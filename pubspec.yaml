@@ -1,0 +1,29 @@
+name: potato_notes
+description: Official POSP note app
+
+environment:
+  sdk: '>=2.0.0 <3.0.0'
+  # The example interacts with build scripts on the Flutter side that are not
+  # yet stable, so it requires a very recent version of Flutter.
+  # This version will increase regularly as the build scripts change.
+  flutter: '>=1.5.9-pre.270'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.0
+
+  sqflite:
+  path:
+  shared_preferences:
+  url_launcher:
+  provider:
+  flutter_material_color_picker:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
