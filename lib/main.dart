@@ -360,12 +360,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   Widget NoteList(BuildContext context, int index) {
+    Color borderCardColor = HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+        .withAlpha(0.2)
+        .toColor();
     return Card(
-      color: Theme.of(context).brightness == Brightness.dark
-          ? Theme.of(context).dividerColor
-          : Theme.of(context).scaffoldBackgroundColor,
-      elevation: 3.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+        side: BorderSide(color: borderCardColor, width: 1.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -498,19 +501,16 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
           : Theme.of(context).scaffoldBackgroundColor;
 
     double cardBrightness = Theme.of(context).brightness == Brightness.dark
-          ? 0.7
-          : 0.9;
+          ? 0.5
+          : 0.96;
+
+    Color borderCardColor = HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+        .withAlpha(0.2)
+        .toColor();
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
-      //resizeToAvoidBottomPadding: false,
-      /*appBar: AppBar(
-        title: Text(noteId == null ? "Add new note" : "Update note"),
-        leading: IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context)),
-      ),*/
       body: Stack(
         children: <Widget>[
           Padding(
@@ -533,8 +533,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
             child: ListView(
               children: <Widget>[
                 Card(
-                  color: cardColor,
-                  elevation: 3,
+                  elevation: 0.0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,8 +570,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
                   )
                 ),
                 Card(
-                  color: cardColor,
-                  elevation: 3,
+                  elevation: 0.0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
