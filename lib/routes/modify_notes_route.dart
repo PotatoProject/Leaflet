@@ -59,8 +59,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
                 child: Text(
                   noteId == null ? "Add new note" : "Update note",
                   style: TextStyle(
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -151,13 +151,14 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         elevation: 0,
         backgroundColor: Theme.of(context).accentColor,
         onPressed: () async {
           if (noteContent != "") {
             List<Note> noteList = await noteHelper.getNotes();
-            int id = noteId == null ? noteList.length : noteId;
+            int id = noteId == null ? await noteIdSearcher() : noteId;
+            print(id);
             await noteHelper.insert(Note(
                 id: id, title: noteTitle, content: noteContent));
             noteList = await noteHelper.getNotes();
@@ -170,31 +171,52 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
             ));
           }
         },
-        icon: Icon(Icons.done),
-        label: Text("Done"),
+        child: Icon(Icons.done),
+        tooltip: "Done",
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(0.0),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
         child: Builder(
           builder: (context) {
             return BottomAppBar(
               color: Theme.of(context).scaffoldBackgroundColor,
+              shape: CircularNotchedRectangle(),
               elevation: 0,
-              child: Row(
-                children: <Widget>[
-                  Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Spacer(flex: 5),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: <Widget>[
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Spacer(flex: 5),
+                  ],
+                ),
               ),
             );
           }
         ),
       ),
     );
+  }
+
+  Future<int> noteIdSearcher() async {
+    List<Note> noteList = await NoteHelper().getNotes();
+    List<int> noteIdList = List<int>();
+    
+    noteList.forEach((item) {
+      noteIdList.add(item.id);
+    });
+
+    for(int i = 1; i < noteIdList.length; i++) {
+      print(noteList[i].id);
+      if(noteIdList.contains(i)) {
+        continue;
+      } else return i;
+    }
+    return noteList.length + 1;
   }
 }

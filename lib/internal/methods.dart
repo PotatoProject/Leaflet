@@ -28,3 +28,13 @@ Future<void> setMainColor(Color color) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('main_color', color.value);
 }
+
+Future<bool> getDevShowIdLabels() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('dev_show_id_labels') ?? false;
+}
+
+Future<bool> setDevShowIdLabels(bool show) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('dev_show_id_labels', show);
+}

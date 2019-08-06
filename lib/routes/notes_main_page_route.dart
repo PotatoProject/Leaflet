@@ -51,21 +51,35 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
                 color: isSelectorVisible ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).cardColor,
               ),
-              padding: EdgeInsets.only(left: 30, right: 20),
+              padding: EdgeInsets.only(left: 20, right: 20),
               height: 70,
               child: isSelectorVisible ?
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Center(
-                      child: Text(
-                        selectionList.length.toString() + " selected",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () async {
+                          selectionList = List<int>();
+                          noteList.forEach((item) {
+                            item.isSelected = false;
+                          });
+                          setState(() => isSelectorVisible = false);
+                        },
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text(
+                          selectionList.length.toString() + " selected",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -89,10 +103,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ) :
                 Center(
                   child: Text(
-                    "Potato Notes",
+                    "Notes",
                     style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -103,7 +117,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             child: noteList.length != 0 ? ListView.builder(
               itemCount: noteList.length,
               itemBuilder: (context, index) {
-                return _noteList(context, index);
+                int bIndex = (noteList.length - 1) - index; 
+                return _noteListItem(context, bIndex);
               },
             ) : Center(
               child: Text("No notes added... yet"),
@@ -116,6 +131,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         elevation: 0.0,
         onPressed: () {
           _addNoteCaller(context);
+          selectionList = List<int>();
+          noteList.forEach((item) {
+            item.isSelected = false;
+          });
           setState(() => isSelectorVisible = false);
         },
         child: Icon(Icons.add),
@@ -139,43 +158,124 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     if (result != null) setState(() => noteList = result);
   }
 
-  Widget _noteList(BuildContext context, int index) {
+  Widget _noteListItem(BuildContext context, int index) {
     Color borderCardColor = HSLColor.fromColor(Theme.of(context).textTheme.title.color)
         .withAlpha(0.2)
         .toColor();
+    
+    final appInfo = Provider.of<AppInfoProvider>(context);
 
-    return Card(
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-        side: BorderSide(color: borderCardColor, width: 1.0),
-      ),
-      child: Row(
-        children: <Widget>[
-          Visibility(
-            visible: isSelectorVisible,
-            child: Checkbox(
-              value: noteList[index].isSelected,
-              onChanged: (value) {
-                setState(() => noteList[index].isSelected = value);
-                if (value == true) {
-                  setState(() => selectionList.add(noteList[index].id));
-                } else {
-                  setState(() => selectionList.remove(noteList[index].id));
-                }
-              },
-              activeColor: Theme.of(context).accentColor,
-              checkColor: Theme.of(context).cardColor,
+    Color cardColor = Theme.of(context).brightness == Brightness.dark
+        ? Theme.of(context).dividerColor
+        : Theme.of(context).scaffoldBackgroundColor;
+
+    double cardBrightness = Theme.of(context).brightness == Brightness.dark
+        ? 0.5
+        : 0.96;
+    
+    return GestureDetector(
+      onTap: () {
+        if(isSelectorVisible) {
+          setState(() {
+            noteList[index].isSelected = !noteList[index].isSelected;
+            if(noteList[index].isSelected) {
+              selectionList.add(noteList[index].id);
+            } else {
+              selectionList.remove(noteList[index].id);
+              if(selectionList.length == 0) {
+                isSelectorVisible = false;
+              }
+            }
+          });
+        } else {
+          _editNoteCaller(context, noteList[index]);
+        }
+      },
+      onLongPress: () {
+        if(!isSelectorVisible)
+          setState(() {
+            isSelectorVisible = true;
+            noteList[index].isSelected = true;
+            selectionList.add(noteList[index].id);
+          });
+      },
+      child: Card(
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(color: noteList[index].isSelected ? Theme.of(context).accentColor : Colors.transparent, width: 1.5),
+        ),
+        color: HSLColor.fromColor(cardColor)
+            .withLightness(cardBrightness)
+            .toColor(),
+        child: Dismissible(
+          direction: isSelectorVisible ? null : DismissDirection.startToEnd,
+          background: Container(
+            padding: EdgeInsets.only(left: 30),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.delete),
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    "Delete note",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Column(
+          onDismissed: (direction) async {
+            Note noteBackup = Note(
+              id: noteList[index].id,
+            title: noteList[index].title,
+              content: noteList[index].content,
+            );
+            await NoteHelper().delete(noteList[index].id);
+            List<Note> list = await NoteHelper().getNotes();
+            setState(() => noteList = list);
+            scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text("Note deleted"),
+                behavior: SnackBarBehavior.floating,
+                elevation: 0.0,
+                action: SnackBarAction(
+                  label: "Undo",
+                  onPressed: () async {
+                    await NoteHelper().insert(noteBackup);
+                    List<Note> list = await NoteHelper().getNotes();
+                    setState(() => noteList = list);
+                  },
+                ),
+              ),
+            );
+          },
+          key: Key(noteList[index].id.toString()),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 14.0, bottom: isSelectorVisible ? 14.0 : 0.0, left: 20.0, right: 20.0),
+                padding: EdgeInsets.only(top: 14.0, bottom: 14.0, left: 20.0, right: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Visibility(
+                      visible: appInfo.devShowIdLabels,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 12.0),
+                        child: Text("Note id: " + noteList[index].id.toString()),
+                      ),
+                    ),
                     Visibility(
                       visible: noteList[index].title == "" ? false : true,
                       child: Padding(
@@ -183,8 +283,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         child: Text(
                           noteList[index].title,
                           style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -194,207 +294,182 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
+                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                            .withAlpha(0.7)
+                            .toColor()
                       ),
                     ),
                   ],
                 )
               ),
-              Visibility(
-                visible: !isSelectorVisible,
-                child: ButtonTheme.bar(
-                  child: ButtonBar(
-                    alignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      FlatButton(
-                        child: Text(
-                          "Edit",
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        ),
-                        onPressed: () => _editNoteCaller(context, noteList[index]),
-                      ),
-                      FlatButton(
-                        child: Text(
-                          "Delete",
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        ),
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Delete note"),
-                                content: Text(
-                                  "Are you sure you want to delete this note?"),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text(
-                                      "No",
-                                      style: TextStyle(color: Theme.of(context).accentColor),
-                                    ),
-                                    onPressed: () => Navigator.of(context).pop(),
-                                  ),
-                                  FlatButton(
-                                    child: Text(
-                                      "Yes",
-                                      style: TextStyle(color: Theme.of(context).accentColor),
-                                    ),
-                                    onPressed: () async {
-                                      await NoteHelper().delete(noteList[index].id);
-                                      List<Note> list =
-                                      await NoteHelper().getNotes();
-                                      setState(() => noteList = list);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            }
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget get _bottomBar {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(0.0),
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
       child: Builder(
         builder: (context) {
-          final appInfo = Provider.of<AppInfoProvider>(context);
           return BottomAppBar(
             color: Theme.of(context).scaffoldBackgroundColor,
             elevation: 0,
-            child: Row(
-              children: <Widget>[
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                      ),
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                              child: Center(
-                                child: Container(
-                                  width: 140,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    color: Theme.of(context).textTheme.title.color.withAlpha(120),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 20.0),
-                              child: Center(
-                                child: Text(
-                                  "Settings",
-                                  style: TextStyle(
-                                    fontSize: 24.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SwitchListTile(
-                              activeColor: Theme.of(context).accentColor,
-                              secondary: Icon(Icons.brightness_5),
-                              title: Text('Dark theme'),
-                              value: appInfo.isDark,
-                              onChanged: (value) => appInfo.isDark = value,
-                            ),
-                            ListTile(
-                              leading: IconTheme(
-                                data: IconThemeData(color: Theme.of(context).accentColor),
-                                child: Icon(Icons.brightness_1),
-                              ),
-                              title: Text('Main app color'),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) {
-                                  Color currentColor = Theme.of(context).accentColor;
-                                  return AlertDialog(
-                                    title: Text("Main color selector"),
-                                    content: MaterialColorPicker(
-                                      circleSize: 70.0,
-                                      allowShades: true,
-                                      onColorChange: (color) {
-                                        currentColor = color;
-                                      },
-                                      onMainColorChange: (ColorSwatch color) {
-                                        // Handle main color changes
-                                      },
-                                      selectedColor: currentColor,
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text(
-                                          "Cancel",
-                                          style: TextStyle(color: Theme.of(context).accentColor),
-                                        ),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                      FlatButton(
-                                        child: Text(
-                                          "Confirm",
-                                          style: TextStyle(color: Theme.of(context).accentColor),
-                                        ),
-                                        onPressed: () {
-                                          appInfo.mainColor = currentColor;
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    );
-                  },
-                ),
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.select_all),
-                  onPressed: () {
-                    setState(() => isSelectorVisible = !isSelectorVisible);
-                  }
-                ),
-                Spacer(flex: 5),
-                IconButton(
-                  icon: new Icon(Icons.code),
-                  onPressed: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
-                ),
-                Spacer(),
-              ],
+            shape: CircularNotchedRectangle(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                children: <Widget>[
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: () {
+                      _showSettingsMenu(context);
+                    },
+                  ),
+                  Spacer(flex: 3),
+                  IconButton(
+                    icon: new Icon(Icons.code),
+                    onPressed: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
+                  ),
+                  Spacer(),
+                ],
+              ),
             ),
           );
         }
       ),
+    );
+  }
+
+  Future<void> _showSettingsMenu(BuildContext context) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+
+    return showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Center(
+                child: Container(
+                  width: 140,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: Theme.of(context).textTheme.title.color.withAlpha(120),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Center(
+                child: Text(
+                  "Settings",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
+              child: Text(
+                "Themes",
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+            SwitchListTile(
+              activeColor: Theme.of(context).accentColor,
+              secondary: Icon(Icons.brightness_5),
+              title: Text('Dark theme'),
+              value: appInfo.isDark,
+              onChanged: (value) => appInfo.isDark = value,
+            ),
+            ListTile(
+              leading: Icon(Icons.color_lens),
+              trailing: CircleColor(
+                color: Theme.of(context).accentColor,
+                circleSize: 30.0,
+              ),
+              title: Text('Accent color'),
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) {
+                  Color currentColor = Theme.of(context).accentColor;
+                  return AlertDialog(
+                    title: Text("Accent color selector"),
+                    content: MaterialColorPicker(
+                      circleSize: 70.0,
+                      allowShades: true,
+                      onColorChange: (color) {
+                        currentColor = color;
+                      },
+                      onMainColorChange: (ColorSwatch color) {
+                        // Handle main color changes
+                      },
+                      selectedColor: currentColor,
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      FlatButton(
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        onPressed: () {
+                          appInfo.mainColor = currentColor;
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                }
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
+              child: Text(
+                "Developer options",
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+            SwitchListTile(
+              activeColor: Theme.of(context).accentColor,
+              secondary: Icon(Icons.label),
+              title: Text('Show id labels'),
+              value: appInfo.devShowIdLabels,
+              onChanged: (value) => appInfo.devShowIdLabels = value,
+            ),
+          ],
+        );
+      }
     );
   }
 }
