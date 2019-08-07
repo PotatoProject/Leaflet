@@ -42,10 +42,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
           ? 0.5
           : 0.96;
 
-    Color borderCardColor = HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-        .withAlpha(0.2)
-        .toColor();
-
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
@@ -158,9 +154,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
           if (noteContent != "") {
             List<Note> noteList = await noteHelper.getNotes();
             int id = noteId == null ? await noteIdSearcher() : noteId;
-            print(id);
             await noteHelper.insert(Note(
-                id: id, title: noteTitle, content: noteContent));
+                id: id, title: noteTitle, content: noteContent, isStarred: 0));
             noteList = await noteHelper.getNotes();
             Navigator.pop(context, noteList);
           } else {
@@ -211,12 +206,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
       noteIdList.add(item.id);
     });
 
-    for(int i = 1; i < noteIdList.length; i++) {
-      print(noteList[i].id);
-      if(noteIdList.contains(i)) {
-        continue;
-      } else return i;
-    }
-    return noteList.length + 1;
+    if(noteIdList.length > 0) {
+      return noteIdList[noteIdList.length - 1] + 1;
+    } else return 1;
   }
 }

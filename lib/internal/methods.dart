@@ -34,7 +34,17 @@ Future<bool> getDevShowIdLabels() async {
   return prefs.getBool('dev_show_id_labels') ?? false;
 }
 
-Future<bool> setDevShowIdLabels(bool show) async {
+Future<void> setDevShowIdLabels(bool show) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('dev_show_id_labels', show);
+}
+
+Future<bool> getIsGridView() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('is_grid_view') ?? false;
+}
+
+Future<void> setIsGridView(bool isGrid) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('is_grid_view', isGrid);
 }

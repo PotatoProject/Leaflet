@@ -12,10 +12,12 @@ class AppInfoProvider extends ChangeNotifier {
   bool _isDark = false;
   Color _mainColor = Colors.blue;
   bool _devShowIdLabels = false;
+  bool _isGridView = false;
 
   bool get isDark => _isDark;
   Color get mainColor => _mainColor;
   bool get devShowIdLabels => _devShowIdLabels;
+  bool get isGridView => _isGridView;
 
   set isDark(bool val) {
     _isDark = val;
@@ -35,9 +37,16 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set isGridView(bool val) {
+    _isGridView = val;
+    setIsGridView(val);
+    notifyListeners();
+  }
+
   Future<void> loadData() async {
     isDark = await getDark();
     mainColor = await getMainColor();
     devShowIdLabels = await getDevShowIdLabels();
+    isGridView = await getIsGridView();
   }
 }
