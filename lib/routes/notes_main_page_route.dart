@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -545,12 +547,29 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ),
               ),
             ),
-            SwitchListTile(
-              activeColor: Theme.of(context).accentColor,
-              secondary: Icon(Icons.brightness_5),
-              title: Text('Dark theme'),
-              value: appInfo.isDark,
-              onChanged: (value) => appInfo.isDark = value,
+            ListTile(
+              leading: Icon(Icons.brightness_5),
+              title: Text('App theme'),
+              trailing: DropdownButton(
+                value: appInfo.themeMode,
+                items: <DropdownMenuItem>[
+                  DropdownMenuItem(
+                    child: Text("Light"),
+                    value: 0,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Dark"),
+                    value: 1,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Black"),
+                    value: 2,
+                  ),
+                ],
+                onChanged: (newValue) {
+                  appInfo.themeMode = newValue;
+                },
+              ),
             ),
             ListTile(
               leading: Icon(Icons.color_lens),

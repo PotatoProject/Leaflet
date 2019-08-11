@@ -19,14 +19,17 @@ import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
+import 'package:potato_notes/ui/themes.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 Future<Database> database;
+AppInfoProvider appInfo;
 
 void main() async {
+
   database = openDatabase(
     join(await getDatabasesPath(), 'notes_database.db'),
     onCreate: (db, version) {
@@ -59,7 +62,7 @@ class NotesRoot extends StatelessWidget {
       ],
       child:  Builder(
         builder: (context) {
-          final appInfo = Provider.of<AppInfoProvider>(context);
+          appInfo = Provider.of<AppInfoProvider>(context);
           return MaterialApp(
             builder: (context, child) => ScrollConfiguration(
               behavior: NoGlowScrollBehavior(),
@@ -67,15 +70,8 @@ class NotesRoot extends StatelessWidget {
             ),
             home: NotesMainPageRoute(noteList),
             debugShowCheckedModeBanner: false,
-            theme: appInfo.isDark
-                ? ThemeData.dark().copyWith(
-                    accentColor: appInfo.mainColor,
-                    cursorColor: appInfo.mainColor,
-                    textSelectionHandleColor: appInfo.mainColor)
-                : ThemeData.light().copyWith(
-                    accentColor: appInfo.mainColor,
-                    cursorColor: appInfo.mainColor,
-                    textSelectionHandleColor: appInfo.mainColor),
+            theme: appInfo.themeMode == 0 ? CustomThemes.light(appInfo) : appInfo.themeMode == 1 ?
+                CustomThemes.dark(appInfo) : CustomThemes.black(appInfo),
             title: 'Notes',
           );
         }

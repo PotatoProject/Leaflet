@@ -9,14 +9,14 @@ void launchUrl(String url) async {
     throw 'Could not launch $url!';
 }
 
-Future<bool> getDark() async {
+Future<int> getThemeMode() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('dark_theme') ?? false;
+  return prefs.getInt('theme_mode') ?? false;
 }
 
-Future<void> setDark(bool dark) async {
+Future<void> setThemeMode(int mode) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('dark_theme', dark);
+  prefs.setInt('theme_mode', mode);
 }
 
 Future<Color> getMainColor() async {
