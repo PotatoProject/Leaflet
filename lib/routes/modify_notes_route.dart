@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 import 'package:potato_notes/internal/note_helper.dart';
 
@@ -16,11 +17,17 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
   int noteId;
   String noteTitle = "";
   String noteContent = "";
+  int noteIsStarred = 0;
+  int noteDate = 0;
+  int noteColor;
 
   _ModifyNotesState(Note note) {
     this.noteId = note.id;
     this.noteTitle = note.title;
     this.noteContent = note.content;
+    this.noteIsStarred = note.isStarred;
+    this.noteDate = note.date;
+    this.noteColor = note.color;
   }
 
   NoteHelper noteHelper = new NoteHelper();
@@ -34,14 +41,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
     titleController.selection = TextSelection.collapsed(offset: noteTitle.length);
     contentController.selection = TextSelection.collapsed(offset: noteContent.length);
 
-    Color cardColor = Theme.of(context).brightness == Brightness.dark
-          ? Theme.of(context).dividerColor
-          : Theme.of(context).scaffoldBackgroundColor;
-
-    double cardBrightness = Theme.of(context).brightness == Brightness.dark
-          ? 0.5
-          : 0.96;
-
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
@@ -51,129 +50,111 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Container(
               height: 70,
-              child: Center(
-                child: Text(
-                  noteId == null ? "Add new note" : "Update note",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () async {
+                        if (noteContent != "") {
+                          List<Note> noteList = await noteHelper.getNotes();
+                          int id = noteId == null ? await noteIdSearcher() : noteId;
+                          noteDate = DateTime.now().millisecondsSinceEpoch;
+
+                          await noteHelper.insert(Note(
+                            id: id,
+                            title: noteTitle,
+                            content: noteContent,
+                            isStarred: noteIsStarred,
+                            date: noteDate,
+                            color: noteColor,
+                          ));
+                          noteList = await noteHelper.getNotes();
+                          Navigator.pop(context, noteList);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Center(
+                        child: Text(
+                          noteId == null ? "Add new note" : "Update note",
+                          style: TextStyle(
+                            fontSize: 26.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 90.0),
+            padding: EdgeInsets.only(top: 90.0, left: 20, right: 20),
             child: ListView(
               children: <Widget>[
-                Card(
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-                        child: Text(
-                          "Title",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                        color: HSLColor.fromColor(cardColor)
-                            .withLightness(cardBrightness)
-                            .toColor(),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 6.0, bottom: 6.0, left: 10.0, right: 10.0),
-                          child: TextField(
-                            controller: titleController,
-                            decoration: InputDecoration(hintText: 'Note title', border: InputBorder.none),
-                            onChanged: (text) {
-                              noteTitle = text;
-                            },
-                            maxLength: 60,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(hintText: 'Title', border: InputBorder.none),
+                  onChanged: (text) {
+                    noteTitle = text;
+                  },
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                Card(
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-                        child: Text(
-                          "Content",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                        color: HSLColor.fromColor(cardColor)
-                            .withLightness(cardBrightness)
-                            .toColor(),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 6.0, bottom: 6.0, left: 10.0, right: 10.0),
-                          child: TextField(
-                            controller: contentController,
-                            decoration: InputDecoration(hintText: 'Note content', border: InputBorder.none),
-                            onChanged: (text) {
-                              noteContent = text;
-                            },
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 9,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                TextField(
+                  controller: contentController,
+                  decoration: InputDecoration(hintText: 'Content', border: InputBorder.none),
+                  onChanged: (text) {
+                    noteContent = text;
+                  },
+                  maxLines: 32,
+                  keyboardType: TextInputType.multiline,
                 ),
               ],
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        backgroundColor: Theme.of(context).accentColor,
-        onPressed: () async {
-          if (noteContent != "") {
-            List<Note> noteList = await noteHelper.getNotes();
-            int id = noteId == null ? await noteIdSearcher() : noteId;
-            await noteHelper.insert(Note(
-                id: id, title: noteTitle, content: noteContent, isStarred: 0));
-            noteList = await noteHelper.getNotes();
-            Navigator.pop(context, noteList);
-          } else {
-            scaffoldKey.currentState.showSnackBar(new SnackBar(
-              content: new Text(noteId == null ?
-                  "Can't add a note with empty content" :
-                  "Can't update a note with empty content"),
-            ));
-          }
-        },
-        child: Icon(Icons.done),
-        tooltip: "Done",
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
         child: Builder(
           builder: (context) {
+            Color noNoteCircleColor = HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+              .withAlpha(0.4)
+              .toColor();
+            
+            List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
+              Colors.red,
+              Colors.pink,
+              Colors.purple,
+              Colors.deepPurple,
+              Colors.indigo,
+              Colors.blue,
+              Colors.lightBlue,
+              Colors.cyan,
+              Colors.teal,
+              Colors.green,
+              Colors.lightGreen,
+              Colors.lime,
+              Colors.yellow,
+              Colors.amber,
+              Colors.orange,
+              Colors.deepOrange,
+              Colors.brown,
+              Colors.grey,
+              Colors.blueGrey,
+              MaterialColor(0x00000000, {500: Colors.transparent}),
+            ];
+
             return BottomAppBar(
               color: Theme.of(context).scaffoldBackgroundColor,
               shape: CircularNotchedRectangle(),
@@ -184,10 +165,58 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
                   children: <Widget>[
                     Spacer(),
                     IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(context),
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                          color: noteColor == null ? noNoteCircleColor : Color(noteColor),
+                        ),
+                        width: 32.0,
+                        height: 32.0,
+                      ),
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          Color currentColor = noteColor == null ? Colors.transparent : Color(noteColor);
+                          return AlertDialog(
+                            title: Text("Note color selector"),
+                            content: MaterialColorPicker(
+                              colors: colors,
+                              allowShades: false,
+                              circleSize: 70.0,
+                              onMainColorChange: (color) {
+                                currentColor = color;
+                              },
+                              selectedColor: currentColor,
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              FlatButton(
+                                child: Text(
+                                  "Confirm",
+                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                ),
+                                onPressed: () {
+                                  if(currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
+                                      || currentColor.toString() == "Color(0x00000000)") {
+                                    setState(() => noteColor = null);
+                                  } else {
+                                    setState(() => noteColor = currentColor.value);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      ),
                     ),
-                    Spacer(flex: 5),
+                    Spacer(),
                   ],
                 ),
               ),

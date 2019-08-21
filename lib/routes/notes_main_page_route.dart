@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
-import 'package:potato_notes/routes/favourite_notes_route.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -15,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class NotesMainPageRoute extends StatefulWidget {
   List<Note> noteList = List<Note>();
+
   NotesMainPageRoute(List<Note> list) {
     this.noteList = list;
   }
@@ -43,7 +43,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
       systemNavigationBarIconBrightness: systemBarsIconBrightness,
-      statusBarColor: isSelectorVisible ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).cardColor,
+      statusBarColor: Theme.of(context).cardColor,
       statusBarIconBrightness: systemBarsIconBrightness,
     ));
 
@@ -58,9 +58,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Container(
               decoration: BoxDecoration(
-                color: isSelectorVisible ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).cardColor,
+                color: Theme.of(context).cardColor,
               ),
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(left: 10, right: 10),
               height: 70,
               child: isSelectorVisible ?
                 Row(
@@ -80,9 +80,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(left: 10),
                         child: Text(
-                          selectionList.length.toString() + " selected",
+                          selectionList.length.toString(),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -108,32 +108,126 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                   ],
                 ) :
-                Center(
-                  child: Text(
-                    "Notes",
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w600,
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 0),
+                      child: IconButton(
+                        iconSize: 36.0,
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Center(
+                                    child: Container(
+                                      width: 80,
+                                      height: 80,
+                                      decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: AssetImage('assets/notes_round.png'),
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      child: Text(
+                                        "PotatoNotes",
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                          fontWeight: FontWeight.w500,
+                                        )
+                                      )
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
+                                    child: Text("Developed and mantained by HrX03"),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
+                                    child: Text("App icon, design and app branding by RshBfn")
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("Source code"),
+                                  onPressed: () => launchUrl('https://github.com/HrX03/PotatoNotes'),
+                                ),
+                                FlatButton(
+                                  child: Text("Close"),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          }
+                        ),
+                        icon: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: AssetImage('assets/notes.png'),
+                        ),
+                      ),
                     ),
-                  ),
+                    Center(
+                      child: Text(
+                        "Notes",
+                        style: TextStyle(
+                          fontSize: 26.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 0),
+                      child: IconButton(
+                        iconSize: 24.0,
+                        onPressed: () {},
+                        icon: CircleAvatar(
+                          backgroundColor: appInfo.mainColor,
+                          child: Icon(
+                            Icons.account_circle,
+                            color: Colors.white,
+                            size: 28.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 70.0),
-            child: noteList.length != 0 ? ListView.builder(
-              itemCount: appInfo.isGridView ? 1 : noteList.length,
-              itemBuilder: (context, index) {
-                if(appInfo.isGridView) {
-                  return noteGridBuilder(context);
-                } else {
-                  int bIndex = (noteList.length - 1) - index; 
-                  return noteListItem(context, bIndex, false, null);
-                }
-              },
-            ) : Center(
-              child: Text("No notes added... yet"),
-            ),
+            padding: EdgeInsets.only(top: 94.0),
+            child: noteList.length == 0 ?
+              Center(
+                child: Text(
+                  "No notes added... yet",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                    color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                      .withAlpha(0.4)
+                      .toColor(),
+                  ),
+                ),
+              ) :
+              ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                children: noteListBuilder(context),
+              ),
           ),
         ],
       ),
@@ -148,7 +242,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           });
           setState(() => isSelectorVisible = false);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.edit),
         tooltip: "Add new note",
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -156,52 +250,232 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     );
   }
 
-  Widget noteGridBuilder(BuildContext context) {
+  List<Widget> noteListBuilder(BuildContext context) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+
+    if(!appInfo.isGridView) {
+      List<Widget> pinnedNotes = List<Widget>();
+      List<Widget> normalNotes = List<Widget>();
+
+      pinnedNotes.add(
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.star,
+                size: 12.0,
+                color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor(),
+              ),
+              Text(
+                "  Starred notes",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                    .withAlpha(0.4)
+                    .toColor()
+                ),
+              ),
+            ],
+          )
+        ),  
+      );
+
+      for(int i = 0; i < noteList.length; i++) {
+        int bIndex = (noteList.length - 1) - i;
+        if(noteList[bIndex].isStarred == 1) {
+          pinnedNotes.add(
+            noteListItem(context, bIndex, false, null)
+          );
+        }
+      }
+
+      for(int i = 0; i < noteList.length; i++) {
+        int bIndex = (noteList.length - 1) - i;
+        if(noteList[bIndex].isStarred == 0) {
+          normalNotes.add(
+            noteListItem(context, bIndex, false, null)
+          );
+        }
+      }
+
+      pinnedNotes.add(
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 100, right: 100),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                .withAlpha(0.2)
+                .toColor(),
+            ),
+            width: MediaQuery.of(context).size.width - 200,
+            height: 2,
+          ),
+        ),
+      );
+
+      return <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            pinnedNotes.length > 2 ?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: pinnedNotes,
+              ) :
+              Container(),
+            normalNotes.length > 0 ?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: normalNotes,
+              ) :
+              Container(),
+          ],
+        ),
+      ];
+    } else {
+      List<int> pinnedIndexes = List<int>();
+      List<int> normalIndexes = List<int>();
+      List<Widget> pinnedWidgets = List<Widget>();
+      List<Widget> normalWidgets = List<Widget>();
+
+      pinnedWidgets.add(
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.star,
+                size: 12.0,
+                color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor(),
+              ),
+              Text(
+                "  Starred notes",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                    .withAlpha(0.4)
+                    .toColor()
+                ),
+              ),
+            ],
+          )
+        ),  
+      );
+
+      for(int i = 0; i < noteList.length; i++) {
+        if(noteList[i].isStarred == 1) {
+          pinnedIndexes.add(i);
+        }
+      }
+
+      for(int i = 0; i < noteList.length; i++) {
+        if(noteList[i].isStarred == 0) {
+          normalIndexes.add(i);
+        }
+      }
+
+      Widget pinnedGrid = noteGridBuilder(context, pinnedIndexes);
+      Widget normalGrid = noteGridBuilder(context, normalIndexes);
+
+      if(pinnedGrid != null)
+        pinnedWidgets.add(pinnedGrid);
+      
+      if(normalGrid != null)
+        normalWidgets.add(normalGrid);
+
+      pinnedWidgets.add(
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 100, right: 100),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                .withAlpha(0.2)
+                .toColor(),
+            ),
+            width: MediaQuery.of(context).size.width - 200,
+            height: 2,
+          ),
+        ),
+      );
+
+      return <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            pinnedWidgets.length > 2 ?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: pinnedWidgets,
+              ) :
+              Container(),
+            normalWidgets.length > 0 ?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: normalWidgets,
+              ) :
+              Container(),
+          ],
+        ),
+      ];
+    }
+  }
+
+  Widget noteGridBuilder(BuildContext context, List<int> indexes) {
     List<Widget> columnOne = List<Widget>();
     List<Widget> columnTwo = List<Widget>();
 
     bool secondColumnFirst = false;
-
-    if((noteList.length - 1).isEven) {
+    
+    if((indexes.length - 1).isEven) {
       secondColumnFirst = false;
     } else {
       secondColumnFirst = true;
     }
 
-
-    for(int i = 0; i < noteList.length; i++) {
-      int bIndex = (noteList.length - 1) - i;
+    for(int i = 0; i < indexes.length; i++) {
+      int bIndex = (indexes.length - 1) - i;
       if(bIndex.isEven) {
-        columnOne.add(noteListItem(context, bIndex, true,
+        columnOne.add(noteListItem(context, indexes[bIndex], true,
             secondColumnFirst ? DismissDirection.startToEnd : DismissDirection.endToStart));
       } else {
-        columnTwo.add(noteListItem(context, bIndex, true,
+        columnTwo.add(noteListItem(context, indexes[bIndex], true,
             secondColumnFirst ? DismissDirection.endToStart : DismissDirection.startToEnd));
       }
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width/2,
-          child: Column(
-            children: secondColumnFirst ? columnTwo : columnOne,
+    if(indexes.length > 0) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width/2-20,
+            child: Column(
+              children: secondColumnFirst ? columnTwo : columnOne,
+            ),
           ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width/2,
-          child: Column(
-            children: secondColumnFirst ? columnOne : columnTwo,
+          Container(
+            width: MediaQuery.of(context).size.width/2-20,
+            child: Column(
+              children: secondColumnFirst ? columnOne : columnTwo,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else return null;
   }
 
   void _addNoteCaller(BuildContext context) async {
-    final Note emptyNote = Note(id: null, title: "", content: "");
+    final Note emptyNote = Note(id: null, title: "", content: "", isStarred: 0, date: 0, color: null);
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(emptyNote)));
 
     if (result != null) setState(() => noteList = result);
@@ -213,13 +487,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     if (result != null) setState(() => noteList = result);
   }
 
-  Future<List<Note>> _favouriteNotesCaller(BuildContext context, List<Note> noteList) async {
-    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteNotesRoute(noteList)));
-
-    List<Note> list = await NoteHelper().getNotes();
-    return list;
-  }
-
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly, DismissDirection dismissDirection) {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
@@ -228,8 +495,28 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         : Theme.of(context).scaffoldBackgroundColor;
 
     double cardBrightness = Theme.of(context).brightness == Brightness.dark
-        ? 0.5
+        ? 0.8
         : 0.96;
+    
+    Color borderColor = HSLColor.fromColor(cardColor)
+        .withLightness(cardBrightness)
+        .toColor();
+    
+    Color getTextColorFromNoteColor(int index, bool isContent) {
+      double noteColorBrightness = Color(noteList[index].color).computeLuminance();
+      Color contentWhite = HSLColor.fromColor(Colors.white)
+        .withAlpha(0.7)
+        .toColor();
+      Color contentBlack = HSLColor.fromColor(Colors.black)
+        .withAlpha(0.7)
+        .toColor();
+      
+      if(noteColorBrightness > 0.5) {
+        return isContent ? contentBlack : Colors.black;
+      } else {
+        return isContent ? contentWhite : Colors.white;
+      }
+    }
     
     return GestureDetector(
       onTap: () {
@@ -249,6 +536,35 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           _editNoteCaller(context, noteList[index]);
         }
       },
+      onDoubleTap: isSelectorVisible ? null : () async {
+        if(noteList[index].isStarred == 0) {
+          await NoteHelper().update(
+            Note(
+              id: noteList[index].id,
+              title: noteList[index].title,
+              content: noteList[index].content,
+              isStarred: 1,
+              date: noteList[index].date,
+              color: noteList[index].color,
+            )
+          );
+          List<Note> list = await NoteHelper().getNotes();
+          setState(() => noteList = list);
+        } else if(noteList[index].isStarred == 1) {
+          await NoteHelper().update(
+            Note(
+              id: noteList[index].id,
+              title: noteList[index].title,
+              content: noteList[index].content,
+              isStarred: 0,
+              date: noteList[index].date,
+              color: noteList[index].color,
+            )
+          );
+          List<Note> list = await NoteHelper().getNotes();
+          setState(() => noteList = list);
+        }
+      },
       onLongPress: () {
         if(!isSelectorVisible)
           setState(() {
@@ -258,14 +574,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           });
       },
       child: Card(
-        elevation: 0.0,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(color: noteList[index].isSelected ? Theme.of(context).accentColor : Colors.transparent, width: 1.5),
+          side: BorderSide(color: noteList[index].isSelected ? Theme.of(context).accentColor : noteList[index].color != null ? Colors.transparent : borderColor, width: 1.5),
         ),
-        color: HSLColor.fromColor(cardColor)
-            .withLightness(cardBrightness)
-            .toColor(),
+        color: noteList[index].color == null ? Theme.of(context).cardColor : Color(noteList[index].color),
         child: Dismissible(
           background: Container(
             decoration: BoxDecoration(
@@ -283,10 +597,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               title: noteList[index].title,
               content: noteList[index].content,
               isStarred: noteList[index].isStarred,
+              date: noteList[index].date,
+              color: noteList[index].color,
             );
             await NoteHelper().delete(noteList[index].id);
             List<Note> list = await NoteHelper().getNotes();
             setState(() => noteList = list);
+            scaffoldKey.currentState.removeCurrentSnackBar();
             scaffoldKey.currentState.showSnackBar(
               SnackBar(
                 content: Text("Note deleted"),
@@ -307,10 +624,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 14.0, bottom: 14.0, left: 20.0, right: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -319,20 +636,26 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       visible: appInfo.devShowIdLabels,
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 12.0),
-                        child: Text("Note id: " + noteList[index].id.toString()),
+                        child: Text(
+                          "Note id: " + noteList[index].id.toString(),
+                          style: TextStyle(
+                            color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                          ),
+                        ),
                       ),
                     ),
                     Visibility(
                       visible: noteList[index].title == "" ? false : true,
                       child: Container(
-                        width: 110,
+                        width: oneSideOnly ? 128 : 324,
                         child:Padding(
                           padding: EdgeInsets.only(bottom: 12.0),
                           child: Text(
                             noteList[index].title,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 20.0,
+                              color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                              fontSize: 18.0,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -340,18 +663,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       ),
                     ),
                     Container(
-                      width: 110,
+                      width: oneSideOnly ? 128 : 324,
                       child: Text(
                         noteList[index].content,
                         overflow: TextOverflow.ellipsis,
-                        //maxLines: 5,
                         textWidthBasis: TextWidthBasis.parent,
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w400,
-                          color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                              .withAlpha(0.7)
-                              .toColor()
+                          color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, true),
                         ),
                       ),
                     ),
@@ -360,81 +680,17 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               Spacer(),
               Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: IconTheme(
-                  data: IconThemeData(
-                    color: Theme.of(context).textTheme.title.color,
-                    opacity: 0.5,
+                padding: EdgeInsets.only(top: 6, right: 6),
+                child: Visibility(
+                  visible: noteList[index].isStarred == 1,
+                  child: Icon(
+                    Icons.star,
+                    size: 14,
+                    color: noteList[index].color == null ? null : HSLColor.fromColor(getTextColorFromNoteColor(index, false))
+                      .withAlpha(0.4)
+                      .toColor(),
                   ),
-                  child: IconButton(
-                    icon: noteList[index].isStarred == 1 ? Icon(Icons.star) : Icon(Icons.star_border),
-                    onPressed: isSelectorVisible ? null : () async {
-                      if(noteList[index].isStarred == 0) {
-                          await NoteHelper().update(
-                            Note(
-                              id: noteList[index].id,
-                              title: noteList[index].title,
-                              content: noteList[index].content,
-                              isStarred: 1,
-                            )
-                          );
-                          List<Note> list = await NoteHelper().getNotes();
-                          setState(() => noteList = list);
-                          scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              content: Text("Note starred"),
-                              behavior: SnackBarBehavior.floating,
-                              elevation: 0.0,
-                              action: SnackBarAction(
-                              label: "Undo",
-                              onPressed: () async {
-                                await NoteHelper().update(Note(
-                                  id: noteList[index].id,
-                                  title: noteList[index].title,
-                                  content: noteList[index].content,
-                                  isStarred: 0,
-                                ));
-                                List<Note> list = await NoteHelper().getNotes();
-                                setState(() => noteList = list);
-                              },
-                            ),
-                          ),
-                        );
-                      } else if(noteList[index].isStarred == 1) {
-                        await NoteHelper().update(
-                          Note(
-                            id: noteList[index].id,
-                            title: noteList[index].title,
-                            content: noteList[index].content,
-                            isStarred: 0,
-                          )
-                        );
-                        List<Note> list = await NoteHelper().getNotes();
-                        setState(() => noteList = list);
-                        scaffoldKey.currentState.showSnackBar(
-                         SnackBar(
-                            content: Text("Note unstarred"),
-                            behavior: SnackBarBehavior.floating,
-                            elevation: 0.0,
-                            action: SnackBarAction(
-                              label: "Undo",
-                              onPressed: () async {
-                                await NoteHelper().update(Note(
-                                  id: noteList[index].id,
-                                  title: noteList[index].title,
-                                  content: noteList[index].content,
-                                  isStarred: 1,
-                                ));
-                                List<Note> list = await NoteHelper().getNotes();
-                                setState(() => noteList = list);
-                              },
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
+                )
               ),
             ],
           ),
@@ -465,26 +721,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       _showSettingsMenu(context);
                     },
                   ),
-                  Spacer(),
+                  Spacer(flex: 3),
                   IconButton(
                     icon: appInfo.isGridView ? Icon(Icons.list) : Icon(Icons.grid_on),
                     onPressed: () {
                       appInfo.isGridView = !appInfo.isGridView;
                     },
-                  ),
-                  Spacer(flex: 5),
-                  IconButton(
-                    icon: Icon(Icons.stars),
-                    onPressed: () async {
-                      List<Note> list = await NoteHelper().getFavouriteNotes();
-
-                      _favouriteNotesCaller(context, list).then((returnList) => setState(() => noteList = returnList));
-                    },
-                  ),
-                  Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.code),
-                    onPressed: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
                   ),
                   Spacer(),
                 ],

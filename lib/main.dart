@@ -34,10 +34,19 @@ void main() async {
     join(await getDatabasesPath(), 'notes_database.db'),
     onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE notes(id INTEGER PRIMARY KEY, title TEXT, content TEXT, isStarred INTEGER)",
+        """
+          CREATE TABLE notes(
+            id INTEGER PRIMARY KEY,
+            title TEXT,
+            content TEXT,
+            isStarred INTEGER,
+            date INTEGER,
+            color INTEGER
+          )
+        """,
       );
     },
-    version: 2,
+    version: 3,
   );
 
   List<Note> noteList = await NoteHelper().getNotes();
