@@ -48,3 +48,33 @@ Future<void> setIsGridView(bool isGrid) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('is_grid_view', isGrid);
 }
+
+Future<void> filtersSetColor(int color) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('filters_color', color);
+}
+
+Future<int> filtersGetColor() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('filters_color') ?? null;
+}
+
+Future<void> filtersSetDate(int date) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('filters_date', date);
+}
+
+Future<int> filtersGetDate() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('filters_date') ?? null;
+}
+
+Future<void> filtersSetCaseSensitive(bool caseSensitive) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('filters_case_sensitive', caseSensitive);
+}
+
+Future<bool> filtersGetCaseSensitive() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('filters_case_sensitive') ?? false;
+}

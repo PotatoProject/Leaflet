@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
+import 'package:potato_notes/routes/search_notes_route.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:provider/provider.dart';
@@ -57,9 +60,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-              ),
               padding: EdgeInsets.only(left: 10, right: 10),
               height: 70,
               child: isSelectorVisible ?
@@ -110,69 +110,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ) :
                 Row(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: 0),
-                      child: IconButton(
-                        iconSize: 36.0,
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Center(
-                                    child: Container(
-                                      width: 80,
-                                      height: 80,
-                                      decoration: new BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: AssetImage('assets/notes_round.png'),
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 20),
-                                      child: Text(
-                                        "PotatoNotes",
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                          fontWeight: FontWeight.w500,
-                                        )
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
-                                    child: Text("Developed and mantained by HrX03"),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 5),
-                                    child: Text("App icon, design and app branding by RshBfn")
-                                  ),
-                                ],
-                              ),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text("Source code"),
-                                  onPressed: () => launchUrl('https://github.com/HrX03/PotatoNotes'),
-                                ),
-                                FlatButton(
-                                  child: Text("Close"),
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                              ],
-                            );
-                          }
-                        ),
-                        icon: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: AssetImage('assets/notes.png'),
+                    Center(
+                      child: Container(
+                        child: IconButton(
+                          iconSize: 36.0,
+                          onPressed: () => showAboutDialog(),
+                          icon: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: AssetImage('assets/notes.png'),
+                          ),
                         ),
                       ),
                     ),
@@ -188,20 +134,17 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     Spacer(),
                     IconButton(
                       icon: Icon(Icons.search),
-                      onPressed: () {},
+                      onPressed: () => _searchNoteCaller(context, noteList),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 0),
-                      child: IconButton(
-                        iconSize: 24.0,
-                        onPressed: () {},
-                        icon: CircleAvatar(
-                          backgroundColor: appInfo.mainColor,
-                          child: Icon(
-                            Icons.account_circle,
-                            color: Colors.white,
-                            size: 28.0,
-                          ),
+                    IconButton(
+                      iconSize: 24.0,
+                      onPressed: () {},
+                      icon: CircleAvatar(
+                        backgroundColor: appInfo.mainColor,
+                        child: Icon(
+                          Icons.account_circle,
+                          color: Colors.white,
+                          size: 28.0,
                         ),
                       ),
                     ),
@@ -213,15 +156,29 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             padding: EdgeInsets.only(top: 94.0),
             child: noteList.length == 0 ?
               Center(
-                child: Text(
-                  "No notes added... yet",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                    color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                      .withAlpha(0.4)
-                      .toColor(),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.close,
+                      size: 50.0,
+                      color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                          .withAlpha(0.4)
+                          .toColor()
+                    ),
+                    Text(
+                      "No notes added... yet",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                          .withAlpha(0.4)
+                          .toColor(),
+                      ),
+                    ),
+                  ],
                 ),
               ) :
               ListView(
@@ -487,19 +444,37 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     if (result != null) setState(() => noteList = result);
   }
 
+  void _searchNoteCaller(BuildContext context, List<Note> noteList) async {
+    SearchFiltersProvider searchFilters = Provider.of<SearchFiltersProvider>(context);
+
+    searchFilters.color = null;
+    searchFilters.date = null;
+    searchFilters.caseSensitive = false;
+    
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchNotesRoute(noteList)));
+
+    if (result != null) setState(() => noteList = result);
+  }
+
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly, DismissDirection dismissDirection) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+    
+    double getAlphaFromTheme() {
+      if(appInfo.themeMode == 0) {
+        return 0.1;
+      } else if (appInfo.themeMode == 1) {
+        return 0.2;
+      } else if (appInfo.themeMode == 2) {
+        return 0.3;
+      }
+    }
 
-    Color cardColor = Theme.of(context).brightness == Brightness.dark
-        ? Theme.of(context).dividerColor
-        : Theme.of(context).scaffoldBackgroundColor;
+    Color cardColor = Theme.of(context).textTheme.title.color;
 
-    double cardBrightness = Theme.of(context).brightness == Brightness.dark
-        ? 0.8
-        : 0.96;
+    double cardBrightness = getAlphaFromTheme();
     
     Color borderColor = HSLColor.fromColor(cardColor)
-        .withLightness(cardBrightness)
+        .withAlpha(cardBrightness)
         .toColor();
     
     Color getTextColorFromNoteColor(int index, bool isContent) {
@@ -648,11 +623,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       visible: noteList[index].title == "" ? false : true,
                       child: Container(
                         width: oneSideOnly ? 128 : 324,
-                        child:Padding(
+                        child: Padding(
                           padding: EdgeInsets.only(bottom: 12.0),
                           child: Text(
                             noteList[index].title,
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
                             style: TextStyle(
                               color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
                               fontSize: 18.0,
@@ -668,6 +644,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         noteList[index].content,
                         overflow: TextOverflow.ellipsis,
                         textWidthBasis: TextWidthBasis.parent,
+                        maxLines: 4,
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w400,
@@ -844,6 +821,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                           style: TextStyle(color: Theme.of(context).accentColor),
                         ),
                         onPressed: () => Navigator.pop(context),
+                        textColor: appInfo.mainColor,
+                        hoverColor: appInfo.mainColor,
                       ),
                       FlatButton(
                         child: Text(
@@ -854,6 +833,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                           appInfo.mainColor = currentColor;
                           Navigator.pop(context);
                         },
+                        textColor: appInfo.mainColor,
+                        hoverColor: appInfo.mainColor,
                       ),
                     ],
                   );
@@ -879,6 +860,100 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               onChanged: (value) => appInfo.devShowIdLabels = value,
             ),
           ],
+        );
+      }
+    );
+  }
+
+  void showAboutDialog() {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.fromLTRB(8, 24, 8, 10),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Center(
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                    fit: BoxFit.fill,
+                      image: AssetImage('assets/notes_round.png'),
+                    ),
+                  )
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "PotatoNotes",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
+                child: Text("Developed and mantained by HrX03"),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
+                child: Text("App icon, design and app branding by RshBfn")
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(24, 30, 24, 4),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "PotatoProject 2019",
+                      style: TextStyle(
+                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                            .withAlpha(0.5)
+                            .toColor(),
+                        fontSize: 14
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      "v0.3.0-1",
+                      style: TextStyle(
+                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                            .withAlpha(0.5)
+                            .toColor(),
+                        fontSize: 14
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FlatButton(
+                    child: Text("Source code"),
+                    onPressed: () => launchUrl('https://github.com/HrX03/PotatoNotes'),
+                      textColor: appInfo.mainColor,
+                      hoverColor: appInfo.mainColor,
+                  ),
+                  FlatButton(
+                    child: Text("Close"),
+                    onPressed: () => Navigator.pop(context),
+                    textColor: appInfo.mainColor,
+                    hoverColor: appInfo.mainColor,
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       }
     );

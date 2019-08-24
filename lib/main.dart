@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
@@ -27,6 +28,7 @@ import 'package:provider/provider.dart';
 
 Future<Database> database;
 AppInfoProvider appInfo;
+SearchFiltersProvider searchFilters;
 
 void main() async {
 
@@ -68,10 +70,15 @@ class NotesRoot extends StatelessWidget {
         ChangeNotifierProvider<AppInfoProvider>.value(
           value: AppInfoProvider(),
         ),
+        ChangeNotifierProvider<SearchFiltersProvider>.value(
+          value: SearchFiltersProvider(),
+        ),
       ],
-      child:  Builder(
+      child: Builder(
         builder: (context) {
           appInfo = Provider.of<AppInfoProvider>(context);
+          searchFilters = Provider.of<SearchFiltersProvider>(context);
+
           return MaterialApp(
             builder: (context, child) => ScrollConfiguration(
               behavior: NoGlowScrollBehavior(),

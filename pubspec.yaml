@@ -20,6 +20,7 @@ dependencies:
   url_launcher:
   provider:
   flutter_material_color_picker:
+  intl:
 
 dev_dependencies:
   flutter_test:

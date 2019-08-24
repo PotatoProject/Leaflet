@@ -5,17 +5,22 @@ class CustomThemes {
   static ThemeData black(AppInfoProvider appInfo) {
     return ThemeData.dark().copyWith(
       accentColor: appInfo.mainColor,
-      backgroundColor: Colors.black,
+      backgroundColor: appInfo.mainColor,
       bottomAppBarColor: Colors.black,
       canvasColor: Colors.black,
       cardColor: Colors.black,
       cursorColor: appInfo.mainColor,
       dialogBackgroundColor: Colors.black,
-      primaryColor: Colors.black,
+      primaryColor: appInfo.mainColor,
       primaryColorLight: Colors.black,
       secondaryHeaderColor: Colors.black,
       scaffoldBackgroundColor: Colors.black,
-      textSelectionHandleColor: appInfo.mainColor
+      textSelectionHandleColor: appInfo.mainColor,
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.accent,
+        hoverColor: appInfo.mainColor,
+      ),
+      buttonColor: appInfo.mainColor,
     );
   }
 
@@ -23,7 +28,14 @@ class CustomThemes {
     return ThemeData.dark().copyWith(
       accentColor: appInfo.mainColor,
       cursorColor: appInfo.mainColor,
-      textSelectionHandleColor: appInfo.mainColor
+      textSelectionHandleColor: appInfo.mainColor,
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.accent,
+        hoverColor: appInfo.mainColor,
+      ),
+      buttonColor: appInfo.mainColor,
+      primaryColor: appInfo.mainColor,
+      backgroundColor: appInfo.mainColor,
     );
   }
 
@@ -31,7 +43,14 @@ class CustomThemes {
     return ThemeData.light().copyWith(
       accentColor: appInfo.mainColor,
       cursorColor: appInfo.mainColor,
-      textSelectionHandleColor: appInfo.mainColor
+      textSelectionHandleColor: appInfo.mainColor,
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.accent,
+        hoverColor: appInfo.mainColor,
+      ),
+      buttonColor: appInfo.mainColor,
+      primaryColor: appInfo.mainColor,
+      backgroundColor: appInfo.mainColor,
     );
   }
 }
