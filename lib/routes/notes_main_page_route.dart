@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
@@ -13,6 +13,7 @@ import 'package:potato_notes/routes/modify_notes_route.dart';
 import 'package:potato_notes/routes/search_notes_route.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class NotesMainPageRoute extends StatefulWidget {
@@ -138,14 +139,19 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                     IconButton(
                       iconSize: 24.0,
-                      onPressed: () {},
+                      onPressed: () => _showUserInfoMenu(context),
                       icon: CircleAvatar(
                         backgroundColor: appInfo.mainColor,
-                        child: Icon(
-                          Icons.account_circle,
-                          color: Colors.white,
-                          size: 28.0,
-                        ),
+                        child: appInfo.userImagePath == null ?
+                          Icon(
+                            Icons.account_circle,
+                            color: Colors.white,
+                            size: 28.0,
+                          ) :
+                          null,
+                        backgroundImage: appInfo.userImagePath == null ? 
+                          null:
+                          FileImage(File(appInfo.userImagePath)),
                       ),
                     ),
                   ],
@@ -715,10 +721,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     );
   }
 
-  Future<void> _showSettingsMenu(BuildContext context) {
+  void _showSettingsMenu(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    return showModalBottomSheet<void>(
+    showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12),
@@ -735,8 +741,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Center(
                 child: Container(
-                  width: 140,
-                  height: 6,
+                  width: 120,
+                  height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
                     color: Theme.of(context).textTheme.title.color.withAlpha(120),
@@ -865,6 +871,199 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     );
   }
 
+  void _showUserInfoMenu(BuildContext context) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+    TextEditingController userNameController = TextEditingController(text: appInfo.userName);
+
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Center(
+                child: Container(
+                  width: 120,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: Theme.of(context).textTheme.title.color.withAlpha(120),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Center(
+                child: Text(
+                  "User info",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      image: appInfo.userImagePath == null ?
+                        null :
+                        DecorationImage(
+                          fit: BoxFit.cover,
+                          image: FileImage(File(appInfo.userImagePath)),
+                        ),
+                      borderRadius: BorderRadius.all(Radius.circular(150)),
+                      color: appInfo.mainColor,
+                    ),
+                    child: appInfo.userImagePath == null ?
+                      Center(
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 145,
+                          color: Colors.white,
+                        ),
+                      ) :
+                      null,
+                  ),
+                ),
+                onTap: () async {
+                  File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                  if(image != null)
+                    appInfo.userImagePath = image.path;
+                },
+                borderRadius: BorderRadius.all(Radius.circular(150)),
+              ),
+            ),
+            Center(
+              child: InkWell(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Text(
+                    appInfo.userName,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    double getAlphaFromTheme() {
+                      if(appInfo.themeMode == 0) {
+                        return 0.1;
+                      } else if (appInfo.themeMode == 1) {
+                        return 0.2;
+                      } else if (appInfo.themeMode == 2) {
+                        return 0.3;
+                      }
+                    }
+                    
+                    String currentName = appInfo.userName;
+                    Color cardColor = Theme.of(context).textTheme.title.color;
+
+                    double cardBrightness = getAlphaFromTheme();
+    
+                    Color borderColor = HSLColor.fromColor(cardColor)
+                        .withAlpha(cardBrightness)
+                        .toColor();
+                    return AlertDialog(
+                      title: Text("Change username"),
+                      contentPadding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))
+                      ),
+                      content: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          side: BorderSide(color:  borderColor, width: 1.5),
+                        ),
+                        color: Theme.of(context).cardColor,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                          child: TextField(
+                            controller: userNameController,
+                            onChanged: (value) => currentName = value,
+                            maxLines: 1,
+                            decoration: InputDecoration(border: InputBorder.none),
+                          ),
+                        )
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () => Navigator.pop(context),
+                          textColor: appInfo.mainColor,
+                          hoverColor: appInfo.mainColor,
+                        ),
+                        FlatButton(
+                          child: Text("Done"),
+                          onPressed: () {
+                            appInfo.userName = currentName;
+                            Navigator.pop(context);
+                          },
+                          textColor: appInfo.mainColor,
+                          hoverColor: appInfo.mainColor,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Visibility(
+                    visible: appInfo.userName != "User",
+                    child: FlatButton(
+                      child: Text("Remove username"),
+                      onPressed: () {
+                        appInfo.userName = "User";
+                        userNameController.text = appInfo.userName;
+                      },
+                      textColor: appInfo.mainColor,
+                      hoverColor: appInfo.mainColor,
+                    ),
+                  ),
+                  Visibility(
+                    visible: appInfo.userName != "User" && appInfo.userImagePath != null,
+                    child: Text(" | "),
+                  ),
+                  Visibility(
+                    visible: appInfo.userImagePath != null,
+                    child: FlatButton(
+                      child: Text("Remove profile image"),
+                      onPressed: () => appInfo.userImagePath = null,
+                      textColor: appInfo.mainColor,
+                      hoverColor: appInfo.mainColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   void showAboutDialog() {
     final appInfo = Provider.of<AppInfoProvider>(context);
     showDialog(
@@ -941,8 +1140,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   FlatButton(
                     child: Text("Source code"),
                     onPressed: () => launchUrl('https://github.com/HrX03/PotatoNotes'),
-                      textColor: appInfo.mainColor,
-                      hoverColor: appInfo.mainColor,
+                    textColor: appInfo.mainColor,
+                    hoverColor: appInfo.mainColor,
                   ),
                   FlatButton(
                     child: Text("Close"),

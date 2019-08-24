@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -47,6 +49,26 @@ Future<bool> getIsGridView() async {
 Future<void> setIsGridView(bool isGrid) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('is_grid_view', isGrid);
+}
+
+Future<String> getUserImagePath() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_image_path') ?? null;
+}
+
+Future<void> setUserImagePath(String path) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_image_path', path);
+}
+
+Future<String> getUserNameString() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_name') ?? "User";
+}
+
+Future<void> setUserNameString(String userName) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_name', userName);
 }
 
 Future<void> filtersSetColor(int color) async {
