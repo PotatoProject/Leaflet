@@ -1123,7 +1123,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                     Spacer(),
                     Text(
-                      "v0.3.0-1",
+                      "v0.3.0-2",
                       style: TextStyle(
                         color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
                             .withAlpha(0.5)
