@@ -71,6 +71,26 @@ Future<void> setUserNameString(String userName) async {
   prefs.setString('user_name', userName);
 }
 
+Future<bool> getIsQuickStarredGestureOn() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('quick_starred_gesture') ?? false;
+}
+
+Future<void> setIsQuickStarredGestureOn(bool isOn) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('quick_starred_gesture', isOn);
+}
+
+Future<List<String>> getNotificationsIdList() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList('notifications_id_list') ?? List<String>();
+}
+
+Future<void> setNotificationsIdList(List<String> idList) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList('notifications_id_list', idList);
+}
+
 Future<void> filtersSetColor(int color) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('filters_color', color);

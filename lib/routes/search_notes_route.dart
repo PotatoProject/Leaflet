@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
@@ -110,7 +111,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                     ),
                     IconButton(
                       icon: Icon(Icons.filter_list),
-                      onPressed: () => showFilterBottomSheet(context),
+                      onPressed: () => showFiltersScrollableBottomSheet(context),
                     ),
                   ],
                 ),
@@ -248,7 +249,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                 Visibility(
                   visible: noteList[index].title == "" ? false : true,
                   child: Container(
-                    width: 324,
+                    width: MediaQuery.of(context).size.width-94,
                     child:Padding(
                       padding: EdgeInsets.only(bottom: 12.0),
                       child: Text(
@@ -264,7 +265,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                   ),
                 ),
                 Container(
-                  width: 324,
+                  width: MediaQuery.of(context).size.width-94,
                   child: Text(
                     noteList[index].content,
                     overflow: TextOverflow.ellipsis,
@@ -284,9 +285,8 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     );
   }
 
-  void showFilterBottomSheet(BuildContext context) {
+  void showFiltersScrollableBottomSheet(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
-    searchFilters = Provider.of<SearchFiltersProvider>(context);
 
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
@@ -296,84 +296,84 @@ class _SearchNotesState extends State<SearchNotesRoute> {
         ),
       ),
       context: context,
-      builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      builder: (BuildContext context) {
+        return Stack(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: Center(
-                child: Container(
-                  width: 120,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    color: Theme.of(context).textTheme.title.color.withAlpha(120),
+            Positioned(
+              top: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: Text(
+                    "Search filters",
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 20.0),
-              child: Center(
-                child: Text(
-                  "Search filters",
-                  style: TextStyle(
-                    fontSize: 24.0,
-                  ),
-                ),
-              ),
-            ),
-            SwitchListTile(
-              secondary: Icon(Icons.text_format),
-              title: Text("Case sensitive"),
-              onChanged: (value) => searchFilters.caseSensitive = value,
-              value: searchFilters.caseSensitive,
-            ),
-            ListTile(
-              leading: Icon(Icons.color_lens),
-              title: Text("Color filter"),
-              trailing: CircleColor(
-                elevation: 0,
-                circleSize: 24,
-                color: searchFilters.color == null ?
-                  HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                      .withAlpha(0.4)
-                      .toColor() :
-                  Color(searchFilters.color),
-              ),
-              onTap: () => showColorDialog(context),
-            ),
-            ListTile(
-              leading: Icon(Icons.date_range),
-              title: Text("Date filter"),
-              trailing: searchFilters.date == null ?
-                null :
-                Text(DateFormat("dd MMMM yyyy").format(
-                  DateTime.fromMillisecondsSinceEpoch(searchFilters.date))
-                ),
-              onTap: () async {
-                DateTime picker = await showDatePicker(
-                  context: context,
-                  initialDate: searchFilters.date == null ?
-                      DateTime.now() :
-                      DateTime.fromMillisecondsSinceEpoch(searchFilters.date),
-                  firstDate: DateTime(2018),
-                  lastDate: DateTime(2100),
-                  builder: (context, widget) {
-                    return widget;
-                  },
-                );
+              padding: EdgeInsets.only(top: 68),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SwitchListTile(
+                      secondary: Icon(Icons.text_format),
+                      title: Text("Case sensitive"),
+                      onChanged: (value) => searchFilters.caseSensitive = value,
+                      value: searchFilters.caseSensitive,
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.color_lens),
+                      title: Text("Color filter"),
+                      trailing: CircleColor(
+                        elevation: 0,
+                        circleSize: 24,
+                        color: searchFilters.color == null ?
+                          HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+                              .withAlpha(0.4)
+                              .toColor() :
+                          Color(searchFilters.color),
+                      ),
+                      onTap: () => showColorDialog(context),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.date_range),
+                      title: Text("Date filter"),
+                      trailing: searchFilters.date == null ?
+                        null :
+                        Text(DateFormat("dd MMMM yyyy").format(
+                          DateTime.fromMillisecondsSinceEpoch(searchFilters.date))
+                        ),
+                      onTap: () async {
+                        DateTime picker = await showDatePicker(
+                          context: context,
+                          initialDate: searchFilters.date == null ?
+                              DateTime.now() :
+                              DateTime.fromMillisecondsSinceEpoch(searchFilters.date),
+                          firstDate: DateTime(2018),
+                          lastDate: DateTime(2100),
+                          builder: (context, widget) {
+                            return widget;
+                          },
+                        );
 
-                if(picker != null) {
-                  searchFilters.date = picker.millisecondsSinceEpoch;
-                } else {
-                  searchFilters.date = null;
-                }
-              },
+                        if(picker != null) {
+                          searchFilters.date = picker.millisecondsSinceEpoch;
+                        } else {
+                          searchFilters.date = null;
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ]
+          ],
         );
       }
     );

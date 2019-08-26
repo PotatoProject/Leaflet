@@ -36,6 +36,11 @@ class CustomThemes {
       buttonColor: appInfo.mainColor,
       primaryColor: appInfo.mainColor,
       backgroundColor: appInfo.mainColor,
+      scaffoldBackgroundColor: Color(0xFF151618),
+      cardColor: Color(0xFF212121),
+      dialogBackgroundColor: Color(0xFF212121),
+      bottomAppBarColor: Color(0xFF212121),
+      canvasColor: Color(0xFF212121),
     );
   }
 

@@ -22,6 +22,10 @@ dependencies:
   flutter_material_color_picker:
   intl:
   image_picker:
+  back_button_interceptor:
+  flutter_local_notifications:
+  share:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

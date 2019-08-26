@@ -3,6 +3,8 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 
 import 'package:potato_notes/internal/note_helper.dart';
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
+
 class ModifyNotesRoute extends StatefulWidget {
   Note note = Note();
   ModifyNotesRoute(Note note) {
@@ -34,6 +36,18 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(saveAndPop);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(saveAndPop);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     TextEditingController titleController = TextEditingController(text: noteTitle);
     TextEditingController contentController = TextEditingController(text: noteContent);
@@ -56,25 +70,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
                   children: <Widget>[
                     IconButton(
                       icon: Icon(Icons.arrow_back),
-                      onPressed: () async {
-                        if (noteContent != "") {
-                          List<Note> noteList = await noteHelper.getNotes();
-                          int id = noteId == null ? await noteIdSearcher() : noteId;
-                          noteDate = DateTime.now().millisecondsSinceEpoch;
-
-                          await noteHelper.insert(Note(
-                            id: id,
-                            title: noteTitle,
-                            content: noteContent,
-                            isStarred: noteIsStarred,
-                            date: noteDate,
-                            color: noteColor,
-                          ));
-                          noteList = await noteHelper.getNotes();
-                          Navigator.pop(context, noteList);
-                        } else {
-                          Navigator.pop(context);
-                        }
+                      onPressed: () {
+                        saveAndPop(true);
                       },
                     ),
                     Padding(
@@ -238,5 +235,31 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
     if(noteIdList.length > 0) {
       return noteIdList[noteIdList.length - 1] + 1;
     } else return 1;
+  }
+
+  bool saveAndPop(bool stopDefaultButtonEvent) {
+    if (noteContent != "") {
+      asyncExecutor();
+    } else {
+      Navigator.pop(context);
+    }
+    return true;
+  }
+
+  void asyncExecutor() async {
+    List<Note> noteList = await noteHelper.getNotes();
+    int id = noteId == null ? await noteIdSearcher() : noteId;
+    noteDate = DateTime.now().millisecondsSinceEpoch;
+
+    await noteHelper.insert(Note(
+      id: id,
+      title: noteTitle,
+      content: noteContent,
+      isStarred: noteIsStarred,
+      date: noteDate,
+      color: noteColor,
+    ));
+    noteList = await noteHelper.getNotes();
+    Navigator.pop(context, noteList);
   }
 }
