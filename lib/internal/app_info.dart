@@ -15,7 +15,7 @@ class AppInfoProvider extends ChangeNotifier {
   bool _devShowIdLabels = false;
   bool _isGridView = false;
   String _userImagePath;
-  String _userName = "User";
+  String _userName = "";
   bool _isQuickStarredGestureOn = false;
   List<String> _notificationsIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;

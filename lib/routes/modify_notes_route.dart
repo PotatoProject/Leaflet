@@ -92,7 +92,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 90.0, left: 20, right: 20),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70, left: 20, right: 20),
             child: ListView(
               children: <Widget>[
                 TextField(

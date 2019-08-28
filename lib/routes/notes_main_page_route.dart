@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
@@ -13,6 +12,7 @@ import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 import 'package:potato_notes/routes/search_notes_route.dart';
+import 'package:potato_notes/routes/settings_route.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -201,7 +201,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 94.0),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
             child: noteList.length == 0 ?
               Center(
                 child: Column(
@@ -502,6 +502,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     if (result != null) setState(() => noteList = result);
   }
 
+  void _settingsCaller(BuildContext context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsRoute()));
+  }
+
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {
     final appInfo = Provider.of<AppInfoProvider>(context);
     
@@ -633,7 +637,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       noteList[index].content,
                       overflow: TextOverflow.ellipsis,
                       textWidthBasis: TextWidthBasis.parent,
-                      maxLines: 4,
+                      maxLines: 11,
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w400,
@@ -685,7 +689,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   IconButton(
                     icon: Icon(Icons.settings),
                     onPressed: () {
-                      showSettingsScrollableBottomSheet(context);
+                      _settingsCaller(context);
                     },
                   ),
                   Spacer(flex: 3),
@@ -705,7 +709,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     );
   }
 
-  void showAboutDialog() {
+  void showNoteAboutDialog() {
     final appInfo = Provider.of<AppInfoProvider>(context);
     int easterEggCounter = 0;
 
@@ -779,7 +783,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                     Spacer(),
                     Text(
-                      "v0.3.0-2",
+                      "v0.4.1-1",
                       style: TextStyle(
                         color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
                             .withAlpha(0.5)
@@ -838,198 +842,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     }
   }
 
-  void showSettingsScrollableBottomSheet(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
-    showModalBottomSheet<void>(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        return Stack(
-          children: <Widget>[
-            Positioned(
-              top: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                  child: Text(
-                    "Settings",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 68),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                      child: Text(
-                        "Themes",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.brightness_5),
-                      title: Text('App theme'),
-                      trailing: DropdownButton(
-                        value: appInfo.themeMode,
-                        underline: Container(),
-                        items: <DropdownMenuItem>[
-                          DropdownMenuItem(
-                            child: Text("Light"),
-                            value: 0,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Dark"),
-                            value: 1,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Black"),
-                            value: 2,
-                          ),
-                        ],
-                        onChanged: (newValue) {
-                          appInfo.themeMode = newValue;
-                        },
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.color_lens),
-                      trailing: CircleColor(
-                        color: Theme.of(context).accentColor,
-                        circleSize: 24.0,
-                        elevation: 0,
-                      ),
-                      title: Text('Accent color'),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          Color currentColor = Theme.of(context).accentColor;
-                          return AlertDialog(
-                            title: Text("Accent color selector"),
-                            content: MaterialColorPicker(
-                              circleSize: 70.0,
-                              allowShades: true,
-                              onColorChange: (color) {
-                                currentColor = color;
-                              },
-                              onMainColorChange: (ColorSwatch color) {
-                                // Handle main color changes
-                              },
-                              selectedColor: currentColor,
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(color: Theme.of(context).accentColor),
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                                textColor: appInfo.mainColor,
-                                hoverColor: appInfo.mainColor,
-                              ),
-                              FlatButton(
-                                child: Text(
-                                 "Confirm",
-                                  style: TextStyle(color: Theme.of(context).accentColor),
-                                ),
-                                onPressed: () {
-                                  appInfo.mainColor = currentColor;
-                                  Navigator.pop(context);
-                                },
-                                textColor: appInfo.mainColor,
-                                hoverColor: appInfo.mainColor,
-                              ),
-                            ],
-                          );
-                        }
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                      child: Text(
-                        "Gestures",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    SwitchListTile(
-                      activeColor: Theme.of(context).accentColor,
-                      secondary: Icon(Icons.star),
-                      title: Text('Quick starred gesture'),
-                      subtitle: Text("If enabled, you can just double tap on a note to star it"),
-                      value: appInfo.isQuickStarredGestureOn,
-                      onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                      child: Text(
-                        "Developer options",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    SwitchListTile(
-                      activeColor: Theme.of(context).accentColor,
-                      secondary: Icon(Icons.label),
-                      title: Text('Show id labels'),
-                      value: appInfo.devShowIdLabels,
-                      onChanged: (value) => appInfo.devShowIdLabels = value,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                      child: Text(
-                        "About",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.info),
-                      title: Text("About PotatoNotes"),
-                      onTap: () => showAboutDialog(),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.code),
-                      title: Text("PotatoNotes source code"),
-                      onTap: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-    );
-  }
-
   void showUserSettingsScrollableBottomSheet(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
@@ -1056,6 +868,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     "User info",
                     style: TextStyle(
                       fontSize: 24.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -1097,9 +910,42 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                           ),
                         ),
                         onTap: () async {
-                          File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-                          if(image != null)
-                            appInfo.userImagePath = image.path;
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Choose action"),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                                      leading: Icon(Icons.photo_library),
+                                      title: Text("Change avatar"),
+                                      onTap: () async {
+                                        Navigator.pop(context);
+                                        File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                                        if(image != null)
+                                          appInfo.userImagePath = image.path;
+                                      },
+                                    ),
+                                    ListTile(
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                                      leading: Icon(Icons.delete),
+                                      title: Text("Remove avatar"),
+                                      onTap: () async {
+                                        appInfo.userImagePath = null;
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          );
                         },
                         borderRadius: BorderRadius.all(Radius.circular(150)),
                       ),
@@ -1110,10 +956,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 18, vertical: 24),
                           child: Text(
-                            appInfo.userName,
+                            appInfo.userName == "" ? "User" : appInfo.userName,
                               style: TextStyle(
                               fontSize: 24.0,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -1157,7 +1002,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                     controller: userNameController,
                                     onChanged: (value) => currentName = value,
                                     maxLines: 1,
-                                    decoration: InputDecoration(border: InputBorder.none),
+                                    decoration: InputDecoration(border: InputBorder.none, hintText: "User"),
                                   ),
                                 )
                               ),
@@ -1165,6 +1010,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                 FlatButton(
                                   child: Text("Cancel"),
                                   onPressed: () => Navigator.pop(context),
+                                  textColor: appInfo.mainColor,
+                                  hoverColor: appInfo.mainColor,
+                                ),
+                                FlatButton(
+                                  child: Text("Reset"),
+                                  onPressed: () {
+                                    appInfo.userName = "";
+                                    Navigator.pop(context);
+                                  },
                                   textColor: appInfo.mainColor,
                                   hoverColor: appInfo.mainColor,
                                 ),
@@ -1181,38 +1035,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                             );
                           },
                         ),
-                      ),
-                    ),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Visibility(
-                            visible: appInfo.userName != "User",
-                            child: FlatButton(
-                              child: Text("Remove username"),
-                              onPressed: () {
-                                appInfo.userName = "User";
-                                userNameController.text = appInfo.userName;
-                              },
-                              textColor: appInfo.mainColor,
-                              hoverColor: appInfo.mainColor,
-                            ),
-                          ),
-                          Visibility(
-                            visible: appInfo.userName != "User" && appInfo.userImagePath != null,
-                            child: Text("|"),
-                          ),
-                          Visibility(
-                            visible: appInfo.userImagePath != null,
-                            child: FlatButton(
-                              child: Text("Remove image"),
-                              onPressed: () => appInfo.userImagePath = null,
-                              textColor: appInfo.mainColor,
-                              hoverColor: appInfo.mainColor,
-                            ),
-                          )
-                        ],
                       ),
                     ),
                   ],
@@ -1395,7 +1217,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         )
                       );
                     });
-
                   } else {
                     Map<PermissionGroup, PermissionStatus> permissions =
                       await PermissionHandler().requestPermissions([PermissionGroup.storage]);
