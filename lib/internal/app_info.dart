@@ -18,7 +18,11 @@ class AppInfoProvider extends ChangeNotifier {
   String _userName = "";
   bool _isQuickStarredGestureOn = false;
   List<String> _notificationsIdList = [];
+  List<String> _remindersNotifIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;
+
+  DateTime _date;
+  TimeOfDay _time;
 
   int get themeMode => _themeMode;
   Color get mainColor => _mainColor;
@@ -28,7 +32,11 @@ class AppInfoProvider extends ChangeNotifier {
   String get userName => _userName;
   bool get isQuickStarredGestureOn => _isQuickStarredGestureOn;
   List<String> get notificationsIdList => _notificationsIdList;
+  List<String> get remindersNotifIdList => _remindersNotifIdList;
   PermissionStatus get storageStatus => _storageStatus;
+
+  DateTime get date => _date;
+  TimeOfDay get time => _time;
 
   set themeMode(int val) {
     _themeMode = val;
@@ -78,8 +86,24 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set remindersNotifIdList(List<String> list) {
+    _remindersNotifIdList = list;
+    setRemindersNotifIdList(list);
+    notifyListeners();
+  }
+
   set storageStatus(PermissionStatus status) {
     _storageStatus = status;
+    notifyListeners();
+  }
+
+  set date(DateTime passedDate) {
+    _date = passedDate;
+    notifyListeners();
+  }
+
+  set time(TimeOfDay passedTime) {
+    _time = passedTime;
     notifyListeners();
   }
 
@@ -92,6 +116,10 @@ class AppInfoProvider extends ChangeNotifier {
     userName = await getUserNameString();
     isQuickStarredGestureOn = await getIsQuickStarredGestureOn();
     notificationsIdList = await getNotificationsIdList();
+    remindersNotifIdList = await getRemindersNotifIdList();
     storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+
+    date = null;
+    time = null;
   }
 }

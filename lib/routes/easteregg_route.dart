@@ -31,7 +31,6 @@ class DrawScreen extends StatefulWidget {
 class _DrawState extends State<DrawScreen> {
   double strokeWidth = 3.0;
   List<DrawingPoints> points = List();
-  bool showBottomList = false;
   double opacity = 1.0;
   StrokeCap strokeCap = StrokeCap.round;
   SelectedMode selectedMode = SelectedMode.StrokeWidth;
@@ -184,8 +183,6 @@ class _DrawState extends State<DrawScreen> {
                           icon: Icon(Icons.blur_circular),
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.StrokeWidth)
-                                showBottomList = !showBottomList;
                               selectedMode = SelectedMode.StrokeWidth;
                             });
                           }
@@ -195,8 +192,6 @@ class _DrawState extends State<DrawScreen> {
                           icon: Icon(Icons.opacity),
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.Opacity)
-                                showBottomList = !showBottomList;
                               selectedMode = SelectedMode.Opacity;
                             });
                           }
@@ -207,8 +202,6 @@ class _DrawState extends State<DrawScreen> {
                           color: selectedColor,
                           onPressed: () {
                             setState(() {
-                              if (selectedMode == SelectedMode.Color)
-                                showBottomList = !showBottomList;
                               selectedMode = SelectedMode.Color;
                             });
                           }
@@ -218,7 +211,6 @@ class _DrawState extends State<DrawScreen> {
                           icon: Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
-                              showBottomList = false;
                               points.clear();
                             });
                           }

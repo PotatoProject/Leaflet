@@ -15,7 +15,6 @@ import 'package:potato_notes/routes/search_notes_route.dart';
 import 'package:potato_notes/routes/settings_route.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,22 +49,54 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   @override
   void initState() {
     super.initState();
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher_fg');
-    IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();
-    InitializationSettings initializationSettings = new InitializationSettings(
-      initializationSettingsAndroid, initializationSettingsIOS
-    );
+      AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher_fg');
+      IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();
+      InitializationSettings initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS
+      );
 
-    Future onNotificationClicked(String payload) async {
-      await FlutterLocalNotificationsPlugin().cancel(int.parse(payload));
-      appInfo.notificationsIdList.remove(payload);
-    } 
+      Future onNotificationClicked(String payload) async {
+        List<String> payloadSplitted = payload.split(":");
+        bool executeAlt = true;
+        try{
+          String _ = payloadSplitted[1];
+        } on RangeError {
+          executeAlt = false;
+        }
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onNotificationClicked);
+        if(executeAlt) {
+          appInfo.remindersNotifIdList.remove(payloadSplitted[0]);
+          List<int> noteListId = List<int>();
+          noteList.forEach((item) {
+            noteListId.add(item.id);
+          });
+          Note note = noteList[noteListId.indexOf(int.parse(payloadSplitted[0]))];
+          List<String> remindersString = note.reminders.split(":");
+          remindersString.remove(payloadSplitted[1]);
+          _editNoteCaller(context, Note(
+            id: int.parse(payloadSplitted[0]),
+            title: note.title,
+            content: note.content,
+            isStarred: note.isStarred,
+            date: note.date,
+            color: note.color,
+            imagePath: note.imagePath,
+            isList: note.isList,
+            listParseString: note.listParseString,
+            reminders: remindersString.join(":")
+          ));
+        } else {
+          appInfo.notificationsIdList.remove(payloadSplitted[0]);
+        }
+      } 
 
-    initializeNotifications();
+      flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onNotificationClicked);
+
+      initializeNotifications();
+    });
   }
 
   void initializeNotifications() async {
@@ -90,16 +121,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   @override
   Widget build(BuildContext context) {
     appInfo = Provider.of<AppInfoProvider>(context);
-    
-    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
-        Brightness.light :
-        Brightness.dark;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
-      systemNavigationBarIconBrightness: systemBarsIconBrightness,
-      statusBarColor: Theme.of(context).cardColor,
-      statusBarIconBrightness: systemBarsIconBrightness,
-    ));
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
@@ -478,16 +499,41 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   void _addNoteCaller(BuildContext context) async {
-    final Note emptyNote = Note(id: null, title: "", content: "", isStarred: 0, date: 0, color: null);
+    final Note emptyNote = Note(
+      id: null,
+      title: "",
+      content: "",
+      isStarred: 0,
+      date: 0,
+      color: null,
+      imagePath: null,
+      isList: 0,
+      listParseString: null,
+      reminders: null,
+    );
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(emptyNote)));
 
     if (result != null) setState(() => noteList = result);
+
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, Theme.of(context).cardColor,
+        systemBarsIconBrightness);
   }
 
   void _editNoteCaller(BuildContext context, Note note) async {
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(note)));
 
     if (result != null) setState(() => noteList = result);
+
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, Theme.of(context).cardColor,
+        systemBarsIconBrightness);
   }
 
   void _searchNoteCaller(BuildContext context, List<Note> noteList) async {
@@ -574,100 +620,247 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(color: noteList[index].isSelected ? Theme.of(context).accentColor : noteList[index].color != null ? Colors.transparent : borderColor, width: 1.5),
+          side: BorderSide(
+            color: noteList[index].isSelected ?
+                noteList[index].color != null ?
+                    Theme.of(context).textTheme.title.color :
+                    Theme.of(context).accentColor :
+                noteList[index].color != null ?
+                  Colors.transparent :
+                  borderColor,
+            width: 1.5
+          ),
         ),
         color: noteList[index].color == null ? Theme.of(context).cardColor : Color(noteList[index].color),
-        child:  Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Visibility(
-                    visible: appInfo.devShowIdLabels,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        "Note id: " + noteList[index].id.toString(),
-                        style: TextStyle(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Visibility(
+                visible: noteList[index].imagePath != null,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                    image: noteList[index].imagePath == null ?
+                        null :
+                        DecorationImage(
+                          image: FileImage(File(noteList[index].imagePath)),
+                        ),
+                  ),
+                  child: noteList[index].imagePath == null ?
+                      Container() :
+                      Image(
+                        image: FileImage(File(noteList[index].imagePath)),
+                        color: Colors.transparent,
+                      ),
+                ),
+              ),
+              Visibility(
+                visible: noteList[index].reminders != null,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Icon(
+                          Icons.alarm,
+                          size: 12,
                           color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
                         ),
                       ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: noteList[index].title == "" ? false : true,
-                    child: Container(
-                      width: noteList[index].isStarred == 1 ?
-                        oneSideOnly ? 
-                          MediaQuery.of(context).size.width/2-88 :
-                          MediaQuery.of(context).size.width-108 :
-                        oneSideOnly ?
-                          MediaQuery.of(context).size.width/2-74 :
-                          MediaQuery.of(context).size.width-94,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 12.0),
+                      Container(
+                        padding: EdgeInsets.only(left: 8),
+                        width: oneSideOnly ?
+                            MediaQuery.of(context).size.width/2-80 :
+                            MediaQuery.of(context).size.width-100,
                         child: Text(
-                          noteList[index].title,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 4,
+                          "Reminders set for note",
                           style: TextStyle(
+                            fontSize: 12,
                             color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
                           ),
-                        ),
-                      ),
-                    ),
+                        )
+                      )
+                    ],
                   ),
-                  Container(
-                    width: noteList[index].isStarred == 1 ?
-                      oneSideOnly ? 
-                        MediaQuery.of(context).size.width/2-88 :
-                        MediaQuery.of(context).size.width-108 :
-                      oneSideOnly ?
-                        MediaQuery.of(context).size.width/2-74 :
-                        MediaQuery.of(context).size.width-94,
-                    child: Text(
-                      noteList[index].content,
-                      overflow: TextOverflow.ellipsis,
-                      textWidthBasis: TextWidthBasis.parent,
-                      maxLines: 11,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
-                        color: noteList[index].color == null ?
-                            Theme.of(context).textTheme.title.color :
-                            getTextColorFromNoteColor(index, true),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ),
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.only(top: 6, right: 6),
-              child: Visibility(
-                visible: noteList[index].isStarred == 1,
-                child: Icon(
-                  Icons.star,
-                  size: 14,
-                  color: noteList[index].color == null ? null : HSLColor.fromColor(getTextColorFromNoteColor(index, false))
-                    .withAlpha(0.4)
-                    .toColor(),
                 ),
-              )
-            ),
-          ],
+              ),
+              Visibility(
+                visible: appInfo.devShowIdLabels,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  child: Text(
+                    "Note id: " + noteList[index].id.toString(),
+                    style: TextStyle(
+                      color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: noteList[index].title != "",
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  width: oneSideOnly ?
+                      MediaQuery.of(context).size.width/2-74 :
+                      MediaQuery.of(context).size.width-94,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 12.0),
+                    child: Text(
+                      noteList[index].title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: TextStyle(
+                        color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(20, noteList[index].title == "" ? 14 : 0, 20, 14),
+                width: oneSideOnly ?
+                    MediaQuery.of(context).size.width/2-74 :
+                    MediaQuery.of(context).size.width-94,
+                child: noteList[index].isList == 1 ?
+                  Column(
+                    children: generateListWidgets(index, oneSideOnly),
+                  ) :
+                  Text(
+                    noteList[index].content,
+                    overflow: TextOverflow.ellipsis,
+                    textWidthBasis: TextWidthBasis.parent,
+                    maxLines: 11,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
+                      color: noteList[index].color == null ?
+                          Theme.of(context).textTheme.title.color :
+                          getTextColorFromNoteColor(index, true),
+                    ),
+                  ),
+              ),
+            ],
+          )
         ),
       ),
     );
+  }
+
+  List<Widget> generateListWidgets(int index, bool oneSideOnly) {
+    List<Widget> widgets = List<Widget>();
+    List<ListPair> checkedList = List<ListPair>();
+    List<ListPair> uncheckedList = List<ListPair>();
+
+    Color getTextColorFromNoteColor(int index, bool isContent) {
+      double noteColorBrightness = Color(noteList[index].color).computeLuminance();
+      Color contentWhite = HSLColor.fromColor(Colors.white)
+        .withAlpha(0.7)
+        .toColor();
+      Color contentBlack = HSLColor.fromColor(Colors.black)
+        .withAlpha(0.7)
+        .toColor();
+      
+      if(noteColorBrightness > 0.5) {
+        return isContent ? contentBlack : Colors.black;
+      } else {
+        return isContent ? contentWhite : Colors.white;
+      }
+    }
+
+    List<String> rawList = noteList[index].listParseString.split("\'..\'");
+
+    for(int i = 0; i < rawList.length; i++) {
+      List<dynamic> rawStrings = rawList[i].split("\',,\'");
+
+      int checkValue = rawStrings[0] == "" ? 0 : int.parse(rawStrings[0]);
+
+      if(checkValue == 1) {
+        try{
+          checkedList.add(ListPair(checkValue: checkValue, title: rawStrings[1]));
+        } on RangeError {
+
+        }
+      } else {
+        try{
+          uncheckedList.add(ListPair(checkValue: checkValue, title: rawStrings[1]));
+        } on RangeError {
+
+        }
+      }
+    }
+
+    for(int i = 0; i < uncheckedList.length; i++) {
+      widgets.add(
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Icon(
+              Icons.check_box_outline_blank,
+              size: 14,
+              color: noteList[index].color == null ?
+                Theme.of(context).iconTheme.color :
+                getTextColorFromNoteColor(index, true)
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
+              width: oneSideOnly ?
+                MediaQuery.of(context).size.width/2-88 :
+                MediaQuery.of(context).size.width-108,
+              child: Text(
+                uncheckedList[i].title,
+                overflow: TextOverflow.ellipsis,
+                textWidthBasis: TextWidthBasis.parent,
+                style: TextStyle(
+                  color: noteList[index].color == null ?
+                    Theme.of(context).textTheme.title.color :
+                    getTextColorFromNoteColor(index, true)
+                ),
+              ),
+            )
+          ],
+        )
+      );
+    }
+
+    if(checkedList.length != 0) {
+      widgets.add(
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Icon(
+              Icons.add,
+              size: 14,
+              color: noteList[index].color == null ?
+                Theme.of(context).iconTheme.color :
+                getTextColorFromNoteColor(index, true)
+            ),
+            Container(
+              width: oneSideOnly ?
+                MediaQuery.of(context).size.width/2-88 :
+                MediaQuery.of(context).size.width-108,
+              padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
+              child: Text(
+                checkedList.length.toString() + " entries selected",
+                style: TextStyle(
+                  color: noteList[index].color == null ?
+                    Theme.of(context).textTheme.title.color :
+                    getTextColorFromNoteColor(index, true)
+                ),
+              ),
+            )
+          ],
+        )
+      );
+    }
+
+    return widgets;
   }
 
   Widget get _bottomBar {
@@ -1075,7 +1268,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.check),
-                title: Text("Select note"),
+                title: Text("Select"),
                 onTap: () {
                   setState(() {
                     isSelectorVisible = true;
@@ -1087,7 +1280,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               ListTile(
                 leading: Icon(Icons.edit),
-                title: Text("Edit note"),
+                title: Text("Edit"),
                 onTap: () {
                   Navigator.pop(context);
                   _editNoteCaller(context, noteList[index]);
@@ -1095,7 +1288,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               ListTile(
                 leading: Icon(Icons.delete),
-                title: Text("Delete note"),
+                title: Text("Delete"),
                 onTap: () async {
                   Navigator.pop(context);
                   Note noteBackup = Note(
@@ -1135,8 +1328,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ),
                 title: Text(
                   noteStarred ?
-                    "Unstar note" :
-                    "Star note"
+                    "Unstar" :
+                    "Star"
                 ),
                 onTap: () async {
                   if(noteStarred) {
@@ -1172,7 +1365,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               Divider(),
               ListTile(
                 leading: Icon(Icons.share),
-                title: Text("Share note"),
+                title: Text("Share"),
                 onTap: () {
                   String shareText = "";
 
@@ -1186,7 +1379,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               ListTile(
                 leading: Icon(Icons.file_upload),
-                title: Text("Export note"),
+                title: Text("Export"),
                 onTap: () async {
                   if(appInfo.storageStatus == PermissionStatus.granted) {
                     DateTime now = DateTime.now();
@@ -1220,14 +1413,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   } else {
                     Map<PermissionGroup, PermissionStatus> permissions =
                       await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-                    print(permissions.entries);
+                    appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
                   }
                 },
               ),
               ListTile(
                 leading: Icon(Icons.notifications),
                 enabled: !appInfo.notificationsIdList.contains(index.toString()),
-                title: Text("Pin note to notifications"),
+                title: Text("Pin to notifications"),
                 onTap: () async {
                   appInfo.notificationsIdList.add(index.toString());
                   await FlutterLocalNotificationsPlugin().show(

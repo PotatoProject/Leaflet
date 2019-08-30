@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:potato_notes/main.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -26,6 +28,10 @@ class NoteHelper {
         isStarred: maps[i]['isStarred'],
         date: maps[i]['date'],
         color: maps[i]['color'],
+        imagePath: maps[i]['imagePath'],
+        isList: maps[i]['isList'],
+        listParseString: maps[i]['listParseString'],
+        reminders: maps[i]['reminders'],
       );
     });
   }
@@ -59,10 +65,25 @@ class Note {
   final int isStarred;
   final int date;
   final int color;
+  final String imagePath;
+  final int isList;
+  final String listParseString;
+  final String reminders;
 
   bool isSelected  = false;
 
-  Note({this.id, this.title, this.content, this.isStarred, this.date, this.color});
+  Note({
+    this.id,
+    this.title,
+    this.content,
+    this.isStarred,
+    this.date,
+    this.color,
+    this.imagePath,
+    this.isList,
+    this.listParseString,
+    this.reminders,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -72,6 +93,17 @@ class Note {
       'isStarred': isStarred,
       'date': date,
       'color': color,
+      'imagePath': imagePath,
+      'isList': isList,
+      'listParseString': listParseString,
+      'reminders': reminders,
     };
   }
+}
+
+class ListPair {
+  int checkValue = 0;
+  String title = "";
+  
+  ListPair({this.checkValue, this.title});
 }

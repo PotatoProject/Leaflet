@@ -26,6 +26,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
+import 'internal/methods.dart';
+
 Future<Database> database;
 AppInfoProvider appInfo;
 SearchFiltersProvider searchFilters;
@@ -43,12 +45,38 @@ void main() async {
             content TEXT,
             isStarred INTEGER,
             date INTEGER,
-            color INTEGER
+            color INTEGER,
+            imagePath TEXT,
+            isList INTEGER,
+            listParseString TEXT,
+            reminders TEXT,
           )
         """,
       );
     },
-    version: 3,
+    onOpen: (db) {
+      List<String> columnsToAdd = [
+        "ALTER TABLE notes ADD COLUMN id INTEGER PRIMARY KEY",
+        "ALTER TABLE notes ADD COLUMN title TEXT",
+        "ALTER TABLE notes ADD COLUMN content TEXT",
+        "ALTER TABLE notes ADD COLUMN isStarred INTEGER",
+        "ALTER TABLE notes ADD COLUMN date INTEGER",
+        "ALTER TABLE notes ADD COLUMN color INTEGER",
+        "ALTER TABLE notes ADD COLUMN imagePath TEXT",
+        "ALTER TABLE notes ADD COLUMN isList INTEGER",
+        "ALTER TABLE notes ADD COLUMN listParseString TEXT",
+        "ALTER TABLE notes ADD COLUMN reminders TEXT"
+      ];
+
+      for(int i = 0; i < columnsToAdd.length; i++) {
+        db.execute(
+          columnsToAdd[i]
+        ).catchError((error) {
+          //do nothing
+        });
+      }
+    },
+    version: 4,
   );
 
   List<Note> noteList = await NoteHelper().getNotes();
@@ -65,6 +93,7 @@ class NotesRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppInfoProvider>.value(
@@ -78,6 +107,20 @@ class NotesRoot extends StatelessWidget {
         builder: (context) {
           appInfo = Provider.of<AppInfoProvider>(context);
           searchFilters = Provider.of<SearchFiltersProvider>(context);
+
+          if(appInfo.themeMode == 0) {
+            changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                CustomThemes.light(appInfo).cardColor,
+                Brightness.dark);
+          } else if(appInfo.themeMode == 1) {
+            changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+                CustomThemes.dark(appInfo).cardColor,
+                Brightness.light);
+          } else {
+            changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
+                CustomThemes.black(appInfo).cardColor,
+                Brightness.light);
+          }
 
           return MaterialApp(
             builder: (context, child) => ScrollConfiguration(

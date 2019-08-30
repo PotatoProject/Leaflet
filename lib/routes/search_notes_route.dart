@@ -286,8 +286,6 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   }
 
   void showFiltersScrollableBottomSheet(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -309,6 +307,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                     "Search filters",
                     style: TextStyle(
                       fontSize: 24.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -385,26 +384,14 @@ class _SearchNotesState extends State<SearchNotesRoute> {
       builder: (context) {
         Color currentColor = searchFilters.color == null ? Colors.transparent : Color(searchFilters.color);
         List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
-          Colors.red,
-          Colors.pink,
-          Colors.purple,
-          Colors.deepPurple,
-          Colors.indigo,
-          Colors.blue,
-          Colors.lightBlue,
-          Colors.cyan,
-          Colors.teal,
-          Colors.green,
-          Colors.lightGreen,
-          Colors.lime,
-          Colors.yellow,
-          Colors.amber,
-          Colors.orange,
-          Colors.deepOrange,
-          Colors.brown,
-          Colors.grey,
-          Colors.blueGrey,
           MaterialColor(0x00000000, {500: Colors.transparent}),
+          MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
+          MaterialColor(0xFFFFF18E, {500: Color(0xFFFFF18E)}),
+          MaterialColor(0xFFFFE8D1, {500: Color(0xFFFFE8D1)}),
+          MaterialColor(0xFFD8D4F2, {500: Color(0xFFD8D4F2)}),
+          MaterialColor(0xFFB9D6F2, {500: Color(0xFFB9D6F2)}),
+          MaterialColor(0xFFFFB8D1, {500: Color(0xFFFFB8D1)}),
+          MaterialColor(0xFFBCFFC3, {500: Color(0xFFBCFFC3)}),
         ];
             
         return AlertDialog(

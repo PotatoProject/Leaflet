@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,6 +11,15 @@ void launchUrl(String url) async {
     await launch(url);
   else
     throw 'Could not launch $url!';
+}
+
+void changeSystemBarsColors(Color navBarColor, Color statusBarColor, Brightness systemBarsIconBrightness) {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: navBarColor,
+    systemNavigationBarIconBrightness: systemBarsIconBrightness,
+    statusBarColor: statusBarColor,
+    statusBarIconBrightness: systemBarsIconBrightness,
+  ));
 }
 
 Future<int> getThemeMode() async {
@@ -89,6 +100,16 @@ Future<List<String>> getNotificationsIdList() async {
 Future<void> setNotificationsIdList(List<String> idList) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setStringList('notifications_id_list', idList);
+}
+
+Future<List<String>> getRemindersNotifIdList() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList('reminders_notif_id_list') ?? List<String>();
+}
+
+Future<void> setRemindersNotifIdList(List<String> idList) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList('reminders_notif_id_list', idList);
 }
 
 Future<void> filtersSetColor(int color) async {
