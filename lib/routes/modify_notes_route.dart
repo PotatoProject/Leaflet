@@ -121,7 +121,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
         Brightness.dark;
 
     changeSystemBarsColors(noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
-        noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
         noteColor == null ? systemBarsIconBrightness : getBarsColorFromNoteColor());
     
     Color getElementsColorBasedOnThemeContext() {

@@ -13,11 +13,11 @@ void launchUrl(String url) async {
     throw 'Could not launch $url!';
 }
 
-void changeSystemBarsColors(Color navBarColor, Color statusBarColor, Brightness systemBarsIconBrightness) {
+void changeSystemBarsColors(Color navBarColor, Brightness systemBarsIconBrightness) {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: navBarColor,
     systemNavigationBarIconBrightness: systemBarsIconBrightness,
-    statusBarColor: statusBarColor,
+    statusBarColor: Colors.transparent,
     statusBarIconBrightness: systemBarsIconBrightness,
   ));
 }
@@ -32,14 +32,24 @@ Future<void> setThemeMode(int mode) async {
   prefs.setInt('theme_mode', mode);
 }
 
-Future<Color> getMainColor() async {
+Future<bool> getUseCustomMainColor() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return Color(prefs.getInt('main_color')) ?? Colors.blue;
+  return prefs.getBool('use_custom_main_color') ?? false;
 }
 
-Future<void> setMainColor(Color color) async {
+Future<void> setUseCustomMainColor(bool use) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('main_color', color.value);
+  prefs.setBool('use_custom_main_color', use);
+}
+
+Future<Color> getCustomMainColor() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return Color(prefs.getInt('custom_main_color')) ?? Color(0xFFFF0000);
+}
+
+Future<void> setCustomMainColor(Color color) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('custom_main_color', color.value);
 }
 
 Future<bool> getDevShowIdLabels() async {

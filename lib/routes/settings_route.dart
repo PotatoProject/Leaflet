@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/methods.dart';
+import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SettingsRoute extends StatefulWidget {
@@ -14,13 +20,21 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsState extends State<SettingsRoute> {
+  static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+    
+    changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
+      key: scaffoldKey,
       body: Stack(
         children: <Widget>[
           Padding(
@@ -92,30 +106,47 @@ class _SettingsState extends State<SettingsRoute> {
                     },
                   ),
                 ),
+                SwitchListTile(
+                  secondary: Icon(Icons.opacity),
+                  title: Text('Custom accent color'),
+                  onChanged: (val) {
+                    appInfo.useCustomMainColor = val;
+                  },
+                  value: appInfo.useCustomMainColor,
+                  activeColor: appInfo.mainColor,
+                ),
                 ListTile(
                   leading: Icon(Icons.color_lens),
-                  trailing: CircleColor(
-                    color: Theme.of(context).accentColor,
-                    circleSize: 24.0,
-                    elevation: 0,
+                  title: Text("Custom color"),
+                  enabled: appInfo.useCustomMainColor,
+                  trailing: Container(
+                    width: 24.0,
+                    height: 24.0,
+                    decoration: BoxDecoration(
+                      color: appInfo.customMainColor,
+                      borderRadius: BorderRadius.all(Radius.circular(24))
+                    ),
                   ),
-                  title: Text('Accent color'),
                   onTap: () => showDialog(
                     context: context,
                     builder: (context) {
-                      Color currentColor = Theme.of(context).accentColor;
+                      Color currentColor = appInfo.customMainColor;
                       return AlertDialog(
-                        title: Text("Accent color selector"),
-                        content: MaterialColorPicker(
-                          circleSize: 70.0,
-                          allowShades: true,
-                          onColorChange: (color) {
-                            currentColor = color;
-                          },
-                          onMainColorChange: (ColorSwatch color) {
-                            // Handle main color changes
-                          },
-                          selectedColor: currentColor,
+                        title: Text("Custom accent picker"),
+                        contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ColorPicker(
+                              enableAlpha: false,
+                              enableLabel: true,
+                              displayThumbColor: false,
+                              pickerColor: appInfo.customMainColor,
+                              onColorChanged: (color) {
+                                currentColor = Color(color.value);
+                              },
+                            )
+                          ],
                         ),
                         actions: <Widget>[
                           FlatButton(
@@ -133,7 +164,7 @@ class _SettingsState extends State<SettingsRoute> {
                               style: TextStyle(color: Theme.of(context).accentColor),
                             ),
                             onPressed: () {
-                              appInfo.mainColor = currentColor;
+                              appInfo.customMainColor = currentColor;
                               Navigator.pop(context);
                             },
                             textColor: appInfo.mainColor,
@@ -141,7 +172,7 @@ class _SettingsState extends State<SettingsRoute> {
                           ),
                         ],
                       );
-                    }
+                    },
                   ),
                 ),
                 Padding(
@@ -162,6 +193,70 @@ class _SettingsState extends State<SettingsRoute> {
                   subtitle: Text("If enabled, you can just double tap on a note to star it"),
                   value: appInfo.isQuickStarredGestureOn,
                   onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
+                  child: Text(
+                    "Backup & restore",
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.backup),
+                  title: Text("Backup (experimental)"),
+                  onTap: () async {
+                    if(appInfo.storageStatus == PermissionStatus.granted) {
+                      DateTime now = DateTime.now();
+ 
+                      bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/backups').exists();
+
+                      if(!backupDirExists) {
+                        await Directory('/storage/emulated/0/PotatoNotes/backups').create(recursive: true);
+                      }
+
+                      String databaseBackupPath =
+                        '/storage/emulated/0/PotatoNotes/backups/notes_backup_' + DateFormat("HH-mm_dd-MM-yyyy").format(now) + '.db';
+
+                      await NoteHelper().backupDatabaseToPath(databaseBackupPath);
+
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text("Backup located at: " + databaseBackupPath)
+                        )
+                      );
+                    } else {
+                      Map<PermissionGroup, PermissionStatus> permissions =
+                        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+                      appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.restore),
+                  title: Text("Restore (experimental)"),
+                  onTap: () async {
+                    String path = await FilePicker.getFilePath();
+                    int status = await NoteHelper().validateDatabase(path);
+                    print(status);
+                    if(status == 0) {
+                      await NoteHelper().restoreDatabaseToPath(path);
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text("Done!")
+                        )
+                      );
+                    } else {
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text("Corrupted or invalid db")
+                        )
+                      );
+                    }
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),

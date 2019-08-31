@@ -519,8 +519,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         Brightness.light :
         Brightness.dark;
 
-    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, Theme.of(context).cardColor,
-        systemBarsIconBrightness);
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
   }
 
   void _editNoteCaller(BuildContext context, Note note) async {
@@ -532,8 +531,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         Brightness.light :
         Brightness.dark;
 
-    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, Theme.of(context).cardColor,
-        systemBarsIconBrightness);
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
   }
 
   void _searchNoteCaller(BuildContext context, List<Note> noteList) async {
@@ -549,7 +547,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   void _settingsCaller(BuildContext context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsRoute()));
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsRoute()));
+
+    List<Note> list = await NoteHelper().getNotes();
+    setState(() => noteList = list);
   }
 
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {

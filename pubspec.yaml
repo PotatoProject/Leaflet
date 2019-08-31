@@ -26,6 +26,8 @@ dependencies:
   flutter_local_notifications:
   share:
   permission_handler:
+  file_picker:
+  flutter_colorpicker:
 
 dev_dependencies:
   flutter_test:

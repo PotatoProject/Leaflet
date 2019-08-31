@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/methods.dart';
 
@@ -10,8 +12,12 @@ class AppInfoProvider extends ChangeNotifier {
     loadData();
   }
 
+  static MethodChannel _channel = MethodChannel("potato_notes_utils");
+
   int _themeMode = 0;
-  Color _mainColor = Colors.blue;
+  Color _mainColor = Color(0xFFFF0000);
+  bool _useCustomMainColor = false;
+  Color _customMainColor = Color(0xFFFF0000);
   bool _devShowIdLabels = false;
   bool _isGridView = false;
   String _userImagePath;
@@ -26,6 +32,8 @@ class AppInfoProvider extends ChangeNotifier {
 
   int get themeMode => _themeMode;
   Color get mainColor => _mainColor;
+  bool get useCustomMainColor => _useCustomMainColor;
+  Color get customMainColor => _customMainColor;
   bool get devShowIdLabels => _devShowIdLabels;
   bool get isGridView => _isGridView;
   String get userImagePath => _userImagePath;
@@ -46,7 +54,20 @@ class AppInfoProvider extends ChangeNotifier {
 
   set mainColor(Color color) {
     _mainColor = color;
-    setMainColor(color);
+    notifyListeners();
+  }
+
+  set useCustomMainColor(bool use) {
+    _useCustomMainColor = use;
+    updateMainColor();
+    setUseCustomMainColor(use);
+    notifyListeners();
+  }
+
+  set customMainColor(Color color) {
+    _customMainColor = color;
+    updateMainColor();
+    setCustomMainColor(color);
     notifyListeners();
   }
 
@@ -107,9 +128,19 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateMainColor() async {
+    mainColor = _useCustomMainColor ?
+        customMainColor :
+        Color(await _channel.invokeMethod("getAccentColor"));
+  }
+
   Future<void> loadData() async {
     themeMode = await getThemeMode();
-    mainColor = await getMainColor();
+    mainColor = _useCustomMainColor ?
+        customMainColor :
+        Color(await _channel.invokeMethod("getAccentColor"));
+    useCustomMainColor = await getUseCustomMainColor();
+    customMainColor = await getCustomMainColor();
     devShowIdLabels = await getDevShowIdLabels();
     isGridView = await getIsGridView();
     userImagePath = await getUserImagePath();

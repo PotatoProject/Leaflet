@@ -49,7 +49,7 @@ void main() async {
             imagePath TEXT,
             isList INTEGER,
             listParseString TEXT,
-            reminders TEXT,
+            reminders TEXT
           )
         """,
       );
@@ -110,15 +110,12 @@ class NotesRoot extends StatelessWidget {
 
           if(appInfo.themeMode == 0) {
             changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                CustomThemes.light(appInfo).cardColor,
                 Brightness.dark);
           } else if(appInfo.themeMode == 1) {
             changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
-                CustomThemes.dark(appInfo).cardColor,
                 Brightness.light);
           } else {
             changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
-                CustomThemes.black(appInfo).cardColor,
                 Brightness.light);
           }
 

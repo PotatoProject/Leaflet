@@ -56,6 +56,87 @@ class NoteHelper {
       whereArgs: [note.id],
     );
   }
+
+  Future<void> backupDatabaseToPath(String path) async {
+    final db = await database;
+
+    await openDatabase(
+      path,
+      onOpen: (db) {
+        return db.execute(
+          """
+            CREATE TABLE notes(
+              id INTEGER PRIMARY KEY,
+              title TEXT,
+              content TEXT,
+              isStarred INTEGER,
+              date INTEGER,
+              color INTEGER,
+              imagePath TEXT,
+              isList INTEGER,
+              listParseString TEXT,
+              reminders TEXT
+            )
+          """,
+        );
+      },
+      version: 4,
+    );
+
+    db.execute("ATTACH DATABASE '" + path + "' AS backup");
+    db.execute("INSERT INTO backup.notes SELECT * FROM main.notes");
+    db.execute("DETACH backup");
+  }
+
+  Future<void> restoreDatabaseToPath(String path) async {
+    final db = await database;
+
+    db.execute("ATTACH DATABASE '" + path + "' AS backup").catchError((error) {
+       db.execute("DETACH backup");
+      return;
+    });
+    db.execute("DROP TABLE main.notes");
+    db.execute(
+      """
+        CREATE TABLE notes(
+          id INTEGER PRIMARY KEY,
+          title TEXT,
+          content TEXT,
+          isStarred INTEGER,
+          date INTEGER,
+          color INTEGER,
+          imagePath TEXT,
+          isList INTEGER,
+          listParseString TEXT,
+          reminders TEXT
+        )
+      """
+    );
+    db.execute("INSERT INTO main.notes SELECT * FROM backup.notes");
+    db.execute("DETACH backup");
+  }
+
+  Future<int> validateDatabase(String path) async {
+    int status = 0;
+
+    if(!path.endsWith(".db")) {
+      print("lol");
+      return 1;
+    }
+
+    try{
+      Database db = await openReadOnlyDatabase(path);
+      await db.rawQuery("SELECT * FROM notes");
+    } on DatabaseException catch (e) {
+      print(e);
+      status = 1;
+    } on Exception catch (e) {
+      print("gae");
+      status = 1;
+    }
+
+    return status;
+  }
 }
 
 class Note {
