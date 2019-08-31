@@ -132,8 +132,10 @@ class _SettingsState extends State<SettingsRoute> {
                     builder: (context) {
                       Color currentColor = appInfo.customMainColor;
                       return AlertDialog(
-                        title: Text("Custom accent picker"),
-                        contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0))
+                        ),
+                        contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[

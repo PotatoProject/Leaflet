@@ -544,6 +544,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchNotesRoute(noteList)));
 
     if (result != null) setState(() => noteList = result);
+
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
   }
 
   void _settingsCaller(BuildContext context) async {
@@ -551,6 +557,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
 
     List<Note> list = await NoteHelper().getNotes();
     setState(() => noteList = list);
+
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+
+    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
   }
 
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {
@@ -1046,6 +1058,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           topRight: Radius.circular(12),
         ),
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (BuildContext context) {
         TextEditingController userNameController = TextEditingController(text: appInfo.userName);

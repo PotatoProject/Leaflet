@@ -197,43 +197,24 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                       ),
                       Spacer(),
                       IconButton(
-                        icon: Icon(Icons.add_alert),
-                        onPressed: () async {
-                          final appInfo = Provider.of<AppInfoProvider>(context);
-                          appInfo.date = null;
-                          appInfo.time = null;
-                          showAddReminderScrollableBottomSheet(context);
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          showAddElementScrollableBottomSheet(context,
+                              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                              getElementsColorBasedOnThemeContext());
                         },
                       ),
                       IconButton(
-                        icon: noteIsList == 0 ?
-                            Icon(Icons.check_circle_outline) :
-                            Icon(Icons.check_circle),
-                        onPressed: () => setState(() {
-                          if(noteIsList == 0) {
-                            noteIsList = 1;
-                            checkList.clear();
-                            List<String> initialList = noteContent.split("\n");
-                            initialList.forEach((item) {
-                              checkList.add(ListPair(checkValue: 0, title: item));
-                            });
-                            updateListParseString();
-                          } else {
-                            noteIsList = 0;
-                            List<String> titleList = List<String>();
-                            for(int i = 0; i < checkList.length; i++) {
-                              titleList.add(checkList[i].title);
-                            }
-                            noteContent = titleList.join("\n");
-                            checkList.clear();
+                        icon: noteIsStarred == 0 ? Icon(Icons.star_border) : Icon(Icons.star),
+                        onPressed: () {
+                          if(noteIsStarred == 0) {
+                            setState(() => noteIsStarred = 1);
+                          } else if(noteIsStarred == 1) {
+                            setState(() => noteIsStarred = 0);
                           }
-                        }),
+                        },
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add_a_photo),
-                        onPressed: () => showImageActionDialog(context),
-                      ),
-                      colorChooserCircle(),
+                      colorChooserIcon(),
                     ],
                   ),
                 ),
@@ -476,7 +457,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             DateFormat("d MMMM yyyy, HH:mm").format(DateTime.fromMillisecondsSinceEpoch(reminderList[i]))
           ),
           onTap: () {
-            showAddReminderScrollableBottomSheet(context, index: i);
+            showAddReminderDialog(context, index: i);
           },
         )
       );
@@ -485,7 +466,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     return widgets;
   }
 
-  Widget colorChooserCircle() { 
+  Widget colorChooserIcon() { 
     List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
       MaterialColor(0x00000000, {500: Colors.transparent}),
       MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
@@ -607,7 +588,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     Navigator.pop(context, noteList);
   }
 
-  void showImageActionDialog(BuildContext context) {
+  Future<void> showImageActionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -648,7 +629,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     );
   }
 
-  void showAddReminderScrollableBottomSheet(BuildContext baseContext, {int index}) {
+  void showAddReminderDialog(BuildContext baseContext, {int index}) {
     final appInfo = Provider.of<AppInfoProvider>(baseContext);
 
     if(index != null) {
@@ -763,6 +744,102 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
               } : null,
             ),
           ],
+        );
+      }
+    );
+  }
+
+  void showAddElementScrollableBottomSheet(BuildContext context, Color bgColor, Color iconTextColor) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      context: context,
+      backgroundColor: bgColor,
+      builder: (BuildContext context) {
+
+        return Theme(
+          data: ThemeData(
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: bgColor,
+            ),
+            iconTheme: IconThemeData(
+              color: iconTextColor,
+            ),
+            textTheme: TextTheme(
+              subhead: Theme.of(context).textTheme.subhead.copyWith(
+                color: iconTextColor,
+              ),
+            ),
+          ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(
+                    Icons.add_to_photos,
+                    color: iconTextColor,
+                  ),
+                  title: Text("Image"),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    showImageActionDialog(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    noteIsList == 0 ? Icons.check_circle_outline : Icons.check_circle,
+                    color: iconTextColor,
+                  ),
+                  title: Text("List"),
+                  onTap: () {
+                    setState(() {
+                      if(noteIsList == 0) {
+                        noteIsList = 1;
+                        checkList.clear();
+                        List<String> initialList = noteContent.split("\n");
+                        initialList.forEach((item) {
+                          checkList.add(ListPair(checkValue: 0, title: item));
+                        });
+                        updateListParseString();
+                      } else {
+                        noteIsList = 0;
+                        List<String> titleList = List<String>();
+                        for(int i = 0; i < checkList.length; i++) {
+                          titleList.add(checkList[i].title);
+                        }
+                        noteContent = titleList.join("\n");
+                        checkList.clear();
+                      }
+                    });
+                    Navigator.pop(context);
+                  }
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.add_alert,
+                    color: iconTextColor,
+                  ),
+                  title: Text("Reminder"),
+                  onTap: () async {
+                    final appInfo = Provider.of<AppInfoProvider>(context);
+                    appInfo.date = null;
+                    appInfo.time = null;
+                    showAddReminderDialog(context);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       }
     );

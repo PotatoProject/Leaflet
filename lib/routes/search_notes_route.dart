@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/search_filters.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -38,6 +39,12 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   @override
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+
+    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
+        Brightness.light :
+        Brightness.dark;
+
+    changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
 
     double getAlphaFromTheme() {
       if(appInfo.themeMode == 0) {
