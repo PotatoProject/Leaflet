@@ -419,7 +419,7 @@ class _SettingsState extends State<SettingsRoute> {
                     ),
                     Spacer(),
                     Text(
-                      "v0.5.0-1",
+                      "v0.5.1+1",
                       style: TextStyle(
                         color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
                             .withAlpha(0.5)
