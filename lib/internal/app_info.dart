@@ -14,7 +14,9 @@ class AppInfoProvider extends ChangeNotifier {
 
   static MethodChannel _channel = MethodChannel("potato_notes_utils");
 
+  bool _followSystemTheme = true;
   int _themeMode = 0;
+  int _darkThemeMode = 0;
   Color _mainColor = Color(0xFFFF0000);
   bool _useCustomMainColor = false;
   Color _customMainColor = Color(0xFFFF0000);
@@ -30,7 +32,9 @@ class AppInfoProvider extends ChangeNotifier {
   DateTime _date;
   TimeOfDay _time;
 
+  bool get followSystemTheme => _followSystemTheme;
   int get themeMode => _themeMode;
+  int get darkThemeMode => _darkThemeMode;
   Color get mainColor => _mainColor;
   bool get useCustomMainColor => _useCustomMainColor;
   Color get customMainColor => _customMainColor;
@@ -46,9 +50,21 @@ class AppInfoProvider extends ChangeNotifier {
   DateTime get date => _date;
   TimeOfDay get time => _time;
 
+  set followSystemTheme(bool follow) {
+    _followSystemTheme = follow;
+    setFollowSystemTheme(follow);
+    notifyListeners();
+  }
+
   set themeMode(int val) {
     _themeMode = val;
     setThemeMode(val);
+    notifyListeners();
+  }
+
+  set darkThemeMode(int val) {
+    _darkThemeMode = val;
+    setDarkThemeMode(val);
     notifyListeners();
   }
 
@@ -135,7 +151,9 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
+    followSystemTheme = await getFollowSystemTheme();
     themeMode = await getThemeMode();
+    darkThemeMode = await getDarkThemeMode();
     mainColor = _useCustomMainColor ?
         customMainColor :
         Color(await _channel.invokeMethod("getAccentColor"));

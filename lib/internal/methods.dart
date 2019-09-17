@@ -22,14 +22,34 @@ void changeSystemBarsColors(Color navBarColor, Brightness systemBarsIconBrightne
   ));
 }
 
+Future<bool> getFollowSystemTheme() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('follow_system_theme') ?? true;
+}
+
+Future<void> setFollowSystemTheme(bool follow) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('follow_system_theme', follow);
+}
+
 Future<int> getThemeMode() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('theme_mode') ?? false;
+  return prefs.getInt('theme_mode') ?? 0;
 }
 
 Future<void> setThemeMode(int mode) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('theme_mode', mode);
+}
+
+Future<int> getDarkThemeMode() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('dark_theme_mode') ?? 0;
+}
+
+Future<void> setDarkThemeMode(int mode) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('dark_theme_mode', mode);
 }
 
 Future<bool> getUseCustomMainColor() async {
@@ -44,7 +64,7 @@ Future<void> setUseCustomMainColor(bool use) async {
 
 Future<Color> getCustomMainColor() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return Color(prefs.getInt('custom_main_color')) ?? Color(0xFFFF0000);
+  return prefs.getInt('curstom_main_color') ?? Color(0xFFFF0000);
 }
 
 Future<void> setCustomMainColor(Color color) async {

@@ -14,7 +14,7 @@ dependencies:
 
   cupertino_icons: ^0.1.0
 
-  sqflite:
+  sqflite: ^1.1.5
   path:
   shared_preferences:
   url_launcher:
@@ -26,7 +26,7 @@ dependencies:
   flutter_local_notifications:
   share:
   permission_handler:
-  file_picker:
+  file_picker: ^1.3.8
   flutter_colorpicker:
 
 dev_dependencies:

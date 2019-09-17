@@ -223,6 +223,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             Padding(
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
               child: ListView(
+                padding: EdgeInsets.all(0),
                 children: <Widget>[
                   Visibility(
                     visible: noteImagePath != null,
@@ -230,6 +231,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                         Container() :
                         Image(
                           image: FileImage(File(noteImagePath)),
+                          fit: BoxFit.fill,
                         ),
                   ),
                   Padding(

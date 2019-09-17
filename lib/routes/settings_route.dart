@@ -8,7 +8,7 @@ import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 
-import 'package:file_picker/file_picker.dart';
+//import 'package:file_picker/file_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -81,11 +81,49 @@ class _SettingsState extends State<SettingsRoute> {
                     ),
                   ),
                 ),
+                SwitchListTile(
+                  secondary: Icon(Icons.brightness_medium),
+                  title: Text('Follow system theme'),
+                  onChanged: (val) {
+                    appInfo.followSystemTheme = val;
+                  },
+                  value: appInfo.followSystemTheme,
+                  activeColor: appInfo.mainColor,
+                ),
                 ListTile(
+                  enabled: appInfo.followSystemTheme,
+                  leading: Icon(Icons.brightness_3),
+                  title: Text('Auto dark theme mode'),
+                  trailing: DropdownButton(
+                    value: appInfo.darkThemeMode,
+                    underline: Container(),
+                    disabledHint: appInfo.darkThemeMode == 0 ? Text("Dark") : Text("Black"),
+                    items: <DropdownMenuItem>[
+                      DropdownMenuItem(
+                        child: Text("Dark"),
+                        value: 0,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Black"),
+                        value: 1,
+                      ),
+                    ],
+                    onChanged: appInfo.followSystemTheme ? (newValue) {
+                      appInfo.darkThemeMode = newValue;
+                    } : null,
+                  ),
+                ),
+                ListTile(
+                  enabled: !appInfo.followSystemTheme,
                   leading: Icon(Icons.brightness_5),
                   title: Text('App theme'),
                   trailing: DropdownButton(
                     value: appInfo.themeMode,
+                    disabledHint: appInfo.themeMode == 0 ?
+                        Text("Light") :
+                            appInfo.themeMode == 1 ?
+                            Text("Dark") :
+                        Text("Black"),
                     underline: Container(),
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
@@ -101,7 +139,7 @@ class _SettingsState extends State<SettingsRoute> {
                         value: 2,
                       ),
                     ],
-                    onChanged: (newValue) {
+                    onChanged: appInfo.followSystemTheme ? null : (newValue) {
                       appInfo.themeMode = newValue;
                     },
                   ),
@@ -240,7 +278,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   leading: Icon(Icons.restore),
                   title: Text("Restore (experimental)"),
-                  onTap: () async {
+                  onTap: null/*() async {
                     String path = await FilePicker.getFilePath();
                     int status = await NoteHelper().validateDatabase(path);
                     print(status);
@@ -258,7 +296,7 @@ class _SettingsState extends State<SettingsRoute> {
                         )
                       );
                     }
-                  },
+                  },*/
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),

@@ -58,4 +58,8 @@ class CustomThemes {
       backgroundColor: appInfo.mainColor,
     );
   }
+
+  static Brightness getCurrentBrightness(BuildContext context, AppInfoProvider appInfo) {
+    return Theme.of(context).brightness;
+  }
 }

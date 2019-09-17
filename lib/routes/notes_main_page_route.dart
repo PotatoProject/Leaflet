@@ -660,6 +660,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         null :
                         DecorationImage(
                           image: FileImage(File(noteList[index].imagePath)),
+                          fit: BoxFit.fill,
                         ),
                   ),
                   child: noteList[index].imagePath == null ?
@@ -667,6 +668,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       Image(
                         image: FileImage(File(noteList[index].imagePath)),
                         color: Colors.transparent,
+                        fit: BoxFit.fill,
                       ),
                 ),
               ),

@@ -14,12 +14,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
-import 'package:potato_notes/routes/search_notes_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
 
@@ -34,7 +34,8 @@ AppInfoProvider appInfo;
 SearchFiltersProvider searchFilters;
 
 void main() async {
-
+  WidgetsFlutterBinding.ensureInitialized();
+  
   database = openDatabase(
     join(await getDatabasesPath(), 'notes_database.db'),
     onCreate: (db, version) {
@@ -109,15 +110,30 @@ class NotesRoot extends StatelessWidget {
           appInfo = Provider.of<AppInfoProvider>(context);
           searchFilters = Provider.of<SearchFiltersProvider>(context);
 
-          if(appInfo.themeMode == 0) {
-            changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                Brightness.dark);
-          } else if(appInfo.themeMode == 1) {
-            changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
-                Brightness.light);
+          if(appInfo.followSystemTheme) {
+            if(CustomThemes.getCurrentBrightness(context, appInfo) == Brightness.light) {
+              changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor,
+                    Brightness.dark);
+            } else {
+              if(appInfo.darkThemeMode == 0) {
+                changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+                    Brightness.light);
+              } else if(appInfo.darkThemeMode == 1) {
+                changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
+                    Brightness.light);
+              }
+            }
           } else {
-            changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
-                Brightness.light);
+            if(appInfo.themeMode == 0) {
+              changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                  Brightness.dark);
+            } else if(appInfo.themeMode == 1) {
+              changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+                  Brightness.light);
+            } else {
+              changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
+                  Brightness.light);
+            }
           }
 
           return MaterialApp(
@@ -127,8 +143,13 @@ class NotesRoot extends StatelessWidget {
             ),
             home: NotesMainPageRoute(noteList),
             debugShowCheckedModeBanner: false,
-            theme: appInfo.themeMode == 0 ? CustomThemes.light(appInfo) : appInfo.themeMode == 1 ?
+            theme: appInfo.followSystemTheme ?
+                CustomThemes.light(appInfo) :
+                (appInfo.themeMode == 0 ? CustomThemes.light(appInfo) : appInfo.themeMode == 1 ?
+                    CustomThemes.dark(appInfo) : CustomThemes.black(appInfo)),
+            darkTheme: appInfo.darkThemeMode == 0 ?
                 CustomThemes.dark(appInfo) : CustomThemes.black(appInfo),
+            themeMode: appInfo.followSystemTheme ? ThemeMode.system : ThemeMode.light,
             title: 'Notes',
           );
         }
