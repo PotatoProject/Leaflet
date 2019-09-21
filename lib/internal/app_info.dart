@@ -31,6 +31,10 @@ class AppInfoProvider extends ChangeNotifier {
 
   DateTime _date;
   TimeOfDay _time;
+  int _hideContent = 0;
+  bool _useProtectionForNoteContent = false;
+  bool _pin = false;
+  bool _password = false;
 
   bool get followSystemTheme => _followSystemTheme;
   int get themeMode => _themeMode;
@@ -49,6 +53,10 @@ class AppInfoProvider extends ChangeNotifier {
 
   DateTime get date => _date;
   TimeOfDay get time => _time;
+  int get hideContent => _hideContent;
+  bool get useProtectionForNoteContent => _useProtectionForNoteContent;
+  bool get pin => _pin;
+  bool get password => _password;
 
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
@@ -134,6 +142,8 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
   set date(DateTime passedDate) {
     _date = passedDate;
     notifyListeners();
@@ -141,6 +151,26 @@ class AppInfoProvider extends ChangeNotifier {
 
   set time(TimeOfDay passedTime) {
     _time = passedTime;
+    notifyListeners();
+  }
+
+  set hideContent(int val) {
+    _hideContent = val;
+    notifyListeners();
+  }
+
+  set useProtectionForNoteContent(bool doUse) {
+    _useProtectionForNoteContent = doUse;
+    notifyListeners();
+  }
+
+  set pin(bool use) {
+    _pin = use;
+    notifyListeners();
+  }
+
+  set password(bool use) {
+    _password = use;
     notifyListeners();
   }
 
@@ -170,5 +200,9 @@ class AppInfoProvider extends ChangeNotifier {
 
     date = null;
     time = null;
+    hideContent = 0;
+    useProtectionForNoteContent = false;
+    pin = false;
+    password = false;
   }
 }

@@ -18,7 +18,7 @@ List<int> reminderList = List<int>();
 
 class ModifyNotesRoute extends StatefulWidget {
   Note note = Note();
-  
+
   ModifyNotesRoute(Note note) {
     this.note = note;
   }
@@ -38,18 +38,24 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
   int noteIsList = 0;
   String noteListParseString;
   String noteReminders;
+  int noteHideContent = 0;
+  int notePin;
+  String notePassword;
 
   _ModifyNotesState(Note note) {
     this.noteId = note.id;
     this.noteTitle = note.title;
     this.noteContent = note.content;
-    this.noteIsStarred = note.isStarred;
+    this.noteIsStarred = note.isStarred ?? 0;
     this.noteDate = note.date;
     this.noteColor = note.color;
     this.noteImagePath = note.imagePath;
-    this.noteIsList = note.isList;
+    this.noteIsList = note.isList ?? 0;
     this.noteListParseString = note.listParseString;
     this.noteReminders = note.reminders;
+    this.noteHideContent = note.hideContent ?? 0;
+    this.notePin = note.pin;
+    this.notePassword = note.password;
   }
 
   NoteHelper noteHelper = new NoteHelper();
@@ -197,6 +203,22 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                         },
                       ),
                       Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          noteHideContent == 1 && (notePin != null || notePassword != null) ?
+                              Icons.lock :
+                              Icons.remove_red_eye
+                        ),
+                        onPressed: () {
+                          appInfo.hideContent = noteHideContent;
+                          appInfo.useProtectionForNoteContent = notePin != null || notePassword != null;
+                          appInfo.pin = notePin != null;
+                          appInfo.password = notePassword != null;
+                          showHideContentScrollableBottomSheet(context,
+                              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                              getElementsColorBasedOnThemeContext());
+                        },
+                      ),
                       IconButton(
                         icon: Icon(Icons.add),
                         onPressed: () {
@@ -586,6 +608,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
       isList: noteIsList,
       listParseString: noteListParseString,
       reminders: noteReminders,
+      hideContent: noteHideContent,
+      pin: notePin,
+      password: notePassword,
     ));
     noteList = await noteHelper.getNotes();
     Navigator.pop(context, noteList);
@@ -753,8 +778,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
   }
 
   void showAddElementScrollableBottomSheet(BuildContext context, Color bgColor, Color iconTextColor) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -845,6 +868,241 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
           ),
         );
       }
+    );
+  }
+
+  void showHideContentScrollableBottomSheet(BuildContext context, Color bgColor, Color iconTextColor) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      context: context,
+      backgroundColor: bgColor,
+      builder: (BuildContext context) {
+
+        return Theme(
+          data: ThemeData(
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: bgColor,
+            ),
+            iconTheme: IconThemeData(
+              color: iconTextColor,
+            ),
+            textTheme: TextTheme(
+              subhead: Theme.of(context).textTheme.subhead.copyWith(
+                color: iconTextColor,
+              ),
+            ),
+          ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SwitchListTile(
+                  secondary: Icon(
+                    Icons.remove_red_eye,
+                    color: iconTextColor,
+                  ),
+                  title: Text("Hide note content on main page"),
+                  value: appInfo.hideContent == 1,
+                  onChanged: (value) async {
+                    appInfo.hideContent = value ? 1 : 0;
+                    noteHideContent = value ? 1 : 0;
+                  },
+                ),
+                SwitchListTile(
+                  title: Text("Use a protection for hiding"),
+                  secondary: Icon(
+                    Icons.lock,
+                    color: iconTextColor,
+                  ),
+                  value: appInfo.useProtectionForNoteContent,
+                  onChanged: appInfo.hideContent == 1 ? (value) {
+                    appInfo.useProtectionForNoteContent = value;
+                    appInfo.pin = false;
+                    appInfo.password = false;
+                    setState(() {
+                      notePin = null;
+                      notePassword = null;
+                    });
+                  } : null,
+                ),
+                ListTile(
+                  enabled: appInfo.hideContent == 1 && appInfo.useProtectionForNoteContent,
+                  leading: Icon(Icons.check, color: appInfo.pin ? iconTextColor : Colors.transparent),
+                  title: Text("PIN"),
+                  onTap: () async {
+                    int result = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ProtectionDialog(
+                          setPassword: false,
+                          pin: notePin,
+                          password: notePassword,
+                          appInfo: appInfo,
+                        );
+                      }
+                    );
+
+                    if(result != null) {
+                      notePin = result;
+                      notePassword = null;
+                    }
+                  }
+                ),
+                ListTile(
+                  enabled: appInfo.hideContent == 1 && appInfo.useProtectionForNoteContent,
+                  leading: Icon(Icons.check, color: appInfo.password ? iconTextColor : Colors.transparent),
+                  title: Text("Password"),
+                  onTap: () async {
+                    String result = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ProtectionDialog(
+                          setPassword: true,
+                          pin: notePin,
+                          password: notePassword,
+                          appInfo: appInfo,
+                        );
+                      }
+                    );
+
+                    if(result != null) {
+                      notePassword = result;
+                      notePin = null;
+                    }
+                  }
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
+}
+
+class ProtectionDialog extends StatefulWidget {
+  bool setPassword;
+  int pin;
+  String password;
+  AppInfoProvider appInfo;
+
+  ProtectionDialog({
+    this.setPassword,
+    this.pin,
+    this.password,
+    this.appInfo,
+  });
+
+  @override createState() => _ProtectionDialogState();
+}
+
+class _ProtectionDialogState extends State<ProtectionDialog> {
+  bool hideText = true;
+  TextEditingController controller = TextEditingController();
+  String status = "";
+  bool error = true;
+
+  int minLength;
+  int maxLength;
+
+  @override
+  void initState() {
+    super.initState();
+    minLength = widget.setPassword ? 2 : 4;
+    maxLength = widget.setPassword ? 30 : 16;
+    controller.text = widget.setPassword ? (widget.password ?? "") : (widget.pin?.toString() ?? "");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.setPassword ? "Set or update password" : "Set or update PIN"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width/1.70,
+                child: TextField(
+                  controller: controller,
+                  obscureText: hideText,
+                  keyboardType: widget.setPassword ?
+                      TextInputType.text :
+                      TextInputType.number,
+                  onChanged: (text) {
+                    setState(() {
+                      if(text.length < minLength) {
+                        status = (widget.setPassword ? "Password" : "PIN") + " length can't be less than $minLength";
+                        error = true;
+                      } else if(text.length > maxLength) {
+                        status = (widget.setPassword ? "Password" : "PIN") + " length can't exceed $maxLength";
+                        error = true;
+                      } else {
+                        status = (widget.setPassword ? "Password" : "PIN") + " valid";
+                        error = false;
+                      }
+                    });
+                  },
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.remove_red_eye,
+                  color: hideText ?
+                      Theme.of(context).iconTheme.color.withAlpha(120) :
+                      Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () {
+                  setState(() => hideText = !hideText);
+                },
+              )
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              status,
+              style: TextStyle(
+                color: error ? Colors.red : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("Cancel"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        FlatButton(
+          child: Text("Set"),
+          onPressed: error ? null : () {
+            if(widget.setPassword) {
+              widget.password = controller.text;
+              widget.pin = null;
+              widget.appInfo.password = true;
+              widget.appInfo.pin = false;
+            } else {
+              widget.password = null;
+              widget.pin = int.parse(controller.text);
+              widget.appInfo.password = false;
+              widget.appInfo.pin = true;
+            }
+            Navigator.pop(context, widget.setPassword ? widget.password : widget.pin);
+          },
+        ),
+      ],
     );
   }
 }

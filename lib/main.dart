@@ -51,7 +51,10 @@ void main() async {
             imagePath TEXT,
             isList INTEGER,
             listParseString TEXT,
-            reminders TEXT
+            reminders TEXT,
+            hideContent INTEGER,
+            pin INTEGER,
+            password TEXT
           )
         """,
       );
@@ -67,7 +70,10 @@ void main() async {
         "ALTER TABLE notes ADD COLUMN imagePath TEXT",
         "ALTER TABLE notes ADD COLUMN isList INTEGER",
         "ALTER TABLE notes ADD COLUMN listParseString TEXT",
-        "ALTER TABLE notes ADD COLUMN reminders TEXT"
+        "ALTER TABLE notes ADD COLUMN reminders TEXT",
+        "ALTER TABLE notes ADD COLUMN hideContent INTEGER",
+        "ALTER TABLE notes ADD COLUMN pin INTEGER",
+        "ALTER TABLE notes ADD COLUMN password TEXT",
       ];
 
       for(int i = 0; i < columnsToAdd.length; i++) {

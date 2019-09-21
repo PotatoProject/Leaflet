@@ -32,6 +32,9 @@ class NoteHelper {
         isList: maps[i]['isList'],
         listParseString: maps[i]['listParseString'],
         reminders: maps[i]['reminders'],
+        hideContent: maps[i]['hideContent'],
+        pin: maps[i]['pin'],
+        password: maps[i]['password'],
       );
     });
   }
@@ -75,7 +78,10 @@ class NoteHelper {
               imagePath TEXT,
               isList INTEGER,
               listParseString TEXT,
-              reminders TEXT
+              reminders TEXT,
+              hideContent INTEGER,
+              pin INTEGER,
+              password TEXT
             )
           """,
         );
@@ -108,7 +114,10 @@ class NoteHelper {
           imagePath TEXT,
           isList INTEGER,
           listParseString TEXT,
-          reminders TEXT
+          reminders TEXT,
+          hideContent INTEGER,
+          pin INTEGER,
+          password TEXT
         )
       """
     );
@@ -150,6 +159,9 @@ class Note {
   final int isList;
   final String listParseString;
   final String reminders;
+  final int hideContent;
+  final int pin;
+  final String password;
 
   bool isSelected  = false;
 
@@ -164,6 +176,9 @@ class Note {
     this.isList,
     this.listParseString,
     this.reminders,
+    this.hideContent,
+    this.pin,
+    this.password,
   });
 
   Map<String, dynamic> toMap() {
@@ -178,6 +193,9 @@ class Note {
       'isList': isList,
       'listParseString': listParseString,
       'reminders': reminders,
+      'hideContent': hideContent,
+      'pin': pin,
+      'password': password,
     };
   }
 }

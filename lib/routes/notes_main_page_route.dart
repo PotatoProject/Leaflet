@@ -667,33 +667,63 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ),
               ),
               Visibility(
-                visible: noteList[index].reminders != null,
+                visible: noteList[index].hideContent == 1 || noteList[index].reminders != null,
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  margin: EdgeInsets.fromLTRB(20, 14, 20,
+                      noteList[index].hideContent == 1 && noteList[index].title == "" ? 14 : 0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Center(
-                        child: Icon(
-                          Icons.alarm,
-                          size: 12,
-                          color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 8),
-                        width: oneSideOnly ?
-                            MediaQuery.of(context).size.width/2-80 :
-                            MediaQuery.of(context).size.width-100,
-                        child: Text(
-                          "Reminders set for note",
-                          style: TextStyle(
-                            fontSize: 12,
+                      Visibility(
+                        visible: noteList[index].reminders != null,
+                        child: Center(
+                          child: Icon(
+                            Icons.alarm,
+                            size: 12,
                             color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
                           ),
-                        )
-                      )
+                        ),
+                      ),
+                      Visibility(
+                        visible: noteList[index].hideContent == 1,
+                        child: Center(
+                          child: Icon(
+                            noteList[index].pin != null || noteList[index].password != null ?
+                                Icons.lock :
+                                Icons.remove_red_eye,
+                            size: 12,
+                            color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: (noteList[index].hideContent == 1 && noteList[index].reminders == null) ||
+                            (noteList[index].hideContent == 0 && noteList[index].reminders != null),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 8),
+                          width: oneSideOnly ?
+                              MediaQuery.of(context).size.width/2-80 :
+                              MediaQuery.of(context).size.width-100,
+                          child: (noteList[index].hideContent == 1 && noteList[index].reminders == null) ?
+                              Text(
+                                "Content hidden",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                                ),
+                              ) :
+                              (noteList[index].hideContent == 0 && noteList[index].reminders != null) ?
+                                  Text(
+                                    "Reminders set for note",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
+                                    ),
+                                  ) :
+                                  Container(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -732,28 +762,31 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, noteList[index].title == "" ? 14 : 0, 20, 14),
-                width: oneSideOnly ?
-                    MediaQuery.of(context).size.width/2-74 :
-                    MediaQuery.of(context).size.width-94,
-                child: noteList[index].isList == 1 ?
-                  Column(
-                    children: generateListWidgets(index, oneSideOnly),
-                  ) :
-                  Text(
-                    noteList[index].content,
-                    overflow: TextOverflow.ellipsis,
-                    textWidthBasis: TextWidthBasis.parent,
-                    maxLines: 11,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                      color: noteList[index].color == null ?
-                          Theme.of(context).textTheme.title.color :
-                          getTextColorFromNoteColor(index, true),
+              Visibility(
+                visible: noteList[index].hideContent == 0,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(20, noteList[index].title == "" ? 14 : 0, 20, 14),
+                  width: oneSideOnly ?
+                      MediaQuery.of(context).size.width/2-74 :
+                      MediaQuery.of(context).size.width-94,
+                  child: noteList[index].isList == 1 ?
+                    Column(
+                      children: generateListWidgets(index, oneSideOnly),
+                    ) :
+                    Text(
+                      noteList[index].content,
+                      overflow: TextOverflow.ellipsis,
+                      textWidthBasis: TextWidthBasis.parent,
+                      maxLines: 11,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w400,
+                        color: noteList[index].color == null ?
+                            Theme.of(context).textTheme.title.color :
+                            getTextColorFromNoteColor(index, true),
+                      ),
                     ),
-                  ),
+                ),
               ),
             ],
           )
