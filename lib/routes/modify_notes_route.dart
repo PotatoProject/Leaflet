@@ -115,7 +115,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
 
     Brightness getBarsColorFromNoteColor() {
       double noteColorBrightness = Color(noteColor).computeLuminance();
-      
+
       if(noteColorBrightness > 0.5) {
         return Brightness.dark;
       } else {
@@ -129,7 +129,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
 
     changeSystemBarsColors(noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
         noteColor == null ? systemBarsIconBrightness : getBarsColorFromNoteColor());
-    
+
     Color getElementsColorBasedOnThemeContext() {
       Color colorToReturn;
       if(noteColor == null) {
@@ -138,7 +138,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             colorToReturn = Colors.black;
       } else {
         double noteColorBrightness = Color(noteColor).computeLuminance();
-      
+
         if(noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
         } else {
@@ -323,7 +323,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             colorToReturn = Colors.black;
       } else {
         double noteColorBrightness = Color(noteColor).computeLuminance();
-      
+
         if(noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
         } else {
@@ -344,7 +344,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
         try{
           checkList.add(ListPair(checkValue: checkValue, title: rawStrings[1]));
         } on RangeError {
-          
+
         }
       }
     }
@@ -491,7 +491,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     return widgets;
   }
 
-  Widget colorChooserIcon() { 
+  Widget colorChooserIcon() {
     List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
       MaterialColor(0x00000000, {500: Colors.transparent}),
       MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
@@ -553,7 +553,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
   Future<int> noteIdSearcher() async {
     List<Note> noteList = await NoteHelper().getNotes();
     List<int> noteIdList = List<int>();
-    
+
     noteList.forEach((item) {
       noteIdList.add(item.id);
     });
@@ -575,7 +575,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
 
   void updateListParseString() {
     List<String> pairedList = List<String>();
-    
+
     checkList.forEach((item) {
       pairedList.add(item.checkValue.toString() + "\',,\'" + item.title);
     });
@@ -898,6 +898,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                 color: iconTextColor,
               ),
             ),
+            disabledColor: iconTextColor.withAlpha(120)
           ),
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 10),
@@ -951,6 +952,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                       }
                     );
 
+                    /*if(result == 0) {
+                      print("lol");
+                      notePin = null;
+                    } else */
                     if(result != null) {
                       notePin = result;
                       notePassword = null;
@@ -974,6 +979,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                       }
                     );
 
+                    /*if(result == "") {
+                      notePassword = null;
+                    } else */
                     if(result != null) {
                       notePassword = result;
                       notePin = null;
@@ -1018,7 +1026,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
   void initState() {
     super.initState();
     minLength = widget.setPassword ? 2 : 4;
-    maxLength = widget.setPassword ? 30 : 16;
+    maxLength = widget.setPassword ? 30 : 12;
     controller.text = widget.setPassword ? (widget.password ?? "") : (widget.pin?.toString() ?? "");
   }
 
@@ -1081,6 +1089,19 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
         ],
       ),
       actions: <Widget>[
+        /*FlatButton(
+          child: Text("Remove"),
+          onPressed: () {
+            if(widget.setPassword) {
+              widget.password = null;
+              widget.appInfo.password = false;
+            } else {
+              widget.pin = null;
+              widget.appInfo.pin = false;
+            }
+            Navigator.pop(context, widget.setPassword ? "" : 0);
+          },
+        ),*/
         FlatButton(
           child: Text("Cancel"),
           onPressed: () => Navigator.pop(context),

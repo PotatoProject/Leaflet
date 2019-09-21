@@ -12,6 +12,7 @@ import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 import 'package:potato_notes/routes/search_notes_route.dart';
+import 'package:potato_notes/routes/security_note_route.dart';
 import 'package:potato_notes/routes/settings_route.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -510,6 +511,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
       isList: 0,
       listParseString: null,
       reminders: null,
+      hideContent: 0,
+      pin: null,
+      password: null,
     );
     final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(emptyNote)));
 
@@ -523,9 +527,17 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   void _editNoteCaller(BuildContext context, Note note) async {
-    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(note)));
+    var result;
 
-    if (result != null) setState(() => noteList = result);
+    if(note.hideContent == 1 && (note.pin != null || note.password != null)) {
+      result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SecurityNoteRoute(note)));
+    } else {
+      result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(note)));
+    }
+
+    List<Note> list = await NoteHelper().getNotes();
+
+    setState(() => noteList = list);
 
     Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
         Brightness.light :
