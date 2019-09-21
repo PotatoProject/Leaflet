@@ -111,9 +111,9 @@ class NotesRoot extends StatelessWidget {
           searchFilters = Provider.of<SearchFiltersProvider>(context);
 
           if(appInfo.followSystemTheme) {
-            if(CustomThemes.getCurrentBrightness(context, appInfo) == Brightness.light) {
-              changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor,
-                    Brightness.dark);
+            if(CustomThemes.getCurrentBrightness(context, appInfo) == Brightness.dark) {
+              changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                  Brightness.dark);
             } else {
               if(appInfo.darkThemeMode == 0) {
                 changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,

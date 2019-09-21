@@ -18,6 +18,7 @@ List<int> reminderList = List<int>();
 
 class ModifyNotesRoute extends StatefulWidget {
   Note note = Note();
+  
   ModifyNotesRoute(Note note) {
     this.note = note;
   }
@@ -272,7 +273,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                           noteContent = text;
                         },
                         textCapitalization: TextCapitalization.sentences,
-                        maxLines: noteImagePath != null ? 3 : 32,
+                        maxLines: noteImagePath != null ? noteContent.split("\n").length : 32,
                         keyboardType: TextInputType.multiline,
                       ),
                     ),
@@ -835,8 +836,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     final appInfo = Provider.of<AppInfoProvider>(context);
                     appInfo.date = null;
                     appInfo.time = null;
-                    showAddReminderDialog(context);
                     Navigator.pop(context);
+                    showAddReminderDialog(context);
                   },
                 ),
               ],

@@ -653,22 +653,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             children: <Widget>[
               Visibility(
                 visible: noteList[index].imagePath != null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                    image: noteList[index].imagePath == null ?
-                        null :
-                        DecorationImage(
-                          image: FileImage(File(noteList[index].imagePath)),
-                          fit: BoxFit.fill,
-                        ),
-                  ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                   child: noteList[index].imagePath == null ?
                       Container() :
                       Image(
                         image: FileImage(File(noteList[index].imagePath)),
-                        color: Colors.transparent,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.fitWidth,
+                        width: oneSideOnly ?
+                          MediaQuery.of(context).size.width/2 :
+                          MediaQuery.of(context).size.width,
                       ),
                 ),
               ),
