@@ -581,12 +581,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     final appInfo = Provider.of<AppInfoProvider>(context);
     
     double getAlphaFromTheme() {
-      if(appInfo.themeMode == 0) {
+      if(Theme.of(context).brightness == Brightness.light) {
         return 0.1;
-      } else if (appInfo.themeMode == 1) {
+      } else {
         return 0.2;
-      } else if (appInfo.themeMode == 2) {
-        return 0.3;
       }
     }
 
@@ -757,8 +755,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 child: Container(
                   margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
                   width: oneSideOnly ?
-                      MediaQuery.of(context).size.width/2-74 :
-                      MediaQuery.of(context).size.width-94,
+                      MediaQuery.of(context).size.width/2 :
+                      MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 12.0),
                     child: Text(
@@ -779,8 +777,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 child: Container(
                   margin: EdgeInsets.fromLTRB(20, noteList[index].title == "" ? 14 : 0, 20, 14),
                   width: oneSideOnly ?
-                      MediaQuery.of(context).size.width/2-74 :
-                      MediaQuery.of(context).size.width-94,
+                      MediaQuery.of(context).size.width/2 :
+                      MediaQuery.of(context).size.width,
                   child: noteList[index].isList == 1 ?
                     Column(
                       children: generateListWidgets(index, oneSideOnly),
@@ -956,109 +954,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     );
   }
 
-  void showNoteAboutDialog() {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-    int easterEggCounter = 0;
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(8, 24, 8, 10),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Center(
-                child: InkWell(
-                  borderRadius: BorderRadius.all(Radius.circular(80)),
-                  onTap: () {
-                    if(easterEggCounter == 9) {
-                      easterEggCounter = 0;
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EasterEggRoute()));
-                    } else easterEggCounter++;
-                  },
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                      fit: BoxFit.fill,
-                        image: AssetImage('assets/notes_round.png'),
-                      ),
-                    )
-                  ),
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "PotatoNotes",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
-                child: Text("Developed and mantained by HrX03"),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
-                child: Text("App icon, design and app branding by RshBfn")
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(24, 30, 24, 4),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "PotatoProject 2019",
-                      style: TextStyle(
-                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                            .withAlpha(0.5)
-                            .toColor(),
-                        fontSize: 14
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      "v0.4.1-1",
-                      style: TextStyle(
-                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                            .withAlpha(0.5)
-                            .toColor(),
-                        fontSize: 14
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Close"),
-                    onPressed: () => Navigator.pop(context),
-                    textColor: appInfo.mainColor,
-                    hoverColor: appInfo.mainColor,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
-  }
-
   void toggleStarNote(int index) async {
     if(noteList[index].isStarred == 0) {
       await NoteHelper().update(
@@ -1069,7 +964,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           isStarred: 1,
           date: noteList[index].date,
           color: noteList[index].color,
-        )
+          imagePath: noteList[index].imagePath,
+          isList: noteList[index].isList,
+          listParseString: noteList[index].listParseString,
+          reminders: noteList[index].reminders,
+          hideContent: noteList[index].hideContent,
+          pin: noteList[index].pin,
+          password: noteList[index].password
+        ),
       );
       List<Note> list = await NoteHelper().getNotes();
       setState(() => noteList = list);
@@ -1082,7 +984,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           isStarred: 0,
           date: noteList[index].date,
           color: noteList[index].color,
-        )
+          imagePath: noteList[index].imagePath,
+          isList: noteList[index].isList,
+          listParseString: noteList[index].listParseString,
+          reminders: noteList[index].reminders,
+          hideContent: noteList[index].hideContent,
+          pin: noteList[index].pin,
+          password: noteList[index].password
+        ),
       );
       List<Note> list = await NoteHelper().getNotes();
       setState(() => noteList = list);
@@ -1309,14 +1218,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
       context: context,
       builder: (BuildContext context) {
         bool noteStarred;
+        bool indexExists = true;
 
         try{
           noteStarred = noteList[index].isStarred == 1;
         } on RangeError {
           noteStarred = noteList[index -1].isStarred == 1;
+          indexExists = false;
         }
 
-        return SingleChildScrollView(
+        return !indexExists ? Container() : SingleChildScrollView(
           padding: EdgeInsets.only(top: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1354,6 +1265,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     isStarred: noteList[index].isStarred,
                     date: noteList[index].date,
                     color: noteList[index].color,
+                    imagePath: noteList[index].imagePath,
+                    isList: noteList[index].isList,
+                    listParseString: noteList[index].listParseString,
+                    reminders: noteList[index].reminders,
+                    hideContent: noteList[index].hideContent,
+                    pin: noteList[index].pin,
+                    password: noteList[index].password
                   );
                   await NoteHelper().delete(noteList[index].id);
                   List<Note> list = await NoteHelper().getNotes();
@@ -1397,6 +1315,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         isStarred: 0,
                         date: noteList[index].date,
                         color: noteList[index].color,
+                        imagePath: noteList[index].imagePath,
+                        isList: noteList[index].isList,
+                        listParseString: noteList[index].listParseString,
+                        reminders: noteList[index].reminders,
+                        hideContent: noteList[index].hideContent,
+                        pin: noteList[index].pin,
+                        password: noteList[index].password
                       ),
                     );
                     List<Note> list = await NoteHelper().getNotes();
@@ -1410,6 +1335,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         isStarred: 1,
                         date: noteList[index].date,
                         color: noteList[index].color,
+                        imagePath: noteList[index].imagePath,
+                        isList: noteList[index].isList,
+                        listParseString: noteList[index].listParseString,
+                        reminders: noteList[index].reminders,
+                        hideContent: noteList[index].hideContent,
+                        pin: noteList[index].pin,
+                        password: noteList[index].password
                       ),
                     );
                     List<Note> list = await NoteHelper().getNotes();
@@ -1443,7 +1375,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ),
               ),
               Visibility(
-                visible: !(noteList[index].hideContent == 1 &&
+                visible: noteList[index].isList == 0 && !(noteList[index].hideContent == 1 &&
                     (noteList[index].pin != null || noteList[index].password != null)),
                 child: Column(
                   children: <Widget>[

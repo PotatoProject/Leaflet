@@ -102,7 +102,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                               child: TextField(
                                 controller: searchController,
-                                decoration: InputDecoration(border: InputBorder.none, hintText: "Search terms go here"),
+                                decoration: InputDecoration(border: InputBorder.none, hintText: "Search..."),
                                 maxLines: 1,
                                 onChanged: (text) {
                                   setState(() {

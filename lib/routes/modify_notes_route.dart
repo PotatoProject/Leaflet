@@ -110,9 +110,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     TextEditingController titleController = TextEditingController(text: noteTitle);
     TextEditingController contentController = TextEditingController(text: noteContent);
 
-    titleController.selection = TextSelection.collapsed(offset: noteTitle.length);
-    contentController.selection = TextSelection.collapsed(offset: noteContent.length);
-
     reminderListPopulater();
 
     Brightness getBarsColorFromNoteColor() {
@@ -242,121 +239,145 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                           }
                         },
                       ),
-                      PopupMenuButton(
-                        padding: EdgeInsets.all(0),
-                        //color: Color(noteColor),
-                        itemBuilder: (context) {
-                          return <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: ListTile(
-                                //leading: Icon(Icons.color_lens),
-                                title: Text("Change note color"),
-                                onTap: () async {
-                                  Navigator.pop(context);
+                      noteIsList == 0 ?
+                          PopupMenuButton(
+                            padding: EdgeInsets.all(0),
+                            //color: Color(noteColor),
+                            itemBuilder: (context) {
+                              return <PopupMenuEntry>[
+                                PopupMenuItem(
+                                  child: ListTile(
+                                    //leading: Icon(Icons.color_lens),
+                                    title: Text("Change note color"),
+                                    onTap: () async {
+                                      Navigator.pop(context);
 
-                                  int result = await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return NoteColorDialog(
-                                        noteColor: noteColor,
+                                      int result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return NoteColorDialog(
+                                            noteColor: noteColor,
+                                          );
+                                        }
                                       );
-                                    }
-                                  );
 
-                                  setState(() {
-                                    if(result != null) {
-                                      if(result == 0) {
-                                        noteColor = null;
+                                      setState(() {
+                                        if(result != null) {
+                                          if(result == 0) {
+                                            noteColor = null;
+                                          } else {
+                                            noteColor = result;
+                                          }
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: ListTile(
+                                    //leading: Icon(Icons.share),
+                                    title: Text("Share"),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      String shareText = "";
+
+                                      if(noteTitle != "")
+                                        shareText += noteTitle + "\n\n";
+                                      shareText += noteContent;
+
+                                      Share.share(shareText);
+                                    },
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: ListTile(
+                                    //leading: Icon(Icons.file_upload),
+                                    title: Text("Export"),
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                      if(appInfo.storageStatus == PermissionStatus.granted) {
+                                        DateTime now = DateTime.now();
+      
+                                        bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/exported').exists();
+
+                                        if(!backupDirExists) {
+                                          await Directory('/storage/emulated/0/PotatoNotes/exported').create(recursive: true);
+                                        }
+
+                                        String noteExportPath =
+                                          '/storage/emulated/0/PotatoNotes/exported/exported_note_' + DateFormat("dd-MM-yyyy_HH-mm").format(now) + '.md';
+
+                                        String noteContents = "";
+
+                                        if(noteTitle != "")
+                                          noteContents += "# " + noteTitle + "\n\n";
+                          
+                                        noteContents += noteContent;
+
+                                        File(noteExportPath).writeAsString(noteContents).then((nothing) {
+                                          scaffoldKey.currentState.showSnackBar(
+                                            SnackBar(
+                                              content: Text("Note exported at PotatoNotes/exported/exported_note_" +
+                                                  DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
+                                            )
+                                          );
+                                        });
                                       } else {
-                                        noteColor = result;
+                                        Map<PermissionGroup, PermissionStatus> permissions =
+                                          await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+                                        appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
                                       }
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                            PopupMenuItem(
-                              child: ListTile(
-                                //leading: Icon(Icons.share),
-                                title: Text("Share"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  String shareText = "";
-
-                                  if(noteTitle != "")
-                                    shareText += noteTitle + "\n\n";
-                                  shareText += noteContent;
-
-                                  Share.share(shareText);
-                                },
-                              ),
-                            ),
-                            PopupMenuItem(
-                              child: ListTile(
-                                //leading: Icon(Icons.file_upload),
-                                title: Text("Export"),
-                                onTap: () async {
-                                  Navigator.pop(context);
-                                  if(appInfo.storageStatus == PermissionStatus.granted) {
-                                    DateTime now = DateTime.now();
-  
-                                    bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/exported').exists();
-
-                                    if(!backupDirExists) {
-                                      await Directory('/storage/emulated/0/PotatoNotes/exported').create(recursive: true);
-                                    }
-
-                                    String noteExportPath =
-                                      '/storage/emulated/0/PotatoNotes/exported/exported_note_' + DateFormat("dd-MM-yyyy_HH-mm").format(now) + '.md';
-
-                                    String noteContents = "";
-
-                                    if(noteTitle != "")
-                                      noteContents += "# " + noteTitle + "\n\n";
-                      
-                                    noteContents += noteContent;
-
-                                    File(noteExportPath).writeAsString(noteContents).then((nothing) {
-                                      scaffoldKey.currentState.showSnackBar(
-                                        SnackBar(
-                                          content: Text("Note exported at PotatoNotes/exported/exported_note_" +
-                                              DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
-                                        )
+                                    },
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  child: ListTile(
+                                    //leading: Icon(Icons.notifications),
+                                    enabled: !appInfo.notificationsIdList.contains(noteId.toString()),
+                                    title: Text("Pin to notifications"),
+                                    onTap: () async {
+                                      appInfo.notificationsIdList.add(noteId.toString());
+                                      await FlutterLocalNotificationsPlugin().show(
+                                        int.parse(appInfo.notificationsIdList.last), noteTitle != "" ? noteTitle : "Pinned note",
+                                        noteContent, NotificationDetails(
+                                          AndroidNotificationDetails(
+                                            '0', 'note_pinned_notifications', 'idk',
+                                            priority: Priority.High, playSound: true, importance: Importance.High,
+                                            ongoing: true,
+                                          ),
+                                          IOSNotificationDetails()
+                                        ), payload: noteId.toString()
                                       );
-                                    });
-                                  } else {
-                                    Map<PermissionGroup, PermissionStatus> permissions =
-                                      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-                                    appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-                                  }
-                                },
-                              ),
-                            ),
-                            PopupMenuItem(
-                              child: ListTile(
-                                //leading: Icon(Icons.notifications),
-                                enabled: !appInfo.notificationsIdList.contains(noteId.toString()),
-                                title: Text("Pin to notifications"),
-                                onTap: () async {
-                                  appInfo.notificationsIdList.add(noteId.toString());
-                                  await FlutterLocalNotificationsPlugin().show(
-                                    int.parse(appInfo.notificationsIdList.last), noteTitle != "" ? noteTitle : "Pinned note",
-                                    noteContent, NotificationDetails(
-                                      AndroidNotificationDetails(
-                                        '0', 'note_pinned_notifications', 'idk',
-                                        priority: Priority.High, playSound: true, importance: Importance.High,
-                                        ongoing: true,
-                                      ),
-                                      IOSNotificationDetails()
-                                    ), payload: noteId.toString()
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                              ];
+                            },
+                          ) :
+                          IconButton(
+                            icon: Icon(Icons.color_lens),
+                            onPressed: () async {
+                              int result = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return NoteColorDialog(
+                                    noteColor: noteColor,
                                   );
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ];
-                        },
-                      ),
+                                }
+                              );
+
+                              setState(() {
+                                if(result != null) {
+                                  if(result == 0) {
+                                    noteColor = null;
+                                  } else {
+                                    noteColor = result;
+                                  }
+                                }
+                              });
+                            },
+                          ),
                     ],
                   ),
                 ),

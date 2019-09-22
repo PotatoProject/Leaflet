@@ -218,7 +218,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width/2,
                 height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
@@ -260,7 +260,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width/2,
                 height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
