@@ -8,7 +8,7 @@ import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 
-//import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -278,25 +278,28 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   leading: Icon(Icons.restore),
                   title: Text("Restore (experimental)"),
-                  onTap: null/*() async {
+                  onTap: () async {
                     String path = await FilePicker.getFilePath();
-                    int status = await NoteHelper().validateDatabase(path);
-                    print(status);
-                    if(status == 0) {
-                      await NoteHelper().restoreDatabaseToPath(path);
-                      scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text("Done!")
-                        )
-                      );
-                    } else {
-                      scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text("Corrupted or invalid db")
-                        )
-                      );
+                    
+                    if(path != null) {
+                      int status = await NoteHelper().validateDatabase(path);
+                      print(status);
+                      if(status == 0) {
+                        await NoteHelper().restoreDatabaseToPath(path);
+                        scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Done!")
+                          )
+                        );
+                      } else {
+                        scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Corrupted or invalid db")
+                          )
+                        );
+                      }
                     }
-                  },*/
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
