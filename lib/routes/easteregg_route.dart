@@ -48,9 +48,7 @@ class _DrawState extends State<DrawScreen> {
       Colors.green,
       Colors.blue,
       Colors.amber,
-      appInfo.themeMode == 0 ? 
-          Colors.black :
-          Colors.white
+      Theme.of(context).textTheme.title.color
     ];
 
     if(!firstTimeRunning) {
