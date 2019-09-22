@@ -1297,6 +1297,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
 
   void showNoteSettingsScrollableBottomSheet(BuildContext context, int index) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+    BuildContext parentContext = context;
 
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
@@ -1338,7 +1339,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 title: Text("Edit"),
                 onTap: () {
                   Navigator.pop(context);
-                  _editNoteCaller(context, noteList[index]);
+                  _editNoteCaller(parentContext, noteList[index]);
                 },
               ),
               ListTile(
@@ -1417,81 +1418,113 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   Navigator.pop(context);
                 },
               ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.share),
-                title: Text("Share"),
-                onTap: () {
-                  String shareText = "";
-
-                  if(noteList[index].title != "")
-                    shareText += noteList[index].title + "\n\n";
-                  shareText += noteList[index].content;
-
-                  Share.share(shareText);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.file_upload),
-                title: Text("Export"),
-                onTap: () async {
-                  if(appInfo.storageStatus == PermissionStatus.granted) {
-                    DateTime now = DateTime.now();
- 
-                    bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/exported').exists();
-
-                    if(!backupDirExists) {
-                      await Directory('/storage/emulated/0/PotatoNotes/exported').create(recursive: true);
-                    }
-
-                    String noteExportPath =
-                      '/storage/emulated/0/PotatoNotes/exported/exported_note_' + DateFormat("dd-MM-yyyy_HH-mm").format(now) + '.md';
-
-                    String noteContents = "";
-
-                    if(noteList[index].title != "")
-                      noteContents += "# " + noteList[index].title + "\n\n";
-                    
-                    noteContents += noteList[index].content;
-
-                    Navigator.pop(context);
-
-                    File(noteExportPath).writeAsString(noteContents).then((nothing) {
-                      scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text("Note exported at PotatoNotes/exported/exported_note_" +
-                              DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
-                        )
-                      );
-                    });
-                  } else {
-                    Map<PermissionGroup, PermissionStatus> permissions =
-                      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-                    appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-                  }
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.notifications),
-                enabled: !appInfo.notificationsIdList.contains(index.toString()),
-                title: Text("Pin to notifications"),
-                onTap: () async {
-                  appInfo.notificationsIdList.add(index.toString());
-                  await FlutterLocalNotificationsPlugin().show(
-                    int.parse(appInfo.notificationsIdList.last), noteList[index].title != "" ? noteList[index].title : "Pinned note",
-                    noteList[index].content, NotificationDetails(
-                      AndroidNotificationDetails(
-                        '0', 'note_pinned_notifications', 'idk',
-                        priority: Priority.High, playSound: true, importance: Importance.High,
-                        ongoing: true,
+              Visibility(
+                visible: noteList[index].hideContent == 1 &&
+                  (noteList[index].pin != null || noteList[index].password != null),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.lock,
+                        size: 14,
                       ),
-                      IOSNotificationDetails()
-                    ), payload: index.toString()
-                  );
-                  Navigator.pop(context);
-                },
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "Note is locked, use the options on the note screen",
+                          style: TextStyle(
+                            fontSize: 12
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
+              Visibility(
+                visible: !(noteList[index].hideContent == 1 &&
+                    (noteList[index].pin != null || noteList[index].password != null)),
+                child: Column(
+                  children: <Widget>[
+                    Divider(),
+                    ListTile(
+                      leading: Icon(Icons.share),
+                      title: Text("Share"),
+                      onTap: () {
+                        String shareText = "";
+
+                        if(noteList[index].title != "")
+                          shareText += noteList[index].title + "\n\n";
+                        shareText += noteList[index].content;
+
+                        Share.share(shareText);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.file_upload),
+                      title: Text("Export"),
+                      onTap: () async {
+                        if(appInfo.storageStatus == PermissionStatus.granted) {
+                          DateTime now = DateTime.now();
+ 
+                          bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/exported').exists();
+
+                          if(!backupDirExists) {
+                            await Directory('/storage/emulated/0/PotatoNotes/exported').create(recursive: true);
+                          }
+
+                          String noteExportPath =
+                            '/storage/emulated/0/PotatoNotes/exported/exported_note_' + DateFormat("dd-MM-yyyy_HH-mm").format(now) + '.md';
+
+                          String noteContents = "";
+
+                          if(noteList[index].title != "")
+                            noteContents += "# " + noteList[index].title + "\n\n";
+                    
+                          noteContents += noteList[index].content;
+
+                          Navigator.pop(context);
+
+                          File(noteExportPath).writeAsString(noteContents).then((nothing) {
+                            scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text("Note exported at PotatoNotes/exported/exported_note_" +
+                                    DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
+                              )
+                            );
+                          });
+                        } else {
+                          Map<PermissionGroup, PermissionStatus> permissions =
+                            await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+                          appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.notifications),
+                      enabled: !appInfo.notificationsIdList.contains(index.toString()),
+                      title: Text("Pin to notifications"),
+                      onTap: () async {
+                        appInfo.notificationsIdList.add(index.toString());
+                        await FlutterLocalNotificationsPlugin().show(
+                          int.parse(appInfo.notificationsIdList.last), noteList[index].title != "" ? noteList[index].title : "Pinned note",
+                          noteList[index].content, NotificationDetails(
+                            AndroidNotificationDetails(
+                              '0', 'note_pinned_notifications', 'idk',
+                              priority: Priority.High, playSound: true, importance: Importance.High,
+                              ongoing: true,
+                            ),
+                            IOSNotificationDetails()
+                          ), payload: index.toString()
+                        );
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         );

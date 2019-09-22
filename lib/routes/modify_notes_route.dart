@@ -2,17 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/internal/methods.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/methods.dart';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 List<int> reminderList = List<int>();
 
@@ -183,6 +185,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
           textTheme: ButtonTextTheme.accent,
           hoverColor: appInfo.mainColor
         ),
+        popupMenuTheme: PopupMenuThemeData(
+          color: noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+        ),
       ),
       child: Scaffold(
         key: scaffoldKey,
@@ -237,7 +242,121 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                           }
                         },
                       ),
-                      colorChooserIcon(),
+                      PopupMenuButton(
+                        padding: EdgeInsets.all(0),
+                        //color: Color(noteColor),
+                        itemBuilder: (context) {
+                          return <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: ListTile(
+                                //leading: Icon(Icons.color_lens),
+                                title: Text("Change note color"),
+                                onTap: () async {
+                                  Navigator.pop(context);
+
+                                  int result = await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return NoteColorDialog(
+                                        noteColor: noteColor,
+                                      );
+                                    }
+                                  );
+
+                                  setState(() {
+                                    if(result != null) {
+                                      if(result == 0) {
+                                        noteColor = null;
+                                      } else {
+                                        noteColor = result;
+                                      }
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                //leading: Icon(Icons.share),
+                                title: Text("Share"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  String shareText = "";
+
+                                  if(noteTitle != "")
+                                    shareText += noteTitle + "\n\n";
+                                  shareText += noteContent;
+
+                                  Share.share(shareText);
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                //leading: Icon(Icons.file_upload),
+                                title: Text("Export"),
+                                onTap: () async {
+                                  Navigator.pop(context);
+                                  if(appInfo.storageStatus == PermissionStatus.granted) {
+                                    DateTime now = DateTime.now();
+  
+                                    bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/exported').exists();
+
+                                    if(!backupDirExists) {
+                                      await Directory('/storage/emulated/0/PotatoNotes/exported').create(recursive: true);
+                                    }
+
+                                    String noteExportPath =
+                                      '/storage/emulated/0/PotatoNotes/exported/exported_note_' + DateFormat("dd-MM-yyyy_HH-mm").format(now) + '.md';
+
+                                    String noteContents = "";
+
+                                    if(noteTitle != "")
+                                      noteContents += "# " + noteTitle + "\n\n";
+                      
+                                    noteContents += noteContent;
+
+                                    File(noteExportPath).writeAsString(noteContents).then((nothing) {
+                                      scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content: Text("Note exported at PotatoNotes/exported/exported_note_" +
+                                              DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
+                                        )
+                                      );
+                                    });
+                                  } else {
+                                    Map<PermissionGroup, PermissionStatus> permissions =
+                                      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+                                    appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+                                  }
+                                },
+                              ),
+                            ),
+                            PopupMenuItem(
+                              child: ListTile(
+                                //leading: Icon(Icons.notifications),
+                                enabled: !appInfo.notificationsIdList.contains(noteId.toString()),
+                                title: Text("Pin to notifications"),
+                                onTap: () async {
+                                  appInfo.notificationsIdList.add(noteId.toString());
+                                  await FlutterLocalNotificationsPlugin().show(
+                                    int.parse(appInfo.notificationsIdList.last), noteTitle != "" ? noteTitle : "Pinned note",
+                                    noteContent, NotificationDetails(
+                                      AndroidNotificationDetails(
+                                        '0', 'note_pinned_notifications', 'idk',
+                                        priority: Priority.High, playSound: true, importance: Importance.High,
+                                        ongoing: true,
+                                      ),
+                                      IOSNotificationDetails()
+                                    ), payload: noteId.toString()
+                                  );
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          ];
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -489,65 +608,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     }
 
     return widgets;
-  }
-
-  Widget colorChooserIcon() {
-    List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
-      MaterialColor(0x00000000, {500: Colors.transparent}),
-      MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
-      MaterialColor(0xFFFFF18E, {500: Color(0xFFFFF18E)}),
-      MaterialColor(0xFFFFE8D1, {500: Color(0xFFFFE8D1)}),
-      MaterialColor(0xFFD8D4F2, {500: Color(0xFFD8D4F2)}),
-      MaterialColor(0xFFB9D6F2, {500: Color(0xFFB9D6F2)}),
-      MaterialColor(0xFFFFB8D1, {500: Color(0xFFFFB8D1)}),
-      MaterialColor(0xFFBCFFC3, {500: Color(0xFFBCFFC3)}),
-    ];
-
-    return IconButton(
-      icon: Icon(Icons.color_lens),
-      onPressed: () => showDialog(
-        context: context,
-        builder: (context) {
-          Color currentColor = noteColor == null ? Colors.transparent : Color(noteColor);
-          return AlertDialog(
-            title: Text("Note color selector"),
-            content: MaterialColorPicker(
-              colors: colors,
-              allowShades: false,
-              circleSize: 70.0,
-              onMainColorChange: (color) {
-                currentColor = color;
-              },
-              selectedColor: currentColor,
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              FlatButton(
-                child: Text(
-                  "Confirm",
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-                onPressed: () {
-                  if(currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
-                      || currentColor.toString() == "Color(0x00000000)") {
-                    setState(() => noteColor = null);
-                  } else {
-                    setState(() => noteColor = currentColor.value);
-                  }
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        }
-      ),
-    );
   }
 
   Future<int> noteIdSearcher() async {
@@ -993,6 +1053,89 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
           ),
         );
       }
+    );
+  }
+}
+
+class NoteColorDialog extends StatefulWidget {
+  int noteColor;
+
+  NoteColorDialog({
+    this.noteColor,
+  });
+
+  @override createState() => _NoteColorDialogState();
+}
+
+class _NoteColorDialogState extends State<NoteColorDialog> {
+  List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
+    MaterialColor(0x00000000, {500: Colors.transparent}),
+    MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
+    MaterialColor(0xFFFFF18E, {500: Color(0xFFFFF18E)}),
+    MaterialColor(0xFFFFE8D1, {500: Color(0xFFFFE8D1)}),
+    MaterialColor(0xFFD8D4F2, {500: Color(0xFFD8D4F2)}),
+    MaterialColor(0xFFB9D6F2, {500: Color(0xFFB9D6F2)}),
+    MaterialColor(0xFFFFB8D1, {500: Color(0xFFFFB8D1)}),
+    MaterialColor(0xFFBCFFC3, {500: Color(0xFFBCFFC3)}),
+  ];
+
+  Color currentColor;
+
+  @override
+  void initState() {
+    super.initState();
+    currentColor = widget.noteColor == null ? Colors.transparent : Color(widget.noteColor);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Note color selector"),
+      content: MaterialColorPicker(
+        colors: colors,
+        allowShades: false,
+        circleSize: 70.0,
+        onMainColorChange: (color) {
+          setState(() => currentColor = color);
+        },
+        selectedColor: currentColor,
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
+                || currentColor.toString() == "Color(0x00000000)" ?
+                  null :
+                  currentColor
+            ),
+          ),
+          onPressed: () => Navigator.pop(context, 0),
+        ),
+        FlatButton(
+          child: Text(
+            "Confirm",
+            style: TextStyle(
+              color: currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
+                || currentColor.toString() == "Color(0x00000000)" ?
+                  null :
+                  currentColor
+            ),
+          ),
+          onPressed: () {
+            int returnValue;
+
+            if(currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
+                || currentColor.toString() == "Color(0x00000000)") {
+              returnValue = 0;
+            } else {
+              returnValue = currentColor.value;
+            }
+            Navigator.pop(context, returnValue);
+          },
+        ),
+      ],
     );
   }
 }

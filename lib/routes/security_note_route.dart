@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
@@ -218,7 +219,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.height,
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -260,7 +261,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               ),
               Container(
                 width: MediaQuery.of(context).size.height,
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
                     Visibility(
@@ -293,10 +294,10 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  pinButton("1", true),
-                                  pinButton("2", true),
-                                  pinButton("3", true),
-                                  pinButton("4", true),
+                                  pinButton("1", false),
+                                  pinButton("2", false),
+                                  pinButton("3", false),
+                                  pinButton("4", false),
                                 ],
                               ),
                               Row(
@@ -304,10 +305,10 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  pinButton("5", true),
-                                  pinButton("6", true),
-                                  pinButton("7", true),
-                                  pinButton("8", true),
+                                  pinButton("5", false),
+                                  pinButton("6", false),
+                                  pinButton("7", false),
+                                  pinButton("8", false),
                                 ],
                               ),
                               Row(
@@ -315,10 +316,10 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  pinEmptyButton(true),
-                                  pinButton("9", true),
-                                  pinButton("0", true),
-                                  eraseButton(true),
+                                  pinEmptyButton(false),
+                                  pinButton("9", false),
+                                  pinButton("0", false),
+                                  eraseButton(false),
                                 ],
                               ),
                             ],
@@ -390,11 +391,11 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
     return widgets;
   }
   
-  Widget pinButton(String char, bool landscape) {
+  Widget pinButton(String char, bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: landscape ? 6 : 16, horizontal: landscape ? 10 : 24),
+      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 8),
       child: IconButton(
-        iconSize: 50,
+        iconSize: portrait ? 60 : 50,
         icon: Text(
           char,
           style: TextStyle(
@@ -422,11 +423,11 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
     );
   }
 
-  Widget eraseButton(bool landscape) {
+  Widget eraseButton(bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: landscape ? 6 : 16, horizontal: landscape ? 10 : 24),
+      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
       child: IconButton(
-        iconSize: 50,
+        iconSize: portrait ? 60 : 50,
         icon: Icon(
           Icons.keyboard_backspace,
           size: 30,
@@ -440,11 +441,11 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
     );
   }
 
-  Widget pinEmptyButton(bool landscape) {
+  Widget pinEmptyButton(bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: landscape ? 6 : 16, horizontal: landscape ? 10 : 24),
+      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
       child: IconButton(
-        iconSize: 50,
+        iconSize: portrait ? 60 : 50,
         icon: Text(
           "",
           style: TextStyle(
