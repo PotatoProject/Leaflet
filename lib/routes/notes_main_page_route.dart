@@ -957,41 +957,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   void toggleStarNote(int index) async {
     if(noteList[index].isStarred == 0) {
       await NoteHelper().update(
-        Note(
-          id: noteList[index].id,
-          title: noteList[index].title,
-          content: noteList[index].content,
-          isStarred: 1,
-          date: noteList[index].date,
-          color: noteList[index].color,
-          imagePath: noteList[index].imagePath,
-          isList: noteList[index].isList,
-          listParseString: noteList[index].listParseString,
-          reminders: noteList[index].reminders,
-          hideContent: noteList[index].hideContent,
-          pin: noteList[index].pin,
-          password: noteList[index].password
-        ),
+        noteList[index].copyWith(localIsStarred: 1),
       );
       List<Note> list = await NoteHelper().getNotes();
       setState(() => noteList = list);
     } else if(noteList[index].isStarred == 1) {
       await NoteHelper().update(
-        Note(
-          id: noteList[index].id,
-          title: noteList[index].title,
-          content: noteList[index].content,
-          isStarred: 0,
-          date: noteList[index].date,
-          color: noteList[index].color,
-          imagePath: noteList[index].imagePath,
-          isList: noteList[index].isList,
-          listParseString: noteList[index].listParseString,
-          reminders: noteList[index].reminders,
-          hideContent: noteList[index].hideContent,
-          pin: noteList[index].pin,
-          password: noteList[index].password
-        ),
+        noteList[index].copyWith(localIsStarred: 0),
       );
       List<Note> list = await NoteHelper().getNotes();
       setState(() => noteList = list);
@@ -1258,21 +1230,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 title: Text("Delete"),
                 onTap: () async {
                   Navigator.pop(context);
-                  Note noteBackup = Note(
-                    id: noteList[index].id,
-                    title: noteList[index].title,
-                    content: noteList[index].content,
-                    isStarred: noteList[index].isStarred,
-                    date: noteList[index].date,
-                    color: noteList[index].color,
-                    imagePath: noteList[index].imagePath,
-                    isList: noteList[index].isList,
-                    listParseString: noteList[index].listParseString,
-                    reminders: noteList[index].reminders,
-                    hideContent: noteList[index].hideContent,
-                    pin: noteList[index].pin,
-                    password: noteList[index].password
-                  );
+                  Note noteBackup = noteList[index];
                   await NoteHelper().delete(noteList[index].id);
                   List<Note> list = await NoteHelper().getNotes();
                   setState(() => noteList = list);
@@ -1308,41 +1266,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 onTap: () async {
                   if(noteStarred) {
                     await NoteHelper().update(
-                      Note(
-                        id: noteList[index].id,
-                        title: noteList[index].title,
-                        content: noteList[index].content,
-                        isStarred: 0,
-                        date: noteList[index].date,
-                        color: noteList[index].color,
-                        imagePath: noteList[index].imagePath,
-                        isList: noteList[index].isList,
-                        listParseString: noteList[index].listParseString,
-                        reminders: noteList[index].reminders,
-                        hideContent: noteList[index].hideContent,
-                        pin: noteList[index].pin,
-                        password: noteList[index].password
-                      ),
+                      noteList[index].copyWith(localIsStarred: 0),
                     );
                     List<Note> list = await NoteHelper().getNotes();
                     setState(() => noteList = list);
                   } else {
                     await NoteHelper().update(
-                      Note(
-                        id: noteList[index].id,
-                        title: noteList[index].title,
-                        content: noteList[index].content,
-                        isStarred: 1,
-                        date: noteList[index].date,
-                        color: noteList[index].color,
-                        imagePath: noteList[index].imagePath,
-                        isList: noteList[index].isList,
-                        listParseString: noteList[index].listParseString,
-                        reminders: noteList[index].reminders,
-                        hideContent: noteList[index].hideContent,
-                        pin: noteList[index].pin,
-                        password: noteList[index].password
-                      ),
+                      noteList[index].copyWith(localIsStarred: 1),
                     );
                     List<Note> list = await NoteHelper().getNotes();
                     setState(() => noteList = list);
@@ -1350,6 +1280,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   Navigator.pop(context);
                 },
               ),
+              Divider(),
               Visibility(
                 visible: noteList[index].hideContent == 1 &&
                   (noteList[index].pin != null || noteList[index].password != null),
@@ -1379,7 +1310,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     (noteList[index].pin != null || noteList[index].password != null)),
                 child: Column(
                   children: <Widget>[
-                    Divider(),
                     ListTile(
                       leading: Icon(Icons.share),
                       title: Text("Share"),

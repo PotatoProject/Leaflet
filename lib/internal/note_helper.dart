@@ -198,6 +198,29 @@ class Note {
       'password': password,
     };
   }
+
+  Note copyWith({
+    int localIsStarred,
+    int localColor,
+    int localIsList,
+    int localHideContent,
+  }) {
+    return Note(
+      id: this.id,
+      title: this.title,
+      content: this.content,
+      isStarred: localIsStarred ?? this.isStarred,
+      date: this.date,
+      color: localColor ?? this.color,
+      imagePath: this.imagePath,
+      isList: localIsList ?? this.isList,
+      listParseString: this.listParseString,
+      reminders: this.reminders,
+      hideContent: localHideContent ?? this.hideContent,
+      pin: this.pin,
+      password: this.password,
+    );
+  }
 }
 
 class ListPair {
