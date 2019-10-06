@@ -190,7 +190,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     );
   }
 
-  List<Widget> noteSearchList(BuildContext contex) {
+  List<Widget> noteSearchList(BuildContext context) {
     searchFilters = Provider.of<SearchFiltersProvider>(context);
     List<int> indexesList = List<int>();
     List<Widget> widgetList = List<Widget>();
@@ -205,9 +205,9 @@ class _SearchNotesState extends State<SearchNotesRoute> {
           DateFormat("dd MM yyyy").format(DateTime.fromMillisecondsSinceEpoch(searchFilters.date));
       int noteColor = noteList[i].color;
 
-      bool addToList = ((noteTitle.contains(query) ||
-          noteContent.contains(query)) &
-          (searchFilters.color == null ? true : noteColor == searchFilters.color)) &
+      bool addToList = noteList[i].hideContent == 0 && ((noteTitle.contains(query) ||
+          noteContent.contains(query)) &&
+          (searchFilters.color == null ? true : noteColor == searchFilters.color)) &&
           (filterDate == null ? true : noteDate == filterDate);
       
       if(addToList) {

@@ -378,12 +378,15 @@ class _SettingsState extends State<SettingsRoute> {
                     width: 80,
                     height: 80,
                     decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                      fit: BoxFit.fill,
+                      color: Color(0xFFFF9800),
+                      borderRadius: BorderRadius.circular(40),  
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: Image(
                         image: AssetImage('assets/notes_round.png'),
                       ),
-                    )
+                    ),
                   ),
                 ),
               ),
@@ -400,12 +403,12 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
                 child: Text("Developed and mantained by HrX03"),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 29, right: 29),
-                child: Text("App icon, design and app branding by RshBfn")
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
+                child: Text("Design, app branding and app logo by RshBfn")
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 30, 24, 4),
