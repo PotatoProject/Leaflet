@@ -6,10 +6,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
-import 'package:potato_notes/routes/easteregg_route.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 import 'package:potato_notes/routes/search_notes_route.dart';
 import 'package:potato_notes/routes/security_note_route.dart';
@@ -46,10 +46,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   bool isSelectorVisible = false;
 
   AppInfoProvider appInfo;
+  AppLocalizations locales;
 
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -106,7 +108,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     for(int i = 0; i < appInfo.notificationsIdList.length; i++) {
       int index = int.parse(appInfo.notificationsIdList[i]);
       await FlutterLocalNotificationsPlugin().show(
-        index, noteList[index].title != "" ? noteList[index].title : "Pinned note",
+        index, noteList[index].title != "" ? noteList[index].title : locales.notesMainPageRoute_pinnedNote,
         noteList[index].content, NotificationDetails(
           AndroidNotificationDetails(
             '0', 'note_pinned_notifications', 'idk',
@@ -122,6 +124,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   @override
   Widget build(BuildContext context) {
     appInfo = Provider.of<AppInfoProvider>(context);
+    locales = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
@@ -183,7 +186,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   children: <Widget>[
                     Center(
                       child: Text(
-                        "Notes",
+                        locales.notes,
                         style: TextStyle(
                           fontSize: 26.0,
                           fontWeight: FontWeight.w600,
@@ -239,7 +242,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                           .toColor()
                     ),
                     Text(
-                      "No notes added... yet",
+                      locales.notesMainPageRoute_noNotes,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -270,7 +273,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
           setState(() => isSelectorVisible = false);
         },
         child: Icon(Icons.edit),
-        tooltip: "Add new note",
+        tooltip: locales.notesMainPageRoute_addButtonTooltip,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _bottomBar,
@@ -297,7 +300,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   .toColor(),
               ),
               Text(
-                "  Starred notes",
+                "  " + locales.notesMainPageRoute_starred,
                 style: TextStyle(
                   fontSize: 14.0,
                   color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
@@ -383,7 +386,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   .toColor(),
               ),
               Text(
-                "  Starred notes",
+                "  " + locales.notesMainPageRoute_starred,
                 style: TextStyle(
                   fontSize: 14.0,
                   color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
@@ -717,7 +720,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                               MediaQuery.of(context).size.width-100,
                           child: (noteList[index].hideContent == 1 && noteList[index].reminders == null) ?
                               Text(
-                                "Content hidden",
+                                locales.notesMainPageRoute_note_hiddenContent,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
@@ -725,7 +728,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                               ) :
                               (noteList[index].hideContent == 0 && noteList[index].reminders != null) ?
                                   Text(
-                                    "Reminders set for note",
+                                    locales.notesMainPageRoute_note_remindersSet,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: noteList[index].color == null ? null : getTextColorFromNoteColor(index, false),
@@ -899,7 +902,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 MediaQuery.of(context).size.width-108,
               padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
               child: Text(
-                checkedList.length.toString() + " entries selected",
+                checkedList.length.toString() + locales.notesMainPageRoute_note_list_selectedEntries,
                 style: TextStyle(
                   color: noteList[index].color == null ?
                     Theme.of(context).textTheme.title.color :
@@ -994,7 +997,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Center(
                   child: Text(
-                    "User info",
+                    locales.notesMainPageRoute_user_info,
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w500,
@@ -1043,7 +1046,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text("Choose action"),
+                                title: Text(locales.chooseAction),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(8.0))
                                 ),
@@ -1053,7 +1056,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                     ListTile(
                                       contentPadding: EdgeInsets.symmetric(horizontal: 0),
                                       leading: Icon(Icons.photo_library),
-                                      title: Text("Change avatar"),
+                                      title: Text(locales.notesMainPageRoute_user_avatar_change),
                                       onTap: () async {
                                         Navigator.pop(context);
                                         File image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -1064,7 +1067,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                     ListTile(
                                       contentPadding: EdgeInsets.symmetric(horizontal: 0),
                                       leading: Icon(Icons.delete),
-                                      title: Text("Remove avatar"),
+                                      title: Text(locales.notesMainPageRoute_user_avatar_remove),
                                       onTap: () async {
                                         appInfo.userImagePath = null;
                                         Navigator.pop(context);
@@ -1113,7 +1116,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                 .withAlpha(cardBrightness)
                                 .toColor();
                             return AlertDialog(
-                              title: Text("Change username"),
+                              title: Text(locales.notesMainPageRoute_user_name_change),
                               contentPadding: EdgeInsets.fromLTRB(12, 12, 12, 0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(8.0))
@@ -1137,13 +1140,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                               ),
                               actions: <Widget>[
                                 FlatButton(
-                                  child: Text("Cancel"),
+                                  child: Text(locales.cancel),
                                   onPressed: () => Navigator.pop(context),
                                   textColor: appInfo.mainColor,
                                   hoverColor: appInfo.mainColor,
                                 ),
                                 FlatButton(
-                                  child: Text("Reset"),
+                                  child: Text(locales.reset),
                                   onPressed: () {
                                     appInfo.userName = "";
                                     Navigator.pop(context);
@@ -1152,7 +1155,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                   hoverColor: appInfo.mainColor,
                                 ),
                                 FlatButton(
-                                  child: Text("Done"),
+                                  child: Text(locales.done),
                                   onPressed: () {
                                     appInfo.userName = currentName;
                                     Navigator.pop(context);
@@ -1207,7 +1210,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.check),
-                title: Text("Select"),
+                title: Text(locales.note_select),
                 onTap: () {
                   setState(() {
                     isSelectorVisible = true;
@@ -1219,7 +1222,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               ListTile(
                 leading: Icon(Icons.edit),
-                title: Text("Edit"),
+                title: Text(locales.note_edit),
                 onTap: () {
                   Navigator.pop(context);
                   _editNoteCaller(parentContext, noteList[index]);
@@ -1227,7 +1230,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
               ),
               ListTile(
                 leading: Icon(Icons.delete),
-                title: Text("Delete"),
+                title: Text(locales.note_delete),
                 onTap: () async {
                   Navigator.pop(context);
                   Note noteBackup = noteList[index];
@@ -1237,11 +1240,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   scaffoldKey.currentState.removeCurrentSnackBar();
                   scaffoldKey.currentState.showSnackBar(
                     SnackBar(
-                      content: Text("Note deleted"),
+                      content: Text(locales.note_delete_snackbar),
                       behavior: SnackBarBehavior.floating,
                       elevation: 0.0,
                       action: SnackBarAction(
-                        label: "Undo",
+                        label: locales.undo,
                         onPressed: () async {
                           await NoteHelper().insert(noteBackup);
                           List<Note> list = await NoteHelper().getNotes();
@@ -1260,8 +1263,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                 ),
                 title: Text(
                   noteStarred ?
-                    "Unstar" :
-                    "Star"
+                    locales.note_unstar :
+                    locales.note_star
                 ),
                 onTap: () async {
                   if(noteStarred) {
@@ -1295,7 +1298,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          "Note is locked, use the options on the note screen",
+                          locales.note_lockedOptions,
                           style: TextStyle(
                             fontSize: 12
                           ),
@@ -1312,7 +1315,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                   children: <Widget>[
                     ListTile(
                       leading: Icon(Icons.share),
-                      title: Text("Share"),
+                      title: Text(locales.note_share),
                       onTap: () {
                         String shareText = "";
 
@@ -1326,7 +1329,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ),
                     ListTile(
                       leading: Icon(Icons.file_upload),
-                      title: Text("Export"),
+                      title: Text(locales.note_export),
                       onTap: () async {
                         if(appInfo.storageStatus == PermissionStatus.granted) {
                           DateTime now = DateTime.now();
@@ -1352,7 +1355,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                           File(noteExportPath).writeAsString(noteContents).then((nothing) {
                             scaffoldKey.currentState.showSnackBar(
                               SnackBar(
-                                content: Text("Note exported at PotatoNotes/exported/exported_note_" +
+                                content: Text(locales.note_exportLocation + " PotatoNotes/exported/exported_note_" +
                                     DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
                               )
                             );
@@ -1367,7 +1370,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                     ListTile(
                       leading: Icon(Icons.notifications),
                       enabled: !appInfo.notificationsIdList.contains(index.toString()),
-                      title: Text("Pin to notifications"),
+                      title: Text(locales.note_pinToNotifs),
                       onTap: () async {
                         appInfo.notificationsIdList.add(index.toString());
                         await FlutterLocalNotificationsPlugin().show(

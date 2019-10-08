@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
@@ -130,6 +132,15 @@ class NotesRoot extends StatelessWidget {
           }
 
           return MaterialApp(
+            localizationsDelegates: [
+              AppLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            supportedLocales: [
+              Locale("en"),
+              Locale("it"),
+            ],
             builder: (context, child) => ScrollConfiguration(
               behavior: NoGlowScrollBehavior(),
               child: child,

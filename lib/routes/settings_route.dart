@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
@@ -22,9 +23,12 @@ class SettingsRoute extends StatefulWidget {
 class _SettingsState extends State<SettingsRoute> {
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  AppLocalizations locales;
+
   @override
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+    locales = AppLocalizations.of(context);
 
     Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
         Brightness.light :
@@ -53,7 +57,7 @@ class _SettingsState extends State<SettingsRoute> {
                       padding: EdgeInsets.only(left: 10),
                       child: Center(
                         child: Text(
-                          "Settings",
+                          locales.settingsRoute_title,
                           style: TextStyle(
                             fontSize: 26.0,
                             fontWeight: FontWeight.w600,
@@ -73,7 +77,7 @@ class _SettingsState extends State<SettingsRoute> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10, left: 70),
                   child: Text(
-                    "Themes",
+                    locales.settingsRoute_themes,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontWeight: FontWeight.w600,
@@ -83,7 +87,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 SwitchListTile(
                   secondary: Icon(Icons.brightness_medium),
-                  title: Text('Follow system theme'),
+                  title: Text(locales.settingsRoute_themes_followSystem),
                   onChanged: (val) {
                     appInfo.followSystemTheme = val;
                   },
@@ -93,18 +97,18 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   enabled: appInfo.followSystemTheme,
                   leading: Icon(Icons.brightness_3),
-                  title: Text('Auto dark theme mode'),
+                  title: Text(locales.settingsRoute_themes_systemDarkMode),
                   trailing: DropdownButton(
                     value: appInfo.darkThemeMode,
                     underline: Container(),
-                    disabledHint: appInfo.darkThemeMode == 0 ? Text("Dark") : Text("Black"),
+                    disabledHint: appInfo.darkThemeMode == 0 ? Text(locales.dark) : Text(locales.black),
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
-                        child: Text("Dark"),
+                        child: Text(locales.dark),
                         value: 0,
                       ),
                       DropdownMenuItem(
-                        child: Text("Black"),
+                        child: Text(locales.black),
                         value: 1,
                       ),
                     ],
@@ -116,26 +120,26 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   enabled: !appInfo.followSystemTheme,
                   leading: Icon(Icons.brightness_5),
-                  title: Text('App theme'),
+                  title: Text(locales.settingsRoute_themes_appTheme),
                   trailing: DropdownButton(
                     value: appInfo.themeMode,
                     disabledHint: appInfo.themeMode == 0 ?
-                        Text("Light") :
+                        Text(locales.light) :
                             appInfo.themeMode == 1 ?
-                            Text("Dark") :
-                        Text("Black"),
+                            Text(locales.dark) :
+                        Text(locales.black),
                     underline: Container(),
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
-                        child: Text("Light"),
+                        child: Text(locales.light),
                         value: 0,
                       ),
                       DropdownMenuItem(
-                        child: Text("Dark"),
+                        child: Text(locales.dark),
                         value: 1,
                       ),
                       DropdownMenuItem(
-                        child: Text("Black"),
+                        child: Text(locales.black),
                         value: 2,
                       ),
                     ],
@@ -146,7 +150,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 SwitchListTile(
                   secondary: Icon(Icons.opacity),
-                  title: Text('Custom accent color'),
+                  title: Text(locales.settingsRoute_themes_useCustomAccent),
                   onChanged: (val) {
                     appInfo.useCustomMainColor = val;
                   },
@@ -155,7 +159,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   leading: Icon(Icons.color_lens),
-                  title: Text("Custom color"),
+                  title: Text(locales.settingsRoute_themes_customAccentColor),
                   enabled: appInfo.useCustomMainColor,
                   trailing: Container(
                     width: 24.0,
@@ -191,7 +195,7 @@ class _SettingsState extends State<SettingsRoute> {
                         actions: <Widget>[
                           FlatButton(
                             child: Text(
-                              "Cancel",
+                              locales.cancel,
                               style: TextStyle(color: Theme.of(context).accentColor),
                             ),
                             onPressed: () => Navigator.pop(context),
@@ -200,7 +204,7 @@ class _SettingsState extends State<SettingsRoute> {
                           ),
                           FlatButton(
                             child: Text(
-                             "Confirm",
+                             locales.confirm,
                               style: TextStyle(color: Theme.of(context).accentColor),
                             ),
                             onPressed: () {
@@ -218,7 +222,7 @@ class _SettingsState extends State<SettingsRoute> {
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
                   child: Text(
-                    "Gestures",
+                    locales.settingsRoute_gestures,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontWeight: FontWeight.w600,
@@ -229,15 +233,14 @@ class _SettingsState extends State<SettingsRoute> {
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
                   secondary: Icon(Icons.star),
-                  title: Text('Quick starred gesture'),
-                  subtitle: Text("If enabled, you can just double tap on a note to star it"),
+                  title: Text(locales.settingsRoute_gestures_quickStar),
                   value: appInfo.isQuickStarredGestureOn,
                   onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
                   child: Text(
-                    "Backup & restore",
+                    locales.settingsRoute_backupAndRestore,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontWeight: FontWeight.w600,
@@ -247,7 +250,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   leading: Icon(Icons.backup),
-                  title: Text("Backup (experimental)"),
+                  title: Text(locales.settingsRoute_backupAndRestore_backup),
                   onTap: () async {
                     if(appInfo.storageStatus == PermissionStatus.granted) {
                       DateTime now = DateTime.now();
@@ -265,7 +268,7 @@ class _SettingsState extends State<SettingsRoute> {
 
                       scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content: Text("Backup located at: " + databaseBackupPath)
+                          content: Text(locales.settingsRoute_backupAndRestore_backup_done(databaseBackupPath))
                         )
                       );
                     } else {
@@ -277,7 +280,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   leading: Icon(Icons.restore),
-                  title: Text("Restore (experimental)"),
+                  title: Text(locales.settingsRoute_backupAndRestore_restore),
                   onTap: () async {
                     String path = await FilePicker.getFilePath();
                     
@@ -288,13 +291,13 @@ class _SettingsState extends State<SettingsRoute> {
                         await NoteHelper().restoreDatabaseToPath(path);
                         scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Done!")
+                            content: Text(locales.settingsRoute_backupAndRestore_restore_success)
                           )
                         );
                       } else {
                         scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Corrupted or invalid db")
+                            content: Text(locales.settingsRoute_backupAndRestore_restore_fail)
                           )
                         );
                       }
@@ -304,7 +307,7 @@ class _SettingsState extends State<SettingsRoute> {
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
                   child: Text(
-                    "About",
+                    locales.settingsRoute_about,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontWeight: FontWeight.w600,
@@ -314,18 +317,18 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   leading: Icon(Icons.info),
-                  title: Text("About PotatoNotes"),
+                  title: Text(locales.settingsRoute_about_potatonotes),
                   onTap: () => showNoteAboutDialog(),
                 ),
                 ListTile(
                   leading: Icon(Icons.code),
-                  title: Text("PotatoNotes source code"),
+                  title: Text(locales.settingsRoute_about_sourceCode),
                   onTap: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
                   child: Text(
-                    "Developer options",
+                    locales.settingsRoute_dev,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontWeight: FontWeight.w600,
@@ -336,7 +339,7 @@ class _SettingsState extends State<SettingsRoute> {
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
                   secondary: Icon(Icons.label),
-                  title: Text('Show id labels'),
+                  title: Text(locales.settingsRoute_dev_idLabels),
                   value: appInfo.devShowIdLabels,
                   onChanged: (value) => appInfo.devShowIdLabels = value,
                 ),
@@ -404,11 +407,11 @@ class _SettingsState extends State<SettingsRoute> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
-                child: Text("Developed and mantained by HrX03"),
+                child: Text(locales.settingsRoute_about_potatonotes_development),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
-                child: Text("Design, app branding and app logo by RshBfn")
+                child: Text(locales.settingsRoute_about_potatonotes_design),
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 30, 24, 4),

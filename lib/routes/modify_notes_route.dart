@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/methods.dart';
 
@@ -68,6 +69,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
   List<TextEditingController> textControllers = List<TextEditingController>();
   AnimationController _controller;
 
+  AppLocalizations locales;
+
   void noteIdInit() async {
     noteId = noteId == null ? await noteIdSearcher() : noteId;
   }
@@ -109,6 +112,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
   Widget build(BuildContext context) {
     TextEditingController titleController = TextEditingController(text: noteTitle);
     TextEditingController contentController = TextEditingController(text: noteContent);
+
+    locales = AppLocalizations.of(context);
 
     reminderListPopulater();
 
@@ -248,7 +253,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                                 PopupMenuItem(
                                   child: ListTile(
                                     //leading: Icon(Icons.color_lens),
-                                    title: Text("Change note color"),
+                                    title: Text(locales.modifyNotesRoute_color_change),
                                     onTap: () async {
                                       Navigator.pop(context);
 
@@ -276,7 +281,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                                 PopupMenuItem(
                                   child: ListTile(
                                     //leading: Icon(Icons.share),
-                                    title: Text("Share"),
+                                    title: Text(locales.note_share),
                                     onTap: () {
                                       Navigator.pop(context);
                                       String shareText = "";
@@ -292,7 +297,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                                 PopupMenuItem(
                                   child: ListTile(
                                     //leading: Icon(Icons.file_upload),
-                                    title: Text("Export"),
+                                    title: Text(locales.note_export),
                                     onTap: () async {
                                       Navigator.pop(context);
                                       if(appInfo.storageStatus == PermissionStatus.granted) {
@@ -317,7 +322,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                                         File(noteExportPath).writeAsString(noteContents).then((nothing) {
                                           scaffoldKey.currentState.showSnackBar(
                                             SnackBar(
-                                              content: Text("Note exported at PotatoNotes/exported/exported_note_" +
+                                              content: Text(locales.note_exportLocation + " PotatoNotes/exported/exported_note_" +
                                                   DateFormat("dd-MM-yyyy_HH-mm-ss").format(now)),
                                             )
                                           );
@@ -334,11 +339,11 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                                   child: ListTile(
                                     //leading: Icon(Icons.notifications),
                                     enabled: !appInfo.notificationsIdList.contains(noteId.toString()),
-                                    title: Text("Pin to notifications"),
+                                    title: Text(locales.note_pinToNotifs),
                                     onTap: () async {
                                       appInfo.notificationsIdList.add(noteId.toString());
                                       await FlutterLocalNotificationsPlugin().show(
-                                        int.parse(appInfo.notificationsIdList.last), noteTitle != "" ? noteTitle : "Pinned note",
+                                        int.parse(appInfo.notificationsIdList.last), noteTitle != "" ? noteTitle : locales.notesMainPageRoute_pinnedNote,
                                         noteContent, NotificationDetails(
                                           AndroidNotificationDetails(
                                             '0', 'note_pinned_notifications', 'idk',
@@ -401,7 +406,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: TextField(
                       controller: titleController,
-                      decoration: InputDecoration(hintText: 'Title', border: InputBorder.none),
+                      decoration: InputDecoration(hintText: locales.modifyNotesRoute_title, border: InputBorder.none),
                       onChanged: (text) {
                         noteTitle = text;
                       },
@@ -430,7 +435,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
                         controller: contentController,
-                        decoration: InputDecoration(hintText: 'Content', border: InputBorder.none),
+                        decoration: InputDecoration(hintText: locales.modifyNotesRoute_content, border: InputBorder.none),
                         onChanged: (text) {
                           noteContent = text;
                         },
@@ -562,7 +567,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
         ),
         title: TextField(
           controller: entryTextController,
-          decoration: InputDecoration(border: InputBorder.none, hintText: "Entry"),
+          decoration: InputDecoration(border: InputBorder.none, hintText: locales.modifyNotesRoute_list_entry),
           textCapitalization: TextCapitalization.sentences,
           onChanged: (text) {
             //entryTextController.selection = TextSelection.collapsed(offset: text.length);
@@ -589,7 +594,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
       widgets.add(
         ExpansionTile(
           initiallyExpanded: true,
-          title: Text(checkedWidgets.length.toString() + " checked entries"),
+          title: Text(checkedWidgets.length.toString() + locales.modifyNotesRoute_list_selectedEntries),
           children: checkedWidgets,
           leading: RotationTransition(
             turns: _iconTurns,
@@ -697,12 +702,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
     Navigator.pop(context, noteList);
   }
 
-  Future<void> showImageActionDialog(BuildContext context) {
+  void showImageActionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Choose action"),
+          title: Text(locales.chooseAction),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))
           ),
@@ -713,7 +718,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 leading: Icon(Icons.photo_library),
-                title: noteImagePath != null ? Text("Update image") : Text("Add image"),
+                title: noteImagePath != null ? Text(locales.modifyNotesRoute_image_update) : Text(locales.modifyNotesRoute_image_add),
                 onTap: () async {
                   Navigator.pop(context);
                   File image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -725,7 +730,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 enabled: noteImagePath != null,
                 leading: Icon(Icons.delete),
-                title: Text("Remove image"),
+                title: Text(locales.modifyNotesRoute_image_remove),
                 onTap: () async {
                   setState(() => noteImagePath = null);
                   Navigator.pop(context);
@@ -753,7 +758,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
       builder: (BuildContext context) {
 
         return AlertDialog(
-          title: index != null ? Text("Update reminder") : Text("Add a new reminder"),
+          title: index != null ? Text(locales.modifyNotesRoute_reminder_update) : Text(locales.modifyNotesRoute_reminder_add),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))
           ),
@@ -764,7 +769,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 leading: Icon(Icons.timer),
-                title: Text("Time"),
+                title: Text(locales.modifyNotesRoute_reminder_time),
                 onTap: () async {
                   TimeOfDay result = await showTimePicker(
                     context: context,
@@ -781,7 +786,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 leading: Icon(Icons.date_range),
-                title: Text("Date"),
+                title: Text(locales.modifyNotesRoute_reminder_date),
                 onTap: () async {
                   DateTime result = await showDatePicker(
                     context: context,
@@ -803,7 +808,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             index != null ? FlatButton(
               textColor: appInfo.mainColor,
               hoverColor: appInfo.mainColor,
-              child: Text("Remove"),
+              child: Text(locales.remove),
               onPressed: () async {
                 reminderList.removeAt(index);
                 await FlutterLocalNotificationsPlugin().cancel(
@@ -816,13 +821,13 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
             FlatButton(
               textColor: appInfo.mainColor,
               hoverColor: appInfo.mainColor,
-              child: Text("Cancel"),
+              child: Text(locales.cancel),
               onPressed: () => Navigator.pop(context),
             ),
             FlatButton(
               textColor: appInfo.mainColor,
               hoverColor: appInfo.mainColor,
-              child: Text("Save"),
+              child: Text(locales.save),
               onPressed: (appInfo.date != null && appInfo.time != null) ? () async {
                 DateTime completeReminder = DateTime(
                   appInfo.date.year,
@@ -840,7 +845,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                 String notifId = noteId.toString() + (index != null ? index : reminderList.length).toString();
                 appInfo.remindersNotifIdList.add(notifId);
                 await FlutterLocalNotificationsPlugin().schedule(
-                  int.parse(appInfo.remindersNotifIdList.last), noteTitle != "" ? noteTitle : "Reminder",
+                  int.parse(appInfo.remindersNotifIdList.last), noteTitle != "" ? noteTitle : locales.modifyNotesRoute_reminder,
                   noteContent, completeReminder, NotificationDetails(
                     AndroidNotificationDetails(
                       '1', 'note_reminders_notifications', 'Reminders channel',
@@ -895,7 +900,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     Icons.add_to_photos,
                     color: iconTextColor,
                   ),
-                  title: Text("Image"),
+                  title: Text(locales.modifyNotesRoute_image),
                   onTap: () async {
                     Navigator.pop(context);
                     showImageActionDialog(context);
@@ -906,7 +911,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     noteIsList == 0 ? Icons.check_circle_outline : Icons.check_circle,
                     color: iconTextColor,
                   ),
-                  title: Text("List"),
+                  title: Text(locales.modifyNotesRoute_list),
                   onTap: () {
                     setState(() {
                       if(noteIsList == 0) {
@@ -935,7 +940,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     Icons.add_alert,
                     color: iconTextColor,
                   ),
-                  title: Text("Reminder"),
+                  title: Text(locales.modifyNotesRoute_reminder),
                   onTap: () async {
                     final appInfo = Provider.of<AppInfoProvider>(context);
                     appInfo.date = null;
@@ -992,7 +997,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                     Icons.remove_red_eye,
                     color: iconTextColor,
                   ),
-                  title: Text("Hide note content on main page"),
+                  title: Text(locales.modifyNotesRoute_security_hideContent),
                   value: appInfo.hideContent == 1,
                   onChanged: (value) async {
                     appInfo.hideContent = value ? 1 : 0;
@@ -1000,7 +1005,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                   },
                 ),
                 SwitchListTile(
-                  title: Text("Use a protection for hiding"),
+                  title: Text(locales.modifyNotesRoute_security_protectionText),
                   secondary: Icon(
                     Icons.lock,
                     color: iconTextColor,
@@ -1019,7 +1024,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                 ListTile(
                   enabled: appInfo.hideContent == 1 && appInfo.useProtectionForNoteContent,
                   leading: Icon(Icons.check, color: appInfo.pin ? iconTextColor : Colors.transparent),
-                  title: Text("PIN"),
+                  title: Text(locales.modifyNotesRoute_security_pin),
                   onTap: () async {
                     int result = await showDialog(
                       context: context,
@@ -1032,11 +1037,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                         );
                       }
                     );
-
-                    /*if(result == 0) {
-                      print("lol");
-                      notePin = null;
-                    } else */
+                    
                     if(result != null) {
                       notePin = result;
                       notePassword = null;
@@ -1046,7 +1047,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                 ListTile(
                   enabled: appInfo.hideContent == 1 && appInfo.useProtectionForNoteContent,
                   leading: Icon(Icons.check, color: appInfo.password ? iconTextColor : Colors.transparent),
-                  title: Text("Password"),
+                  title: Text(locales.modifyNotesRoute_security_password),
                   onTap: () async {
                     String result = await showDialog(
                       context: context,
@@ -1059,10 +1060,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute> with SingleTickerProvide
                         );
                       }
                     );
-
-                    /*if(result == "") {
-                      notePassword = null;
-                    } else */
+                    
                     if(result != null) {
                       notePassword = result;
                       notePin = null;
@@ -1110,8 +1108,9 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text("Note color selector"),
+      title: Text(locales.modifyNotesRoute_color_dialogTitle),
       content: MaterialColorPicker(
         colors: colors,
         allowShades: false,
@@ -1124,7 +1123,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
       actions: <Widget>[
         FlatButton(
           child: Text(
-            "Cancel",
+            locales.cancel,
             style: TextStyle(
               color: currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
                 || currentColor.toString() == "Color(0x00000000)" ?
@@ -1136,7 +1135,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
         ),
         FlatButton(
           child: Text(
-            "Confirm",
+            locales.confirm,
             style: TextStyle(
               color: currentColor.toString() == "MaterialColor(primary value: Color(0x00000000))"
                 || currentColor.toString() == "Color(0x00000000)" ?
@@ -1196,8 +1195,10 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
+    
     return AlertDialog(
-      title: Text(widget.setPassword ? "Set or update password" : "Set or update PIN"),
+      title: Text(widget.setPassword ? locales.modifyNotesRoute_security_dialog_titlePassword : locales.modifyNotesRoute_security_dialog_titlePin),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1215,13 +1216,13 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                   onChanged: (text) {
                     setState(() {
                       if(text.length < minLength) {
-                        status = (widget.setPassword ? "Password" : "PIN") + " length can't be less than $minLength";
+                        status = locales.modifyNotesRoute_security_dialog_lengthShort(widget.setPassword ? "Password" : "PIN", minLength.toString());
                         error = true;
                       } else if(text.length > maxLength) {
-                        status = (widget.setPassword ? "Password" : "PIN") + " length can't exceed $maxLength";
+                        status = locales.modifyNotesRoute_security_dialog_lengthExceed(widget.setPassword ? "Password" : "PIN", maxLength.toString());
                         error = true;
                       } else {
-                        status = (widget.setPassword ? "Password" : "PIN") + " valid";
+                        status = (widget.setPassword ? "Password" : "PIN") + locales.modifyNotesRoute_security_dialog_valid;
                         error = false;
                       }
                     });
@@ -1253,25 +1254,12 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
         ],
       ),
       actions: <Widget>[
-        /*FlatButton(
-          child: Text("Remove"),
-          onPressed: () {
-            if(widget.setPassword) {
-              widget.password = null;
-              widget.appInfo.password = false;
-            } else {
-              widget.pin = null;
-              widget.appInfo.pin = false;
-            }
-            Navigator.pop(context, widget.setPassword ? "" : 0);
-          },
-        ),*/
         FlatButton(
-          child: Text("Cancel"),
+          child: Text(locales.cancel),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text("Set"),
+          child: Text(locales.done),
           onPressed: error ? null : () {
             if(widget.setPassword) {
               widget.password = controller.text;

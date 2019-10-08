@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/search_filters.dart';
@@ -36,9 +37,12 @@ class _SearchNotesState extends State<SearchNotesRoute> {
 
   SearchFiltersProvider searchFilters;
 
+  AppLocalizations locales;
+
   @override
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+    locales = AppLocalizations.of(context);
 
     Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
         Brightness.light :
@@ -102,7 +106,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                               child: TextField(
                                 controller: searchController,
-                                decoration: InputDecoration(border: InputBorder.none, hintText: "Search..."),
+                                decoration: InputDecoration(border: InputBorder.none, hintText: locales.searchNotesRoute_searchbar),
                                 maxLines: 1,
                                 onChanged: (text) {
                                   setState(() {
@@ -142,7 +146,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           .toColor()
                     ),
                     Text(
-                      "Input something to start the search",
+                      locales.searchNotesRoute_noQuery,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -169,7 +173,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           .toColor()
                     ),
                     Text(
-                      "No notes found that match your search terms",
+                      locales.searchNotesRoute_nothingFound,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -311,7 +315,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Center(
                   child: Text(
-                    "Search filters",
+                    locales.searchNotesRoute_filters_title,
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w500,
@@ -329,13 +333,13 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                   children: <Widget>[
                     SwitchListTile(
                       secondary: Icon(Icons.text_format),
-                      title: Text("Case sensitive"),
+                      title: Text(locales.searchNotesRoute_filters_case),
                       onChanged: (value) => searchFilters.caseSensitive = value,
                       value: searchFilters.caseSensitive,
                     ),
                     ListTile(
                       leading: Icon(Icons.color_lens),
-                      title: Text("Color filter"),
+                      title: Text(locales.searchNotesRoute_filters_color),
                       trailing: CircleColor(
                         elevation: 0,
                         circleSize: 24,
@@ -349,7 +353,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                     ),
                     ListTile(
                       leading: Icon(Icons.date_range),
-                      title: Text("Date filter"),
+                      title: Text(locales.searchNotesRoute_filters_date),
                       trailing: searchFilters.date == null ?
                         null :
                         Text(DateFormat("dd MMMM yyyy").format(
@@ -402,7 +406,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
         ];
             
         return AlertDialog(
-          title: Text("Note color selector"),
+          title: Text(locales.modifyNotesRoute_color_dialogTitle),
           content: MaterialColorPicker(
             colors: colors,
             allowShades: false,

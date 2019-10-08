@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/localizations.dart';
 
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
@@ -17,6 +18,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   String text = "";
   bool error = false;
 
+  AppLocalizations locales;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
 
   @override
   Widget build(BuildContext context) {
+    locales = AppLocalizations.of(context);
+
     List<Widget> portraitContent = <Widget>[
       Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -66,8 +71,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   widget.note.pin != null ?
-                      "A PIN is requested to open the note" :
-                      "A password is requested to open the note",
+                      locales.securityNoteRoute_request_pin :
+                      locales.securityNoteRoute_request_password,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500
@@ -79,8 +84,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 child: Text(
                   error ?
                       widget.note.pin != null ?
-                          "Wrong pin" :
-                          "Wrong password" :
+                          locales.securityNoteRoute_wrong_pin :
+                          locales.securityNoteRoute_wrong_password :
                       "",
                   style: TextStyle(
                     fontSize: 16,
@@ -233,8 +238,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
                         widget.note.pin != null ?
-                            "A PIN is requested to open the note" :
-                            "A password is requested to open the note",
+                            locales.securityNoteRoute_request_pin :
+                            locales.securityNoteRoute_request_password,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500
@@ -246,8 +251,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                       child: Text(
                         error ?
                             widget.note.pin != null ?
-                                "Wrong pin" :
-                                "Wrong password" :
+                                locales.securityNoteRoute_wrong_pin :
+                                locales.securityNoteRoute_wrong_password :
                             "",
                         style: TextStyle(
                           fontSize: 16,
