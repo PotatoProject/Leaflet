@@ -1,0 +1,487 @@
+{
+  "@@last_modified": "2019-10-08T19:36:55.092580",
+  "notes": "Appunti",
+  "@notes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "done": "Fatto",
+  "@done": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "save": "Salva",
+  "@save": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirm": "Conferma",
+  "@confirm": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "Annulla",
+  "@cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "remove": "Rimuovi",
+  "@remove": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "reset": "Reimposta",
+  "@reset": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "undo": "Annulla",
+  "@undo": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "chooseAction": "Scegli azione",
+  "@chooseAction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "light": "Chiaro",
+  "@light": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dark": "Scuro",
+  "@dark": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "black": "Nero",
+  "@black": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_noNotes": "Nessun appunto aggiunto... per ora",
+  "@notesMainPageRoute_noNotes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_addButtonTooltip": "Aggiungi appunto",
+  "@notesMainPageRoute_addButtonTooltip": {
+    "description": "Tooltip that is shown when long pressing the FAB",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_starred": "Appunti predefiniti",
+  "@notesMainPageRoute_starred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_note_hiddenContent": "Contenuto nascosto",
+  "@notesMainPageRoute_note_hiddenContent": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_note_remindersSet": "Promemoria impostati",
+  "@notesMainPageRoute_note_remindersSet": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_note_list_selectedEntries": " voci selezionate",
+  "@notesMainPageRoute_note_list_selectedEntries": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_user_info": "Informazioni utente",
+  "@notesMainPageRoute_user_info": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_user_avatar_change": "Cambia immagine",
+  "@notesMainPageRoute_user_avatar_change": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_user_avatar_remove": "Rimuovi immagine",
+  "@notesMainPageRoute_user_avatar_remove": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_user_name_change": "Cambia nickname",
+  "@notesMainPageRoute_user_name_change": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "notesMainPageRoute_pinnedNote": "Appunto fissato",
+  "@notesMainPageRoute_pinnedNote": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_title": "Titolo",
+  "@modifyNotesRoute_title": {
+    "description": "Title textfield hint",
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_content": "Contenuto",
+  "@modifyNotesRoute_content": {
+    "description": "Content textfield hint",
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_list": "Lista",
+  "@modifyNotesRoute_list": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_list_entry": "Voce",
+  "@modifyNotesRoute_list_entry": {
+    "description": "List entry textfield hint",
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_list_selectedEntries": " voci selezionate",
+  "@modifyNotesRoute_list_selectedEntries": {
+    "description": "Text that appears on checked entries header widget",
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_image": "Immagine",
+  "@modifyNotesRoute_image": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_image_add": "Aggiungi immagine",
+  "@modifyNotesRoute_image_add": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_image_update": "Aggiorna immagine",
+  "@modifyNotesRoute_image_update": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_image_remove": "Rimuovi immagine",
+  "@modifyNotesRoute_image_remove": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_reminder": "Promemoria",
+  "@modifyNotesRoute_reminder": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_reminder_add": "Aggiungi un promemoria",
+  "@modifyNotesRoute_reminder_add": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_reminder_update": "Aggiorna promemoria",
+  "@modifyNotesRoute_reminder_update": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_reminder_time": "Ora",
+  "@modifyNotesRoute_reminder_time": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_reminder_date": "Giorno",
+  "@modifyNotesRoute_reminder_date": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_hideContent": "Nascondi contenuto nella pagina principale",
+  "@modifyNotesRoute_security_hideContent": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_protectionText": "Utilizza una protezione per nascondere",
+  "@modifyNotesRoute_security_protectionText": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_pin": "PIN",
+  "@modifyNotesRoute_security_pin": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_password": "Password",
+  "@modifyNotesRoute_security_password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_dialog_titlePin": "Imposta o aggiorna il PIN",
+  "@modifyNotesRoute_security_dialog_titlePin": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_dialog_titlePassword": "Imposta o aggiorna la password",
+  "@modifyNotesRoute_security_dialog_titlePassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_security_dialog_lengthExceed": "La lunghezza del {method} non può oltrepassare {maxLength}",
+  "@modifyNotesRoute_security_dialog_lengthExceed": {
+    "type": "text",
+    "placeholders": {
+      "method": {},
+      "maxLength": {}
+    }
+  },
+  "modifyNotesRoute_security_dialog_lengthShort": "La lunghezza del {method} non può essere minore di {minLength}",
+  "@modifyNotesRoute_security_dialog_lengthShort": {
+    "type": "text",
+    "placeholders": {
+      "method": {},
+      "minLength": {}
+    }
+  },
+  "modifyNotesRoute_security_dialog_valid": " valido/a",
+  "@modifyNotesRoute_security_dialog_valid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_color_dialogTitle": "Selettore del colore",
+  "@modifyNotesRoute_color_dialogTitle": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyNotesRoute_color_change": "Cambia colore",
+  "@modifyNotesRoute_color_change": {
+    "description": "Used in the three dots menu on modify notes route, for modifying note color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_title": "Impostazioni",
+  "@settingsRoute_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes": "Temi",
+  "@settingsRoute_themes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_followSystem": "Segui il tema di sistema",
+  "@settingsRoute_themes_followSystem": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_systemDarkMode": "Tema scuro di sistema",
+  "@settingsRoute_themes_systemDarkMode": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_appTheme": "Tema dell'app",
+  "@settingsRoute_themes_appTheme": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_useCustomAccent": "Utilizza un colore di accento personalizzato",
+  "@settingsRoute_themes_useCustomAccent": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_customAccentColor": "Colore personalizzato",
+  "@settingsRoute_themes_customAccentColor": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_gestures": "Gesti",
+  "@settingsRoute_gestures": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_gestures_quickStar": "Doppio tocco per mettere tra i preferiti",
+  "@settingsRoute_gestures_quickStar": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_backupAndRestore": "Backup & ripristino",
+  "@settingsRoute_backupAndRestore": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_backupAndRestore_backup": "Backup (Sperimentale)",
+  "@settingsRoute_backupAndRestore_backup": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_backupAndRestore_backup_done": "Backup situato su: {path}",
+  "@settingsRoute_backupAndRestore_backup_done": {
+    "type": "text",
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "settingsRoute_backupAndRestore_restore": "Ripristino (Sperimentale)",
+  "@settingsRoute_backupAndRestore_restore": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_backupAndRestore_restore_success": "Fatto!",
+  "@settingsRoute_backupAndRestore_restore_success": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_backupAndRestore_restore_fail": "Database corrotto o non valido!",
+  "@settingsRoute_backupAndRestore_restore_fail": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_about": "Crediti",
+  "@settingsRoute_about": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_about_potatonotes": "A proposito di PotatoNotes...",
+  "@settingsRoute_about_potatonotes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_about_potatonotes_development": "Sviluppato e supportato da HrX03",
+  "@settingsRoute_about_potatonotes_development": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_about_potatonotes_design": "Design e icon dell'app di RshBfn",
+  "@settingsRoute_about_potatonotes_design": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_about_sourceCode": "Codice sorgente di PotatoNotes",
+  "@settingsRoute_about_sourceCode": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_dev": "Opzioni sviluppatore",
+  "@settingsRoute_dev": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_dev_idLabels": "Mostra etichette dell'id",
+  "@settingsRoute_dev_idLabels": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_searchbar": "Cerca...",
+  "@searchNotesRoute_searchbar": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_noQuery": "Scrivi qualcosa per iniziare a cercare",
+  "@searchNotesRoute_noQuery": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_nothingFound": "Nessun appunto trovato che corrispondesse alla tua ricerca",
+  "@searchNotesRoute_nothingFound": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_filters_title": "Filtri",
+  "@searchNotesRoute_filters_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_filters_case": "Sensibile alle maiuscole",
+  "@searchNotesRoute_filters_case": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_filters_color": "Colore",
+  "@searchNotesRoute_filters_color": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchNotesRoute_filters_date": "Data",
+  "@searchNotesRoute_filters_date": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "securityNoteRoute_request_pin": "E' richiesto un PIN per aprire l'appunto",
+  "@securityNoteRoute_request_pin": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "securityNoteRoute_request_password": "E' richiesta una password per aprire l'appunto",
+  "@securityNoteRoute_request_password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "securityNoteRoute_wrong_pin": "PIN errato",
+  "@securityNoteRoute_wrong_pin": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "securityNoteRoute_wrong_password": "Password errata",
+  "@securityNoteRoute_wrong_password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_select": "Seleziona",
+  "@note_select": {
+    "description": "String for selecting a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_edit": "Modifica",
+  "@note_edit": {
+    "description": "String for editing a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_delete": "Elimina",
+  "@note_delete": {
+    "description": "String for deleting a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_delete_snackbar": "Appunto eliminato",
+  "@note_delete_snackbar": {
+    "description": "Appears on snackbar upon note deletion",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_star": "Preferito",
+  "@note_star": {
+    "description": "String for starring a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_unstar": "Non preferito",
+  "@note_unstar": {
+    "description": "String for unstarring a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_locked_options": "Il contenuto è nascosto, usa le opzioni nello schermo dell'appunto",
+  "@note_locked_options": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_share": "Condividi",
+  "@note_share": {
+    "description": "String for sharing a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_export": "Esporta",
+  "@note_export": {
+    "description": "String for exporting a note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_exportLocation": "Appunto esportato su",
+  "@note_exportLocation": {
+    "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note_pinToNotifs": "Fissa nelle notifiche",
+  "@note_pinToNotifs": {
+    "description": "String for pinning a note to notifications",
+    "type": "text",
+    "placeholders": {}
+  }
+}
