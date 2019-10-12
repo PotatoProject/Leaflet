@@ -59,7 +59,8 @@ class CustomThemes {
     );
   }
 
-  static Brightness getCurrentBrightness(BuildContext context, AppInfoProvider appInfo) {
+  static Brightness getCurrentBrightness(
+      BuildContext context, AppInfoProvider appInfo) {
     return Theme.of(context).brightness;
   }
 }

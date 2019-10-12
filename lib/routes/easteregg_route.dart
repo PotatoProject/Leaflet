@@ -3,10 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:potato_notes/internal/app_info.dart';
-
-import 'package:provider/provider.dart';
-
 class EasterEggRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,8 +37,6 @@ class _DrawState extends State<DrawScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     colors = [
       Colors.red,
       Colors.green,
@@ -51,11 +45,11 @@ class _DrawState extends State<DrawScreen> {
       Theme.of(context).textTheme.title.color
     ];
 
-    if(!firstTimeRunning) {
+    if (!firstTimeRunning) {
       pickerColor = colors.last;
       selectedColor = colors.last;
     }
-    
+
     firstTimeRunning = true;
 
     return Scaffold(
@@ -104,125 +98,119 @@ class _DrawState extends State<DrawScreen> {
   Widget get _bottomAppBar {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
       ),
       height: 136,
-      child: Builder(
-        builder: (context) {
-          return BottomAppBar(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            elevation: 0,
-            shape: CircularNotchedRectangle(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: 48,
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 24),
-                          child: Icon(
-                            selectedMode == SelectedMode.StrokeWidth ?
-                              Icons.blur_circular :
-                              selectedMode == SelectedMode.Opacity ?
-                                Icons.opacity :
-                              Icons.color_lens
-                          ),
-                        ),
-                        selectedMode == SelectedMode.Color ?
-                          Expanded(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                colorCircle(colors[0]),
-                                colorCircle(colors[1]),
-                                colorCircle(colors[2]),
-                                colorCircle(colors[3]),
-                                colorCircle(colors[4]),
-                              ],
+      child: Builder(builder: (context) {
+        return BottomAppBar(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          shape: CircularNotchedRectangle(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 48,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 24),
+                        child: Icon(selectedMode == SelectedMode.StrokeWidth
+                            ? Icons.blur_circular
+                            : selectedMode == SelectedMode.Opacity
+                                ? Icons.opacity
+                                : Icons.color_lens),
+                      ),
+                      selectedMode == SelectedMode.Color
+                          ? Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  colorCircle(colors[0]),
+                                  colorCircle(colors[1]),
+                                  colorCircle(colors[2]),
+                                  colorCircle(colors[3]),
+                                  colorCircle(colors[4]),
+                                ],
+                              ),
+                            )
+                          : Expanded(
+                              child: Slider(
+                                value:
+                                    (selectedMode == SelectedMode.StrokeWidth)
+                                        ? strokeWidth
+                                        : opacity,
+                                max: (selectedMode == SelectedMode.StrokeWidth)
+                                    ? 50.0
+                                    : 1.0,
+                                min: 0.0,
+                                onChanged: (val) => setState(() {
+                                  if (selectedMode == SelectedMode.StrokeWidth)
+                                    strokeWidth = val;
+                                  else
+                                    opacity = val;
+                                }),
+                              ),
                             ),
-                          ) :
-                          Expanded(
-                            child: Slider(
-                              value: (selectedMode == SelectedMode.StrokeWidth)
-                                  ? strokeWidth
-                                  : opacity,
-                              max: (selectedMode == SelectedMode.StrokeWidth)
-                                  ? 50.0
-                                  : 1.0,
-                              min: 0.0,
-                                  onChanged: (val) => setState(() {
-                                if (selectedMode == SelectedMode.StrokeWidth)
-                                  strokeWidth = val;
-                                else
-                                  opacity = val;
-                              }),
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-                  Divider(),
-                  Container(
-                    height: 64,
-                    child: Row(
-                      children: <Widget>[
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Spacer(),
-                        IconButton(
+                ),
+                Divider(),
+                Container(
+                  height: 64,
+                  child: Row(
+                    children: <Widget>[
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      Spacer(),
+                      IconButton(
                           icon: Icon(Icons.blur_circular),
                           onPressed: () {
                             setState(() {
                               selectedMode = SelectedMode.StrokeWidth;
                             });
-                          }
-                        ),
-                        Spacer(),
-                        IconButton(
+                          }),
+                      Spacer(),
+                      IconButton(
                           icon: Icon(Icons.opacity),
                           onPressed: () {
                             setState(() {
                               selectedMode = SelectedMode.Opacity;
                             });
-                          }
-                        ),
-                        Spacer(),
-                        IconButton(
+                          }),
+                      Spacer(),
+                      IconButton(
                           icon: Icon(Icons.color_lens),
                           color: selectedColor,
                           onPressed: () {
                             setState(() {
                               selectedMode = SelectedMode.Color;
                             });
-                          }
-                        ),
-                        Spacer(),
-                        IconButton(
+                          }),
+                      Spacer(),
+                      IconButton(
                           icon: Icon(Icons.clear),
                           onPressed: () {
                             setState(() {
                               points.clear();
                             });
-                          }
-                        ),
-                        Spacer(),
-                      ],
-                    ),
+                          }),
+                      Spacer(),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        }
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -254,8 +242,10 @@ class _DrawState extends State<DrawScreen> {
 
 class DrawingPainter extends CustomPainter {
   DrawingPainter({this.pointsList});
+
   List<DrawingPoints> pointsList;
   List<Offset> offsetPoints = List();
+
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < pointsList.length - 1; i++) {
@@ -279,6 +269,7 @@ class DrawingPainter extends CustomPainter {
 class DrawingPoints {
   Paint paint;
   Offset points;
+
   DrawingPoints({this.points, this.paint});
 }
 

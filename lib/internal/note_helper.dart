@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:potato_notes/main.dart';
-
 import 'package:sqflite/sqflite.dart';
 
 class NoteHelper {
   Future<void> insert(Note note) async {
     final Database db = await database;
-    
+
     await db.insert(
       'notes',
       note.toMap(),
@@ -98,12 +97,11 @@ class NoteHelper {
     final db = await database;
 
     db.execute("ATTACH DATABASE '" + path + "' AS backup").catchError((error) {
-       db.execute("DETACH backup");
+      db.execute("DETACH backup");
       return;
     });
     db.execute("DROP TABLE main.notes");
-    db.execute(
-      """
+    db.execute("""
         CREATE TABLE notes(
           id INTEGER PRIMARY KEY,
           title TEXT,
@@ -119,8 +117,7 @@ class NoteHelper {
           pin INTEGER,
           password TEXT
         )
-      """
-    );
+      """);
     db.execute("INSERT INTO main.notes SELECT * FROM backup.notes");
     db.execute("DETACH backup");
   }
@@ -128,19 +125,16 @@ class NoteHelper {
   Future<int> validateDatabase(String path) async {
     int status = 0;
 
-    if(!path.endsWith(".db")) {
+    if (!path.endsWith(".db")) {
       print("lol");
       return 1;
     }
 
-    try{
+    try {
       Database db = await openReadOnlyDatabase(path);
       await db.rawQuery("SELECT * FROM notes");
-    } on DatabaseException catch (e) {
-      print(e);
-      status = 1;
     } on Exception catch (e) {
-      print("gae");
+      print(e);
       status = 1;
     }
 
@@ -163,7 +157,7 @@ class Note {
   final int pin;
   final String password;
 
-  bool isSelected  = false;
+  bool isSelected = false;
 
   Note({
     this.id,
@@ -226,6 +220,6 @@ class Note {
 class ListPair {
   int checkValue = 0;
   String title = "";
-  
+
   ListPair({this.checkValue, this.title});
 }

@@ -1,18 +1,16 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
-
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SettingsRoute extends StatefulWidget {
@@ -30,11 +28,13 @@ class _SettingsState extends State<SettingsRoute> {
     final appInfo = Provider.of<AppInfoProvider>(context);
     locales = AppLocalizations.of(context);
 
-    Brightness systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark ?
-        Brightness.light :
-        Brightness.dark;
-    
-    changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+    Brightness systemBarsIconBrightness =
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark;
+
+    changeSystemBarsColors(
+        Theme.of(context).cardColor, systemBarsIconBrightness);
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
@@ -71,7 +71,8 @@ class _SettingsState extends State<SettingsRoute> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
             child: ListView(
               children: <Widget>[
                 Padding(
@@ -101,7 +102,9 @@ class _SettingsState extends State<SettingsRoute> {
                   trailing: DropdownButton(
                     value: appInfo.darkThemeMode,
                     underline: Container(),
-                    disabledHint: appInfo.darkThemeMode == 0 ? Text(locales.dark) : Text(locales.black),
+                    disabledHint: appInfo.darkThemeMode == 0
+                        ? Text(locales.dark)
+                        : Text(locales.black),
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
                         child: Text(locales.dark),
@@ -112,9 +115,11 @@ class _SettingsState extends State<SettingsRoute> {
                         value: 1,
                       ),
                     ],
-                    onChanged: appInfo.followSystemTheme ? (newValue) {
-                      appInfo.darkThemeMode = newValue;
-                    } : null,
+                    onChanged: appInfo.followSystemTheme
+                        ? (newValue) {
+                            appInfo.darkThemeMode = newValue;
+                          }
+                        : null,
                   ),
                 ),
                 ListTile(
@@ -123,11 +128,11 @@ class _SettingsState extends State<SettingsRoute> {
                   title: Text(locales.settingsRoute_themes_appTheme),
                   trailing: DropdownButton(
                     value: appInfo.themeMode,
-                    disabledHint: appInfo.themeMode == 0 ?
-                        Text(locales.light) :
-                            appInfo.themeMode == 1 ?
-                            Text(locales.dark) :
-                        Text(locales.black),
+                    disabledHint: appInfo.themeMode == 0
+                        ? Text(locales.light)
+                        : appInfo.themeMode == 1
+                            ? Text(locales.dark)
+                            : Text(locales.black),
                     underline: Container(),
                     items: <DropdownMenuItem>[
                       DropdownMenuItem(
@@ -143,9 +148,11 @@ class _SettingsState extends State<SettingsRoute> {
                         value: 2,
                       ),
                     ],
-                    onChanged: appInfo.followSystemTheme ? null : (newValue) {
-                      appInfo.themeMode = newValue;
-                    },
+                    onChanged: appInfo.followSystemTheme
+                        ? null
+                        : (newValue) {
+                            appInfo.themeMode = newValue;
+                          },
                   ),
                 ),
                 SwitchListTile(
@@ -165,9 +172,8 @@ class _SettingsState extends State<SettingsRoute> {
                     width: 24.0,
                     height: 24.0,
                     decoration: BoxDecoration(
-                      color: appInfo.customMainColor,
-                      borderRadius: BorderRadius.all(Radius.circular(24))
-                    ),
+                        color: appInfo.customMainColor,
+                        borderRadius: BorderRadius.all(Radius.circular(24))),
                   ),
                   onTap: () => showDialog(
                     context: context,
@@ -175,8 +181,8 @@ class _SettingsState extends State<SettingsRoute> {
                       Color currentColor = appInfo.customMainColor;
                       return AlertDialog(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0))),
                         contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -196,7 +202,8 @@ class _SettingsState extends State<SettingsRoute> {
                           FlatButton(
                             child: Text(
                               locales.cancel,
-                              style: TextStyle(color: Theme.of(context).accentColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
                             ),
                             onPressed: () => Navigator.pop(context),
                             textColor: appInfo.mainColor,
@@ -204,8 +211,9 @@ class _SettingsState extends State<SettingsRoute> {
                           ),
                           FlatButton(
                             child: Text(
-                             locales.confirm,
-                              style: TextStyle(color: Theme.of(context).accentColor),
+                              locales.confirm,
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
                             ),
                             onPressed: () {
                               appInfo.customMainColor = currentColor;
@@ -252,29 +260,36 @@ class _SettingsState extends State<SettingsRoute> {
                   leading: Icon(Icons.backup),
                   title: Text(locales.settingsRoute_backupAndRestore_backup),
                   onTap: () async {
-                    if(appInfo.storageStatus == PermissionStatus.granted) {
+                    if (appInfo.storageStatus == PermissionStatus.granted) {
                       DateTime now = DateTime.now();
- 
-                      bool backupDirExists = await Directory('/storage/emulated/0/PotatoNotes/backups').exists();
 
-                      if(!backupDirExists) {
-                        await Directory('/storage/emulated/0/PotatoNotes/backups').create(recursive: true);
+                      bool backupDirExists = await Directory(
+                              '/storage/emulated/0/PotatoNotes/backups')
+                          .exists();
+
+                      if (!backupDirExists) {
+                        await Directory(
+                                '/storage/emulated/0/PotatoNotes/backups')
+                            .create(recursive: true);
                       }
 
                       String databaseBackupPath =
-                        '/storage/emulated/0/PotatoNotes/backups/notes_backup_' + DateFormat("HH-mm_dd-MM-yyyy").format(now) + '.db';
+                          '/storage/emulated/0/PotatoNotes/backups/notes_backup_' +
+                              DateFormat("HH-mm_dd-MM-yyyy").format(now) +
+                              '.db';
 
-                      await NoteHelper().backupDatabaseToPath(databaseBackupPath);
+                      await NoteHelper()
+                          .backupDatabaseToPath(databaseBackupPath);
 
-                      scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text(locales.settingsRoute_backupAndRestore_backup_done(databaseBackupPath))
-                        )
-                      );
+                      scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(locales
+                              .settingsRoute_backupAndRestore_backup_done(
+                                  databaseBackupPath))));
                     } else {
-                      Map<PermissionGroup, PermissionStatus> permissions =
-                        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-                      appInfo.storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+                      await PermissionHandler()
+                          .requestPermissions([PermissionGroup.storage]);
+                      appInfo.storageStatus = await PermissionHandler()
+                          .checkPermissionStatus(PermissionGroup.storage);
                     }
                   },
                 ),
@@ -283,23 +298,19 @@ class _SettingsState extends State<SettingsRoute> {
                   title: Text(locales.settingsRoute_backupAndRestore_restore),
                   onTap: () async {
                     String path = await FilePicker.getFilePath();
-                    
-                    if(path != null) {
+
+                    if (path != null) {
                       int status = await NoteHelper().validateDatabase(path);
                       print(status);
-                      if(status == 0) {
+                      if (status == 0) {
                         await NoteHelper().restoreDatabaseToPath(path);
-                        scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(locales.settingsRoute_backupAndRestore_restore_success)
-                          )
-                        );
+                        scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text(locales
+                                .settingsRoute_backupAndRestore_restore_success)));
                       } else {
-                        scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(locales.settingsRoute_backupAndRestore_restore_fail)
-                          )
-                        );
+                        scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text(locales
+                                .settingsRoute_backupAndRestore_restore_fail)));
                       }
                     }
                   },
@@ -323,7 +334,8 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   leading: Icon(Icons.code),
                   title: Text(locales.settingsRoute_about_sourceCode),
-                  onTap: () => launchUrl("https://github.com/HrX03/PotatoNotes"),
+                  onTap: () =>
+                      launchUrl("https://github.com/HrX03/PotatoNotes"),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
@@ -356,104 +368,110 @@ class _SettingsState extends State<SettingsRoute> {
     int easterEggCounter = 0;
 
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(8, 24, 8, 10),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Center(
-                child: InkWell(
-                  borderRadius: BorderRadius.all(Radius.circular(80)),
-                  onTap: () {
-                    if(easterEggCounter == 9) {
-                      easterEggCounter = 0;
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EasterEggRoute()));
-                    } else easterEggCounter++;
-                  },
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: new BoxDecoration(
-                      color: Color(0xFFFF9800),
-                      borderRadius: BorderRadius.circular(40),  
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: Image(
-                        image: AssetImage('assets/notes_round.png'),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            contentPadding: EdgeInsets.fromLTRB(8, 24, 8, 10),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Center(
+                  child: InkWell(
+                    borderRadius: BorderRadius.all(Radius.circular(80)),
+                    onTap: () {
+                      if (easterEggCounter == 9) {
+                        easterEggCounter = 0;
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EasterEggRoute()));
+                      } else
+                        easterEggCounter++;
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: new BoxDecoration(
+                        color: Color(0xFFFF9800),
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: Image(
+                          image: AssetImage('assets/notes_round.png'),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "PotatoNotes",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "PotatoNotes",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
-                child: Text(locales.settingsRoute_about_potatonotes_development),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
-                child: Text(locales.settingsRoute_about_potatonotes_design),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(24, 30, 24, 4),
-                child: Row(
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
+                  child:
+                      Text(locales.settingsRoute_about_potatonotes_development),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 10, left: 24, right: 24),
+                  child: Text(locales.settingsRoute_about_potatonotes_design),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(24, 30, 24, 4),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        "PotatoProject 2019",
+                        style: TextStyle(
+                            color: HSLColor.fromColor(
+                                    Theme.of(context).textTheme.title.color)
+                                .withAlpha(0.5)
+                                .toColor(),
+                            fontSize: 14),
+                      ),
+                      Spacer(),
+                      Text(
+                        appInfo.version,
+                        style: TextStyle(
+                            color: HSLColor.fromColor(
+                                    Theme.of(context).textTheme.title.color)
+                                .withAlpha(0.5)
+                                .toColor(),
+                            fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Text(
-                      "PotatoProject 2019",
-                      style: TextStyle(
-                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                            .withAlpha(0.5)
-                            .toColor(),
-                        fontSize: 14
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      "v1.1.0+b1",
-                      style: TextStyle(
-                        color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                            .withAlpha(0.5)
-                            .toColor(),
-                        fontSize: 14
-                      ),
+                    FlatButton(
+                      child: Text("Close"),
+                      onPressed: () => Navigator.pop(context),
+                      textColor: appInfo.mainColor,
+                      hoverColor: appInfo.mainColor,
                     ),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Close"),
-                    onPressed: () => Navigator.pop(context),
-                    textColor: appInfo.mainColor,
-                    hoverColor: appInfo.mainColor,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      }
-    );
+              ],
+            ),
+          );
+        });
   }
 }

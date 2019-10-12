@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:path/path.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
@@ -11,10 +11,8 @@ import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
-
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'internal/methods.dart';
 
@@ -24,7 +22,7 @@ SearchFiltersProvider searchFilters;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   database = openDatabase(
     join(await getDatabasesPath(), 'notes_database.db'),
     onCreate: (db, version) {
@@ -65,10 +63,8 @@ void main() async {
         "ALTER TABLE notes ADD COLUMN password TEXT",
       ];
 
-      for(int i = 0; i < columnsToAdd.length; i++) {
-        db.execute(
-          columnsToAdd[i]
-        ).catchError((error) {
+      for (int i = 0; i < columnsToAdd.length; i++) {
+        db.execute(columnsToAdd[i]).catchError((error) {
           //do nothing
         });
       }
@@ -78,19 +74,16 @@ void main() async {
 
   List<Note> noteList = await NoteHelper().getNotes();
 
-  runApp(NotesRoot(noteList));
+  runApp(NotesRoot(noteList: noteList));
 }
 
 class NotesRoot extends StatelessWidget {
-  List<Note> noteList = List<Note>();
+  final List<Note> noteList;
 
-  NotesRoot(List<Note> list) {
-    this.noteList = list;
-  }
+  NotesRoot({@required this.noteList});
 
   @override
   Widget build(BuildContext context) {
-    
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppInfoProvider>.value(
@@ -100,64 +93,74 @@ class NotesRoot extends StatelessWidget {
           value: SearchFiltersProvider(),
         ),
       ],
-      child: Builder(
-        builder: (context) {
-          appInfo = Provider.of<AppInfoProvider>(context);
-          searchFilters = Provider.of<SearchFiltersProvider>(context);
+      child: Builder(builder: (context) {
+        appInfo = Provider.of<AppInfoProvider>(context);
+        searchFilters = Provider.of<SearchFiltersProvider>(context);
 
-          if(appInfo.followSystemTheme) {
-            if(CustomThemes.getCurrentBrightness(context, appInfo) == Brightness.dark) {
-              changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                  Brightness.dark);
-            } else {
-              if(appInfo.darkThemeMode == 0) {
-                changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
-                    Brightness.light);
-              } else if(appInfo.darkThemeMode == 1) {
-                changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
-                    Brightness.light);
-              }
-            }
+        if (appInfo.followSystemTheme) {
+          if (CustomThemes.getCurrentBrightness(context, appInfo) ==
+              Brightness.dark) {
+            changeSystemBarsColors(
+                CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                Brightness.dark);
           } else {
-            if(appInfo.themeMode == 0) {
-              changeSystemBarsColors(CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                  Brightness.dark);
-            } else if(appInfo.themeMode == 1) {
-              changeSystemBarsColors(CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+            if (appInfo.darkThemeMode == 0) {
+              changeSystemBarsColors(
+                  CustomThemes.dark(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
-            } else {
-              changeSystemBarsColors(CustomThemes.black(appInfo).scaffoldBackgroundColor,
+            } else if (appInfo.darkThemeMode == 1) {
+              changeSystemBarsColors(
+                  CustomThemes.black(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
             }
           }
-
-          return MaterialApp(
-            localizationsDelegates: [
-              AppLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate
-            ],
-            supportedLocales: [
-              Locale("en"),
-              Locale("it"),
-            ],
-            builder: (context, child) => ScrollConfiguration(
-              behavior: NoGlowScrollBehavior(),
-              child: child,
-            ),
-            home: NotesMainPageRoute(noteList),
-            debugShowCheckedModeBanner: false,
-            theme: appInfo.followSystemTheme ?
-                CustomThemes.light(appInfo) :
-                (appInfo.themeMode == 0 ? CustomThemes.light(appInfo) : appInfo.themeMode == 1 ?
-                    CustomThemes.dark(appInfo) : CustomThemes.black(appInfo)),
-            darkTheme: appInfo.darkThemeMode == 0 ?
-                CustomThemes.dark(appInfo) : CustomThemes.black(appInfo),
-            themeMode: appInfo.followSystemTheme ? ThemeMode.system : ThemeMode.light,
-            title: 'Notes',
-          );
+        } else {
+          if (appInfo.themeMode == 0) {
+            changeSystemBarsColors(
+                CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                Brightness.dark);
+          } else if (appInfo.themeMode == 1) {
+            changeSystemBarsColors(
+                CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+                Brightness.light);
+          } else {
+            changeSystemBarsColors(
+                CustomThemes.black(appInfo).scaffoldBackgroundColor,
+                Brightness.light);
+          }
         }
-      ),
+
+        return MaterialApp(
+          localizationsDelegates: [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          supportedLocales: [
+            Locale("en"),
+            Locale("it"),
+          ],
+          builder: (context, child) => ScrollConfiguration(
+            behavior: NoGlowScrollBehavior(),
+            child: child,
+          ),
+          home: NotesMainPageRoute(noteList: noteList),
+          debugShowCheckedModeBanner: false,
+          theme: appInfo.followSystemTheme
+              ? CustomThemes.light(appInfo)
+              : (appInfo.themeMode == 0
+                  ? CustomThemes.light(appInfo)
+                  : appInfo.themeMode == 1
+                      ? CustomThemes.dark(appInfo)
+                      : CustomThemes.black(appInfo)),
+          darkTheme: appInfo.darkThemeMode == 0
+              ? CustomThemes.dark(appInfo)
+              : CustomThemes.black(appInfo),
+          themeMode:
+              appInfo.followSystemTheme ? ThemeMode.system : ThemeMode.light,
+          title: 'Notes',
+        );
+      }),
     );
   }
 }
