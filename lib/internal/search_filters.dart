@@ -14,7 +14,9 @@ class SearchFiltersProvider extends ChangeNotifier {
   bool _caseSensitive = false;
 
   int get color => _color;
+
   int get date => _date;
+
   bool get caseSensitive => _caseSensitive;
 
   set color(int color) {

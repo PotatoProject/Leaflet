@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/localizations.dart';
-
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
@@ -11,7 +10,8 @@ class SecurityNoteRoute extends StatefulWidget {
     this.note = note;
   }
 
-  @override createState() => _SecurityNoteRouteState();
+  @override
+  createState() => _SecurityNoteRouteState();
 }
 
 class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
@@ -52,7 +52,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
       ),
       Container(
         margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
-        height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
+        height: MediaQuery.of(context).size.height -
+            (MediaQuery.of(context).padding.top + 70),
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Column(
@@ -70,28 +71,24 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  widget.note.pin != null ?
-                      locales.securityNoteRoute_request_pin :
-                      locales.securityNoteRoute_request_password,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500
-                  ),
+                  widget.note.pin != null
+                      ? locales.securityNoteRoute_request_pin
+                      : locales.securityNoteRoute_request_password,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  error ?
-                      widget.note.pin != null ?
-                          locales.securityNoteRoute_wrong_pin :
-                          locales.securityNoteRoute_wrong_password :
-                      "",
+                  error
+                      ? widget.note.pin != null
+                          ? locales.securityNoteRoute_wrong_pin
+                          : locales.securityNoteRoute_wrong_password
+                      : "",
                   style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500
-                  ),
+                      fontSize: 16,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
               Visibility(
@@ -108,10 +105,9 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                       child: Text(
                         "",
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500
-                        ),
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                     Column(
@@ -165,27 +161,31 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 ),
               ),
               Visibility(
-                visible: widget.note.password != null,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: TextField(
-                    obscureText: true,
-                    onSubmitted: (text) async {
-                      if(text != widget.note.password.toString()) {
-                        setState(() {
-                          text = "";
-                          error = true;
-                        });
-                      } else {
-                        error = false;
-                        var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(widget.note)));
+                  visible: widget.note.password != null,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: TextField(
+                      obscureText: true,
+                      onSubmitted: (text) async {
+                        if (text != widget.note.password.toString()) {
+                          setState(() {
+                            text = "";
+                            error = true;
+                          });
+                        } else {
+                          error = false;
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ModifyNotesRoute(widget.note)));
 
-                        if(result == null || result != null) Navigator.pop(context);
-                      }
-                    },
-                  ),
-                )
-              ),
+                          if (result == null || result != null)
+                            Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  )),
             ],
           ),
         ),
@@ -214,7 +214,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
       ),
       Container(
         margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
-        height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
+        height: MediaQuery.of(context).size.height -
+            (MediaQuery.of(context).padding.top + 70),
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Row(
@@ -223,8 +224,9 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width/2,
-                height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height -
+                    (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -237,36 +239,34 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        widget.note.pin != null ?
-                            locales.securityNoteRoute_request_pin :
-                            locales.securityNoteRoute_request_password,
+                        widget.note.pin != null
+                            ? locales.securityNoteRoute_request_pin
+                            : locales.securityNoteRoute_request_password,
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500
-                        ),
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        error ?
-                            widget.note.pin != null ?
-                                locales.securityNoteRoute_wrong_pin :
-                                locales.securityNoteRoute_wrong_password :
-                            "",
+                        error
+                            ? widget.note.pin != null
+                                ? locales.securityNoteRoute_wrong_pin
+                                : locales.securityNoteRoute_wrong_password
+                            : "",
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500
-                        ),
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width/2,
-                height: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + 70),
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height -
+                    (MediaQuery.of(context).padding.top + 70),
                 child: Column(
                   children: <Widget>[
                     Visibility(
@@ -283,10 +283,9 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                             child: Text(
                               "",
                               style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500
-                              ),
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                           Column(
@@ -333,27 +332,31 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.note.password != null,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        child: TextField(
-                          obscureText: true,
-                          onSubmitted: (text) async {
-                            if(text != widget.note.password.toString()) {
-                              setState(() {
-                                text = "";
-                                error = true;
-                              });
-                            } else {
-                              error = false;
-                              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(widget.note)));
+                        visible: widget.note.password != null,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: TextField(
+                            obscureText: true,
+                            onSubmitted: (text) async {
+                              if (text != widget.note.password.toString()) {
+                                setState(() {
+                                  text = "";
+                                  error = true;
+                                });
+                              } else {
+                                error = false;
+                                var result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ModifyNotesRoute(widget.note)));
 
-                              if(result == null || result != null) Navigator.pop(context);
-                            }
-                          },
-                        ),
-                      )
-                    ),
+                                if (result == null || result != null)
+                                  Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -365,7 +368,9 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
 
     return Scaffold(
       body: Stack(
-        children: MediaQuery.of(context).orientation == Orientation.landscape ? landscapeContent : portraitContent,
+        children: MediaQuery.of(context).orientation == Orientation.landscape
+            ? landscapeContent
+            : portraitContent,
       ),
     );
   }
@@ -373,54 +378,52 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   List<Widget> buildPinViewer() {
     List<Widget> widgets = [];
 
-    for(int i = 0; i < widget.note.pin.toString().length; i++) {
-      widgets.add(
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: Container(
-            height: 18,
-            width: 18,
-            decoration: BoxDecoration(
-              color: i >= text.length ? Colors.transparent : Theme.of(context).textTheme.title.color,
+    for (int i = 0; i < widget.note.pin.toString().length; i++) {
+      widgets.add(Padding(
+        padding: EdgeInsets.all(8),
+        child: Container(
+          height: 18,
+          width: 18,
+          decoration: BoxDecoration(
+              color: i >= text.length
+                  ? Colors.transparent
+                  : Theme.of(context).textTheme.title.color,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Theme.of(context).textTheme.title.color,
-                width: 1.5
-              )
-            ),
-          ),
-        )
-      );
+                  color: Theme.of(context).textTheme.title.color, width: 1.5)),
+        ),
+      ));
     }
 
     return widgets;
   }
-  
+
   Widget pinButton(String char, bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 8),
+      padding: EdgeInsets.symmetric(
+          vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 8),
       child: IconButton(
         iconSize: portrait ? 60 : 50,
         icon: Text(
           char,
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w500
-          ),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
         ),
         onPressed: () async {
           error = false;
           setState(() => text += char);
-          if(text.length == widget.note.pin.toString().length) {
-            if(text != widget.note.pin.toString()) {
+          if (text.length == widget.note.pin.toString().length) {
+            if (text != widget.note.pin.toString()) {
               setState(() {
                 text = "";
                 error = true;
               });
             } else {
-              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ModifyNotesRoute(widget.note)));
+              var result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ModifyNotesRoute(widget.note)));
 
-              if(result == null || result != null) Navigator.pop(context);
+              if (result == null || result != null) Navigator.pop(context);
             }
           }
         },
@@ -430,7 +433,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
 
   Widget eraseButton(bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
+      padding: EdgeInsets.symmetric(
+          vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
       child: IconButton(
         iconSize: portrait ? 60 : 50,
         icon: Icon(
@@ -438,7 +442,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
           size: 30,
         ),
         onPressed: () async {
-          if(text.length > 0) {
+          if (text.length > 0) {
             setState(() => text = text.substring(0, text.length - 1));
           }
         },
@@ -448,15 +452,13 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
 
   Widget pinEmptyButton(bool portrait) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
+      padding: EdgeInsets.symmetric(
+          vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
       child: IconButton(
         iconSize: portrait ? 60 : 50,
         icon: Text(
           "",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w500
-          ),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
         ),
         onPressed: null,
       ),

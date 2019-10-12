@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/methods.dart';
 
@@ -37,25 +36,43 @@ class AppInfoProvider extends ChangeNotifier {
   bool _password = false;
 
   bool get followSystemTheme => _followSystemTheme;
+
   int get themeMode => _themeMode;
+
   int get darkThemeMode => _darkThemeMode;
+
   Color get mainColor => _mainColor;
+
   bool get useCustomMainColor => _useCustomMainColor;
+
   Color get customMainColor => _customMainColor;
+
   bool get devShowIdLabels => _devShowIdLabels;
+
   bool get isGridView => _isGridView;
+
   String get userImagePath => _userImagePath;
+
   String get userName => _userName;
+
   bool get isQuickStarredGestureOn => _isQuickStarredGestureOn;
+
   List<String> get notificationsIdList => _notificationsIdList;
+
   List<String> get remindersNotifIdList => _remindersNotifIdList;
+
   PermissionStatus get storageStatus => _storageStatus;
 
   DateTime get date => _date;
+
   TimeOfDay get time => _time;
+
   int get hideContent => _hideContent;
+
   bool get useProtectionForNoteContent => _useProtectionForNoteContent;
+
   bool get pin => _pin;
+
   bool get password => _password;
 
   set followSystemTheme(bool follow) {
@@ -142,8 +159,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   set date(DateTime passedDate) {
     _date = passedDate;
     notifyListeners();
@@ -175,18 +190,18 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateMainColor() async {
-    mainColor = _useCustomMainColor ?
-        customMainColor :
-        Color(await _channel.invokeMethod("getAccentColor"));
+    mainColor = _useCustomMainColor
+        ? customMainColor
+        : Color(await _channel.invokeMethod("getAccentColor"));
   }
 
   Future<void> loadData() async {
     followSystemTheme = await getFollowSystemTheme();
     themeMode = await getThemeMode();
     darkThemeMode = await getDarkThemeMode();
-    mainColor = _useCustomMainColor ?
-        customMainColor :
-        Color(await _channel.invokeMethod("getAccentColor"));
+    mainColor = _useCustomMainColor
+        ? customMainColor
+        : Color(await _channel.invokeMethod("getAccentColor"));
     useCustomMainColor = await getUseCustomMainColor();
     customMainColor = await getCustomMainColor();
     devShowIdLabels = await getDevShowIdLabels();
@@ -196,7 +211,8 @@ class AppInfoProvider extends ChangeNotifier {
     isQuickStarredGestureOn = await getIsQuickStarredGestureOn();
     notificationsIdList = await getNotificationsIdList();
     remindersNotifIdList = await getRemindersNotifIdList();
-    storageStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    storageStatus = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.storage);
 
     date = null;
     time = null;

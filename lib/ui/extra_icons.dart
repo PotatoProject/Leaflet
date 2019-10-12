@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/Extra.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -20,6 +20,7 @@ class ExtraIcons {
 
   static const _kFontFam = 'ExtraIcons';
 
-  static const IconData pin_outline = const IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData pin_outline =
+      const IconData(0xe800, fontFamily: _kFontFam);
   static const IconData pin = const IconData(0xe801, fontFamily: _kFontFam);
 }
