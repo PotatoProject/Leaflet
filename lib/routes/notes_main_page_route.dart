@@ -1259,7 +1259,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         ),
         context: context,
         builder: (BuildContext context) {
-          bool noteStarred = false;
+          bool noteStarred = curNote.isStarred == 1;
           bool indexExists = true;
 
           return !indexExists
