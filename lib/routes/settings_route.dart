@@ -447,7 +447,7 @@ class _SettingsState extends State<SettingsRoute> {
                       ),
                       Spacer(),
                       Text(
-                        "v1.1.0+b1",
+                        appInfo.version,
                         style: TextStyle(
                             color: HSLColor.fromColor(
                                     Theme.of(context).textTheme.title.color)

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/methods.dart';
 
@@ -34,6 +35,7 @@ class AppInfoProvider extends ChangeNotifier {
   bool _useProtectionForNoteContent = false;
   bool _pin = false;
   bool _password = false;
+  String _version = '1.0';
 
   bool get followSystemTheme => _followSystemTheme;
 
@@ -74,6 +76,8 @@ class AppInfoProvider extends ChangeNotifier {
   bool get pin => _pin;
 
   bool get password => _password;
+
+  String get version => _version;
 
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
@@ -189,6 +193,11 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set version(String val) {
+    _version = val;
+    notifyListeners();
+  }
+
   Future<void> updateMainColor() async {
     mainColor = _useCustomMainColor
         ? customMainColor
@@ -220,5 +229,8 @@ class AppInfoProvider extends ChangeNotifier {
     useProtectionForNoteContent = false;
     pin = false;
     password = false;
+
+    final packageInfo = (await PackageInfo.fromPlatform());
+    version = '${packageInfo.version}+${packageInfo.buildNumber}';
   }
 }
