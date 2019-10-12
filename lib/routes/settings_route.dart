@@ -286,9 +286,8 @@ class _SettingsState extends State<SettingsRoute> {
                               .settingsRoute_backupAndRestore_backup_done(
                                   databaseBackupPath))));
                     } else {
-                      Map<PermissionGroup, PermissionStatus> permissions =
-                          await PermissionHandler()
-                              .requestPermissions([PermissionGroup.storage]);
+                      await PermissionHandler()
+                          .requestPermissions([PermissionGroup.storage]);
                       appInfo.storageStatus = await PermissionHandler()
                           .checkPermissionStatus(PermissionGroup.storage);
                     }

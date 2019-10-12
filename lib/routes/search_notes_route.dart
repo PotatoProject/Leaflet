@@ -10,11 +10,9 @@ import 'package:potato_notes/internal/search_filters.dart';
 import 'package:provider/provider.dart';
 
 class SearchNotesRoute extends StatefulWidget {
-  List<Note> noteList = List<Note>();
+  final List<Note> noteList;
 
-  SearchNotesRoute(List<Note> providedNoteList) {
-    this.noteList = providedNoteList;
-  }
+  SearchNotesRoute({@required this.noteList});
 
   @override
   _SearchNotesState createState() => new _SearchNotesState(noteList);
@@ -53,12 +51,15 @@ class _SearchNotesState extends State<SearchNotesRoute> {
         Theme.of(context).cardColor, systemBarsIconBrightness);
 
     double getAlphaFromTheme() {
-      if (appInfo.themeMode == 0) {
-        return 0.1;
-      } else if (appInfo.themeMode == 1) {
-        return 0.2;
-      } else if (appInfo.themeMode == 2) {
-        return 0.3;
+      switch (appInfo.themeMode) {
+        case 0:
+          return 0.1;
+        case 1:
+          return 0.2;
+        case 2:
+          return 0.3;
+        default:
+          return 0;
       }
     }
 

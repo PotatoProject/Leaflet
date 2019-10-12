@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
@@ -18,11 +19,9 @@ import 'package:share/share.dart';
 List<int> reminderList = List<int>();
 
 class ModifyNotesRoute extends StatefulWidget {
-  Note note = Note();
+  final Note note;
 
-  ModifyNotesRoute(Note note) {
-    this.note = note;
-  }
+  ModifyNotesRoute({@required this.note});
 
   @override
   _ModifyNotesState createState() => new _ModifyNotesState(note);
@@ -358,12 +357,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                             ));
                                           });
                                         } else {
-                                          Map<PermissionGroup, PermissionStatus>
-                                              permissions =
-                                              await PermissionHandler()
-                                                  .requestPermissions([
-                                            PermissionGroup.storage
-                                          ]);
+                                          await PermissionHandler()
+                                              .requestPermissions(
+                                                  [PermissionGroup.storage]);
                                           appInfo.storageStatus =
                                               await PermissionHandler()
                                                   .checkPermissionStatus(
@@ -1171,11 +1167,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 }
 
 class NoteColorDialog extends StatefulWidget {
-  int noteColor;
+  final int noteColor;
 
-  NoteColorDialog({
-    this.noteColor,
-  });
+  NoteColorDialog({this.noteColor});
 
   @override
   createState() => _NoteColorDialogState();

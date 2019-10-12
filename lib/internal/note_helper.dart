@@ -133,11 +133,8 @@ class NoteHelper {
     try {
       Database db = await openReadOnlyDatabase(path);
       await db.rawQuery("SELECT * FROM notes");
-    } on DatabaseException catch (e) {
-      print(e);
-      status = 1;
     } on Exception catch (e) {
-      print("gae");
+      print(e);
       status = 1;
     }
 

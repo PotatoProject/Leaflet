@@ -21,11 +21,9 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class NotesMainPageRoute extends StatefulWidget {
-  List<Note> noteList = List<Note>();
+  final List<Note> noteList;
 
-  NotesMainPageRoute(List<Note> list) {
-    this.noteList = list;
-  }
+  NotesMainPageRoute({@required this.noteList});
 
   @override
   _NotesMainPageState createState() => new _NotesMainPageState(noteList);
@@ -527,8 +525,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
       pin: null,
       password: null,
     );
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ModifyNotesRoute(emptyNote)));
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ModifyNotesRoute(note: emptyNote)));
 
     if (result != null) setState(() => noteList = result);
 
@@ -542,14 +542,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   void _editNoteCaller(BuildContext context, Note note) async {
-    var result;
-
     if (note.hideContent == 1 && (note.pin != null || note.password != null)) {
-      result = await Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SecurityNoteRoute(note)));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SecurityNoteRoute(note: note)));
     } else {
-      result = await Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ModifyNotesRoute(note)));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ModifyNotesRoute(note: note)));
     }
 
     List<Note> list = await NoteHelper().getNotes();
@@ -573,8 +575,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
     searchFilters.date = null;
     searchFilters.caseSensitive = false;
 
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => SearchNotesRoute(noteList)));
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SearchNotesRoute(noteList: noteList)));
 
     if (result != null) setState(() => noteList = result);
 
@@ -588,7 +592,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   }
 
   void _settingsCaller(BuildContext context) async {
-    final result = await Navigator.push(
+    await Navigator.push(
         context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
     List<Note> list = await NoteHelper().getNotes();
@@ -1152,12 +1156,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                             context: context,
                             builder: (context) {
                               double getAlphaFromTheme() {
-                                if (appInfo.themeMode == 0) {
-                                  return 0.1;
-                                } else if (appInfo.themeMode == 1) {
-                                  return 0.2;
-                                } else if (appInfo.themeMode == 2) {
-                                  return 0.3;
+                                switch (appInfo.themeMode) {
+                                  case 0:
+                                    return 0.1;
+                                  case 1:
+                                    return 0.2;
+                                  case 2:
+                                    return 0.3;
+                                  default:
+                                    return 0;
                                 }
                               }
 
@@ -1337,8 +1344,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       Divider(),
                       Visibility(
                         visible: curNote.hideContent == 1 &&
-                            (curNote.pin != null ||
-                                curNote.password != null),
+                            (curNote.pin != null || curNote.password != null),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 22, vertical: 10),
@@ -1427,10 +1433,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                     ));
                                   });
                                 } else {
-                                  Map<PermissionGroup, PermissionStatus>
-                                      permissions = await PermissionHandler()
-                                          .requestPermissions(
-                                              [PermissionGroup.storage]);
+                                  await PermissionHandler().requestPermissions(
+                                      [PermissionGroup.storage]);
                                   appInfo.storageStatus =
                                       await PermissionHandler()
                                           .checkPermissionStatus(

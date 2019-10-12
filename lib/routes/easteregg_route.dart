@@ -2,8 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:potato_notes/internal/app_info.dart';
-import 'package:provider/provider.dart';
 
 class EasterEggRoute extends StatelessWidget {
   @override
@@ -39,8 +37,6 @@ class _DrawState extends State<DrawScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     colors = [
       Colors.red,
       Colors.green,

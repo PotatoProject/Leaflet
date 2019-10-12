@@ -74,15 +74,13 @@ void main() async {
 
   List<Note> noteList = await NoteHelper().getNotes();
 
-  runApp(NotesRoot(noteList));
+  runApp(NotesRoot(noteList: noteList));
 }
 
 class NotesRoot extends StatelessWidget {
-  List<Note> noteList = List<Note>();
+  final List<Note> noteList;
 
-  NotesRoot(List<Note> list) {
-    this.noteList = list;
-  }
+  NotesRoot({@required this.noteList});
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +144,7 @@ class NotesRoot extends StatelessWidget {
             behavior: NoGlowScrollBehavior(),
             child: child,
           ),
-          home: NotesMainPageRoute(noteList),
+          home: NotesMainPageRoute(noteList: noteList),
           debugShowCheckedModeBanner: false,
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)

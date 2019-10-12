@@ -4,11 +4,9 @@ import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
 class SecurityNoteRoute extends StatefulWidget {
-  Note note = Note();
+  final Note note;
 
-  SecurityNoteRoute(Note note) {
-    this.note = note;
-  }
+  SecurityNoteRoute({@required this.note});
 
   @override
   createState() => _SecurityNoteRouteState();
@@ -178,7 +176,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      ModifyNotesRoute(widget.note)));
+                                      ModifyNotesRoute(note: widget.note)));
 
                           if (result == null || result != null)
                             Navigator.pop(context);
@@ -348,8 +346,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ModifyNotesRoute(widget.note)));
+                                        builder: (context) => ModifyNotesRoute(
+                                            note: widget.note)));
 
                                 if (result == null || result != null)
                                   Navigator.pop(context);
@@ -421,7 +419,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               var result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ModifyNotesRoute(widget.note)));
+                      builder: (context) =>
+                          ModifyNotesRoute(note: widget.note)));
 
               if (result == null || result != null) Navigator.pop(context);
             }
