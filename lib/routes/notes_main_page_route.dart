@@ -1242,7 +1242,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
   void showNoteSettingsScrollableBottomSheet(BuildContext context, int index) {
     final appInfo = Provider.of<AppInfoProvider>(context);
     BuildContext parentContext = context;
-
+    Note curNote = noteList[index];
     showModalBottomSheet<void>(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -1252,15 +1252,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
         ),
         context: context,
         builder: (BuildContext context) {
-          bool noteStarred;
+          bool noteStarred = false;
           bool indexExists = true;
-
-          try {
-            noteStarred = noteList[index].isStarred == 1;
-          } on RangeError {
-            noteStarred = noteList[index - 1].isStarred == 1;
-            indexExists = false;
-          }
 
           return !indexExists
               ? Container()
@@ -1276,8 +1269,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         onTap: () {
                           setState(() {
                             isSelectorVisible = true;
-                            noteList[index].isSelected = true;
-                            selectionList.add(noteList[index].id);
+                            curNote.isSelected = true;
+                            selectionList.add(curNote.id);
                           });
                           Navigator.pop(context);
                         },
@@ -1287,7 +1280,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         title: Text(locales.note_edit),
                         onTap: () {
                           Navigator.pop(context);
-                          _editNoteCaller(parentContext, noteList[index]);
+                          _editNoteCaller(parentContext, curNote);
                         },
                       ),
                       ListTile(
@@ -1295,8 +1288,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         title: Text(locales.note_delete),
                         onTap: () async {
                           Navigator.pop(context);
-                          Note noteBackup = noteList[index];
-                          await NoteHelper().delete(noteList[index].id);
+                          Note noteBackup = curNote;
+                          await NoteHelper().delete(curNote.id);
                           List<Note> list = await NoteHelper().getNotes();
                           setState(() => noteList = list);
                           scaffoldKey.currentState.removeCurrentSnackBar();
@@ -1327,13 +1320,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         onTap: () async {
                           if (noteStarred) {
                             await NoteHelper().update(
-                              noteList[index].copyWith(localIsStarred: 0),
+                              curNote.copyWith(localIsStarred: 0),
                             );
                             List<Note> list = await NoteHelper().getNotes();
                             setState(() => noteList = list);
                           } else {
                             await NoteHelper().update(
-                              noteList[index].copyWith(localIsStarred: 1),
+                              curNote.copyWith(localIsStarred: 1),
                             );
                             List<Note> list = await NoteHelper().getNotes();
                             setState(() => noteList = list);
@@ -1343,9 +1336,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                       ),
                       Divider(),
                       Visibility(
-                        visible: noteList[index].hideContent == 1 &&
-                            (noteList[index].pin != null ||
-                                noteList[index].password != null),
+                        visible: curNote.hideContent == 1 &&
+                            (curNote.pin != null ||
+                                curNote.password != null),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 22, vertical: 10),
@@ -1367,10 +1360,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                         ),
                       ),
                       Visibility(
-                        visible: noteList[index].isList == 0 &&
-                            !(noteList[index].hideContent == 1 &&
-                                (noteList[index].pin != null ||
-                                    noteList[index].password != null)),
+                        visible: curNote.isList == 0 &&
+                            !(curNote.hideContent == 1 &&
+                                (curNote.pin != null ||
+                                    curNote.password != null)),
                         child: Column(
                           children: <Widget>[
                             ListTile(
@@ -1379,9 +1372,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                               onTap: () {
                                 String shareText = "";
 
-                                if (noteList[index].title != "")
-                                  shareText += noteList[index].title + "\n\n";
-                                shareText += noteList[index].content;
+                                if (curNote.title != "")
+                                  shareText += curNote.title + "\n\n";
+                                shareText += curNote.content;
 
                                 Share.share(shareText);
                                 Navigator.pop(context);
@@ -1413,11 +1406,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
 
                                   String noteContents = "";
 
-                                  if (noteList[index].title != "")
+                                  if (curNote.title != "")
                                     noteContents +=
-                                        "# " + noteList[index].title + "\n\n";
+                                        "# " + curNote.title + "\n\n";
 
-                                  noteContents += noteList[index].content;
+                                  noteContents += curNote.content;
 
                                   Navigator.pop(context);
 
@@ -1455,10 +1448,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> {
                                     .add(index.toString());
                                 await FlutterLocalNotificationsPlugin().show(
                                     int.parse(appInfo.notificationsIdList.last),
-                                    noteList[index].title != ""
-                                        ? noteList[index].title
+                                    curNote.title != ""
+                                        ? curNote.title
                                         : "Pinned note",
-                                    noteList[index].content,
+                                    curNote.content,
                                     NotificationDetails(
                                         AndroidNotificationDetails(
                                           '0',
