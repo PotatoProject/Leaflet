@@ -329,6 +329,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "settingsRoute_backupAndRestore_restore_regenDbEntries": "Regenerate database entries",
+  "@settingsRoute_backupAndRestore_restore_regenDbEntries": {
+    "type": "text",
+    "placeholders": {}
+  },
   "settingsRoute_about": "About",
   "@settingsRoute_about": {
     "type": "text",

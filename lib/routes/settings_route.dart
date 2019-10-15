@@ -315,6 +315,15 @@ class _SettingsState extends State<SettingsRoute> {
                     }
                   },
                 ),
+                ListTile(
+                  title: Text(locales.settingsRoute_backupAndRestore_regenDbEntries),
+                  leading: Icon(Icons.list),
+                  onTap: () async {
+                    await NoteHelper().recreateDB();
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(locales.done)));
+                  },
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
                   child: Text(

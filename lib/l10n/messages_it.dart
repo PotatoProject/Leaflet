@@ -167,6 +167,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Backup (Sperimentale)"),
         "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_regenDbEntries":
+            MessageLookupByLibrary.simpleMessage("Rigenera le colonne del database"),
         "settingsRoute_backupAndRestore_restore":
             MessageLookupByLibrary.simpleMessage("Ripristino (Sperimentale)"),
         "settingsRoute_backupAndRestore_restore_fail":

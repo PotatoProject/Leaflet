@@ -140,6 +140,42 @@ class NoteHelper {
 
     return status;
   }
+
+  Future<void> recreateDB() async {
+    final db = await database;
+
+    db.execute("ALTER TABLE notes RENAME TO notesold");
+    db.execute(
+      """
+        CREATE TABLE notes(
+          id INTEGER PRIMARY KEY,
+          title TEXT,
+          content TEXT,
+          isStarred INTEGER,
+          date INTEGER,
+          color INTEGER,
+          imagePath TEXT,
+          isList INTEGER,
+          listParseString TEXT,
+          reminders TEXT,
+          hideContent INTEGER,
+          pin TEXT,
+          password TEXT
+        )
+      """
+    );
+
+    db.execute(
+      """
+        INSERT INTO notes(
+          id, title, content, isStarred, date, color, imagePath, isList,
+          listParseString,reminders, hideContent, pin, password
+        ) SELECT * FROM notesold
+      """
+    );
+
+    db.execute("DROP TABLE notesold");
+  }
 }
 
 class Note {

@@ -40,7 +40,7 @@ void main() async {
             listParseString TEXT,
             reminders TEXT,
             hideContent INTEGER,
-            pin INTEGER,
+            pin TEXT,
             password TEXT
           )
         """,
@@ -59,7 +59,7 @@ void main() async {
         "ALTER TABLE notes ADD COLUMN listParseString TEXT",
         "ALTER TABLE notes ADD COLUMN reminders TEXT",
         "ALTER TABLE notes ADD COLUMN hideContent INTEGER",
-        "ALTER TABLE notes ADD COLUMN pin INTEGER",
+        "ALTER TABLE notes ADD COLUMN pin TEXT",
         "ALTER TABLE notes ADD COLUMN password TEXT",
       ];
 

@@ -329,6 +329,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "settingsRoute_backupAndRestore_restore_regenDbEntries": "Rigenera le colonne del database",
+  "@settingsRoute_backupAndRestore_restore_regenDbEntries": {
+    "type": "text",
+    "placeholders": {}
+  },
   "settingsRoute_about": "Crediti",
   "@settingsRoute_about": {
     "type": "text",

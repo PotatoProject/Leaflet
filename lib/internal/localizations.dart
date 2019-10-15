@@ -322,6 +322,13 @@ class AppLocalizations {
         "Corrupted or invalid DB!",
         name: "settingsRoute_backupAndRestore_restore_fail",
       );
+  
+
+
+  String get settingsRoute_backupAndRestore_regenDbEntries => Intl.message(
+        "Regenerate database entries",
+        name: "settingsRoute_backupAndRestore_regenDbEntries",
+      );
 
   String get settingsRoute_about => Intl.message(
         "About",
