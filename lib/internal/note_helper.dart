@@ -32,7 +32,7 @@ class NoteHelper {
         listParseString: maps[i]['listParseString'],
         reminders: maps[i]['reminders'],
         hideContent: maps[i]['hideContent'],
-        pin: maps[i]['pin'],
+        pin: maps[i]['pin'].toString(),
         password: maps[i]['password'],
       );
     });
@@ -79,7 +79,7 @@ class NoteHelper {
               listParseString TEXT,
               reminders TEXT,
               hideContent INTEGER,
-              pin INTEGER,
+              pin TEXT,
               password TEXT
             )
           """,
@@ -114,7 +114,7 @@ class NoteHelper {
           listParseString TEXT,
           reminders TEXT,
           hideContent INTEGER,
-          pin INTEGER,
+          pin TEXT,
           password TEXT
         )
       """);
@@ -154,7 +154,7 @@ class Note {
   final String listParseString;
   final String reminders;
   final int hideContent;
-  final int pin;
+  final String pin;
   final String password;
 
   bool isSelected = false;

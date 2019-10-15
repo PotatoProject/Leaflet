@@ -409,8 +409,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
         onPressed: () async {
           error = false;
           setState(() => text += char);
-          if (text.length == widget.note.pin.toString().length) {
-            if (text != widget.note.pin.toString()) {
+          if (text.length == widget.note.pin.length) {
+            if (text != widget.note.pin) {
               setState(() {
                 text = "";
                 error = true;

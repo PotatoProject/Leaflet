@@ -40,7 +40,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   String noteListParseString;
   String noteReminders;
   int noteHideContent = 0;
-  int notePin;
+  String notePin;
   String notePassword;
 
   _ModifyNotesState(Note note) {
@@ -1117,7 +1117,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                               appInfo.pin ? iconTextColor : Colors.transparent),
                       title: Text(locales.modifyNotesRoute_security_pin),
                       onTap: () async {
-                        int result = await showDialog(
+                        String result = await showDialog(
                             context: context,
                             builder: (context) {
                               return ProtectionDialog(
@@ -1253,7 +1253,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
 
 class ProtectionDialog extends StatefulWidget {
   bool setPassword;
-  int pin;
+  String pin;
   String password;
   AppInfoProvider appInfo;
 
@@ -1373,7 +1373,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                     widget.appInfo.pin = false;
                   } else {
                     widget.password = null;
-                    widget.pin = int.parse(controller.text);
+                    widget.pin = controller.text;
                     widget.appInfo.password = false;
                     widget.appInfo.pin = true;
                   }
