@@ -32,7 +32,7 @@ class NoteHelper {
         listParseString: maps[i]['listParseString'],
         reminders: maps[i]['reminders'],
         hideContent: maps[i]['hideContent'],
-        pin: maps[i]['pin'].toString(),
+        pin: maps[i]['pin'] == null ? maps[i]['pin'] : maps[i]['pin'].toString(),
         password: maps[i]['password'],
       );
     });
