@@ -65,6 +65,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   TextEditingController entryTextController = TextEditingController(text: "");
   List<TextEditingController> textControllers = List<TextEditingController>();
+
+  TextEditingController titleController;
+  TextEditingController contentController;
+  
   AnimationController _controller;
 
   AppLocalizations locales;
@@ -94,6 +98,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   @override
   void initState() {
     super.initState();
+    titleController = TextEditingController(text: noteTitle);
+    contentController = TextEditingController(text: noteContent);
     BackButtonInterceptor.add(saveAndPop);
     _controller =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
@@ -109,11 +115,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController titleController =
-        TextEditingController(text: noteTitle);
-    TextEditingController contentController =
-        TextEditingController(text: noteContent);
-
     locales = AppLocalizations.of(context);
 
     reminderListPopulater();
