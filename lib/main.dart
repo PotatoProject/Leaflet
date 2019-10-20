@@ -140,6 +140,7 @@ class NotesRoot extends StatelessWidget {
             Locale("en"),
             Locale("it"),
             Locale("nl"),
+            Locale("id"),
           ],
           builder: (context, child) => ScrollConfiguration(
             behavior: NoGlowScrollBehavior(),
