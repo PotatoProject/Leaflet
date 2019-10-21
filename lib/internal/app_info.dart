@@ -79,6 +79,13 @@ class AppInfoProvider extends ChangeNotifier {
 
   String get version => _version;
 
+  static List<String> get supportedLocales => [
+    "en",
+    "it",
+    "nl",
+    "id",
+  ];
+
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
     setFollowSystemTheme(follow);

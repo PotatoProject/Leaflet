@@ -130,18 +130,18 @@ class NotesRoot extends StatelessWidget {
           }
         }
 
+        List<Locale> supportedLocales = [];
+        for(int i = 0; i < AppInfoProvider.supportedLocales.length; i++) {
+          supportedLocales.add(Locale(AppInfoProvider.supportedLocales[i]));
+        }
+
         return MaterialApp(
           localizationsDelegates: [
             AppLocalizationsDelegate(),
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate
           ],
-          supportedLocales: [
-            Locale("en"),
-            Locale("it"),
-            Locale("nl"),
-            Locale("id"),
-          ],
+          supportedLocales: supportedLocales,
           builder: (context, child) => ScrollConfiguration(
             behavior: NoGlowScrollBehavior(),
             child: child,

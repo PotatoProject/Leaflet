@@ -74,6 +74,7 @@ class _SettingsState extends State<SettingsRoute> {
             padding:
                 EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
             child: ListView(
+              padding: EdgeInsets.all(0),
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(bottom: 10, left: 70),

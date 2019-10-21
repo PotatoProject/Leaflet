@@ -76,7 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notesMainPageRoute_note_list_selectedEntries" : MessageLookupByLibrary.simpleMessage(" voci selezionate"),
     "notesMainPageRoute_note_remindersSet" : MessageLookupByLibrary.simpleMessage("Promemoria impostati"),
     "notesMainPageRoute_pinnedNote" : MessageLookupByLibrary.simpleMessage("Appunto fissato"),
-    "notesMainPageRoute_starred" : MessageLookupByLibrary.simpleMessage("Appunti predefiniti"),
+    "notesMainPageRoute_starred" : MessageLookupByLibrary.simpleMessage("Appunti preferiti"),
     "notesMainPageRoute_user_avatar_change" : MessageLookupByLibrary.simpleMessage("Cambia immagine"),
     "notesMainPageRoute_user_avatar_remove" : MessageLookupByLibrary.simpleMessage("Rimuovi immagine"),
     "notesMainPageRoute_user_info" : MessageLookupByLibrary.simpleMessage("Informazioni utente"),

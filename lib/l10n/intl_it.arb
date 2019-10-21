@@ -71,7 +71,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "notesMainPageRoute_starred": "Appunti predefiniti",
+  "notesMainPageRoute_starred": "Appunti preferiti",
   "@notesMainPageRoute_starred": {
     "type": "text",
     "placeholders": {}

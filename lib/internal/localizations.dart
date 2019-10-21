@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/l10n/messages_all.dart';
 
 class AppLocalizations {
@@ -498,7 +499,7 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'it', 'nl', 'id'].contains(locale.languageCode);
+    return AppInfoProvider.supportedLocales.contains(locale.languageCode);
   }
 
   @override
