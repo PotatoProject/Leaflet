@@ -5,8 +5,9 @@ import 'package:potato_notes/routes/modify_notes_route.dart';
 
 class SecurityNoteRoute extends StatefulWidget {
   final Note note;
+  final String heroIndex;
 
-  SecurityNoteRoute({@required this.note});
+  SecurityNoteRoute({@required this.note, @required this.heroIndex});
 
   @override
   createState() => _SecurityNoteRouteState();
@@ -172,14 +173,15 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                           });
                         } else {
                           error = false;
+                          Navigator.pop(context);
                           var result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      ModifyNotesRoute(note: widget.note)));
+                                      ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex)));
 
-                          if (result == null || result != null)
-                            Navigator.pop(context);
+                          //if (result == null || result != null)
+                          //  Navigator.pop(context);
                         }
                       },
                     ),
@@ -343,14 +345,15 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 });
                               } else {
                                 error = false;
+                                Navigator.pop(context);
                                 var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ModifyNotesRoute(
-                                            note: widget.note)));
+                                            note: widget.note, heroIndex: widget.heroIndex)));
 
-                                if (result == null || result != null)
-                                  Navigator.pop(context);
+                                //if (result == null || result != null)
+                                //  Navigator.pop(context);
                               }
                             },
                           ),
@@ -416,13 +419,14 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 error = true;
               });
             } else {
+              Navigator.pop(context);
               var result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ModifyNotesRoute(note: widget.note)));
+                          ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex)));
 
-              if (result == null || result != null) Navigator.pop(context);
+              //if (result == null || result != null) Navigator.pop(context);
             }
           }
         },

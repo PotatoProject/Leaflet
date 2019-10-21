@@ -20,8 +20,9 @@ List<int> reminderList = List<int>();
 
 class ModifyNotesRoute extends StatefulWidget {
   final Note note;
+  final String heroIndex;
 
-  ModifyNotesRoute({@required this.note});
+  ModifyNotesRoute({@required this.note, @required this.heroIndex});
 
   @override
   _ModifyNotesState createState() => new _ModifyNotesState(note);
@@ -161,347 +162,346 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    return Theme(
-      data: Theme.of(context).copyWith(
-        iconTheme: IconThemeData(color: getElementsColorBasedOnThemeContext()),
-        textTheme: TextTheme(
-          subhead: Theme.of(context).textTheme.subhead.copyWith(
-                color: getElementsColorBasedOnThemeContext(),
+    return Hero(
+      tag: "note" + widget.heroIndex,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          iconTheme: IconThemeData(color: getElementsColorBasedOnThemeContext()),
+          textTheme: TextTheme(
+            subhead: Theme.of(context).textTheme.subhead.copyWith(
+                  color: getElementsColorBasedOnThemeContext(),
+                ),
+          ),
+          inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+                hintStyle: TextStyle(
+                  color: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                      .withAlpha(0.5)
+                      .toColor(),
+                ),
               ),
+          unselectedWidgetColor:
+              HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                  .withAlpha(0.5)
+                  .toColor(),
+          scaffoldBackgroundColor:
+              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+          accentColor: getElementsColorBasedOnThemeContext(),
+          dividerColor: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+              .withAlpha(0.12)
+              .toColor(),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: noteColor == null
+                ? Theme.of(context).cardColor
+                : Color(noteColor),
+          ),
+          buttonTheme: ButtonThemeData(
+              textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
+          popupMenuTheme: PopupMenuThemeData(
+            color: noteColor == null
+                ? Theme.of(context).cardColor
+                : Color(noteColor),
+          ),
         ),
-        inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
-              hintStyle: TextStyle(
-                color: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                    .withAlpha(0.5)
-                    .toColor(),
-              ),
-            ),
-        unselectedWidgetColor:
-            HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                .withAlpha(0.5)
-                .toColor(),
-        scaffoldBackgroundColor:
-            noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
-        accentColor: getElementsColorBasedOnThemeContext(),
-        dividerColor: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-            .withAlpha(0.12)
-            .toColor(),
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: noteColor == null
-              ? Theme.of(context).cardColor
-              : Color(noteColor),
-        ),
-        buttonTheme: ButtonThemeData(
-            textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
-        popupMenuTheme: PopupMenuThemeData(
-          color: noteColor == null
-              ? Theme.of(context).cardColor
-              : Color(noteColor),
-        ),
-      ),
-      child: Scaffold(
-        key: scaffoldKey,
-        body: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Container(
-                height: 70,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          saveAndPop(true);
-                        },
+        child: Scaffold(
+          key: scaffoldKey,
+          body: Stack(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: Container(
+                  height: 70,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            saveAndPop(true);
+                          },
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(noteHideContent == 1 &&
+                                  (notePin != null || notePassword != null)
+                              ? Icons.lock
+                              : Icons.remove_red_eye),
+                          onPressed: () {
+                            appInfo.hideContent = noteHideContent;
+                            appInfo.useProtectionForNoteContent =
+                                notePin != null || notePassword != null;
+                            appInfo.pin = notePin != null;
+                            appInfo.password = notePassword != null;
+                            showHideContentScrollableBottomSheet(
+                                context,
+                                noteColor == null
+                                    ? Theme.of(context).cardColor
+                                    : Color(noteColor),
+                                getElementsColorBasedOnThemeContext());
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            showAddElementScrollableBottomSheet(
+                                context,
+                                noteColor == null
+                                    ? Theme.of(context).cardColor
+                                    : Color(noteColor),
+                                getElementsColorBasedOnThemeContext());
+                          },
+                        ),
+                        IconButton(
+                          icon: noteIsStarred == 0
+                              ? Icon(Icons.star_border)
+                              : Icon(Icons.star),
+                          onPressed: () {
+                            if (noteIsStarred == 0) {
+                              setState(() => noteIsStarred = 1);
+                            } else if (noteIsStarred == 1) {
+                              setState(() => noteIsStarred = 0);
+                            }
+                          },
                       ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(noteHideContent == 1 &&
-                                (notePin != null || notePassword != null)
-                            ? Icons.lock
-                            : Icons.remove_red_eye),
-                        onPressed: () {
-                          appInfo.hideContent = noteHideContent;
-                          appInfo.useProtectionForNoteContent =
-                              notePin != null || notePassword != null;
-                          appInfo.pin = notePin != null;
-                          appInfo.password = notePassword != null;
-                          showHideContentScrollableBottomSheet(
-                              context,
-                              noteColor == null
-                                  ? Theme.of(context).cardColor
-                                  : Color(noteColor),
-                              getElementsColorBasedOnThemeContext());
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          showAddElementScrollableBottomSheet(
-                              context,
-                              noteColor == null
-                                  ? Theme.of(context).cardColor
-                                  : Color(noteColor),
-                              getElementsColorBasedOnThemeContext());
-                        },
-                      ),
-                      IconButton(
-                        icon: noteIsStarred == 0
-                            ? Icon(Icons.star_border)
-                            : Icon(Icons.star),
-                        onPressed: () {
-                          if (noteIsStarred == 0) {
-                            setState(() => noteIsStarred = 1);
-                          } else if (noteIsStarred == 1) {
-                            setState(() => noteIsStarred = 0);
-                          }
-                        },
-                      ),
-                      noteIsList == 0
-                          ? PopupMenuButton(
-                              padding: EdgeInsets.all(0),
-                              //color: Color(noteColor),
-                              itemBuilder: (context) {
-                                return <PopupMenuEntry>[
-                                  PopupMenuItem(
-                                    child: ListTile(
-                                      //leading: Icon(Icons.color_lens),
-                                      title: Text(locales
-                                          .modifyNotesRoute_color_change),
-                                      onTap: () async {
-                                        Navigator.pop(context);
-
-                                        int result = await showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return NoteColorDialog(
-                                                noteColor: noteColor,
-                                              );
-                                            });
-
-                                        setState(() {
-                                          if (result != null) {
-                                            if (result == 0) {
-                                              noteColor = null;
-                                            } else {
-                                              noteColor = result;
+                        noteIsList == 0
+                            ? PopupMenuButton(
+                                padding: EdgeInsets.all(0),
+                                //color: Color(noteColor),
+                                itemBuilder: (context) {
+                                  return <PopupMenuEntry>[
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        //leading: Icon(Icons.color_lens),
+                                        title: Text(locales
+                                            .modifyNotesRoute_color_change),
+                                        onTap: () async {
+                                          Navigator.pop(context);
+                                            int result = await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return NoteColorDialog(
+                                                  noteColor: noteColor,
+                                                );
+                                              });
+                                            setState(() {
+                                            if (result != null) {
+                                              if (result == 0) {
+                                                noteColor = null;
+                                              } else {
+                                                noteColor = result;
+                                              }
                                             }
-                                          }
-                                        });
-                                      },
+                                          });
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  PopupMenuItem(
-                                    child: ListTile(
-                                      //leading: Icon(Icons.share),
-                                      title: Text(locales.note_share),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        String shareText = "";
-
-                                        if (noteTitle != "")
-                                          shareText += noteTitle + "\n\n";
-                                        shareText += noteContent;
-
-                                        Share.share(shareText);
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        //leading: Icon(Icons.share),
+                                        title: Text(locales.note_share),
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          String shareText = "";
+                                            if (noteTitle != "")
+                                            shareText += noteTitle + "\n\n";
+                                          shareText += noteContent;
+                                            Share.share(shareText);
                                       },
+                                      ),
                                     ),
-                                  ),
-                                  PopupMenuItem(
-                                    child: ListTile(
-                                      //leading: Icon(Icons.file_upload),
-                                      title: Text(locales.note_export),
-                                      onTap: () async {
-                                        Navigator.pop(context);
-                                        if (appInfo.storageStatus ==
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        //leading: Icon(Icons.file_upload),
+                                        title: Text(locales.note_export),
+                                        onTap: () async {
+                                          Navigator.pop(context);
+                                          if (appInfo.storageStatus ==
                                             PermissionStatus.granted) {
-                                          DateTime now = DateTime.now();
+                                            DateTime now = DateTime.now();
 
-                                          bool backupDirExists = await Directory(
-                                                  '/storage/emulated/0/PotatoNotes/exported')
+                                            bool backupDirExists = await Directory(
+                                                    '/storage/emulated/0/PotatoNotes/exported')
                                               .exists();
 
-                                          if (!backupDirExists) {
-                                            await Directory(
-                                                    '/storage/emulated/0/PotatoNotes/exported')
-                                                .create(recursive: true);
-                                          }
+                                            if (!backupDirExists) {
+                                              await Directory(
+                                                      '/storage/emulated/0/PotatoNotes/exported')
+                                                  .create(recursive: true);
+                                            }
 
-                                          String noteExportPath =
-                                              '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
-                                                  DateFormat("dd-MM-yyyy_HH-mm")
+                                            String noteExportPath =
+                                                '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
+                                                    DateFormat("dd-MM-yyyy_HH-mm")
                                                       .format(now) +
-                                                  '.md';
+                                                      '.md';
 
-                                          String noteContents = "";
+                                            String noteContents = "";
 
-                                          if (noteTitle != "")
-                                            noteContents +=
-                                                "# " + noteTitle + "\n\n";
+                                            if (noteTitle != "")
+                                              noteContents +=
+                                                  "# " + noteTitle + "\n\n";
 
-                                          noteContents += noteContent;
+                                            noteContents += noteContent;
 
-                                          File(noteExportPath)
-                                              .writeAsString(noteContents)
-                                              .then((nothing) {
-                                            scaffoldKey.currentState
-                                                .showSnackBar(SnackBar(
-                                              content: Text(locales
-                                                      .note_exportLocation +
-                                                  " PotatoNotes/exported/exported_note_" +
-                                                  DateFormat(
-                                                          "dd-MM-yyyy_HH-mm-ss")
-                                                      .format(now)),
-                                            ));
-                                          });
-                                        } else {
-                                          await PermissionHandler()
-                                              .requestPermissions(
-                                                  [PermissionGroup.storage]);
-                                          appInfo.storageStatus =
-                                              await PermissionHandler()
-                                                  .checkPermissionStatus(
-                                                      PermissionGroup.storage);
-                                        }
-                                      },
+                                            File(noteExportPath)
+                                                .writeAsString(noteContents)
+                                                .then((nothing) {
+                                              scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(locales
+                                                        .note_exportLocation +
+                                                    " PotatoNotes/exported/exported_note_" +
+                                                    DateFormat(
+                                                            "dd-MM-yyyy_HH-mm-ss")
+                                                        .format(now)),
+                                              ));
+                                            });
+                                          } else {
+                                            await PermissionHandler()
+                                                .requestPermissions(
+                                                    [PermissionGroup.storage]);
+                                            appInfo.storageStatus =
+                                                await PermissionHandler()
+                                                    .checkPermissionStatus(
+                                                        PermissionGroup.storage);
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  PopupMenuItem(
-                                    child: ListTile(
-                                      //leading: Icon(Icons.notifications),
-                                      enabled: !appInfo.notificationsIdList
-                                          .contains(noteId.toString()),
-                                      title: Text(locales.note_pinToNotifs),
-                                      onTap: () async {
-                                        appInfo.notificationsIdList
-                                            .add(noteId.toString());
-                                        await FlutterLocalNotificationsPlugin()
-                                            .show(
-                                                int.parse(appInfo
-                                                    .notificationsIdList.last),
-                                                noteTitle != ""
-                                                    ? noteTitle
-                                                    : locales
-                                                        .notesMainPageRoute_pinnedNote,
-                                                noteContent,
-                                                NotificationDetails(
-                                                    AndroidNotificationDetails(
-                                                      '0',
-                                                      'note_pinned_notifications',
-                                                      'idk',
-                                                      priority: Priority.High,
-                                                      playSound: true,
-                                                      importance:
-                                                          Importance.High,
-                                                      ongoing: true,
-                                                    ),
-                                                    IOSNotificationDetails()),
-                                                payload: noteId.toString());
-                                        Navigator.pop(context);
-                                      },
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        //leading: Icon(Icons.notifications),
+                                        enabled: !appInfo.notificationsIdList
+                                            .contains(noteId.toString()),
+                                        title: Text(locales.note_pinToNotifs),
+                                        onTap: () async {
+                                          appInfo.notificationsIdList
+                                              .add(noteId.toString());
+                                          await FlutterLocalNotificationsPlugin()
+                                              .show(
+                                                  int.parse(appInfo
+                                                      .notificationsIdList.last),
+                                                  noteTitle != ""
+                                                      ? noteTitle
+                                                      : locales
+                                                          .notesMainPageRoute_pinnedNote,
+                                                  noteContent,
+                                                  NotificationDetails(
+                                                      AndroidNotificationDetails(
+                                                        '0',
+                                                        'note_pinned_notifications',
+                                                        'idk',
+                                                        priority: Priority.High,
+                                                        playSound: true,
+                                                        importance:
+                                                            Importance.High,
+                                                        ongoing: true,
+                                                      ),
+                                                      IOSNotificationDetails()),
+                                                  payload: noteId.toString());
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                ];
-                              },
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.color_lens),
-                              onPressed: () async {
-                                int result = await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return NoteColorDialog(
-                                        noteColor: noteColor,
-                                      );
-                                    });
+                                  ];
+                                },
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.color_lens),
+                                onPressed: () async {
+                                  int result = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return NoteColorDialog(
+                                          noteColor: noteColor,
+                                        );
+                                      });
 
-                                setState(() {
-                                  if (result != null) {
-                                    if (result == 0) {
-                                      noteColor = null;
-                                    } else {
-                                      noteColor = result;
+                                  setState(() {
+                                    if (result != null) {
+                                      if (result == 0) {
+                                        noteColor = null;
+                                      } else {
+                                        noteColor = result;
+                                      }
                                     }
-                                  }
-                                });
-                              },
-                            ),
-                    ],
+                                  });
+                                },
+                              ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
-              child: ListView(
-                padding: EdgeInsets.all(0),
-                children: <Widget>[
-                  Visibility(
-                    visible: noteImagePath != null,
-                    child: noteImagePath == null
-                        ? Container()
-                        : Image(
-                            image: FileImage(File(noteImagePath)),
-                            fit: BoxFit.fill,
-                          ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: TextField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                          hintText: locales.modifyNotesRoute_title,
-                          border: InputBorder.none),
-                      onChanged: (text) {
-                        noteTitle = text;
-                      },
-                      textCapitalization: TextCapitalization.sentences,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                      ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
+                child: ListView(
+                  padding: EdgeInsets.all(0),
+                  children: <Widget>[
+                    Visibility(
+                      visible: noteImagePath != null,
+                      child: noteImagePath == null
+                          ? Container()
+                          : Image(
+                              image: FileImage(File(noteImagePath)),
+                              fit: BoxFit.fill,
+                            ),
                     ),
-                  ),
-                  Visibility(
-                    visible: noteIsList == 1,
-                    child: Column(
-                      children: checkListBuilder(),
-                    ),
-                  ),
-                  Visibility(
-                    visible: reminderList.length > 0,
-                    child: Column(
-                      children: reminderListBuilder(),
-                    ),
-                  ),
-                  Visibility(
-                    visible: noteIsList == 0,
-                    child: Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
-                        controller: contentController,
+                        controller: titleController,
                         decoration: InputDecoration(
-                            hintText: locales.modifyNotesRoute_content,
+                            hintText: locales.modifyNotesRoute_title,
                             border: InputBorder.none),
                         onChanged: (text) {
-                          noteContent = text;
+                          noteTitle = text;
                         },
                         textCapitalization: TextCapitalization.sentences,
-                        maxLines: noteImagePath != null
-                            ? noteContent.split("\n").length
-                            : 32,
-                        keyboardType: TextInputType.multiline,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Visibility(
+                      visible: noteIsList == 1,
+                      child: Column(
+                        children: checkListBuilder(),
+                      ),
+                    ),
+                    Visibility(
+                      visible: reminderList.length > 0,
+                      child: Column(
+                        children: reminderListBuilder(),
+                      ),
+                    ),
+                    Visibility(
+                      visible: noteIsList == 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          controller: contentController,
+                          decoration: InputDecoration(
+                              hintText: locales.modifyNotesRoute_content,
+                              border: InputBorder.none),
+                          onChanged: (text) {
+                            noteContent = text;
+                          },
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: noteImagePath != null
+                              ? noteContent.split("\n").length
+                              : 32,
+                          keyboardType: TextInputType.multiline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
