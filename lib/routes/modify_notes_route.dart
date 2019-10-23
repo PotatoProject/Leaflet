@@ -135,12 +135,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             ? Brightness.light
             : Brightness.dark;
 
-    changeSystemBarsColors(
-        noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
-        noteColor == null
-            ? systemBarsIconBrightness
-            : getBarsColorFromNoteColor());
-
     Color getElementsColorBasedOnThemeContext() {
       Color colorToReturn;
       if (noteColor == null) {
@@ -161,6 +155,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     }
 
     final appInfo = Provider.of<AppInfoProvider>(context);
+
+    changeSystemBarsColors(
+        noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+        noteColor == null
+            ? systemBarsIconBrightness
+            : getBarsColorFromNoteColor());
 
     return Hero(
       tag: "note" + widget.heroIndex,
@@ -1083,6 +1083,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       Icons.remove_red_eye,
                       color: iconTextColor,
                     ),
+                    activeColor: Theme.of(context).accentColor,
                     title: Text(locales.modifyNotesRoute_security_hideContent),
                     value: appInfo.hideContent == 1,
                     onChanged: (value) async {
@@ -1097,6 +1098,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       Icons.lock,
                       color: iconTextColor,
                     ),
+                    activeColor: Theme.of(context).accentColor,
                     value: appInfo.useProtectionForNoteContent,
                     onChanged: appInfo.hideContent == 1
                         ? (value) {
@@ -1223,6 +1225,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
                     : currentColor),
           ),
           onPressed: () => Navigator.pop(context, 0),
+          textColor: Theme.of(context).accentColor,
         ),
         FlatButton(
           child: Text(
@@ -1246,6 +1249,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
             }
             Navigator.pop(context, returnValue);
           },
+          textColor: Theme.of(context).accentColor,
         ),
       ],
     );
@@ -1361,6 +1365,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
         FlatButton(
           child: Text(locales.cancel),
           onPressed: () => Navigator.pop(context),
+          textColor: Theme.of(context).accentColor,
         ),
         FlatButton(
           child: Text(locales.done),
@@ -1381,6 +1386,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                   Navigator.pop(context,
                       widget.setPassword ? widget.password : widget.pin);
                 },
+          textColor: Theme.of(context).accentColor,
         ),
       ],
     );

@@ -36,8 +36,8 @@ class CustomThemes {
       buttonColor: appInfo.mainColor,
       primaryColor: appInfo.mainColor,
       backgroundColor: appInfo.mainColor,
-      scaffoldBackgroundColor: Color(0xFF151618),
-      cardColor: Color(0xFF212121),
+      cardColor: Color(0xFF151618),
+      scaffoldBackgroundColor: Color(0xFF212121),
       dialogBackgroundColor: Color(0xFF212121),
       bottomAppBarColor: Color(0xFF212121),
       canvasColor: Color(0xFF212121),
@@ -45,6 +45,8 @@ class CustomThemes {
   }
 
   static ThemeData light(AppInfoProvider appInfo) {
+    Color scaffoldBackup = ThemeData.light().scaffoldBackgroundColor;
+
     return ThemeData.light().copyWith(
       accentColor: appInfo.mainColor,
       cursorColor: appInfo.mainColor,
@@ -53,6 +55,8 @@ class CustomThemes {
         textTheme: ButtonTextTheme.accent,
         hoverColor: appInfo.mainColor,
       ),
+      scaffoldBackgroundColor: ThemeData.light().cardColor,
+      cardColor: scaffoldBackup,
       buttonColor: appInfo.mainColor,
       primaryColor: appInfo.mainColor,
       backgroundColor: appInfo.mainColor,

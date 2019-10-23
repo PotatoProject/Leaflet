@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/localizations.dart';
+import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
@@ -28,6 +29,14 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   @override
   Widget build(BuildContext context) {
     locales = AppLocalizations.of(context);
+
+    Brightness systemBarsIconBrightness =
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark;
+
+    changeSystemBarsColors(
+        Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
     List<Widget> portraitContent = <Widget>[
       Padding(
@@ -419,14 +428,14 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 error = true;
               });
             } else {
-              Navigator.pop(context);
+              //Navigator.pop(context);
               var result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex)));
 
-              //if (result == null || result != null) Navigator.pop(context);
+              if (result == null || result != null) Navigator.pop(context);
             }
           }
         },

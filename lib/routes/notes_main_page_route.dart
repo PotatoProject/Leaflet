@@ -271,18 +271,18 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                     ),
                   )
                 : AnimatedBuilder(
-                  animation: Tween<double>(begin: 0, end: 1).animate(controller),
-                  child: ListView(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    children: noteListBuilder(context),
+                    animation: Tween<double>(begin: 0, end: 1).animate(controller),
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      children: noteListBuilder(context),
+                    ),
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: controller.value,
+                        child: child,
+                      );
+                    },
                   ),
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: controller.value,
-                      child: child,
-                    );
-                  },
-                ),
           ),
         ],
       ),
@@ -505,13 +505,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width / 2 - 20,
+            width: MediaQuery.of(context).size.width / 2 - 4,
             child: Column(
               children: secondColumnFirst ? columnTwo : columnOne,
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width / 2 - 20,
+            width: MediaQuery.of(context).size.width / 2 - 4,
             child: Column(
               children: secondColumnFirst ? columnOne : columnTwo,
             ),
@@ -990,45 +990,45 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
   Widget get _bottomBar {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
-      child: Builder(builder: (context) {
-        return BottomAppBar(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-          shape: CircularNotchedRectangle(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: Row(
-              children: <Widget>[
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    _settingsCaller(context);
-                  },
-                ),
-                Spacer(flex: 3),
-                IconButton(
-                  icon: appInfo.isGridView
-                      ? Icon(Icons.list)
-                      : Icon(Icons.grid_on),
-                  onPressed: () async {
-                    if(controller.status == AnimationStatus.completed) {
-                      await controller.animateTo(0);
-                      appInfo.isGridView = !appInfo.isGridView;
-                      await controller.animateTo(1);
-                    }
-                  },
-                ),
-                Spacer(),
-              ],
-            ),
+    return Builder(builder: (context) {
+      return Card(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 120,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+        ),
+        margin: EdgeInsets.all(0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            children: <Widget>[
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  _settingsCaller(context);
+                },
+              ),
+              Spacer(flex: 3),
+              IconButton(
+                icon: appInfo.isGridView
+                    ? Icon(Icons.list)
+                    : Icon(Icons.grid_on),
+                onPressed: () async {
+                  if(controller.status == AnimationStatus.completed) {
+                    await controller.animateTo(0);
+                    appInfo.isGridView = !appInfo.isGridView;
+                    await controller.animateTo(1);
+                  }
+                },
+              ),
+              Spacer(),
+            ],
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   void toggleStarNote(int index) async {
