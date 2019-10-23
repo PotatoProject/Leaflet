@@ -566,8 +566,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     } else {
       await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => ModifyNotesRoute(note: note, heroIndex: heroIndex.toString()),
+        PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 200),
+          pageBuilder: (_, __, ___) => ModifyNotesRoute(note: note, heroIndex: heroIndex.toString()),
         )
       );
     }
