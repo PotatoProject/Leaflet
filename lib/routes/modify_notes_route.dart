@@ -209,7 +209,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               Padding(
                 padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
                 child: Container(
-                  height: 70,
+                  height: 60,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
@@ -719,6 +719,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         (noteIsList == 1 && noteListParseString != "")) {
       asyncExecutor();
     } else {
+      FocusScope.of(context).requestFocus(FocusNode());
       Navigator.pop(context);
     }
     return true;

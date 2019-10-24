@@ -44,7 +44,7 @@ class _SettingsState extends State<SettingsRoute> {
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Container(
-              height: 70,
+              height: 60,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Row(

@@ -142,7 +142,184 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
-      body: Stack(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverPersistentHeader(
+            pinned: isSelectorVisible,
+            floating: !isSelectorVisible,
+            delegate: HeaderDelegate(
+              child: PreferredSize(
+                preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
+                child: Center(
+                  child: Hero(
+                    tag: "searchbar",
+                    child: isSelectorVisible ?
+                        Card(
+                          elevation: 3,
+                          margin: EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            height: 60,
+                            child: Row(
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: appInfo.mainColor,
+                                  ),
+                                  onPressed: () async {
+                                    selectionList = List<int>();
+                                    noteList.forEach((item) {
+                                      item.isSelected = false;
+                                    });
+                                    setState(() => isSelectorVisible = false);
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    selectionList.length.toString(),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete_outline,
+                                    color: appInfo.mainColor,
+                                  ),
+                                  onPressed: () async {
+                                    for (int i = 0; i < selectionList.length; i++)
+                                      await NoteHelper().delete(selectionList[i]);
+                                    selectionList = List<int>();
+                                    List<Note> list = await NoteHelper().getNotes();
+                                    setState(() {
+                                      noteList = list;
+                                      isSelectorVisible = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ) :
+                        Card(
+                          elevation: 3,
+                          margin: EdgeInsets.fromLTRB(16, 4 + MediaQuery.of(context).padding.top, 16, 4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: () => _searchNoteCaller(context, noteList),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 20, right: 4),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    locales.searchNotesRoute_searchbar,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(Icons.select_all),
+                                    onPressed: () {
+                                      setState(() => isSelectorVisible = true);
+                                    },
+                                  ),
+                                  IconButton(
+                                    iconSize: 24.0,
+                                    onPressed: () =>
+                                        showUserSettingsScrollableBottomSheet(context),
+                                    icon: CircleAvatar(
+                                      backgroundColor: appInfo.mainColor,
+                                      child: appInfo.userImagePath == null
+                                          ? Icon(
+                                              Icons.account_circle,
+                                              color: Colors.white,
+                                              size: 28.0,
+                                            )
+                                          : null,
+                                      backgroundImage: appInfo.userImagePath == null
+                                          ? null
+                                          : FileImage(File(appInfo.userImagePath)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                  ),
+                )
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate.fixed(
+              [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: noteList.length == 0
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.close,
+                                size: 50.0,
+                                color: HSLColor.fromColor(
+                                        Theme.of(context).textTheme.title.color)
+                                    .withAlpha(0.4)
+                                    .toColor()),
+                            Text(
+                              locales.notesMainPageRoute_noNotes,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w500,
+                                color: HSLColor.fromColor(
+                                        Theme.of(context).textTheme.title.color)
+                                    .withAlpha(0.4)
+                                    .toColor(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : AnimatedBuilder(
+                        animation: Tween<double>(begin: 0, end: 1).animate(controller),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          child: Column(
+                            //physics: NeverScrollableScrollPhysics(),
+                            children: noteListBuilder(context),
+                          ),
+                        ),
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: controller.value,
+                            child: child,
+                          );
+                        },
+                      ),
+                ),
+              ]
+            )
+          )
+        ],
+      ),
+      /*Stack(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -285,7 +462,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                   ),
           ),
         ],
-      ),
+      ),*/
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).accentColor,
         elevation: 0.0,
@@ -659,136 +836,179 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       }
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (isSelectorVisible) {
-          setState(() {
-            noteList[index].isSelected = !noteList[index].isSelected;
-            if (noteList[index].isSelected) {
-              selectionList.add(noteList[index].id);
-            } else {
-              selectionList.remove(noteList[index].id);
-              if (selectionList.length == 0) {
-                isSelectorVisible = false;
-              }
-            }
-          });
+    Color getBorderColor() {
+      if(noteList[index].isSelected) {
+        if(noteList[index].color != null) {
+          return Theme.of(context).textTheme.title.color;
         } else {
-          _editNoteCaller(context, noteList[index], index.toString());
+          return Theme.of(context).accentColor;
         }
+      } else if(noteList[index].color != null) {
+        return Colors.transparent;
+      } else {
+        if(Theme.of(context).brightness == Brightness.light) {
+          return borderColor;
+        } else {
+          if(appInfo.followSystemTheme) {
+            if(MediaQuery.of(context).platformBrightness == Brightness.dark) {
+              if(appInfo.darkThemeMode == 0) {
+                return Colors.transparent;
+              } else {
+                return borderColor;
+              }
+            } else {
+              return borderColor;
+            }
+          } else {
+            if(appInfo.themeMode == 1) {
+              return Colors.transparent;
+            } else if(appInfo.themeMode == 2) {
+              return borderColor;
+            } else {
+              return borderColor;
+            }
+          }
+        }
+      }
+    }
+
+    return Hero(
+      createRectTween: (Rect begin, Rect end) {
+        return MaterialRectArcTween(begin: begin, end: end);
       },
-      onDoubleTap: isSelectorVisible
-          ? null
-          : appInfo.isQuickStarredGestureOn
-              ? () => toggleStarNote(index)
-              : null,
-      onLongPress: () {
-        if (!isSelectorVisible)
-          showNoteSettingsScrollableBottomSheet(context, index);
-      },
-      child: Hero(
-        createRectTween: (Rect begin, Rect end) {
-          return MaterialRectArcTween(begin: begin, end: end);
-        },
-        tag: "note" + index.toString(),
-        child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            side: BorderSide(
-                color: noteList[index].isSelected
-                    ? noteList[index].color != null
-                        ? Theme.of(context).textTheme.title.color
-                        : Theme.of(context).accentColor
-                    : noteList[index].color != null
-                        ? Colors.transparent
-                        : borderColor,
-                width: 1.5),
+      tag: "note" + index.toString(),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: getBorderColor(),
+            width: 2
           ),
-          color: noteList[index].color == null
-              ? Theme.of(context).cardColor
-              : Color(noteList[index].color),
-          child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Visibility(
-                    visible: noteList[index].imagePath != null,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12)),
-                      child: noteList[index].imagePath == null
-                          ? Container()
-                          : Image(
-                              image: FileImage(File(noteList[index].imagePath)),
-                              fit: BoxFit.fitWidth,
-                              width: oneSideOnly
-                                  ? MediaQuery.of(context).size.width / 2
-                                  : MediaQuery.of(context).size.width,
-                            ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: noteList[index].hideContent == 1 ||
-                        noteList[index].reminders != null,
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(
-                          20,
-                          14,
-                          20,
-                          noteList[index].hideContent == 1 &&
-                                  noteList[index].title == ""
-                              ? 14
-                              : 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Visibility(
-                            visible: noteList[index].reminders != null,
-                            child: Center(
-                              child: Icon(
-                                Icons.alarm,
-                                size: 12,
-                                color: noteList[index].color == null
-                                    ? null
-                                    : getTextColorFromNoteColor(index, false),
-                              ),
-                            ),
+        ),
+        color: noteList[index].color == null
+            ? (Theme.of(context).brightness == Brightness.light ? null : Theme.of(context).scaffoldBackgroundColor)
+            : Color(noteList[index].color),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12.0),
+          onTap: () {
+            if (isSelectorVisible) {
+              setState(() {
+                noteList[index].isSelected = !noteList[index].isSelected;
+                if (noteList[index].isSelected) {
+                  selectionList.add(noteList[index].id);
+                } else {
+                  selectionList.remove(noteList[index].id);
+                  if (selectionList.length == 0) {
+                    isSelectorVisible = false;
+                  }
+                }
+              });
+            } else {
+              _editNoteCaller(context, noteList[index], index.toString());
+            }
+          },
+          onDoubleTap: isSelectorVisible
+              ? null
+              : appInfo.isQuickStarredGestureOn
+                  ? () => toggleStarNote(index)
+                  : null,
+          onLongPress: () {
+            if (!isSelectorVisible)
+              showNoteSettingsScrollableBottomSheet(context, index);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Visibility(
+                visible: noteList[index].imagePath != null,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                  child: noteList[index].imagePath == null
+                      ? Container()
+                      : Image(
+                          image: FileImage(File(noteList[index].imagePath)),
+                          fit: BoxFit.fitWidth,
+                          width: oneSideOnly
+                              ? MediaQuery.of(context).size.width / 2
+                              : MediaQuery.of(context).size.width,
+                        ),
+                ),
+              ),
+              Visibility(
+                visible: noteList[index].hideContent == 1 ||
+                    noteList[index].reminders != null,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(
+                      20,
+                      14,
+                      20,
+                      noteList[index].hideContent == 1 &&
+                              noteList[index].title == ""
+                          ? 14
+                          : 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Visibility(
+                        visible: noteList[index].reminders != null,
+                        child: Center(
+                          child: Icon(
+                            Icons.alarm,
+                            size: 12,
+                            color: noteList[index].color == null
+                                ? null
+                                : getTextColorFromNoteColor(index, false),
                           ),
-                          Visibility(
-                            visible: noteList[index].hideContent == 1,
-                            child: Center(
-                              child: Icon(
-                                noteList[index].pin != null ||
-                                        noteList[index].password != null
-                                    ? Icons.lock
-                                    : Icons.remove_red_eye,
-                                size: 12,
-                                color: noteList[index].color == null
-                                    ? null
-                                    : getTextColorFromNoteColor(index, false),
-                              ),
-                            ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: noteList[index].hideContent == 1,
+                        child: Center(
+                          child: Icon(
+                            noteList[index].pin != null ||
+                                    noteList[index].password != null
+                                ? Icons.lock
+                                : Icons.remove_red_eye,
+                            size: 12,
+                            color: noteList[index].color == null
+                                ? null
+                                : getTextColorFromNoteColor(index, false),
                           ),
-                          Visibility(
-                            visible: (noteList[index].hideContent == 1 &&
-                                    noteList[index].reminders == null) ||
-                                (noteList[index].hideContent == 0 &&
-                                    noteList[index].reminders != null),
-                            child: Container(
-                              padding: EdgeInsets.only(left: 8),
-                              width: oneSideOnly
-                                  ? MediaQuery.of(context).size.width / 2 - 80
-                                  : MediaQuery.of(context).size.width - 100,
-                              child: (noteList[index].hideContent == 1 &&
-                                      noteList[index].reminders == null)
+                        ),
+                      ),
+                      Visibility(
+                        visible: (noteList[index].hideContent == 1 &&
+                                noteList[index].reminders == null) ||
+                            (noteList[index].hideContent == 0 &&
+                                noteList[index].reminders != null),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 8),
+                          width: oneSideOnly
+                              ? MediaQuery.of(context).size.width / 2 - 80
+                              : MediaQuery.of(context).size.width - 100,
+                          child: (noteList[index].hideContent == 1 &&
+                                  noteList[index].reminders == null)
+                              ? Text(
+                                  locales
+                                      .notesMainPageRoute_note_hiddenContent,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: noteList[index].color == null
+                                        ? null
+                                        : getTextColorFromNoteColor(
+                                            index, false),
+                                  ),
+                                )
+                              : (noteList[index].hideContent == 0 &&
+                                      noteList[index].reminders != null)
                                   ? Text(
                                       locales
-                                          .notesMainPageRoute_note_hiddenContent,
+                                          .notesMainPageRoute_note_remindersSet,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: noteList[index].color == null
@@ -797,93 +1017,80 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                                 index, false),
                                       ),
                                     )
-                                  : (noteList[index].hideContent == 0 &&
-                                          noteList[index].reminders != null)
-                                      ? Text(
-                                          locales
-                                              .notesMainPageRoute_note_remindersSet,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: noteList[index].color == null
-                                                ? null
-                                                : getTextColorFromNoteColor(
-                                                    index, false),
-                                          ),
-                                        )
-                                      : Container(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: appInfo.devShowIdLabels,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 14, 20, 0),
-                      child: Text(
-                        "Note id: " + noteList[index].id.toString(),
-                        style: TextStyle(
-                          color: noteList[index].color == null
-                              ? null
-                              : getTextColorFromNoteColor(index, false),
+                                  : Container(),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: appInfo.devShowIdLabels,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  child: Text(
+                    "Note id: " + noteList[index].id.toString(),
+                    style: TextStyle(
+                      color: noteList[index].color == null
+                          ? null
+                          : getTextColorFromNoteColor(index, false),
                     ),
                   ),
-                  Visibility(
-                    visible: noteList[index].title != "",
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
-                      width: oneSideOnly
-                          ? MediaQuery.of(context).size.width / 2
-                          : MediaQuery.of(context).size.width,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 12.0),
-                        child: Text(
-                          noteList[index].title,
+                ),
+              ),
+              Visibility(
+                visible: noteList[index].title != "",
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  width: oneSideOnly
+                      ? MediaQuery.of(context).size.width / 2
+                      : MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 12.0),
+                    child: Text(
+                      noteList[index].title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: TextStyle(
+                        color: noteList[index].color == null
+                            ? null
+                            : getTextColorFromNoteColor(index, false),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: noteList[index].hideContent == 0,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(
+                      20, noteList[index].title == "" ? 14 : 0, 20, 14),
+                  width: oneSideOnly
+                      ? MediaQuery.of(context).size.width / 2
+                      : MediaQuery.of(context).size.width,
+                  child: noteList[index].isList == 1
+                      ? Column(
+                          children: generateListWidgets(index, oneSideOnly),
+                        )
+                      : Text(
+                          noteList[index].content,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 4,
+                          textWidthBasis: TextWidthBasis.parent,
+                          maxLines: 11,
                           style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
                             color: noteList[index].color == null
-                                ? null
-                                : getTextColorFromNoteColor(index, false),
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
+                                ? Theme.of(context).textTheme.title.color
+                                : getTextColorFromNoteColor(index, true),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: noteList[index].hideContent == 0,
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(
-                          20, noteList[index].title == "" ? 14 : 0, 20, 14),
-                      width: oneSideOnly
-                          ? MediaQuery.of(context).size.width / 2
-                          : MediaQuery.of(context).size.width,
-                      child: noteList[index].isList == 1
-                          ? Column(
-                              children: generateListWidgets(index, oneSideOnly),
-                            )
-                          : Text(
-                              noteList[index].content,
-                              overflow: TextOverflow.ellipsis,
-                              textWidthBasis: TextWidthBasis.parent,
-                              maxLines: 11,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                                color: noteList[index].color == null
-                                    ? Theme.of(context).textTheme.title.color
-                                    : getTextColorFromNoteColor(index, true),
-                              ),
-                            ),
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ),
+            ],
+          )
         ),
       ),
     );
@@ -1507,5 +1714,27 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                   ),
                 );
         });
+  }
+}
+
+class HeaderDelegate extends SliverPersistentHeaderDelegate {
+  final PreferredSize child;
+
+  HeaderDelegate({this.child});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapOffset) {
+    return child;
+  }
+
+  @override
+  double get maxExtent => child.preferredSize.height;
+
+  @override
+  double get minExtent => child.preferredSize.height;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }

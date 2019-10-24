@@ -39,7 +39,6 @@ class _SearchNotesState extends State<SearchNotesRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
     locales = AppLocalizations.of(context);
 
     Brightness systemBarsIconBrightness =
@@ -50,26 +49,6 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     changeSystemBarsColors(
         Theme.of(context).cardColor, systemBarsIconBrightness);
 
-    double getAlphaFromTheme() {
-      switch (appInfo.themeMode) {
-        case 0:
-          return 0.1;
-        case 1:
-          return 0.2;
-        case 2:
-          return 0.3;
-        default:
-          return 0;
-      }
-    }
-
-    Color cardColor = Theme.of(context).textTheme.title.color;
-
-    double cardBrightness = getAlphaFromTheme();
-
-    Color borderColor =
-        HSLColor.fromColor(cardColor).withAlpha(cardBrightness).toColor();
-
     List<Widget> widgets = noteSearchList(context);
 
     return Scaffold(
@@ -77,59 +56,57 @@ class _SearchNotesState extends State<SearchNotesRoute> {
       key: scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Container(
-              height: 70,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        setState(() => searchTerms = "");
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Center(
-                          child: Container(
-                        width: MediaQuery.of(context).size.width - 136,
-                        child: Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                              side: BorderSide(color: borderColor, width: 1.5),
+          Hero(
+            tag: "searchbar",
+            child: Card(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Container(
+                height: 60,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() => searchTerms = "");
+                        },
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: TextField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText:
+                                    locales.searchNotesRoute_searchbar,
+                                hintStyle: TextStyle(
+                                  fontSize: 18
+                                ),
                             ),
-                            color: Theme.of(context).cardColor,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 2),
-                              child: TextField(
-                                controller: searchController,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText:
-                                        locales.searchNotesRoute_searchbar),
-                                maxLines: 1,
-                                onChanged: (text) {
-                                  setState(() {
-                                    searchTerms = text;
-                                    widgets = noteSearchList(context);
-                                  });
-                                },
-                              ),
-                            )),
-                      )),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_list),
-                      onPressed: () =>
-                          showFiltersScrollableBottomSheet(context),
-                    ),
-                  ],
+                            maxLines: 1,
+                            onChanged: (text) {
+                              setState(() {
+                                searchTerms = text;
+                                widgets = noteSearchList(context);
+                              });
+                            },
+                            style: TextStyle(
+                              fontSize: 18
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.filter_list),
+                        onPressed: () =>
+                            showFiltersScrollableBottomSheet(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
