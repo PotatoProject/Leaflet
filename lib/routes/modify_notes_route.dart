@@ -262,7 +262,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                               setState(() => noteIsStarred = 0);
                             }
                           },
-                      ),
+                        ),
                         noteIsList == 0
                             ? PopupMenuButton(
                                 padding: EdgeInsets.all(0),
@@ -1225,7 +1225,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
                     ? null
                     : currentColor),
           ),
-          onPressed: () => Navigator.pop(context, 0),
+          onPressed: () => Navigator.pop(context),
           textColor: Theme.of(context).accentColor,
         ),
         FlatButton(

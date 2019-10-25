@@ -241,7 +241,7 @@ class Note {
       content: this.content,
       isStarred: localIsStarred ?? this.isStarred,
       date: this.date,
-      color: localColor ?? this.color,
+      color: localColor == 0 ? null : localColor == null ? this.color : localColor,
       imagePath: this.imagePath,
       isList: localIsList ?? this.isList,
       listParseString: this.listParseString,
