@@ -287,8 +287,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       isSelectorVisible = false;
                                     });
 
-                                    print(noteBackup.length);
-
                                     scaffoldKey.currentState.removeCurrentSnackBar();
                                     scaffoldKey.currentState.showSnackBar(
                                       SnackBar(
@@ -506,57 +504,58 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
               ),
             ),
           ),
-          SliverList(
+          noteList.length != 0 ? SliverList(
             delegate: SliverChildListDelegate.fixed(
               [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  child: noteList.length == 0
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.close,
-                                size: 50.0,
-                                color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.title.color)
-                                    .withAlpha(0.4)
-                                    .toColor()),
-                            Text(
-                              locales.notesMainPageRoute_noNotes,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w500,
-                                color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.title.color)
-                                    .withAlpha(0.4)
-                                    .toColor(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : AnimatedBuilder(
-                        animation: Tween<double>(begin: 0, end: 1).animate(controller),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                          child: Column(
-                            //physics: NeverScrollableScrollPhysics(),
-                            children: noteListBuilder(context),
-                          ),
-                        ),
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: controller.value,
-                            child: child,
-                          );
-                        },
+                  child: AnimatedBuilder(
+                    animation: Tween<double>(begin: 0, end: 1).animate(controller),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      child: Column(
+                        //physics: NeverScrollableScrollPhysics(),
+                        children: noteListBuilder(context),
                       ),
+                    ),
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: controller.value,
+                        child: child,
+                      );
+                    },
+                  ),
                 ),
               ]
             )
+          ) : SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.close,
+                      size: 50.0,
+                      color: HSLColor.fromColor(
+                              Theme.of(context).textTheme.title.color)
+                          .withAlpha(0.4)
+                          .toColor()),
+                  Text(
+                    locales.notesMainPageRoute_noNotes,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                      color: HSLColor.fromColor(
+                              Theme.of(context).textTheme.title.color)
+                          .withAlpha(0.4)
+                          .toColor(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
       ),
@@ -847,10 +846,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       );
     }
 
-    List<Note> list = await NoteHelper().getNotes();
-
-    setState(() => noteList = list);
-
     Brightness systemBarsIconBrightness =
         Theme.of(context).brightness == Brightness.dark
             ? Brightness.light
@@ -858,6 +853,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
+
+    List<Note> list = await NoteHelper().getNotes();
+
+    setState(() => noteList = list);
   }
 
   void _searchNoteCaller(BuildContext context, List<Note> noteList) async {

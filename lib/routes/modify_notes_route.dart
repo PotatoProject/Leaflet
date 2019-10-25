@@ -74,6 +74,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   AppLocalizations locales;
 
+  bool firstRun = true;
+  Brightness systemBarsIconBrightness;
+
   void noteIdInit() async {
     noteId = noteId == null ? await noteIdSearcher() : noteId;
   }
@@ -94,6 +97,16 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   void noteRemindersUpdater() {
     noteReminders = reminderList.join(":");
+  }
+
+  Brightness getBarsColorFromNoteColor() {
+    double noteColorBrightness = Color(noteColor).computeLuminance();
+
+    if (noteColorBrightness > 0.5) {
+      return Brightness.dark;
+    } else {
+      return Brightness.light;
+    }
   }
 
   @override
@@ -120,17 +133,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     reminderListPopulater();
 
-    Brightness getBarsColorFromNoteColor() {
-      double noteColorBrightness = Color(noteColor).computeLuminance();
-
-      if (noteColorBrightness > 0.5) {
-        return Brightness.dark;
-      } else {
-        return Brightness.light;
-      }
-    }
-
-    Brightness systemBarsIconBrightness =
+    systemBarsIconBrightness =
         Theme.of(context).brightness == Brightness.dark
             ? Brightness.light
             : Brightness.dark;
@@ -156,11 +159,14 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    changeSystemBarsColors(
-        noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
-        noteColor == null
-            ? systemBarsIconBrightness
-            : getBarsColorFromNoteColor());
+    if(firstRun) {
+      changeSystemBarsColors(
+          noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+          noteColor == null
+              ? systemBarsIconBrightness
+              : getBarsColorFromNoteColor());
+      firstRun = false;
+    }
 
     return Hero(
       tag: "note" + widget.heroIndex,
@@ -283,6 +289,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                   noteColor: noteColor,
                                                 );
                                               });
+
                                             setState(() {
                                             if (result != null) {
                                               if (result == 0) {
@@ -291,6 +298,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                 noteColor = result;
                                               }
                                             }
+
+                                            changeSystemBarsColors(
+                                                noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                                                noteColor == null
+                                                    ? systemBarsIconBrightness
+                                                    : getBarsColorFromNoteColor());
                                           });
                                         },
                                       ),
@@ -426,6 +439,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       }
                                     }
                                   });
+                                  
+                                  changeSystemBarsColors(
+                                      noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                                      noteColor == null
+                                          ? systemBarsIconBrightness
+                                          : getBarsColorFromNoteColor());
                                 },
                               ),
                       ],
@@ -722,6 +741,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       FocusScope.of(context).requestFocus(FocusNode());
       Navigator.pop(context);
     }
+    
     return true;
   }
 
@@ -962,6 +982,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         context: context,
         backgroundColor: bgColor,
         builder: (BuildContext context) {
+          changeSystemBarsColors(
+              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+              noteColor == null
+                  ? systemBarsIconBrightness
+                  : getBarsColorFromNoteColor());
+          
           return Theme(
             data: ThemeData(
               bottomSheetTheme: BottomSheetThemeData(
@@ -1059,6 +1085,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         context: context,
         backgroundColor: bgColor,
         builder: (BuildContext context) {
+          changeSystemBarsColors(
+              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+              noteColor == null
+                  ? systemBarsIconBrightness
+                  : getBarsColorFromNoteColor());
+          
           return Theme(
             data: ThemeData(
                 bottomSheetTheme: BottomSheetThemeData(
@@ -1204,7 +1236,14 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
   Widget build(BuildContext context) {
     AppLocalizations locales = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text(locales.modifyNotesRoute_color_dialogTitle),
+      title: Text(
+        locales.modifyNotesRoute_color_dialogTitle,
+        style: TextStyle(
+          color: Theme.of(context).brightness == Brightness.light ?
+              Colors.black :
+              Colors.white,
+        ),
+      ),
       content: MaterialColorPicker(
         colors: colors,
         allowShades: false,
