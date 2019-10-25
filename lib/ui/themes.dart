@@ -16,6 +16,15 @@ class CustomThemes {
       secondaryHeaderColor: Colors.black,
       scaffoldBackgroundColor: Color(0xFF111111),
       textSelectionHandleColor: appInfo.mainColor,
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: Color(0xFF111111),
+        elevation: 3,
+        actionTextColor: appInfo.mainColor,
+        contentTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      textSelectionColor: appInfo.mainColor,
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.accent,
         hoverColor: appInfo.mainColor,
@@ -29,6 +38,15 @@ class CustomThemes {
       accentColor: appInfo.mainColor,
       cursorColor: appInfo.mainColor,
       textSelectionHandleColor: appInfo.mainColor,
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: Color(0xFF212121),
+        elevation: 3,
+        actionTextColor: appInfo.mainColor,
+        contentTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      textSelectionColor: appInfo.mainColor,
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.accent,
         hoverColor: appInfo.mainColor,
@@ -51,6 +69,15 @@ class CustomThemes {
       accentColor: appInfo.mainColor,
       cursorColor: appInfo.mainColor,
       textSelectionHandleColor: appInfo.mainColor,
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: ThemeData.light().cardColor,
+        elevation: 3,
+        actionTextColor: appInfo.mainColor,
+        contentTextStyle: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      textSelectionColor: appInfo.mainColor,
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.accent,
         hoverColor: appInfo.mainColor,

@@ -292,7 +292,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       SnackBar(
                                         content: Text(locales.note_delete_snackbar),
                                         behavior: SnackBarBehavior.floating,
-                                        elevation: 0.0,
+                                        elevation: 3,
                                         action: SnackBarAction(
                                           label: locales.undo,
                                           onPressed: () async {
@@ -386,6 +386,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                               scaffoldKey.currentState.showSnackBar(
                                                 SnackBar(
                                                   content: Text(locales.done),
+                                                  behavior: SnackBarBehavior.floating,
+                                                  elevation: 3,
                                                 )
                                               );
                                             } else {
