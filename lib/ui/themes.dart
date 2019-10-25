@@ -14,7 +14,7 @@ class CustomThemes {
       primaryColor: appInfo.mainColor,
       primaryColorLight: Colors.black,
       secondaryHeaderColor: Colors.black,
-      scaffoldBackgroundColor: Colors.black,
+      scaffoldBackgroundColor: Color(0xFF111111),
       textSelectionHandleColor: appInfo.mainColor,
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.accent,

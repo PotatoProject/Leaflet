@@ -948,19 +948,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
         } else {
           if(appInfo.followSystemTheme) {
             if(MediaQuery.of(context).platformBrightness == Brightness.dark) {
-              if(appInfo.darkThemeMode == 0) {
-                return Colors.transparent;
-              } else {
-                return borderColor;
-              }
+              return Colors.transparent;
             } else {
               return borderColor;
             }
           } else {
-            if(appInfo.themeMode == 1) {
+            if(appInfo.themeMode != 0) {
               return Colors.transparent;
-            } else if(appInfo.themeMode == 2) {
-              return borderColor;
             } else {
               return borderColor;
             }
