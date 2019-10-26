@@ -208,7 +208,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes();
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
                                       setState(() => noteList = list);
                                     } else {
                                       for(int i = 0; i < selectionList.length; i++) {
@@ -218,7 +218,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes();
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
                                       setState(() => noteList = list);
                                     }
 
@@ -254,7 +254,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes();
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
                                       setState(() {
                                         noteList = list;
                                         selectionList.clear();
@@ -280,7 +280,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       item.isSelected = false;
                                     });
 
-                                    List<Note> list = await NoteHelper().getNotes();
+                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
 
                                     setState(() {
                                       noteList = list;
@@ -301,7 +301,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             }
 
                                             List<Note> list =
-                                                await NoteHelper().getNotes();
+                                                await NoteHelper().getNotes(appInfo.sortMode);
                                             setState(() => noteList = list);
                                           },
                                         ),
@@ -478,6 +478,18 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     ),
                                   ),
                                   Spacer(),
+                                  IconButton(
+                                    icon: appInfo.isGridView
+                                        ? Icon(Icons.list)
+                                        : Icon(Icons.grid_on),
+                                    onPressed: () async {
+                                      if(controller.status == AnimationStatus.completed) {
+                                        await controller.animateTo(0);
+                                        appInfo.isGridView = !appInfo.isGridView;
+                                        await controller.animateTo(1);
+                                      }
+                                    },
+                                  ),
                                   IconButton(
                                     iconSize: 24.0,
                                     onPressed: () =>
@@ -856,7 +868,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
-    List<Note> list = await NoteHelper().getNotes();
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
 
     setState(() => noteList = list);
   }
@@ -889,7 +901,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     await Navigator.push(
         context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
-    List<Note> list = await NoteHelper().getNotes();
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
     setState(() => noteList = list);
 
     Brightness systemBarsIconBrightness =
@@ -1315,14 +1327,50 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
               ),
               Spacer(flex: 3),
               IconButton(
-                icon: appInfo.isGridView
-                    ? Icon(Icons.list)
-                    : Icon(Icons.grid_on),
+                icon: Icon(Icons.sort),
                 onPressed: () async {
                   if(controller.status == AnimationStatus.completed) {
-                    await controller.animateTo(0);
-                    appInfo.isGridView = !appInfo.isGridView;
-                    await controller.animateTo(1);
+                    var result = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        SortMode value = appInfo.sortMode;
+
+                        return AlertDialog(
+                          title: Text("Select sort mode"),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              RadioListTile(
+                                title: Text("Id"),
+                                groupValue: value,
+                                value: SortMode.ID,
+                                onChanged: (sort) => Navigator.pop(context, sort),
+                                activeColor: appInfo.mainColor,
+                              ),
+                              RadioListTile(
+                                title: Text("Date"),
+                                groupValue: value,
+                                value: SortMode.DATE,
+                                onChanged: (sort) => Navigator.pop(context, sort),
+                                activeColor: appInfo.mainColor,
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    );
+
+                    if(result != null && result != appInfo.sortMode) {
+                      await controller.animateTo(0);
+                      appInfo.sortMode = result;
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                      setState(() => noteList = list);
+                      await controller.animateTo(1);
+                    }
                   }
                 },
               ),
@@ -1339,13 +1387,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       await NoteHelper().update(
         noteList[index].copyWith(localIsStarred: 1),
       );
-      List<Note> list = await NoteHelper().getNotes();
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
       setState(() => noteList = list);
     } else if (noteList[index].isStarred == 1) {
       await NoteHelper().update(
         noteList[index].copyWith(localIsStarred: 0),
       );
-      List<Note> list = await NoteHelper().getNotes();
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
       setState(() => noteList = list);
     }
   }

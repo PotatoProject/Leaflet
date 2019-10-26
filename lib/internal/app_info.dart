@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/methods.dart';
+import 'package:potato_notes/internal/note_helper.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   AppInfoProvider() {
@@ -28,6 +29,7 @@ class AppInfoProvider extends ChangeNotifier {
   List<String> _notificationsIdList = [];
   List<String> _remindersNotifIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;
+  SortMode _sortMode = SortMode.ID;
 
   DateTime _date;
   TimeOfDay _time;
@@ -64,6 +66,8 @@ class AppInfoProvider extends ChangeNotifier {
   List<String> get remindersNotifIdList => _remindersNotifIdList;
 
   PermissionStatus get storageStatus => _storageStatus;
+
+  SortMode get sortMode => _sortMode;
 
   DateTime get date => _date;
 
@@ -170,6 +174,12 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set sortMode(SortMode sort) {
+    _sortMode = sort;
+    setSortMode(sort);
+    notifyListeners();
+  }
+
   set date(DateTime passedDate) {
     _date = passedDate;
     notifyListeners();
@@ -229,6 +239,7 @@ class AppInfoProvider extends ChangeNotifier {
     remindersNotifIdList = await getRemindersNotifIdList();
     storageStatus = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
+    sortMode = await getSortMode();
 
     date = null;
     time = null;

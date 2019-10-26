@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/note_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -140,6 +141,18 @@ Future<List<String>> getRemindersNotifIdList() async {
 Future<void> setRemindersNotifIdList(List<String> idList) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setStringList('reminders_notif_id_list', idList);
+}
+
+Future<SortMode> getSortMode() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return (prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
+      SortMode.ID :
+      SortMode.DATE;
+}
+
+Future<void> setSortMode(SortMode sort) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
 }
 
 Future<void> filtersSetColor(int color) async {

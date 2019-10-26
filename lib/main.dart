@@ -12,6 +12,7 @@ import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'internal/methods.dart';
@@ -72,7 +73,11 @@ void main() async {
     version: 4,
   );
 
-  List<Note> noteList = await NoteHelper().getNotes();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  List<Note> noteList = await NoteHelper().getNotes((prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
+      SortMode.ID :
+      SortMode.DATE);
 
   runApp(NotesRoot(noteList: noteList));
 }

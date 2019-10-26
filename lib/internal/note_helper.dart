@@ -14,12 +14,12 @@ class NoteHelper {
     );
   }
 
-  Future<List<Note>> getNotes() async {
+  Future<List<Note>> getNotes(SortMode sort) async {
     Database db = await database;
 
     List<Map<String, dynamic>> maps = await db.query('notes');
 
-    return List.generate(maps.length, (i) {
+    List<Note> list = List.generate(maps.length, (i) {
       return Note(
         id: maps[i]['id'],
         title: maps[i]['title'],
@@ -36,6 +36,18 @@ class NoteHelper {
         password: maps[i]['password'],
       );
     });
+
+    list.sort((a, b) {
+      if(sort == SortMode.ID) {
+        return a.id.compareTo(b.id);
+      } else if(sort == SortMode.DATE) {
+        return a.date.compareTo(b.date);
+      } else {
+        return a.id.compareTo(b.id);
+      }
+    });
+
+    return list;
   }
 
   Future<void> delete(int id) async {
@@ -258,4 +270,9 @@ class ListPair {
   String title = "";
 
   ListPair({this.checkValue, this.title});
+}
+
+enum SortMode {
+  ID,
+  DATE
 }
