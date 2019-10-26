@@ -43,6 +43,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   int noteHideContent = 0;
   String notePin;
   String notePassword;
+  int noteIsDeleted = 0;
+  int noteIsArchived = 0;
 
   _ModifyNotesState(Note note) {
     this.noteId = note.id;
@@ -58,6 +60,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     this.noteHideContent = note.hideContent ?? 0;
     this.notePin = note.pin;
     this.notePassword = note.password;
+    this.noteIsDeleted = note.isDeleted ?? 0;
+    this.noteIsArchived = note.isArchived ?? 0;
   }
 
   NoteHelper noteHelper = new NoteHelper();
@@ -720,9 +724,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Future<int> noteIdSearcher() async {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
-    List<Note> noteList = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+    List<Note> noteList = await NoteHelper().getNotes(await getSortMode(), NotesReturnMode.ALL);
     List<int> noteIdList = List<int>();
 
     noteList.forEach((item) {
@@ -784,6 +786,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       hideContent: noteHideContent,
       pin: notePin,
       password: notePassword,
+      isDeleted: noteIsDeleted,
+      isArchived: noteIsArchived,
     ));
     List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, noteList);

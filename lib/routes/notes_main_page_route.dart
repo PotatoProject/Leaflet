@@ -270,8 +270,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   onPressed: () async {
                                     List<Note> noteBackup = List.from(selectionList);
 
-                                    for (int i = 0; i < selectionList.length; i++) {
-                                      await NoteHelper().delete(selectionList[i].id);
+                                    for(int i = 0; i < selectionList.length; i++) {
+                                      await NoteHelper().update(
+                                        noteList.firstWhere((note) => note == selectionList[i])
+                                            .copyWith(isDeleted: 1),
+                                      );
                                     }
                                     
                                     selectionList.clear();
@@ -297,7 +300,58 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                           label: locales.undo,
                                           onPressed: () async {
                                             for(int i = 0; i < noteBackup.length; i++) {
-                                              await NoteHelper().insert(noteBackup[i]);
+                                              await NoteHelper().insert(noteBackup[i]
+                                                  .copyWith(isDeleted: 0));
+                                            }
+
+                                            List<Note> list =
+                                                await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                            setState(() => noteList = list);
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.archive,
+                                  ),
+                                  onPressed: () async {
+                                    List<Note> noteBackup = List.from(selectionList);
+
+                                    for(int i = 0; i < selectionList.length; i++) {
+                                      await NoteHelper().update(
+                                        noteList.firstWhere((note) => note == selectionList[i])
+                                            .copyWith(isArchived: 1),
+                                      );
+                                    }
+                                    
+                                    selectionList.clear();
+
+                                    noteList.forEach((item) {
+                                      item.isSelected = false;
+                                    });
+
+                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+
+                                    setState(() {
+                                      noteList = list;
+                                      isSelectorVisible = false;
+                                    });
+
+                                    scaffoldKey.currentState.removeCurrentSnackBar();
+                                    scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text(locales.note_delete_snackbar),
+                                        behavior: SnackBarBehavior.floating,
+                                        elevation: 3,
+                                        action: SnackBarAction(
+                                          label: locales.undo,
+                                          onPressed: () async {
+                                            for(int i = 0; i < noteBackup.length; i++) {
+                                              await NoteHelper().insert(noteBackup[i]
+                                                  .copyWith(isArchived: 0));
                                             }
 
                                             List<Note> list =

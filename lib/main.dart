@@ -76,12 +76,8 @@ void main() async {
     },
     version: 5,
   );
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  List<Note> noteList = await NoteHelper().getNotes((prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
-      SortMode.ID :
-      SortMode.DATE, NotesReturnMode.NORMAL);
+  
+  List<Note> noteList = await NoteHelper().getNotes(await getSortMode(), NotesReturnMode.NORMAL);
 
   runApp(NotesRoot(noteList: noteList));
 }

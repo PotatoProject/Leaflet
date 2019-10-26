@@ -52,9 +52,9 @@ class NoteHelper {
     if(returnMode == NotesReturnMode.NORMAL) {
       list.removeWhere((note) => note.isArchived == 1 || note.isDeleted == 1);
     } else if(returnMode == NotesReturnMode.DELETED) {
-      list.removeWhere((note) => note.isArchived == 0 && note.isDeleted == 1);
+      list.removeWhere((note) => note.isDeleted == 0);
     } else if(returnMode == NotesReturnMode.ARCHIVED) {
-      list.removeWhere((note) => note.isArchived == 1 && note.isDeleted == 0);
+      list.removeWhere((note) => note.isArchived == 0 || note.isDeleted == 1);
     }
 
     return list;
