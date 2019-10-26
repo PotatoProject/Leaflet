@@ -14,7 +14,7 @@ class NoteHelper {
     );
   }
 
-  Future<List<Note>> getNotes(SortMode sort) async {
+  Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
     Database db = await database;
 
     List<Map<String, dynamic>> maps = await db.query('notes');
@@ -34,6 +34,8 @@ class NoteHelper {
         hideContent: maps[i]['hideContent'],
         pin: maps[i]['pin'] == null ? maps[i]['pin'] : maps[i]['pin'].toString(),
         password: maps[i]['password'],
+        isDeleted: maps[i]['isDeleted'] ?? 0,
+        isArchived: maps[i]['isArchived'] ?? 0,
       );
     });
 
@@ -46,6 +48,14 @@ class NoteHelper {
         return a.id.compareTo(b.id);
       }
     });
+
+    if(returnMode == NotesReturnMode.NORMAL) {
+      list.removeWhere((note) => note.isArchived == 1 || note.isDeleted == 1);
+    } else if(returnMode == NotesReturnMode.DELETED) {
+      list.removeWhere((note) => note.isArchived == 0 && note.isDeleted == 1);
+    } else if(returnMode == NotesReturnMode.ARCHIVED) {
+      list.removeWhere((note) => note.isArchived == 1 && note.isDeleted == 0);
+    }
 
     return list;
   }
@@ -92,12 +102,14 @@ class NoteHelper {
               reminders TEXT,
               hideContent INTEGER,
               pin TEXT,
-              password TEXT
+              password TEXT,
+              isDeleted INTEGER,
+              isArchived INTEGER
             )
           """,
         );
       },
-      version: 4,
+      version: 5,
     );
 
     db.execute("ATTACH DATABASE '" + path + "' AS backup");
@@ -127,7 +139,9 @@ class NoteHelper {
           reminders TEXT,
           hideContent INTEGER,
           pin TEXT,
-          password TEXT
+          password TEXT,
+          isDeleted INTEGER,
+          isArchived INTEGER
         )
       """);
     db.execute("INSERT INTO main.notes SELECT * FROM backup.notes");
@@ -172,17 +186,16 @@ class NoteHelper {
           reminders TEXT,
           hideContent INTEGER,
           pin TEXT,
-          password TEXT
+          password TEXT,
+          isDeleted INTEGER,
+          isArchived INTEGER
         )
       """
     );
 
     db.execute(
       """
-        INSERT INTO notes(
-          id, title, content, isStarred, date, color, imagePath, isList,
-          listParseString,reminders, hideContent, pin, password
-        ) SELECT * FROM notesold
+        INSERT INTO notes SELECT * FROM notesold
       """
     );
 
@@ -204,6 +217,8 @@ class Note {
   final int hideContent;
   final String pin;
   final String password;
+  final int isDeleted;
+  final int isArchived;
 
   bool isSelected = false;
 
@@ -221,6 +236,8 @@ class Note {
     this.hideContent,
     this.pin,
     this.password,
+    this.isDeleted,
+    this.isArchived,
   });
 
   Map<String, dynamic> toMap() {
@@ -238,29 +255,35 @@ class Note {
       'hideContent': hideContent,
       'pin': pin,
       'password': password,
+      'isDeleted': isDeleted,
+      'isArchived': isArchived,
     };
   }
 
   Note copyWith({
-    int localIsStarred,
-    int localColor,
-    int localIsList,
-    int localHideContent,
+    int isStarred,
+    int color,
+    int isList,
+    int hideContent,
+    int isDeleted,
+    int isArchived,
   }) {
     return Note(
       id: this.id,
       title: this.title,
       content: this.content,
-      isStarred: localIsStarred ?? this.isStarred,
+      isStarred: isStarred ?? this.isStarred,
       date: this.date,
-      color: localColor == 0 ? null : localColor == null ? this.color : localColor,
+      color: color == 0 ? null : color == null ? this.color : color,
       imagePath: this.imagePath,
-      isList: localIsList ?? this.isList,
+      isList: isList ?? this.isList,
       listParseString: this.listParseString,
       reminders: this.reminders,
-      hideContent: localHideContent ?? this.hideContent,
+      hideContent: hideContent ?? this.hideContent,
       pin: this.pin,
       password: this.password,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 }
@@ -275,4 +298,11 @@ class ListPair {
 enum SortMode {
   ID,
   DATE
+}
+
+enum NotesReturnMode {
+  ALL,
+  NORMAL,
+  DELETED,
+  ARCHIVED,
 }

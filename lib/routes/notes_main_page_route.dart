@@ -204,21 +204,21 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       for(int i = 0; i < selectionList.length; i++) {
                                         await NoteHelper().update(
                                           noteList.firstWhere((note) => note == selectionList[i])
-                                              .copyWith(localIsStarred: 1),
+                                              .copyWith(isStarred: 1),
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
                                       setState(() => noteList = list);
                                     } else {
                                       for(int i = 0; i < selectionList.length; i++) {
                                         await NoteHelper().update(
                                           noteList.firstWhere((note) => note == selectionList[i])
-                                              .copyWith(localIsStarred: 0),
+                                              .copyWith(isStarred: 0),
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
                                       setState(() => noteList = list);
                                     }
 
@@ -250,11 +250,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       for(int i = 0; i < selectionList.length; i++) {
                                         await NoteHelper().update(
                                           noteList.firstWhere((note) => note == selectionList[i])
-                                              .copyWith(localColor: result),
+                                              .copyWith(color: result),
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
                                       setState(() {
                                         noteList = list;
                                         selectionList.clear();
@@ -280,7 +280,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       item.isSelected = false;
                                     });
 
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
 
                                     setState(() {
                                       noteList = list;
@@ -301,7 +301,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             }
 
                                             List<Note> list =
-                                                await NoteHelper().getNotes(appInfo.sortMode);
+                                                await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
                                             setState(() => noteList = list);
                                           },
                                         ),
@@ -868,7 +868,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
 
     setState(() => noteList = list);
   }
@@ -901,7 +901,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     await Navigator.push(
         context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     setState(() => noteList = list);
 
     Brightness systemBarsIconBrightness =
@@ -1367,7 +1367,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                     if(result != null && result != appInfo.sortMode) {
                       await controller.animateTo(0);
                       appInfo.sortMode = result;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
                       setState(() => noteList = list);
                       await controller.animateTo(1);
                     }
@@ -1385,15 +1385,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
   void toggleStarNote(int index) async {
     if (noteList[index].isStarred == 0) {
       await NoteHelper().update(
-        noteList[index].copyWith(localIsStarred: 1),
+        noteList[index].copyWith(isStarred: 1),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
       setState(() => noteList = list);
     } else if (noteList[index].isStarred == 1) {
       await NoteHelper().update(
-        noteList[index].copyWith(localIsStarred: 0),
+        noteList[index].copyWith(isStarred: 0),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode);
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
       setState(() => noteList = list);
     }
   }

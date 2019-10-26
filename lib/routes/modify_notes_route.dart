@@ -722,7 +722,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   Future<int> noteIdSearcher() async {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    List<Note> noteList = await NoteHelper().getNotes(appInfo.sortMode);
+    List<Note> noteList = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
     List<int> noteIdList = List<int>();
 
     noteList.forEach((item) {
@@ -759,8 +759,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   void asyncExecutor() async {
     final appInfo = Provider.of<AppInfoProvider>(context);
-    
-    List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode);
+
     noteDate = DateTime.now().millisecondsSinceEpoch;
 
     updateListParseString();
@@ -786,7 +785,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       pin: notePin,
       password: notePassword,
     ));
-    noteList = await noteHelper.getNotes(appInfo.sortMode);
+    List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, noteList);
   }
 

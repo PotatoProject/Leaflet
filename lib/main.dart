@@ -42,7 +42,9 @@ void main() async {
             reminders TEXT,
             hideContent INTEGER,
             pin TEXT,
-            password TEXT
+            password TEXT,
+            isDeleted INTEGER,
+            isArchived INTEGER
           )
         """,
       );
@@ -62,6 +64,8 @@ void main() async {
         "ALTER TABLE notes ADD COLUMN hideContent INTEGER",
         "ALTER TABLE notes ADD COLUMN pin TEXT",
         "ALTER TABLE notes ADD COLUMN password TEXT",
+        "ALTER TABLE notes ADD COLUMN isDeleted INTEGER",
+        "ALTER TABLE notes ADD COLUMN isArchived INTEGER",
       ];
 
       for (int i = 0; i < columnsToAdd.length; i++) {
@@ -70,14 +74,14 @@ void main() async {
         });
       }
     },
-    version: 4,
+    version: 5,
   );
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<Note> noteList = await NoteHelper().getNotes((prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
       SortMode.ID :
-      SortMode.DATE);
+      SortMode.DATE, NotesReturnMode.NORMAL);
 
   runApp(NotesRoot(noteList: noteList));
 }
