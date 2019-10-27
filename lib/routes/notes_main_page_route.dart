@@ -46,6 +46,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
   AppInfoProvider appInfo;
   AppLocalizations locales;
 
+  NotesReturnMode currentView = NotesReturnMode.NORMAL;
+
   @override
   void initState() {
     super.initState();
@@ -208,7 +210,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                       setState(() => noteList = list);
                                     } else {
                                       for(int i = 0; i < selectionList.length; i++) {
@@ -218,7 +220,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                       setState(() => noteList = list);
                                     }
 
@@ -254,7 +256,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                         );
                                       }
 
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                       setState(() {
                                         noteList = list;
                                         selectionList.clear();
@@ -283,7 +285,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       item.isSelected = false;
                                     });
 
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
 
                                     setState(() {
                                       noteList = list;
@@ -305,7 +307,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             }
 
                                             List<Note> list =
-                                                await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                                await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                             setState(() => noteList = list);
                                           },
                                         ),
@@ -333,7 +335,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       item.isSelected = false;
                                     });
 
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
 
                                     setState(() {
                                       noteList = list;
@@ -355,7 +357,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             }
 
                                             List<Note> list =
-                                                await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                                                await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                             setState(() => noteList = list);
                                           },
                                         ),
@@ -526,7 +528,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                    locales.searchNotesRoute_searchbar,
+                                    currentView == NotesReturnMode.NORMAL ?
+                                        locales.searchNotesRoute_searchbar :
+                                        currentView == NotesReturnMode.DELETED ?
+                                            "Deleted notes" :
+                                            currentView == NotesReturnMode.ARCHIVED ?
+                                                "Archived notes" :
+                                                locales.searchNotesRoute_searchbar,
                                     style: TextStyle(
                                       fontSize: 16,
                                     ),
@@ -534,13 +542,68 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   Spacer(),
                                   IconButton(
                                     icon: appInfo.isGridView
-                                        ? Icon(Icons.list)
+                                        ? Icon(Icons.view_agenda)
                                         : Icon(Icons.grid_on),
                                     onPressed: () async {
                                       if(controller.status == AnimationStatus.completed) {
                                         await controller.animateTo(0);
                                         appInfo.isGridView = !appInfo.isGridView;
                                         await controller.animateTo(1);
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.view_carousel),
+                                    onPressed: () async {
+                                      if(controller.status == AnimationStatus.completed) {
+                                        var result = await showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            NotesReturnMode value = currentView;
+
+                                            return AlertDialog(
+                                              title: Text("Select view mode"),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12)
+                                              ),
+                                              contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  RadioListTile(
+                                                    title: Text("Normal view"),
+                                                    groupValue: value,
+                                                    value: NotesReturnMode.NORMAL,
+                                                    onChanged: (sort) => Navigator.pop(context, sort),
+                                                    activeColor: appInfo.mainColor,
+                                                  ),
+                                                  RadioListTile(
+                                                    title: Text("Deleted notes"),
+                                                    groupValue: value,
+                                                    value: NotesReturnMode.DELETED,
+                                                    onChanged: (sort) => Navigator.pop(context, sort),
+                                                    activeColor: appInfo.mainColor,
+                                                  ),
+                                                  RadioListTile(
+                                                    title: Text("Archived notes"),
+                                                    groupValue: value,
+                                                    value: NotesReturnMode.ARCHIVED,
+                                                    onChanged: (sort) => Navigator.pop(context, sort),
+                                                    activeColor: appInfo.mainColor,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        );
+
+                                        if(result != null && result != currentView) {
+                                          await controller.animateTo(0);
+                                          currentView = result;
+                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          setState(() => noteList = list);
+                                          await controller.animateTo(1);
+                                        }
                                       }
                                     },
                                   ),
@@ -627,7 +690,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: currentView != NotesReturnMode.NORMAL ? null : FloatingActionButton(
         backgroundColor: Theme.of(context).accentColor,
         elevation: 0.0,
         onPressed: () {
@@ -922,7 +985,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
 
     setState(() => noteList = list);
   }
@@ -955,7 +1018,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     await Navigator.push(
         context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
     setState(() => noteList = list);
 
     Brightness systemBarsIconBrightness =
@@ -1421,7 +1484,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                     if(result != null && result != appInfo.sortMode) {
                       await controller.animateTo(0);
                       appInfo.sortMode = result;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
                       setState(() => noteList = list);
                       await controller.animateTo(1);
                     }
@@ -1441,13 +1504,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       await NoteHelper().update(
         noteList[index].copyWith(isStarred: 1),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
       setState(() => noteList = list);
     } else if (noteList[index].isStarred == 1) {
       await NoteHelper().update(
         noteList[index].copyWith(isStarred: 0),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
       setState(() => noteList = list);
     }
   }
