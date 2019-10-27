@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
@@ -723,10 +722,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           )
         ],
       ),
-      floatingActionButton: currentView != NotesReturnMode.NORMAL ? null : FloatingActionButton(
-        backgroundColor: Theme.of(context).accentColor,
-        elevation: 0.0,
-        onPressed: () {
+      bottomNavigationBar: bottomBar,
+    );
+  }
+
+  Widget get bottomBar {
+    return Material(
+      elevation: 140,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: InkWell(
+        onTap: () {
           _addNoteCaller(context);
           selectionList.clear();
           noteList.forEach((item) {
@@ -734,11 +739,36 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           });
           setState(() => isSelectorVisible = false);
         },
-        child: Icon(Icons.edit),
-        tooltip: locales.notesMainPageRoute_addButtonTooltip,
+        child: Container(
+          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "Write a note...",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).textTheme.title.color
+                      .withAlpha(120)
+                ),
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.check_box),
+                onPressed: () {
+                  _addNoteCaller(context, startAsList: true);
+                  selectionList.clear();
+                  noteList.forEach((item) {
+                    item.isSelected = false;
+                  });
+                  setState(() => isSelectorVisible = false);
+                },
+              ),
+            ],
+          ),
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _bottomBar,
     );
   }
 
@@ -959,7 +989,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       return null;
   }
 
-  void _addNoteCaller(BuildContext context) async {
+  void _addNoteCaller(BuildContext context, {bool startAsList = false}) async {
     final Note emptyNote = Note(
       id: null,
       title: "",
@@ -968,7 +998,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       date: 0,
       color: null,
       imagePath: null,
-      isList: 0,
+      isList: startAsList ? 1 : 0,
       listParseString: null,
       reminders: null,
       hideContent: 0,
@@ -1451,87 +1481,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
     return widgets;
   }
-
-  Widget get _bottomBar {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
-    return Builder(builder: (context) {
-      return Card(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 120,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
-        ),
-        margin: EdgeInsets.all(0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            children: <Widget>[
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  _settingsCaller(context);
-                },
-              ),
-              Spacer(flex: 3),
-              IconButton(
-                icon: Icon(Icons.sort),
-                onPressed: () async {
-                  if(controller.status == AnimationStatus.completed) {
-                    var result = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        SortMode value = appInfo.sortMode;
-
-                        return AlertDialog(
-                          title: Text("Select sort mode"),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)
-                          ),
-                          contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              RadioListTile(
-                                title: Text("Id"),
-                                groupValue: value,
-                                value: SortMode.ID,
-                                onChanged: (sort) => Navigator.pop(context, sort),
-                                activeColor: appInfo.mainColor,
-                              ),
-                              RadioListTile(
-                                title: Text("Date"),
-                                groupValue: value,
-                                value: SortMode.DATE,
-                                onChanged: (sort) => Navigator.pop(context, sort),
-                                activeColor: appInfo.mainColor,
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    );
-
-                    if(result != null && result != appInfo.sortMode) {
-                      await controller.animateTo(0);
-                      appInfo.sortMode = result;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                      setState(() => noteList = list);
-                      await controller.animateTo(1);
-                    }
-                  }
-                },
-              ),
-              Spacer(),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
+  
   void toggleStarNote(int index) async {
     if (noteList[index].isStarred == 0) {
       await NoteHelper().update(

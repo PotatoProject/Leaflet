@@ -144,7 +144,25 @@ class NoteHelper {
           isArchived INTEGER
         )
       """);
-    db.execute("INSERT INTO main.notes SELECT * FROM backup.notes");
+    db.execute("""
+      INSERT INTO main.notes(
+        id,
+        title,
+        content,
+        isStarred,
+        date,
+        color,
+        imagePath,
+        isList,
+        listParseString,
+        reminders,
+        hideContent,
+        pin,
+        password,
+        isDeleted,
+        isArchived
+      ) SELECT * FROM backup.notes
+    """);
     db.execute("DETACH backup");
   }
 

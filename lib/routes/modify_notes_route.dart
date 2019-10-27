@@ -724,7 +724,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Future<int> noteIdSearcher() async {
-    List<Note> noteList = await NoteHelper().getNotes(await getSortMode(), NotesReturnMode.ALL);
+    List<Note> noteList = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
     List<int> noteIdList = List<int>();
 
     noteList.forEach((item) {
@@ -738,8 +738,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   bool saveAndPop(bool stopDefaultButtonEvent) {
+    print(noteListParseString);
     if (((noteContent != "" || noteTitle != "") && noteIsList == 0) ||
-        (noteIsList == 1 && noteListParseString != "")) {
+        (noteIsList == 1 && noteListParseString != null)) {
       asyncExecutor();
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
@@ -766,7 +767,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     updateListParseString();
 
-    if (noteListParseString == "") noteIsList = 0;
+    if(noteListParseString == null) noteIsList = 0;
+
+    if(noteIsList == 0) noteListParseString = null;
 
     noteRemindersUpdater();
 
