@@ -155,7 +155,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 child: Center(
                   child: isSelectorVisible ?
                       Card(
-                        elevation: 3,
+                        elevation: 1.5,
                         margin: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0)
@@ -295,7 +295,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     SnackBar(
                                       content: Text(locales.note_delete_snackbar),
                                       behavior: SnackBarBehavior.floating,
-                                      elevation: 3,
                                       action: SnackBarAction(
                                         label: locales.undo,
                                         onPressed: () async {
@@ -345,7 +344,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     SnackBar(
                                       content: Text(locales.note_delete_snackbar),
                                       behavior: SnackBarBehavior.floating,
-                                      elevation: 3,
                                       action: SnackBarAction(
                                         label: locales.undo,
                                         onPressed: () async {
@@ -512,7 +510,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                         ),
                       ) :
                       Card(
-                        elevation: 3,
+                        elevation: 1.5,
                         margin: EdgeInsets.fromLTRB(16, 4 + MediaQuery.of(context).padding.top, 16, 4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
@@ -535,6 +533,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                               locales.searchNotesRoute_searchbar,
                                   style: TextStyle(
                                     fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).textTheme.title.color
+                                        .withAlpha(120)
                                   ),
                                 ),
                                 Spacer(),
@@ -1249,7 +1250,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             Icons.alarm,
                             size: 12,
                             color: noteList[index].color == null
-                                ? null
+                                ? Theme.of(context).textTheme.title.color
+                                    .withAlpha(140)
                                 : getTextColorFromNoteColor(index, false),
                           ),
                         ),
@@ -1264,7 +1266,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 : Icons.remove_red_eye,
                             size: 12,
                             color: noteList[index].color == null
-                                ? null
+                                ? Theme.of(context).textTheme.title.color
+                                    .withAlpha(140)
                                 : getTextColorFromNoteColor(index, false),
                           ),
                         ),
@@ -1287,7 +1290,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: noteList[index].color == null
-                                        ? null
+                                        ? Theme.of(context).textTheme.title.color
+                                            .withAlpha(140)
                                         : getTextColorFromNoteColor(
                                             index, false),
                                   ),
@@ -1300,7 +1304,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: noteList[index].color == null
-                                            ? null
+                                            ? Theme.of(context).textTheme.title.color
+                                                .withAlpha(140)
                                             : getTextColorFromNoteColor(
                                                 index, false),
                                       ),
@@ -1341,7 +1346,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                       maxLines: 4,
                       style: TextStyle(
                         color: noteList[index].color == null
-                            ? null
+                            ? Theme.of(context).textTheme.title.color
+                                .withAlpha(220)
                             : getTextColorFromNoteColor(index, false),
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -1372,6 +1378,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             fontWeight: FontWeight.w400,
                             color: noteList[index].color == null
                                 ? Theme.of(context).textTheme.title.color
+                                    .withAlpha(180)
                                 : getTextColorFromNoteColor(index, true),
                           ),
                         ),

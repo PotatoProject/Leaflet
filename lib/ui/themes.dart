@@ -18,7 +18,7 @@ class CustomThemes {
       textSelectionHandleColor: appInfo.mainColor,
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Color(0xFF111111),
-        elevation: 3,
+        elevation: 1,
         actionTextColor: appInfo.mainColor,
         contentTextStyle: TextStyle(
           color: Colors.white,
@@ -30,6 +30,10 @@ class CustomThemes {
         hoverColor: appInfo.mainColor,
       ),
       buttonColor: appInfo.mainColor,
+      iconTheme: IconThemeData(
+        color: Color(0x8AFFFFFF)
+      ),
+      disabledColor: Color(0x4AFFFFFF)
     );
   }
 
@@ -40,7 +44,7 @@ class CustomThemes {
       textSelectionHandleColor: appInfo.mainColor,
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Color(0xFF212121),
-        elevation: 3,
+        elevation: 1,
         actionTextColor: appInfo.mainColor,
         contentTextStyle: TextStyle(
           color: Colors.white,
@@ -59,6 +63,10 @@ class CustomThemes {
       dialogBackgroundColor: Color(0xFF212121),
       bottomAppBarColor: Color(0xFF212121),
       canvasColor: Color(0xFF212121),
+      iconTheme: IconThemeData(
+        color: Color(0x8AFFFFFF)
+      ),
+      disabledColor: Color(0x4AFFFFFF)
     );
   }
 
@@ -71,7 +79,7 @@ class CustomThemes {
       textSelectionHandleColor: appInfo.mainColor,
       snackBarTheme: SnackBarThemeData(
         backgroundColor: ThemeData.light().cardColor,
-        elevation: 3,
+        elevation: 1,
         actionTextColor: appInfo.mainColor,
         contentTextStyle: TextStyle(
           color: Colors.black,
@@ -87,6 +95,10 @@ class CustomThemes {
       buttonColor: appInfo.mainColor,
       primaryColor: appInfo.mainColor,
       backgroundColor: appInfo.mainColor,
+      iconTheme: IconThemeData(
+        color: Color(0x8A000000)
+      ),
+      disabledColor: Color(0x4A000000)
     );
   }
 
