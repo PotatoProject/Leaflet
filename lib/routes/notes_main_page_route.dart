@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -141,226 +142,767 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     appInfo = Provider.of<AppInfoProvider>(context);
     locales = AppLocalizations.of(context);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
-      key: scaffoldKey,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverPersistentHeader(
-            pinned: isSelectorVisible,
-            floating: !isSelectorVisible,
-            delegate: HeaderDelegate(
-              child: PreferredSize(
-                preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
-                child: Center(
-                  child: isSelectorVisible ?
-                      Card(
-                        elevation: 1.5,
-                        margin: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0)
+    Widget normalHeader = SliverPersistentHeader(
+      pinned: isSelectorVisible,
+      floating: !isSelectorVisible,
+      delegate: HeaderDelegate(
+        child: PreferredSize(
+          preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
+          child: Center(
+            child: isSelectorVisible ?
+                Card(
+                  elevation: 1.5,
+                  margin: EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 60,
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: appInfo.mainColor,
+                          ),
+                          onPressed: () async {
+                            selectionList.clear();
+                            noteList.forEach((item) {
+                              item.isSelected = false;
+                            });
+                            setState(() => isSelectorVisible = false);
+                          },
                         ),
-                        child: Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          height: 60,
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(
-                                  Icons.close,
-                                  color: appInfo.mainColor,
-                                ),
-                                onPressed: () async {
-                                  selectionList.clear();
-                                  noteList.forEach((item) {
-                                    item.isSelected = false;
-                                  });
-                                  setState(() => isSelectorVisible = false);
-                                },
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  selectionList.length.toString(),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                icon: Icon(
-                                  selectionList.where(
-                                    (note) => note.isStarred == 0
-                                  ).toList().length != 0 ?
-                                    Icons.star :
-                                    Icons.star_border,
-                                ),
-                                onPressed: () async {
-                                  if(selectionList.where((note) => note.isStarred == 0
-                                        ).toList().length != 0) {
-                                    for(int i = 0; i < selectionList.length; i++) {
-                                      await NoteHelper().update(
-                                        noteList.firstWhere((note) => note == selectionList[i])
-                                            .copyWith(isStarred: 1),
-                                      );
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            selectionList.length.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            selectionList.where(
+                              (note) => note.isStarred == 0
+                            ).toList().length != 0 ?
+                              Icons.star :
+                              Icons.star_border,
+                          ),
+                          onPressed: () async {
+                            if(selectionList.where((note) => note.isStarred == 0
+                                  ).toList().length != 0) {
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(isStarred: 1),
+                                );
+                              }
+
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              setState(() => noteList = list);
+                            } else {
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(isStarred: 0),
+                                );
+                              }
+
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              setState(() => noteList = list);
+                            }
+
+                            noteList.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            setState(() {
+                              selectionList.clear();
+                              isSelectorVisible = false;
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.color_lens,
+                          ),
+                          onPressed: () async {
+                            var result = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoteColorDialog(
+                                  noteColor: null,
+                                );
+                              }
+                            );
+
+                            if(result != null) {
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(color: result),
+                                );
+                              }
+
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              setState(() {
+                                noteList = list;
+                                selectionList.clear();
+                                isSelectorVisible = false;
+                              });
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_outline,
+                          ),
+                          onPressed: () async {
+                            List<Note> noteBackup = List.from(selectionList);
+
+                            for(int i = 0; i < selectionList.length; i++) {
+                              await NoteHelper().update(
+                                noteList.firstWhere((note) => note == selectionList[i])
+                                    .copyWith(isDeleted: 1, isStarred: 0),
+                              );
+                            }
+                                          
+                            selectionList.clear();
+
+                            noteList.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+
+                            setState(() {
+                              noteList = list;
+                              isSelectorVisible = false;
+                            });
+
+                            scaffoldKey.currentState.removeCurrentSnackBar();
+                            scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text(locales.note_delete_snackbar),
+                                action: SnackBarAction(
+                                  label: locales.undo,
+                                  onPressed: () async {
+                                    for(int i = 0; i < noteBackup.length; i++) {
+                                      await NoteHelper().insert(noteBackup[i]
+                                          .copyWith(isDeleted: 0));
                                     }
 
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                    List<Note> list =
+                                        await NoteHelper().getNotes(appInfo.sortMode, currentView);
                                     setState(() => noteList = list);
-                                  } else {
-                                    for(int i = 0; i < selectionList.length; i++) {
-                                      await NoteHelper().update(
-                                        noteList.firstWhere((note) => note == selectionList[i])
-                                            .copyWith(isStarred: 0),
-                                      );
-                                    }
-
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                                    setState(() => noteList = list);
-                                  }
-
-                                  noteList.forEach((item) {
-                                    item.isSelected = false;
-                                  });
-
-                                  setState(() {
-                                    selectionList.clear();
-                                    isSelectorVisible = false;
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.color_lens,
+                                  },
                                 ),
-                                onPressed: () async {
-                                  var result = await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return NoteColorDialog(
-                                        noteColor: null,
-                                      );
-                                    }
-                                  );
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.archive,
+                          ),
+                          onPressed: () async {
+                            List<Note> noteBackup = List.from(selectionList);
 
-                                  if(result != null) {
-                                    for(int i = 0; i < selectionList.length; i++) {
-                                      await NoteHelper().update(
-                                        noteList.firstWhere((note) => note == selectionList[i])
-                                            .copyWith(color: result),
-                                      );
+                            for(int i = 0; i < selectionList.length; i++) {
+                              await NoteHelper().update(
+                                noteList.firstWhere((note) => note == selectionList[i])
+                                    .copyWith(isArchived: 1, isStarred: 0),
+                              );
+                            }
+                                          
+                            selectionList.clear();
+
+                            noteList.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+
+                            setState(() {
+                              noteList = list;
+                              isSelectorVisible = false;
+                            });
+
+                            scaffoldKey.currentState.removeCurrentSnackBar();
+                            scaffoldKey.currentState.showSnackBar(
+                              SnackBar(
+                                content: Text(locales.note_delete_snackbar),
+                                action: SnackBarAction(
+                                  label: locales.undo,
+                                  onPressed: () async {
+                                    for(int i = 0; i < noteBackup.length; i++) {
+                                      await NoteHelper().insert(noteBackup[i]
+                                          .copyWith(isArchived: 0));
                                     }
 
-                                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                    List<Note> list =
+                                        await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                    setState(() => noteList = list);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        PopupMenuButton(
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: appInfo.mainColor
+                          ),
+                          onSelected: null,
+                          itemBuilder: (context) {
+                            return [
+                              (selectionList.length == 1 ? PopupMenuItem(
+                                enabled: false,
+                                child: ListTile(
+                                  title: Text(locales.note_share),
+                                  onTap: () {
+                                    String shareText = "";
+
+                                    if (selectionList[0].title != "")
+                                      shareText += selectionList[0].title + "\n\n";
+                                    shareText += selectionList[0].content;
+
+                                    Share.share(shareText);
+                                    Navigator.pop(context);
+
+                                    noteList.forEach((item) {
+                                      item.isSelected = false;
+                                    });
+
                                     setState(() {
-                                      noteList = list;
                                       selectionList.clear();
                                       isSelectorVisible = false;
                                     });
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.delete_outline,
+                                  },
                                 ),
-                                onPressed: () async {
-                                  List<Note> noteBackup = List.from(selectionList);
+                              ) : null),
+                              PopupMenuItem(
+                                enabled: false,
+                                child: ListTile(
+                                  title: Text(locales.note_export),
+                                  onTap: () async {
+                                    Navigator.pop(context);
 
-                                  for(int i = 0; i < selectionList.length; i++) {
-                                    await NoteHelper().update(
-                                      noteList.firstWhere((note) => note == selectionList[i])
-                                          .copyWith(isDeleted: 1),
+                                    if (appInfo.storageStatus ==
+                                        PermissionStatus.granted) {
+                                      DateTime now = DateTime.now();
+
+                                      bool backupDirExists = await Directory(
+                                              '/storage/emulated/0/PotatoNotes/exported')
+                                          .exists();
+
+                                      if (!backupDirExists) {
+                                        await Directory(
+                                                '/storage/emulated/0/PotatoNotes/exported')
+                                            .create(recursive: true);
+                                      }
+
+                                      for(int i = 0; i < selectionList.length; i++) {
+                                        Note curNote = noteList.firstWhere((note) => note == selectionList[i]);
+
+                                        String noteExportPath =
+                                            '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
+                                                DateFormat("dd-MM-yyyy_HH-mm")
+                                                    .format(now) +
+                                                '_' + curNote.id.toString() + '.md';
+
+                                        String noteContents = "";
+
+                                        if (curNote.title != "")
+                                          noteContents +=
+                                              "# " + curNote.title + "\n\n";
+
+                                        noteContents += curNote.content;
+
+                                        File(noteExportPath).writeAsString(noteContents);
+                                      }
+
+                                      scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content: Text(locales.done),
+                                          elevation: 3,
+                                        )
+                                      );
+                                    } else {
+                                      await PermissionHandler().requestPermissions(
+                                          [PermissionGroup.storage]);
+                                      appInfo.storageStatus =
+                                          await PermissionHandler()
+                                              .checkPermissionStatus(
+                                                  PermissionGroup.storage);
+                                    }
+
+                                    noteList.forEach((item) {
+                                      item.isSelected = false;
+                                    });
+
+                                    setState(() {
+                                      selectionList.clear();
+                                      isSelectorVisible = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                              (selectionList.length == 1 ? PopupMenuItem(
+                                enabled: false,
+                                child: ListTile(
+                                  title: Text(locales.note_pinToNotifs),
+                                  enabled: !appInfo.notificationsIdList
+                                      .contains(selectionList[0].id.toString()),
+                                  onTap: () async {
+                                    appInfo.notificationsIdList
+                                        .add(selectionList[0].id.toString());
+                                    await FlutterLocalNotificationsPlugin().show(
+                                        int.parse(appInfo.notificationsIdList.last),
+                                        selectionList[0].title != ""
+                                            ? selectionList[0].title
+                                            : "Pinned note",
+                                        selectionList[0].content,
+                                        NotificationDetails(
+                                            AndroidNotificationDetails(
+                                              '0',
+                                              'note_pinned_notifications',
+                                              'idk',
+                                              priority: Priority.High,
+                                              playSound: true,
+                                              importance: Importance.High,
+                                              ongoing: true,
+                                            ),
+                                            IOSNotificationDetails()),
+                                        payload: selectionList[0].id.toString());
+                                    Navigator.pop(context);
+
+                                    noteList.forEach((item) {
+                                      item.isSelected = false;
+                                    });
+
+                                    setState(() {
+                                      selectionList.clear();
+                                      isSelectorVisible = false;
+                                    });
+                                  },
+                                ),
+                              ) : null),
+                            ];
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ) :
+                Card(
+                  elevation: 1.5,
+                  margin: EdgeInsets.fromLTRB(16, 4 + MediaQuery.of(context).padding.top, 16, 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () => _searchNoteCaller(context, noteList, Theme.of(context).scaffoldBackgroundColor),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.menu),
+                            onPressed: () async {
+                              scaffoldKey.currentState.openDrawer();
+                            },
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              locales.searchNotesRoute_searchbar,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).textTheme.title.color
+                                    .withAlpha(120)
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            icon: appInfo.isGridView
+                                ? Icon(Icons.view_agenda)
+                                : Icon(Icons.grid_on),
+                            onPressed: () async {
+                              if(controller.status == AnimationStatus.completed) {
+                                await controller.animateTo(0);
+                                appInfo.isGridView = !appInfo.isGridView;
+                                await controller.animateTo(1);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            iconSize: 24.0,
+                            onPressed: () =>
+                                Navigator.push(context, PageRouteBuilder(
+                                  opaque: false,
+                                  transitionDuration: Duration(milliseconds: 200),
+                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: UserInfoDialog(
+                                        onSortSwitchChange: (value) async {
+                                          SortMode sortMode;
+                                                
+                                          if(value) {
+                                            sortMode = SortMode.DATE;
+                                          } else {
+                                            sortMode = SortMode.ID;
+                                          }
+
+                                          await controller.animateTo(0);
+                                          appInfo.sortMode = sortMode;
+                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          setState(() => noteList = list);
+                                          await controller.animateTo(1);
+                                        },
+                                        onSettingsTileClick: () => _settingsCaller(context),
+                                      ),
                                     );
                                   }
-                                          
-                                  selectionList.clear();
+                                )),
+                            icon: Hero(
+                              createRectTween: (begin, end) {
+                                return MaterialRectCenterArcTween(begin: begin, end: end);
+                              },
+                              tag: "userimage",
+                              child: Material(
+                                color: Colors.transparent,
+                                child: CircleAvatar(
+                                  backgroundColor: appInfo.mainColor,
+                                  child: appInfo.userImagePath == null
+                                      ? Icon(
+                                          Icons.account_circle,
+                                          color: Colors.white,
+                                          size: 28.0,
+                                        )
+                                      : null,
+                                  backgroundImage: appInfo.userImagePath == null
+                                      ? null
+                                      : FileImage(File(appInfo.userImagePath)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+          )
+        ),
+      ),
+    );
 
-                                  noteList.forEach((item) {
-                                    item.isSelected = false;
-                                  });
+    Widget altHeader = SliverPersistentHeader(
+      pinned: true,
+      delegate: HeaderDelegate(
+        child: PreferredSize(
+          preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
+          child: Center(
+            child: isSelectorVisible ?
+                Card(
+                  elevation: 1.5,
+                  margin: EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 60,
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: appInfo.mainColor,
+                          ),
+                          onPressed: () async {
+                            selectionList.clear();
+                            noteList.forEach((item) {
+                              item.isSelected = false;
+                            });
+                            setState(() => isSelectorVisible = false);
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            selectionList.length.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        (
+                          currentView == NotesReturnMode.ARCHIVED ?
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.star),
+                                    onPressed: () async {
+                                      for(int i = 0; i < selectionList.length; i++) {
+                                        await NoteHelper().update(
+                                          noteList.firstWhere((note) => note == selectionList[i])
+                                              .copyWith(isArchived: 0, isStarred: 1),
+                                        );
+                                      }
+                                    
+                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      setState(() => noteList = list);
 
-                                  List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      noteList.forEach((item) {
+                                        item.isSelected = false;
+                                      });
 
-                                  setState(() {
-                                    noteList = list;
-                                    isSelectorVisible = false;
-                                  });
+                                      setState(() {
+                                        selectionList.clear();
+                                        isSelectorVisible = false;
+                                      });
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.color_lens,
+                                    ),
+                                    onPressed: () async {
+                                      var result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return NoteColorDialog(
+                                            noteColor: null,
+                                          );
+                                        }
+                                      );
 
-                                  scaffoldKey.currentState.removeCurrentSnackBar();
-                                  scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                      content: Text(locales.note_delete_snackbar),
-                                      behavior: SnackBarBehavior.floating,
-                                      action: SnackBarAction(
-                                        label: locales.undo,
+                                      if(result != null) {
+                                        for(int i = 0; i < selectionList.length; i++) {
+                                          await NoteHelper().update(
+                                            noteList.firstWhere((note) => note == selectionList[i])
+                                                .copyWith(color: result),
+                                          );
+                                        }
+
+                                        List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                        setState(() {
+                                          noteList = list;
+                                          selectionList.clear();
+                                          isSelectorVisible = false;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ) : Container()
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_outline,
+                          ),
+                          onPressed: () async {
+                            if(currentView == NotesReturnMode.ARCHIVED) {
+                              List<Note> noteBackup = List.from(selectionList);
+
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(isDeleted: 1, isStarred: 0),
+                                );
+                              }
+                                            
+                              selectionList.clear();
+
+                              noteList.forEach((item) {
+                                item.isSelected = false;
+                              });
+
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+
+                              setState(() {
+                                noteList = list;
+                                isSelectorVisible = false;
+                              });
+
+                              scaffoldKey.currentState.removeCurrentSnackBar();
+                              scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text(locales.note_delete_snackbar),
+                                  action: SnackBarAction(
+                                    label: locales.undo,
+                                    onPressed: () async {
+                                      for(int i = 0; i < noteBackup.length; i++) {
+                                        await NoteHelper().insert(noteBackup[i]
+                                            .copyWith(isDeleted: 0));
+                                      }
+
+                                      List<Note> list =
+                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      setState(() => noteList = list);
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else if(currentView == NotesReturnMode.DELETED) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)
+                                    ),
+                                    title: Text("Delete selected notes?"),
+                                    content: Text("Once the notes are deleted from here you can't restore them.\nAre you sure you want to continue?"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text(locales.cancel),
+                                        onPressed: () => Navigator.pop(context),
+                                        textColor: appInfo.mainColor,
+                                      ),
+                                      FlatButton(
+                                        child: Text(locales.confirm),
+                                        color: appInfo.mainColor,
+                                        textColor: Theme.of(context).scaffoldBackgroundColor,
                                         onPressed: () async {
-                                          for(int i = 0; i < noteBackup.length; i++) {
-                                            await NoteHelper().insert(noteBackup[i]
-                                                .copyWith(isDeleted: 0));
+                                          Navigator.pop(context);
+
+                                          for(int i = 0; i < selectionList.length; i++) {
+                                            await NoteHelper().delete(selectionList[i].id);
                                           }
 
                                           List<Note> list =
-                                              await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                              await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
                                           setState(() => noteList = list);
+
+                                          noteList.forEach((item) {
+                                            item.isSelected = false;
+                                          });
+
+                                          setState(() {
+                                            selectionList.clear();
+                                            isSelectorVisible = false;
+                                          });
                                         },
                                       ),
-                                    ),
+                                    ],
                                   );
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.archive,
-                                ),
-                                onPressed: () async {
-                                  List<Note> noteBackup = List.from(selectionList);
+                                }
+                              );
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.settings_backup_restore,
+                          ),
+                          onPressed: () async {
+                            if(currentView == NotesReturnMode.ARCHIVED) {
+                              List<Note> noteBackup = List.from(selectionList);
 
-                                  for(int i = 0; i < selectionList.length; i++) {
-                                    await NoteHelper().update(
-                                      noteList.firstWhere((note) => note == selectionList[i])
-                                          .copyWith(isArchived: 1),
-                                    );
-                                  }
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(isArchived: 0),
+                                );
+                              }
                                           
-                                  selectionList.clear();
+                              selectionList.clear();
 
-                                  noteList.forEach((item) {
-                                    item.isSelected = false;
-                                  });
+                              noteList.forEach((item) {
+                                item.isSelected = false;
+                              });
 
-                                  List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
 
-                                  setState(() {
-                                    noteList = list;
-                                    isSelectorVisible = false;
-                                  });
+                              setState(() {
+                                noteList = list;
+                                isSelectorVisible = false;
+                              });
 
-                                  scaffoldKey.currentState.removeCurrentSnackBar();
-                                  scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                      content: Text(locales.note_delete_snackbar),
-                                      behavior: SnackBarBehavior.floating,
-                                      action: SnackBarAction(
-                                        label: locales.undo,
-                                        onPressed: () async {
-                                          for(int i = 0; i < noteBackup.length; i++) {
-                                            await NoteHelper().insert(noteBackup[i]
-                                                .copyWith(isArchived: 0));
-                                          }
+                              scaffoldKey.currentState.removeCurrentSnackBar();
+                              scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text("Notes removed from archived"),
+                                  action: SnackBarAction(
+                                    label: locales.undo,
+                                    onPressed: () async {
+                                      for(int i = 0; i < noteBackup.length; i++) {
+                                        await NoteHelper().insert(noteBackup[i]
+                                            .copyWith(isArchived: 1));
+                                      }
 
-                                          List<Note> list =
-                                              await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                                          setState(() => noteList = list);
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                      List<Note> list =
+                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      setState(() => noteList = list);
+                                    },
+                                  ),
+                                ),
+                              );
+                            } else if(currentView == NotesReturnMode.DELETED) {
+                              List<Note> noteBackup = List.from(selectionList);
+
+                              for(int i = 0; i < selectionList.length; i++) {
+                                await NoteHelper().update(
+                                  noteList.firstWhere((note) => note == selectionList[i])
+                                      .copyWith(isDeleted: 0),
+                                );
+                              }
+                                          
+                              selectionList.clear();
+
+                              noteList.forEach((item) {
+                                item.isSelected = false;
+                              });
+
+                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+
+                              setState(() {
+                                noteList = list;
+                                isSelectorVisible = false;
+                              });
+
+                              scaffoldKey.currentState.removeCurrentSnackBar();
+                              scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text("Notes restored"),
+                                  action: SnackBarAction(
+                                    label: locales.undo,
+                                    onPressed: () async {
+                                      for(int i = 0; i < noteBackup.length; i++) {
+                                        await NoteHelper().insert(noteBackup[i]
+                                            .copyWith(isDeleted: 1));
+                                      }
+
+                                      List<Note> list =
+                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      setState(() => noteList = list);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        ),
+                        (
+                          currentView == NotesReturnMode.ARCHIVED ?
                               PopupMenuButton(
                                 icon: Icon(
                                   Icons.more_vert,
@@ -438,7 +980,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             scaffoldKey.currentState.showSnackBar(
                                               SnackBar(
                                                 content: Text(locales.done),
-                                                behavior: SnackBarBehavior.floating,
                                                 elevation: 3,
                                               )
                                             );
@@ -504,170 +1045,139 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     ) : null),
                                   ];
                                 },
-                              ),
-                            ],
-                          ),
+                              ) : Container()
                         ),
-                      ) :
-                      Card(
-                        elevation: 1.5,
-                        margin: EdgeInsets.fromLTRB(16, 4 + MediaQuery.of(context).padding.top, 16, 4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
+                      ],
+                    ),
+                  ),
+                ) :
+                Card(
+                  elevation: 1.5,
+                  margin: EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 60,
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.menu),
+                          onPressed: () async {
+                            scaffoldKey.currentState.openDrawer();
+                          },
                         ),
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(10),
-                          onTap: () => _searchNoteCaller(context, noteList),
-                          child: Container(
-                            padding: EdgeInsets.only(left: 20, right: 4),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  currentView == NotesReturnMode.NORMAL ?
-                                      locales.searchNotesRoute_searchbar :
-                                      currentView == NotesReturnMode.DELETED ?
-                                          "Deleted notes" :
-                                          currentView == NotesReturnMode.ARCHIVED ?
-                                              "Archived notes" :
-                                              locales.searchNotesRoute_searchbar,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Theme.of(context).textTheme.title.color
-                                        .withAlpha(120)
-                                  ),
-                                ),
-                                Spacer(),
-                                IconButton(
-                                  icon: appInfo.isGridView
-                                      ? Icon(Icons.view_agenda)
-                                      : Icon(Icons.grid_on),
-                                  onPressed: () async {
-                                    if(controller.status == AnimationStatus.completed) {
-                                      await controller.animateTo(0);
-                                      appInfo.isGridView = !appInfo.isGridView;
-                                      await controller.animateTo(1);
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.view_carousel),
-                                  onPressed: () async {
-                                    if(controller.status == AnimationStatus.completed) {
-                                      var result = await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          NotesReturnMode value = currentView;
-
-                                          return AlertDialog(
-                                            title: Text("Select view mode"),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12)
-                                            ),
-                                            contentPadding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                RadioListTile(
-                                                  title: Text("Normal view"),
-                                                  groupValue: value,
-                                                  value: NotesReturnMode.NORMAL,
-                                                  onChanged: (sort) => Navigator.pop(context, sort),
-                                                  activeColor: appInfo.mainColor,
-                                                ),
-                                                RadioListTile(
-                                                  title: Text("Deleted notes"),
-                                                  groupValue: value,
-                                                  value: NotesReturnMode.DELETED,
-                                                  onChanged: (sort) => Navigator.pop(context, sort),
-                                                  activeColor: appInfo.mainColor,
-                                                ),
-                                                RadioListTile(
-                                                  title: Text("Archived notes"),
-                                                  groupValue: value,
-                                                  value: NotesReturnMode.ARCHIVED,
-                                                  onChanged: (sort) => Navigator.pop(context, sort),
-                                                  activeColor: appInfo.mainColor,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      );
-
-                                      if(result != null && result != currentView) {
-                                        await controller.animateTo(0);
-                                        currentView = result;
-                                        List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                                        setState(() => noteList = list);
-                                        await controller.animateTo(1);
-                                      }
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  iconSize: 24.0,
-                                  onPressed: () =>
-                                      Navigator.push(context, PageRouteBuilder(
-                                        opaque: false,
-                                        transitionDuration: Duration(milliseconds: 200),
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: UserInfoDialog(
-                                              onSortSwitchChange: (value) async {
-                                                SortMode sortMode;
-                                                
-                                                if(value) {
-                                                  sortMode = SortMode.DATE;
-                                                } else {
-                                                  sortMode = SortMode.ID;
-                                                }
-
-                                                await controller.animateTo(0);
-                                                appInfo.sortMode = sortMode;
-                                                List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                                                setState(() => noteList = list);
-                                                await controller.animateTo(1);
-                                              },
-                                              onSettingsTileClick: () => _settingsCaller(context),
-                                            ),
-                                          );
-                                        }
-                                      )),
-                                  icon: Hero(
-                                    createRectTween: (begin, end) {
-                                      return MaterialRectCenterArcTween(begin: begin, end: end);
-                                    },
-                                    tag: "userimage",
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: CircleAvatar(
-                                        backgroundColor: appInfo.mainColor,
-                                        child: appInfo.userImagePath == null
-                                            ? Icon(
-                                                Icons.account_circle,
-                                                color: Colors.white,
-                                                size: 28.0,
-                                              )
-                                            : null,
-                                        backgroundImage: appInfo.userImagePath == null
-                                            ? null
-                                            : FileImage(File(appInfo.userImagePath)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Text(
+                            currentView == NotesReturnMode.DELETED ?
+                                "Trash" :
+                                "Archive",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).textTheme.title.color
+                                  .withAlpha(220)
                             ),
                           ),
                         ),
-                      ),
-                )
-              ),
-            ),
-          ),
+                        Spacer(),
+                        (
+                          currentView == NotesReturnMode.DELETED ?
+                              PopupMenuButton(
+                                onSelected: (value) {
+                                  if(value == 0) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          title: Text("Empty trash?"),
+                                          content: Text("Once the notes are deleted from here you can't restore them.\nAre you sure you want to continue?"),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text(locales.cancel),
+                                              onPressed: () => Navigator.pop(context),
+                                              textColor: appInfo.mainColor,
+                                            ),
+                                            FlatButton(
+                                              child: Text(locales.confirm),
+                                              color: appInfo.mainColor,
+                                              textColor: Theme.of(context).scaffoldBackgroundColor,
+                                              onPressed: () async {
+                                                Navigator.pop(context);
+
+                                                for(int i = 0; i < noteList.length; i++) {
+                                                  await NoteHelper().delete(noteList[i].id);
+                                                }
+
+                                                List<Note> list =
+                                                    await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
+                                                setState(() => noteList = list);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }
+                                },
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      enabled: noteList.length != 0,
+                                      value: 0,
+                                      child: Text("Empty trash"),
+                                    ),
+                                  ];
+                                },
+                              ) :
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: appInfo.isGridView
+                                        ? Icon(Icons.view_agenda)
+                                        : Icon(Icons.grid_on),
+                                    onPressed: () async {
+                                      if(controller.status == AnimationStatus.completed) {
+                                        await controller.animateTo(0);
+                                        appInfo.isGridView = !appInfo.isGridView;
+                                        await controller.animateTo(1);
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.search),
+                                    onPressed: () async {
+                                      _searchNoteCaller(
+                                        context,
+                                        await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL),
+                                        Theme.of(context).cardColor
+                                      );
+                                    }
+                                  ),
+                                ],
+                              )
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+          )
+        ),
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).cardColor,
+      key: scaffoldKey,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          (currentView == NotesReturnMode.NORMAL ? normalHeader : altHeader),
           noteList.length != 0 ? SliverList(
             delegate: SliverChildListDelegate.fixed(
               [
@@ -700,14 +1210,23 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.close,
-                      size: 50.0,
-                      color: HSLColor.fromColor(
-                              Theme.of(context).textTheme.title.color)
-                          .withAlpha(0.4)
-                          .toColor()),
+                  Icon(
+                    currentView == NotesReturnMode.DELETED ?
+                        Icons.delete_outline :
+                        currentView == NotesReturnMode.ARCHIVED ?
+                            Icons.archive :
+                            Icons.note,
+                    size: 50.0,
+                    color: HSLColor.fromColor(
+                        Theme.of(context).textTheme.title.color)
+                        .withAlpha(0.4)
+                        .toColor()),
                   Text(
-                    locales.notesMainPageRoute_noNotes,
+                    currentView == NotesReturnMode.DELETED ?
+                    "Your trash is empty" :
+                    currentView == NotesReturnMode.ARCHIVED ?
+                        "You don't have any notes in the archive" :
+                        locales.notesMainPageRoute_noNotes,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
@@ -723,7 +1242,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           )
         ],
       ),
-      bottomNavigationBar: bottomBar,
+      bottomNavigationBar: currentView == NotesReturnMode.NORMAL ? bottomBar : null,
+      drawer: drawer,
     );
   }
 
@@ -769,6 +1289,165 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget get drawer {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Theme.of(context).scaffoldBackgroundColor
+      ),
+      child: Drawer(
+        child: SafeArea(
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: <Widget>[
+              Container(
+                height: 80,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Image(
+                        image: AssetImage('assets/notes_orange.png'),
+                        width: 36,
+                        height: 36,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Text(
+                      "PotatoNotes",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: currentView == NotesReturnMode.NORMAL ? appInfo.mainColor.withAlpha(80) : null,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(60),
+                    topRight: Radius.circular(60),
+                  )
+                ),
+                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
+                child: ListTile(
+                  leading: Icon(Icons.note),
+                  title: Text(locales.notes),
+                  selected: currentView == NotesReturnMode.NORMAL,
+                  onTap: () async {
+                    if(currentView != NotesReturnMode.NORMAL) {
+                      currentView = NotesReturnMode.NORMAL;
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                      setState(() => noteList = list);
+                      Navigator.pop(context);
+
+                      noteList.forEach((item) {
+                        item.isSelected = false;
+                      });
+
+                      setState(() {
+                        selectionList.clear();
+                        isSelectorVisible = false;
+                      });
+
+                      Brightness systemBarsIconBrightness =
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.light
+                              : Brightness.dark;
+
+                      changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
+                    }
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: currentView == NotesReturnMode.DELETED ? appInfo.mainColor.withAlpha(80) : null,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(60),
+                    topRight: Radius.circular(60),
+                  )
+                ),
+                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
+                child: ListTile(
+                  leading: Icon(Icons.delete_outline),
+                  title: Text("Trash"),
+                  selected: currentView == NotesReturnMode.DELETED,
+                  onTap: () async {
+                    if(currentView != NotesReturnMode.DELETED) {
+                      currentView = NotesReturnMode.DELETED;
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                      setState(() => noteList = list);
+                      Navigator.pop(context);
+
+                      noteList.forEach((item) {
+                        item.isSelected = false;
+                      });
+
+                      setState(() {
+                        selectionList.clear();
+                        isSelectorVisible = false;
+                      });
+
+                      Brightness systemBarsIconBrightness =
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.light
+                              : Brightness.dark;
+
+                      changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+                    }
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: currentView == NotesReturnMode.ARCHIVED ? appInfo.mainColor.withAlpha(80) : null,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(60),
+                    topRight: Radius.circular(60),
+                  )
+                ),
+                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
+                child: ListTile(
+                  leading: Icon(Icons.archive),
+                  title: Text("Archive"),
+                  selected: currentView == NotesReturnMode.ARCHIVED,
+                  onTap: () async {
+                    if(currentView != NotesReturnMode.ARCHIVED) {
+                      currentView = NotesReturnMode.ARCHIVED;
+                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                      setState(() => noteList = list);
+                      Navigator.pop(context);
+
+                      noteList.forEach((item) {
+                        item.isSelected = false;
+                      });
+
+                      setState(() {
+                        selectionList.clear();
+                        isSelectorVisible = false;
+                      });
+
+                      Brightness systemBarsIconBrightness =
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.light
+                              : Brightness.dark;
+
+                      changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
       ),
     );
   }
@@ -1054,7 +1733,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     setState(() => noteList = list);
   }
 
-  void _searchNoteCaller(BuildContext context, List<Note> noteList) async {
+  void _searchNoteCaller(BuildContext context, List<Note> noteList, Color returnBarsColor) async {
     SearchFiltersProvider searchFilters =
         Provider.of<SearchFiltersProvider>(context);
 
@@ -1075,7 +1754,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             : Brightness.dark;
 
     changeSystemBarsColors(
-        Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
+        returnBarsColor, systemBarsIconBrightness);
   }
 
   void _settingsCaller(BuildContext context) async {
@@ -1341,7 +2020,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      noteList[index].title,
+                      noteList[index].title ?? "",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
                       style: TextStyle(
@@ -1369,7 +2048,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                           children: generateListWidgets(index, oneSideOnly),
                         )
                       : Text(
-                          noteList[index].content,
+                          noteList[index].content ?? "",
                           overflow: TextOverflow.ellipsis,
                           textWidthBasis: TextWidthBasis.parent,
                           maxLines: 11,
