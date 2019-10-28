@@ -1461,28 +1461,18 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
       pinnedNotes.add(
         Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.star,
-                  size: 12.0,
-                  color: HSLColor.fromColor(
-                          Theme.of(context).textTheme.title.color)
-                      .withAlpha(0.4)
-                      .toColor(),
-                ),
-                Text(
-                  "  " + locales.notesMainPageRoute_starred,
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      color: HSLColor.fromColor(
-                              Theme.of(context).textTheme.title.color)
-                          .withAlpha(0.4)
-                          .toColor()),
-                ),
-              ],
-            )),
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Text(
+            locales.notesMainPageRoute_starred,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: HSLColor.fromColor(
+                  Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor()
+            ),
+          ),
+        )
       );
 
       for (int i = 0; i < noteList.length; i++) {
@@ -1500,20 +1490,19 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       }
 
       pinnedNotes.add(
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(top: 10, bottom: 10, left: 100, right: 100),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                  .withAlpha(0.2)
-                  .toColor(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Text(
+            "Other notes",
+            style: TextStyle(
+              fontSize: 14.0,
+              color: HSLColor.fromColor(
+                  Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor()
             ),
-            width: MediaQuery.of(context).size.width - 200,
-            height: 2,
           ),
-        ),
+        )
       );
 
       return <Widget>[
@@ -1543,28 +1532,18 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
       pinnedWidgets.add(
         Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.star,
-                  size: 12.0,
-                  color: HSLColor.fromColor(
-                          Theme.of(context).textTheme.title.color)
-                      .withAlpha(0.4)
-                      .toColor(),
-                ),
-                Text(
-                  "  " + locales.notesMainPageRoute_starred,
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      color: HSLColor.fromColor(
-                              Theme.of(context).textTheme.title.color)
-                          .withAlpha(0.4)
-                          .toColor()),
-                ),
-              ],
-            )),
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Text(
+            locales.notesMainPageRoute_starred,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: HSLColor.fromColor(
+                  Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor()
+            ),
+          ),
+        )
       );
 
       for (int i = 0; i < noteList.length; i++) {
@@ -1587,20 +1566,19 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       if (normalGrid != null) normalWidgets.add(normalGrid);
 
       pinnedWidgets.add(
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(top: 10, bottom: 10, left: 100, right: 100),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
-                  .withAlpha(0.2)
-                  .toColor(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: Text(
+            "Other notes",
+            style: TextStyle(
+              fontSize: 14.0,
+              color: HSLColor.fromColor(
+                  Theme.of(context).textTheme.title.color)
+                  .withAlpha(0.4)
+                  .toColor()
             ),
-            width: MediaQuery.of(context).size.width - 200,
-            height: 2,
           ),
-        ),
+        )
       );
 
       return <Widget>[
