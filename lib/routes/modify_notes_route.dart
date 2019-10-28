@@ -21,8 +21,9 @@ List<int> reminderList = List<int>();
 class ModifyNotesRoute extends StatefulWidget {
   final Note note;
   final String heroIndex;
+  final bool autofocus;
 
-  ModifyNotesRoute({@required this.note, @required this.heroIndex});
+  ModifyNotesRoute({@required this.note, @required this.heroIndex, this.autofocus = false});
 
   @override
   _ModifyNotesState createState() => new _ModifyNotesState(note);
@@ -80,6 +81,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   bool firstRun = true;
   Brightness systemBarsIconBrightness;
+
+  FocusNode contentNode = FocusNode();
 
   void noteIdInit() async {
     noteId = noteId == null ? await noteIdSearcher() : noteId;
@@ -169,6 +172,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           noteColor == null
               ? systemBarsIconBrightness
               : getBarsColorFromNoteColor());
+      
+      if(widget.autofocus)
+          FocusScope.of(context).requestFocus(contentNode);
+      
       firstRun = false;
     }
 
@@ -506,6 +513,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
                           controller: contentController,
+                          focusNode: contentNode,
                           decoration: InputDecoration(
                               hintText: locales.modifyNotesRoute_content,
                               border: InputBorder.none),
@@ -738,7 +746,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   bool saveAndPop(bool stopDefaultButtonEvent) {
-    print(noteListParseString);
     if (((noteContent != "" || noteTitle != "") && noteIsList == 0) ||
         (noteIsList == 1 && noteListParseString != null)) {
       asyncExecutor();

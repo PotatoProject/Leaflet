@@ -41,6 +41,8 @@ class _SearchNotesState extends State<SearchNotesRoute> {
 
   bool firstRun = true;
 
+  FocusNode mainNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     locales = AppLocalizations.of(context);
@@ -53,6 +55,8 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     if(firstRun) {
       changeSystemBarsColors(
           Theme.of(context).cardColor, systemBarsIconBrightness);
+      
+      FocusScope.of(context).requestFocus(mainNode);
 
       firstRun = false;
     }
@@ -95,6 +99,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                                   fontSize: 18
                                 ),
                             ),
+                            focusNode: mainNode,
                             maxLines: 1,
                             onChanged: (text) {
                               setState(() {
