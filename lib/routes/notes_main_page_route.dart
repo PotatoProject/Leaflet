@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -272,7 +271,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     .copyWith(isDeleted: 1, isStarred: 0),
                               );
                             }
-                                          
+                            
+                            bool multipleItems = selectionList.length > 1;
                             selectionList.clear();
 
                             noteList.forEach((item) {
@@ -289,7 +289,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             scaffoldKey.currentState.removeCurrentSnackBar();
                             scaffoldKey.currentState.showSnackBar(
                               SnackBar(
-                                content: Text(locales.note_delete_snackbar),
+                                content: Text(
+                                  multipleItems ?
+                                      locales.notes_delete_snackbar : 
+                                      locales.note_delete_snackbar
+                                ),
                                 action: SnackBarAction(
                                   label: locales.undo,
                                   onPressed: () async {
@@ -320,7 +324,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     .copyWith(isArchived: 1, isStarred: 0),
                               );
                             }
-                                          
+                            
+                            bool multipleItems = selectionList.length > 1;
                             selectionList.clear();
 
                             noteList.forEach((item) {
@@ -337,7 +342,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             scaffoldKey.currentState.removeCurrentSnackBar();
                             scaffoldKey.currentState.showSnackBar(
                               SnackBar(
-                                content: Text(locales.note_delete_snackbar),
+                                content: Text(
+                                  multipleItems ?
+                                      locales.notes_archive_snackbar : 
+                                      locales.note_archive_snackbar
+                                ),
                                 action: SnackBarAction(
                                   label: locales.undo,
                                   onPressed: () async {
@@ -745,7 +754,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               scaffoldKey.currentState.removeCurrentSnackBar();
                               scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
-                                  content: Text(locales.note_delete_snackbar),
+                                  content: Text(noteBackup.length > 1 ?
+                                      locales.notes_delete_snackbar :
+                                      locales.note_delete_snackbar),
                                   action: SnackBarAction(
                                     label: locales.undo,
                                     onPressed: () async {
@@ -769,8 +780,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)
                                     ),
-                                    title: Text("Delete selected notes?"),
-                                    content: Text("Once the notes are deleted from here you can't restore them.\nAre you sure you want to continue?"),
+                                    title: Text(locales.notesMainPageRoute_note_deleteDialog_title),
+                                    content: Text(locales.notesMainPageRoute_note_deleteDialog_content),
                                     actions: <Widget>[
                                       FlatButton(
                                         child: Text(locales.cancel),
@@ -840,7 +851,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               scaffoldKey.currentState.removeCurrentSnackBar();
                               scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
-                                  content: Text("Notes removed from archived"),
+                                  content: Text(noteBackup.length > 1 ?
+                                      locales.notes_removeFromArchive_snackbar :
+                                      locales.note_removeFromArchive_snackbar),
                                   action: SnackBarAction(
                                     label: locales.undo,
                                     onPressed: () async {
@@ -882,7 +895,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               scaffoldKey.currentState.removeCurrentSnackBar();
                               scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
-                                  content: Text("Notes restored"),
+                                  content: Text(noteBackup.length > 1 ?
+                                      locales.notes_restore_snackbar :
+                                      locales.note_restore_snackbar),
                                   action: SnackBarAction(
                                     label: locales.undo,
                                     onPressed: () async {
@@ -1073,8 +1088,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                           padding: EdgeInsets.only(left: 4),
                           child: Text(
                             currentView == NotesReturnMode.DELETED ?
-                                "Trash" :
-                                "Archive",
+                                locales.trash :
+                                locales.archive,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -1096,8 +1111,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12)
                                           ),
-                                          title: Text("Empty trash?"),
-                                          content: Text("Once the notes are deleted from here you can't restore them.\nAre you sure you want to continue?"),
+                                          title: Text(locales.notesMainPageRoute_note_emptyTrash_title),
+                                          content: Text(locales.notesMainPageRoute_note_emptyTrash_content),
                                           actions: <Widget>[
                                             FlatButton(
                                               child: Text(locales.cancel),
@@ -1131,7 +1146,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     PopupMenuItem(
                                       enabled: noteList.length != 0,
                                       value: 0,
-                                      child: Text("Empty trash"),
+                                      child: Text(locales.note_emptryTrash),
                                     ),
                                   ];
                                 },
@@ -1223,10 +1238,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                         .toColor()),
                   Text(
                     currentView == NotesReturnMode.DELETED ?
-                    "Your trash is empty" :
-                    currentView == NotesReturnMode.ARCHIVED ?
-                        "You don't have any notes in the archive" :
-                        locales.notesMainPageRoute_noNotes,
+                        locales.notesMainPageRoute_emptyTrash :
+                        currentView == NotesReturnMode.ARCHIVED ?
+                            locales.notesMainPageRoute_emptyArchive :
+                            locales.notesMainPageRoute_noNotes,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
@@ -1266,7 +1281,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           child: Row(
             children: <Widget>[
               Text(
-                "Write a note...",
+                locales.notesMainPageRoute_writeNote,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -1378,7 +1393,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
                 child: ListTile(
                   leading: Icon(Icons.delete_outline),
-                  title: Text("Trash"),
+                  title: Text(locales.trash),
                   selected: currentView == NotesReturnMode.DELETED,
                   onTap: () async {
                     if(currentView != NotesReturnMode.DELETED) {
@@ -1417,7 +1432,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
                 child: ListTile(
                   leading: Icon(Icons.archive),
-                  title: Text("Archive"),
+                  title: Text(locales.archive),
                   selected: currentView == NotesReturnMode.ARCHIVED,
                   onTap: () async {
                     if(currentView != NotesReturnMode.ARCHIVED) {
@@ -1493,7 +1508,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
           child: Text(
-            "Other notes",
+            locales.notesMainPageRoute_other,
             style: TextStyle(
               fontSize: 14.0,
               color: HSLColor.fromColor(
@@ -1569,7 +1584,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
           child: Text(
-            "Other notes",
+            locales.notesMainPageRoute_other,
             style: TextStyle(
               fontSize: 14.0,
               color: HSLColor.fromColor(
