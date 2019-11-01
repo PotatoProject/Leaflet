@@ -475,7 +475,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "note_emptryTrash": "Emptry trash",
+  "note_emptryTrash": "Empty trash",
   "@note_emptryTrash": {
     "type": "text",
     "placeholders": {}

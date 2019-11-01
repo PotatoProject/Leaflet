@@ -1,7 +1,17 @@
 {
-    "@@last_modified": "2019-10-08T19:36:55.092580",
+    "@@last_modified": "2019-11-01T10:23:22.504582",
     "notes": "Catatan",
     "@notes": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "trash": "Sampah",
+    "@trash": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "archive": "Arsip",
+    "@archive": {
         "type": "text",
         "placeholders": {}
     },
@@ -65,14 +75,28 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_addButtonTooltip": "Tambahkan catatan baru",
-    "@notesMainPageRoute_addButtonTooltip": {
-        "description": "Tooltip that is shown when long pressing the FAB",
+    "notesMainPageRoute_emptyTrash": "Kotak sampah anda kosong",
+    "@notesMainPageRoute_emptyTrash": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_emptyArchive": "Anda tidak memiliki cataran dalam arsip",
+    "@notesMainPageRoute_emptyArchive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_writeNote": "Tulis sebuah catatan",
+    "@notesMainPageRoute_writeNote": {
         "type": "text",
         "placeholders": {}
     },
     "notesMainPageRoute_starred": "Catatan berbintang",
     "@notesMainPageRoute_starred": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_other": "Catatan lain",
+    "@notesMainPageRoute_other": {
         "type": "text",
         "placeholders": {}
     },
@@ -86,33 +110,48 @@
         "type": "text",
         "placeholders": {}
     },
+    "notesMainPageRoute_note_deleteDialog_title": "Hapus catatan terpilih?",
+    "@notesMainPageRoute_note_deleteDialog_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_deleteDialog_content": "Setelah catatan terhapus dari sini, anda tak dapat memulihkannya.\nApakah anda yakin untuk melanjutkan?",
+    "@notesMainPageRoute_note_deleteDialog_content": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_emptyTrash_title": "Bersihkan kotak sampah?",
+    "@notesMainPageRoute_note_emptyTrash_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_emptyTrash_content": "Setelah catatan terhapus dari sini, anda tak dapat memulihkannya.\nApakah anda yakin untuk melanjutkan?",
+    "@notesMainPageRoute_note_emptyTrash_content": {
+        "type": "text",
+        "placeholders": {}
+    },
     "notesMainPageRoute_note_list_selectedEntries": " entri terpilih",
     "@notesMainPageRoute_note_list_selectedEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_user_info": "Info pengguna",
-    "@notesMainPageRoute_user_info": {
-        "type": "text",
-        "placeholders": {}
-    },
-    "notesMainPageRoute_user_avatar_change": "Ubah avatar",
-    "@notesMainPageRoute_user_avatar_change": {
-        "type": "text",
-        "placeholders": {}
-    },
-    "notesMainPageRoute_user_avatar_remove": "Hapus avatar",
-    "@notesMainPageRoute_user_avatar_remove": {
-        "type": "text",
-        "placeholders": {}
-    },
-    "notesMainPageRoute_user_name_change": "Ganti nama pengguna",
-    "@notesMainPageRoute_user_name_change": {
-        "type": "text",
-        "placeholders": {}
-    },
     "notesMainPageRoute_pinnedNote": "Catatan tersemat",
     "@notesMainPageRoute_pinnedNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_sortByDate": "Urutkan catatan berdasarkan tanggal",
+    "@userInfoRoute_sortByDate": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_avatar_change": "Ubah avatar",
+    "@userInfoRoute_avatar_change": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_avatar_remove": "Hapus avatar",
+    "@userInfoRoute_avatar_remove": {
         "type": "text",
         "placeholders": {}
     },
@@ -329,8 +368,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_regenDbEntries": "Memperbarui entri database",
-    "@settingsRoute_backupAndRestore_restore_regenDbEntries": {
+    "settingsRoute_backupAndRestore_regenDbEntries": "Memperbarui entri database",
+    "@settingsRoute_backupAndRestore_regenDbEntries": {
         "type": "text",
         "placeholders": {}
     },
@@ -436,6 +475,11 @@
         "type": "text",
         "placeholders": {}
     },
+    "note_emptryTrash": "Bersihkan sampah",
+    "@note_emptryTrash": {
+        "type": "text",
+        "placeholders": {}
+    },
     "note_delete": "Hapus",
     "@note_delete": {
         "description": "String for deleting a note",
@@ -448,6 +492,46 @@
         "type": "text",
         "placeholders": {}
     },
+    "notes_delete_snackbar": "Catatan dihapus",
+    "@notes_delete_snackbar": {
+        "description": "Appears on snackbar upon notes deletion",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_restore_snackbar": "Catatan dipulihkan",
+    "@note_restore_snackbar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_restore_snackbar": "Catatan dipulihkan",
+    "@notes_restore_snackbar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_archive_snackbar": "Catatan telah diarsipkan",
+    "@note_archive_snackbar": {
+        "description": "Appears on snackbar upon note archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_archive_snackbar": "Catatan telah diarsipkan",
+    "@notes_archive_snackbar": {
+        "description": "Appears on snackbar upon notes archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_removeFromArchive_snackbar": "Catatan dihilangkan dari arsip",
+    "@note_removeFromArchive_snackbar": {
+        "description": "Appears on snackbar upon note archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_removeFromArchive_snackbar": "Catatan dihilangkan dari arsip",
+    "@notes_removeFromArchive_snackbar": {
+        "description": "Appears on snackbar upon notes archivation",
+        "type": "text",
+        "placeholders": {}
+    },
     "note_star": "Bintangi",
     "@note_star": {
         "description": "String for starring a note",
@@ -457,11 +541,6 @@
     "note_unstar": "Batal Bintangi",
     "@note_unstar": {
         "description": "String for unstarring a note",
-        "type": "text",
-        "placeholders": {}
-    },
-    "note_locked_options": "Catatan terkunci, gunakan opsi pada layar catatan",
-    "@note_locked_options": {
         "type": "text",
         "placeholders": {}
     },
@@ -480,6 +559,11 @@
     "note_exportLocation": "Catatan diekspor pada",
     "@note_exportLocation": {
         "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_lockedOptions": "Catatan terkunci, gunakan opsi pada layar catatan",
+    "@note_lockedOptions": {
         "type": "text",
         "placeholders": {}
     },

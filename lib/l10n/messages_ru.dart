@@ -1,0 +1,140 @@
+// DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
+// This is a library that provides messages for a ru locale. All the
+// messages from the main program should be duplicated here with the same
+// function name.
+
+// Ignore issues from commonly used lints in this file.
+// ignore_for_file:unnecessary_brace_in_string_interps, unnecessary_new
+// ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
+// ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
+// ignore_for_file:unused_import, file_names
+
+import 'package:intl/intl.dart';
+import 'package:intl/message_lookup_by_library.dart';
+
+final messages = new MessageLookup();
+
+typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
+
+class MessageLookup extends MessageLookupByLibrary {
+  String get localeName => 'ru';
+
+  static m0(method, maxLength) => "длина ${method} не может превышать ${maxLength}";
+
+  static m1(method, minLength) => "длина ${method} не может быть меньше ${minLength}";
+
+  static m2(path) => "Бэкап расположен в: ${path}";
+
+  final messages = _notInlinedMessages(_notInlinedMessages);
+  static _notInlinedMessages(_) => <String, Function> {
+    "archive" : MessageLookupByLibrary.simpleMessage("Архив"),
+    "black" : MessageLookupByLibrary.simpleMessage("Черная"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("Отмена"),
+    "chooseAction" : MessageLookupByLibrary.simpleMessage("Выберите действие"),
+    "confirm" : MessageLookupByLibrary.simpleMessage("Подтвердить"),
+    "dark" : MessageLookupByLibrary.simpleMessage("Темная"),
+    "done" : MessageLookupByLibrary.simpleMessage("Готово"),
+    "light" : MessageLookupByLibrary.simpleMessage("Светлая"),
+    "modifyNotesRoute_color_change" : MessageLookupByLibrary.simpleMessage("Изменить цвет записки"),
+    "modifyNotesRoute_color_dialogTitle" : MessageLookupByLibrary.simpleMessage("Цвет записок"),
+    "modifyNotesRoute_content" : MessageLookupByLibrary.simpleMessage("Содержимое"),
+    "modifyNotesRoute_image" : MessageLookupByLibrary.simpleMessage("Изображение"),
+    "modifyNotesRoute_image_add" : MessageLookupByLibrary.simpleMessage("Добавить изображение"),
+    "modifyNotesRoute_image_remove" : MessageLookupByLibrary.simpleMessage("Удалить изображение"),
+    "modifyNotesRoute_image_update" : MessageLookupByLibrary.simpleMessage("Обновить изображение"),
+    "modifyNotesRoute_list" : MessageLookupByLibrary.simpleMessage("Список"),
+    "modifyNotesRoute_list_entry" : MessageLookupByLibrary.simpleMessage("Запись"),
+    "modifyNotesRoute_list_selectedEntries" : MessageLookupByLibrary.simpleMessage(" записей выделено"),
+    "modifyNotesRoute_reminder" : MessageLookupByLibrary.simpleMessage("Напоминание"),
+    "modifyNotesRoute_reminder_add" : MessageLookupByLibrary.simpleMessage("Добавить напоминание"),
+    "modifyNotesRoute_reminder_date" : MessageLookupByLibrary.simpleMessage("Дата"),
+    "modifyNotesRoute_reminder_time" : MessageLookupByLibrary.simpleMessage("Время"),
+    "modifyNotesRoute_reminder_update" : MessageLookupByLibrary.simpleMessage("Обновить напоминание"),
+    "modifyNotesRoute_security_dialog_lengthExceed" : m0,
+    "modifyNotesRoute_security_dialog_lengthShort" : m1,
+    "modifyNotesRoute_security_dialog_titlePassword" : MessageLookupByLibrary.simpleMessage("Установить или обновить пароль"),
+    "modifyNotesRoute_security_dialog_titlePin" : MessageLookupByLibrary.simpleMessage("Установить или обновить PIN"),
+    "modifyNotesRoute_security_dialog_valid" : MessageLookupByLibrary.simpleMessage(" верно"),
+    "modifyNotesRoute_security_hideContent" : MessageLookupByLibrary.simpleMessage("Прятать содержание заметок на главной"),
+    "modifyNotesRoute_security_password" : MessageLookupByLibrary.simpleMessage("Пароль"),
+    "modifyNotesRoute_security_pin" : MessageLookupByLibrary.simpleMessage("PIN-код"),
+    "modifyNotesRoute_security_protectionText" : MessageLookupByLibrary.simpleMessage("Использовать защиту"),
+    "modifyNotesRoute_title" : MessageLookupByLibrary.simpleMessage("Заголовок"),
+    "note_archive_snackbar" : MessageLookupByLibrary.simpleMessage("Заметка перемещена в архив"),
+    "note_delete" : MessageLookupByLibrary.simpleMessage("Удалить"),
+    "note_delete_snackbar" : MessageLookupByLibrary.simpleMessage("Заметка удалена"),
+    "note_edit" : MessageLookupByLibrary.simpleMessage("Изменить"),
+    "note_emptryTrash" : MessageLookupByLibrary.simpleMessage("Очистить корзину"),
+    "note_export" : MessageLookupByLibrary.simpleMessage("Экспортировать"),
+    "note_exportLocation" : MessageLookupByLibrary.simpleMessage("Заметка экспортирована в"),
+    "note_lockedOptions" : MessageLookupByLibrary.simpleMessage("Заметка заблокирована, используйте опции на экране заметки"),
+    "note_pinToNotifs" : MessageLookupByLibrary.simpleMessage("Закрепить в уведомлениях"),
+    "note_removeFromArchive_snackbar" : MessageLookupByLibrary.simpleMessage("Заметка убрана из архива"),
+    "note_restore_snackbar" : MessageLookupByLibrary.simpleMessage("Заметка восстановлена"),
+    "note_select" : MessageLookupByLibrary.simpleMessage("Выбрать"),
+    "note_share" : MessageLookupByLibrary.simpleMessage("Поделиться"),
+    "note_star" : MessageLookupByLibrary.simpleMessage("Пометить"),
+    "note_unstar" : MessageLookupByLibrary.simpleMessage("Снять пометку"),
+    "notes" : MessageLookupByLibrary.simpleMessage("Заметки"),
+    "notesMainPageRoute_emptyArchive" : MessageLookupByLibrary.simpleMessage("У вас нет заметок в архиве"),
+    "notesMainPageRoute_emptyTrash" : MessageLookupByLibrary.simpleMessage("Корзина пуста"),
+    "notesMainPageRoute_noNotes" : MessageLookupByLibrary.simpleMessage("Заметки еще не добавлены"),
+    "notesMainPageRoute_note_deleteDialog_content" : MessageLookupByLibrary.simpleMessage("Как только заметки будут удалены отсюда, вы не можете их восстановить.\nВы уверены, что хотите продолжить?"),
+    "notesMainPageRoute_note_deleteDialog_title" : MessageLookupByLibrary.simpleMessage("Удалить выбранные заметки?"),
+    "notesMainPageRoute_note_emptyTrash_content" : MessageLookupByLibrary.simpleMessage("Как только заметки будут удалены отсюда, вы не можете их восстановить.\nВы уверены, что хотите продолжить?"),
+    "notesMainPageRoute_note_emptyTrash_title" : MessageLookupByLibrary.simpleMessage("Очистить корзину?"),
+    "notesMainPageRoute_note_hiddenContent" : MessageLookupByLibrary.simpleMessage("Содержимое скрыто"),
+    "notesMainPageRoute_note_list_selectedEntries" : MessageLookupByLibrary.simpleMessage(" записей выбрано"),
+    "notesMainPageRoute_note_remindersSet" : MessageLookupByLibrary.simpleMessage("Напоминания установлены для заметки"),
+    "notesMainPageRoute_other" : MessageLookupByLibrary.simpleMessage("Другие заметки"),
+    "notesMainPageRoute_pinnedNote" : MessageLookupByLibrary.simpleMessage("Закрепленная заметка"),
+    "notesMainPageRoute_starred" : MessageLookupByLibrary.simpleMessage("Помеченные заметки"),
+    "notesMainPageRoute_writeNote" : MessageLookupByLibrary.simpleMessage("Написать заметку"),
+    "notes_archive_snackbar" : MessageLookupByLibrary.simpleMessage("Заметки перемещены в архив"),
+    "notes_delete_snackbar" : MessageLookupByLibrary.simpleMessage("Заметки удалены"),
+    "notes_removeFromArchive_snackbar" : MessageLookupByLibrary.simpleMessage("Заметки убрана из архива"),
+    "notes_restore_snackbar" : MessageLookupByLibrary.simpleMessage("Заметки восстановлены"),
+    "remove" : MessageLookupByLibrary.simpleMessage("Удалить"),
+    "reset" : MessageLookupByLibrary.simpleMessage("Сбросить"),
+    "save" : MessageLookupByLibrary.simpleMessage("Сохранить"),
+    "searchNotesRoute_filters_case" : MessageLookupByLibrary.simpleMessage("Учитывать регистр"),
+    "searchNotesRoute_filters_color" : MessageLookupByLibrary.simpleMessage("Цветовой фильтр"),
+    "searchNotesRoute_filters_date" : MessageLookupByLibrary.simpleMessage("По дате"),
+    "searchNotesRoute_filters_title" : MessageLookupByLibrary.simpleMessage("Фильтры поиска"),
+    "searchNotesRoute_noQuery" : MessageLookupByLibrary.simpleMessage("Введите что-либо, чтобы начать поиск"),
+    "searchNotesRoute_nothingFound" : MessageLookupByLibrary.simpleMessage("Не найдено записок соответствующих критериям поиска"),
+    "searchNotesRoute_searchbar" : MessageLookupByLibrary.simpleMessage("Поиск..."),
+    "securityNoteRoute_request_password" : MessageLookupByLibrary.simpleMessage("Требуется пароль, чтобы открыть заметку"),
+    "securityNoteRoute_request_pin" : MessageLookupByLibrary.simpleMessage("Требуется ПИН, чтобы открыть заметку"),
+    "securityNoteRoute_wrong_password" : MessageLookupByLibrary.simpleMessage("Неверный пароль"),
+    "securityNoteRoute_wrong_pin" : MessageLookupByLibrary.simpleMessage("Неверный PIN-код"),
+    "settingsRoute_about" : MessageLookupByLibrary.simpleMessage("О программе"),
+    "settingsRoute_about_potatonotes" : MessageLookupByLibrary.simpleMessage("О PotatoNotes"),
+    "settingsRoute_about_potatonotes_design" : MessageLookupByLibrary.simpleMessage("Дизайн, брендинг и логотип: RshBfn"),
+    "settingsRoute_about_potatonotes_development" : MessageLookupByLibrary.simpleMessage("Разработка и поддержка: HrX03"),
+    "settingsRoute_about_sourceCode" : MessageLookupByLibrary.simpleMessage("Исходный код PotatoNotes"),
+    "settingsRoute_backupAndRestore" : MessageLookupByLibrary.simpleMessage("Бэкап и восстановление"),
+    "settingsRoute_backupAndRestore_backup" : MessageLookupByLibrary.simpleMessage("Бэкап (Экспериментальный)"),
+    "settingsRoute_backupAndRestore_backup_done" : m2,
+    "settingsRoute_backupAndRestore_regenDbEntries" : MessageLookupByLibrary.simpleMessage("Регенерировать базу данных"),
+    "settingsRoute_backupAndRestore_restore" : MessageLookupByLibrary.simpleMessage("Восстановить (Экспериментальное)"),
+    "settingsRoute_backupAndRestore_restore_fail" : MessageLookupByLibrary.simpleMessage("База данных повреждена или недействительна!"),
+    "settingsRoute_backupAndRestore_restore_success" : MessageLookupByLibrary.simpleMessage("Готово!"),
+    "settingsRoute_dev" : MessageLookupByLibrary.simpleMessage("Опции для разработчиков"),
+    "settingsRoute_dev_idLabels" : MessageLookupByLibrary.simpleMessage("Показывать id записок"),
+    "settingsRoute_gestures" : MessageLookupByLibrary.simpleMessage("Жесты"),
+    "settingsRoute_gestures_quickStar" : MessageLookupByLibrary.simpleMessage("Двойное нажатие для пометки"),
+    "settingsRoute_themes" : MessageLookupByLibrary.simpleMessage("Темы"),
+    "settingsRoute_themes_appTheme" : MessageLookupByLibrary.simpleMessage("Тема приложения"),
+    "settingsRoute_themes_customAccentColor" : MessageLookupByLibrary.simpleMessage("Пользовательский цвет"),
+    "settingsRoute_themes_followSystem" : MessageLookupByLibrary.simpleMessage("Следовать системной теме"),
+    "settingsRoute_themes_systemDarkMode" : MessageLookupByLibrary.simpleMessage("Автоматический ночной режим"),
+    "settingsRoute_themes_useCustomAccent" : MessageLookupByLibrary.simpleMessage("Использовать пользовательский акцент"),
+    "settingsRoute_title" : MessageLookupByLibrary.simpleMessage("Настройки"),
+    "trash" : MessageLookupByLibrary.simpleMessage("Корзина"),
+    "undo" : MessageLookupByLibrary.simpleMessage("Отменить"),
+    "userInfoRoute_avatar_change" : MessageLookupByLibrary.simpleMessage("Изменить аватар"),
+    "userInfoRoute_avatar_remove" : MessageLookupByLibrary.simpleMessage("Удалить аватар"),
+    "userInfoRoute_sortByDate" : MessageLookupByLibrary.simpleMessage("Сортировать заметки по дате")
+  };
+}

@@ -88,6 +88,9 @@ class AppInfoProvider extends ChangeNotifier {
     "it",
     "nl",
     "id",
+    "fr",
+    "ru",
+    "cs",
   ];
 
   set followSystemTheme(bool follow) {

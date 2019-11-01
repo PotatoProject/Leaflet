@@ -76,7 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "note_star" : MessageLookupByLibrary.simpleMessage("Preferito"),
     "note_unstar" : MessageLookupByLibrary.simpleMessage("Non preferito"),
     "notes" : MessageLookupByLibrary.simpleMessage("Appunti"),
-    "notesMainPageRoute_emptyArchive" : MessageLookupByLibrary.simpleMessage("Non hai nessun appunto archviato"),
+    "notesMainPageRoute_emptyArchive" : MessageLookupByLibrary.simpleMessage("Non hai nessun appunto archiviato"),
     "notesMainPageRoute_emptyTrash" : MessageLookupByLibrary.simpleMessage("Il cestino è vuoto"),
     "notesMainPageRoute_noNotes" : MessageLookupByLibrary.simpleMessage("Nessun appunto aggiunto... per ora"),
     "notesMainPageRoute_note_deleteDialog_content" : MessageLookupByLibrary.simpleMessage("Una volta che elimini gli appunti essi non possono essere ripristinati. Continuare?"),

@@ -80,7 +80,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "Non hai nessun appunto archviato",
+    "notesMainPageRoute_emptyArchive": "Non hai nessun appunto archiviato",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}

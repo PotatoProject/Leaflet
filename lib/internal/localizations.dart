@@ -465,7 +465,7 @@ class AppLocalizations {
   );
 
   String get note_emptryTrash => Intl.message(
-    "Emptry trash",
+    "Empty trash",
     name: "note_emptryTrash",
   );
 
