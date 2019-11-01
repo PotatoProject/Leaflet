@@ -109,8 +109,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                                             contentPadding: EdgeInsets.symmetric(
                                                 horizontal: 0),
                                             leading: Icon(Icons.photo_library),
-                                            title: Text(locales
-                                                .notesMainPageRoute_user_avatar_change),
+                                            title: Text(locales.userInfoRoute_avatar_change),
                                             onTap: () async {
                                               Navigator.pop(context);
                                               File image =
@@ -126,8 +125,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                                             contentPadding: EdgeInsets.symmetric(
                                                 horizontal: 0),
                                             leading: Icon(Icons.delete),
-                                            title: Text(locales
-                                                .notesMainPageRoute_user_avatar_remove),
+                                            title: Text(locales.userInfoRoute_avatar_remove),
                                             onTap: () async {
                                               appInfo.userImagePath = null;
                                               Navigator.pop(context);
@@ -169,7 +167,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                   ),
                   SwitchListTile(
                     secondary: Icon(Icons.sort),
-                    title: Text("Sort notes by date"),
+                    title: Text(locales.userInfoRoute_sortByDate),
                     value: appInfo.sortMode == SortMode.DATE,
                     onChanged: widget.onSortSwitchChange,
                     activeColor: appInfo.mainColor,

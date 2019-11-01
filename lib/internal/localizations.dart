@@ -109,29 +109,26 @@ class AppLocalizations {
     name: "notesMainPageRoute_note_list_selectedEntries",
   );
 
-  String get notesMainPageRoute_user_info => Intl.message(
-    "User info",
-    name: "notesMainPageRoute_user_info",
-  );
-
-  String get notesMainPageRoute_user_avatar_change => Intl.message(
-    "Change avatar",
-    name: "notesMainPageRoute_user_avatar_change",
-  );
-
-  String get notesMainPageRoute_user_avatar_remove => Intl.message(
-    "Remove avatar",
-    name: "notesMainPageRoute_user_avatar_remove",
-  );
-
-  String get notesMainPageRoute_user_name_change => Intl.message(
-    "Change username",
-    name: "notesMainPageRoute_user_name_change",
-  );
-
   String get notesMainPageRoute_pinnedNote => Intl.message(
     "Pinned note",
     name: "notesMainPageRoute_pinnedNote",
+  );
+
+  /* -- UserInfoRoute related -- */
+
+  String get userInfoRoute_sortByDate => Intl.message(
+    "Sort notes by date",
+    name: "userInfoRoute_sortByDate",
+  );
+
+  String get userInfoRoute_avatar_change => Intl.message(
+    "Change avatar",
+    name: "userInfoRoute_avatar_change",
+  );
+
+  String get userInfoRoute_avatar_remove => Intl.message(
+    "Remove avatar",
+    name: "userInfoRoute_avatar_remove",
   );
 
   /* -- ModifyNotesRoute related -- */
