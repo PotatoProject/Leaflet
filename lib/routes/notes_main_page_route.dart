@@ -17,6 +17,7 @@ import 'package:potato_notes/routes/search_notes_route.dart';
 import 'package:potato_notes/routes/security_note_route.dart';
 import 'package:potato_notes/routes/settings_route.dart';
 import 'package:potato_notes/routes/user_info_route.dart';
+import 'package:potato_notes/ui/round_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
@@ -1343,122 +1344,92 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: currentView == NotesReturnMode.NORMAL ? appInfo.mainColor.withAlpha(80) : null,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                  )
-                ),
-                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
-                child: ListTile(
-                  leading: Icon(Icons.note),
-                  title: Text(locales.notes),
-                  selected: currentView == NotesReturnMode.NORMAL,
-                  onTap: () async {
-                    if(currentView != NotesReturnMode.NORMAL) {
-                      currentView = NotesReturnMode.NORMAL;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                      setState(() => noteList = list);
-                      Navigator.pop(context);
+              RoundListTile(
+                leading: Icon(Icons.note),
+                title: Text(locales.notes),
+                selected: currentView == NotesReturnMode.NORMAL,
+                onTap: () async {
+                  if(currentView != NotesReturnMode.NORMAL) {
+                    currentView = NotesReturnMode.NORMAL;
+                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    setState(() => noteList = list);
+                    Navigator.pop(context);
 
-                      noteList.forEach((item) {
-                        item.isSelected = false;
-                      });
+                    noteList.forEach((item) {
+                      item.isSelected = false;
+                    });
 
-                      setState(() {
-                        selectionList.clear();
-                        isSelectorVisible = false;
-                      });
+                    setState(() {
+                      selectionList.clear();
+                      isSelectorVisible = false;
+                    });
 
-                      Brightness systemBarsIconBrightness =
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Brightness.light
-                              : Brightness.dark;
+                    Brightness systemBarsIconBrightness =
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Brightness.light
+                            : Brightness.dark;
 
-                      changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
-                    }
-                  },
-                ),
+                    changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
+                  }
+                },
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: currentView == NotesReturnMode.DELETED ? appInfo.mainColor.withAlpha(80) : null,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                  )
-                ),
-                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
-                child: ListTile(
-                  leading: Icon(Icons.delete_outline),
-                  title: Text(locales.trash),
-                  selected: currentView == NotesReturnMode.DELETED,
-                  onTap: () async {
-                    if(currentView != NotesReturnMode.DELETED) {
-                      currentView = NotesReturnMode.DELETED;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                      setState(() => noteList = list);
-                      Navigator.pop(context);
+              RoundListTile(
+                leading: Icon(Icons.delete_outline),
+                title: Text(locales.trash),
+                selected: currentView == NotesReturnMode.DELETED,
+                onTap: () async {
+                  if(currentView != NotesReturnMode.DELETED) {
+                    currentView = NotesReturnMode.DELETED;
+                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    setState(() => noteList = list);
+                    Navigator.pop(context);
 
-                      noteList.forEach((item) {
-                        item.isSelected = false;
-                      });
+                    noteList.forEach((item) {
+                      item.isSelected = false;
+                    });
 
-                      setState(() {
-                        selectionList.clear();
-                        isSelectorVisible = false;
-                      });
+                    setState(() {
+                      selectionList.clear();
+                      isSelectorVisible = false;
+                    });
 
-                      Brightness systemBarsIconBrightness =
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Brightness.light
-                              : Brightness.dark;
+                    Brightness systemBarsIconBrightness =
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Brightness.light
+                            : Brightness.dark;
 
-                      changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
-                    }
-                  },
-                ),
+                    changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+                  }
+                },
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: currentView == NotesReturnMode.ARCHIVED ? appInfo.mainColor.withAlpha(80) : null,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                  )
-                ),
-                margin: EdgeInsets.fromLTRB(0, 5, 15, 5),
-                child: ListTile(
-                  leading: Icon(Icons.archive),
-                  title: Text(locales.archive),
-                  selected: currentView == NotesReturnMode.ARCHIVED,
-                  onTap: () async {
-                    if(currentView != NotesReturnMode.ARCHIVED) {
-                      currentView = NotesReturnMode.ARCHIVED;
-                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-                      setState(() => noteList = list);
-                      Navigator.pop(context);
+              RoundListTile(
+                leading: Icon(Icons.archive),
+                title: Text(locales.archive),
+                selected: currentView == NotesReturnMode.ARCHIVED,
+                onTap: () async {
+                  if(currentView != NotesReturnMode.ARCHIVED) {
+                    currentView = NotesReturnMode.ARCHIVED;
+                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    setState(() => noteList = list);
+                    Navigator.pop(context);
 
-                      noteList.forEach((item) {
-                        item.isSelected = false;
-                      });
+                    noteList.forEach((item) {
+                      item.isSelected = false;
+                    });
 
-                      setState(() {
-                        selectionList.clear();
-                        isSelectorVisible = false;
-                      });
+                    setState(() {
+                      selectionList.clear();
+                      isSelectorVisible = false;
+                    });
 
-                      Brightness systemBarsIconBrightness =
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Brightness.light
-                              : Brightness.dark;
+                    Brightness systemBarsIconBrightness =
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Brightness.light
+                            : Brightness.dark;
 
-                      changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
-                    }
-                  },
-                ),
+                    changeSystemBarsColors(Theme.of(context).cardColor, systemBarsIconBrightness);
+                  }
+                },
               ),
             ],
           ),
