@@ -24,12 +24,15 @@ class AppInfoProvider extends ChangeNotifier {
   bool _devShowIdLabels = false;
   bool _isGridView = false;
   String _userImagePath;
-  String _userName = "";
   bool _isQuickStarredGestureOn = false;
   List<String> _notificationsIdList = [];
   List<String> _remindersNotifIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;
   SortMode _sortMode = SortMode.ID;
+
+  String _userToken;
+  String _userName = "";
+  String _userEmail = "";
 
   DateTime _date;
   TimeOfDay _time;
@@ -40,47 +43,30 @@ class AppInfoProvider extends ChangeNotifier {
   String _version = '1.0';
 
   bool get followSystemTheme => _followSystemTheme;
-
   int get themeMode => _themeMode;
-
   int get darkThemeMode => _darkThemeMode;
-
   Color get mainColor => _mainColor;
-
   bool get useCustomMainColor => _useCustomMainColor;
-
   Color get customMainColor => _customMainColor;
-
   bool get devShowIdLabels => _devShowIdLabels;
-
   bool get isGridView => _isGridView;
-
   String get userImagePath => _userImagePath;
-
-  String get userName => _userName;
-
   bool get isQuickStarredGestureOn => _isQuickStarredGestureOn;
-
   List<String> get notificationsIdList => _notificationsIdList;
-
   List<String> get remindersNotifIdList => _remindersNotifIdList;
-
   PermissionStatus get storageStatus => _storageStatus;
-
   SortMode get sortMode => _sortMode;
 
+  String get userToken => _userToken;
+  String get userName => _userName;
+  String get userEmail => _userEmail;
+
   DateTime get date => _date;
-
   TimeOfDay get time => _time;
-
   int get hideContent => _hideContent;
-
   bool get useProtectionForNoteContent => _useProtectionForNoteContent;
-
   bool get pin => _pin;
-
   bool get password => _password;
-
   String get version => _version;
 
   static List<String> get supportedLocales => [
@@ -150,12 +136,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userName(String name) {
-    _userName = name;
-    setUserNameString(name);
-    notifyListeners();
-  }
-
   set isQuickStarredGestureOn(bool isOn) {
     _isQuickStarredGestureOn = isOn;
     setIsQuickStarredGestureOn(isOn);
@@ -182,6 +162,24 @@ class AppInfoProvider extends ChangeNotifier {
   set sortMode(SortMode sort) {
     _sortMode = sort;
     setSortMode(sort);
+    notifyListeners();
+  }
+
+  set userToken(String token) {
+    _userToken = token;
+    setUserToken(token);
+    notifyListeners();
+  }
+
+  set userName(String name) {
+    _userName = name;
+    setUserName(name);
+    notifyListeners();
+  }
+
+  set userEmail(String email) {
+    _userEmail = email;
+    setUserEmail(email);
     notifyListeners();
   }
 
@@ -238,13 +236,16 @@ class AppInfoProvider extends ChangeNotifier {
     devShowIdLabels = await getDevShowIdLabels();
     isGridView = await getIsGridView();
     userImagePath = await getUserImagePath();
-    userName = await getUserNameString();
     isQuickStarredGestureOn = await getIsQuickStarredGestureOn();
     notificationsIdList = await getNotificationsIdList();
     remindersNotifIdList = await getRemindersNotifIdList();
     storageStatus = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
     sortMode = await getSortMode();
+
+    userToken = await getUserToken();
+    userName = await getUserName();
+    userEmail = await getUserEmail();
 
     date = null;
     time = null;

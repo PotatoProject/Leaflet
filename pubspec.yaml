@@ -33,6 +33,7 @@ dependencies:
   flutter_colorpicker:
   intl_translation:
   package_info:
+  http:
 
 dev_dependencies:
   flutter_test:
@@ -42,3 +43,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family:  CustomIcons
+      fonts:
+      - asset: fonts/CustomIcons.ttf

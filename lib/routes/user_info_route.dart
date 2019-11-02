@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/routes/sync_login_route.dart';
+import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:provider/provider.dart';
 
 class UserInfoDialog extends StatefulWidget {
@@ -140,22 +142,29 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                           ),
                         )
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: TextField(
-                            controller: userNameController,
-                            onChanged: (value) => appInfo.userName = value,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 20.0,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              appInfo.userName,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ),
                             ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "User"
+                            Visibility(
+                              visible: appInfo.userEmail != "",
+                              child: Text(
+                                appInfo.userEmail,
+                                style: TextStyle(
+                                  color: Theme.of(context).textTheme.title.color.withAlpha(180),
+                                  fontSize: 16.0,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          ]
+                        )
                       ),
                     ],
                   ),
@@ -179,6 +188,19 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                     ),
                     title: Text(locales.settingsRoute_title),
                     onTap: widget.onSettingsTileClick,
+                  ),
+                  Divider(
+                    height: 1,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CustomIcons.potato_sync,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("PotatoSync"),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => SyncLoginRoute()
+                    )),
                   ),
                 ],
               ),

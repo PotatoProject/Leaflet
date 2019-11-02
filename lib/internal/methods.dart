@@ -103,16 +103,6 @@ Future<void> setUserImagePath(String path) async {
   prefs.setString('user_image_path', path);
 }
 
-Future<String> getUserNameString() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_name') ?? "User";
-}
-
-Future<void> setUserNameString(String userName) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_name', userName);
-}
-
 Future<bool> getIsQuickStarredGestureOn() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('quick_starred_gesture') ?? false;
@@ -153,6 +143,36 @@ Future<SortMode> getSortMode() async {
 Future<void> setSortMode(SortMode sort) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
+}
+
+Future<String> getUserToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_token') ?? null;
+}
+
+Future<void> setUserToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_token', token);
+}
+
+Future<String> getUserName() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_name') ?? "User";
+}
+
+Future<void> setUserName(String name) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_name', name);
+}
+
+Future<String> getUserEmail() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_email') ?? "";
+}
+
+Future<void> setUserEmail(String email) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_email', email);
 }
 
 Future<void> filtersSetColor(int color) async {
