@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
-import 'package:potato_notes/routes/sync_login_route.dart';
-import 'package:potato_notes/routes/sync_manage_route.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:provider/provider.dart';
 
 class UserInfoDialog extends StatefulWidget {
   final void Function(bool) onSortSwitchChange;
   final void Function() onSettingsTileClick;
+  final void Function() onPotatoSyncTileClick;
 
-  UserInfoDialog({@required this.onSortSwitchChange, @required this.onSettingsTileClick});
+  UserInfoDialog({
+    @required this.onSortSwitchChange,
+    @required this.onSettingsTileClick,
+    @required this.onPotatoSyncTileClick,
+  });
 
   @override createState() => _UserInfoDialogState();
 }
@@ -153,9 +156,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                       color: Theme.of(context).iconTheme.color,
                     ),
                     title: Text("PotatoSync"),
-                    onTap: () => Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => appInfo.userToken != null ? SyncManageRoute() : SyncLoginRoute()
-                    )),
+                    onTap: widget.onPotatoSyncTileClick
                   ),
                 ],
               ),

@@ -188,7 +188,7 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
 
                                         String body = "{\"username\": \"$username\", \"email\": \"$email\", \"password\": \"$password\"}";
 
-                                        Response login = await post("http://potatosync.herokuapp.com/api/users/new",
+                                        Response login = await post("https://sync.potatoproject.co/api/users/new",
                                             body: body);
 
                                         Map<dynamic, dynamic> responseBody = json.decode(login.body);

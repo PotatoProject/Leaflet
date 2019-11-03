@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/sync_register_route.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
@@ -81,7 +82,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                             ),
                           ),
                           SyncInputField(
-                            title: "Email or password",
+                            title: "Email or username",
                             errorMessage: "This field can't be empty",
                             selectHandler: emailSelected,
                             emptyHandler: emailEmpty,
@@ -178,7 +179,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           body = "{\"username\": \"$email\", \"password\": \"$password\"}";
                                         }
 
-                                        Response login = await post("http://potatosync.herokuapp.com/api/users/login", body: body);
+                                        Response login = await post("https://sync.potatoproject.co/api/users/login", body: body);
 
                                         Map<dynamic, dynamic> responseBody = json.decode(login.body);
 
@@ -190,6 +191,67 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                               responseBody["account"]["image_url"];
 
                                           appInfo.userToken = responseBody["account"]["token"];
+
+                                          Response noteList = await get("https://sync.potatoproject.co/api/notes/list",
+                                              headers: {"Authorization": appInfo.userToken});
+                                          
+                                          Map<dynamic, dynamic> body = json.decode(noteList.body);
+
+                                          var result;
+
+                                          if(body["notes"].isNotEmpty) {
+                                            result = await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text("Notes found on your account"),
+                                                  content: Text("Your account seem to already have some notes saved.\nWhat do you want to do?"),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                      child: Text("Keep current"),
+                                                      onPressed: () => Navigator.pop(context),
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text("Replace with cloud"),
+                                                      onPressed: () async {
+                                                        List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                                        
+                                                        for(int i = 0; i < list.length; i++) {
+                                                          NoteHelper().delete(list[i].id);
+                                                        }
+
+                                                        List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+
+                                                        for(int i = 0; i < parsedList.length; i++) {
+                                                          await NoteHelper().insert(parsedList[i]);
+                                                        }
+
+                                                        Navigator.pop(context, false);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                            );
+                                          }
+
+                                          if(result == null) {
+                                            print("ffs");
+
+                                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+
+                                            for(int i = 0; i < body["notes"].length; i++) {
+                                              await post("https://sync.potatoproject.co/api/notes/deleteall",
+                                                  headers: {"Authorization": appInfo.userToken});
+                                            }
+
+                                            for(int i = 0; i < list.length; i++) {
+                                              await post("https://sync.potatoproject.co/api/notes/save",
+                                                  body: list[i].readyForRequest,
+                                                  headers: {"Authorization": appInfo.userToken});
+                                            }
+                                          }
+                                              
 
                                           Navigator.pop(context);
                                         } else {

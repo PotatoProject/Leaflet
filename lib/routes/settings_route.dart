@@ -279,7 +279,6 @@ class _SettingsState extends State<SettingsRoute> {
 
                     if (path != null) {
                       int status = await NoteHelper().validateDatabase(path);
-                      print(status);
                       if (status == 0) {
                         await NoteHelper().restoreDatabaseToPath(path);
                         scaffoldKey.currentState.showSnackBar(SnackBar(

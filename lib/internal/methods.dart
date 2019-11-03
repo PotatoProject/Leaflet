@@ -175,6 +175,26 @@ Future<void> setUserToken(String token) async {
   prefs.setString('user_token', token);
 }
 
+Future<bool> getAutoSync() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('auto_sync') ?? false;
+}
+
+Future<void> setAutoSync(bool autoSync) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('auto_sync', autoSync);
+}
+
+Future<int> getAutoSyncTimeInterval() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('auto_sync_time_interval') ?? 15;
+}
+
+Future<void> setAutoSyncTimeInterval(int interval) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('auto_sync_time_interval', interval);
+}
+
 Future<void> filtersSetColor(int color) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setInt('filters_color', color);

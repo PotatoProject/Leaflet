@@ -170,7 +170,6 @@ class NoteHelper {
     int status = 0;
 
     if (!path.endsWith(".db")) {
-      print("lol");
       return 1;
     }
 
@@ -303,6 +302,68 @@ class Note {
       isDeleted: isDeleted ?? this.isDeleted,
       isArchived: isArchived ?? this.isArchived,
     );
+  }
+
+  String get readyForRequest {
+    String content = this.content.replaceAll('\n', '\\n');
+
+    return "{" +
+        '"note_id": ${this.id}, ' +
+        '"title": "${this.title}", ' +
+        '"content": "$content", ' +
+        '"is_starred": ${this.isStarred == 1}, ' +
+        '"date": "${DateTime.fromMillisecondsSinceEpoch(this.date).toUtc().toIso8601String()}", ' +
+        '"color": ${this.color}, ' +
+        '"image_url":' + (this.imagePath == null ? 'null' : '"${this.imagePath}"') + ', ' +
+        '"is_list": ${this.isList == 1}, ' +
+        '"list_parse_string":' + (this.listParseString == null ? 'null' : '"${this.listParseString}"') + ', ' +
+        '"reminders":' + (this.reminders == null ? 'null' : '"${this.reminders}"') + ', ' +
+        '"hide_content": ${this.hideContent == 1}, ' +
+        '"pin":' + (this.pin == null ? 'null' : '"${this.pin}"') + ', ' +
+        '"password":' + (this.password == null ? 'null' : '"${this.password}"') + ', ' +
+        '"is_deleted": ${this.isDeleted == 1}, ' +
+        '"is_archived": ${this.isArchived == 1}' +
+    "}";
+  }
+
+  static Future<List<Note>> fromRequest(List<dynamic> list, bool generateNewIds) async {
+    Future<int> noteIdSearcher() async {
+      List<Note> noteList = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
+      List<int> noteIdList = List<int>();
+
+      noteList.forEach((item) {
+        noteIdList.add(item.id);
+      });
+
+      if (noteIdList.length > 0) {
+        return noteIdList[noteIdList.length - 1] + 1;
+      } else
+        return 1;
+    }
+
+    List<Note> returnList = [];
+
+    for(int i = 0; i < list.length; i++) {
+      returnList.add(Note(
+        id: generateNewIds ? await noteIdSearcher() : list[i]["note_id"],
+        title: list[i]["title"],
+        content: list[i]["content"],
+        isStarred: list[i]["is_starred"] ? 1 : 0,
+        date: DateTime.parse(list[i]["date"]).millisecondsSinceEpoch,
+        color: list[i]["color"] == 0 ? null : list[i]["color"],
+        imagePath: list[i]["image_url"] == "" || list[i]["image_url"] == "null" ? null : list[i]["image_url"],
+        isList: list[i]["is_list"] ? 1 : 0,
+        listParseString: list[i]["list_parse_string"] == "" ? null : list[i]["list_parse_string"],
+        reminders: list[i]["reminders"] == "" || list[i]["reminders"] == "null" ? null : list[i]["reminders"],
+        hideContent: list[i]["hide_content"] ?? false ? 1 : 0,
+        pin: list[i]["pin"] == "" || list[i]["pin"] == "null" ? null : list[i]["pin"],
+        password: list[i]["password"] == "" || list[i]["password"] == "null" ? null : list[i]["password"],
+        isDeleted: list[i]["is_deleted"] ? 1 : 0,
+        isArchived: list[i]["is_archived"] ? 1 : 0,
+      ));
+    }
+
+    return returnList;
   }
 }
 

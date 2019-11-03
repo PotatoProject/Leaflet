@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
+import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/ui/list_label_divider.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +70,6 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                           appInfo.userToken = null;
                           appInfo.userImage = null;
 
-                          print(appInfo.userImage);
-
                           Navigator.pop(context);
                         },
                       ),
@@ -109,13 +108,10 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                       
                       String url = json.decode(imageToImgur.body)["data"]["link"];
 
-                      print(url);
-
-                      Response uploadImage = await post("http://potatosync.herokuapp.com/api/users/manage/image",
+                      Response uploadImage = await post("https://sync.potatoproject.co/api/users/manage/image",
                           body: "{\"image_url\": \"$url\"}", headers: {"Authorization": appInfo.userToken});
                       
                       Map<dynamic, dynamic> parsedBody = json.decode(uploadImage.body);
-                      print(parsedBody);
 
                       if(parsedBody["status"]) {
                         appInfo.userImage = url;
@@ -126,6 +122,47 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                       setState(() => showLoadingOverlay = false);
                     }
                   },
+                ),
+                ListLabelDivider(
+                  label: "Sync",
+                ),
+                SwitchListTile(
+                  secondary: Icon(Icons.sync),
+                  title: Text("Enable auto-sync"),
+                  value: appInfo.autoSync,
+                  activeColor: Theme.of(context).accentColor,
+                  onChanged: (value) {
+                    appInfo.autoSync = value;
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.ac_unit,
+                    color: Colors.transparent,
+                  ),
+                  enabled: appInfo.autoSync,
+                  title: Text("Auto-sync time interval (seconds)"),
+                  trailing: DropdownButton(
+                    onChanged: appInfo.autoSync ? (value) {
+                      appInfo.autoSyncTimeInterval = value;
+                    } : null,
+                    disabledHint: Text(appInfo.autoSyncTimeInterval.toString()),
+                    value: appInfo.autoSyncTimeInterval,
+                    items: [
+                      DropdownMenuItem(
+                        value: 15,
+                        child: Text("15"),
+                      ),
+                      DropdownMenuItem(
+                        value: 30,
+                        child: Text("30"),
+                      ),
+                      DropdownMenuItem(
+                        value: 60,
+                        child: Text("60"),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

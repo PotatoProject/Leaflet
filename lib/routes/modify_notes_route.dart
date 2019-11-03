@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -784,7 +785,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     if (noteReminders == "") noteReminders = null;
 
-    await noteHelper.insert(Note(
+    Note note = Note(
       id: noteId,
       title: noteTitle,
       content: noteContent,
@@ -804,7 +805,17 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           sha256.convert(utf8.encode(notePassword)).toString(),
       isDeleted: noteIsDeleted,
       isArchived: noteIsArchived,
-    ));
+    );
+
+    await noteHelper.insert(note);
+    if(appInfo.userToken != null) {
+      var result = await post("https://sync.potatoproject.co/api/notes/save",
+          body: note.readyForRequest,
+          headers: {"Authorization": appInfo.userToken});
+      
+      print(result.body);
+    }
+    
     List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, noteList);
   }

@@ -34,6 +34,9 @@ class AppInfoProvider extends ChangeNotifier {
   String _userEmail = "";
   String _userToken;
 
+  bool _autoSync = false;
+  int _autoSyncTimeInterval = 15;
+
   DateTime _date;
   TimeOfDay _time;
   int _hideContent = 0;
@@ -60,6 +63,9 @@ class AppInfoProvider extends ChangeNotifier {
   String get userName => _userName;
   String get userEmail => _userEmail;
   String get userToken => _userToken;
+
+  bool get autoSync => _autoSync;
+  int get autoSyncTimeInterval => _autoSyncTimeInterval;
 
   DateTime get date => _date;
   TimeOfDay get time => _time;
@@ -130,12 +136,6 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userImage(String path) {
-    _userImage = path;
-    setUserImage(path);
-    notifyListeners();
-  }
-
   set isQuickStarredGestureOn(bool isOn) {
     _isQuickStarredGestureOn = isOn;
     setIsQuickStarredGestureOn(isOn);
@@ -165,9 +165,9 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userToken(String token) {
-    _userToken = token;
-    setUserToken(token);
+  set userImage(String path) {
+    _userImage = path;
+    setUserImage(path);
     notifyListeners();
   }
 
@@ -180,6 +180,24 @@ class AppInfoProvider extends ChangeNotifier {
   set userEmail(String email) {
     _userEmail = email;
     setUserEmail(email);
+    notifyListeners();
+  }
+
+  set userToken(String token) {
+    _userToken = token;
+    setUserToken(token);
+    notifyListeners();
+  }
+
+  set autoSync(bool autoSync) {
+    _autoSync = autoSync;
+    setAutoSync(autoSync);
+    notifyListeners();
+  }
+
+  set autoSyncTimeInterval(int interval) {
+    _autoSyncTimeInterval = interval;
+    setAutoSyncTimeInterval(interval);
     notifyListeners();
   }
 
@@ -246,6 +264,9 @@ class AppInfoProvider extends ChangeNotifier {
     userToken = await getUserToken();
     userName = await getUserName();
     userEmail = await getUserEmail();
+
+    autoSync = await getAutoSync();
+    autoSyncTimeInterval = await getAutoSyncTimeInterval();
 
     date = null;
     time = null;
