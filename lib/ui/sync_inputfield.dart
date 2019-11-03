@@ -11,6 +11,7 @@ class SyncInputField extends StatelessWidget {
   final bool isPassword;
   final bool showPassword;
   final TextInputType keyboardType;
+  final TextEditingController controller;
 
   final Function(String text) onChanged;
 
@@ -25,6 +26,7 @@ class SyncInputField extends StatelessWidget {
     this.isPassword = false,
     this.showPassword = true,
     this.keyboardType = TextInputType.text,
+    this.controller,
     @required this.onChanged,
   });
   @override
@@ -32,6 +34,7 @@ class SyncInputField extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(title),
@@ -58,6 +61,7 @@ class SyncInputField extends StatelessWidget {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                       ),
+                      controller: controller,
                       autocorrect: false,
                       keyboardType: keyboardType,
                       focusNode: focusNode,

@@ -596,16 +596,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 color: Colors.transparent,
                                 child: CircleAvatar(
                                   backgroundColor: appInfo.mainColor,
-                                  child: appInfo.userImagePath == null
+                                  child: appInfo.userImage == null
                                       ? Icon(
                                           Icons.account_circle,
                                           color: Colors.white,
                                           size: 28.0,
                                         )
                                       : null,
-                                  backgroundImage: appInfo.userImagePath == null
+                                  backgroundImage: appInfo.userImage == null
                                       ? null
-                                      : FileImage(File(appInfo.userImagePath)),
+                                      : NetworkImage(appInfo.userImage),
                                 ),
                               ),
                             ),

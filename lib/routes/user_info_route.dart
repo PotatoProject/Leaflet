@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/sync_login_route.dart';
+import 'package:potato_notes/routes/sync_manage_route.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -73,18 +71,18 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                                 width: 70,
                                 height: 70,
                                 decoration: BoxDecoration(
-                                  image: appInfo.userImagePath == null
+                                  image: appInfo.userImage == null
                                       ? null
                                       : DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: FileImage(
-                                              File(appInfo.userImagePath)),
+                                          image: NetworkImage(
+                                              appInfo.userImage),
                                         ),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(150)),
                                   color: appInfo.mainColor,
                                 ),
-                                child: appInfo.userImagePath == null
+                                child: appInfo.userImage == null
                                     ? Center(
                                         child: Icon(
                                           Icons.account_circle,
@@ -95,49 +93,6 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                                     : null,
                               ),
                             ),
-                            onTap: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text(locales.chooseAction),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0))),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          ListTile(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                horizontal: 0),
-                                            leading: Icon(Icons.photo_library),
-                                            title: Text(locales.userInfoRoute_avatar_change),
-                                            onTap: () async {
-                                              Navigator.pop(context);
-                                              File image =
-                                                  await ImagePicker.pickImage(
-                                                      source:
-                                                          ImageSource.gallery);
-                                              if (image != null)
-                                                appInfo.userImagePath =
-                                                    image.path;
-                                            },
-                                          ),
-                                          ListTile(
-                                            contentPadding: EdgeInsets.symmetric(
-                                                horizontal: 0),
-                                            leading: Icon(Icons.delete),
-                                            title: Text(locales.userInfoRoute_avatar_remove),
-                                            onTap: () async {
-                                              appInfo.userImagePath = null;
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                            },
                             borderRadius: BorderRadius.all(Radius.circular(100)),
                           ),
                         )
@@ -199,7 +154,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                     ),
                     title: Text("PotatoSync"),
                     onTap: () => Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => SyncLoginRoute()
+                      builder: (context) => appInfo.userToken != null ? SyncManageRoute() : SyncLoginRoute()
                     )),
                   ),
                 ],

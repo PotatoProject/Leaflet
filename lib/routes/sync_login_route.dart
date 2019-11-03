@@ -185,6 +185,9 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                         if(responseBody["status"]) {
                                           appInfo.userName = responseBody["account"]["username"];
                                           appInfo.userEmail = responseBody["account"]["email"];
+                                          appInfo.userImage = responseBody["account"]["image_url"] == "" ?
+                                              null :
+                                              responseBody["account"]["image_url"];
 
                                           appInfo.userToken = responseBody["account"]["token"];
 
@@ -216,6 +219,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
             ),
             Container(
               height: 60,
+              color: Theme.of(context).scaffoldBackgroundColor,
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: <Widget>[

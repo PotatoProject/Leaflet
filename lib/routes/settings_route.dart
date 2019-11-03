@@ -11,6 +11,7 @@ import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
+import 'package:potato_notes/ui/list_label_divider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsRoute extends StatefulWidget {
@@ -76,16 +77,8 @@ class _SettingsState extends State<SettingsRoute> {
             child: ListView(
               padding: EdgeInsets.all(0),
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10, left: 70),
-                  child: Text(
-                    locales.settingsRoute_themes,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                ListLabelDivider(
+                  label: locales.settingsRoute_themes,
                 ),
                 SwitchListTile(
                   secondary: Icon(Icons.brightness_medium),
@@ -228,16 +221,8 @@ class _SettingsState extends State<SettingsRoute> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                  child: Text(
-                    locales.settingsRoute_gestures,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                ListLabelDivider(
+                  label: locales.settingsRoute_gestures,
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
@@ -246,16 +231,8 @@ class _SettingsState extends State<SettingsRoute> {
                   value: appInfo.isQuickStarredGestureOn,
                   onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                  child: Text(
-                    locales.settingsRoute_backupAndRestore,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                ListLabelDivider(
+                  label: locales.settingsRoute_backupAndRestore,
                 ),
                 ListTile(
                   leading: Icon(Icons.backup),
@@ -325,16 +302,8 @@ class _SettingsState extends State<SettingsRoute> {
                         content: Text(locales.done)));
                   },
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                  child: Text(
-                    locales.settingsRoute_about,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                ListLabelDivider(
+                  label: locales.settingsRoute_about,
                 ),
                 ListTile(
                   leading: Icon(Icons.info),
@@ -347,16 +316,8 @@ class _SettingsState extends State<SettingsRoute> {
                   onTap: () =>
                       launchUrl("https://github.com/HrX03/PotatoNotes"),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 70),
-                  child: Text(
-                    locales.settingsRoute_dev,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                ListLabelDivider(
+                  label: locales.settingsRoute_dev,
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,

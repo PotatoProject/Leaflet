@@ -23,16 +23,16 @@ class AppInfoProvider extends ChangeNotifier {
   Color _customMainColor = Color(0xFFFF0000);
   bool _devShowIdLabels = false;
   bool _isGridView = false;
-  String _userImagePath;
   bool _isQuickStarredGestureOn = false;
   List<String> _notificationsIdList = [];
   List<String> _remindersNotifIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;
   SortMode _sortMode = SortMode.ID;
 
-  String _userToken;
+  String _userImage;
   String _userName = "";
   String _userEmail = "";
+  String _userToken;
 
   DateTime _date;
   TimeOfDay _time;
@@ -50,16 +50,16 @@ class AppInfoProvider extends ChangeNotifier {
   Color get customMainColor => _customMainColor;
   bool get devShowIdLabels => _devShowIdLabels;
   bool get isGridView => _isGridView;
-  String get userImagePath => _userImagePath;
   bool get isQuickStarredGestureOn => _isQuickStarredGestureOn;
   List<String> get notificationsIdList => _notificationsIdList;
   List<String> get remindersNotifIdList => _remindersNotifIdList;
   PermissionStatus get storageStatus => _storageStatus;
   SortMode get sortMode => _sortMode;
 
-  String get userToken => _userToken;
+  String get userImage => _userImage;
   String get userName => _userName;
   String get userEmail => _userEmail;
+  String get userToken => _userToken;
 
   DateTime get date => _date;
   TimeOfDay get time => _time;
@@ -130,9 +130,9 @@ class AppInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set userImagePath(String path) {
-    _userImagePath = path;
-    setUserImagePath(path);
+  set userImage(String path) {
+    _userImage = path;
+    setUserImage(path);
     notifyListeners();
   }
 
@@ -235,7 +235,7 @@ class AppInfoProvider extends ChangeNotifier {
     customMainColor = await getCustomMainColor();
     devShowIdLabels = await getDevShowIdLabels();
     isGridView = await getIsGridView();
-    userImagePath = await getUserImagePath();
+    userImage = await getUserImage();
     isQuickStarredGestureOn = await getIsQuickStarredGestureOn();
     notificationsIdList = await getNotificationsIdList();
     remindersNotifIdList = await getRemindersNotifIdList();

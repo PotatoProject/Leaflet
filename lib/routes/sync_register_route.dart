@@ -231,6 +231,7 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
             ),
             Container(
               height: 60,
+              color: Theme.of(context).scaffoldBackgroundColor,
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: <Widget>[

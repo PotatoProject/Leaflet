@@ -93,16 +93,6 @@ Future<void> setIsGridView(bool isGrid) async {
   prefs.setBool('is_grid_view', isGrid);
 }
 
-Future<String> getUserImagePath() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_image_path') ?? null;
-}
-
-Future<void> setUserImagePath(String path) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_image_path', path);
-}
-
 Future<bool> getIsQuickStarredGestureOn() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('quick_starred_gesture') ?? false;
@@ -145,19 +135,19 @@ Future<void> setSortMode(SortMode sort) async {
   prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
 }
 
-Future<String> getUserToken() async {
+Future<String> getUserImage() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_token') ?? null;
+  return prefs.getString('user_image') ?? null;
 }
 
-Future<void> setUserToken(String token) async {
+Future<void> setUserImage(String path) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_token', token);
+  prefs.setString('user_image', path);
 }
 
 Future<String> getUserName() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_name') ?? "User";
+  return prefs.getString('user_name') ?? "Guest";
 }
 
 Future<void> setUserName(String name) async {
@@ -173,6 +163,16 @@ Future<String> getUserEmail() async {
 Future<void> setUserEmail(String email) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('user_email', email);
+}
+
+Future<String> getUserToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_token') ?? null;
+}
+
+Future<void> setUserToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_token', token);
 }
 
 Future<void> filtersSetColor(int color) async {
