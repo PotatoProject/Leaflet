@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -794,8 +796,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       listParseString: noteListParseString,
       reminders: noteReminders,
       hideContent: noteHideContent,
-      pin: notePin,
-      password: notePassword,
+      pin: (notePin == null ? 64 : notePin.length) == 64 ?
+          notePin :
+          sha256.convert(utf8.encode(notePin)).toString(),
+      password: (notePassword == null ? 64 : notePassword.length) == 64 ?
+          notePassword :
+          sha256.convert(utf8.encode(notePassword)).toString(),
       isDeleted: noteIsDeleted,
       isArchived: noteIsArchived,
     ));
@@ -1344,9 +1350,6 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
     super.initState();
     minLength = widget.setPassword ? 2 : 4;
     maxLength = widget.setPassword ? 30 : 12;
-    controller.text = widget.setPassword
-        ? (widget.password ?? "")
-        : (widget.pin?.toString() ?? "");
   }
 
   @override
@@ -1430,13 +1433,13 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
               ? null
               : () {
                   if (widget.setPassword) {
-                    widget.password = controller.text;
+                    widget.password = sha256.convert(utf8.encode(controller.text)).toString();
                     widget.pin = null;
                     widget.appInfo.password = true;
                     widget.appInfo.pin = false;
                   } else {
                     widget.password = null;
-                    widget.pin = controller.text;
+                    widget.pin = sha256.convert(utf8.encode(controller.text)).toString();
                     widget.appInfo.password = false;
                     widget.appInfo.pin = true;
                   }

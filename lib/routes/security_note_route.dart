@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
@@ -16,7 +19,8 @@ class SecurityNoteRoute extends StatefulWidget {
 
 class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   String text = "";
-  bool error = false;
+
+  int pinDigitsInserted = 0;
 
   AppLocalizations locales;
 
@@ -88,11 +92,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
-                  error
-                      ? widget.note.pin != null
-                          ? locales.securityNoteRoute_wrong_pin
-                          : locales.securityNoteRoute_wrong_password
-                      : "",
+                  "",
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.red,
@@ -175,19 +175,17 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                     child: TextField(
                       obscureText: true,
                       onSubmitted: (text) async {
-                        if (text != widget.note.password.toString()) {
-                          setState(() {
-                            text = "";
-                            error = true;
-                          });
-                        } else {
-                          error = false;
+                        String hashedInput = widget.note.password.length == 64 ?
+                            sha256.convert(utf8.encode(text)).toString() :
+                            text;
+
+                        if (hashedInput == widget.note.password.toString()) {
                           Navigator.pop(context);
-                          var result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex)));
+
+                          await Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                                  ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex))
+                          );
 
                           //if (result == null || result != null)
                           //  Navigator.pop(context);
@@ -258,11 +256,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        error
-                            ? widget.note.pin != null
-                                ? locales.securityNoteRoute_wrong_pin
-                                : locales.securityNoteRoute_wrong_password
-                            : "",
+                        "",
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.red,
@@ -347,22 +341,17 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                           child: TextField(
                             obscureText: true,
                             onSubmitted: (text) async {
-                              if (text != widget.note.password.toString()) {
-                                setState(() {
-                                  text = "";
-                                  error = true;
-                                });
-                              } else {
-                                error = false;
-                                Navigator.pop(context);
-                                var result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ModifyNotesRoute(
-                                            note: widget.note, heroIndex: widget.heroIndex)));
+                              String hashedInput = widget.note.password.length == 64 ?
+                                  sha256.convert(utf8.encode(text)).toString() :
+                                  text;
 
-                                //if (result == null || result != null)
-                                //  Navigator.pop(context);
+                              if (hashedInput == widget.note.password.toString()) {
+                                Navigator.pop(context);
+
+                                await Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => ModifyNotesRoute(
+                                        note: widget.note, heroIndex: widget.heroIndex))
+                                );
                               }
                             },
                           ),
@@ -388,19 +377,27 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   List<Widget> buildPinViewer() {
     List<Widget> widgets = [];
 
-    for (int i = 0; i < widget.note.pin.toString().length; i++) {
+    if(pinDigitsInserted > 0) {
+      for (int i = 0; i < pinDigitsInserted; i++) {
+        widgets.add(Padding(
+          padding: EdgeInsets.all(8),
+          child: Container(
+            height: 18,
+            width: 18,
+            decoration: BoxDecoration(
+                color: Theme.of(context).textTheme.title.color,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                    color: Theme.of(context).textTheme.title.color, width: 1.5)),
+          ),
+        ));
+      }
+    } else {
       widgets.add(Padding(
         padding: EdgeInsets.all(8),
         child: Container(
           height: 18,
           width: 18,
-          decoration: BoxDecoration(
-              color: i >= text.length
-                  ? Colors.transparent
-                  : Theme.of(context).textTheme.title.color,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                  color: Theme.of(context).textTheme.title.color, width: 1.5)),
         ),
       ));
     }
@@ -419,24 +416,20 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
         ),
         onPressed: () async {
-          error = false;
-          setState(() => text += char);
-          if (text.length == widget.note.pin.length) {
-            if (text != widget.note.pin) {
-              setState(() {
-                text = "";
-                error = true;
-              });
-            } else {
-              //Navigator.pop(context);
-              var result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex)));
+          setState(() {
+            text += char;
+            pinDigitsInserted = text.length;
+          });
 
-              if (result == null || result != null) Navigator.pop(context);
-            }
+          String hashedInput = widget.note.pin.length == 64 ? sha256.convert(utf8.encode(text)).toString() : text;
+
+          if (hashedInput == widget.note.pin) {
+            await Navigator.push(context, MaterialPageRoute(
+                builder: (context) =>
+                    ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex))
+            );
+
+            Navigator.pop(context);
           }
         },
       ),
@@ -455,7 +448,10 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
         ),
         onPressed: () async {
           if (text.length > 0) {
-            setState(() => text = text.substring(0, text.length - 1));
+            setState(() {
+              text = text.substring(0, text.length - 1);
+              pinDigitsInserted = text.length;
+            });
           }
         },
       ),
