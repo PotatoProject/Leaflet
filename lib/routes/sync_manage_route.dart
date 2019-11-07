@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -144,11 +145,27 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   title: Text("Auto-sync time interval (seconds)"),
                   trailing: DropdownButton(
                     onChanged: appInfo.autoSync ? (value) {
+                      appInfo.autoSync = false;
                       appInfo.autoSyncTimeInterval = value;
+                      Future.delayed(Duration(seconds: 1), () {
+                        appInfo.autoSync = true;
+                      });
                     } : null,
                     disabledHint: Text(appInfo.autoSyncTimeInterval.toString()),
                     value: appInfo.autoSyncTimeInterval,
                     items: [
+                      DropdownMenuItem(
+                        value: 2,
+                        child: Text("2"),
+                      ),
+                      DropdownMenuItem(
+                        value: 5,
+                        child: Text("5"),
+                      ),
+                      DropdownMenuItem(
+                        value: 10,
+                        child: Text("10"),
+                      ),
                       DropdownMenuItem(
                         value: 15,
                         child: Text("15"),

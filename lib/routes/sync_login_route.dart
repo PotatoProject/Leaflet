@@ -236,8 +236,6 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           }
 
                                           if(result == null) {
-                                            print("ffs");
-
                                             List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                             for(int i = 0; i < body["notes"].length; i++) {

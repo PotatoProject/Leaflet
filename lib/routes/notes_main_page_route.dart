@@ -50,6 +50,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
   AppInfoProvider appInfo;
   AppLocalizations locales;
+  Timer executor;
+  bool autoSyncLastStatus;
+  int autoSyncLastTimeout;
 
   NotesReturnMode currentView = NotesReturnMode.NORMAL;
 
@@ -115,6 +118,33 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     });
   }
 
+  void updateAutosyncExecutor(bool execute, int timeout) {
+    if(appInfo.userToken != null) {
+      if(execute) {
+        executor = Timer.periodic(Duration(seconds: appInfo.autoSyncTimeInterval), (timer) async {
+          if(appInfo.autoSync == false)
+            timer.cancel();
+          
+          Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
+              headers: {"Authorization": appInfo.userToken});
+                                          
+          Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
+
+          List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+
+          for(int i = 0; i < parsedList.length; i++) {
+            await NoteHelper().insert(parsedList[i]);
+          }
+
+          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+          setState(() => noteList = list);
+        });
+      } else {
+        executor?.cancel();
+      }
+    }
+  }
+
   void initializeNotifications() async {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
@@ -145,6 +175,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
   Widget build(BuildContext context) {
     appInfo = Provider.of<AppInfoProvider>(context);
     locales = AppLocalizations.of(context);
+
+    if((autoSyncLastStatus == null && autoSyncLastTimeout == null) ||
+        (autoSyncLastStatus != appInfo.autoSync || autoSyncLastTimeout != appInfo.autoSyncTimeInterval)) {
+      updateAutosyncExecutor(appInfo.autoSync, appInfo.autoSyncTimeInterval);
+      autoSyncLastStatus = appInfo.autoSync;
+      autoSyncLastTimeout = appInfo.autoSyncTimeInterval;
+    }
 
     Widget normalHeader = SliverPersistentHeader(
       pinned: isSelectorVisible,
@@ -2318,5 +2355,26 @@ class HeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
     return true;
+  }
+}
+
+class AutoSyncExecutor {
+  Timer timer;
+  bool isRunning = false;
+
+  AutoSyncExecutor(int timeout, Function(Timer) callback) {
+    timer = Timer.periodic(Duration(seconds: timeout), callback);
+    isRunning = true;
+  }
+
+  stop() {
+    timer.cancel();
+    isRunning = false;
+  }
+
+  update(int timeout, Function(Timer) callback) {
+    timer.cancel();
+    timer = Timer.periodic(Duration(seconds: timeout), callback);
+    isRunning = true;
   }
 }

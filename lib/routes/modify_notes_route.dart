@@ -809,11 +809,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     await noteHelper.insert(note);
     if(appInfo.userToken != null) {
-      var result = await post("https://sync.potatoproject.co/api/notes/save",
+      await post("https://sync.potatoproject.co/api/notes/save",
           body: note.readyForRequest,
           headers: {"Authorization": appInfo.userToken});
-      
-      print(result.body);
     }
     
     List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
