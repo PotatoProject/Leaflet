@@ -198,8 +198,9 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           Map<dynamic, dynamic> body = json.decode(noteList.body);
 
                                           var result;
+                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
-                                          if(body["notes"].isNotEmpty) {
+                                          if(body["notes"].isNotEmpty && list.isNotEmpty) {
                                             result = await showDialog(
                                               context: context,
                                               builder: (context) {
