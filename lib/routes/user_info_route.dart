@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_animations/simple_animations/controlled_animation.dart';
 
 class UserInfoDialog extends StatefulWidget {
   final void Function(bool) onSortSwitchChange;
@@ -63,42 +65,38 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Hero(
-                        tag: "userimage",
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                width: 70,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  image: appInfo.userImage == null
-                                      ? null
-                                      : DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(
-                                              appInfo.userImage),
-                                        ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(150)),
-                                  color: appInfo.mainColor,
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(45),
+                            child: appInfo.userImage == null ?
+                                Icon(
+                                  Icons.person_outline,
+                                  size: 36,
+                                ) :
+                                CachedNetworkImage(
+                                  imageUrl: appInfo.userImage,
+                                  fadeInDuration: Duration(milliseconds: 0),
+                                  fadeOutDuration: Duration(milliseconds: 0),
+                                  placeholder: (context, url) {
+                                    return ControlledAnimation(
+                                      playback: Playback.MIRROR,
+                                      tween: Tween<double>(begin: 0.2, end: 1),
+                                      duration: Duration(milliseconds: 400),
+                                      builder: (context, animation) {
+                                        return Opacity(
+                                          opacity: animation,
+                                          child: Icon(Icons.image),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
-                                child: appInfo.userImage == null
-                                    ? Center(
-                                        child: Icon(
-                                          Icons.account_circle,
-                                          size: 65,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(100)),
                           ),
-                        )
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),

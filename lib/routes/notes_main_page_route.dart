@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -250,9 +251,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                           onPressed: () async {
                             bool starOrNot = selectionList.where((note) => note.isStarred == 0)
                                 .toList().length != 0;
-                            
+
                             List<Note> selectionListCopy = List.from(selectionList);
-                            
+
                             if(starOrNot) {
                               for(int i = 0; i < selectionList.length; i++) {
                                 await NoteHelper().update(
@@ -386,7 +387,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     .copyWith(isDeleted: 1, isStarred: 0),
                               );
                             }
-                            
+
                             bool multipleItems = selectionListLenght > 1;
                             selectionList.clear();
 
@@ -473,7 +474,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     .copyWith(isArchived: 1, isStarred: 0),
                               );
                             }
-                              
+
                             bool multipleItems = selectionListLenght > 1;
                             selectionList.clear();
 
@@ -530,7 +531,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 ),
                               ),
                             );
-                              
+
                             for(int i = 0; i < noteBackup.length; i++) {
                               if(appInfo.userToken != null) {
                                 await post("https://sync.potatoproject.co/api/notes/save",
@@ -795,26 +796,34 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     );
                                   }
                                 )),
-                            icon: Hero(
-                              createRectTween: (begin, end) {
-                                return MaterialRectCenterArcTween(begin: begin, end: end);
-                              },
-                              tag: "userimage",
-                              child: Material(
-                                color: Colors.transparent,
-                                child: CircleAvatar(
-                                  backgroundColor: appInfo.mainColor,
-                                  child: appInfo.userImage == null
-                                      ? Icon(
-                                          Icons.account_circle,
-                                          color: Colors.white,
-                                          size: 28.0,
-                                        )
-                                      : null,
-                                  backgroundImage: appInfo.userImage == null
-                                      ? null
-                                      : NetworkImage(appInfo.userImage),
-                                ),
+                            icon: Container(
+                              height: 28,
+                              width: 28,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(45),
+                                child: appInfo.userImage == null ?
+                                    Icon(
+                                      Icons.person_outline,
+                                      size: 36,
+                                    ) :
+                                    CachedNetworkImage(
+                                      imageUrl: appInfo.userImage,
+                                      fadeInDuration: Duration(milliseconds: 0),
+                                      fadeOutDuration: Duration(milliseconds: 0),
+                                      placeholder: (context, url) {
+                                        return ControlledAnimation(
+                                          playback: Playback.MIRROR,
+                                          tween: Tween<double>(begin: 0.2, end: 1),
+                                          duration: Duration(milliseconds: 400),
+                                          builder: (context, animation) {
+                                            return Opacity(
+                                              opacity: animation,
+                                              child: Icon(Icons.image),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                               ),
                             ),
                           ),
