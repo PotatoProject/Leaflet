@@ -2088,7 +2088,22 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       )
     );
 
-    if (result != null) setState(() => noteList = result);
+    if (result != null) {
+      setState(() {
+        noteList = result;
+        syncing = true;
+        queueList.add(1);
+      });
+      
+      if(appInfo.userToken != null) {
+        await post("https://sync.potatoproject.co/api/notes/save",
+            body: noteList.last.readyForRequest,
+            headers: {"Authorization": appInfo.userToken});
+      }
+
+      queueList.removeLast();
+      if(queueList.length == 0) setState(() => syncing = false);
+    }
 
     Brightness systemBarsIconBrightness =
         Theme.of(context).brightness == Brightness.dark
@@ -2125,7 +2140,20 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
     List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
 
-    setState(() => noteList = list);
+    setState(() {
+      noteList = list;
+      syncing = true;
+      queueList.add(1);
+    });
+      
+    if(appInfo.userToken != null) {
+      await post("https://sync.potatoproject.co/api/notes/save",
+          body: noteList.last.readyForRequest,
+          headers: {"Authorization": appInfo.userToken});
+    }
+
+    queueList.removeLast();
+    if(queueList.length == 0) setState(() => syncing = false);
   }
 
   void _searchNoteCaller(BuildContext context, List<Note> noteList, Color returnBarsColor) async {
