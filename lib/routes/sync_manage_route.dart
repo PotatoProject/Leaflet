@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/ui/list_label_divider.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class SyncManageRoute extends StatefulWidget {
 class _SyncManageRouteState extends State<SyncManageRoute> {
   bool showLoadingOverlay = false;
   AppLocalizations locales;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
     locales = AppLocalizations.of(context);
 
     return Scaffold(
+      key: scaffoldKey,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -116,7 +119,9 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                       if(parsedBody["status"]) {
                         appInfo.userImage = url;
                       } else {
-                        print(parsedBody["message"]);
+                        scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(Utils.parseErrorMessage(context, parsedBody["message"].toString())),
+                        ));
                       }
 
                       setState(() => showLoadingOverlay = false);
@@ -311,7 +316,7 @@ class _UsernameDialogState extends State<UsernameDialog> {
                 });
               } else {
                 setState(() {
-                  message = responseBody["message"];
+                  message = Utils.parseErrorMessage(context, responseBody["message"].toString());
                   error = true;
                 });
               }

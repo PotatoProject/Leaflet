@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
-import 'package:provider/provider.dart';
 
 class SyncRegisterRoute extends StatefulWidget {
   @override createState() => _SyncRegisterRouteState();
@@ -50,8 +49,6 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     return Scaffold(
       key: scaffoldKey,
       body: SafeArea(
@@ -197,7 +194,7 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                                           Navigator.pop(context, true);
                                         } else {
                                           scaffoldKey.currentState.showSnackBar(SnackBar(
-                                            content: Text(responseBody["message"].toString()),
+                                            content: Text(Utils.parseErrorMessage(context, responseBody["message"].toString())),
                                           ));
                                         }
                                       }

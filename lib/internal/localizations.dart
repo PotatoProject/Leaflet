@@ -562,6 +562,73 @@ class AppLocalizations {
     name: "note_pinToNotifs",
     desc: "String for pinning a note to notifications",
   );
+
+  /* -- Sync api related -- */
+  
+  String get sync_malformedEmailError => Intl.message(
+    "Malformed or missing email",
+    name: "sync_malformedEmailError",
+  );
+  
+  String get sync_usernameOutOfBoundsError => Intl.message(
+    "The username you entered is too long or too short",
+    name: "sync_usernameOutOfBoundsError",
+  );
+  
+  String get sync_passOutOfBoundsError => Intl.message(
+    "The password you entered is too long or too short",
+    name: "sync_passOutOfBoundsError",
+  );
+  
+  String get sync_dbConnectionError => Intl.message(
+    "There was a problem connecting to the database, retry later",
+    name: "sync_dbConnectionError",
+  );
+  
+  String get sync_emailAlreadyExistsError => Intl.message(
+    "The email you entered seems to be already registered",
+    name: "sync_emailAlreadyExistsError",
+  );
+  
+  String get sync_usernameAlreadyExistsError => Intl.message(
+    "The username you entered seems to be already registered",
+    name: "sync_usernameAlreadyExistsError",
+  );
+  
+  String get sync_usernameNotFoundError => Intl.message(
+    "This username isn't registered",
+    name: "sync_usernameNotFoundError",
+  );
+  
+  String get sync_invalidCredentialsError => Intl.message(
+    "Bad username/email and password combination",
+    name: "sync_invalidCredentialsError",
+  );
+  
+  String get sync_notFoundError => Intl.message(
+    "The account was not found",
+    name: "sync_notFoundError",
+  );
+  
+  String get sync_userNotFoundError => Intl.message(
+    "The user was not found",
+    name: "sync_userNotFoundError",
+  );
+  
+  String get sync_outOfBoundsError => Intl.message(
+    "The input you entered is too long or too short",
+    name: "sync_userNotFoundError",
+  );
+  
+  String get sync_accNotFoundError => Intl.message(
+    "The account was not found",
+    name: "sync_userNotFoundError",
+  );
+  
+  String get sync_missingNoteIdError => Intl.message(
+    "You can't create a note without an id",
+    name: "sync_missingNoteId",
+  );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

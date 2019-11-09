@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/sync_register_route.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
@@ -254,7 +255,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           Navigator.pop(context);
                                         } else {
                                           scaffoldKey.currentState.showSnackBar(SnackBar(
-                                            content: Text(responseBody["message"].toString()),
+                                            content: Text(Utils.parseErrorMessage(context, responseBody["message"].toString())),
                                           ));
                                         }
                                       }
