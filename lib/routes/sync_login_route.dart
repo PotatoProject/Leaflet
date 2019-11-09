@@ -250,7 +250,6 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                                   headers: {"Authorization": appInfo.userToken});
                                             }
                                           }
-                                              
 
                                           Navigator.pop(context);
                                         } else {

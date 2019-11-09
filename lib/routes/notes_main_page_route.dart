@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -137,9 +138,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
 
           List<Note> parsedList = await Note.fromRequest(body["notes"], false);
-          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+          List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
 
-          if(parsedList != null) {
+          if(parsedList != null && listEquals(parsedList, list)) {
+            noteList.forEach((note) => note.isSelected = false);
+            setState(() {
+              selectionList.clear();
+              isSelectorVisible = false;
+            });
+            
             for(int i = 0; i < list.length; i++) {
               NoteHelper().delete(list[i].id);
             }
@@ -147,10 +154,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             for(int i = 0; i < parsedList.length; i++) {
               await NoteHelper().insert(parsedList[i]);
             }
-          }
 
-          list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-          setState(() => noteList = list);
+            list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+            setState(() => noteList = list);
+          }
         });
       } else {
         executor?.cancel();
@@ -1604,9 +1611,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
 
           List<Note> parsedList = await Note.fromRequest(body["notes"], false);
-          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+          List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
 
-          if(parsedList != null) {
+          if(parsedList != null && listEquals(parsedList, list)) {
+            noteList.forEach((note) => note.isSelected = false);
+            setState(() {
+              selectionList.clear();
+              isSelectorVisible = false;
+            });
+
             for(int i = 0; i < list.length; i++) {
               NoteHelper().delete(list[i].id);
             }
@@ -1614,10 +1627,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             for(int i = 0; i < parsedList.length; i++) {
               await NoteHelper().insert(parsedList[i]);
             }
-          }
 
-          list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
-          setState(() => noteList = list);
+            list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+            setState(() => noteList = list);
+          }
         },
         child: CustomScrollView(
           slivers: <Widget>[
