@@ -102,7 +102,6 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
 
                     if(image != null) {
                       List<int> imageBytes = await image.readAsBytes();
-                      String base64 = base64Encode(imageBytes);
 
                       Response imageToImgur = await post("https://api.imgur.com/3/image", body: imageBytes,
                           headers: {"Authorization": "Client-ID f856a5e4fd5b2af"});

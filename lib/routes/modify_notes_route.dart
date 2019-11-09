@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +19,7 @@ import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 List<int> reminderList = List<int>();
 
@@ -86,6 +88,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   Brightness systemBarsIconBrightness;
 
   FocusNode contentNode = FocusNode();
+
+  bool showLoadingIcon = false;
 
   void noteIdInit() async {
     noteId = noteId == null ? await noteIdSearcher() : noteId;
@@ -241,6 +245,14 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           },
                         ),
                         Spacer(),
+                        Visibility(
+                          visible: showLoadingIcon,
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
                         IconButton(
                           icon: Icon(noteHideContent == 1 &&
                                   (notePin != null || notePassword != null)
@@ -468,7 +480,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               ),
               Padding(
                 padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60),
                 child: ListView(
                   padding: EdgeInsets.all(0),
                   children: <Widget>[
@@ -476,9 +488,30 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       visible: noteImagePath != null,
                       child: noteImagePath == null
                           ? Container()
-                          : Image(
-                              image: FileImage(File(noteImagePath)),
+                          : CachedNetworkImage(
+                              imageUrl: noteImagePath,
                               fit: BoxFit.fill,
+                              fadeInDuration: Duration(milliseconds: 0),
+                              fadeOutDuration: Duration(milliseconds: 0),
+                              placeholder: (context, url) {
+                                return ControlledAnimation(
+                                  playback: Playback.MIRROR,
+                                  tween: Tween<double>(begin: 0.2, end: 1),
+                                  duration: Duration(milliseconds: 400),
+                                  builder: (context, animation) {
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 30),
+                                      child: Opacity(
+                                        opacity: animation,
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 56,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                     ),
                     Padding(
@@ -838,10 +871,27 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       : Text(locales.modifyNotesRoute_image_add),
                   onTap: () async {
                     Navigator.pop(context);
+
                     File image = await ImagePicker.pickImage(
                         source: ImageSource.gallery);
-                    if (image != null)
-                      setState(() => noteImagePath = image.path);
+                    
+                    if(image != null) {
+                      List<int> imageBytes = await image.readAsBytes();
+
+                      setState(() => showLoadingIcon = true);
+                      Response imageToImgur = await post("https://api.imgur.com/3/image", body: imageBytes,
+                          headers: {"Authorization": "Client-ID f856a5e4fd5b2af"});
+
+                      Map<String, dynamic> imgurBody = json.decode(imageToImgur.body);
+                      
+                      setState(() => showLoadingIcon = false);
+
+                      if(imgurBody["success"]) {
+                        setState(() => noteImagePath = imgurBody["data"]["link"]);
+                      } else {
+                        print("k");
+                      }
+                    }
                   },
                 ),
                 ListTile(

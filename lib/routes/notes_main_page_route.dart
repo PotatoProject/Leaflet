@@ -2292,13 +2292,33 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                       topRight: Radius.circular(12)),
                   child: noteList[index].imagePath == null
                       ? Container()
-                      : Image(
-                          image: FileImage(File(noteList[index].imagePath)),
-                          fit: BoxFit.fitWidth,
-                          width: oneSideOnly
-                              ? MediaQuery.of(context).size.width / 2
-                              : MediaQuery.of(context).size.width,
+                      : Center(
+                        child: CachedNetworkImage(
+                          imageUrl: noteList[index].imagePath,
+                          fit: BoxFit.fill,
+                          fadeInDuration: Duration(milliseconds: 0),
+                          fadeOutDuration: Duration(milliseconds: 0),
+                          placeholder: (context, url) {
+                            return ControlledAnimation(
+                              playback: Playback.MIRROR,
+                              tween: Tween<double>(begin: 0.2, end: 1),
+                              duration: Duration(milliseconds: 400),
+                              builder: (context, animation) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 40),
+                                  child: Opacity(
+                                    opacity: animation,
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 56,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
+                      )
                 ),
               ),
               Visibility(
