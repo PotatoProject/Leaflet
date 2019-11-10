@@ -78,13 +78,8 @@ class AppInfoProvider extends ChangeNotifier {
   static List<String> get supportedLocales => [
     "en",
     "it",
-    "nl",
-    "id",
-    "fr",
     "ru",
-    "cs",
-    "es",
-    "vi",
+    "zh",
   ];
 
   set followSystemTheme(bool follow) {

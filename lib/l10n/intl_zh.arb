@@ -1,265 +1,265 @@
 {
     "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Заметки",
+    "notes": "記事",
     "@notes": {
         "type": "text",
         "placeholders": {}
     },
-    "trash": "Корзина",
+    "trash": "垃圾桶",
     "@trash": {
         "type": "text",
         "placeholders": {}
     },
-    "archive": "Архив",
+    "archive": "封存",
     "@archive": {
         "type": "text",
         "placeholders": {}
     },
-    "done": "Готово",
+    "done": "完成",
     "@done": {
         "type": "text",
         "placeholders": {}
     },
-    "save": "Сохранить",
+    "save": "儲存",
     "@save": {
         "type": "text",
         "placeholders": {}
     },
-    "confirm": "Подтвердить",
+    "confirm": "確認",
     "@confirm": {
         "type": "text",
         "placeholders": {}
     },
-    "cancel": "Отмена",
+    "cancel": "取消",
     "@cancel": {
         "type": "text",
         "placeholders": {}
     },
-    "remove": "Удалить",
+    "remove": "移除",
     "@remove": {
         "type": "text",
         "placeholders": {}
     },
-    "reset": "Сбросить",
+    "reset": "重設",
     "@reset": {
         "type": "text",
         "placeholders": {}
     },
-    "undo": "Отменить",
+    "undo": "復原",
     "@undo": {
         "type": "text",
         "placeholders": {}
     },
-    "chooseAction": "Выберите действие",
+    "chooseAction": "選擇動作",
     "@chooseAction": {
         "type": "text",
         "placeholders": {}
     },
-    "light": "Светлая",
+    "light": "亮色",
     "@light": {
         "type": "text",
         "placeholders": {}
     },
-    "dark": "Темная",
+    "dark": "深色",
     "@dark": {
         "type": "text",
         "placeholders": {}
     },
-    "black": "Черная",
+    "black": "黑色",
     "@black": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_noNotes": "Заметки еще не добавлены",
+    "notesMainPageRoute_noNotes": "你新增的記事會顯示在這裡",
     "@notesMainPageRoute_noNotes": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyTrash": "Корзина пуста",
+    "notesMainPageRoute_emptyTrash": "垃圾桶內沒有任何記事",
     "@notesMainPageRoute_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "У вас нет заметок в архиве",
+    "notesMainPageRoute_emptyArchive": "你封存的記事會顯示在這裡",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_writeNote": "Написать заметку",
+    "notesMainPageRoute_writeNote": "新增記事…",
     "@notesMainPageRoute_writeNote": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_starred": "Помеченные заметки",
+    "notesMainPageRoute_starred": "已加星號的筆記",
     "@notesMainPageRoute_starred": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_other": "Другие заметки",
+    "notesMainPageRoute_other": "其他記事",
     "@notesMainPageRoute_other": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_hiddenContent": "Содержимое скрыто",
+    "notesMainPageRoute_note_hiddenContent": "內容已隱藏",
     "@notesMainPageRoute_note_hiddenContent": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_remindersSet": "Напоминания установлены для заметки",
+    "notesMainPageRoute_note_remindersSet": "已設定提醒",
     "@notesMainPageRoute_note_remindersSet": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_title": "Удалить выбранные заметки?",
+    "notesMainPageRoute_note_deleteDialog_title": "確認移除選取的記事？",
     "@notesMainPageRoute_note_deleteDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_content": "Как только заметки будут удалены отсюда, вы не можете их восстановить.\nВы уверены, что хотите продолжить?",
+    "notesMainPageRoute_note_deleteDialog_content": "垃圾桶中的所有記事將永久刪除。",
     "@notesMainPageRoute_note_deleteDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_title": "Очистить корзину?",
+    "notesMainPageRoute_note_emptyTrash_title": "要清空垃圾桶嗎？",
     "@notesMainPageRoute_note_emptyTrash_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_content": "Как только заметки будут удалены отсюда, вы не можете их восстановить.\nВы уверены, что хотите продолжить?",
+    "notesMainPageRoute_note_emptyTrash_content": "垃圾桶中的所有記事將永久刪除。",
     "@notesMainPageRoute_note_emptyTrash_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_list_selectedEntries": " записей выбрано",
+    "notesMainPageRoute_note_list_selectedEntries": " 則選取的記事",
     "@notesMainPageRoute_note_list_selectedEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_pinnedNote": "Закрепленная заметка",
+    "notesMainPageRoute_pinnedNote": "已固定的記事",
     "@notesMainPageRoute_pinnedNote": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_sortByDate": "Сортировать заметки по дате",
+    "userInfoRoute_sortByDate": "以日期排序",
     "@userInfoRoute_sortByDate": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_change": "Изменить аватар",
+    "userInfoRoute_avatar_change": "變更個人資料相片",
     "@userInfoRoute_avatar_change": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_remove": "Удалить аватар",
+    "userInfoRoute_avatar_remove": "移除個人資料相片",
     "@userInfoRoute_avatar_remove": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_title": "Заголовок",
+    "modifyNotesRoute_title": "標題",
     "@modifyNotesRoute_title": {
         "description": "Title textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_content": "Содержимое",
+    "modifyNotesRoute_content": "内容",
     "@modifyNotesRoute_content": {
         "description": "Content textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list": "Список",
+    "modifyNotesRoute_list": "清單",
     "@modifyNotesRoute_list": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_entry": "Запись",
+    "modifyNotesRoute_list_entry": "項目",
     "@modifyNotesRoute_list_entry": {
         "description": "List entry textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_selectedEntries": " записей выделено",
+    "modifyNotesRoute_list_selectedEntries": " 個選取的項目",
     "@modifyNotesRoute_list_selectedEntries": {
         "description": "Text that appears on checked entries header widget",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image": "Изображение",
+    "modifyNotesRoute_image": "圖片",
     "@modifyNotesRoute_image": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_add": "Добавить изображение",
+    "modifyNotesRoute_image_add": "新增圖片",
     "@modifyNotesRoute_image_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_update": "Обновить изображение",
+    "modifyNotesRoute_image_update": "更新圖片",
     "@modifyNotesRoute_image_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_remove": "Удалить изображение",
+    "modifyNotesRoute_image_remove": "移除圖片",
     "@modifyNotesRoute_image_remove": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder": "Напоминание",
+    "modifyNotesRoute_reminder": "提醒",
     "@modifyNotesRoute_reminder": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_add": "Добавить напоминание",
+    "modifyNotesRoute_reminder_add": "建立新提醒",
     "@modifyNotesRoute_reminder_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_update": "Обновить напоминание",
+    "modifyNotesRoute_reminder_update": "更新提醒",
     "@modifyNotesRoute_reminder_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_time": "Время",
+    "modifyNotesRoute_reminder_time": "時間",
     "@modifyNotesRoute_reminder_time": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_date": "Дата",
+    "modifyNotesRoute_reminder_date": "日期",
     "@modifyNotesRoute_reminder_date": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_hideContent": "Прятать содержание заметок на главной",
+    "modifyNotesRoute_security_hideContent": "於主頁面隱藏記事內容",
     "@modifyNotesRoute_security_hideContent": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_protectionText": "Использовать защиту",
+    "modifyNotesRoute_security_protectionText": "選擇保護方式",
     "@modifyNotesRoute_security_protectionText": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_pin": "PIN-код",
+    "modifyNotesRoute_security_pin": "PIN 碼",
     "@modifyNotesRoute_security_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_password": "Пароль",
+    "modifyNotesRoute_security_password": "密碼",
     "@modifyNotesRoute_security_password": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePin": "Установить или обновить PIN",
+    "modifyNotesRoute_security_dialog_titlePin": "設定或變更 PIN 碼",
     "@modifyNotesRoute_security_dialog_titlePin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePassword": "Установить или обновить пароль",
+    "modifyNotesRoute_security_dialog_titlePassword": "設定或變更密碼",
     "@modifyNotesRoute_security_dialog_titlePassword": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_lengthExceed": "длина {method} не может превышать {maxLength}",
+    "modifyNotesRoute_security_dialog_lengthExceed": "{method} 長度請勿超過 {maxLength} 個字元",
     "@modifyNotesRoute_security_dialog_lengthExceed": {
         "type": "text",
         "placeholders": {
@@ -267,7 +267,7 @@
             "maxLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_lengthShort": "длина {method} не может быть меньше {minLength}",
+    "modifyNotesRoute_security_dialog_lengthShort": "{method} 長度請勿短於 {minLength} 個字元",
     "@modifyNotesRoute_security_dialog_lengthShort": {
         "type": "text",
         "placeholders": {
@@ -275,512 +275,512 @@
             "minLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_valid": " верно",
+    "modifyNotesRoute_security_dialog_valid": " 有效",
     "@modifyNotesRoute_security_dialog_valid": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_dialogTitle": "Цвет записок",
+    "modifyNotesRoute_color_dialogTitle": "記事顏色選取工具",
     "@modifyNotesRoute_color_dialogTitle": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_change": "Изменить цвет записки",
+    "modifyNotesRoute_color_change": "變更記事顏色",
     "@modifyNotesRoute_color_change": {
         "description": "Used in the three dots menu on modify notes route, for modifying note color",
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_title": "Настройки",
+    "settingsRoute_title": "設定",
     "@settingsRoute_title": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes": "Темы",
+    "settingsRoute_themes": "主題",
     "@settingsRoute_themes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_followSystem": "Следовать системной теме",
+    "settingsRoute_themes_followSystem": "根據裝置主題進行設定",
     "@settingsRoute_themes_followSystem": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_systemDarkMode": "Автоматический ночной режим",
+    "settingsRoute_themes_systemDarkMode": "自動深色模式",
     "@settingsRoute_themes_systemDarkMode": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_appTheme": "Тема приложения",
+    "settingsRoute_themes_appTheme": "應用程式主題",
     "@settingsRoute_themes_appTheme": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_useCustomAccent": "Использовать пользовательский акцент",
+    "settingsRoute_themes_useCustomAccent": "使用自訂強調色",
     "@settingsRoute_themes_useCustomAccent": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_customAccentColor": "Пользовательский цвет",
+    "settingsRoute_themes_customAccentColor": "自訂顏色",
     "@settingsRoute_themes_customAccentColor": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures": "Жесты",
+    "settingsRoute_gestures": "手勢",
     "@settingsRoute_gestures": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures_quickStar": "Двойное нажатие для пометки",
+    "settingsRoute_gestures_quickStar": "輕觸兩下記事來加上星號",
     "@settingsRoute_gestures_quickStar": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore": "Бэкап и восстановление",
+    "settingsRoute_backupAndRestore": "備份與還原",
     "@settingsRoute_backupAndRestore": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_backup": "Бэкап (Экспериментальный)",
+    "settingsRoute_backupAndRestore_backup": "備份 (實驗性)",
     "@settingsRoute_backupAndRestore_backup": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_backup_done": "Бэкап расположен в: {path}",
+    "settingsRoute_backupAndRestore_backup_done": "已備份於：{path}",
     "@settingsRoute_backupAndRestore_backup_done": {
         "type": "text",
         "placeholders": {
             "path": {}
         }
     },
-    "settingsRoute_backupAndRestore_restore": "Восстановить (Экспериментальное)",
+    "settingsRoute_backupAndRestore_restore": "還原 (實驗性)",
     "@settingsRoute_backupAndRestore_restore": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_success": "Готово!",
+    "settingsRoute_backupAndRestore_restore_success": "已完成！",
     "@settingsRoute_backupAndRestore_restore_success": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_fail": "База данных повреждена или недействительна!",
+    "settingsRoute_backupAndRestore_restore_fail": "資料庫錯誤或無效！",
     "@settingsRoute_backupAndRestore_restore_fail": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_regenDbEntries": "Регенерировать базу данных",
+    "settingsRoute_backupAndRestore_regenDbEntries": "重新產生資料庫項目",
     "@settingsRoute_backupAndRestore_regenDbEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about": "О программе",
+    "settingsRoute_about": "關於",
     "@settingsRoute_about": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes": "О PotatoNotes",
+    "settingsRoute_about_potatonotes": "關於 PotatoNotes",
     "@settingsRoute_about_potatonotes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_development": "Разработка и поддержка: HrX03",
+    "settingsRoute_about_potatonotes_development": "開發及維護：HrX03",
     "@settingsRoute_about_potatonotes_development": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_design": "Дизайн, брендинг и логотип: RshBfn",
+    "settingsRoute_about_potatonotes_design": "設計、應用程式識別及圖示：RshBfn",
     "@settingsRoute_about_potatonotes_design": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_sourceCode": "Исходный код PotatoNotes",
+    "settingsRoute_about_sourceCode": "PotatoNotes 原始程式碼",
     "@settingsRoute_about_sourceCode": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev": "Опции для разработчиков",
+    "settingsRoute_dev": "開發人員選項",
     "@settingsRoute_dev": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_idLabels": "Показывать id записок",
+    "settingsRoute_dev_idLabels": "顯示編號標籤",
     "@settingsRoute_dev_idLabels": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_searchbar": "Поиск...",
+    "searchNotesRoute_searchbar": "搜尋…",
     "@searchNotesRoute_searchbar": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_noQuery": "Введите что-либо, чтобы начать поиск",
+    "searchNotesRoute_noQuery": "請輸入搜尋關鍵字",
     "@searchNotesRoute_noQuery": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_nothingFound": "Не найдено записок соответствующих критериям поиска",
+    "searchNotesRoute_nothingFound": "找不到相符的搜尋結果",
     "@searchNotesRoute_nothingFound": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_title": "Фильтры поиска",
+    "searchNotesRoute_filters_title": "搜尋工具",
     "@searchNotesRoute_filters_title": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_case": "Учитывать регистр",
+    "searchNotesRoute_filters_case": "區分大小寫",
     "@searchNotesRoute_filters_case": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_color": "Цветовой фильтр",
+    "searchNotesRoute_filters_color": "以顏色篩選",
     "@searchNotesRoute_filters_color": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_date": "По дате",
+    "searchNotesRoute_filters_date": "以日期篩選",
     "@searchNotesRoute_filters_date": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_pin": "Требуется ПИН, чтобы открыть заметку",
+    "securityNoteRoute_request_pin": "需要 PIN 碼以開啟記事",
     "@securityNoteRoute_request_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_password": "Требуется пароль, чтобы открыть заметку",
+    "securityNoteRoute_request_password": "需要密碼以開啟記事",
     "@securityNoteRoute_request_password": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_pin": "Неверный PIN-код",
+    "securityNoteRoute_wrong_pin": "PIN 碼錯誤",
     "@securityNoteRoute_wrong_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_password": "Неверный пароль",
+    "securityNoteRoute_wrong_password": "密碼錯誤",
     "@securityNoteRoute_wrong_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emailOrUsername": "Email или имя пользователя",
+    "syncLoginRoute_emailOrUsername": "電子郵件或使用者名稱",
     "@syncLoginRoute_emailOrUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emptyField": "Это поле не может быть пустым!",
+    "syncLoginRoute_emptyField": "此欄位不得為空！",
     "@syncLoginRoute_emptyField": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_password": "Пароль",
+    "syncLoginRoute_password": "密碼",
     "@syncLoginRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_register": "Регистрация",
+    "syncLoginRoute_register": "註冊",
     "@syncLoginRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_successfulRegistration": "Успешно зарегистрировано",
+    "syncLoginRoute_successfulRegistration": "註冊成功",
     "@syncLoginRoute_successfulRegistration": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_login": "Вход",
+    "syncLoginRoute_login": "登入",
     "@syncLoginRoute_login": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_title": "Заметки найдены в вашей учетной записи",
+    "syncLoginRoute_noteConflictDialog_title": "帳戶中尚無筆記",
     "@syncLoginRoute_noteConflictDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_content": "Сохранённые и синхронизированные заметки конфликтуют.\nЧто вы хотите сделать?",
+    "syncLoginRoute_noteConflictDialog_content": "現有筆記與同步中的筆記發生衝突。\n請選擇下一步：",
     "@syncLoginRoute_noteConflictDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_keep": "Сохранить текущие и загрузить их",
+    "syncLoginRoute_noteConflictDialog_keep": "保留現有筆記並上傳至雲端",
     "@syncLoginRoute_noteConflictDialog_keep": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_replace": "Заменить на сохранённые в облаке",
+    "syncLoginRoute_noteConflictDialog_replace": "將現有筆記替換為同步中的版本",
     "@syncLoginRoute_noteConflictDialog_replace": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_register": "Зарегистрироваться",
+    "syncRegisterRoute_register": "註冊",
     "@syncRegisterRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username": "Имя пользователя",
+    "syncRegisterRoute_username": "使用者名稱",
     "@syncRegisterRoute_username": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username_empty": "Имя не может быть пустым",
+    "syncRegisterRoute_username_empty": "使用者名稱不得為空",
     "@syncRegisterRoute_username_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email": "Эл. почта",
+    "syncRegisterRoute_email": "電子郵件",
     "@syncRegisterRoute_email": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_empty": "Эл. почта не может быть пустой",
+    "syncRegisterRoute_email_empty": "電子郵件不得為空",
     "@syncRegisterRoute_email_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_invalidFormat": "Неверный формат эл. почты",
+    "syncRegisterRoute_email_invalidFormat": "電子郵件格式無效",
     "@syncRegisterRoute_email_invalidFormat": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password": "Пароль",
+    "syncRegisterRoute_password": "密碼",
     "@syncRegisterRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password_empty": "Пароль не может быть пустым",
+    "syncRegisterRoute_password_empty": "密碼不得為空",
     "@syncRegisterRoute_password_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword": "Подтверждение пароля",
+    "syncRegisterRoute_confirmPassword": "確認密碼",
     "@syncRegisterRoute_confirmPassword": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword_noMatch": "Пароли не совпадают",
+    "syncRegisterRoute_confirmPassword_noMatch": "密碼不相符",
     "@syncRegisterRoute_confirmPassword_noMatch": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account": "Профиль",
+    "syncManageRoute_account": "帳戶",
     "@syncManageRoute_account": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_loggedInAs": "Вход выполнен как: {username}",
+    "syncManageRoute_account_loggedInAs": "登入為：{username}",
     "@syncManageRoute_account_loggedInAs": {
         "type": "text",
         "placeholders": {
             "username": {}
         }
     },
-    "syncManageRoute_account_logout": "Выход",
+    "syncManageRoute_account_logout": "登出",
     "@syncManageRoute_account_logout": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_guest": "Гость",
+    "syncManageRoute_account_guest": "訪客",
     "@syncManageRoute_account_guest": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeUsername": "Изменить имя пользователя",
+    "syncManageRoute_account_changeUsername": "變更使用者名稱",
     "@syncManageRoute_account_changeUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeImage": "Изменить изображение",
+    "syncManageRoute_account_changeImage": "變更圖片",
     "@syncManageRoute_account_changeImage": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync": "Синхронизировать",
+    "syncManageRoute_sync": "同步",
     "@syncManageRoute_sync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_enableAutoSync": "Включить автосинхронизацию",
+    "syncManageRoute_sync_enableAutoSync": "開啟自動同步",
     "@syncManageRoute_sync_enableAutoSync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_autoSyncInterval": "Интервал времени автосинхронизации (в секундах)",
+    "syncManageRoute_sync_autoSyncInterval": "自動同步間隔（秒）",
     "@syncManageRoute_sync_autoSyncInterval": {
         "type": "text",
         "placeholders": {}
     },
-    "note_select": "Выбрать",
+    "note_select": "選取",
     "@note_select": {
         "description": "String for selecting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_edit": "Изменить",
+    "note_edit": "編輯",
     "@note_edit": {
         "description": "String for editing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_emptyTrash": "Очистить корзину",
+    "note_emptyTrash": "清空垃圾桶",
     "@note_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "note_delete": "Удалить",
+    "note_delete": "刪除",
     "@note_delete": {
         "description": "String for deleting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_delete_snackbar": "Заметка удалена",
+    "note_delete_snackbar": "筆記已刪除",
     "@note_delete_snackbar": {
         "description": "Appears on snackbar upon note deletion",
         "type": "text",
         "placeholders": {}
     },
-    "notes_delete_snackbar": "Заметки удалены",
+    "notes_delete_snackbar": "筆記已刪除",
     "@notes_delete_snackbar": {
         "description": "Appears on snackbar upon notes deletion",
         "type": "text",
         "placeholders": {}
     },
-    "note_restore_snackbar": "Заметка восстановлена",
+    "note_restore_snackbar": "筆記已還原",
     "@note_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "notes_restore_snackbar": "Заметки восстановлены",
+    "notes_restore_snackbar": "筆記已還原",
     "@notes_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "note_archive_snackbar": "Заметка перемещена в архив",
+    "note_archive_snackbar": "筆記已封存",
     "@note_archive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_archive_snackbar": "Заметки перемещены в архив",
+    "notes_archive_snackbar": "筆記已封存",
     "@notes_archive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_removeFromArchive_snackbar": "Заметка убрана из архива",
+    "note_removeFromArchive_snackbar": "已從封存中還原筆記",
     "@note_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_removeFromArchive_snackbar": "Заметки убрана из архива",
+    "notes_removeFromArchive_snackbar": "已從封存中還原筆記",
     "@notes_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_star": "Пометить",
+    "note_star": "加上星號",
     "@note_star": {
         "description": "String for starring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_unstar": "Снять пометку",
+    "note_unstar": "移除星號",
     "@note_unstar": {
         "description": "String for unstarring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_share": "Поделиться",
+    "note_share": "分享",
     "@note_share": {
         "description": "String for sharing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_export": "Экспортировать",
+    "note_export": "匯出",
     "@note_export": {
         "description": "String for exporting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_exportLocation": "Заметка экспортирована в",
+    "note_exportLocation": "已將記事匯出於",
     "@note_exportLocation": {
         "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
         "type": "text",
         "placeholders": {}
     },
-    "note_lockedOptions": "Заметка заблокирована, используйте опции на экране заметки",
+    "note_lockedOptions": "記事已鎖定，請於記事頁面變更選項",
     "@note_lockedOptions": {
         "type": "text",
         "placeholders": {}
     },
-    "note_pinToNotifs": "Закрепить в уведомлениях",
+    "note_pinToNotifs": "固定至通知區域",
     "@note_pinToNotifs": {
         "description": "String for pinning a note to notifications",
         "type": "text",
         "placeholders": {}
     },
-    "sync_malformedEmailError": "Неправильная или отсутствующая эл. почта",
+    "sync_malformedEmailError": "格式錯誤或無電子郵件",
     "@sync_malformedEmailError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameOutOfBoundsError": "Введенное имя пользователя слишком длинное или слишком короткое",
+    "sync_usernameOutOfBoundsError": "使用者名稱過長或過短",
     "@sync_usernameOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_passOutOfBoundsError": "Введённый пароль слишком короткий или слишком долгий",
+    "sync_passOutOfBoundsError": "密碼過長或過短",
     "@sync_passOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_dbConnectionError": "Возникла проблема при подключении к базе данных, повторите попытку позже",
+    "sync_dbConnectionError": "與資料庫連線時發生錯誤，請稍後再試",
     "@sync_dbConnectionError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_emailAlreadyExistsError": "Введенный вами адрес эл. почты уже зарегистрирован",
+    "sync_emailAlreadyExistsError": "該電子郵件已註冊",
     "@sync_emailAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameAlreadyExistsError": "Введённое имя пользователя уже зарегистрировано",
+    "sync_usernameAlreadyExistsError": "該使用者名稱已註冊",
     "@sync_usernameAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameNotFoundError": "Это имя пользователя не зарегистрировано",
+    "sync_usernameNotFoundError": "使用者名稱尚未註冊",
     "@sync_usernameNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_invalidCredentialsError": "Неверное имя пользователя/эл. почта и/или пароль",
+    "sync_invalidCredentialsError": "使用者名稱或電子郵件與密碼不相符",
     "@sync_invalidCredentialsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_notFoundError": "Профиль не найден",
+    "sync_notFoundError": "找不到此帳戶",
     "@sync_notFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_userNotFoundError": "Пользователь не найден",
+    "sync_userNotFoundError": "找不到使用者",
     "@sync_userNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_outOfBoundsError": "Введённые данные слишком долгие или слишком короткие",
+    "sync_outOfBoundsError": "輸入內容過長或過短",
     "@sync_outOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_accNotFoundError": "Профиль не найден",
+    "sync_accNotFoundError": "找不到此帳戶",
     "@sync_accNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_missingNoteIdError": "Вы не можете создать заметку без id",
+    "sync_missingNoteIdError": "無法建立無 ID 的筆記",
     "@sync_missingNoteIdError": {
         "type": "text",
         "placeholders": {}
