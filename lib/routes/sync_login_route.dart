@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/sync_register_route.dart';
@@ -43,6 +44,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
   @override
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
+    final locales = AppLocalizations.of(context);
 
     return Scaffold(
       key: scaffoldKey,
@@ -83,8 +85,8 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                             ),
                           ),
                           SyncInputField(
-                            title: "Email or username",
-                            errorMessage: "This field can't be empty",
+                            title: locales.syncLoginRoute_emailOrUsername,
+                            errorMessage: locales.syncLoginRoute_emptyField,
                             selectHandler: emailSelected,
                             emptyHandler: emailEmpty,
                             focusNode: emailNode,
@@ -99,8 +101,8 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                             color: Colors.transparent,
                           ),
                           SyncInputField(
-                            title: "Password",
-                            errorMessage: "Password can't be empty",
+                            title: locales.syncLoginRoute_password,
+                            errorMessage: locales.syncLoginRoute_emptyField,
                             selectHandler: passwordSelected,
                             emptyHandler: passwordEmpty,
                             focusNode: passwordNode,
@@ -137,7 +139,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                         width: 1.5,
                                       )
                                     ),
-                                    child: Text("Register"),
+                                    child: Text(locales.syncLoginRoute_register),
                                     textColor: Theme.of(context).accentColor,
                                     onPressed: () async {
                                       bool result = await Navigator.push(context, MaterialPageRoute(
@@ -146,7 +148,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
 
                                       if(result != null && result == true)
                                           scaffoldKey.currentState.showSnackBar(SnackBar(
-                                            content: Text("Registration successful"),
+                                            content: Text(locales.syncLoginRoute_successfulRegistration),
                                           ));
                                     }
                                   ),
@@ -161,7 +163,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                     ),
                                     color: Theme.of(context).accentColor,
                                     textColor: Theme.of(context).scaffoldBackgroundColor,
-                                    child: Text("Login"),
+                                    child: Text(locales.syncLoginRoute_login),
                                     onPressed: () async {
                                       if(email.isNotEmpty && password.isNotEmpty) {
                                         setState(() => showLoadingOverlay = true);
@@ -204,17 +206,18 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           if(body["notes"].isNotEmpty && list.isNotEmpty) {
                                             result = await showDialog(
                                               context: context,
+                                              barrierDismissible: false,
                                               builder: (context) {
                                                 return AlertDialog(
-                                                  title: Text("Notes found on your account"),
-                                                  content: Text("Your account seem to already have some notes saved.\nWhat do you want to do?"),
+                                                  title: Text(locales.syncLoginRoute_noteConflictDialog_title),
+                                                  content: Text(locales.syncLoginRoute_noteConflictDialog_content),
                                                   actions: <Widget>[
                                                     FlatButton(
-                                                      child: Text("Keep current"),
+                                                      child: Text(locales.syncLoginRoute_noteConflictDialog_keep),
                                                       onPressed: () => Navigator.pop(context),
                                                     ),
                                                     FlatButton(
-                                                      child: Text("Replace with cloud"),
+                                                      child: Text(locales.syncLoginRoute_noteConflictDialog_replace),
                                                       onPressed: () async {
                                                         List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
                                                         

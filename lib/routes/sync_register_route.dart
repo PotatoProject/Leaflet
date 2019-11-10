@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/ui/custom_icons_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
@@ -49,6 +50,8 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final locales = AppLocalizations.of(context);
+    
     return Scaffold(
       key: scaffoldKey,
       body: SafeArea(
@@ -78,7 +81,7 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                                   color: Colors.transparent,
                                 ),
                                 Text(
-                                  "Register",
+                                  locales.syncRegisterRoute_register,
                                   style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600
@@ -88,8 +91,8 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                             ),
                           ),
                           SyncInputField(
-                            title: "Username",
-                            errorMessage: "Username can't be empty",
+                            title: locales.syncRegisterRoute_username,
+                            errorMessage: locales.syncRegisterRoute_username_empty,
                             selectHandler: usernameSelected,
                             focusNode: usernameNode,
                             emptyHandler: usernameEmpty,
@@ -103,8 +106,10 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                             color: Colors.transparent,
                           ),
                           SyncInputField(
-                            title: "Email",
-                            errorMessage: invalidEmail ? "Invalid email format" : "Email can't be empty",
+                            title: locales.syncRegisterRoute_email,
+                            errorMessage: invalidEmail ?
+                                locales.syncRegisterRoute_email_invalidFormat :
+                                locales.syncRegisterRoute_email_empty,
                             selectHandler: emailSelected,
                             focusNode: emailNode,
                             emptyHandler: emailEmpty,
@@ -120,8 +125,8 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                             color: Colors.transparent,
                           ),
                           SyncInputField(
-                            title: "Password",
-                            errorMessage: "Password can't be empty",
+                            title: locales.syncRegisterRoute_password,
+                            errorMessage: locales.syncRegisterRoute_password_empty,
                             selectHandler: passwordSelected,
                             focusNode: passwordNode,
                             emptyHandler: passwordEmpty,
@@ -144,8 +149,8 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                             color: Colors.transparent,
                           ),
                           SyncInputField(
-                            title: "Confirm password",
-                            errorMessage: "Password don't match",
+                            title: locales.syncRegisterRoute_confirmPassword,
+                            errorMessage: locales.syncRegisterRoute_confirmPassword_noMatch,
                             selectHandler: confirmPasswordSelected,
                             focusNode: confirmPasswordNode,
                             emptyHandler: passwordNotMatch,
@@ -173,7 +178,7 @@ class _SyncRegisterRouteState extends State<SyncRegisterRoute> {
                                     ),
                                     color: Theme.of(context).accentColor,
                                     textColor: Theme.of(context).scaffoldBackgroundColor,
-                                    child: Text("Register"),
+                                    child: Text(locales.syncRegisterRoute_register),
                                     onPressed: () async {
                                       if((username.isNotEmpty && username.length >= 5) &&
                                           (email.isNotEmpty && email.contains(RegExp(".*\..*@.*\..*", dotAll: true))) &&

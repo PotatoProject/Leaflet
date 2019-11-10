@@ -450,6 +450,158 @@ class AppLocalizations {
     name: "securityNoteRoute_wrong_password",
   );
 
+  /* -- SyncLoginRoute related -- */
+
+  String get syncLoginRoute_emailOrUsername => Intl.message(
+    "Email or username",
+    name: "syncLoginRoute_emailOrUsername",
+  );
+
+  String get syncLoginRoute_emptyField => Intl.message(
+    "This field can't be empty!",
+    name: "syncLoginRoute_emptyField",
+  );
+
+  String get syncLoginRoute_password => Intl.message(
+    "Password",
+    name: "syncLoginRoute_password",
+  );
+
+  String get syncLoginRoute_register => Intl.message(
+    "Register",
+    name: "syncLoginRoute_register",
+  );
+
+  String get syncLoginRoute_successfulRegistration => Intl.message(
+    "Registered with success",
+    name: "syncLoginRoute_successfulRegistration",
+  );
+
+  String get syncLoginRoute_login => Intl.message(
+    "Login",
+    name: "syncLoginRoute_login",
+  );
+
+  String get syncLoginRoute_noteConflictDialog_title => Intl.message(
+    "Notes found on your account",
+    name: "syncLoginRoute_noteConflictDialog_title",
+  );
+
+  String get syncLoginRoute_noteConflictDialog_content => Intl.message(
+    "Saved notes and synced notes conflict.\nWhat do you want to do?",
+    name: "syncLoginRoute_noteConflictDialog_content",
+  );
+
+  String get syncLoginRoute_noteConflictDialog_keep => Intl.message(
+    "Keep current and upload them",
+    name: "syncLoginRoute_noteConflictDialog_keep",
+  );
+
+  String get syncLoginRoute_noteConflictDialog_replace => Intl.message(
+    "Replace saved with cloud",
+    name: "syncLoginRoute_noteConflictDialog_replace",
+  );
+
+  /* -- SyncRegisterRoute related -- */
+
+  String get syncRegisterRoute_register => Intl.message(
+    "Register",
+    name: "syncRegisterRoute_register",
+  );
+
+  String get syncRegisterRoute_username => Intl.message(
+    "Username",
+    name: "syncRegisterRoute_username",
+  );
+
+  String get syncRegisterRoute_username_empty => Intl.message(
+    "Username can't be empty",
+    name: "syncRegisterRoute_username_empty",
+  );
+
+  String get syncRegisterRoute_email => Intl.message(
+    "Email",
+    name: "syncRegisterRoute_email",
+  );
+
+  String get syncRegisterRoute_email_empty => Intl.message(
+    "Email can't be empty",
+    name: "syncRegisterRoute_email_empty",
+  );
+
+  String get syncRegisterRoute_email_invalidFormat => Intl.message(
+    "Invalid email format",
+    name: "syncRegisterRoute_email_invalidFormat",
+  );
+
+  String get syncRegisterRoute_password => Intl.message(
+    "Password",
+    name: "syncRegisterRoute_password",
+  );
+
+  String get syncRegisterRoute_password_empty => Intl.message(
+    "Password can't be empty",
+    name: "syncRegisterRoute_password_empty",
+  );
+
+  String get syncRegisterRoute_confirmPassword => Intl.message(
+    "Confirm password",
+    name: "syncRegisterRoute_confirmPassword",
+  );
+
+  String get syncRegisterRoute_confirmPassword_noMatch => Intl.message(
+    "Password don't match",
+    name: "syncRegisterRoute_confirmPassword_noMatch",
+  );
+
+  /* -- SyncManageRoute related -- */
+
+  String get syncManageRoute_account => Intl.message(
+    "Account",
+    name: "syncManageRoute_account",
+  );
+
+  String syncManageRoute_account_loggedInAs(String username) => Intl.message(
+    "Logged in as: $username",
+    name: "syncManageRoute_account_loggedInAs",
+    args: [username]
+  );
+
+  String get syncManageRoute_account_logout => Intl.message(
+    "Logout",
+    name: "syncManageRoute_account_logout",
+  );
+
+  String get syncManageRoute_account_guest => Intl.message(
+    "Guest",
+    name: "syncManageRoute_account_guest",
+  );
+
+  String get syncManageRoute_account_changeUsername => Intl.message(
+    "Change username",
+    name: "syncManageRoute_account_changeUsername",
+  );
+
+  String get syncManageRoute_account_changeImage => Intl.message(
+    "Change image",
+    name: "syncManageRoute_account_changeImage",
+  );
+
+  String get syncManageRoute_sync => Intl.message(
+    "Sync",
+    name: "syncManageRoute_sync",
+  );
+
+  String get syncManageRoute_sync_enableAutoSync => Intl.message(
+    "Enable auto sync",
+    name: "syncManageRoute_sync_enableAutoSync",
+  );
+
+  String get syncManageRoute_sync_autoSyncInterval => Intl.message(
+    "Auto-sync time interval (seconds)",
+    name: "syncManageRoute_sync_autoSyncInterval",
+  );
+
   /* -- General note related -- */
 
   String get note_select => Intl.message(

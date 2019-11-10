@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/ui/list_label_divider.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
@@ -36,11 +35,11 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
               padding: EdgeInsets.only(top: 60),
               children: <Widget>[
                 ListLabelDivider(
-                  label: "Account",
+                  label: locales.syncManageRoute_account,
                 ),
                 ListTile(
                   leading: Icon(Icons.person_outline),
-                  title: Text("Logged in as: " + appInfo.userName),
+                  title: Text(locales.syncManageRoute_account_loggedInAs(appInfo.userName)),
                   subtitle: Text(appInfo.userEmail),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -59,18 +58,16 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                             appInfo.userName = account["username"];
                             appInfo.userEmail = account["email"];
                             appInfo.userImage = account["image_url"];
-                          } else {
-                            
                           }
                         },
                       ),
                       RaisedButton(
                         color: Theme.of(context).accentColor,
                         textColor: Theme.of(context).scaffoldBackgroundColor,
-                        child: Text("Logout"),
+                        child: Text(locales.syncManageRoute_account_logout),
                         onPressed: () {
                           appInfo.userEmail = "";
-                          appInfo.userName = "Guest";
+                          appInfo.userName = locales.syncManageRoute_account_guest;
                           appInfo.userToken = null;
                           appInfo.userImage = null;
 
@@ -85,7 +82,7 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                     Icons.ac_unit,
                     color: Colors.transparent,
                   ),
-                  title: Text("Change username"),
+                  title: Text(locales.syncManageRoute_account_changeUsername),
                   onTap: () async {
                     showDialog(
                       context: context,
@@ -98,7 +95,7 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                     Icons.ac_unit,
                     color: Colors.transparent,
                   ),
-                  title: Text("Change image"),
+                  title: Text(locales.syncManageRoute_account_changeImage),
                   onTap: () async {
                     setState(() => showLoadingOverlay = true);
                     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -129,11 +126,11 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   },
                 ),
                 ListLabelDivider(
-                  label: "Sync",
+                  label: locales.syncManageRoute_sync,
                 ),
                 SwitchListTile(
                   secondary: Icon(Icons.sync),
-                  title: Text("Enable auto-sync"),
+                  title: Text(locales.syncManageRoute_sync_enableAutoSync),
                   value: appInfo.autoSync,
                   activeColor: Theme.of(context).accentColor,
                   onChanged: (value) {
@@ -146,7 +143,7 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                     color: Colors.transparent,
                   ),
                   enabled: appInfo.autoSync,
-                  title: Text("Auto-sync time interval (seconds)"),
+                  title: Text(locales.syncManageRoute_sync_autoSyncInterval),
                   trailing: DropdownButton(
                     onChanged: appInfo.autoSync ? (value) {
                       appInfo.autoSync = false;
