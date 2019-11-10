@@ -200,7 +200,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           
                                           Map<dynamic, dynamic> body = json.decode(noteList.body);
 
-                                          var result;
+                                          var result = false;
                                           List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                           if(body["notes"].isNotEmpty && list.isNotEmpty) {
@@ -224,26 +224,12 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                                             FlatButton(
                                                               textColor: Theme.of(context).accentColor,
                                                               child: Text(locales.syncLoginRoute_noteConflictDialog_keep),
-                                                              onPressed: () => Navigator.pop(context),
+                                                              onPressed: () => Navigator.pop(context, false),
                                                             ),
                                                             FlatButton(
                                                               textColor: Theme.of(context).accentColor,
                                                               child: Text(locales.syncLoginRoute_noteConflictDialog_replace),
-                                                              onPressed: () async {
-                                                                List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
-                                                          
-                                                                for(int i = 0; i < list.length; i++) {
-                                                                  NoteHelper().delete(list[i].id);
-                                                                }
-
-                                                                List<Note> parsedList = await Note.fromRequest(body["notes"], false);
-
-                                                                for(int i = 0; i < parsedList.length; i++) {
-                                                                  await NoteHelper().insert(parsedList[i]);
-                                                                }
-
-                                                                Navigator.pop(context, false);
-                                                              },
+                                                              onPressed: () => Navigator.pop(context, true),
                                                             ),
                                                           ],
                                                         ),
@@ -255,7 +241,19 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                             );
                                           }
 
-                                          if(result == null) {
+                                          if(result) {
+                                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                                          
+                                            for(int i = 0; i < list.length; i++) {
+                                              NoteHelper().delete(list[i].id);
+                                            }
+
+                                            List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+
+                                            for(int i = 0; i < parsedList.length; i++) {
+                                              await NoteHelper().insert(parsedList[i]);
+                                            }
+                                          } else {
                                             List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                             for(int i = 0; i < body["notes"].length; i++) {
