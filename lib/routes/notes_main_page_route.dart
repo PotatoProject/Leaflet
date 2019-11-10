@@ -1558,7 +1558,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     PopupMenuItem(
                                       enabled: noteList.length != 0,
                                       value: 0,
-                                      child: Text(locales.note_emptryTrash),
+                                      child: Text(locales.note_emptyTrash),
                                     ),
                                   ];
                                 },

@@ -616,9 +616,9 @@ class AppLocalizations {
     desc: "String for editing a note",
   );
 
-  String get note_emptryTrash => Intl.message(
+  String get note_emptyTrash => Intl.message(
     "Empty trash",
-    name: "note_emptryTrash",
+    name: "note_emptyTrash",
   );
 
   String get note_delete => Intl.message(
@@ -769,17 +769,17 @@ class AppLocalizations {
   
   String get sync_outOfBoundsError => Intl.message(
     "The input you entered is too long or too short",
-    name: "sync_userNotFoundError",
+    name: "sync_outOfBoundsError",
   );
   
   String get sync_accNotFoundError => Intl.message(
     "The account was not found",
-    name: "sync_userNotFoundError",
+    name: "sync_accNotFoundError",
   );
   
   String get sync_missingNoteIdError => Intl.message(
     "You can't create a note without an id",
-    name: "sync_missingNoteId",
+    name: "sync_missingNoteIdError",
   );
 }
 
