@@ -1,0 +1,788 @@
+{
+    "@@last_modified": "2019-11-10T11:25:03.268082",
+    "notes": "Notatki",
+    "@notes": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "trash": "Kosz",
+    "@trash": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "archive": "Archiwizuj",
+    "@archive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "done": "Gotowe",
+    "@done": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "save": "Zapisz",
+    "@save": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "confirm": "Potwierdź",
+    "@confirm": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "cancel": "Anuluj",
+    "@cancel": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "remove": "Usuń",
+    "@remove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "reset": "Przywróć domyślne",
+    "@reset": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "undo": "Cofnij",
+    "@undo": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "chooseAction": "Wybierz akcję",
+    "@chooseAction": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "light": "Jasny",
+    "@light": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "dark": "Ciemny",
+    "@dark": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "black": "Czarny",
+    "@black": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_noNotes": "Nie dodano żadnych notatek",
+    "@notesMainPageRoute_noNotes": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_emptyTrash": "Twój kosz jest pusty",
+    "@notesMainPageRoute_emptyTrash": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_emptyArchive": "Nie masz żadnych notatek w archiwum",
+    "@notesMainPageRoute_emptyArchive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_writeNote": "Napisz notatkę",
+    "@notesMainPageRoute_writeNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_starred": "Oznaczone gwiazdką",
+    "@notesMainPageRoute_starred": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_other": "Pozostałe notatki",
+    "@notesMainPageRoute_other": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_hiddenContent": "Ukryta zawartość",
+    "@notesMainPageRoute_note_hiddenContent": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_remindersSet": "Przypomnienie",
+    "@notesMainPageRoute_note_remindersSet": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_deleteDialog_title": "Usunąć zaznaczone notatki?",
+    "@notesMainPageRoute_note_deleteDialog_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_deleteDialog_content": "Nie można przywrócić notatek po ich usunięciu.\nCzy na pewno chcesz kontynuować?",
+    "@notesMainPageRoute_note_deleteDialog_content": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_emptyTrash_title": "Opróżnić kosz?",
+    "@notesMainPageRoute_note_emptyTrash_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_emptyTrash_content": "Nie można przywrócić notatek po ich usunięciu.\nCzy na pewno chcesz kontynuować?",
+    "@notesMainPageRoute_note_emptyTrash_content": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_note_list_selectedEntries": " wybranych wpisów",
+    "@notesMainPageRoute_note_list_selectedEntries": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notesMainPageRoute_pinnedNote": "Przypięta notatka",
+    "@notesMainPageRoute_pinnedNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_sortByDate": "Sortuj notatki według daty",
+    "@userInfoRoute_sortByDate": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_avatar_change": "Zmień awatar",
+    "@userInfoRoute_avatar_change": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "userInfoRoute_avatar_remove": "Usuń awatar",
+    "@userInfoRoute_avatar_remove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_title": "Tytuł",
+    "@modifyNotesRoute_title": {
+        "description": "Title textfield hint",
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_content": "Zawartość",
+    "@modifyNotesRoute_content": {
+        "description": "Content textfield hint",
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_list": "Lista",
+    "@modifyNotesRoute_list": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_list_entry": "Wpis",
+    "@modifyNotesRoute_list_entry": {
+        "description": "List entry textfield hint",
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_list_selectedEntries": " sprawdzonych wpisów",
+    "@modifyNotesRoute_list_selectedEntries": {
+        "description": "Text that appears on checked entries header widget",
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_image": "Obraz",
+    "@modifyNotesRoute_image": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_image_add": "Dodaj obraz",
+    "@modifyNotesRoute_image_add": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_image_update": "Aktualizuj obraz",
+    "@modifyNotesRoute_image_update": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_image_remove": "Usuń zdjęcie",
+    "@modifyNotesRoute_image_remove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_reminder": "Przypomnienie",
+    "@modifyNotesRoute_reminder": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_reminder_add": "Dodaj nowe przypomnienie",
+    "@modifyNotesRoute_reminder_add": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_reminder_update": "Aktualizuj przypomnienie",
+    "@modifyNotesRoute_reminder_update": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_reminder_time": "Czas",
+    "@modifyNotesRoute_reminder_time": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_reminder_date": "Data",
+    "@modifyNotesRoute_reminder_date": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_hideContent": "Ukryj zawartość notatki na stronie głównej",
+    "@modifyNotesRoute_security_hideContent": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_protectionText": "Użyj zabezpieczenia dla ukrycia",
+    "@modifyNotesRoute_security_protectionText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_pin": "PIN",
+    "@modifyNotesRoute_security_pin": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_password": "Hasło",
+    "@modifyNotesRoute_security_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_dialog_titlePin": "Ustaw lub aktualizuj PIN",
+    "@modifyNotesRoute_security_dialog_titlePin": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_dialog_titlePassword": "Ustaw lub aktualizuj hasło",
+    "@modifyNotesRoute_security_dialog_titlePassword": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_security_dialog_lengthExceed": "Długość {method} nie może przekroczyć {maxLength}",
+    "@modifyNotesRoute_security_dialog_lengthExceed": {
+        "type": "text",
+        "placeholders": {
+            "method": {},
+            "maxLength": {}
+        }
+    },
+    "modifyNotesRoute_security_dialog_lengthShort": "Długość {method} nie może być krótsza niż {minLength}",
+    "@modifyNotesRoute_security_dialog_lengthShort": {
+        "type": "text",
+        "placeholders": {
+            "method": {},
+            "minLength": {}
+        }
+    },
+    "modifyNotesRoute_security_dialog_valid": " ważny",
+    "@modifyNotesRoute_security_dialog_valid": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_color_dialogTitle": "Wybór koloru notatki",
+    "@modifyNotesRoute_color_dialogTitle": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "modifyNotesRoute_color_change": "Zmień kolor notatki",
+    "@modifyNotesRoute_color_change": {
+        "description": "Used in the three dots menu on modify notes route, for modifying note color",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_title": "Ustawienia",
+    "@settingsRoute_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes": "Motywy",
+    "@settingsRoute_themes": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_followSystem": "Z motywu systemu",
+    "@settingsRoute_themes_followSystem": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_systemDarkMode": "Automatyczny tryb ciemny",
+    "@settingsRoute_themes_systemDarkMode": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_appTheme": "Motyw aplikacji",
+    "@settingsRoute_themes_appTheme": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_useCustomAccent": "Użyj niestandardowego koloru akcentu",
+    "@settingsRoute_themes_useCustomAccent": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_customAccentColor": "Własny kolor",
+    "@settingsRoute_themes_customAccentColor": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_gestures": "Gesty",
+    "@settingsRoute_gestures": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_gestures_quickStar": "Dwukrotnie stuknij na notatkę, by dodać gwiazdkę",
+    "@settingsRoute_gestures_quickStar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore": "Kopia zapasowa i przywracanie",
+    "@settingsRoute_backupAndRestore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore_backup": "Kopia zapasowa (eksperymentalna)",
+    "@settingsRoute_backupAndRestore_backup": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore_backup_done": "Kopia zapasowa zlokalizowana w: {path}",
+    "@settingsRoute_backupAndRestore_backup_done": {
+        "type": "text",
+        "placeholders": {
+            "path": {}
+        }
+    },
+    "settingsRoute_backupAndRestore_restore": "Przywróć (eksperymentalne)",
+    "@settingsRoute_backupAndRestore_restore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore_restore_success": "Gotowe!",
+    "@settingsRoute_backupAndRestore_restore_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore_restore_fail": "Uszkodzona lub nieprawidłowa baza danych!",
+    "@settingsRoute_backupAndRestore_restore_fail": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_backupAndRestore_regenDbEntries": "Wygeneruj ponownie wpisy bazy danych",
+    "@settingsRoute_backupAndRestore_regenDbEntries": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_about": "O",
+    "@settingsRoute_about": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_about_potatonotes": "O PotatoNotes",
+    "@settingsRoute_about_potatonotes": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_about_potatonotes_development": "Opracowane i rozwijane przez HrX03",
+    "@settingsRoute_about_potatonotes_development": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_about_potatonotes_design": "Projekt, marka aplikacji i logo aplikacji przez RshBfn",
+    "@settingsRoute_about_potatonotes_design": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_about_sourceCode": "Kod źródłowy PotatoNotes",
+    "@settingsRoute_about_sourceCode": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev": "Opcje programistyczne",
+    "@settingsRoute_dev": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev_idLabels": "Pokaż etykiety identyfikatorów",
+    "@settingsRoute_dev_idLabels": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_searchbar": "Szukaj...",
+    "@searchNotesRoute_searchbar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_noQuery": "Wprowadź coś, aby rozpocząć wyszukiwanie",
+    "@searchNotesRoute_noQuery": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_nothingFound": "Nie znaleziono notatek pasujących do twoich kryteriów wyszukiwania",
+    "@searchNotesRoute_nothingFound": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_filters_title": "Filtry wyszukiwania",
+    "@searchNotesRoute_filters_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_filters_case": "Rozróżniaj małe i duże litery",
+    "@searchNotesRoute_filters_case": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_filters_color": "Filtr kolorów",
+    "@searchNotesRoute_filters_color": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "searchNotesRoute_filters_date": "Filtr daty",
+    "@searchNotesRoute_filters_date": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "securityNoteRoute_request_pin": "Proszony jest kod PIN, aby otworzyć notatkę",
+    "@securityNoteRoute_request_pin": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "securityNoteRoute_request_password": "Aby otworzyć notatkę, wymagane jest podanie hasła",
+    "@securityNoteRoute_request_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "securityNoteRoute_wrong_pin": "Nieprawidłowy kod PIN",
+    "@securityNoteRoute_wrong_pin": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "securityNoteRoute_wrong_password": "Nieprawidłowe hasło",
+    "@securityNoteRoute_wrong_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_emailOrUsername": "E-mail lub nazwa użytkownika",
+    "@syncLoginRoute_emailOrUsername": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_emptyField": "To pole nie może być puste!",
+    "@syncLoginRoute_emptyField": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_password": "Hasło",
+    "@syncLoginRoute_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_register": "Zarejestruj się",
+    "@syncLoginRoute_register": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_successfulRegistration": "Zarejestrowano z powodzeniem",
+    "@syncLoginRoute_successfulRegistration": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_login": "Zaloguj się",
+    "@syncLoginRoute_login": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_title": "Notatki znalezione na Twoim koncie",
+    "@syncLoginRoute_noteConflictDialog_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_content": "Wystąpił konflikt z zapisanymi i zsynchronizowanymi notatkami. Co chcesz zrobić?",
+    "@syncLoginRoute_noteConflictDialog_content": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_keep": "Zachowaj bieżące i prześlij je",
+    "@syncLoginRoute_noteConflictDialog_keep": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_replace": "Zastąp zapisane chmurą",
+    "@syncLoginRoute_noteConflictDialog_replace": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_register": "Zarejestruj się",
+    "@syncRegisterRoute_register": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_username": "Nazwa użytkownika",
+    "@syncRegisterRoute_username": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_username_empty": "Nazwa użytkownika nie może być pusta",
+    "@syncRegisterRoute_username_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email": "E-mail",
+    "@syncRegisterRoute_email": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email_empty": "Adres e-mail nie może być pusty",
+    "@syncRegisterRoute_email_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email_invalidFormat": "Nieprawidłowy format e-mail",
+    "@syncRegisterRoute_email_invalidFormat": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_password": "Hasło",
+    "@syncRegisterRoute_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_password_empty": "Hasło nie może być puste",
+    "@syncRegisterRoute_password_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_confirmPassword": "Potwierdź hasło",
+    "@syncRegisterRoute_confirmPassword": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_confirmPassword_noMatch": "Hasło nie pasuje",
+    "@syncRegisterRoute_confirmPassword_noMatch": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account": "Konto",
+    "@syncManageRoute_account": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_loggedInAs": "Zalogowano jako: {username}",
+    "@syncManageRoute_account_loggedInAs": {
+        "type": "text",
+        "placeholders": {
+            "username": {}
+        }
+    },
+    "syncManageRoute_account_logout": "Wyloguj się",
+    "@syncManageRoute_account_logout": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_guest": "Gość",
+    "@syncManageRoute_account_guest": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_changeUsername": "Zmień nazwę użytkownika",
+    "@syncManageRoute_account_changeUsername": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_changeImage": "Zmień obraz",
+    "@syncManageRoute_account_changeImage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync": "Synchronizuj",
+    "@syncManageRoute_sync": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync_enableAutoSync": "Włącz automatyczną synchronizację",
+    "@syncManageRoute_sync_enableAutoSync": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync_autoSyncInterval": "Interwał czasu automatycznej synchronizacji (sekundy)",
+    "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_select": "Wybierz",
+    "@note_select": {
+        "description": "String for selecting a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_edit": "Edytuj",
+    "@note_edit": {
+        "description": "String for editing a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_emptyTrash": "Opróżnij kosz",
+    "@note_emptyTrash": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_delete": "Usuń",
+    "@note_delete": {
+        "description": "String for deleting a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_delete_snackbar": "Notatka usunięta",
+    "@note_delete_snackbar": {
+        "description": "Appears on snackbar upon note deletion",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_delete_snackbar": "Usunięto notatki",
+    "@notes_delete_snackbar": {
+        "description": "Appears on snackbar upon notes deletion",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_restore_snackbar": "Przywrócono notatkę",
+    "@note_restore_snackbar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_restore_snackbar": "Przywrócono notatki",
+    "@notes_restore_snackbar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_archive_snackbar": "Zarchiwizowano notatkę",
+    "@note_archive_snackbar": {
+        "description": "Appears on snackbar upon note archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_archive_snackbar": "Zarchiwizowano notatki",
+    "@notes_archive_snackbar": {
+        "description": "Appears on snackbar upon notes archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_removeFromArchive_snackbar": "Usunięto notatkę z archiwum",
+    "@note_removeFromArchive_snackbar": {
+        "description": "Appears on snackbar upon note archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_removeFromArchive_snackbar": "Usunięto notatki z archiwum",
+    "@notes_removeFromArchive_snackbar": {
+        "description": "Appears on snackbar upon notes archivation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_star": "Gwiazdka",
+    "@note_star": {
+        "description": "String for starring a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_unstar": "Usuń gwiazdkę",
+    "@note_unstar": {
+        "description": "String for unstarring a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_share": "Udostępnij",
+    "@note_share": {
+        "description": "String for sharing a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_export": "Wyeksportuj",
+    "@note_export": {
+        "description": "String for exporting a note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_exportLocation": "Notatka wyeksportowana do",
+    "@note_exportLocation": {
+        "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_lockedOptions": "Notatka jest zablokowana, użyj opcji na ekranie notatki",
+    "@note_lockedOptions": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "note_pinToNotifs": "Przypnij do powiadomień",
+    "@note_pinToNotifs": {
+        "description": "String for pinning a note to notifications",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_malformedEmailError": "Niepoprawny lub brakujący adres e-mail",
+    "@sync_malformedEmailError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameOutOfBoundsError": "Wprowadzona nazwa użytkownika jest zbyt długa lub zbyt krótka",
+    "@sync_usernameOutOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_passOutOfBoundsError": "Wprowadzone hasło jest zbyt długie lub za krótkie",
+    "@sync_passOutOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_dbConnectionError": "Wystąpił problem z połączeniem z bazą danych, spróbuj ponownie później",
+    "@sync_dbConnectionError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_emailAlreadyExistsError": "Wprowadzony adres e-mail wydaje się być już zarejestrowany",
+    "@sync_emailAlreadyExistsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameAlreadyExistsError": "Podana nazwa użytkownika wydaje się być już zarejestrowana",
+    "@sync_usernameAlreadyExistsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameNotFoundError": "Ta nazwa użytkownika nie jest zarejestrowana",
+    "@sync_usernameNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_invalidCredentialsError": "Zła kombinacja nazwy użytkownika/adresu e-mail i hasła",
+    "@sync_invalidCredentialsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_notFoundError": "Konto nie zostało znalezione",
+    "@sync_notFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_userNotFoundError": "Użytkownik nie został znaleziony",
+    "@sync_userNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_outOfBoundsError": "Wprowadzone dane są zbyt długie lub zbyt krótkie",
+    "@sync_outOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_accNotFoundError": "Konto nie zostało znalezione",
+    "@sync_accNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_missingNoteIdError": "Nie możesz utworzyć notatki bez identyfikatora",
+    "@sync_missingNoteIdError": {
+        "type": "text",
+        "placeholders": {}
+    }
+}
