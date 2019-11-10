@@ -1,5 +1,5 @@
 {
-    "@@last_modified": "2019-11-01T10:23:22.504582",
+    "@@last_modified": "2019-11-10T11:25:03.268082",
     "notes": "Appunti",
     "@notes": {
         "type": "text",
@@ -80,7 +80,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "Non hai nessun appunto archiviato",
+    "notesMainPageRoute_emptyArchive": "Non hai nessun appunto archviato",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}
@@ -90,7 +90,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_starred": "Appunti predefiniti",
+    "notesMainPageRoute_starred": "Appunti preferiti",
     "@notesMainPageRoute_starred": {
         "type": "text",
         "placeholders": {}
@@ -463,6 +463,153 @@
         "type": "text",
         "placeholders": {}
     },
+    "syncLoginRoute_emailOrUsername": "Email o nome utente",
+    "@syncLoginRoute_emailOrUsername": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_emptyField": "Questo spazio non può essere vuoto!",
+    "@syncLoginRoute_emptyField": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_password": "Password",
+    "@syncLoginRoute_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_register": "Registrati",
+    "@syncLoginRoute_register": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_successfulRegistration": "Registrato con successo",
+    "@syncLoginRoute_successfulRegistration": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_login": "Accedi",
+    "@syncLoginRoute_login": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_title": "Sono stati trovati appunti sul tuo account",
+    "@syncLoginRoute_noteConflictDialog_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_content": "Gli appunti salvati e quelli sul cloud vanno in conflitto.\nCosa si desidare fare?",
+    "@syncLoginRoute_noteConflictDialog_content": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_keep": "Mantieni attuali e caricali",
+    "@syncLoginRoute_noteConflictDialog_keep": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncLoginRoute_noteConflictDialog_replace": "Rimpiazza con quelli sul cloud",
+    "@syncLoginRoute_noteConflictDialog_replace": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_register": "Registrazione",
+    "@syncRegisterRoute_register": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_username": "Nome utente",
+    "@syncRegisterRoute_username": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_username_empty": "Il nome utente non può essere vuoto",
+    "@syncRegisterRoute_username_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email": "Email",
+    "@syncRegisterRoute_email": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email_empty": "L'email non può essere vuota",
+    "@syncRegisterRoute_email_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_email_invalidFormat": "Formato dell'email non valido",
+    "@syncRegisterRoute_email_invalidFormat": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_password": "Password",
+    "@syncRegisterRoute_password": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_password_empty": "La password non può essere vuota",
+    "@syncRegisterRoute_password_empty": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_confirmPassword": "Conferma password",
+    "@syncRegisterRoute_confirmPassword": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncRegisterRoute_confirmPassword_noMatch": "Le password non corrispondono",
+    "@syncRegisterRoute_confirmPassword_noMatch": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account": "Account",
+    "@syncManageRoute_account": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_loggedInAs": "Accesso eseguito come: {username}",
+    "@syncManageRoute_account_loggedInAs": {
+        "type": "text",
+        "placeholders": {
+            "username": {}
+        }
+    },
+    "syncManageRoute_account_logout": "Esci",
+    "@syncManageRoute_account_logout": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_guest": "Ospite",
+    "@syncManageRoute_account_guest": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_changeUsername": "Cambia username",
+    "@syncManageRoute_account_changeUsername": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_account_changeImage": "Cambia immagine",
+    "@syncManageRoute_account_changeImage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync": "Sincronizzazione",
+    "@syncManageRoute_sync": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync_enableAutoSync": "Attiva la sincronizzazione automatica",
+    "@syncManageRoute_sync_enableAutoSync": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "syncManageRoute_sync_autoSyncInterval": "Intervallo di tempo in secondi per la sincronizzazione automatica",
+    "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
     "note_select": "Seleziona",
     "@note_select": {
         "description": "String for selecting a note",
@@ -475,8 +622,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "note_emptryTrash": "Svuota cestino",
-    "@note_emptryTrash": {
+    "note_emptyTrash": "Svuota cestino",
+    "@note_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
@@ -570,6 +717,71 @@
     "note_pinToNotifs": "Fissa nelle notifiche",
     "@note_pinToNotifs": {
         "description": "String for pinning a note to notifications",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_malformedEmailError": "Email non valida o inesistente",
+    "@sync_malformedEmailError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameOutOfBoundsError": "Il nome utente inserito è troppo lungo o troppo corto",
+    "@sync_usernameOutOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_passOutOfBoundsError": "La password inserita è troppo lunga o troppo corta",
+    "@sync_passOutOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_dbConnectionError": "Si è verificato un errore nel connettersi al database, riprova più tardi",
+    "@sync_dbConnectionError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_emailAlreadyExistsError": "L'email inserita sembra essere già registrata",
+    "@sync_emailAlreadyExistsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameAlreadyExistsError": "Il nome utente inserito sembra essere già registrato",
+    "@sync_usernameAlreadyExistsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_usernameNotFoundError": "Nome utente non registrato",
+    "@sync_usernameNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_invalidCredentialsError": "Combinazione nome utente/email e password non valida",
+    "@sync_invalidCredentialsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_notFoundError": "L'account non è stato trovato",
+    "@sync_notFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_userNotFoundError": "Utente non trovato",
+    "@sync_userNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_outOfBoundsError": "La stringa inserita è troppo lunga o troppo corta",
+    "@sync_outOfBoundsError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_accNotFoundError": "Account non trovato",
+    "@sync_accNotFoundError": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "sync_missingNoteIdError": "Non puoi creare un appunto senza id",
+    "@sync_missingNoteIdError": {
         "type": "text",
         "placeholders": {}
     }
