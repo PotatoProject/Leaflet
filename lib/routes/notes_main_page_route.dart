@@ -132,6 +132,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
           if(appInfo.autoSync == false)
             timer.cancel();
           
+          if(appInfo.userToken == null)
+            timer.cancel();
+          
           Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
               headers: {"Authorization": appInfo.userToken});
                                           
@@ -809,10 +812,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(45),
                                 child: appInfo.userImage == null ?
-                                    Icon(
-                                      Icons.person_outline,
-                                      size: 36,
-                                    ) :
+                                    Icon(Icons.person_outline) :
                                     CachedNetworkImage(
                                       imageUrl: appInfo.userImage,
                                       fadeInDuration: Duration(milliseconds: 0),

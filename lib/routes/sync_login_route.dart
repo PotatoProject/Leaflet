@@ -210,31 +210,46 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                               builder: (context) {
                                                 return AlertDialog(
                                                   title: Text(locales.syncLoginRoute_noteConflictDialog_title),
-                                                  content: Text(locales.syncLoginRoute_noteConflictDialog_content),
-                                                  actions: <Widget>[
-                                                    FlatButton(
-                                                      child: Text(locales.syncLoginRoute_noteConflictDialog_keep),
-                                                      onPressed: () => Navigator.pop(context),
-                                                    ),
-                                                    FlatButton(
-                                                      child: Text(locales.syncLoginRoute_noteConflictDialog_replace),
-                                                      onPressed: () async {
-                                                        List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
-                                                        
-                                                        for(int i = 0; i < list.length; i++) {
-                                                          NoteHelper().delete(list[i].id);
-                                                        }
+                                                  contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 10),
+                                                  content: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Text(locales.syncLoginRoute_noteConflictDialog_content),
+                                                      Container(
+                                                        width: MediaQuery.of(context).size.width,
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                                          children: <Widget>[
+                                                            FlatButton(
+                                                              textColor: Theme.of(context).accentColor,
+                                                              child: Text(locales.syncLoginRoute_noteConflictDialog_keep),
+                                                              onPressed: () => Navigator.pop(context),
+                                                            ),
+                                                            FlatButton(
+                                                              textColor: Theme.of(context).accentColor,
+                                                              child: Text(locales.syncLoginRoute_noteConflictDialog_replace),
+                                                              onPressed: () async {
+                                                                List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                                          
+                                                                for(int i = 0; i < list.length; i++) {
+                                                                  NoteHelper().delete(list[i].id);
+                                                                }
 
-                                                        List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+                                                                List<Note> parsedList = await Note.fromRequest(body["notes"], false);
 
-                                                        for(int i = 0; i < parsedList.length; i++) {
-                                                          await NoteHelper().insert(parsedList[i]);
-                                                        }
+                                                                for(int i = 0; i < parsedList.length; i++) {
+                                                                  await NoteHelper().insert(parsedList[i]);
+                                                                }
 
-                                                        Navigator.pop(context, false);
-                                                      },
-                                                    ),
-                                                  ],
+                                                                Navigator.pop(context, false);
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 );
                                               }
                                             );
