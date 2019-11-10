@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-11-01T10:23:22.504582",
+  "@@last_modified": "2019-11-10T11:25:03.268082",
   "notes": "Notes",
   "@notes": {
     "type": "text",
@@ -463,6 +463,153 @@
     "type": "text",
     "placeholders": {}
   },
+  "syncLoginRoute_emailOrUsername": "Email or username",
+  "@syncLoginRoute_emailOrUsername": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_emptyField": "This field can't be empty!",
+  "@syncLoginRoute_emptyField": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_password": "Password",
+  "@syncLoginRoute_password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_register": "Register",
+  "@syncLoginRoute_register": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_successfulRegistration": "Registered with success",
+  "@syncLoginRoute_successfulRegistration": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_login": "Login",
+  "@syncLoginRoute_login": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_noteConflictDialog_title": "Notes found on your account",
+  "@syncLoginRoute_noteConflictDialog_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_noteConflictDialog_content": "Saved notes and synced notes conflict.\nWhat do you want to do?",
+  "@syncLoginRoute_noteConflictDialog_content": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_noteConflictDialog_keep": "Keep current and upload them",
+  "@syncLoginRoute_noteConflictDialog_keep": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncLoginRoute_noteConflictDialog_replace": "Replace saved with cloud",
+  "@syncLoginRoute_noteConflictDialog_replace": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_register": "Register",
+  "@syncRegisterRoute_register": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_username": "Username",
+  "@syncRegisterRoute_username": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_username_empty": "Username can't be empty",
+  "@syncRegisterRoute_username_empty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_email": "Email",
+  "@syncRegisterRoute_email": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_email_empty": "Email can't be empty",
+  "@syncRegisterRoute_email_empty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_email_invalidFormat": "Invalid email format",
+  "@syncRegisterRoute_email_invalidFormat": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_password": "Password",
+  "@syncRegisterRoute_password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_password_empty": "Password can't be empty",
+  "@syncRegisterRoute_password_empty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_confirmPassword": "Confirm password",
+  "@syncRegisterRoute_confirmPassword": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncRegisterRoute_confirmPassword_noMatch": "Password don't match",
+  "@syncRegisterRoute_confirmPassword_noMatch": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_account": "Account",
+  "@syncManageRoute_account": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_account_loggedInAs": "Logged in as: {username}",
+  "@syncManageRoute_account_loggedInAs": {
+    "type": "text",
+    "placeholders": {
+      "username": {}
+    }
+  },
+  "syncManageRoute_account_logout": "Logout",
+  "@syncManageRoute_account_logout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_account_guest": "Guest",
+  "@syncManageRoute_account_guest": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_account_changeUsername": "Change username",
+  "@syncManageRoute_account_changeUsername": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_account_changeImage": "Change image",
+  "@syncManageRoute_account_changeImage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_sync": "Sync",
+  "@syncManageRoute_sync": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_sync_enableAutoSync": "Enable auto sync",
+  "@syncManageRoute_sync_enableAutoSync": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "syncManageRoute_sync_autoSyncInterval": "Auto-sync time interval (seconds)",
+  "@syncManageRoute_sync_autoSyncInterval": {
+    "type": "text",
+    "placeholders": {}
+  },
   "note_select": "Select",
   "@note_select": {
     "description": "String for selecting a note",
@@ -475,8 +622,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "note_emptryTrash": "Empty trash",
-  "@note_emptryTrash": {
+  "note_emptyTrash": "Empty trash",
+  "@note_emptyTrash": {
     "type": "text",
     "placeholders": {}
   },
@@ -570,6 +717,71 @@
   "note_pinToNotifs": "Pin to notifications",
   "@note_pinToNotifs": {
     "description": "String for pinning a note to notifications",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_malformedEmailError": "Malformed or missing email",
+  "@sync_malformedEmailError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_usernameOutOfBoundsError": "The username you entered is too long or too short",
+  "@sync_usernameOutOfBoundsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_passOutOfBoundsError": "The password you entered is too long or too short",
+  "@sync_passOutOfBoundsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_dbConnectionError": "There was a problem connecting to the database, retry later",
+  "@sync_dbConnectionError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_emailAlreadyExistsError": "The email you entered seems to be already registered",
+  "@sync_emailAlreadyExistsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_usernameAlreadyExistsError": "The username you entered seems to be already registered",
+  "@sync_usernameAlreadyExistsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_usernameNotFoundError": "This username isn't registered",
+  "@sync_usernameNotFoundError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_invalidCredentialsError": "Bad username/email and password combination",
+  "@sync_invalidCredentialsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_notFoundError": "The account was not found",
+  "@sync_notFoundError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_userNotFoundError": "The user was not found",
+  "@sync_userNotFoundError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_outOfBoundsError": "The input you entered is too long or too short",
+  "@sync_outOfBoundsError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_accNotFoundError": "The account was not found",
+  "@sync_accNotFoundError": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sync_missingNoteIdError": "You can't create a note without an id",
+  "@sync_missingNoteIdError": {
     "type": "text",
     "placeholders": {}
   }
