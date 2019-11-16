@@ -77,6 +77,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   static List<String> get supportedLocales => [
     "en",
+    'fr',
     "id",
     "it",
     "pl",
