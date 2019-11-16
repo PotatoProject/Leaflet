@@ -200,7 +200,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           
                                           Map<dynamic, dynamic> body = json.decode(noteList.body);
 
-                                          var result = false;
+                                          var result = true;
                                           List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                           if(body["notes"].isNotEmpty && list.isNotEmpty) {
@@ -240,6 +240,8 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                               }
                                             );
                                           }
+
+                                          print(result);
 
                                           if(result) {
                                             List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);

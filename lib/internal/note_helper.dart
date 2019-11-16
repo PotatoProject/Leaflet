@@ -343,7 +343,7 @@ class Note {
 
     List<Note> returnList = [];
 
-    for(int i = 0; i < list.length; i++) {
+    for(int i = 0; i < list?.length ?? 0; i++) {
       returnList.add(Note(
         id: generateNewIds ? await noteIdSearcher() : list[i]["note_id"],
         title: list[i]["title"],

@@ -48,7 +48,7 @@ void main() async {
         """,
       );
     },
-    onOpen: (db) {
+    onOpen: (db) async {
       List<String> columnsToAdd = [
         "ALTER TABLE notes ADD COLUMN id INTEGER PRIMARY KEY",
         "ALTER TABLE notes ADD COLUMN title TEXT",
@@ -68,9 +68,11 @@ void main() async {
       ];
 
       for (int i = 0; i < columnsToAdd.length; i++) {
-        db.execute(columnsToAdd[i]).catchError((error) {
+        try {
+          await db.execute(columnsToAdd[i]);
+        } on DatabaseException {
           //do nothing
-        });
+        }
       }
     },
     version: 5,

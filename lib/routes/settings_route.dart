@@ -295,10 +295,8 @@ class _SettingsState extends State<SettingsRoute> {
                           
                           List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
-                          for(int i = 0; i < body["notes"].length; i++) {
-                            await post("https://sync.potatoproject.co/api/notes/deleteall",
-                                headers: {"Authorization": appInfo.userToken});
-                          }
+                          await post("https://sync.potatoproject.co/api/notes/deleteall",
+                              headers: {"Authorization": appInfo.userToken});
 
                           for(int i = 0; i < list.length; i++) {
                             await post("https://sync.potatoproject.co/api/notes/save",

@@ -1,9 +1,9 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/hrx/flutter
-FLUTTER_APPLICATION_PATH=/home/hrx/FlutterApps/PotatoNotes
-FLUTTER_TARGET=lib/main.dart
+FLUTTER_ROOT=C:\flutter
+FLUTTER_APPLICATION_PATH=C:\Users\dnbia\Documents\FlutterApps\PotatoNotes
+FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
-SYMROOT=${SOURCE_ROOT}/../build/ios
-FLUTTER_FRAMEWORK_DIR=/home/hrx/flutter/bin/cache/artifacts/engine/ios
-FLUTTER_BUILD_NAME=1.3.0
-FLUTTER_BUILD_NUMBER=6
+SYMROOT=${SOURCE_ROOT}/../build\ios
+FLUTTER_FRAMEWORK_DIR=C:\flutter\bin\cache\artifacts\engine\ios
+FLUTTER_BUILD_NAME=1.4.0
+FLUTTER_BUILD_NUMBER=8

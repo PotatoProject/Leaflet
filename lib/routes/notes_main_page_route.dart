@@ -129,10 +129,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     if(appInfo.userToken != null) {
       if(execute) {
         executor = Timer.periodic(Duration(seconds: appInfo.autoSyncTimeInterval), (timer) async {
-          if(appInfo.autoSync == false)
-            timer.cancel();
-          
-          if(appInfo.userToken == null)
+          if(appInfo.autoSync == false || appInfo.userToken == null)
             timer.cancel();
           
           Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
@@ -140,10 +137,41 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                           
           Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
 
-          List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+          List<Note> parsedList = (await Note.fromRequest(body["notes"], false))..sort((a, b) =>
+              a.id.compareTo(b.id));
           List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
 
-          if(parsedList != null && listEquals(parsedList, list)) {
+          bool shouldUpdate() {
+            if(parsedList.length != list.length) {
+              return true;
+            } else {
+              for(int i = 0; i < parsedList.length; i++) {
+                Note parsedNote = parsedList[i];
+                Note note = list[i];
+
+                if(parsedNote.title != note.title ||
+                    parsedNote.content != note.content ||
+                    parsedNote.isStarred != note.isStarred ||
+                    parsedNote.date != note.date ||
+                    parsedNote.color != note.color ||
+                    parsedNote.imagePath!= note.imagePath ||
+                    parsedNote.isList != note.isList ||
+                    parsedNote.listParseString != note.listParseString ||
+                    parsedNote.reminders != note.reminders ||
+                    parsedNote.hideContent != note.hideContent ||
+                    parsedNote.pin != note.pin ||
+                    parsedNote.password != note.password ||
+                    parsedNote.isDeleted != note.isDeleted ||
+                    parsedNote.isArchived != note.isArchived) {
+                  
+                  return true;
+                }
+              }
+              return false;
+            }
+          }
+
+          if(parsedList != null && shouldUpdate()) {
             noteList.forEach((note) => note.isSelected = false);
             setState(() {
               selectionList.clear();
@@ -1610,10 +1638,41 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                           
           Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
 
-          List<Note> parsedList = await Note.fromRequest(body["notes"], false);
+          List<Note> parsedList = (await Note.fromRequest(body["notes"], false))..sort((a, b) =>
+              a.id.compareTo(b.id));
           List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
 
-          if(parsedList != null && listEquals(parsedList, list)) {
+          bool shouldUpdate() {
+            if(parsedList.length != list.length) {
+              return true;
+            } else {
+              for(int i = 0; i < parsedList.length; i++) {
+                Note parsedNote = parsedList[i];
+                Note note = list[i];
+
+                if(parsedNote.title != note.title ||
+                    parsedNote.content != note.content ||
+                    parsedNote.isStarred != note.isStarred ||
+                    parsedNote.date != note.date ||
+                    parsedNote.color != note.color ||
+                    parsedNote.imagePath!= note.imagePath ||
+                    parsedNote.isList != note.isList ||
+                    parsedNote.listParseString != note.listParseString ||
+                    parsedNote.reminders != note.reminders ||
+                    parsedNote.hideContent != note.hideContent ||
+                    parsedNote.pin != note.pin ||
+                    parsedNote.password != note.password ||
+                    parsedNote.isDeleted != note.isDeleted ||
+                    parsedNote.isArchived != note.isArchived) {
+                  
+                  return true;
+                }
+              }
+              return false;
+            }
+          }
+
+          if(parsedList != null && shouldUpdate()) {
             noteList.forEach((note) => note.isSelected = false);
             setState(() {
               selectionList.clear();
