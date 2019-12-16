@@ -781,7 +781,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                           IconButton(
                             icon: appInfo.isGridView
                                 ? Icon(Icons.view_agenda)
-                                : Icon(Icons.grid_on),
+                                : Icon(Icons.dashboard),
                             onPressed: () async {
                               if(controller.status == AnimationStatus.completed) {
                                 await controller.animateTo(0);
@@ -1596,7 +1596,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   IconButton(
                                     icon: appInfo.isGridView
                                         ? Icon(Icons.view_agenda)
-                                        : Icon(Icons.grid_on),
+                                        : Icon(Icons.dashboard),
                                     onPressed: () async {
                                       if(controller.status == AnimationStatus.completed) {
                                         await controller.animateTo(0);

@@ -40,7 +40,11 @@ public class MainActivity extends FlutterActivity {
     try {
       res = this.getPackageManager().getResourcesForApplication("android");
       int resId = res.getIdentifier("android:color/" + colResName, null, null);
-      return res.getColor(resId);
+      try {
+        return res.getColor(resId);
+      } catch (Resources.NotFoundException e) {
+        return 0xFF80CBC4;
+      }
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }
