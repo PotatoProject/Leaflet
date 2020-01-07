@@ -201,7 +201,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           Map<dynamic, dynamic> body = json.decode(noteList.body);
 
                                           var result = true;
-                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                          List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                           if(body["notes"].isNotEmpty && list.isNotEmpty) {
                                             result = await showDialog(
@@ -244,19 +244,19 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                           print(result);
 
                                           if(result) {
-                                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                            List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.ALL);
                                                           
                                             for(int i = 0; i < list.length; i++) {
-                                              NoteHelper().delete(list[i].id);
+                                              NoteHelper.delete(list[i].id);
                                             }
 
                                             List<Note> parsedList = await Note.fromRequest(body["notes"], false);
 
                                             for(int i = 0; i < parsedList.length; i++) {
-                                              await NoteHelper().insert(parsedList[i]);
+                                              await NoteHelper.insert(parsedList[i]);
                                             }
                                           } else {
-                                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                                            List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                                             for(int i = 0; i < body["notes"].length; i++) {
                                               await post("https://sync.potatoproject.co/api/notes/deleteall",

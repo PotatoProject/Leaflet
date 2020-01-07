@@ -260,7 +260,7 @@ class _SettingsState extends State<SettingsRoute> {
                               DateFormat("HH-mm_dd-MM-yyyy").format(now) +
                               '.db';
 
-                      await NoteHelper()
+                      await NoteHelper
                           .backupDatabaseToPath(databaseBackupPath);
 
                       scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -282,7 +282,7 @@ class _SettingsState extends State<SettingsRoute> {
                     String path = await FilePicker.getFilePath();
 
                     if (path != null) {
-                      int status = await NoteHelper().validateDatabase(path);
+                      int status = await NoteHelper.validateDatabase(path);
 
                       if (status == 0) {
                         if(appInfo.userToken != null) {
@@ -293,7 +293,7 @@ class _SettingsState extends State<SettingsRoute> {
                                           
                           Map<dynamic, dynamic> body = json.decode(noteList.body);
                           
-                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.ALL);
+                          List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.ALL);
 
                           await post("https://sync.potatoproject.co/api/notes/deleteall",
                               headers: {"Authorization": appInfo.userToken});
@@ -307,7 +307,7 @@ class _SettingsState extends State<SettingsRoute> {
                           setState(() => showLoadingOverlay = false);
                         }
                         
-                        await NoteHelper().restoreDatabaseToPath(path);
+                        await NoteHelper.restoreDatabaseToPath(path);
                         scaffoldKey.currentState.showSnackBar(SnackBar(
                             content: Text(locales
                                 .settingsRoute_backupAndRestore_restore_success)));
@@ -323,7 +323,7 @@ class _SettingsState extends State<SettingsRoute> {
                   title: Text(locales.settingsRoute_backupAndRestore_regenDbEntries),
                   leading: Icon(Icons.list),
                   onTap: () async {
-                    await NoteHelper().recreateDB();
+                    await NoteHelper.recreateDB();
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(locales.done)));
                   },

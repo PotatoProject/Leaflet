@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:potato_notes/main.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NoteHelper {
-  Future<void> insert(Note note) async {
+  static Future<void> insert(Note note) async {
     final Database db = await database;
 
     await db.insert(
@@ -14,7 +16,7 @@ class NoteHelper {
     );
   }
 
-  Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
+  static Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
     Database db = await database;
 
     List<Map<String, dynamic>> maps = await db.query('notes');
@@ -60,7 +62,7 @@ class NoteHelper {
     return list;
   }
 
-  Future<void> delete(int id) async {
+  static Future<void> delete(int id) async {
     final db = await database;
 
     await db.delete(
@@ -70,7 +72,7 @@ class NoteHelper {
     );
   }
 
-  Future<void> update(Note note) async {
+  static Future<void> update(Note note) async {
     final db = await database;
 
     await db.update(
@@ -81,7 +83,7 @@ class NoteHelper {
     );
   }
 
-  Future<void> backupDatabaseToPath(String path) async {
+  static Future<void> backupDatabaseToPath(String path) async {
     final db = await database;
 
     await openDatabase(
@@ -117,7 +119,7 @@ class NoteHelper {
     db.execute("DETACH backup");
   }
 
-  Future<void> restoreDatabaseToPath(String path) async {
+  static Future<void> restoreDatabaseToPath(String path) async {
     final db = await database;
 
     db.execute("ATTACH DATABASE '" + path + "' AS backup").catchError((error) {
@@ -166,7 +168,7 @@ class NoteHelper {
     db.execute("DETACH backup");
   }
 
-  Future<int> validateDatabase(String path) async {
+  static Future<int> validateDatabase(String path) async {
     int status = 0;
 
     if (!path.endsWith(".db")) {
@@ -184,7 +186,7 @@ class NoteHelper {
     return status;
   }
 
-  Future<void> recreateDB() async {
+  static Future<void> recreateDB() async {
     final db = await database;
 
     db.execute("ALTER TABLE notes RENAME TO notesold");
@@ -217,6 +219,47 @@ class NoteHelper {
     );
 
     db.execute("DROP TABLE notesold");
+  }
+}
+
+class OnlineNoteHelper {
+  static Future<void> save(Note note) async {
+    await post("https://sync.potatoproject.co/api/notes/save",
+        body: note.readyForRequest,
+        headers: {"Authorization": appInfo.userToken});
+  }
+
+  static Future<void> delete(int id) async {
+    await post("https://sync.potatoproject.co/api/notes/delete",
+        body: id,
+        headers: {"Authorization": appInfo.userToken});
+  }
+
+  static Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
+    Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
+        headers: {"Authorization": appInfo.userToken});
+    
+    List<Note> list = await Note.fromRequest(json.decode(parsedNoteList.body)["notes"], false);
+
+    list.sort((a, b) {
+      if(sort == SortMode.ID) {
+        return a.id.compareTo(b.id);
+      } else if(sort == SortMode.DATE) {
+        return a.date.compareTo(b.date);
+      } else {
+        return a.id.compareTo(b.id);
+      }
+    });
+
+    if(returnMode == NotesReturnMode.NORMAL) {
+      list.removeWhere((note) => note.isArchived == 1 || note.isDeleted == 1);
+    } else if(returnMode == NotesReturnMode.DELETED) {
+      list.removeWhere((note) => note.isDeleted == 0);
+    } else if(returnMode == NotesReturnMode.ARCHIVED) {
+      list.removeWhere((note) => note.isArchived == 0 || note.isDeleted == 1);
+    }
+
+    return list;
   }
 }
 
@@ -328,7 +371,7 @@ class Note {
 
   static Future<List<Note>> fromRequest(List<dynamic> list, bool generateNewIds) async {
     Future<int> noteIdSearcher() async {
-      List<Note> noteList = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
+      List<Note> noteList = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
       List<int> noteIdList = List<int>();
 
       noteList.forEach((item) {

@@ -70,7 +70,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     this.noteIsArchived = note.isArchived ?? 0;
   }
 
-  NoteHelper noteHelper = new NoteHelper();
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<ListPair> checkList = List<ListPair>();
 
@@ -768,7 +767,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Future<int> noteIdSearcher() async {
-    List<Note> noteList = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
+    List<Note> noteList = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
     List<int> noteIdList = List<int>();
 
     noteList.forEach((item) {
@@ -840,9 +839,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       isArchived: noteIsArchived,
     );
 
-    await noteHelper.insert(note);
+    await NoteHelper.insert(note);
     
-    List<Note> noteList = await noteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    List<Note> noteList = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, noteList);
   }
 

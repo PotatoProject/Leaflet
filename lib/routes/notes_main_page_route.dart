@@ -131,15 +131,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
         executor = Timer.periodic(Duration(seconds: appInfo.autoSyncTimeInterval), (timer) async {
           if(appInfo.autoSync == false || appInfo.userToken == null)
             timer.cancel();
-          
-          Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
-              headers: {"Authorization": appInfo.userToken});
-                                          
-          Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
 
-          List<Note> parsedList = (await Note.fromRequest(body["notes"], false))..sort((a, b) =>
-              a.id.compareTo(b.id));
-          List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
+          List<Note> parsedList = await OnlineNoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
+          List<Note> list = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
 
           bool shouldUpdate() {
             if(parsedList.length != list.length) {
@@ -179,14 +173,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             });
             
             for(int i = 0; i < list.length; i++) {
-              NoteHelper().delete(list[i].id);
+              NoteHelper.delete(list[i].id);
             }
 
             for(int i = 0; i < parsedList.length; i++) {
-              await NoteHelper().insert(parsedList[i]);
+              await NoteHelper.insert(parsedList[i]);
             }
 
-            list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+            list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
             setState(() => noteList = list);
           }
         });
@@ -294,13 +288,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                             if(starOrNot) {
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(isStarred: 1),
                                 );
                               }
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                               setState(() => noteList = list);
 
                               noteList.forEach((item) {
@@ -315,23 +309,21 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < selectionListCopy.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: noteList.firstWhere((note) => note.id == selectionListCopy[i].id)
-                                          .copyWith(isStarred: 1).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(noteList.firstWhere((note) => note.id == selectionListCopy[i].id)
+                                      .copyWith(isStarred: 1));
                                 }
                               }
 
                               setState(() => syncing = false);
                             } else {
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(isStarred: 0),
                                 );
                               }
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                               setState(() => noteList = list);
 
                               noteList.forEach((item) {
@@ -347,10 +339,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < selectionListCopy.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: noteList.firstWhere((note) => note.id == selectionListCopy[i].id)
-                                          .copyWith(isStarred: 0).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(noteList.firstWhere((note) => note.id == selectionListCopy[i].id)
+                                      .copyWith(isStarred: 0));
                                 }
                               }
 
@@ -380,13 +370,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                             if(result != null) {
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(color: result),
                                 );
                               }
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                               setState(() {
                                 noteList = list;
                                 selectionList.clear();
@@ -397,9 +387,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < selectionListCopy.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: selectionListCopy[i].copyWith(color: result).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(selectionListCopy[i].copyWith(color: result));
                                 }
                               }
 
@@ -420,7 +408,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             int selectionListLenght = selectionList.length;
 
                             for(int i = 0; i < selectionListLenght; i++) {
-                              await NoteHelper().update(
+                              await NoteHelper.update(
                                 noteList.firstWhere((note) => note == selectionList[i])
                                     .copyWith(isDeleted: 1, isStarred: 0),
                               );
@@ -433,7 +421,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               item.isSelected = false;
                             });
 
-                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                            List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                             setState(() {
                               noteList = list;
@@ -454,12 +442,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   label: locales.undo,
                                   onPressed: () async {
                                     for(int i = 0; i < noteBackup.length; i++) {
-                                      await NoteHelper().insert(noteBackup[i]
+                                      await NoteHelper.insert(noteBackup[i]
                                           .copyWith(isDeleted: 0));
                                     }
 
                                     List<Note> list =
-                                        await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                        await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                     setState(() {
                                       noteList = list;
                                       syncing = true;
@@ -468,9 +456,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                     for(int i = 0; i < noteBackup.length; i++) {
                                       if(appInfo.userToken != null) {
-                                        await post("https://sync.potatoproject.co/api/notes/save",
-                                            body: noteBackup[i].copyWith(isDeleted: 0).readyForRequest,
-                                            headers: {"Authorization": appInfo.userToken});
+                                        await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 0));
                                       }
                                     }
 
@@ -485,9 +471,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             
                             for(int i = 0; i < noteBackup.length; i++) {
                               if(appInfo.userToken != null) {
-                                await post("https://sync.potatoproject.co/api/notes/save",
-                                    body: noteBackup[i].copyWith(isDeleted: 1, isStarred: 0).readyForRequest,
-                                    headers: {"Authorization": appInfo.userToken});
+                                await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 1, isStarred: 0));
                               }
                             }
 
@@ -507,7 +491,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                             int selectionListLenght = selectionList.length;
 
                             for(int i = 0; i < selectionListLenght; i++) {
-                              await NoteHelper().update(
+                              await NoteHelper.update(
                                 noteList.firstWhere((note) => note == selectionList[i])
                                     .copyWith(isArchived: 1, isStarred: 0),
                               );
@@ -520,7 +504,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               item.isSelected = false;
                             });
 
-                            List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                            List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                             setState(() {
                               noteList = list;
@@ -541,12 +525,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                   label: locales.undo,
                                   onPressed: () async {
                                     for(int i = 0; i < noteBackup.length; i++) {
-                                      await NoteHelper().insert(noteBackup[i]
+                                      await NoteHelper.insert(noteBackup[i]
                                           .copyWith(isArchived: 0));
                                     }
 
                                     List<Note> list =
-                                        await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                        await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                     setState(() {
                                       noteList = list;
                                       syncing = true;
@@ -555,9 +539,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                     for(int i = 0; i < noteBackup.length; i++) {
                                       if(appInfo.userToken != null) {
-                                        await post("https://sync.potatoproject.co/api/notes/save",
-                                            body: noteBackup[i].copyWith(isArchived: 0).readyForRequest,
-                                            headers: {"Authorization": appInfo.userToken});
+                                        await OnlineNoteHelper.save(noteBackup[i].copyWith(isArchived: 0));
                                       }
                                     }
 
@@ -572,9 +554,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                             for(int i = 0; i < noteBackup.length; i++) {
                               if(appInfo.userToken != null) {
-                                await post("https://sync.potatoproject.co/api/notes/save",
-                                    body: noteBackup[i].copyWith(isArchived: 1, isStarred: 0).readyForRequest,
-                                    headers: {"Authorization": appInfo.userToken});
+                                await OnlineNoteHelper.save(noteBackup[i].copyWith(isArchived: 1, isStarred: 0));
                               }
                             }
 
@@ -811,7 +791,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                           await controller.animateTo(0);
                                           appInfo.sortMode = sortMode;
-                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                           setState(() => noteList = list);
                                           await controller.animateTo(1);
                                         },
@@ -827,7 +807,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                             ));
                                           }
 
-                                          List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                           setState(() => noteList = list);
                                         },
                                       ),
@@ -925,13 +905,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                       List<Note> selectionListBackup = List.from(selectionList);
 
                                       for(int i = 0; i < selectionList.length; i++) {
-                                        await NoteHelper().update(
+                                        await NoteHelper.update(
                                           noteList.firstWhere((note) => note == selectionList[i])
                                               .copyWith(isArchived: 0, isStarred: 1),
                                         );
                                       }
                                     
-                                      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                      List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                       setState(() => noteList = list);
 
                                       noteList.forEach((item) {
@@ -947,9 +927,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                       for(int i = 0; i < selectionListBackup.length; i++) {
                                         if(appInfo.userToken != null) {
-                                          await post("https://sync.potatoproject.co/api/notes/save",
-                                              body: selectionListBackup[i].copyWith(isArchived: 0, isStarred: 1).readyForRequest,
-                                              headers: {"Authorization": appInfo.userToken});
+                                          await OnlineNoteHelper.save(selectionListBackup[i].copyWith(isArchived: 0, isStarred: 1));
                                         }
                                       }
 
@@ -977,13 +955,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                       if(result != null) {
                                         for(int i = 0; i < selectionList.length; i++) {
-                                          await NoteHelper().update(
+                                          await NoteHelper.update(
                                             noteList.firstWhere((note) => note == selectionList[i])
                                                 .copyWith(color: result),
                                           );
                                         }
 
-                                        List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                        List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                         setState(() {
                                           noteList = list;
                                           selectionList.clear();
@@ -994,9 +972,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                         for(int i = 0; i < selectionListCopy.length; i++) {
                                           if(appInfo.userToken != null) {
-                                            await post("https://sync.potatoproject.co/api/notes/save",
-                                                body: selectionListCopy[i].readyForRequest,
-                                                headers: {"Authorization": appInfo.userToken});
+                                            await OnlineNoteHelper.save(selectionListCopy[i]);
                                           }
                                         }
 
@@ -1020,7 +996,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               List<Note> noteBackup = List.from(selectionList);
 
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(isDeleted: 1, isStarred: 0),
                                 );
@@ -1032,7 +1008,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 item.isSelected = false;
                               });
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                               setState(() {
                                 noteList = list;
@@ -1051,12 +1027,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     label: locales.undo,
                                     onPressed: () async {
                                       for(int i = 0; i < noteBackup.length; i++) {
-                                        await NoteHelper().insert(noteBackup[i]
+                                        await NoteHelper.insert(noteBackup[i]
                                             .copyWith(isDeleted: 0));
                                       }
 
                                       List<Note> list =
-                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                       setState(() {
                                         noteList = list;
                                         syncing = true;
@@ -1065,9 +1041,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                       for(int i = 0; i < noteBackup.length; i++) {
                                         if(appInfo.userToken != null) {
-                                          await post("https://sync.potatoproject.co/api/notes/save",
-                                              body: noteBackup[i].copyWith(isDeleted: 0).readyForRequest,
-                                              headers: {"Authorization": appInfo.userToken});
+                                          await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 0));
                                         }
                                       }
 
@@ -1082,9 +1056,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < noteBackup.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: noteBackup[i].copyWith(isDeleted: 1, isStarred: 0).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 1, isStarred: 0));
                                 }
                               }
 
@@ -1118,11 +1090,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                           List<Note> selectionListCopy = List.from(selectionList);
 
                                           for(int i = 0; i < selectionList.length; i++) {
-                                            await NoteHelper().delete(selectionList[i].id);
+                                            await NoteHelper.delete(selectionList[i].id);
                                           }
 
                                           List<Note> list =
-                                              await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
+                                              await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
                                           setState(() => noteList = list);
 
                                           noteList.forEach((item) {
@@ -1138,9 +1110,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                           for(int i = 0; i < selectionListCopy.length; i++) {
                                             if(appInfo.userToken != null) {
-                                              await post("https://sync.potatoproject.co/api/notes/delete",
-                                                  body: "{\"note_id\": ${selectionListCopy[i].id}}",
-                                                  headers: {"Authorization": appInfo.userToken});
+                                              await OnlineNoteHelper.delete(selectionListCopy[i].id);
                                             }
                                           }
 
@@ -1166,7 +1136,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               List<Note> noteBackup = List.from(selectionList);
 
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(isArchived: 0),
                                 );
@@ -1178,7 +1148,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 item.isSelected = false;
                               });
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                               setState(() {
                                 noteList = list;
@@ -1197,12 +1167,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     label: locales.undo,
                                     onPressed: () async {
                                       for(int i = 0; i < noteBackup.length; i++) {
-                                        await NoteHelper().insert(noteBackup[i]
+                                        await NoteHelper.insert(noteBackup[i]
                                             .copyWith(isArchived: 1));
                                       }
 
                                       List<Note> list =
-                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                       setState(() {
                                         noteList = list;
                                         syncing = true;
@@ -1211,9 +1181,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                       for(int i = 0; i < noteBackup.length; i++) {
                                         if(appInfo.userToken != null) {
-                                          await post("https://sync.potatoproject.co/api/notes/save",
-                                              body: noteBackup[i].copyWith(isArchived: 1).readyForRequest,
-                                              headers: {"Authorization": appInfo.userToken});
+                                          await OnlineNoteHelper.save(noteBackup[i].copyWith(isArchived: 1));
                                         }
                                       }
 
@@ -1228,9 +1196,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < noteBackup.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: noteBackup[i].copyWith(isArchived: 0).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(noteBackup[i].copyWith(isArchived: 0));
                                 }
                               }
 
@@ -1243,7 +1209,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                               List<Note> noteBackup = List.from(selectionList);
 
                               for(int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper().update(
+                                await NoteHelper.update(
                                   noteList.firstWhere((note) => note == selectionList[i])
                                       .copyWith(isDeleted: 0),
                                 );
@@ -1255,7 +1221,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                 item.isSelected = false;
                               });
 
-                              List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                              List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                               setState(() {
                                 noteList = list;
@@ -1274,18 +1240,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     label: locales.undo,
                                     onPressed: () async {
                                       for(int i = 0; i < noteBackup.length; i++) {
-                                        await NoteHelper().insert(noteBackup[i]
+                                        await NoteHelper.insert(noteBackup[i]
                                             .copyWith(isDeleted: 1));
 
                                         if(appInfo.userToken != null) {
-                                          await post("https://sync.potatoproject.co/api/notes/save",
-                                              body: noteBackup[i].copyWith(isDeleted: 1).readyForRequest,
-                                              headers: {"Authorization": appInfo.userToken});
+                                          await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 1));
                                         }
                                       }
 
                                       List<Note> list =
-                                          await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                                          await NoteHelper.getNotes(appInfo.sortMode, currentView);
                                       setState(() {
                                         noteList = list;
                                         syncing = true;
@@ -1294,9 +1258,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                       for(int i = 0; i < noteBackup.length; i++) {
                                         if(appInfo.userToken != null) {
-                                          await post("https://sync.potatoproject.co/api/notes/save",
-                                              body: noteBackup[i].copyWith(isDeleted: 1).readyForRequest,
-                                              headers: {"Authorization": appInfo.userToken});
+                                          await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 1));
                                         }
                                       }
 
@@ -1311,9 +1273,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                               for(int i = 0; i < noteBackup.length; i++) {
                                 if(appInfo.userToken != null) {
-                                  await post("https://sync.potatoproject.co/api/notes/save",
-                                      body: noteBackup[i].copyWith(isDeleted: 0).readyForRequest,
-                                      headers: {"Authorization": appInfo.userToken});
+                                  await OnlineNoteHelper.save(noteBackup[i].copyWith(isDeleted: 0));
                                 }
                               }
 
@@ -1550,11 +1510,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                                 Navigator.pop(context);
 
                                                 for(int i = 0; i < noteList.length; i++) {
-                                                  await NoteHelper().delete(noteList[i].id);
+                                                  await NoteHelper.delete(noteList[i].id);
                                                 }
 
                                                 List<Note> list =
-                                                    await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
+                                                    await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.DELETED);
                                                 setState(() {
                                                   noteList = list;
                                                   syncing = true;
@@ -1563,9 +1523,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
 
                                                 for(int i = 0; i < noteList.length; i++) {
                                                   if(appInfo.userToken != null) {
-                                                    await post("https://sync.potatoproject.co/api/notes/delete",
-                                                        body: "{\"note_id\": ${noteList[i].id}}",
-                                                        headers: {"Authorization": appInfo.userToken});
+                                                    await OnlineNoteHelper.delete(noteList[i].id);
                                                   }
                                                 }
 
@@ -1610,7 +1568,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                                     onPressed: () async {
                                       _searchNoteCaller(
                                         context,
-                                        await NoteHelper().getNotes(appInfo.sortMode, NotesReturnMode.NORMAL),
+                                        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL),
                                         Theme.of(context).cardColor
                                       );
                                     }
@@ -1633,14 +1591,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       body: RefreshIndicator(
         displacement: 160,
         onRefresh: appInfo.userToken == null ? () async {} : () async {
-          Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
-              headers: {"Authorization": appInfo.userToken});
-                                          
-          Map<dynamic, dynamic> body = json.decode(parsedNoteList.body);
-
-          List<Note> parsedList = (await Note.fromRequest(body["notes"], false))..sort((a, b) =>
-              a.id.compareTo(b.id));
-          List<Note> list = await NoteHelper().getNotes(SortMode.ID, NotesReturnMode.ALL);
+          List<Note> parsedList = await OnlineNoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
+          List<Note> list = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
 
           bool shouldUpdate() {
             if(parsedList.length != list.length) {
@@ -1680,14 +1632,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
             });
 
             for(int i = 0; i < list.length; i++) {
-              NoteHelper().delete(list[i].id);
+              NoteHelper.delete(list[i].id);
             }
 
             for(int i = 0; i < parsedList.length; i++) {
-              await NoteHelper().insert(parsedList[i]);
+              await NoteHelper.insert(parsedList[i]);
             }
 
-            list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+            list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
             setState(() => noteList = list);
           }
         },
@@ -1852,7 +1804,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 onTap: () async {
                   if(currentView != NotesReturnMode.NORMAL) {
                     currentView = NotesReturnMode.NORMAL;
-                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                     setState(() => noteList = list);
                     Navigator.pop(context);
 
@@ -1881,7 +1833,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 onTap: () async {
                   if(currentView != NotesReturnMode.DELETED) {
                     currentView = NotesReturnMode.DELETED;
-                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                     setState(() => noteList = list);
                     Navigator.pop(context);
 
@@ -1910,7 +1862,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
                 onTap: () async {
                   if(currentView != NotesReturnMode.ARCHIVED) {
                     currentView = NotesReturnMode.ARCHIVED;
-                    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+                    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
                     setState(() => noteList = list);
                     Navigator.pop(context);
 
@@ -2168,9 +2120,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
       });
       
       if(appInfo.userToken != null) {
-        await post("https://sync.potatoproject.co/api/notes/save",
-            body: noteList.last.readyForRequest,
-            headers: {"Authorization": appInfo.userToken});
+        await OnlineNoteHelper.save(noteList.last);
       }
 
       queueList.removeLast();
@@ -2210,7 +2160,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
     setState(() {
       noteList = list;
@@ -2219,9 +2169,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     });
       
     if(appInfo.userToken != null) {
-      await post("https://sync.potatoproject.co/api/notes/save",
-          body: noteList.last.readyForRequest,
-          headers: {"Authorization": appInfo.userToken});
+      await OnlineNoteHelper.save(noteList.last);
     }
 
     queueList.removeLast();
@@ -2256,7 +2204,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
     await Navigator.push(
         context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
-    List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
     setState(() => noteList = list);
 
     Brightness systemBarsIconBrightness =
@@ -2685,16 +2633,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute> with SingleTickerPro
   
   void toggleStarNote(int index) async {
     if (noteList[index].isStarred == 0) {
-      await NoteHelper().update(
+      await NoteHelper.update(
         noteList[index].copyWith(isStarred: 1),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+      List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
       setState(() => noteList = list);
     } else if (noteList[index].isStarred == 1) {
-      await NoteHelper().update(
+      await NoteHelper.update(
         noteList[index].copyWith(isStarred: 0),
       );
-      List<Note> list = await NoteHelper().getNotes(appInfo.sortMode, currentView);
+      List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
       setState(() => noteList = list);
     }
   }

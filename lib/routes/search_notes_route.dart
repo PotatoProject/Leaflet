@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
@@ -26,8 +25,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   _SearchNotesState(List<Note> providedNoteList) {
     this.noteList = providedNoteList;
   }
-
-  NoteHelper noteHelper = new NoteHelper();
+  
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   static String searchTerms = "";

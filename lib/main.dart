@@ -78,7 +78,7 @@ void main() async {
     version: 5,
   );
   
-  List<Note> noteList = await NoteHelper().getNotes(await getSortMode(), NotesReturnMode.NORMAL);
+  List<Note> noteList = await NoteHelper.getNotes(await getSortMode(), NotesReturnMode.NORMAL);
 
   runApp(NotesRoot(noteList: noteList));
 }
