@@ -13,7 +13,8 @@ import 'package:potato_notes/ui/sync_inputfield.dart';
 import 'package:provider/provider.dart';
 
 class SyncManageRoute extends StatefulWidget {
-  @override createState() => _SyncManageRouteState();
+  @override
+  createState() => _SyncManageRouteState();
 }
 
 class _SyncManageRouteState extends State<SyncManageRoute> {
@@ -38,45 +39,47 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   label: locales.syncManageRoute_account,
                 ),
                 ListTile(
-                  leading: Icon(Icons.person_outline),
-                  title: Text(locales.syncManageRoute_account_loggedInAs(appInfo.userName)),
-                  subtitle: Text(appInfo.userEmail),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.refresh),
-                        onPressed: () async {
-                          Response info = await get("https://potatosync.herokuapp.com/api/users/info",
-                              headers: {"Authorization": appInfo.userToken});
-                          
-                          Map<dynamic, dynamic> body = json.decode(info.body);
+                    leading: Icon(Icons.person_outline),
+                    title: Text(locales
+                        .syncManageRoute_account_loggedInAs(appInfo.userName)),
+                    subtitle: Text(appInfo.userEmail),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.refresh),
+                          onPressed: () async {
+                            Response info = await get(
+                                "https://potatosync.herokuapp.com/api/users/info",
+                                headers: {"Authorization": appInfo.userToken});
 
-                          if(body["status"]) {
-                            Map<dynamic, dynamic> account = body["account"];
+                            Map<dynamic, dynamic> body = json.decode(info.body);
 
-                            appInfo.userName = account["username"];
-                            appInfo.userEmail = account["email"];
-                            appInfo.userImage = account["image_url"];
-                          }
-                        },
-                      ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        textColor: Theme.of(context).scaffoldBackgroundColor,
-                        child: Text(locales.syncManageRoute_account_logout),
-                        onPressed: () {
-                          appInfo.userEmail = "";
-                          appInfo.userName = locales.syncManageRoute_account_guest;
-                          appInfo.userToken = null;
-                          appInfo.userImage = null;
+                            if (body["status"]) {
+                              Map<dynamic, dynamic> account = body["account"];
 
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  )
-                ),
+                              appInfo.userName = account["username"];
+                              appInfo.userEmail = account["email"];
+                              appInfo.userImage = account["image_url"];
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          textColor: Theme.of(context).scaffoldBackgroundColor,
+                          child: Text(locales.syncManageRoute_account_logout),
+                          onPressed: () {
+                            appInfo.userEmail = "";
+                            appInfo.userName =
+                                locales.syncManageRoute_account_guest;
+                            appInfo.userToken = null;
+                            appInfo.userImage = null;
+
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    )),
                 ListTile(
                   leading: Icon(
                     Icons.ac_unit,
@@ -85,9 +88,8 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   title: Text(locales.syncManageRoute_account_changeUsername),
                   onTap: () async {
                     showDialog(
-                      context: context,
-                      builder: (context) => UsernameDialog(context: context)
-                    );
+                        context: context,
+                        builder: (context) => UsernameDialog(context: context));
                   },
                 ),
                 ListTile(
@@ -98,26 +100,36 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   title: Text(locales.syncManageRoute_account_changeImage),
                   onTap: () async {
                     setState(() => showLoadingOverlay = true);
-                    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                    File image = await ImagePicker.pickImage(
+                        source: ImageSource.gallery);
 
-                    if(image != null) {
+                    if (image != null) {
                       List<int> imageBytes = await image.readAsBytes();
 
-                      Response imageToImgur = await post("https://api.imgur.com/3/image", body: imageBytes,
-                          headers: {"Authorization": "Client-ID f856a5e4fd5b2af"});
-                      
-                      String url = json.decode(imageToImgur.body)["data"]["link"];
+                      Response imageToImgur = await post(
+                          "https://api.imgur.com/3/image",
+                          body: imageBytes,
+                          headers: {
+                            "Authorization": "Client-ID f856a5e4fd5b2af"
+                          });
 
-                      Response uploadImage = await post("https://sync.potatoproject.co/api/users/manage/image",
-                          body: "{\"image_url\": \"$url\"}", headers: {"Authorization": appInfo.userToken});
-                      
-                      Map<dynamic, dynamic> parsedBody = json.decode(uploadImage.body);
+                      String url =
+                          json.decode(imageToImgur.body)["data"]["link"];
 
-                      if(parsedBody["status"]) {
+                      Response uploadImage = await post(
+                          "https://sync.potatoproject.co/api/users/manage/image",
+                          body: "{\"image_url\": \"$url\"}",
+                          headers: {"Authorization": appInfo.userToken});
+
+                      Map<dynamic, dynamic> parsedBody =
+                          json.decode(uploadImage.body);
+
+                      if (parsedBody["status"]) {
                         appInfo.userImage = url;
                       } else {
                         scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text(Utils.parseErrorMessage(context, parsedBody["message"].toString())),
+                          content: Text(Utils.parseErrorMessage(
+                              context, parsedBody["message"].toString())),
                         ));
                       }
 
@@ -145,13 +157,15 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                   enabled: appInfo.autoSync,
                   title: Text(locales.syncManageRoute_sync_autoSyncInterval),
                   trailing: DropdownButton(
-                    onChanged: appInfo.autoSync ? (value) {
-                      appInfo.autoSync = false;
-                      appInfo.autoSyncTimeInterval = value;
-                      Future.delayed(Duration(seconds: 1), () {
-                        appInfo.autoSync = true;
-                      });
-                    } : null,
+                    onChanged: appInfo.autoSync
+                        ? (value) {
+                            appInfo.autoSync = false;
+                            appInfo.autoSyncTimeInterval = value;
+                            Future.delayed(Duration(seconds: 1), () {
+                              appInfo.autoSync = true;
+                            });
+                          }
+                        : null,
                     disabledHint: Text(appInfo.autoSyncTimeInterval.toString()),
                     value: appInfo.autoSyncTimeInterval,
                     items: [
@@ -200,17 +214,16 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
             Visibility(
               visible: showLoadingOverlay,
               child: SizedBox.expand(
-                child: AnimatedOpacity(
-                  opacity: showLoadingOverlay ? 1 : 0,
-                  duration: Duration(milliseconds: 300),
-                  child: Container(
-                    color: Colors.black45,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  child: AnimatedOpacity(
+                opacity: showLoadingOverlay ? 1 : 0,
+                duration: Duration(milliseconds: 300),
+                child: Container(
+                  color: Colors.black45,
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                )
-              ),
+                ),
+              )),
             ),
           ],
         ),
@@ -221,10 +234,11 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
 
 class UsernameDialog extends StatefulWidget {
   final BuildContext context;
-  
+
   UsernameDialog({@required this.context});
 
-  @override createState() => _UsernameDialogState();
+  @override
+  createState() => _UsernameDialogState();
 }
 
 class _UsernameDialogState extends State<UsernameDialog> {
@@ -244,17 +258,15 @@ class _UsernameDialogState extends State<UsernameDialog> {
   Widget build(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
     final locales = AppLocalizations.of(context);
-    
-    if(firstRun) {
+
+    if (firstRun) {
       controller.text = appInfo.userName;
       username = appInfo.userName;
       firstRun = false;
     }
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       contentPadding: EdgeInsets.only(top: 20),
       content: SyncInputField(
         title: "New username",
@@ -267,10 +279,10 @@ class _UsernameDialogState extends State<UsernameDialog> {
         onChanged: (text) => setState(() {
           username = text;
 
-          if(username.length < 5) {
+          if (username.length < 5) {
             error = true;
             message = "Username too short";
-          } else if(error) error = false;
+          } else if (error) error = false;
         }),
       ),
       actions: <Widget>[
@@ -288,39 +300,46 @@ class _UsernameDialogState extends State<UsernameDialog> {
           textColor: Theme.of(context).scaffoldBackgroundColor,
           child: Text(locales.confirm),
           disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
-          onPressed: (username == appInfo.userName || username.length < 5) ? null : () async {
-            setState(() => loading = true);
+          onPressed: (username == appInfo.userName || username.length < 5)
+              ? null
+              : () async {
+                  setState(() => loading = true);
 
-            String body = "{\"email\": \"${appInfo.userEmail}\", \"username\": \"$username\"}";
-            Map<String, String> headers = {
-              "Authorization": appInfo.userToken
-            };
+                  String body =
+                      "{\"email\": \"${appInfo.userEmail}\", \"username\": \"$username\"}";
+                  Map<String, String> headers = {
+                    "Authorization": appInfo.userToken
+                  };
 
-            Response changeUser = await post("https://potatosync.herokuapp.com/api/users/manage/username",
-                body: body, headers: headers);
-            
-            Map<dynamic, dynamic> responseBody = json.decode(changeUser.body);
+                  Response changeUser = await post(
+                      "https://potatosync.herokuapp.com/api/users/manage/username",
+                      body: body,
+                      headers: headers);
 
-            if(responseBody["status"]) {
-              appInfo.userName = username;
+                  Map<dynamic, dynamic> responseBody =
+                      json.decode(changeUser.body);
 
-              Navigator.pop(context);
-            } else {
-              if(responseBody["message"] == "OutOfBoundsError") {
-                setState(() {
-                  message = "Username is too long";
-                  error = true;
-                });
-              } else {
-                setState(() {
-                  message = Utils.parseErrorMessage(context, responseBody["message"].toString());
-                  error = true;
-                });
-              }
-            }
+                  if (responseBody["status"]) {
+                    appInfo.userName = username;
 
-            setState(() => loading = false);
-          },
+                    Navigator.pop(context);
+                  } else {
+                    if (responseBody["message"] == "OutOfBoundsError") {
+                      setState(() {
+                        message = "Username is too long";
+                        error = true;
+                      });
+                    } else {
+                      setState(() {
+                        message = Utils.parseErrorMessage(
+                            context, responseBody["message"].toString());
+                        error = true;
+                      });
+                    }
+                  }
+
+                  setState(() => loading = false);
+                },
         )
       ],
     );

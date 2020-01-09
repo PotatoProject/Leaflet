@@ -34,7 +34,7 @@ public class MainActivity extends FlutterActivity {
     );
   }
 
-  private int getAccentColor() {
+  private Integer getAccentColor() {
     String colResName = "accent_device_default_dark";
     Resources res = null;
     try {
@@ -43,7 +43,7 @@ public class MainActivity extends FlutterActivity {
       try {
         return res.getColor(resId);
       } catch (Resources.NotFoundException e) {
-        return 0xFF80CBC4;
+        return null;
       }
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();

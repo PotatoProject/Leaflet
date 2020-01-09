@@ -22,13 +22,16 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   void initState() {
     super.initState();
     currentColor = widget.initialColor;
-    controller = TextEditingController(text: currentColor.value.toRadixString(16).substring(2, 8).toUpperCase());
+    controller = TextEditingController(
+        text:
+            currentColor.value.toRadixString(16).substring(2, 8).toUpperCase());
   }
 
   @override
   void setState(fn) {
     super.setState(fn);
-    controller.text = currentColor.value.toRadixString(16).substring(2, 8).toUpperCase();
+    controller.text =
+        currentColor.value.toRadixString(16).substring(2, 8).toUpperCase();
   }
 
   @override
@@ -40,21 +43,20 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
           height: 200,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: currentColor,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(8))
-          ),
+              color: currentColor,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(8))),
           margin: EdgeInsets.only(bottom: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-             children: <Widget>[
+            children: <Widget>[
               Text(
                 "#",
                 style: TextStyle(
-                  color: currentColor.computeLuminance() > 0.5
-                      ? Colors.black
-                      : Colors.white
-                ),
+                    color: currentColor.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white),
               ),
               Container(
                 width: MediaQuery.of(context).size.width / 6,
@@ -72,14 +74,11 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                       widget.onColorChange(currentColor);
                     }
                   },
-                  decoration: InputDecoration(
-                    border: InputBorder.none
-                  ),
+                  decoration: InputDecoration(border: InputBorder.none),
                   style: TextStyle(
-                    color: currentColor.computeLuminance() > 0.5
-                        ? Colors.black
-                        : Colors.white
-                  ),
+                      color: currentColor.computeLuminance() > 0.5
+                          ? Colors.black
+                          : Colors.white),
                 ),
               )
             ],
@@ -141,37 +140,29 @@ class ColorSlider extends StatelessWidget {
           child: SizedBox.fromSize(
             size: Size.square(24),
             child: Center(
-              child: Text(
-                rgb == RGB.RED
-                  ? "R"
-                  : rgb == RGB.GREEN
-                      ? "G"
-                      : "B"
-              ),
+              child: Text(rgb == RGB.RED ? "R" : rgb == RGB.GREEN ? "G" : "B"),
             ),
           ),
         ),
         Expanded(
           child: SliderTheme(
-          data: SliderThemeData(
-            trackShape: CustomTrackShape(),
-          ),
-          child: Slider(
-            activeColor: color,
-            inactiveColor: color.withOpacity(0.4),
-            max: 255,
-            min: 0,
-            value: (rgb == RGB.RED
-                ? color.red
-                : rgb == RGB.GREEN
-                    ? color.green
-                    : color.blue).toDouble(),
-            onChanged: (value) => onChange(
-              rgb == RGB.RED
-                  ? color.withRed(value.toInt())
-                  : rgb == RGB.GREEN
-                      ? color.withGreen(value.toInt())
-                      : color.withBlue(value.toInt()))),
+            data: SliderThemeData(
+              trackShape: CustomTrackShape(),
+            ),
+            child: Slider(
+                activeColor: color,
+                inactiveColor: color.withOpacity(0.4),
+                max: 255,
+                min: 0,
+                value: (rgb == RGB.RED
+                        ? color.red
+                        : rgb == RGB.GREEN ? color.green : color.blue)
+                    .toDouble(),
+                onChanged: (value) => onChange(rgb == RGB.RED
+                    ? color.withRed(value.toInt())
+                    : rgb == RGB.GREEN
+                        ? color.withGreen(value.toInt())
+                        : color.withBlue(value.toInt()))),
           ),
         ),
       ],

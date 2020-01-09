@@ -10,7 +10,7 @@ import 'package:potato_notes/internal/note_helper.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   Preferences preferences;
-  
+
   AppInfoProvider() {
     init();
   }
@@ -83,15 +83,17 @@ class AppInfoProvider extends ChangeNotifier {
   String get version => _version;
 
   static List<String> get supportedLocales => [
-    "en",
-    'fr',
-    "id",
-    "it",
-    "pl",
-    "ru",
-    "uk",
-    "zh",
-  ];
+        "en",
+        'fr',
+        "id",
+        "it",
+        "pl",
+        "ru",
+        "uk",
+        "zh",
+      ];
+
+  bool supportsSystemAccent = true;
 
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
@@ -243,19 +245,24 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateMainColor() async {
-    mainColor = _useCustomMainColor
+    int sysAccent = await _channel.invokeMethod("getAccentColor");
+
+    if (sysAccent == null) {
+      supportsSystemAccent = false;
+      useCustomMainColor = true;
+    }
+
+    mainColor = _useCustomMainColor || !supportsSystemAccent
         ? customMainColor
-        : Color(await _channel.invokeMethod("getAccentColor"));
+        : Color(sysAccent);
   }
 
   Future<void> loadData() async {
     followSystemTheme = preferences.getFollowSystemTheme();
     themeMode = preferences.getThemeMode();
     darkThemeMode = preferences.getDarkThemeMode();
-    mainColor = _useCustomMainColor
-        ? customMainColor
-        : Color(await _channel.invokeMethod("getAccentColor"));
     useCustomMainColor = preferences.getUseCustomMainColor();
+    updateMainColor();
     customMainColor = preferences.getCustomMainColor();
     devShowIdLabels = preferences.getDevShowIdLabels();
     isGridView = preferences.getIsGridView();

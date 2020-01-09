@@ -28,7 +28,8 @@ class ModifyNotesRoute extends StatefulWidget {
   final String heroIndex;
   final bool autofocus;
 
-  ModifyNotesRoute({@required this.note, @required this.heroIndex, this.autofocus = false});
+  ModifyNotesRoute(
+      {@required this.note, @required this.heroIndex, this.autofocus = false});
 
   @override
   _ModifyNotesState createState() => new _ModifyNotesState(note);
@@ -78,7 +79,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   TextEditingController titleController;
   TextEditingController contentController;
-  
+
   AnimationController _controller;
 
   AppLocalizations locales;
@@ -146,10 +147,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     reminderListPopulater();
 
-    systemBarsIconBrightness =
-        Theme.of(context).brightness == Brightness.dark
-            ? Brightness.light
-            : Brightness.dark;
+    systemBarsIconBrightness = Theme.of(context).brightness == Brightness.dark
+        ? Brightness.light
+        : Brightness.dark;
 
     Color getElementsColorBasedOnThemeContext() {
       Color colorToReturn;
@@ -172,16 +172,15 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    if(firstRun) {
+    if (firstRun) {
       changeSystemBarsColors(
           noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
           noteColor == null
               ? systemBarsIconBrightness
               : getBarsColorFromNoteColor());
-      
-      if(widget.autofocus)
-          FocusScope.of(context).requestFocus(contentNode);
-      
+
+      if (widget.autofocus) FocusScope.of(context).requestFocus(contentNode);
+
       firstRun = false;
     }
 
@@ -189,7 +188,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       tag: "note" + widget.heroIndex,
       child: Theme(
         data: Theme.of(context).copyWith(
-          iconTheme: IconThemeData(color: getElementsColorBasedOnThemeContext()),
+          iconTheme:
+              IconThemeData(color: getElementsColorBasedOnThemeContext()),
           textTheme: TextTheme(
             subhead: Theme.of(context).textTheme.subhead.copyWith(
                   color: getElementsColorBasedOnThemeContext(),
@@ -197,21 +197,24 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           ),
           inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
                 hintStyle: TextStyle(
-                  color: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                      .withAlpha(0.5)
-                      .toColor(),
+                  color:
+                      HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                          .withAlpha(0.5)
+                          .toColor(),
                 ),
               ),
           unselectedWidgetColor:
               HSLColor.fromColor(getElementsColorBasedOnThemeContext())
                   .withAlpha(0.5)
                   .toColor(),
-          scaffoldBackgroundColor:
-              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+          scaffoldBackgroundColor: noteColor == null
+              ? Theme.of(context).cardColor
+              : Color(noteColor),
           accentColor: getElementsColorBasedOnThemeContext(),
-          dividerColor: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-              .withAlpha(0.12)
-              .toColor(),
+          dividerColor:
+              HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                  .withAlpha(0.12)
+                  .toColor(),
           bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: noteColor == null
                 ? Theme.of(context).cardColor
@@ -230,7 +233,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           body: Stack(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
                 child: Container(
                   height: 60,
                   child: Padding(
@@ -307,7 +311,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                             .modifyNotesRoute_color_change),
                                         onTap: () async {
                                           Navigator.pop(context);
-                                            int result = await showDialog(
+                                          int result = await showDialog(
                                               context: context,
                                               builder: (context) {
                                                 return NoteColorDialog(
@@ -315,7 +319,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                 );
                                               });
 
-                                            setState(() {
+                                          setState(() {
                                             if (result != null) {
                                               if (result == 0) {
                                                 noteColor = null;
@@ -325,7 +329,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                             }
 
                                             changeSystemBarsColors(
-                                                noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                                                noteColor == null
+                                                    ? Theme.of(context)
+                                                        .cardColor
+                                                    : Color(noteColor),
                                                 noteColor == null
                                                     ? systemBarsIconBrightness
                                                     : getBarsColorFromNoteColor());
@@ -340,11 +347,11 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                         onTap: () {
                                           Navigator.pop(context);
                                           String shareText = "";
-                                            if (noteTitle != "")
+                                          if (noteTitle != "")
                                             shareText += noteTitle + "\n\n";
                                           shareText += noteContent;
-                                            Share.share(shareText);
-                                      },
+                                          Share.share(shareText);
+                                        },
                                       ),
                                     ),
                                     PopupMenuItem(
@@ -354,12 +361,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                         onTap: () async {
                                           Navigator.pop(context);
                                           if (appInfo.storageStatus ==
-                                            PermissionStatus.granted) {
+                                              PermissionStatus.granted) {
                                             DateTime now = DateTime.now();
 
                                             bool backupDirExists = await Directory(
                                                     '/storage/emulated/0/PotatoNotes/exported')
-                                              .exists();
+                                                .exists();
 
                                             if (!backupDirExists) {
                                               await Directory(
@@ -369,9 +376,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
                                             String noteExportPath =
                                                 '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
-                                                    DateFormat("dd-MM-yyyy_HH-mm")
-                                                      .format(now) +
-                                                      '.md';
+                                                    DateFormat(
+                                                            "dd-MM-yyyy_HH-mm")
+                                                        .format(now) +
+                                                    '.md';
 
                                             String noteContents = "";
 
@@ -401,7 +409,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                             appInfo.storageStatus =
                                                 await PermissionHandler()
                                                     .checkPermissionStatus(
-                                                        PermissionGroup.storage);
+                                                        PermissionGroup
+                                                            .storage);
                                           }
                                         },
                                       ),
@@ -418,7 +427,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                           await FlutterLocalNotificationsPlugin()
                                               .show(
                                                   int.parse(appInfo
-                                                      .notificationsIdList.last),
+                                                      .notificationsIdList
+                                                      .last),
                                                   noteTitle != ""
                                                       ? noteTitle
                                                       : locales
@@ -464,9 +474,11 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       }
                                     }
                                   });
-                                  
+
                                   changeSystemBarsColors(
-                                      noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+                                      noteColor == null
+                                          ? Theme.of(context).cardColor
+                                          : Color(noteColor),
                                       noteColor == null
                                           ? systemBarsIconBrightness
                                           : getBarsColorFromNoteColor());
@@ -478,8 +490,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 60),
                 child: ListView(
                   padding: EdgeInsets.all(0),
                   children: <Widget>[
@@ -499,7 +511,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                   duration: Duration(milliseconds: 400),
                                   builder: (context, animation) {
                                     return Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 30),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 30),
                                       child: Opacity(
                                         opacity: animation,
                                         child: Icon(
@@ -767,7 +780,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Future<int> noteIdSearcher() async {
-    List<Note> noteList = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
+    List<Note> noteList =
+        await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
     List<int> noteIdList = List<int>();
 
     noteList.forEach((item) {
@@ -788,7 +802,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       FocusScope.of(context).requestFocus(FocusNode());
       Navigator.pop(context);
     }
-    
+
     return true;
   }
 
@@ -809,9 +823,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     updateListParseString();
 
-    if(noteListParseString == null) noteIsList = 0;
+    if (noteListParseString == null) noteIsList = 0;
 
-    if(noteIsList == 0) noteListParseString = null;
+    if (noteIsList == 0) noteListParseString = null;
 
     noteRemindersUpdater();
 
@@ -829,19 +843,20 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       listParseString: noteListParseString,
       reminders: noteReminders,
       hideContent: noteHideContent,
-      pin: (notePin == null ? 64 : notePin.length) == 64 ?
-          notePin :
-          sha256.convert(utf8.encode(notePin)).toString(),
-      password: (notePassword == null ? 64 : notePassword.length) == 64 ?
-          notePassword :
-          sha256.convert(utf8.encode(notePassword)).toString(),
+      pin: (notePin == null ? 64 : notePin.length) == 64
+          ? notePin
+          : sha256.convert(utf8.encode(notePin)).toString(),
+      password: (notePassword == null ? 64 : notePassword.length) == 64
+          ? notePassword
+          : sha256.convert(utf8.encode(notePassword)).toString(),
       isDeleted: noteIsDeleted,
       isArchived: noteIsArchived,
     );
 
     await NoteHelper.insert(note);
-    
-    List<Note> noteList = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+
+    List<Note> noteList =
+        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, noteList);
   }
 
@@ -868,20 +883,26 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
                     File image = await ImagePicker.pickImage(
                         source: ImageSource.gallery);
-                    
-                    if(image != null) {
+
+                    if (image != null) {
                       List<int> imageBytes = await image.readAsBytes();
 
                       setState(() => showLoadingIcon = true);
-                      Response imageToImgur = await post("https://api.imgur.com/3/image", body: imageBytes,
-                          headers: {"Authorization": "Client-ID f856a5e4fd5b2af"});
+                      Response imageToImgur = await post(
+                          "https://api.imgur.com/3/image",
+                          body: imageBytes,
+                          headers: {
+                            "Authorization": "Client-ID f856a5e4fd5b2af"
+                          });
 
-                      Map<String, dynamic> imgurBody = json.decode(imageToImgur.body);
-                      
+                      Map<String, dynamic> imgurBody =
+                          json.decode(imageToImgur.body);
+
                       setState(() => showLoadingIcon = false);
 
-                      if(imgurBody["success"]) {
-                        setState(() => noteImagePath = imgurBody["data"]["link"]);
+                      if (imgurBody["success"]) {
+                        setState(
+                            () => noteImagePath = imgurBody["data"]["link"]);
                       } else {
                         print("k");
                       }
@@ -1059,11 +1080,13 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         backgroundColor: bgColor,
         builder: (BuildContext context) {
           changeSystemBarsColors(
-              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+              noteColor == null
+                  ? Theme.of(context).cardColor
+                  : Color(noteColor),
               noteColor == null
                   ? systemBarsIconBrightness
                   : getBarsColorFromNoteColor());
-          
+
           return Theme(
             data: ThemeData(
               bottomSheetTheme: BottomSheetThemeData(
@@ -1162,11 +1185,13 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         backgroundColor: bgColor,
         builder: (BuildContext context) {
           changeSystemBarsColors(
-              noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+              noteColor == null
+                  ? Theme.of(context).cardColor
+                  : Color(noteColor),
               noteColor == null
                   ? systemBarsIconBrightness
                   : getBarsColorFromNoteColor());
-          
+
           return Theme(
             data: ThemeData(
                 bottomSheetTheme: BottomSheetThemeData(
@@ -1315,9 +1340,9 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
       title: Text(
         locales.modifyNotesRoute_color_dialogTitle,
         style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.light ?
-              Colors.black :
-              Colors.white,
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
       ),
       content: MaterialColorPicker(
@@ -1486,13 +1511,15 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
               ? null
               : () {
                   if (widget.setPassword) {
-                    widget.password = sha256.convert(utf8.encode(controller.text)).toString();
+                    widget.password =
+                        sha256.convert(utf8.encode(controller.text)).toString();
                     widget.pin = null;
                     widget.appInfo.password = true;
                     widget.appInfo.pin = false;
                   } else {
                     widget.password = null;
-                    widget.pin = sha256.convert(utf8.encode(controller.text)).toString();
+                    widget.pin =
+                        sha256.convert(utf8.encode(controller.text)).toString();
                     widget.appInfo.password = false;
                     widget.appInfo.pin = true;
                   }

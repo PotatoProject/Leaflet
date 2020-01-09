@@ -112,9 +112,9 @@ class Preferences {
   }
 
   SortMode getSortMode() {
-    return (prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
-        SortMode.ID :
-        SortMode.DATE;
+    return (prefs.getInt('notes_sort_mode') ?? 0) == 0
+        ? SortMode.ID
+        : SortMode.DATE;
   }
 
   void setSortMode(SortMode sort) {

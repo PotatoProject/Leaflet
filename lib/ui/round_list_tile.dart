@@ -22,13 +22,12 @@ class RoundListTile extends StatelessWidget {
     this.selected = false,
     this.selectedColor,
     this.splashColor,
-
     this.leading,
     this.title,
     this.onTap,
     this.onLongPress,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,52 +42,49 @@ class RoundListTile extends StatelessWidget {
                 bottomRight: Radius.circular(borderRadius ?? height / 2),
                 topRight: Radius.circular(borderRadius ?? height / 2),
               ),
-              color: selected ?
-                  (selectedColor ?? Theme.of(context).accentColor) :
-                  Colors.transparent,
+              color: selected
+                  ? (selectedColor ?? Theme.of(context).accentColor)
+                  : Colors.transparent,
             ),
           ),
           InkWell(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(borderRadius ?? height / 2),
-              topRight: Radius.circular(borderRadius ?? height / 2),
-            ),
-            splashColor: splashColor ?? Theme.of(context).splashColor,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: IconTheme(
-                      data: IconThemeData(
-                        color: selected ? 
-                            selectedColor ?? Theme.of(context).canvasColor :
-                            Theme.of(context).iconTheme.color
-                      ),
-                      child: leading ?? const SizedBox(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
-                      child: AnimatedDefaultTextStyle(
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: selected ?
-                            selectedColor ?? Theme.of(context).canvasColor :
-                            Theme.of(context).textTheme.subhead.color
-                      ),
-                      duration: kThemeChangeDuration,
-                      child: title,
-                    ),
-                  ),
-                ],
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(borderRadius ?? height / 2),
+                topRight: Radius.circular(borderRadius ?? height / 2),
               ),
-            )
-          ),
+              splashColor: splashColor ?? Theme.of(context).splashColor,
+              onTap: onTap,
+              onLongPress: onLongPress,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: IconTheme(
+                        data: IconThemeData(
+                            color: selected
+                                ? selectedColor ?? Theme.of(context).canvasColor
+                                : Theme.of(context).iconTheme.color),
+                        child: leading ?? const SizedBox(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 14),
+                      child: AnimatedDefaultTextStyle(
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: selected
+                                ? selectedColor ?? Theme.of(context).canvasColor
+                                : Theme.of(context).textTheme.subhead.color),
+                        duration: kThemeChangeDuration,
+                        child: title,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
     );

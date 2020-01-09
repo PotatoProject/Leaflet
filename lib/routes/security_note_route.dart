@@ -175,17 +175,19 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                     child: TextField(
                       obscureText: true,
                       onSubmitted: (text) async {
-                        String hashedInput = widget.note.password.length == 64 ?
-                            sha256.convert(utf8.encode(text)).toString() :
-                            text;
+                        String hashedInput = widget.note.password.length == 64
+                            ? sha256.convert(utf8.encode(text)).toString()
+                            : text;
 
                         if (hashedInput == widget.note.password.toString()) {
                           Navigator.pop(context);
 
-                          await Navigator.push(context, MaterialPageRoute(
-                              builder: (context) =>
-                                  ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex))
-                          );
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ModifyNotesRoute(
+                                      note: widget.note,
+                                      heroIndex: widget.heroIndex)));
 
                           //if (result == null || result != null)
                           //  Navigator.pop(context);
@@ -341,17 +343,23 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                           child: TextField(
                             obscureText: true,
                             onSubmitted: (text) async {
-                              String hashedInput = widget.note.password.length == 64 ?
-                                  sha256.convert(utf8.encode(text)).toString() :
-                                  text;
+                              String hashedInput =
+                                  widget.note.password.length == 64
+                                      ? sha256
+                                          .convert(utf8.encode(text))
+                                          .toString()
+                                      : text;
 
-                              if (hashedInput == widget.note.password.toString()) {
+                              if (hashedInput ==
+                                  widget.note.password.toString()) {
                                 Navigator.pop(context);
 
-                                await Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => ModifyNotesRoute(
-                                        note: widget.note, heroIndex: widget.heroIndex))
-                                );
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ModifyNotesRoute(
+                                            note: widget.note,
+                                            heroIndex: widget.heroIndex)));
                               }
                             },
                           ),
@@ -377,7 +385,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
   List<Widget> buildPinViewer() {
     List<Widget> widgets = [];
 
-    if(pinDigitsInserted > 0) {
+    if (pinDigitsInserted > 0) {
       for (int i = 0; i < pinDigitsInserted; i++) {
         widgets.add(Padding(
           padding: EdgeInsets.all(8),
@@ -388,7 +396,8 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                 color: Theme.of(context).textTheme.title.color,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: Theme.of(context).textTheme.title.color, width: 1.5)),
+                    color: Theme.of(context).textTheme.title.color,
+                    width: 1.5)),
           ),
         ));
       }
@@ -421,13 +430,16 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             pinDigitsInserted = text.length;
           });
 
-          String hashedInput = widget.note.pin.length == 64 ? sha256.convert(utf8.encode(text)).toString() : text;
+          String hashedInput = widget.note.pin.length == 64
+              ? sha256.convert(utf8.encode(text)).toString()
+              : text;
 
           if (hashedInput == widget.note.pin) {
-            await Navigator.push(context, MaterialPageRoute(
-                builder: (context) =>
-                    ModifyNotesRoute(note: widget.note, heroIndex: widget.heroIndex))
-            );
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ModifyNotesRoute(
+                        note: widget.note, heroIndex: widget.heroIndex)));
 
             Navigator.pop(context);
           }

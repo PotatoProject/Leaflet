@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/CustomIcons.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -20,5 +20,6 @@ class CustomIcons {
 
   static const _kFontFam = 'CustomIcons';
 
-  static const IconData potato_sync = const IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData potato_sync =
+      const IconData(0xe800, fontFamily: _kFontFam);
 }

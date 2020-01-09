@@ -79,7 +79,8 @@ void main() async {
   );
 
   Preferences preferences = await Preferences().create();
-  List<Note> noteList = await NoteHelper.getNotes(preferences.getSortMode(), NotesReturnMode.NORMAL);
+  List<Note> noteList = await NoteHelper.getNotes(
+      preferences.getSortMode(), NotesReturnMode.NORMAL);
 
   runApp(NotesRoot(noteList: noteList));
 }
@@ -138,7 +139,7 @@ class NotesRoot extends StatelessWidget {
         }
 
         List<Locale> supportedLocales = [];
-        for(int i = 0; i < AppInfoProvider.supportedLocales.length; i++) {
+        for (int i = 0; i < AppInfoProvider.supportedLocales.length; i++) {
           supportedLocales.add(Locale(AppInfoProvider.supportedLocales[i]));
         }
 

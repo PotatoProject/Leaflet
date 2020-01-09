@@ -41,44 +41,46 @@ class SyncInputField extends StatelessWidget {
           Card(
             margin: EdgeInsets.only(top: 10, bottom: 5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: BorderSide(
-                color: emptyHandler ? Colors.red :
-                    selectHandler ?
-                        Theme.of(context).accentColor :
-                        Theme.of(context).textTheme.title.color.withAlpha(100),
-                width: 1.5,
-              )
-            ),
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(
+                  color: emptyHandler
+                      ? Colors.red
+                      : selectHandler
+                          ? Theme.of(context).accentColor
+                          : Theme.of(context)
+                              .textTheme
+                              .title
+                              .color
+                              .withAlpha(100),
+                  width: 1.5,
+                )),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Padding(
-              padding: EdgeInsets.only(left: 10, right: 4),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      obscureText: !showPassword,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
+                padding: EdgeInsets.only(left: 10, right: 4),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        obscureText: !showPassword,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        controller: controller,
+                        autocorrect: false,
+                        keyboardType: keyboardType,
+                        focusNode: focusNode,
+                        onChanged: onChanged,
                       ),
-                      controller: controller,
-                      autocorrect: false,
-                      keyboardType: keyboardType,
-                      focusNode: focusNode,
-                      onChanged: onChanged,
                     ),
-                  ),
-                  trailing ?? Container(),
-                ],
-              )
-            ),
+                    trailing ?? Container(),
+                  ],
+                )),
           ),
           Text(
             emptyHandler ? errorMessage : "",
             style: TextStyle(
-              color: emptyHandler ? Colors.red : Colors.transparent,
-              fontSize: 12
-            ),
+                color: emptyHandler ? Colors.red : Colors.transparent,
+                fontSize: 12),
           ),
         ],
       ),

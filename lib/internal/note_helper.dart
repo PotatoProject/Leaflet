@@ -16,7 +16,8 @@ class NoteHelper {
     );
   }
 
-  static Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
+  static Future<List<Note>> getNotes(
+      SortMode sort, NotesReturnMode returnMode) async {
     Database db = await database;
 
     List<Map<String, dynamic>> maps = await db.query('notes');
@@ -34,7 +35,8 @@ class NoteHelper {
         listParseString: maps[i]['listParseString'],
         reminders: maps[i]['reminders'],
         hideContent: maps[i]['hideContent'],
-        pin: maps[i]['pin'] == null ? maps[i]['pin'] : maps[i]['pin'].toString(),
+        pin:
+            maps[i]['pin'] == null ? maps[i]['pin'] : maps[i]['pin'].toString(),
         password: maps[i]['password'],
         isDeleted: maps[i]['isDeleted'] ?? 0,
         isArchived: maps[i]['isArchived'] ?? 0,
@@ -42,20 +44,20 @@ class NoteHelper {
     });
 
     list.sort((a, b) {
-      if(sort == SortMode.ID) {
+      if (sort == SortMode.ID) {
         return a.id.compareTo(b.id);
-      } else if(sort == SortMode.DATE) {
+      } else if (sort == SortMode.DATE) {
         return a.date.compareTo(b.date);
       } else {
         return a.id.compareTo(b.id);
       }
     });
 
-    if(returnMode == NotesReturnMode.NORMAL) {
+    if (returnMode == NotesReturnMode.NORMAL) {
       list.removeWhere((note) => note.isArchived == 1 || note.isDeleted == 1);
-    } else if(returnMode == NotesReturnMode.DELETED) {
+    } else if (returnMode == NotesReturnMode.DELETED) {
       list.removeWhere((note) => note.isDeleted == 0);
-    } else if(returnMode == NotesReturnMode.ARCHIVED) {
+    } else if (returnMode == NotesReturnMode.ARCHIVED) {
       list.removeWhere((note) => note.isArchived == 0 || note.isDeleted == 1);
     }
 
@@ -190,8 +192,7 @@ class NoteHelper {
     final db = await database;
 
     db.execute("ALTER TABLE notes RENAME TO notesold");
-    db.execute(
-      """
+    db.execute("""
         CREATE TABLE notes(
           id INTEGER PRIMARY KEY,
           title TEXT,
@@ -209,14 +210,11 @@ class NoteHelper {
           isDeleted INTEGER,
           isArchived INTEGER
         )
-      """
-    );
+      """);
 
-    db.execute(
-      """
+    db.execute("""
         INSERT INTO notes SELECT * FROM notesold
-      """
-    );
+      """);
 
     db.execute("DROP TABLE notesold");
   }
@@ -231,31 +229,33 @@ class OnlineNoteHelper {
 
   static Future<void> delete(int id) async {
     await post("https://sync.potatoproject.co/api/notes/delete",
-        body: id,
-        headers: {"Authorization": appInfo.userToken});
+        body: id, headers: {"Authorization": appInfo.userToken});
   }
 
-  static Future<List<Note>> getNotes(SortMode sort, NotesReturnMode returnMode) async {
-    Response parsedNoteList = await get("https://sync.potatoproject.co/api/notes/list",
+  static Future<List<Note>> getNotes(
+      SortMode sort, NotesReturnMode returnMode) async {
+    Response parsedNoteList = await get(
+        "https://sync.potatoproject.co/api/notes/list",
         headers: {"Authorization": appInfo.userToken});
-    
-    List<Note> list = await Note.fromRequest(json.decode(parsedNoteList.body)["notes"], false);
+
+    List<Note> list = await Note.fromRequest(
+        json.decode(parsedNoteList.body)["notes"], false);
 
     list.sort((a, b) {
-      if(sort == SortMode.ID) {
+      if (sort == SortMode.ID) {
         return a.id.compareTo(b.id);
-      } else if(sort == SortMode.DATE) {
+      } else if (sort == SortMode.DATE) {
         return a.date.compareTo(b.date);
       } else {
         return a.id.compareTo(b.id);
       }
     });
 
-    if(returnMode == NotesReturnMode.NORMAL) {
+    if (returnMode == NotesReturnMode.NORMAL) {
       list.removeWhere((note) => note.isArchived == 1 || note.isDeleted == 1);
-    } else if(returnMode == NotesReturnMode.DELETED) {
+    } else if (returnMode == NotesReturnMode.DELETED) {
       list.removeWhere((note) => note.isDeleted == 0);
-    } else if(returnMode == NotesReturnMode.ARCHIVED) {
+    } else if (returnMode == NotesReturnMode.ARCHIVED) {
       list.removeWhere((note) => note.isArchived == 0 || note.isDeleted == 1);
     }
 
@@ -357,21 +357,33 @@ class Note {
         '"is_starred": ${this.isStarred == 1}, ' +
         '"date": "${DateTime.fromMillisecondsSinceEpoch(this.date).toUtc().toIso8601String()}", ' +
         '"color": ${this.color}, ' +
-        '"image_url":' + (this.imagePath == null ? 'null' : '"${this.imagePath}"') + ', ' +
+        '"image_url":' +
+        (this.imagePath == null ? 'null' : '"${this.imagePath}"') +
+        ', ' +
         '"is_list": ${this.isList == 1}, ' +
-        '"list_parse_string":' + (this.listParseString == null ? 'null' : '"${this.listParseString}"') + ', ' +
-        '"reminders":' + (this.reminders == null ? 'null' : '"${this.reminders}"') + ', ' +
+        '"list_parse_string":' +
+        (this.listParseString == null ? 'null' : '"${this.listParseString}"') +
+        ', ' +
+        '"reminders":' +
+        (this.reminders == null ? 'null' : '"${this.reminders}"') +
+        ', ' +
         '"hide_content": ${this.hideContent == 1}, ' +
-        '"pin":' + (this.pin == null ? 'null' : '"${this.pin}"') + ', ' +
-        '"password":' + (this.password == null ? 'null' : '"${this.password}"') + ', ' +
+        '"pin":' +
+        (this.pin == null ? 'null' : '"${this.pin}"') +
+        ', ' +
+        '"password":' +
+        (this.password == null ? 'null' : '"${this.password}"') +
+        ', ' +
         '"is_deleted": ${this.isDeleted == 1}, ' +
         '"is_archived": ${this.isArchived == 1}' +
-    "}";
+        "}";
   }
 
-  static Future<List<Note>> fromRequest(List<dynamic> list, bool generateNewIds) async {
+  static Future<List<Note>> fromRequest(
+      List<dynamic> list, bool generateNewIds) async {
     Future<int> noteIdSearcher() async {
-      List<Note> noteList = await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
+      List<Note> noteList =
+          await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
       List<int> noteIdList = List<int>();
 
       noteList.forEach((item) {
@@ -386,7 +398,7 @@ class Note {
 
     List<Note> returnList = [];
 
-    for(int i = 0; list == null ? false : i < list?.length ?? 0; i++) {
+    for (int i = 0; list == null ? false : i < list?.length ?? 0; i++) {
       returnList.add(Note(
         id: generateNewIds ? await noteIdSearcher() : list[i]["note_id"],
         title: list[i]["title"],
@@ -394,13 +406,23 @@ class Note {
         isStarred: list[i]["is_starred"] ? 1 : 0,
         date: DateTime.parse(list[i]["date"]).millisecondsSinceEpoch,
         color: list[i]["color"] == 0 ? null : list[i]["color"],
-        imagePath: list[i]["image_url"] == "" || list[i]["image_url"] == "null" ? null : list[i]["image_url"],
+        imagePath: list[i]["image_url"] == "" || list[i]["image_url"] == "null"
+            ? null
+            : list[i]["image_url"],
         isList: list[i]["is_list"] ? 1 : 0,
-        listParseString: list[i]["list_parse_string"] == "" ? null : list[i]["list_parse_string"],
-        reminders: list[i]["reminders"] == "" || list[i]["reminders"] == "null" ? null : list[i]["reminders"],
+        listParseString: list[i]["list_parse_string"] == ""
+            ? null
+            : list[i]["list_parse_string"],
+        reminders: list[i]["reminders"] == "" || list[i]["reminders"] == "null"
+            ? null
+            : list[i]["reminders"],
         hideContent: list[i]["hide_content"] ?? false ? 1 : 0,
-        pin: list[i]["pin"] == "" || list[i]["pin"] == "null" ? null : list[i]["pin"],
-        password: list[i]["password"] == "" || list[i]["password"] == "null" ? null : list[i]["password"],
+        pin: list[i]["pin"] == "" || list[i]["pin"] == "null"
+            ? null
+            : list[i]["pin"],
+        password: list[i]["password"] == "" || list[i]["password"] == "null"
+            ? null
+            : list[i]["password"],
         isDeleted: list[i]["is_deleted"] ? 1 : 0,
         isArchived: list[i]["is_archived"] ? 1 : 0,
       ));
@@ -417,10 +439,7 @@ class ListPair {
   ListPair({this.checkValue, this.title});
 }
 
-enum SortMode {
-  ID,
-  DATE
-}
+enum SortMode { ID, DATE }
 
 enum NotesReturnMode {
   ALL,

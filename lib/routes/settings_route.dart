@@ -156,9 +156,11 @@ class _SettingsState extends State<SettingsRoute> {
                 SwitchListTile(
                   secondary: Icon(Icons.opacity),
                   title: Text(locales.settingsRoute_themes_useCustomAccent),
-                  onChanged: (val) {
-                    appInfo.useCustomMainColor = val;
-                  },
+                  onChanged: appInfo.supportsSystemAccent
+                      ? (val) {
+                          appInfo.useCustomMainColor = val;
+                        }
+                      : null,
                   value: appInfo.useCustomMainColor,
                   activeColor: appInfo.mainColor,
                 ),
@@ -267,8 +269,7 @@ class _SettingsState extends State<SettingsRoute> {
                               DateFormat("HH-mm_dd-MM-yyyy").format(now) +
                               '.db';
 
-                      await NoteHelper
-                          .backupDatabaseToPath(databaseBackupPath);
+                      await NoteHelper.backupDatabaseToPath(databaseBackupPath);
 
                       scaffoldKey.currentState.showSnackBar(SnackBar(
                           content: Text(locales
@@ -292,28 +293,33 @@ class _SettingsState extends State<SettingsRoute> {
                       int status = await NoteHelper.validateDatabase(path);
 
                       if (status == 0) {
-                        if(appInfo.userToken != null) {
+                        if (appInfo.userToken != null) {
                           setState(() => showLoadingOverlay = true);
 
-                          Response noteList = await get("https://sync.potatoproject.co/api/notes/list",
-                              headers: {"Authorization": appInfo.userToken});
-                                          
-                          Map<dynamic, dynamic> body = json.decode(noteList.body);
-                          
-                          List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.ALL);
-
-                          await post("https://sync.potatoproject.co/api/notes/deleteall",
+                          Response noteList = await get(
+                              "https://sync.potatoproject.co/api/notes/list",
                               headers: {"Authorization": appInfo.userToken});
 
-                          for(int i = 0; i < list.length; i++) {
-                            await post("https://sync.potatoproject.co/api/notes/save",
+                          Map<dynamic, dynamic> body =
+                              json.decode(noteList.body);
+
+                          List<Note> list = await NoteHelper.getNotes(
+                              appInfo.sortMode, NotesReturnMode.ALL);
+
+                          await post(
+                              "https://sync.potatoproject.co/api/notes/deleteall",
+                              headers: {"Authorization": appInfo.userToken});
+
+                          for (int i = 0; i < list.length; i++) {
+                            await post(
+                                "https://sync.potatoproject.co/api/notes/save",
                                 body: list[i].readyForRequest,
                                 headers: {"Authorization": appInfo.userToken});
                           }
 
                           setState(() => showLoadingOverlay = false);
                         }
-                        
+
                         await NoteHelper.restoreDatabaseToPath(path);
                         scaffoldKey.currentState.showSnackBar(SnackBar(
                             content: Text(locales
@@ -327,12 +333,13 @@ class _SettingsState extends State<SettingsRoute> {
                   },
                 ),
                 ListTile(
-                  title: Text(locales.settingsRoute_backupAndRestore_regenDbEntries),
+                  title: Text(
+                      locales.settingsRoute_backupAndRestore_regenDbEntries),
                   leading: Icon(Icons.list),
                   onTap: () async {
                     await NoteHelper.recreateDB();
-                    scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(locales.done)));
+                    scaffoldKey.currentState
+                        .showSnackBar(SnackBar(content: Text(locales.done)));
                   },
                 ),
                 ListLabelDivider(
@@ -365,17 +372,16 @@ class _SettingsState extends State<SettingsRoute> {
           Visibility(
             visible: showLoadingOverlay,
             child: SizedBox.expand(
-              child: AnimatedOpacity(
-                opacity: showLoadingOverlay ? 1 : 0,
-                duration: Duration(milliseconds: 300),
-                child: Container(
-                  color: Colors.black45,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                child: AnimatedOpacity(
+              opacity: showLoadingOverlay ? 1 : 0,
+              duration: Duration(milliseconds: 300),
+              child: Container(
+                color: Colors.black45,
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              )
-            ),
+              ),
+            )),
           ),
         ],
       ),

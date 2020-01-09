@@ -5,41 +5,41 @@ class Utils {
   static parseErrorMessage(BuildContext context, String errorMessage) {
     AppLocalizations locales = AppLocalizations.of(context);
 
-    switch(errorMessage) {
-      case("MalformedEmailError"):
+    switch (errorMessage) {
+      case ("MalformedEmailError"):
         return locales.sync_malformedEmailError;
         break;
-      case("UsernameOutOfBoundsError"):
+      case ("UsernameOutOfBoundsError"):
         return locales.sync_usernameOutOfBoundsError;
         break;
-      case("PassOutOfBoundsError"):
+      case ("PassOutOfBoundsError"):
         return locales.sync_passOutOfBoundsError;
         break;
-      case("DbConnectionError"):
+      case ("DbConnectionError"):
         return locales.sync_dbConnectionError;
         break;
-      case("EmailAlreadyExistsError"):
+      case ("EmailAlreadyExistsError"):
         return locales.sync_emailAlreadyExistsError;
         break;
-      case("UsernameAlreadyExistsError"):
+      case ("UsernameAlreadyExistsError"):
         return locales.sync_usernameAlreadyExistsError;
         break;
-      case("InvalidCredentialsError"):
+      case ("InvalidCredentialsError"):
         return locales.sync_invalidCredentialsError;
         break;
-      case("NotFoundError"):
+      case ("NotFoundError"):
         return locales.sync_notFoundError;
         break;
-      case("UserNotFoundError"):
+      case ("UserNotFoundError"):
         return locales.sync_userNotFoundError;
         break;
-      case("OutOfBoundsError"):
+      case ("OutOfBoundsError"):
         return locales.sync_outOfBoundsError;
         break;
-      case("AccNotFoundError"):
+      case ("AccNotFoundError"):
         return locales.sync_accNotFoundError;
         break;
-      case("MissingNoteIdError"):
+      case ("MissingNoteIdError"):
         return locales.sync_missingNoteIdError;
         break;
       default:

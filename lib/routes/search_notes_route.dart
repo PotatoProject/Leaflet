@@ -25,7 +25,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   _SearchNotesState(List<Note> providedNoteList) {
     this.noteList = providedNoteList;
   }
-  
+
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   static String searchTerms = "";
@@ -50,10 +50,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
             ? Brightness.light
             : Brightness.dark;
 
-    if(firstRun) {
+    if (firstRun) {
       changeSystemBarsColors(
           Theme.of(context).cardColor, systemBarsIconBrightness);
-      
+
       FocusScope.of(context).requestFocus(mainNode);
 
       firstRun = false;
@@ -90,12 +90,9 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           child: TextField(
                             controller: searchController,
                             decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText:
-                                    locales.searchNotesRoute_searchbar,
-                                hintStyle: TextStyle(
-                                  fontSize: 18
-                                ),
+                              border: InputBorder.none,
+                              hintText: locales.searchNotesRoute_searchbar,
+                              hintStyle: TextStyle(fontSize: 18),
                             ),
                             focusNode: mainNode,
                             maxLines: 1,
@@ -105,19 +102,17 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                                 widgets = noteSearchList(context);
                               });
                             },
-                            style: TextStyle(
-                              fontSize: 18
-                            ),
+                            style: TextStyle(fontSize: 18),
                           ),
                         ),
                       ),
                       IconButton(
                         icon: Icon(Icons.filter_list),
                         onPressed: () async {
-                            showFiltersScrollableBottomSheet(context).then((_) {
-                              changeSystemBarsColors(
-                                  Theme.of(context).cardColor, systemBarsIconBrightness);
-                            });
+                          showFiltersScrollableBottomSheet(context).then((_) {
+                            changeSystemBarsColors(Theme.of(context).cardColor,
+                                systemBarsIconBrightness);
+                          });
                         },
                       ),
                     ],
@@ -306,111 +301,110 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     bool firstRun = true;
 
     return showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
         ),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        Brightness systemBarsIconBrightness =
-            Theme.of(context).brightness == Brightness.dark
-                ? Brightness.light
-                : Brightness.dark;
-        
-        if(firstRun) {
-          changeSystemBarsColors(
-            Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
-          
-          firstRun = false;
-        }
-        
-        return Stack(
-          children: <Widget>[
-            Positioned(
-              top: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                  child: Text(
-                    locales.searchNotesRoute_filters_title,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w500,
+        context: context,
+        builder: (BuildContext context) {
+          Brightness systemBarsIconBrightness =
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark;
+
+          if (firstRun) {
+            changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor,
+                systemBarsIconBrightness);
+
+            firstRun = false;
+          }
+
+          return Stack(
+            children: <Widget>[
+              Positioned(
+                top: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child: Text(
+                      locales.searchNotesRoute_filters_title,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 68),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SwitchListTile(
-                      secondary: Icon(Icons.text_format),
-                      title: Text(locales.searchNotesRoute_filters_case),
-                      onChanged: (value) =>
-                          searchFilters.caseSensitive = value,
-                      value: searchFilters.caseSensitive,
-                      activeColor: Theme.of(context).accentColor,
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.color_lens),
-                      title: Text(locales.searchNotesRoute_filters_color),
-                      trailing: CircleColor(
-                        elevation: 0,
-                        circleSize: 24,
-                        color: searchFilters.color == null
-                          ? HSLColor.fromColor(
-                              Theme.of(context).textTheme.title.color)
-                                .withAlpha(0.4)
-                                .toColor()
-                          : Color(searchFilters.color),
+              Padding(
+                padding: EdgeInsets.only(top: 68),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SwitchListTile(
+                        secondary: Icon(Icons.text_format),
+                        title: Text(locales.searchNotesRoute_filters_case),
+                        onChanged: (value) =>
+                            searchFilters.caseSensitive = value,
+                        value: searchFilters.caseSensitive,
+                        activeColor: Theme.of(context).accentColor,
                       ),
-                      onTap: () => showColorDialog(context),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.date_range),
-                      title: Text(locales.searchNotesRoute_filters_date),
-                      trailing: searchFilters.date == null
-                          ? null
-                          : Text(DateFormat("dd MMMM yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  searchFilters.date))),
-                      onTap: () async {
-                        DateTime picker = await showDatePicker(
-                          context: context,
-                          initialDate: searchFilters.date == null
-                              ? DateTime.now()
-                              : DateTime.fromMillisecondsSinceEpoch(
-                                  searchFilters.date),
-                          firstDate: DateTime(2018),
-                          lastDate: DateTime(2100),
-                          builder: (context, widget) {
-                            return widget;
-                          },
-                        );
-                      
-                        if (picker != null) {
-                          searchFilters.date = picker.millisecondsSinceEpoch;
-                        } else {
-                          searchFilters.date = null;
-                        }
-                      },
-                    ),
-                  ],
+                      ListTile(
+                        leading: Icon(Icons.color_lens),
+                        title: Text(locales.searchNotesRoute_filters_color),
+                        trailing: CircleColor(
+                          elevation: 0,
+                          circleSize: 24,
+                          color: searchFilters.color == null
+                              ? HSLColor.fromColor(
+                                      Theme.of(context).textTheme.title.color)
+                                  .withAlpha(0.4)
+                                  .toColor()
+                              : Color(searchFilters.color),
+                        ),
+                        onTap: () => showColorDialog(context),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.date_range),
+                        title: Text(locales.searchNotesRoute_filters_date),
+                        trailing: searchFilters.date == null
+                            ? null
+                            : Text(DateFormat("dd MMMM yyyy").format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    searchFilters.date))),
+                        onTap: () async {
+                          DateTime picker = await showDatePicker(
+                            context: context,
+                            initialDate: searchFilters.date == null
+                                ? DateTime.now()
+                                : DateTime.fromMillisecondsSinceEpoch(
+                                    searchFilters.date),
+                            firstDate: DateTime(2018),
+                            lastDate: DateTime(2100),
+                            builder: (context, widget) {
+                              return widget;
+                            },
+                          );
+
+                          if (picker != null) {
+                            searchFilters.date = picker.millisecondsSinceEpoch;
+                          } else {
+                            searchFilters.date = null;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
-      }
-    );
+            ],
+          );
+        });
   }
 
   void showColorDialog(BuildContext context) {
