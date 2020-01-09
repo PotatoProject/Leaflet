@@ -9,7 +9,14 @@ import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 
 class AppInfoProvider extends ChangeNotifier {
+  Preferences preferences;
+  
   AppInfoProvider() {
+    init();
+  }
+
+  void init() async {
+    preferences = await Preferences().create();
     loadData();
   }
 
@@ -88,19 +95,19 @@ class AppInfoProvider extends ChangeNotifier {
 
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
-    setFollowSystemTheme(follow);
+    preferences.setFollowSystemTheme(follow);
     notifyListeners();
   }
 
   set themeMode(int val) {
     _themeMode = val;
-    setThemeMode(val);
+    preferences.setThemeMode(val);
     notifyListeners();
   }
 
   set darkThemeMode(int val) {
     _darkThemeMode = val;
-    setDarkThemeMode(val);
+    preferences.setDarkThemeMode(val);
     notifyListeners();
   }
 
@@ -112,44 +119,44 @@ class AppInfoProvider extends ChangeNotifier {
   set useCustomMainColor(bool use) {
     _useCustomMainColor = use;
     updateMainColor();
-    setUseCustomMainColor(use);
+    preferences.setUseCustomMainColor(use);
     notifyListeners();
   }
 
   set customMainColor(Color color) {
     _customMainColor = color;
     updateMainColor();
-    setCustomMainColor(color);
+    preferences.setCustomMainColor(color);
     notifyListeners();
   }
 
   set devShowIdLabels(bool val) {
     _devShowIdLabels = val;
-    setDevShowIdLabels(val);
+    preferences.setDevShowIdLabels(val);
     notifyListeners();
   }
 
   set isGridView(bool val) {
     _isGridView = val;
-    setIsGridView(val);
+    preferences.setIsGridView(val);
     notifyListeners();
   }
 
   set isQuickStarredGestureOn(bool isOn) {
     _isQuickStarredGestureOn = isOn;
-    setIsQuickStarredGestureOn(isOn);
+    preferences.setIsQuickStarredGestureOn(isOn);
     notifyListeners();
   }
 
   set notificationsIdList(List<String> list) {
     _notificationsIdList = list;
-    setNotificationsIdList(list);
+    preferences.setNotificationsIdList(list);
     notifyListeners();
   }
 
   set remindersNotifIdList(List<String> list) {
     _remindersNotifIdList = list;
-    setRemindersNotifIdList(list);
+    preferences.setRemindersNotifIdList(list);
     notifyListeners();
   }
 
@@ -160,43 +167,43 @@ class AppInfoProvider extends ChangeNotifier {
 
   set sortMode(SortMode sort) {
     _sortMode = sort;
-    setSortMode(sort);
+    preferences.setSortMode(sort);
     notifyListeners();
   }
 
   set userImage(String path) {
     _userImage = path;
-    setUserImage(path);
+    preferences.setUserImage(path);
     notifyListeners();
   }
 
   set userName(String name) {
     _userName = name;
-    setUserName(name);
+    preferences.setUserName(name);
     notifyListeners();
   }
 
   set userEmail(String email) {
     _userEmail = email;
-    setUserEmail(email);
+    preferences.setUserEmail(email);
     notifyListeners();
   }
 
   set userToken(String token) {
     _userToken = token;
-    setUserToken(token);
+    preferences.setUserToken(token);
     notifyListeners();
   }
 
   set autoSync(bool autoSync) {
     _autoSync = autoSync;
-    setAutoSync(autoSync);
+    preferences.setAutoSync(autoSync);
     notifyListeners();
   }
 
   set autoSyncTimeInterval(int interval) {
     _autoSyncTimeInterval = interval;
-    setAutoSyncTimeInterval(interval);
+    preferences.setAutoSyncTimeInterval(interval);
     notifyListeners();
   }
 
@@ -242,30 +249,30 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
-    followSystemTheme = await getFollowSystemTheme();
-    themeMode = await getThemeMode();
-    darkThemeMode = await getDarkThemeMode();
+    followSystemTheme = preferences.getFollowSystemTheme();
+    themeMode = preferences.getThemeMode();
+    darkThemeMode = preferences.getDarkThemeMode();
     mainColor = _useCustomMainColor
         ? customMainColor
         : Color(await _channel.invokeMethod("getAccentColor"));
-    useCustomMainColor = await getUseCustomMainColor();
-    customMainColor = await getCustomMainColor();
-    devShowIdLabels = await getDevShowIdLabels();
-    isGridView = await getIsGridView();
-    userImage = await getUserImage();
-    isQuickStarredGestureOn = await getIsQuickStarredGestureOn();
-    notificationsIdList = await getNotificationsIdList();
-    remindersNotifIdList = await getRemindersNotifIdList();
+    useCustomMainColor = preferences.getUseCustomMainColor();
+    customMainColor = preferences.getCustomMainColor();
+    devShowIdLabels = preferences.getDevShowIdLabels();
+    isGridView = preferences.getIsGridView();
+    userImage = preferences.getUserImage();
+    isQuickStarredGestureOn = preferences.getIsQuickStarredGestureOn();
+    notificationsIdList = preferences.getNotificationsIdList();
+    remindersNotifIdList = preferences.getRemindersNotifIdList();
     storageStatus = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
-    sortMode = await getSortMode();
+    sortMode = preferences.getSortMode();
 
-    userToken = await getUserToken();
-    userName = await getUserName();
-    userEmail = await getUserEmail();
+    userToken = preferences.getUserToken();
+    userName = preferences.getUserName();
+    userEmail = preferences.getUserEmail();
 
-    autoSync = await getAutoSync();
-    autoSyncTimeInterval = await getAutoSyncTimeInterval();
+    autoSync = preferences.getAutoSync();
+    autoSyncTimeInterval = preferences.getAutoSyncTimeInterval();
 
     date = null;
     time = null;

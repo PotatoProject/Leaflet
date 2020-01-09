@@ -5,7 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/methods.dart';
 
 class SearchFiltersProvider extends ChangeNotifier {
+  Preferences preferences;
+
   SearchFiltersProvider() {
+    init();
+  }
+
+  void init() async {
+    preferences = await Preferences().create();
     loadData();
   }
 
@@ -21,25 +28,25 @@ class SearchFiltersProvider extends ChangeNotifier {
 
   set color(int color) {
     _color = color;
-    filtersSetColor(color);
+    preferences.filtersSetColor(color);
     notifyListeners();
   }
 
   set date(int date) {
     _date = date;
-    filtersSetDate(date);
+    preferences.filtersSetDate(date);
     notifyListeners();
   }
 
   set caseSensitive(bool caseSensitive) {
     _caseSensitive = caseSensitive;
-    filtersSetCaseSensitive(caseSensitive);
+    preferences.filtersSetCaseSensitive(caseSensitive);
     notifyListeners();
   }
 
-  Future<void> loadData() async {
-    color = await filtersGetColor();
-    date = await filtersGetDate();
-    caseSensitive = await filtersGetCaseSensitive();
+  void loadData() {
+    color = preferences.filtersGetColor();
+    date = preferences.filtersGetDate();
+    caseSensitive = preferences.filtersGetCaseSensitive();
   }
 }

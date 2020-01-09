@@ -193,6 +193,19 @@ class _SettingsState extends State<SettingsRoute> {
                         actions: <Widget>[
                           FlatButton(
                             child: Text(
+                              locales.reset,
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            onPressed: () {
+                              appInfo.customMainColor = Color(0xFFFF9100);
+                              Navigator.pop(context);
+                            },
+                            textColor: appInfo.mainColor,
+                            hoverColor: appInfo.mainColor,
+                          ),
+                          FlatButton(
+                            child: Text(
                               locales.cancel,
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),

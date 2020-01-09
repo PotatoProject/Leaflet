@@ -23,204 +23,173 @@ void changeSystemBarsColors(
   ));
 }
 
-Future<bool> getFollowSystemTheme() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('follow_system_theme') ?? true;
-}
+class Preferences {
+  SharedPreferences prefs;
 
-Future<void> setFollowSystemTheme(bool follow) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('follow_system_theme', follow);
-}
+  Future<Preferences> create() async {
+    prefs = await SharedPreferences.getInstance();
+    return this;
+  }
 
-Future<int> getThemeMode() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('theme_mode') ?? 0;
-}
+  bool getFollowSystemTheme() {
+    return prefs.getBool('follow_system_theme') ?? true;
+  }
 
-Future<void> setThemeMode(int mode) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('theme_mode', mode);
-}
+  void setFollowSystemTheme(bool follow) {
+    prefs.setBool('follow_system_theme', follow);
+  }
 
-Future<int> getDarkThemeMode() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('dark_theme_mode') ?? 0;
-}
+  int getThemeMode() {
+    return prefs.getInt('theme_mode') ?? 0;
+  }
 
-Future<void> setDarkThemeMode(int mode) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('dark_theme_mode', mode);
-}
+  void setThemeMode(int mode) {
+    prefs.setInt('theme_mode', mode);
+  }
 
-Future<bool> getUseCustomMainColor() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('use_custom_main_color') ?? false;
-}
+  int getDarkThemeMode() {
+    return prefs.getInt('dark_theme_mode') ?? 0;
+  }
 
-Future<void> setUseCustomMainColor(bool use) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('use_custom_main_color', use);
-}
+  void setDarkThemeMode(int mode) {
+    prefs.setInt('dark_theme_mode', mode);
+  }
 
-Future<Color> getCustomMainColor() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('curstom_main_color') ?? Color(0xFFFF0000);
-}
+  bool getUseCustomMainColor() {
+    return prefs.getBool('use_custom_main_color') ?? false;
+  }
 
-Future<void> setCustomMainColor(Color color) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('custom_main_color', color.value);
-}
+  void setUseCustomMainColor(bool use) {
+    prefs.setBool('use_custom_main_color', use);
+  }
 
-Future<bool> getDevShowIdLabels() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('dev_show_id_labels') ?? false;
-}
+  Color getCustomMainColor() {
+    return Color(prefs.getInt('custom_main_color') ?? 0xFFFF9100);
+  }
 
-Future<void> setDevShowIdLabels(bool show) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('dev_show_id_labels', show);
-}
+  void setCustomMainColor(Color color) {
+    prefs.setInt('custom_main_color', color?.value ?? null);
+  }
 
-Future<bool> getIsGridView() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('is_grid_view') ?? false;
-}
+  bool getDevShowIdLabels() {
+    return prefs.getBool('dev_show_id_labels') ?? false;
+  }
 
-Future<void> setIsGridView(bool isGrid) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('is_grid_view', isGrid);
-}
+  void setDevShowIdLabels(bool show) {
+    prefs.setBool('dev_show_id_labels', show);
+  }
 
-Future<bool> getIsQuickStarredGestureOn() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('quick_starred_gesture') ?? false;
-}
+  bool getIsGridView() {
+    return prefs.getBool('is_grid_view') ?? false;
+  }
 
-Future<void> setIsQuickStarredGestureOn(bool isOn) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('quick_starred_gesture', isOn);
-}
+  void setIsGridView(bool isGrid) {
+    prefs.setBool('is_grid_view', isGrid);
+  }
 
-Future<List<String>> getNotificationsIdList() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getStringList('notifications_id_list') ?? List<String>();
-}
+  bool getIsQuickStarredGestureOn() {
+    return prefs.getBool('quick_starred_gesture') ?? false;
+  }
 
-Future<void> setNotificationsIdList(List<String> idList) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setStringList('notifications_id_list', idList);
-}
+  void setIsQuickStarredGestureOn(bool isOn) {
+    prefs.setBool('quick_starred_gesture', isOn);
+  }
 
-Future<List<String>> getRemindersNotifIdList() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getStringList('reminders_notif_id_list') ?? List<String>();
-}
+  List<String> getNotificationsIdList() {
+    return prefs.getStringList('notifications_id_list') ?? List<String>();
+  }
 
-Future<void> setRemindersNotifIdList(List<String> idList) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setStringList('reminders_notif_id_list', idList);
-}
+  void setNotificationsIdList(List<String> idList) {
+    prefs.setStringList('notifications_id_list', idList);
+  }
 
-Future<SortMode> getSortMode() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return (prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
-      SortMode.ID :
-      SortMode.DATE;
-}
+  List<String> getRemindersNotifIdList() {
+    return prefs.getStringList('reminders_notif_id_list') ?? List<String>();
+  }
 
-Future<void> setSortMode(SortMode sort) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
-}
+  void setRemindersNotifIdList(List<String> idList) {
+    prefs.setStringList('reminders_notif_id_list', idList);
+  }
 
-Future<String> getUserImage() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_image') ?? null;
-}
+  SortMode getSortMode() {
+    return (prefs.getInt('notes_sort_mode') ?? 0) == 0 ?
+        SortMode.ID :
+        SortMode.DATE;
+  }
 
-Future<void> setUserImage(String path) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_image', path);
-}
+  void setSortMode(SortMode sort) {
+    prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
+  }
 
-Future<String> getUserName() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_name') ?? "Guest";
-}
+  String getUserImage() {
+    return prefs.getString('user_image') ?? null;
+  }
 
-Future<void> setUserName(String name) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_name', name);
-}
+  void setUserImage(String path) {
+    prefs.setString('user_image', path);
+  }
 
-Future<String> getUserEmail() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_email') ?? "";
-}
+  String getUserName() {
+    return prefs.getString('user_name') ?? "Guest";
+  }
 
-Future<void> setUserEmail(String email) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_email', email);
-}
+  void setUserName(String name) {
+    prefs.setString('user_name', name);
+  }
 
-Future<String> getUserToken() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_token') ?? null;
-}
+  String getUserEmail() {
+    return prefs.getString('user_email') ?? "";
+  }
 
-Future<void> setUserToken(String token) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_token', token);
-}
+  void setUserEmail(String email) {
+    prefs.setString('user_email', email);
+  }
 
-Future<bool> getAutoSync() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('auto_sync') ?? false;
-}
+  String getUserToken() {
+    return prefs.getString('user_token') ?? null;
+  }
 
-Future<void> setAutoSync(bool autoSync) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('auto_sync', autoSync);
-}
+  void setUserToken(String token) {
+    prefs.setString('user_token', token);
+  }
 
-Future<int> getAutoSyncTimeInterval() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('auto_sync_time_interval') ?? 15;
-}
+  bool getAutoSync() {
+    return prefs.getBool('auto_sync') ?? false;
+  }
 
-Future<void> setAutoSyncTimeInterval(int interval) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('auto_sync_time_interval', interval);
-}
+  void setAutoSync(bool autoSync) {
+    prefs.setBool('auto_sync', autoSync);
+  }
 
-Future<void> filtersSetColor(int color) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('filters_color', color);
-}
+  int getAutoSyncTimeInterval() {
+    return prefs.getInt('auto_sync_time_interval') ?? 15;
+  }
 
-Future<int> filtersGetColor() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('filters_color') ?? null;
-}
+  void setAutoSyncTimeInterval(int interval) {
+    prefs.setInt('auto_sync_time_interval', interval);
+  }
 
-Future<void> filtersSetDate(int date) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('filters_date', date);
-}
+  void filtersSetColor(int color) {
+    prefs.setInt('filters_color', color);
+  }
 
-Future<int> filtersGetDate() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('filters_date') ?? null;
-}
+  int filtersGetColor() {
+    return prefs.getInt('filters_color') ?? null;
+  }
 
-Future<void> filtersSetCaseSensitive(bool caseSensitive) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('filters_case_sensitive', caseSensitive);
-}
+  void filtersSetDate(int date) {
+    prefs.setInt('filters_date', date);
+  }
 
-Future<bool> filtersGetCaseSensitive() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('filters_case_sensitive') ?? false;
+  int filtersGetDate() {
+    return prefs.getInt('filters_date') ?? null;
+  }
+
+  void filtersSetCaseSensitive(bool caseSensitive) {
+    prefs.setBool('filters_case_sensitive', caseSensitive);
+  }
+
+  bool filtersGetCaseSensitive() {
+    return prefs.getBool('filters_case_sensitive') ?? false;
+  }
 }
