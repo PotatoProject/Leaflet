@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,6 +13,7 @@ import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 import 'package:potato_notes/ui/list_label_divider.dart';
+import 'package:potato_notes/ui/rgb_color_picker.dart';
 import 'package:provider/provider.dart';
 
 class SettingsRoute extends StatefulWidget {
@@ -77,7 +77,7 @@ class _SettingsState extends State<SettingsRoute> {
           ),
           Padding(
             padding:
-                EdgeInsets.only(top: MediaQuery.of(context).padding.top + 70),
+                EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60),
             child: ListView(
               padding: EdgeInsets.all(0),
               children: <Widget>[
@@ -180,21 +180,15 @@ class _SettingsState extends State<SettingsRoute> {
                       return AlertDialog(
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(8.0))),
+                                BorderRadius.all(Radius.circular(12))),
                         contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ColorPicker(
-                              enableAlpha: false,
-                              enableLabel: true,
-                              displayThumbColor: false,
-                              pickerColor: appInfo.customMainColor,
-                              onColorChanged: (color) {
-                                currentColor = Color(color.value);
-                              },
-                            )
-                          ],
+                        content: SingleChildScrollView(
+                          child: RGBColorPicker(
+                            initialColor: appInfo.customMainColor,
+                            onColorChange: (color) {
+                              currentColor = color;
+                            },
+                          ),
                         ),
                         actions: <Widget>[
                           FlatButton(
