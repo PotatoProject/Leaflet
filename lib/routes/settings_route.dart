@@ -366,6 +366,13 @@ class _SettingsState extends State<SettingsRoute> {
                   value: appInfo.devShowIdLabels,
                   onChanged: (value) => appInfo.devShowIdLabels = value,
                 ),
+                SwitchListTile(
+                  activeColor: Theme.of(context).accentColor,
+                  secondary: Icon(Icons.remove_red_eye),
+                  title: Text("Welcome screen seen"),
+                  value: appInfo.welcomeScreenSeen,
+                  onChanged: (value) => appInfo.welcomeScreenSeen = value,
+                ),
               ],
             ),
           ),

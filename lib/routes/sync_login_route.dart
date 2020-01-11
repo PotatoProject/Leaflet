@@ -309,8 +309,6 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                                   });
                                             }
 
-                                            print(result);
-
                                             if (result) {
                                               List<Note> list =
                                                   await NoteHelper.getNotes(

@@ -31,6 +31,14 @@ class Preferences {
     return this;
   }
 
+  bool getWelcomeScreenSeen() {
+    return prefs.getBool('weclome_screen_seen') ?? false;
+  }
+
+  void setWelcomeScreenSeen(bool seen) {
+    prefs.setBool('weclome_screen_seen', seen);
+  }
+
   bool getFollowSystemTheme() {
     return prefs.getBool('follow_system_theme') ?? true;
   }

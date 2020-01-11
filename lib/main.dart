@@ -9,6 +9,7 @@ import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
+import 'package:potato_notes/routes/welcome_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
 import 'package:provider/provider.dart';
@@ -81,14 +82,16 @@ void main() async {
   Preferences preferences = await Preferences().create();
   List<Note> noteList = await NoteHelper.getNotes(
       preferences.getSortMode(), NotesReturnMode.NORMAL);
+  bool showWelcomeScreen = !preferences.getWelcomeScreenSeen();
 
-  runApp(NotesRoot(noteList: noteList));
+  runApp(NotesRoot(noteList: noteList, showWelcomeScreen: showWelcomeScreen));
 }
 
 class NotesRoot extends StatelessWidget {
   final List<Note> noteList;
+  final bool showWelcomeScreen;
 
-  NotesRoot({@required this.noteList});
+  NotesRoot({@required this.noteList, this.showWelcomeScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +157,9 @@ class NotesRoot extends StatelessWidget {
             behavior: NoGlowScrollBehavior(),
             child: child,
           ),
-          home: NotesMainPageRoute(noteList: noteList),
+          home: showWelcomeScreen
+              ? WelcomeRoute(noteList: noteList)
+              : NotesMainPageRoute(noteList: noteList),
           debugShowCheckedModeBanner: false,
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)
@@ -169,6 +174,7 @@ class NotesRoot extends StatelessWidget {
           themeMode:
               appInfo.followSystemTheme ? ThemeMode.system : ThemeMode.light,
           title: 'Notes',
+          color: appInfo.mainColor,
         );
       }),
     );

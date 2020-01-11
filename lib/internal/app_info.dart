@@ -22,6 +22,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   static MethodChannel _channel = MethodChannel("potato_notes_utils");
 
+  bool _welcomeScreenSeen = true;
   bool _followSystemTheme = true;
   int _themeMode = 0;
   int _darkThemeMode = 0;
@@ -52,6 +53,7 @@ class AppInfoProvider extends ChangeNotifier {
   bool _password = false;
   String _version = '1.0';
 
+  bool get welcomeScreenSeen => _welcomeScreenSeen;
   bool get followSystemTheme => _followSystemTheme;
   int get themeMode => _themeMode;
   int get darkThemeMode => _darkThemeMode;
@@ -94,6 +96,12 @@ class AppInfoProvider extends ChangeNotifier {
       ];
 
   bool supportsSystemAccent = true;
+
+  set welcomeScreenSeen(bool seen) {
+    _welcomeScreenSeen = seen;
+    preferences.setWelcomeScreenSeen(seen);
+    notifyListeners();
+  }
 
   set followSystemTheme(bool follow) {
     _followSystemTheme = follow;
@@ -245,19 +253,24 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> updateMainColor() async {
-    int sysAccent = await _channel.invokeMethod("getAccentColor");
+    if (supportsSystemAccent) {
+      int sysAccent = await _channel.invokeMethod("getAccentColor");
 
-    if (sysAccent == null) {
-      supportsSystemAccent = false;
-      useCustomMainColor = true;
+      if (sysAccent == null) {
+        supportsSystemAccent = false;
+        useCustomMainColor = true;
+      }
+
+      mainColor = _useCustomMainColor || !supportsSystemAccent
+          ? customMainColor
+          : Color(sysAccent);
+    } else {
+      mainColor = customMainColor;
     }
-
-    mainColor = _useCustomMainColor || !supportsSystemAccent
-        ? customMainColor
-        : Color(sysAccent);
   }
 
   Future<void> loadData() async {
+    welcomeScreenSeen = preferences.getWelcomeScreenSeen();
     followSystemTheme = preferences.getFollowSystemTheme();
     themeMode = preferences.getThemeMode();
     darkThemeMode = preferences.getDarkThemeMode();
