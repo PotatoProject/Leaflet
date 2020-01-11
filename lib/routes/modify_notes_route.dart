@@ -12,6 +12,7 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
@@ -261,7 +262,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       child: Opacity(
                                         opacity: animation,
                                         child: Icon(
-                                          Icons.image,
+                                          OMIcons.image,
                                           size: 56,
                                         ),
                                       ),
@@ -355,8 +356,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           IconButton(
                             icon: Icon(noteHideContent == 1 &&
                                     (notePin != null || notePassword != null)
-                                ? Icons.lock
-                                : Icons.remove_red_eye),
+                                ? OMIcons.lock
+                                : OMIcons.removeRedEye),
                             onPressed: () {
                               appInfo.hideContent = noteHideContent;
                               appInfo.useProtectionForNoteContent =
@@ -399,12 +400,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           noteIsList == 0
                               ? PopupMenuButton(
                                   padding: EdgeInsets.all(0),
-                                  //color: Color(noteColor),
                                   itemBuilder: (context) {
                                     return <PopupMenuEntry>[
                                       PopupMenuItem(
                                         child: ListTile(
-                                          //leading: Icon(Icons.color_lens),
                                           title: Text(locales
                                               .modifyNotesRoute_color_change),
                                           onTap: () async {
@@ -431,7 +430,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       ),
                                       PopupMenuItem(
                                         child: ListTile(
-                                          //leading: Icon(Icons.share),
                                           title: Text(locales.note_share),
                                           onTap: () {
                                             Navigator.pop(context);
@@ -445,7 +443,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       ),
                                       PopupMenuItem(
                                         child: ListTile(
-                                          //leading: Icon(Icons.file_upload),
                                           title: Text(locales.note_export),
                                           onTap: () async {
                                             Navigator.pop(context);
@@ -547,7 +544,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                   },
                                 )
                               : IconButton(
-                                  icon: Icon(Icons.color_lens),
+                                  icon: Icon(OMIcons.colorLens),
                                   onPressed: () async {
                                     int result = await showDialog(
                                         context: context,
@@ -869,7 +866,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               children: <Widget>[
                 ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  leading: Icon(Icons.photo_library),
+                  leading: Icon(OMIcons.photoLibrary),
                   title: noteImagePath != null
                       ? Text(locales.modifyNotesRoute_image_update)
                       : Text(locales.modifyNotesRoute_image_add),
@@ -907,7 +904,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   enabled: noteImagePath != null,
-                  leading: Icon(Icons.delete),
+                  leading: Icon(OMIcons.delete),
                   title: Text(locales.modifyNotesRoute_image_remove),
                   onTap: () async {
                     setState(() => noteImagePath = null);
@@ -948,7 +945,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               children: <Widget>[
                 ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  leading: Icon(Icons.timer),
+                  leading: Icon(OMIcons.timer),
                   title: Text(locales.modifyNotesRoute_reminder_time),
                   onTap: () async {
                     TimeOfDay result = await showTimePicker(
@@ -967,7 +964,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  leading: Icon(Icons.date_range),
+                  leading: Icon(OMIcons.dateRange),
                   title: Text(locales.modifyNotesRoute_reminder_date),
                   onTap: () async {
                     DateTime result = await showDatePicker(
@@ -1090,7 +1087,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 children: <Widget>[
                   ListTile(
                     leading: Icon(
-                      Icons.add_to_photos,
+                      OMIcons.addToPhotos,
                       color: iconTextColor,
                     ),
                     title: Text(locales.modifyNotesRoute_image),
@@ -1132,7 +1129,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       }),
                   ListTile(
                     leading: Icon(
-                      Icons.add_alert,
+                      OMIcons.addAlert,
                       color: iconTextColor,
                     ),
                     title: Text(locales.modifyNotesRoute_reminder),
@@ -1181,7 +1178,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 children: <Widget>[
                   SwitchListTile(
                     secondary: Icon(
-                      Icons.remove_red_eye,
+                      OMIcons.removeRedEye,
                       color: iconTextColor,
                     ),
                     activeColor: Theme.of(context).accentColor,
@@ -1196,7 +1193,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                     title:
                         Text(locales.modifyNotesRoute_security_protectionText),
                     secondary: Icon(
-                      Icons.lock,
+                      OMIcons.lock,
                       color: iconTextColor,
                     ),
                     activeColor: Theme.of(context).accentColor,
@@ -1216,7 +1213,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                   ListTile(
                       enabled: appInfo.hideContent == 1 &&
                           appInfo.useProtectionForNoteContent,
-                      leading: Icon(Icons.check,
+                      leading: Icon(OMIcons.check,
                           color:
                               appInfo.pin ? iconTextColor : Colors.transparent),
                       title: Text(locales.modifyNotesRoute_security_pin),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
@@ -179,7 +180,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
               padding: EdgeInsets.all(0),
               children: <Widget>[
                 SwitchListTile(
-                  secondary: Icon(Icons.brightness_medium),
+                  secondary: Icon(OMIcons.brightnessMedium),
                   title: Text(locales.settingsRoute_themes_followSystem),
                   onChanged: (val) {
                     appInfo.followSystemTheme = val;
@@ -189,7 +190,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 ),
                 ListTile(
                   enabled: appInfo.followSystemTheme,
-                  leading: Icon(Icons.brightness_3),
+                  leading: Icon(OMIcons.brightness3),
                   title: Text(locales.settingsRoute_themes_systemDarkMode),
                   trailing: DropdownButton(
                     value: appInfo.darkThemeMode,
@@ -216,7 +217,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 ),
                 ListTile(
                   enabled: !appInfo.followSystemTheme,
-                  leading: Icon(Icons.brightness_5),
+                  leading: Icon(OMIcons.brightness5),
                   title: Text(locales.settingsRoute_themes_appTheme),
                   trailing: DropdownButton(
                     value: appInfo.themeMode,
@@ -248,7 +249,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                   ),
                 ),
                 SwitchListTile(
-                  secondary: Icon(Icons.opacity),
+                  secondary: Icon(OMIcons.opacity),
                   title: Text(locales.settingsRoute_themes_useCustomAccent),
                   onChanged: appInfo.supportsSystemAccent
                       ? (val) {
@@ -259,7 +260,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                   activeColor: appInfo.mainColor,
                 ),
                 ListTile(
-                  leading: Icon(Icons.color_lens),
+                  leading: Icon(OMIcons.colorLens),
                   title: Text(locales.settingsRoute_themes_customAccentColor),
                   enabled: appInfo.useCustomMainColor,
                   trailing: Container(
@@ -330,10 +331,27 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
-                  secondary: Icon(Icons.star),
+                  secondary: Icon(OMIcons.starBorder),
                   title: Text(locales.settingsRoute_gestures_quickStar),
                   value: appInfo.isQuickStarredGestureOn,
                   onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
+                ),
+                SwitchListTile(
+                  secondary: Icon(OMIcons.sort),
+                  title: Text(locales.userInfoRoute_sortByDate),
+                  value: appInfo.sortMode == SortMode.DATE,
+                  onChanged: (value) {
+                    SortMode sortMode;
+
+                    if (value) {
+                      sortMode = SortMode.DATE;
+                    } else {
+                      sortMode = SortMode.ID;
+                    }
+
+                    appInfo.sortMode = sortMode;
+                  },
+                  activeColor: appInfo.mainColor,
                 ),
               ],
             ),
@@ -414,7 +432,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
               children: <Widget>[
                 Spacer(),
                 Icon(
-                  Icons.done,
+                  OMIcons.done,
                   size: 190,
                   color: Theme.of(context).iconTheme.color.withOpacity(0.2),
                 ),
@@ -500,7 +518,7 @@ class PageIndicator extends StatelessWidget {
         width: 8,
         height: 8,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(4),
           color: i == page
               ? Theme.of(context).accentColor
               : Theme.of(context).accentColor.withOpacity(0.4),

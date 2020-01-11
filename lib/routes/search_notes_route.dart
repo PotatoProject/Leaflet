@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
@@ -302,7 +303,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SwitchListTile(
-                        secondary: Icon(Icons.text_format),
+                        secondary: Icon(OMIcons.textFormat),
                         title: Text(locales.searchNotesRoute_filters_case),
                         onChanged: (value) =>
                             searchFilters.caseSensitive = value,
@@ -310,7 +311,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                         activeColor: Theme.of(context).accentColor,
                       ),
                       ListTile(
-                        leading: Icon(Icons.color_lens),
+                        leading: Icon(OMIcons.colorLens),
                         title: Text(locales.searchNotesRoute_filters_color),
                         trailing: CircleColor(
                           elevation: 0,
@@ -325,7 +326,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                         onTap: () => showColorDialog(context),
                       ),
                       ListTile(
-                        leading: Icon(Icons.date_range),
+                        leading: Icon(OMIcons.dateRange),
                         title: Text(locales.searchNotesRoute_filters_date),
                         trailing: searchFilters.date == null
                             ? null

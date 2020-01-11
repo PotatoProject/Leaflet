@@ -335,8 +335,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               currentView == NotesReturnMode.DELETED
                                   ? Icons.delete_outline
                                   : currentView == NotesReturnMode.ARCHIVED
-                                      ? Icons.archive
-                                      : Icons.note,
+                                      ? OMIcons.archive
+                                      : OMIcons.note,
                               size: 50.0,
                               color: HSLColor.fromColor(
                                       Theme.of(context).textTheme.title.color)
@@ -400,8 +400,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               onPressed: () => showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 builder: (context) => UserInfoDialog(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   onSettingsTileClick: () => _settingsCaller(context),
                   onPotatoSyncTileClick: () async {
                     if (appInfo.userToken != null) {

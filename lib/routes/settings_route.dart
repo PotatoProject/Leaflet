@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
@@ -48,7 +49,7 @@ class _SettingsState extends State<SettingsRoute> {
                   label: locales.settingsRoute_themes,
                 ),
                 SwitchListTile(
-                  secondary: Icon(Icons.brightness_medium),
+                  secondary: Icon(OMIcons.brightnessMedium),
                   title: Text(locales.settingsRoute_themes_followSystem),
                   onChanged: (val) {
                     appInfo.followSystemTheme = val;
@@ -58,7 +59,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   enabled: appInfo.followSystemTheme,
-                  leading: Icon(Icons.brightness_3),
+                  leading: Icon(OMIcons.brightness3),
                   title: Text(locales.settingsRoute_themes_systemDarkMode),
                   trailing: DropdownButton(
                     value: appInfo.darkThemeMode,
@@ -85,7 +86,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   enabled: !appInfo.followSystemTheme,
-                  leading: Icon(Icons.brightness_5),
+                  leading: Icon(OMIcons.brightness5),
                   title: Text(locales.settingsRoute_themes_appTheme),
                   trailing: DropdownButton(
                     value: appInfo.themeMode,
@@ -117,7 +118,7 @@ class _SettingsState extends State<SettingsRoute> {
                   ),
                 ),
                 SwitchListTile(
-                  secondary: Icon(Icons.opacity),
+                  secondary: Icon(OMIcons.opacity),
                   title: Text(locales.settingsRoute_themes_useCustomAccent),
                   onChanged: appInfo.supportsSystemAccent
                       ? (val) {
@@ -128,7 +129,7 @@ class _SettingsState extends State<SettingsRoute> {
                   activeColor: appInfo.mainColor,
                 ),
                 ListTile(
-                  leading: Icon(Icons.color_lens),
+                  leading: Icon(OMIcons.colorLens),
                   title: Text(locales.settingsRoute_themes_customAccentColor),
                   enabled: appInfo.useCustomMainColor,
                   trailing: Container(
@@ -202,7 +203,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
-                  secondary: Icon(Icons.star),
+                  secondary: Icon(OMIcons.starBorder),
                   title: Text(locales.settingsRoute_gestures_quickStar),
                   value: appInfo.isQuickStarredGestureOn,
                   onChanged: (value) => appInfo.isQuickStarredGestureOn = value,
@@ -211,7 +212,7 @@ class _SettingsState extends State<SettingsRoute> {
                   label: locales.settingsRoute_backupAndRestore,
                 ),
                 ListTile(
-                  leading: Icon(Icons.backup),
+                  leading: Icon(OMIcons.backup),
                   title: Text(locales.settingsRoute_backupAndRestore_backup),
                   onTap: () async {
                     if (appInfo.storageStatus == PermissionStatus.granted) {
@@ -247,7 +248,7 @@ class _SettingsState extends State<SettingsRoute> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.restore),
+                  leading: Icon(OMIcons.restore),
                   title: Text(locales.settingsRoute_backupAndRestore_restore),
                   onTap: () async {
                     String path = await FilePicker.getFilePath();
@@ -298,7 +299,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ListTile(
                   title: Text(
                       locales.settingsRoute_backupAndRestore_regenDbEntries),
-                  leading: Icon(Icons.list),
+                  leading: Icon(OMIcons.list),
                   onTap: () async {
                     await NoteHelper.recreateDB();
                     scaffoldKey.currentState
@@ -306,7 +307,7 @@ class _SettingsState extends State<SettingsRoute> {
                   },
                 ),
                 SwitchListTile(
-                  secondary: Icon(Icons.sort),
+                  secondary: Icon(OMIcons.sort),
                   title: Text(locales.userInfoRoute_sortByDate),
                   value: appInfo.sortMode == SortMode.DATE,
                   onChanged: (value) {
@@ -326,12 +327,12 @@ class _SettingsState extends State<SettingsRoute> {
                   label: locales.settingsRoute_about,
                 ),
                 ListTile(
-                  leading: Icon(Icons.info),
+                  leading: Icon(OMIcons.info),
                   title: Text(locales.settingsRoute_about_potatonotes),
                   onTap: () => showNoteAboutDialog(),
                 ),
                 ListTile(
-                  leading: Icon(Icons.code),
+                  leading: Icon(OMIcons.code),
                   title: Text(locales.settingsRoute_about_sourceCode),
                   onTap: () =>
                       launchUrl("https://github.com/HrX03/PotatoNotes"),
@@ -341,17 +342,17 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
-                  secondary: Icon(Icons.label),
+                  secondary: Icon(OMIcons.label),
                   title: Text(locales.settingsRoute_dev_idLabels),
                   value: appInfo.devShowIdLabels,
                   onChanged: (value) => appInfo.devShowIdLabels = value,
                 ),
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
-                  secondary: Icon(Icons.remove_red_eye),
-                  title: Text("Welcome screen seen"),
-                  value: appInfo.welcomeScreenSeen,
-                  onChanged: (value) => appInfo.welcomeScreenSeen = value,
+                  secondary: Icon(OMIcons.removeRedEye),
+                  title: Text("Show welcome screen on next startup"),
+                  value: !appInfo.welcomeScreenSeen,
+                  onChanged: (value) => appInfo.welcomeScreenSeen = !value,
                 ),
               ],
             ),

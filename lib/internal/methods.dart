@@ -32,11 +32,11 @@ class Preferences {
   }
 
   bool getWelcomeScreenSeen() {
-    return prefs.getBool('weclome_screen_seen') ?? false;
+    return prefs.getBool('welcome_screen_seen') ?? false;
   }
 
   void setWelcomeScreenSeen(bool seen) {
-    prefs.setBool('weclome_screen_seen', seen);
+    prefs.setBool('welcome_screen_seen', seen);
   }
 
   bool getFollowSystemTheme() {
