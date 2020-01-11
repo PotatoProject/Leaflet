@@ -234,9 +234,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top,
-                  bottom: 60
-                ),
+                    top: MediaQuery.of(context).padding.top, bottom: 60),
                 child: ListView(
                   padding: EdgeInsets.all(0),
                   children: <Widget>[

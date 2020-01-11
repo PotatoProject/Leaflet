@@ -68,11 +68,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              left: 20,
-              right: 20,
-              bottom: 60
-            ),
+                top: MediaQuery.of(context).padding.top,
+                left: 20,
+                right: 20,
+                bottom: 60),
             child: searchTerms == ""
                 ? Center(
                     child: Column(

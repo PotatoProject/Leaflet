@@ -200,23 +200,22 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
               ],
             ),
             Align(
-              alignment: Alignment.bottomCenter,
-              child: Material(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Container(
-                  height: 60,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
+                alignment: Alignment.bottomCenter,
+                child: Material(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Container(
+                    height: 60,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ),
+                )),
             Visibility(
               visible: showLoadingOverlay,
               child: SizedBox.expand(

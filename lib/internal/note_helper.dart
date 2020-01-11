@@ -229,7 +229,8 @@ class OnlineNoteHelper {
 
   static Future<void> delete(int id) async {
     await post("https://sync.potatoproject.co/api/notes/delete",
-        body: id, headers: {"Authorization": appInfo.userToken});
+        body: "{\"note_id\": $id}",
+        headers: {"Authorization": appInfo.userToken});
   }
 
   static Future<List<Note>> getNotes(
