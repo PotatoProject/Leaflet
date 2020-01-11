@@ -45,15 +45,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   Widget build(BuildContext context) {
     locales = AppLocalizations.of(context);
 
-    Brightness systemBarsIconBrightness =
-        Theme.of(context).brightness == Brightness.dark
-            ? Brightness.light
-            : Brightness.dark;
-
     if (firstRun) {
-      changeSystemBarsColors(
-          Theme.of(context).cardColor, systemBarsIconBrightness);
-
       FocusScope.of(context).requestFocus(mainNode);
 
       firstRun = false;
@@ -173,10 +165,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                       IconButton(
                         icon: Icon(Icons.filter_list),
                         onPressed: () async {
-                          showFiltersScrollableBottomSheet(context).then((_) {
-                            changeSystemBarsColors(Theme.of(context).cardColor,
-                                systemBarsIconBrightness);
-                          });
+                          showFiltersScrollableBottomSheet(context);
                         },
                       ),
                     ],
@@ -299,23 +288,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
   }
 
   Future<void> showFiltersScrollableBottomSheet(BuildContext context) async {
-    bool firstRun = true;
-
     return showModalBottomSheet(
         context: context,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         builder: (BuildContext context) {
-          Brightness systemBarsIconBrightness =
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : Brightness.dark;
-
-          if (firstRun) {
-            changeSystemBarsColors(Theme.of(context).scaffoldBackgroundColor,
-                systemBarsIconBrightness);
-
-            firstRun = false;
-          }
-
           return Stack(
             children: <Widget>[
               Padding(

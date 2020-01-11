@@ -33,14 +33,6 @@ class _SettingsState extends State<SettingsRoute> {
     final appInfo = Provider.of<AppInfoProvider>(context);
     locales = AppLocalizations.of(context);
 
-    Brightness systemBarsIconBrightness =
-        Theme.of(context).brightness == Brightness.dark
-            ? Brightness.light
-            : Brightness.dark;
-
-    changeSystemBarsColors(
-        Theme.of(context).cardColor, systemBarsIconBrightness);
-
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
