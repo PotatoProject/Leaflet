@@ -2058,10 +2058,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                         style: TextStyle(
                             color: currentView == NotesReturnMode.NORMAL
                                 ? Theme.of(context).accentColor
-                                : Theme.of(context)
-                                    .iconTheme
-                                    .color
-                                    .withOpacity(0.7),
+                                : null,
                             fontWeight: currentView == NotesReturnMode.NORMAL
                                 ? FontWeight.w500
                                 : FontWeight.w400,
@@ -2110,10 +2107,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                         style: TextStyle(
                             color: currentView == NotesReturnMode.ARCHIVED
                                 ? Theme.of(context).accentColor
-                                : Theme.of(context)
-                                    .iconTheme
-                                    .color
-                                    .withOpacity(0.7),
+                                : null,
                             fontWeight: currentView == NotesReturnMode.ARCHIVED
                                 ? FontWeight.w500
                                 : FontWeight.w400,
@@ -2162,10 +2156,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                         style: TextStyle(
                             color: currentView == NotesReturnMode.DELETED
                                 ? Theme.of(context).accentColor
-                                : Theme.of(context)
-                                    .iconTheme
-                                    .color
-                                    .withOpacity(0.7),
+                                : null,
                             fontWeight: currentView == NotesReturnMode.DELETED
                                 ? FontWeight.w500
                                 : FontWeight.w400,

@@ -29,11 +29,12 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
 
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: Theme.of(context).cardColor,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
             ListView(
-              padding: EdgeInsets.only(top: 60),
+              padding: EdgeInsets.only(bottom: 60),
               children: <Widget>[
                 ListLabelDivider(
                   label: locales.syncManageRoute_account,
@@ -198,18 +199,23 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                 ),
               ],
             ),
-            Container(
-              height: 60,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Material(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Container(
+                  height: 60,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              )
             ),
             Visibility(
               visible: showLoadingOverlay,

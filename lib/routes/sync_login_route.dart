@@ -53,7 +53,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
         child: Stack(
           children: <Widget>[
             SingleChildScrollView(
-                padding: EdgeInsets.only(top: 60),
+                padding: EdgeInsets.only(bottom: 60),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height -
                       60 -
@@ -394,17 +394,22 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                     ],
                   ),
                 )),
-            Container(
-              height: 60,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Material(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Container(
+                  height: 60,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             Visibility(

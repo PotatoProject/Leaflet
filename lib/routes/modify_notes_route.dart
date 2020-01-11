@@ -233,8 +233,100 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           body: Stack(
             children: <Widget>[
               Padding(
-                padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top,
+                  bottom: 60
+                ),
+                child: ListView(
+                  padding: EdgeInsets.all(0),
+                  children: <Widget>[
+                    Visibility(
+                      visible: noteImagePath != null,
+                      child: noteImagePath == null
+                          ? Container()
+                          : CachedNetworkImage(
+                              imageUrl: noteImagePath,
+                              fit: BoxFit.fill,
+                              fadeInDuration: Duration(milliseconds: 0),
+                              fadeOutDuration: Duration(milliseconds: 0),
+                              placeholder: (context, url) {
+                                return ControlledAnimation(
+                                  playback: Playback.MIRROR,
+                                  tween: Tween<double>(begin: 0.2, end: 1),
+                                  duration: Duration(milliseconds: 400),
+                                  builder: (context, animation) {
+                                    return Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 30),
+                                      child: Opacity(
+                                        opacity: animation,
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 56,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        controller: titleController,
+                        decoration: InputDecoration(
+                            hintText: locales.modifyNotesRoute_title,
+                            border: InputBorder.none),
+                        onChanged: (text) {
+                          noteTitle = text;
+                        },
+                        textCapitalization: TextCapitalization.sentences,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: noteIsList == 1,
+                      child: Column(
+                        children: checkListBuilder(),
+                      ),
+                    ),
+                    Visibility(
+                      visible: reminderList.length > 0,
+                      child: Column(
+                        children: reminderListBuilder(),
+                      ),
+                    ),
+                    Visibility(
+                      visible: noteIsList == 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          controller: contentController,
+                          scrollPhysics: NeverScrollableScrollPhysics(),
+                          focusNode: contentNode,
+                          decoration: InputDecoration(
+                              hintText: locales.modifyNotesRoute_content,
+                              border: InputBorder.none),
+                          onChanged: (text) {
+                            noteContent = text;
+                          },
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLines: noteImagePath != null
+                              ? noteContent.split("\n").length
+                              : 32,
+                          keyboardType: TextInputType.multiline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 60,
                   child: Padding(
@@ -487,96 +579,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       ],
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 60),
-                child: ListView(
-                  padding: EdgeInsets.all(0),
-                  children: <Widget>[
-                    Visibility(
-                      visible: noteImagePath != null,
-                      child: noteImagePath == null
-                          ? Container()
-                          : CachedNetworkImage(
-                              imageUrl: noteImagePath,
-                              fit: BoxFit.fill,
-                              fadeInDuration: Duration(milliseconds: 0),
-                              fadeOutDuration: Duration(milliseconds: 0),
-                              placeholder: (context, url) {
-                                return ControlledAnimation(
-                                  playback: Playback.MIRROR,
-                                  tween: Tween<double>(begin: 0.2, end: 1),
-                                  duration: Duration(milliseconds: 400),
-                                  builder: (context, animation) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 30),
-                                      child: Opacity(
-                                        opacity: animation,
-                                        child: Icon(
-                                          Icons.image,
-                                          size: 56,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                            hintText: locales.modifyNotesRoute_title,
-                            border: InputBorder.none),
-                        onChanged: (text) {
-                          noteTitle = text;
-                        },
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: noteIsList == 1,
-                      child: Column(
-                        children: checkListBuilder(),
-                      ),
-                    ),
-                    Visibility(
-                      visible: reminderList.length > 0,
-                      child: Column(
-                        children: reminderListBuilder(),
-                      ),
-                    ),
-                    Visibility(
-                      visible: noteIsList == 0,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: TextField(
-                          controller: contentController,
-                          focusNode: contentNode,
-                          decoration: InputDecoration(
-                              hintText: locales.modifyNotesRoute_content,
-                              border: InputBorder.none),
-                          onChanged: (text) {
-                            noteContent = text;
-                          },
-                          textCapitalization: TextCapitalization.sentences,
-                          maxLines: noteImagePath != null
-                              ? noteContent.split("\n").length
-                              : 32,
-                          keyboardType: TextInputType.multiline,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ],
@@ -1070,12 +1072,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   void showAddElementScrollableBottomSheet(
       BuildContext context, Color bgColor, Color iconTextColor) {
     showModalBottomSheet<void>(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-        ),
         context: context,
         backgroundColor: bgColor,
         builder: (BuildContext context) {
@@ -1175,12 +1171,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     final appInfo = Provider.of<AppInfoProvider>(context);
 
     showModalBottomSheet<void>(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-        ),
         context: context,
         backgroundColor: bgColor,
         builder: (BuildContext context) {

@@ -50,7 +50,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
           icon: appInfo.userImage == null
               ? Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFEEEEEE),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(22),
                   ),
                   child: Center(

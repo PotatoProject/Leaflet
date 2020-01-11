@@ -66,66 +66,13 @@ class _SearchNotesState extends State<SearchNotesRoute> {
       key: scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Hero(
-            tag: "searchbar",
-            child: Card(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Container(
-                height: 60,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          setState(() => searchTerms = "");
-                        },
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: TextField(
-                            controller: searchController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: locales.searchNotesRoute_searchbar,
-                              hintStyle: TextStyle(fontSize: 18),
-                            ),
-                            focusNode: mainNode,
-                            maxLines: 1,
-                            onChanged: (text) {
-                              setState(() {
-                                searchTerms = text;
-                                widgets = noteSearchList(context);
-                              });
-                            },
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.filter_list),
-                        onPressed: () async {
-                          showFiltersScrollableBottomSheet(context).then((_) {
-                            changeSystemBarsColors(Theme.of(context).cardColor,
-                                systemBarsIconBrightness);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
           Padding(
             padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 70,
-                left: 20,
-                right: 20),
+              top: MediaQuery.of(context).padding.top,
+              left: 20,
+              right: 20,
+              bottom: 60
+            ),
             child: searchTerms == ""
                 ? Center(
                     child: Column(
@@ -184,6 +131,61 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                         children: widgets,
                       ),
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Card(
+              margin: EdgeInsets.all(0),
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Container(
+                height: 60,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() => searchTerms = "");
+                        },
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: TextField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: locales.searchNotesRoute_searchbar,
+                              hintStyle: TextStyle(fontSize: 18),
+                            ),
+                            focusNode: mainNode,
+                            maxLines: 1,
+                            onChanged: (text) {
+                              setState(() {
+                                searchTerms = text;
+                                widgets = noteSearchList(context);
+                              });
+                            },
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.filter_list),
+                        onPressed: () async {
+                          showFiltersScrollableBottomSheet(context).then((_) {
+                            changeSystemBarsColors(Theme.of(context).cardColor,
+                                systemBarsIconBrightness);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -301,12 +303,6 @@ class _SearchNotesState extends State<SearchNotesRoute> {
     bool firstRun = true;
 
     return showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-        ),
         context: context,
         builder: (BuildContext context) {
           Brightness systemBarsIconBrightness =
@@ -323,24 +319,8 @@ class _SearchNotesState extends State<SearchNotesRoute> {
 
           return Stack(
             children: <Widget>[
-              Positioned(
-                top: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child: Text(
-                      locales.searchNotesRoute_filters_title,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Padding(
-                padding: EdgeInsets.only(top: 68),
+                padding: EdgeInsets.only(top: 0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

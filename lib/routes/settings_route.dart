@@ -47,37 +47,10 @@ class _SettingsState extends State<SettingsRoute> {
       body: Stack(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Container(
-              height: 60,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Center(
-                        child: Text(
-                          locales.settingsRoute_title,
-                          style: TextStyle(
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              bottom: 60
             ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60),
             child: ListView(
               padding: EdgeInsets.all(0),
               children: <Widget>[
@@ -391,6 +364,26 @@ class _SettingsState extends State<SettingsRoute> {
                   onChanged: (value) => appInfo.welcomeScreenSeen = value,
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 60,
+              child: Material(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
           Visibility(
