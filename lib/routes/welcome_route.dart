@@ -139,7 +139,10 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
           ),
           Text(
             "PotatoNotes",
-            style: TextStyle(fontWeight: FontWeight.w500, fontFamily: "GoogleSans", fontSize: 30),
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontFamily: "GoogleSans",
+                fontSize: 30),
           ),
           Divider(
             color: Colors.transparent,

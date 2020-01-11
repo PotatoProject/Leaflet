@@ -342,6 +342,23 @@ class _SettingsState extends State<SettingsRoute> {
                         .showSnackBar(SnackBar(content: Text(locales.done)));
                   },
                 ),
+                SwitchListTile(
+                  secondary: Icon(Icons.sort),
+                  title: Text(locales.userInfoRoute_sortByDate),
+                  value: appInfo.sortMode == SortMode.DATE,
+                  onChanged: (value) {
+                    SortMode sortMode;
+
+                    if (value) {
+                      sortMode = SortMode.DATE;
+                    } else {
+                      sortMode = SortMode.ID;
+                    }
+
+                    appInfo.sortMode = sortMode;
+                  },
+                  activeColor: appInfo.mainColor,
+                ),
                 ListLabelDivider(
                   label: locales.settingsRoute_about,
                 ),

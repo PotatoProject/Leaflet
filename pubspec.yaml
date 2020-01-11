@@ -28,13 +28,14 @@ dependencies:
   share:
   permission_handler:
   file_picker:
-  flutter_colorpicker:
   intl_translation:
   package_info:
   http:
   crypto:
   simple_animations:
   cached_network_image: ^2.0.0-rc
+  outline_material_icons:
+  community_material_icon:
 
 dev_dependencies:
   flutter_test:

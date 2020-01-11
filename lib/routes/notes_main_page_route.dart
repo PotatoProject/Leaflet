@@ -3,12 +3,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
@@ -23,6 +25,7 @@ import 'package:potato_notes/routes/sync_login_route.dart';
 import 'package:potato_notes/routes/sync_manage_route.dart';
 import 'package:potato_notes/routes/user_info_route.dart';
 import 'package:potato_notes/ui/round_list_tile.dart';
+import 'package:potato_notes/ui/user_info_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -878,25 +881,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                           return FadeTransition(
                                             opacity: animation,
                                             child: UserInfoDialog(
-                                              onSortSwitchChange:
-                                                  (value) async {
-                                                SortMode sortMode;
-
-                                                if (value) {
-                                                  sortMode = SortMode.DATE;
-                                                } else {
-                                                  sortMode = SortMode.ID;
-                                                }
-
-                                                await controller.animateTo(0);
-                                                appInfo.sortMode = sortMode;
-                                                List<Note> list =
-                                                    await NoteHelper.getNotes(
-                                                        appInfo.sortMode,
-                                                        currentView);
-                                                setState(() => noteList = list);
-                                                await controller.animateTo(1);
-                                              },
                                               onSettingsTileClick: () =>
                                                   _settingsCaller(context),
                                               onPotatoSyncTileClick: () async {
@@ -1938,13 +1922,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   setState(() => noteList = list);
                 }
               },
-        child: CustomScrollView(
-          slivers: <Widget>[
-            (currentView == NotesReturnMode.NORMAL ? normalHeader : altHeader),
-            noteList.length != 0
-                ? SliverList(
-                    delegate: SliverChildListDelegate.fixed([
-                    Container(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            children: <Widget>[
+              noteList.length != 0
+                  ? Container(
                       width: MediaQuery.of(context).size.width,
                       child: AnimatedBuilder(
                         animation:
@@ -1953,7 +1938,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           padding:
                               EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                           child: Column(
-                            //physics: NeverScrollableScrollPhysics(),
                             children: noteListBuilder(context),
                           ),
                         ),
@@ -1964,11 +1948,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           );
                         },
                       ),
-                    ),
-                  ]))
-                : SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Center(
+                    )
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -2003,22 +1986,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                         ],
                       ),
                     ),
-                  )
-          ],
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar:
-          currentView == NotesReturnMode.NORMAL ? bottomBar : null,
-      drawer: drawer,
-    );
-  }
-
-  Widget get bottomBar {
-    return Material(
-      elevation: 140,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: InkWell(
-        onTap: () {
+      bottomNavigationBar: bottomBar,
+      //drawer: drawer,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).accentColor,
+        onPressed: () {
           _addNoteCaller(context);
           selectionList.clear();
           noteList.forEach((item) {
@@ -2026,33 +2003,243 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           });
           setState(() => isSelectorVisible = false);
         },
-        child: Container(
-          height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: <Widget>[
-              Text(
-                locales.notesMainPageRoute_writeNote,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color:
-                        Theme.of(context).textTheme.title.color.withAlpha(120)),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    );
+  }
+
+  Widget get bottomBar {
+    return Material(
+      elevation: 140,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(CommunityMaterialIcons.menu),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              onPressed: () => showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => UserInfoDialog(
+                  onSettingsTileClick: () => _settingsCaller(context),
+                  onPotatoSyncTileClick: () async {
+                    if (appInfo.userToken != null) {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SyncManageRoute()));
+                    } else {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SyncLoginRoute()));
+                    }
+
+                    List<Note> list = await NoteHelper.getNotes(
+                        appInfo.sortMode, currentView);
+                    setState(() => noteList = list);
+                  },
+                  extraItems: <Widget>[
+                    UserInfoListTile(
+                      icon: Icon(
+                        CommunityMaterialIcons.home_variant_outline,
+                        color: currentView == NotesReturnMode.NORMAL
+                            ? Theme.of(context).accentColor
+                            : Theme.of(context)
+                                .iconTheme
+                                .color
+                                .withOpacity(0.7),
+                      ),
+                      text: Text(
+                        locales.notes,
+                        style: TextStyle(
+                            color: currentView == NotesReturnMode.NORMAL
+                                ? Theme.of(context).accentColor
+                                : Theme.of(context)
+                                    .iconTheme
+                                    .color
+                                    .withOpacity(0.7),
+                            fontWeight: currentView == NotesReturnMode.NORMAL
+                                ? FontWeight.w500
+                                : FontWeight.w400,
+                            fontSize: 16),
+                      ),
+                      onTap: () async {
+                        if (currentView != NotesReturnMode.NORMAL) {
+                          currentView = NotesReturnMode.NORMAL;
+                          List<Note> list = await NoteHelper.getNotes(
+                              appInfo.sortMode, currentView);
+                          setState(() => noteList = list);
+                          Navigator.pop(context);
+
+                          noteList.forEach((item) {
+                            item.isSelected = false;
+                          });
+
+                          setState(() {
+                            selectionList.clear();
+                            isSelectorVisible = false;
+                          });
+
+                          Brightness systemBarsIconBrightness =
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Brightness.light
+                                  : Brightness.dark;
+
+                          changeSystemBarsColors(
+                              Theme.of(context).scaffoldBackgroundColor,
+                              systemBarsIconBrightness);
+                        }
+                      },
+                    ),
+                    UserInfoListTile(
+                      icon: Icon(
+                        OMIcons.archive,
+                        color: currentView == NotesReturnMode.ARCHIVED
+                            ? Theme.of(context).accentColor
+                            : Theme.of(context)
+                                .iconTheme
+                                .color
+                                .withOpacity(0.7),
+                      ),
+                      text: Text(
+                        locales.archive,
+                        style: TextStyle(
+                            color: currentView == NotesReturnMode.ARCHIVED
+                                ? Theme.of(context).accentColor
+                                : Theme.of(context)
+                                    .iconTheme
+                                    .color
+                                    .withOpacity(0.7),
+                            fontWeight: currentView == NotesReturnMode.ARCHIVED
+                                ? FontWeight.w500
+                                : FontWeight.w400,
+                            fontSize: 16),
+                      ),
+                      onTap: () async {
+                        if (currentView != NotesReturnMode.ARCHIVED) {
+                          currentView = NotesReturnMode.ARCHIVED;
+                          List<Note> list = await NoteHelper.getNotes(
+                              appInfo.sortMode, currentView);
+                          setState(() => noteList = list);
+                          Navigator.pop(context);
+
+                          noteList.forEach((item) {
+                            item.isSelected = false;
+                          });
+
+                          setState(() {
+                            selectionList.clear();
+                            isSelectorVisible = false;
+                          });
+
+                          Brightness systemBarsIconBrightness =
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Brightness.light
+                                  : Brightness.dark;
+
+                          changeSystemBarsColors(
+                              Theme.of(context).scaffoldBackgroundColor,
+                              systemBarsIconBrightness);
+                        }
+                      },
+                    ),
+                    UserInfoListTile(
+                      icon: Icon(
+                        CommunityMaterialIcons.trash_can_outline,
+                        color: currentView == NotesReturnMode.DELETED
+                            ? Theme.of(context).accentColor
+                            : Theme.of(context)
+                                .iconTheme
+                                .color
+                                .withOpacity(0.7),
+                      ),
+                      text: Text(
+                        locales.trash,
+                        style: TextStyle(
+                            color: currentView == NotesReturnMode.DELETED
+                                ? Theme.of(context).accentColor
+                                : Theme.of(context)
+                                    .iconTheme
+                                    .color
+                                    .withOpacity(0.7),
+                            fontWeight: currentView == NotesReturnMode.DELETED
+                                ? FontWeight.w500
+                                : FontWeight.w400,
+                            fontSize: 16),
+                      ),
+                      onTap: () async {
+                        if (currentView != NotesReturnMode.DELETED) {
+                          currentView = NotesReturnMode.DELETED;
+                          List<Note> list = await NoteHelper.getNotes(
+                              appInfo.sortMode, currentView);
+                          setState(() => noteList = list);
+                          Navigator.pop(context);
+
+                          noteList.forEach((item) {
+                            item.isSelected = false;
+                          });
+
+                          setState(() {
+                            selectionList.clear();
+                            isSelectorVisible = false;
+                          });
+
+                          Brightness systemBarsIconBrightness =
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Brightness.light
+                                  : Brightness.dark;
+
+                          changeSystemBarsColors(
+                              Theme.of(context).scaffoldBackgroundColor,
+                              systemBarsIconBrightness);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.check_box),
-                onPressed: () {
-                  _addNoteCaller(context, startAsList: true);
-                  selectionList.clear();
-                  noteList.forEach((item) {
-                    item.isSelected = false;
-                  });
-                  setState(() => isSelectorVisible = false);
-                },
+            ),
+            IconButton(
+              icon: Icon(Icons.search),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              onPressed: () => _searchNoteCaller(
+                  context, noteList, Theme.of(context).scaffoldBackgroundColor),
+            ),
+            IconButton(
+              icon: appInfo.isGridView
+                  ? Icon(OMIcons.viewAgenda)
+                  : Icon(CommunityMaterialIcons.view_dashboard_outline),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              onPressed: () async {
+                if (controller.status == AnimationStatus.completed) {
+                  await controller.animateTo(0);
+                  appInfo.isGridView = !appInfo.isGridView;
+                  await controller.animateTo(1);
+                }
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Visibility(
+                visible: syncing,
+                child: ControlledAnimation(
+                  playback: Playback.LOOP,
+                  tween: Tween<double>(begin: 0, end: 360),
+                  duration: Duration(milliseconds: 900),
+                  builder: (context, animation) {
+                    return Transform.rotate(
+                      angle: -(animation * pi) / 180,
+                      child: Icon(Icons.sync),
+                    );
+                  },
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
