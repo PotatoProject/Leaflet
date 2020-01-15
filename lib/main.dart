@@ -109,35 +109,41 @@ class NotesRoot extends StatelessWidget {
         searchFilters = Provider.of<SearchFiltersProvider>(context);
 
         if (appInfo.followSystemTheme) {
-          if (CustomThemes.getCurrentBrightness(context, appInfo) ==
-              Brightness.dark) {
-            changeSystemBarsColors(
-                CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                Brightness.dark);
-          } else {
-            if (appInfo.darkThemeMode == 0) {
+          switch(appInfo.systemBrightness) {
+            case Brightness.light:
+              changeSystemBarsColors(
+                  CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                  Brightness.dark);
+              break;
+            case Brightness.dark:
+              if(appInfo.darkThemeMode == 0) {
+                changeSystemBarsColors(
+                    CustomThemes.dark(appInfo).scaffoldBackgroundColor,
+                    Brightness.light);
+              } else {
+                changeSystemBarsColors(
+                    CustomThemes.black(appInfo).scaffoldBackgroundColor,
+                    Brightness.light);
+              }
+              break;
+          }
+        } else {
+          switch(appInfo.themeMode) {
+            case 0:
+              changeSystemBarsColors(
+                  CustomThemes.light(appInfo).scaffoldBackgroundColor,
+                  Brightness.dark);
+              break;
+            case 1:
               changeSystemBarsColors(
                   CustomThemes.dark(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
-            } else if (appInfo.darkThemeMode == 1) {
+              break;
+            case 2:
               changeSystemBarsColors(
                   CustomThemes.black(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
-            }
-          }
-        } else {
-          if (appInfo.themeMode == 0) {
-            changeSystemBarsColors(
-                CustomThemes.light(appInfo).scaffoldBackgroundColor,
-                Brightness.dark);
-          } else if (appInfo.themeMode == 1) {
-            changeSystemBarsColors(
-                CustomThemes.dark(appInfo).scaffoldBackgroundColor,
-                Brightness.light);
-          } else {
-            changeSystemBarsColors(
-                CustomThemes.black(appInfo).scaffoldBackgroundColor,
-                Brightness.light);
+              break;
           }
         }
 

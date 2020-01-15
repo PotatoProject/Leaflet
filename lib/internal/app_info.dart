@@ -20,9 +20,10 @@ class AppInfoProvider extends ChangeNotifier {
     loadData();
   }
 
-  static MethodChannel _channel = MethodChannel("potato_notes_utils");
+  static MethodChannel channel = MethodChannel("potato_notes_utils");
 
   List<Note> _notes = [];
+  Brightness _systemBrightness = Brightness.light;
   bool _welcomeScreenSeen = true;
   bool _followSystemTheme = true;
   int _themeMode = 0;
@@ -55,6 +56,7 @@ class AppInfoProvider extends ChangeNotifier {
   String _version = '1.0';
 
   List<Note> get notes => _notes;
+  Brightness get systemBrightness => _systemBrightness;
   bool get welcomeScreenSeen => _welcomeScreenSeen;
   bool get followSystemTheme => _followSystemTheme;
   int get themeMode => _themeMode;
@@ -102,6 +104,11 @@ class AppInfoProvider extends ChangeNotifier {
   set notes(List<Note> newNotes) {
     _notes.clear();
     _notes = List.from(newNotes);
+    notifyListeners();
+  }
+
+  set systemBrightness(Brightness newBrightness) {
+    _systemBrightness = newBrightness;
     notifyListeners();
   }
 
@@ -262,7 +269,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> updateMainColor() async {
     if (supportsSystemAccent) {
-      int sysAccent = await _channel.invokeMethod("getAccentColor");
+      int sysAccent = await channel.invokeMethod("getAccentColor");
 
       if (sysAccent == null) {
         supportsSystemAccent = false;
@@ -278,6 +285,9 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   Future<void> loadData() async {
+    systemBrightness = await channel.invokeMethod("isCurrentThemeDark")
+        ? Brightness.dark
+        : Brightness.light;
     welcomeScreenSeen = preferences.getWelcomeScreenSeen();
     followSystemTheme = preferences.getFollowSystemTheme();
     themeMode = preferences.getThemeMode();

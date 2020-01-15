@@ -24,10 +24,16 @@ public class MainActivity extends FlutterActivity {
       new MethodCallHandler() {
         @Override
         public void onMethodCall(MethodCall call, Result result) {
-          if(call.method.equals("getAccentColor")) {
-            result.success(getAccentColor());
-          } else {
-            result.notImplemented();
+          switch(call.method) {
+            case "getAccentColor":
+              result.success(getAccentColor());
+              break;
+            case "isCurrentThemeDark":
+              result.success(isCurrentThemeDark());
+              break;
+            default:
+              result.notImplemented();
+              break;
           }
         }
       }
@@ -49,5 +55,16 @@ public class MainActivity extends FlutterActivity {
       e.printStackTrace();
     }
     return 0;
+  }
+
+  private boolean isCurrentThemeDark() {
+    switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+      case Configuration.UI_MODE_NIGHT_YES:
+        return true;
+      case Configuration.UI_MODE_NIGHT_NO:
+        return false;
+      default:
+        return false;
+    }
   }
 }

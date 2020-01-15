@@ -26,6 +26,7 @@ import 'package:potato_notes/routes/user_info_route.dart';
 import 'package:potato_notes/ui/user_info_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class NotesMainPageRoute extends StatefulWidget {
@@ -217,6 +218,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     }
   }
 
+  void updateSystemBrightness() async {
+    //This is so hacky lmao
+    
+    if(appInfo.followSystemTheme) {
+      appInfo.systemBrightness = await AppInfoProvider.channel.invokeMethod("isCurrentThemeDark")
+          ? Brightness.dark
+          : Brightness.light;
+    } else appInfo.themeMode = (await SharedPreferences.getInstance()).getInt("theme_mode") ?? 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     appInfo = Provider.of<AppInfoProvider>(context);
@@ -229,6 +240,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       autoSyncLastStatus = appInfo.autoSync;
       autoSyncLastTimeout = appInfo.autoSyncTimeInterval;
     }
+    
+    updateSystemBrightness();
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
