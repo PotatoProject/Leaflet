@@ -1621,7 +1621,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         MaterialPageRoute(
           builder: (context) => ModifyNotesRoute(
             note: emptyNote,
-            heroIndex: "",
             autofocus: true,
           ),
         ));
@@ -1655,15 +1654,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SecurityNoteRoute(
-                  note: note, heroIndex: heroIndex.toString())));
+              builder: (context) => SecurityNoteRoute(note: note)));
     } else {
       await Navigator.push(
           context,
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 200),
-            pageBuilder: (_, __, ___) =>
-                ModifyNotesRoute(note: note, heroIndex: heroIndex.toString()),
+          MaterialPageRoute(
+            builder: (context) => ModifyNotesRoute(note: note)
           ));
     }
 

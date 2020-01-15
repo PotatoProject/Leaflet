@@ -26,11 +26,10 @@ List<int> reminderList = List<int>();
 
 class ModifyNotesRoute extends StatefulWidget {
   final Note note;
-  final String heroIndex;
   final bool autofocus;
 
   ModifyNotesRoute(
-      {@required this.note, @required this.heroIndex, this.autofocus = false});
+      {@required this.note, this.autofocus = false});
 
   @override
   _ModifyNotesState createState() => new _ModifyNotesState(note);
@@ -187,392 +186,379 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
       firstRun = false;
     }
 
-    return Hero(
-      tag: "note" + widget.heroIndex,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          iconTheme:
-              IconThemeData(color: getElementsColorBasedOnThemeContext()),
-          textTheme: TextTheme(
-            subhead: Theme.of(context).textTheme.subhead.copyWith(
-                  color: getElementsColorBasedOnThemeContext(),
-                ),
-          ),
-          inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
-                hintStyle: TextStyle(
-                  color:
-                      HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                          .withAlpha(0.5)
-                          .toColor(),
-                ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        iconTheme: IconThemeData(color: getElementsColorBasedOnThemeContext()),
+        textTheme: TextTheme(
+          subhead: Theme.of(context).textTheme.subhead.copyWith(
+                color: getElementsColorBasedOnThemeContext(),
               ),
-          unselectedWidgetColor:
-              HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                  .withAlpha(0.5)
-                  .toColor(),
-          scaffoldBackgroundColor: noteColor == null
+        ),
+        inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+              hintStyle: TextStyle(
+                color: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                    .withAlpha(0.5)
+                    .toColor(),
+              ),
+            ),
+        unselectedWidgetColor:
+            HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+                .withAlpha(0.5)
+                .toColor(),
+        scaffoldBackgroundColor:
+            noteColor == null ? Theme.of(context).cardColor : Color(noteColor),
+        accentColor: getElementsColorBasedOnThemeContext(),
+        dividerColor: HSLColor.fromColor(getElementsColorBasedOnThemeContext())
+            .withAlpha(0.12)
+            .toColor(),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: noteColor == null
               ? Theme.of(context).cardColor
               : Color(noteColor),
-          accentColor: getElementsColorBasedOnThemeContext(),
-          dividerColor:
-              HSLColor.fromColor(getElementsColorBasedOnThemeContext())
-                  .withAlpha(0.12)
-                  .toColor(),
-          bottomSheetTheme: BottomSheetThemeData(
-            backgroundColor: noteColor == null
-                ? Theme.of(context).cardColor
-                : Color(noteColor),
-          ),
-          buttonTheme: ButtonThemeData(
-              textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
-          popupMenuTheme: PopupMenuThemeData(
-            color: noteColor == null
-                ? Theme.of(context).cardColor
-                : Color(noteColor),
-          ),
         ),
-        child: Scaffold(
-          key: scaffoldKey,
-          body: Stack(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top, bottom: 60),
-                child: ListView(
-                  padding: EdgeInsets.all(0),
-                  children: <Widget>[
-                    Visibility(
-                      visible: noteImagePath != null,
-                      child: noteImagePath == null
-                          ? Container()
-                          : CachedNetworkImage(
-                              imageUrl: noteImagePath,
-                              fit: BoxFit.fill,
-                              fadeInDuration: Duration(milliseconds: 0),
-                              fadeOutDuration: Duration(milliseconds: 0),
-                              placeholder: (context, url) {
-                                return ControlledAnimation(
-                                  playback: Playback.MIRROR,
-                                  tween: Tween<double>(begin: 0.2, end: 1),
-                                  duration: Duration(milliseconds: 400),
-                                  builder: (context, animation) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 30),
-                                      child: Opacity(
-                                        opacity: animation,
-                                        child: Icon(
-                                          OMIcons.image,
-                                          size: 56,
-                                        ),
+        buttonTheme: ButtonThemeData(
+            textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
+        popupMenuTheme: PopupMenuThemeData(
+          color: noteColor == null
+              ? Theme.of(context).cardColor
+              : Color(noteColor),
+        ),
+      ),
+      child: Scaffold(
+        key: scaffoldKey,
+        body: Stack(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top, bottom: 60),
+              child: ListView(
+                padding: EdgeInsets.all(0),
+                children: <Widget>[
+                  Visibility(
+                    visible: noteImagePath != null,
+                    child: noteImagePath == null
+                        ? Container()
+                        : CachedNetworkImage(
+                            imageUrl: noteImagePath,
+                            fit: BoxFit.fill,
+                            fadeInDuration: Duration(milliseconds: 0),
+                            fadeOutDuration: Duration(milliseconds: 0),
+                            placeholder: (context, url) {
+                              return ControlledAnimation(
+                                playback: Playback.MIRROR,
+                                tween: Tween<double>(begin: 0.2, end: 1),
+                                duration: Duration(milliseconds: 400),
+                                builder: (context, animation) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 30),
+                                    child: Opacity(
+                                      opacity: animation,
+                                      child: Icon(
+                                        OMIcons.image,
+                                        size: 56,
                                       ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(
+                          hintText: locales.modifyNotesRoute_title,
+                          border: InputBorder.none),
+                      onChanged: (text) {
+                        noteTitle = text;
+                      },
+                      textCapitalization: TextCapitalization.sentences,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    Padding(
+                  ),
+                  Visibility(
+                    visible: noteIsList == 1,
+                    child: Column(
+                      children: checkListBuilder(),
+                    ),
+                  ),
+                  Visibility(
+                    visible: reminderList.length > 0,
+                    child: Column(
+                      children: reminderListBuilder(),
+                    ),
+                  ),
+                  Visibility(
+                    visible: noteIsList == 0,
+                    child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextField(
-                        controller: titleController,
+                        controller: contentController,
+                        scrollPhysics: NeverScrollableScrollPhysics(),
+                        focusNode: contentNode,
                         decoration: InputDecoration(
-                            hintText: locales.modifyNotesRoute_title,
+                            hintText: locales.modifyNotesRoute_content,
                             border: InputBorder.none),
                         onChanged: (text) {
-                          noteTitle = text;
+                          noteContent = text;
                         },
                         textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        maxLines: noteImagePath != null
+                            ? noteContent.split("\n").length
+                            : 32,
+                        keyboardType: TextInputType.multiline,
                       ),
                     ),
-                    Visibility(
-                      visible: noteIsList == 1,
-                      child: Column(
-                        children: checkListBuilder(),
-                      ),
-                    ),
-                    Visibility(
-                      visible: reminderList.length > 0,
-                      child: Column(
-                        children: reminderListBuilder(),
-                      ),
-                    ),
-                    Visibility(
-                      visible: noteIsList == 0,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: TextField(
-                          controller: contentController,
-                          scrollPhysics: NeverScrollableScrollPhysics(),
-                          focusNode: contentNode,
-                          decoration: InputDecoration(
-                              hintText: locales.modifyNotesRoute_content,
-                              border: InputBorder.none),
-                          onChanged: (text) {
-                            noteContent = text;
-                          },
-                          textCapitalization: TextCapitalization.sentences,
-                          maxLines: noteImagePath != null
-                              ? noteContent.split("\n").length
-                              : 32,
-                          keyboardType: TextInputType.multiline,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Material(
-                  color: noteColor == null
-                      ? Theme.of(context).scaffoldBackgroundColor
-                      : Color(noteColor),
-                  child: Container(
-                    height: 60,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.arrow_back),
-                            onPressed: () {
-                              saveAndPop(true);
-                            },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Material(
+                color: noteColor == null
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Color(noteColor),
+                child: Container(
+                  height: 60,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            saveAndPop(true);
+                          },
+                        ),
+                        Spacer(),
+                        Visibility(
+                          visible: showLoadingIcon,
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(),
                           ),
-                          Spacer(),
-                          Visibility(
-                            visible: showLoadingIcon,
-                            child: Container(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(noteHideContent == 1 &&
-                                    (notePin != null || notePassword != null)
-                                ? OMIcons.lock
-                                : OMIcons.removeRedEye),
-                            onPressed: () {
-                              appInfo.hideContent = noteHideContent;
-                              appInfo.useProtectionForNoteContent =
-                                  notePin != null || notePassword != null;
-                              appInfo.pin = notePin != null;
-                              appInfo.password = notePassword != null;
-                              showHideContentScrollableBottomSheet(
-                                  context,
-                                  noteColor == null
-                                      ? Theme.of(context)
-                                          .scaffoldBackgroundColor
-                                      : Color(noteColor),
-                                  getElementsColorBasedOnThemeContext());
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              showAddElementScrollableBottomSheet(
-                                  context,
-                                  noteColor == null
-                                      ? Theme.of(context)
-                                          .scaffoldBackgroundColor
-                                      : Color(noteColor),
-                                  getElementsColorBasedOnThemeContext());
-                            },
-                          ),
-                          IconButton(
-                            icon: noteIsStarred == 0
-                                ? Icon(Icons.star_border)
-                                : Icon(Icons.star),
-                            onPressed: () {
-                              if (noteIsStarred == 0) {
-                                setState(() => noteIsStarred = 1);
-                              } else if (noteIsStarred == 1) {
-                                setState(() => noteIsStarred = 0);
-                              }
-                            },
-                          ),
-                          noteIsList == 0
-                              ? PopupMenuButton(
-                                  padding: EdgeInsets.all(0),
-                                  itemBuilder: (context) {
-                                    return <PopupMenuEntry>[
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                          title: Text(locales
-                                              .modifyNotesRoute_color_change),
-                                          onTap: () async {
-                                            Navigator.pop(context);
-                                            int result = await showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return NoteColorDialog(
-                                                    noteColor: noteColor,
-                                                  );
-                                                });
-
-                                            setState(() {
-                                              if (result != null) {
-                                                if (result == 0) {
-                                                  noteColor = null;
-                                                } else {
-                                                  noteColor = result;
-                                                }
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                          title: Text(locales.note_share),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            String shareText = "";
-                                            if (noteTitle != "")
-                                              shareText += noteTitle + "\n\n";
-                                            shareText += noteContent;
-                                            Share.share(shareText);
-                                          },
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                          title: Text(locales.note_export),
-                                          onTap: () async {
-                                            Navigator.pop(context);
-                                            if (appInfo.storageStatus ==
-                                                PermissionStatus.granted) {
-                                              DateTime now = DateTime.now();
-
-                                              bool backupDirExists =
-                                                  await Directory(
-                                                          '/storage/emulated/0/PotatoNotes/exported')
-                                                      .exists();
-
-                                              if (!backupDirExists) {
-                                                await Directory(
-                                                        '/storage/emulated/0/PotatoNotes/exported')
-                                                    .create(recursive: true);
-                                              }
-
-                                              String noteExportPath =
-                                                  '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
-                                                      DateFormat(
-                                                              "dd-MM-yyyy_HH-mm")
-                                                          .format(now) +
-                                                      '.md';
-
-                                              String noteContents = "";
-
-                                              if (noteTitle != "")
-                                                noteContents +=
-                                                    "# " + noteTitle + "\n\n";
-
-                                              noteContents += noteContent;
-
-                                              File(noteExportPath)
-                                                  .writeAsString(noteContents)
-                                                  .then((nothing) {
-                                                scaffoldKey.currentState
-                                                    .showSnackBar(SnackBar(
-                                                  content: Text(locales
-                                                          .note_exportLocation +
-                                                      " PotatoNotes/exported/exported_note_" +
-                                                      DateFormat(
-                                                              "dd-MM-yyyy_HH-mm-ss")
-                                                          .format(now)),
-                                                ));
+                        ),
+                        IconButton(
+                          icon: Icon(noteHideContent == 1 &&
+                                  (notePin != null || notePassword != null)
+                              ? OMIcons.lock
+                              : OMIcons.removeRedEye),
+                          onPressed: () {
+                            appInfo.hideContent = noteHideContent;
+                            appInfo.useProtectionForNoteContent =
+                                notePin != null || notePassword != null;
+                            appInfo.pin = notePin != null;
+                            appInfo.password = notePassword != null;
+                            showHideContentScrollableBottomSheet(
+                                context,
+                                noteColor == null
+                                    ? Theme.of(context).scaffoldBackgroundColor
+                                    : Color(noteColor),
+                                getElementsColorBasedOnThemeContext());
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            showAddElementScrollableBottomSheet(
+                                context,
+                                noteColor == null
+                                    ? Theme.of(context).scaffoldBackgroundColor
+                                    : Color(noteColor),
+                                getElementsColorBasedOnThemeContext());
+                          },
+                        ),
+                        IconButton(
+                          icon: noteIsStarred == 0
+                              ? Icon(Icons.star_border)
+                              : Icon(Icons.star),
+                          onPressed: () {
+                            if (noteIsStarred == 0) {
+                              setState(() => noteIsStarred = 1);
+                            } else if (noteIsStarred == 1) {
+                              setState(() => noteIsStarred = 0);
+                            }
+                          },
+                        ),
+                        noteIsList == 0
+                            ? PopupMenuButton(
+                                padding: EdgeInsets.all(0),
+                                itemBuilder: (context) {
+                                  return <PopupMenuEntry>[
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        title: Text(locales
+                                            .modifyNotesRoute_color_change),
+                                        onTap: () async {
+                                          Navigator.pop(context);
+                                          int result = await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return NoteColorDialog(
+                                                  noteColor: noteColor,
+                                                );
                                               });
-                                            } else {
-                                              await PermissionHandler()
-                                                  .requestPermissions([
-                                                PermissionGroup.storage
-                                              ]);
-                                              appInfo.storageStatus =
-                                                  await PermissionHandler()
-                                                      .checkPermissionStatus(
-                                                          PermissionGroup
-                                                              .storage);
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                          //leading: Icon(Icons.notifications),
-                                          enabled: !appInfo.notificationsIdList
-                                              .contains(noteId.toString()),
-                                          title: Text(locales.note_pinToNotifs),
-                                          onTap: () async {
-                                            appInfo.notificationsIdList
-                                                .add(noteId.toString());
-                                            await FlutterLocalNotificationsPlugin()
-                                                .show(
-                                                    int.parse(appInfo
-                                                        .notificationsIdList
-                                                        .last),
-                                                    noteTitle != ""
-                                                        ? noteTitle
-                                                        : locales
-                                                            .notesMainPageRoute_pinnedNote,
-                                                    noteContent,
-                                                    NotificationDetails(
-                                                        AndroidNotificationDetails(
-                                                          '0',
-                                                          'note_pinned_notifications',
-                                                          'idk',
-                                                          priority:
-                                                              Priority.High,
-                                                          playSound: true,
-                                                          importance:
-                                                              Importance.High,
-                                                          ongoing: true,
-                                                        ),
-                                                        IOSNotificationDetails()),
-                                                    payload: noteId.toString());
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                    ];
-                                  },
-                                )
-                              : IconButton(
-                                  icon: Icon(OMIcons.colorLens),
-                                  onPressed: () async {
-                                    int result = await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return NoteColorDialog(
-                                            noteColor: noteColor,
-                                          );
-                                        });
 
-                                    setState(() {
-                                      if (result != null) {
-                                        if (result == 0) {
-                                          noteColor = null;
-                                        } else {
-                                          noteColor = result;
-                                        }
+                                          setState(() {
+                                            if (result != null) {
+                                              if (result == 0) {
+                                                noteColor = null;
+                                              } else {
+                                                noteColor = result;
+                                              }
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        title: Text(locales.note_share),
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          String shareText = "";
+                                          if (noteTitle != "")
+                                            shareText += noteTitle + "\n\n";
+                                          shareText += noteContent;
+                                          Share.share(shareText);
+                                        },
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        title: Text(locales.note_export),
+                                        onTap: () async {
+                                          Navigator.pop(context);
+                                          if (appInfo.storageStatus ==
+                                              PermissionStatus.granted) {
+                                            DateTime now = DateTime.now();
+
+                                            bool backupDirExists = await Directory(
+                                                    '/storage/emulated/0/PotatoNotes/exported')
+                                                .exists();
+
+                                            if (!backupDirExists) {
+                                              await Directory(
+                                                      '/storage/emulated/0/PotatoNotes/exported')
+                                                  .create(recursive: true);
+                                            }
+
+                                            String noteExportPath =
+                                                '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
+                                                    DateFormat(
+                                                            "dd-MM-yyyy_HH-mm")
+                                                        .format(now) +
+                                                    '.md';
+
+                                            String noteContents = "";
+
+                                            if (noteTitle != "")
+                                              noteContents +=
+                                                  "# " + noteTitle + "\n\n";
+
+                                            noteContents += noteContent;
+
+                                            File(noteExportPath)
+                                                .writeAsString(noteContents)
+                                                .then((nothing) {
+                                              scaffoldKey.currentState
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(locales
+                                                        .note_exportLocation +
+                                                    " PotatoNotes/exported/exported_note_" +
+                                                    DateFormat(
+                                                            "dd-MM-yyyy_HH-mm-ss")
+                                                        .format(now)),
+                                              ));
+                                            });
+                                          } else {
+                                            await PermissionHandler()
+                                                .requestPermissions(
+                                                    [PermissionGroup.storage]);
+                                            appInfo.storageStatus =
+                                                await PermissionHandler()
+                                                    .checkPermissionStatus(
+                                                        PermissionGroup
+                                                            .storage);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: ListTile(
+                                        //leading: Icon(Icons.notifications),
+                                        enabled: !appInfo.notificationsIdList
+                                            .contains(noteId.toString()),
+                                        title: Text(locales.note_pinToNotifs),
+                                        onTap: () async {
+                                          appInfo.notificationsIdList
+                                              .add(noteId.toString());
+                                          await FlutterLocalNotificationsPlugin()
+                                              .show(
+                                                  int.parse(appInfo
+                                                      .notificationsIdList
+                                                      .last),
+                                                  noteTitle != ""
+                                                      ? noteTitle
+                                                      : locales
+                                                          .notesMainPageRoute_pinnedNote,
+                                                  noteContent,
+                                                  NotificationDetails(
+                                                      AndroidNotificationDetails(
+                                                        '0',
+                                                        'note_pinned_notifications',
+                                                        'idk',
+                                                        priority: Priority.High,
+                                                        playSound: true,
+                                                        importance:
+                                                            Importance.High,
+                                                        ongoing: true,
+                                                      ),
+                                                      IOSNotificationDetails()),
+                                                  payload: noteId.toString());
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ),
+                                  ];
+                                },
+                              )
+                            : IconButton(
+                                icon: Icon(OMIcons.colorLens),
+                                onPressed: () async {
+                                  int result = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return NoteColorDialog(
+                                          noteColor: noteColor,
+                                        );
+                                      });
+
+                                  setState(() {
+                                    if (result != null) {
+                                      if (result == 0) {
+                                        noteColor = null;
+                                      } else {
+                                        noteColor = result;
                                       }
-                                    });
-                                  },
-                                ),
-                        ],
-                      ),
+                                    }
+                                  });
+                                },
+                              ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

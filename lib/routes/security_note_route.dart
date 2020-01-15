@@ -9,9 +9,8 @@ import 'package:potato_notes/routes/modify_notes_route.dart';
 
 class SecurityNoteRoute extends StatefulWidget {
   final Note note;
-  final String heroIndex;
 
-  SecurityNoteRoute({@required this.note, @required this.heroIndex});
+  SecurityNoteRoute({@required this.note});
 
   @override
   createState() => _SecurityNoteRouteState();
@@ -185,12 +184,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ModifyNotesRoute(
-                                      note: widget.note,
-                                      heroIndex: widget.heroIndex)));
-
-                          //if (result == null || result != null)
-                          //  Navigator.pop(context);
+                                  builder: (context) => ModifyNotesRoute(note: widget.note)));
                         }
                       },
                     ),
@@ -357,9 +351,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
                                 await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ModifyNotesRoute(
-                                            note: widget.note,
-                                            heroIndex: widget.heroIndex)));
+                                        builder: (context) => ModifyNotesRoute(note: widget.note)));
                               }
                             },
                           ),
@@ -438,9 +430,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ModifyNotesRoute(
-                        note: widget.note, heroIndex: widget.heroIndex)));
-
+                    builder: (context) => ModifyNotesRoute(note: widget.note)));
             Navigator.pop(context);
           }
         },
