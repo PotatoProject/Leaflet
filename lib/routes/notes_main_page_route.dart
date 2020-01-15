@@ -35,7 +35,6 @@ class NotesMainPageRoute extends StatefulWidget {
 
 class _NotesMainPageState extends State<NotesMainPageRoute>
     with SingleTickerProviderStateMixin {
-
   AnimationController controller;
 
   static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -72,7 +71,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       InitializationSettings initializationSettings =
           new InitializationSettings(
               initializationSettingsAndroid, initializationSettingsIOS);
-      
+
       initNotes();
 
       Future onNotificationClicked(String payload) async {
@@ -121,7 +120,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   }
 
   void initNotes() async {
-    appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    appInfo.notes =
+        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
   }
 
   void updateAutosyncExecutor(bool execute, int timeout) {
@@ -386,16 +386,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       height: 60,
       padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 2,
-            offset: Offset(0, -0.1),
-            spreadRadius: 2,
-          )
-        ]
-      ),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 2,
+              offset: Offset(0, -0.1),
+              spreadRadius: 2,
+            )
+          ]),
       child: Material(
         color: Colors.transparent,
         child: Row(
@@ -578,8 +577,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
             IconButton(
               icon: Icon(Icons.search),
               padding: EdgeInsets.symmetric(horizontal: 16),
-              onPressed: () => _searchNoteCaller(
-                context, appInfo.notes, Theme.of(context).scaffoldBackgroundColor),
+              onPressed: () => _searchNoteCaller(context, appInfo.notes,
+                  Theme.of(context).scaffoldBackgroundColor),
             ),
             IconButton(
               icon: appInfo.isGridView
@@ -694,16 +693,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       height: 60,
       padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 2,
-            offset: Offset(0, -0.1),
-            spreadRadius: 2,
-          )
-        ]
-      ),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 2,
+              offset: Offset(0, -0.1),
+              spreadRadius: 2,
+            )
+          ]),
       child: Material(
         color: Colors.transparent,
         child: Row(
@@ -900,8 +898,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     item.isSelected = false;
                   });
 
-                  appInfo.notes = await NoteHelper.getNotes(
-                      appInfo.sortMode, currentView);
+                  appInfo.notes =
+                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                   setState(() {
                     isSelectorVisible = false;
@@ -1050,8 +1048,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     item.isSelected = false;
                   });
 
-                  appInfo.notes = await NoteHelper.getNotes(
-                      appInfo.sortMode, currentView);
+                  appInfo.notes =
+                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
                   setState(() {
                     isSelectorVisible = false;
@@ -1710,8 +1708,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     if (result != null) setState(() => appInfo.notes = result);
   }
 
-  void _settingsCaller(BuildContext context) async => await Navigator.push(context,
-      MaterialPageRoute(builder: (context) => SettingsRoute()));
+  void _settingsCaller(BuildContext context) async => await Navigator.push(
+      context, MaterialPageRoute(builder: (context) => SettingsRoute()));
 
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {
     final appInfo = Provider.of<AppInfoProvider>(context);
@@ -1797,7 +1795,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
             onTap: () {
               if (isSelectorVisible) {
                 setState(() {
-                  appInfo.notes[index].isSelected = !appInfo.notes[index].isSelected;
+                  appInfo.notes[index].isSelected =
+                      !appInfo.notes[index].isSelected;
                   if (appInfo.notes[index].isSelected) {
                     selectionList.add(appInfo.notes[index]);
                   } else {
@@ -1808,7 +1807,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   }
                 });
               } else {
-                _editNoteCaller(context, appInfo.notes[index], index.toString());
+                _editNoteCaller(
+                    context, appInfo.notes[index], index.toString());
               }
             },
             onDoubleTap: isSelectorVisible
@@ -1950,14 +1950,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                             .notesMainPageRoute_note_remindersSet,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: appInfo.notes[index].color == null
-                                              ? Theme.of(context)
-                                                  .textTheme
-                                                  .title
-                                                  .color
-                                                  .withAlpha(140)
-                                              : getTextColorFromNoteColor(
-                                                  index, false),
+                                          color:
+                                              appInfo.notes[index].color == null
+                                                  ? Theme.of(context)
+                                                      .textTheme
+                                                      .title
+                                                      .color
+                                                      .withAlpha(140)
+                                                  : getTextColorFromNoteColor(
+                                                      index, false),
                                         ),
                                       )
                                     : Container(),

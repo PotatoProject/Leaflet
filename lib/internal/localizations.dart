@@ -597,7 +597,7 @@ class AppLocalizations {
         "Auto-sync time interval (seconds)",
         name: "syncManageRoute_sync_autoSyncInterval",
       );
-  
+
   /* -- WelcomeRoute related -- */
 
   String get welcomeRoute_firstPage_catchPhrase => Intl.message(

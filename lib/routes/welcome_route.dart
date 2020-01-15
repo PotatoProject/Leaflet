@@ -103,7 +103,8 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                               duration: Duration(milliseconds: 700))
                           : () async {
                               appInfo.welcomeScreenSeen = true;
-                              appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                              appInfo.notes = await NoteHelper.getNotes(
+                                  appInfo.sortMode, NotesReturnMode.NORMAL);
 
                               Navigator.pushReplacement(
                                   context,

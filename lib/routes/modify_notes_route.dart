@@ -847,7 +847,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     await NoteHelper.insert(note);
 
-    appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    appInfo.notes =
+        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
     Navigator.pop(context, true);
   }
 

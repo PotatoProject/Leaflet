@@ -157,9 +157,7 @@ class NotesRoot extends StatelessWidget {
             behavior: NoGlowScrollBehavior(),
             child: child,
           ),
-          home: showWelcomeScreen
-              ? WelcomeRoute()
-              : NotesMainPageRoute(),
+          home: showWelcomeScreen ? WelcomeRoute() : NotesMainPageRoute(),
           debugShowCheckedModeBanner: false,
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)

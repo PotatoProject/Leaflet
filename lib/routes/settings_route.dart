@@ -258,7 +258,7 @@ class _SettingsState extends State<SettingsRoute> {
 
                       if (status == 0) {
                         await NoteHelper.restoreDatabaseToPath(path);
-                        
+
                         if (appInfo.userToken != null) {
                           setState(() => showLoadingOverlay = true);
 
