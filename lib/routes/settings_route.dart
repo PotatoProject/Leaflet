@@ -257,34 +257,24 @@ class _SettingsState extends State<SettingsRoute> {
                       int status = await NoteHelper.validateDatabase(path);
 
                       if (status == 0) {
+                        await NoteHelper.restoreDatabaseToPath(path);
+                        
                         if (appInfo.userToken != null) {
                           setState(() => showLoadingOverlay = true);
 
-                          Response noteList = await get(
-                              "https://sync.potatoproject.co/api/notes/list",
-                              headers: {"Authorization": appInfo.userToken});
-
-                          Map<dynamic, dynamic> body =
-                              json.decode(noteList.body);
-
-                          List<Note> list = await NoteHelper.getNotes(
-                              appInfo.sortMode, NotesReturnMode.ALL);
+                          List<Note> list = appInfo.notes;
 
                           await post(
                               "https://sync.potatoproject.co/api/notes/deleteall",
                               headers: {"Authorization": appInfo.userToken});
 
                           for (int i = 0; i < list.length; i++) {
-                            await post(
-                                "https://sync.potatoproject.co/api/notes/save",
-                                body: list[i].readyForRequest,
-                                headers: {"Authorization": appInfo.userToken});
+                            await OnlineNoteHelper.save(list[i]);
                           }
 
                           setState(() => showLoadingOverlay = false);
                         }
 
-                        await NoteHelper.restoreDatabaseToPath(path);
                         scaffoldKey.currentState.showSnackBar(SnackBar(
                             content: Text(locales
                                 .settingsRoute_backupAndRestore_restore_success)));

@@ -158,8 +158,8 @@ class NotesRoot extends StatelessWidget {
             child: child,
           ),
           home: showWelcomeScreen
-              ? WelcomeRoute(noteList: noteList)
-              : NotesMainPageRoute(noteList: noteList),
+              ? WelcomeRoute()
+              : NotesMainPageRoute(),
           debugShowCheckedModeBanner: false,
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)

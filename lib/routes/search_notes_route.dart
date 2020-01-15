@@ -6,7 +6,6 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
 import 'package:provider/provider.dart';

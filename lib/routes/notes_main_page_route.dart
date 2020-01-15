@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -30,21 +29,12 @@ import 'package:share/share.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class NotesMainPageRoute extends StatefulWidget {
-  final List<Note> noteList;
-
-  NotesMainPageRoute({@required this.noteList});
-
   @override
-  _NotesMainPageState createState() => new _NotesMainPageState(noteList);
+  _NotesMainPageState createState() => _NotesMainPageState();
 }
 
 class _NotesMainPageState extends State<NotesMainPageRoute>
     with SingleTickerProviderStateMixin {
-  List<Note> noteList = List<Note>();
-
-  _NotesMainPageState(List<Note> list) {
-    this.noteList = list;
-  }
 
   AnimationController controller;
 
@@ -82,6 +72,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       InitializationSettings initializationSettings =
           new InitializationSettings(
               initializationSettingsAndroid, initializationSettingsIOS);
+      
+      initNotes();
 
       Future onNotificationClicked(String payload) async {
         List<String> payloadSplitted = payload.split(":");
@@ -95,11 +87,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         if (executeAlt) {
           appInfo.remindersNotifIdList.remove(payloadSplitted[0]);
           List<int> noteListId = List<int>();
-          noteList.forEach((item) {
+          appInfo.notes.forEach((item) {
             noteListId.add(item.id);
           });
           Note note =
-              noteList[noteListId.indexOf(int.parse(payloadSplitted[0]))];
+              appInfo.notes[noteListId.indexOf(int.parse(payloadSplitted[0]))];
           List<String> remindersString = note.reminders.split(":");
           remindersString.remove(payloadSplitted[1]);
           _editNoteCaller(
@@ -126,6 +118,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
       initializeNotifications();
     });
+  }
+
+  void initNotes() async {
+    appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
   }
 
   void updateAutosyncExecutor(bool execute, int timeout) {
@@ -171,7 +167,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           }
 
           if (parsedList != null && shouldUpdate()) {
-            noteList.forEach((note) => note.isSelected = false);
+            appInfo.notes.forEach((note) => note.isSelected = false);
             setState(() {
               selectionList.clear();
               isSelectorVisible = false;
@@ -186,7 +182,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
             }
 
             list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
-            setState(() => noteList = list);
+            setState(() => appInfo.notes = list);
           }
         });
       } else {
@@ -202,10 +198,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       int index = int.parse(appInfo.notificationsIdList[i]);
       await FlutterLocalNotificationsPlugin().show(
           index,
-          noteList[index].title != ""
-              ? noteList[index].title
+          appInfo.notes[index].title != ""
+              ? appInfo.notes[index].title
               : locales.notesMainPageRoute_pinnedNote,
-          noteList[index].content,
+          appInfo.notes[index].content,
           NotificationDetails(
               AndroidNotificationDetails(
                 '0',
@@ -277,7 +273,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 }
 
                 if (parsedList != null && shouldUpdate()) {
-                  noteList.forEach((note) => note.isSelected = false);
+                  appInfo.notes.forEach((note) => note.isSelected = false);
                   setState(() {
                     selectionList.clear();
                     isSelectorVisible = false;
@@ -293,7 +289,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                   list =
                       await NoteHelper.getNotes(appInfo.sortMode, currentView);
-                  setState(() => noteList = list);
+                  setState(() => appInfo.notes = list);
                 }
               },
         child: Container(
@@ -302,7 +298,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           child: ListView(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             children: <Widget>[
-              noteList.length != 0
+              appInfo.notes.length != 0
                   ? Container(
                       width: MediaQuery.of(context).size.width,
                       child: AnimatedBuilder(
@@ -374,7 +370,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   onPressed: () {
                     _addNoteCaller(context);
                     selectionList.clear();
-                    noteList.forEach((item) {
+                    appInfo.notes.forEach((item) {
                       item.isSelected = false;
                     });
                     setState(() => isSelectorVisible = false);
@@ -386,12 +382,22 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   }
 
   Widget get bottomBar {
-    return Material(
-      elevation: 140,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8),
+    return Container(
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 2,
+            offset: Offset(0, -0.1),
+            spreadRadius: 2,
+          )
+        ]
+      ),
+      child: Material(
+        color: Colors.transparent,
         child: Row(
           children: <Widget>[
             IconButton(
@@ -418,7 +424,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                     List<Note> list = await NoteHelper.getNotes(
                         appInfo.sortMode, currentView);
-                    setState(() => noteList = list);
+                    setState(() => appInfo.notes = list);
                   },
                   extraItems: <Widget>[
                     UserInfoListTile(
@@ -445,12 +451,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       onTap: () async {
                         if (currentView != NotesReturnMode.NORMAL) {
                           currentView = NotesReturnMode.NORMAL;
-                          List<Note> list = await NoteHelper.getNotes(
+                          appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
-                          setState(() => noteList = list);
                           Navigator.pop(context);
 
-                          noteList.forEach((item) {
+                          appInfo.notes.forEach((item) {
                             item.isSelected = false;
                           });
 
@@ -494,12 +499,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       onTap: () async {
                         if (currentView != NotesReturnMode.ARCHIVED) {
                           currentView = NotesReturnMode.ARCHIVED;
-                          List<Note> list = await NoteHelper.getNotes(
+                          appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
-                          setState(() => noteList = list);
                           Navigator.pop(context);
 
-                          noteList.forEach((item) {
+                          appInfo.notes.forEach((item) {
                             item.isSelected = false;
                           });
 
@@ -543,12 +547,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       onTap: () async {
                         if (currentView != NotesReturnMode.DELETED) {
                           currentView = NotesReturnMode.DELETED;
-                          List<Note> list = await NoteHelper.getNotes(
+                          appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
-                          setState(() => noteList = list);
                           Navigator.pop(context);
 
-                          noteList.forEach((item) {
+                          appInfo.notes.forEach((item) {
                             item.isSelected = false;
                           });
 
@@ -576,7 +579,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               icon: Icon(Icons.search),
               padding: EdgeInsets.symmetric(horizontal: 16),
               onPressed: () => _searchNoteCaller(
-                  context, noteList, Theme.of(context).scaffoldBackgroundColor),
+                context, appInfo.notes, Theme.of(context).scaffoldBackgroundColor),
             ),
             IconButton(
               icon: appInfo.isGridView
@@ -638,22 +641,22 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               onPressed: () async {
                                 Navigator.pop(context);
 
-                                for (int i = 0; i < noteList.length; i++) {
-                                  await NoteHelper.delete(noteList[i].id);
+                                for (int i = 0; i < appInfo.notes.length; i++) {
+                                  await NoteHelper.delete(appInfo.notes[i].id);
                                 }
 
                                 List<Note> list = await NoteHelper.getNotes(
                                     appInfo.sortMode, NotesReturnMode.DELETED);
                                 setState(() {
-                                  noteList = list;
+                                  appInfo.notes = list;
                                   syncing = true;
                                   queueList.add(1);
                                 });
 
-                                for (int i = 0; i < noteList.length; i++) {
+                                for (int i = 0; i < appInfo.notes.length; i++) {
                                   if (appInfo.userToken != null) {
                                     await OnlineNoteHelper.delete(
-                                        noteList[i].id);
+                                        appInfo.notes[i].id);
                                   }
                                 }
 
@@ -672,7 +675,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
-                      enabled: noteList.length != 0,
+                      enabled: appInfo.notes.length != 0,
                       value: 0,
                       child: Text(locales.note_emptyTrash),
                     ),
@@ -687,12 +690,22 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   }
 
   Widget get selectorBottomBar {
-    return Material(
-      elevation: 140,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8),
+    return Container(
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 2,
+            offset: Offset(0, -0.1),
+            spreadRadius: 2,
+          )
+        ]
+      ),
+      child: Material(
+        color: Colors.transparent,
         child: Row(
           children: <Widget>[
             IconButton(
@@ -702,7 +715,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               ),
               onPressed: () async {
                 selectionList.clear();
-                noteList.forEach((item) {
+                appInfo.notes.forEach((item) {
                   item.isSelected = false;
                 });
                 setState(() => isSelectorVisible = false);
@@ -745,17 +758,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       if (starOrNot) {
                         for (int i = 0; i < selectionList.length; i++) {
                           await NoteHelper.update(
-                            noteList
+                            appInfo.notes
                                 .firstWhere((note) => note == selectionList[i])
                                 .copyWith(isStarred: 1),
                           );
                         }
 
-                        List<Note> list = await NoteHelper.getNotes(
+                        appInfo.notes = await NoteHelper.getNotes(
                             appInfo.sortMode, currentView);
-                        setState(() => noteList = list);
 
-                        noteList.forEach((item) {
+                        appInfo.notes.forEach((item) {
                           item.isSelected = false;
                         });
 
@@ -767,7 +779,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                         for (int i = 0; i < selectionListCopy.length; i++) {
                           if (appInfo.userToken != null) {
-                            await OnlineNoteHelper.save(noteList
+                            await OnlineNoteHelper.save(appInfo.notes
                                 .firstWhere((note) =>
                                     note.id == selectionListCopy[i].id)
                                 .copyWith(isStarred: 1));
@@ -778,17 +790,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       } else {
                         for (int i = 0; i < selectionList.length; i++) {
                           await NoteHelper.update(
-                            noteList
+                            appInfo.notes
                                 .firstWhere((note) => note == selectionList[i])
                                 .copyWith(isStarred: 0),
                           );
                         }
 
-                        List<Note> list = await NoteHelper.getNotes(
+                        appInfo.notes = await NoteHelper.getNotes(
                             appInfo.sortMode, currentView);
-                        setState(() => noteList = list);
 
-                        noteList.forEach((item) {
+                        appInfo.notes.forEach((item) {
                           item.isSelected = false;
                         });
 
@@ -801,7 +812,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                         for (int i = 0; i < selectionListCopy.length; i++) {
                           if (appInfo.userToken != null) {
-                            await OnlineNoteHelper.save(noteList
+                            await OnlineNoteHelper.save(appInfo.notes
                                 .firstWhere((note) =>
                                     note.id == selectionListCopy[i].id)
                                 .copyWith(isStarred: 0));
@@ -834,16 +845,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       if (result != null) {
                         for (int i = 0; i < selectionList.length; i++) {
                           await NoteHelper.update(
-                            noteList
+                            appInfo.notes
                                 .firstWhere((note) => note == selectionList[i])
                                 .copyWith(color: result),
                           );
                         }
 
-                        List<Note> list = await NoteHelper.getNotes(
+                        appInfo.notes = await NoteHelper.getNotes(
                             appInfo.sortMode, currentView);
                         setState(() {
-                          noteList = list;
                           selectionList.clear();
                           isSelectorVisible = false;
                           syncing = true;
@@ -878,7 +888,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                   for (int i = 0; i < selectionList.length; i++) {
                     await NoteHelper.update(
-                      noteList
+                      appInfo.notes
                           .firstWhere((note) => note == selectionList[i])
                           .copyWith(isDeleted: 1, isStarred: 0),
                     );
@@ -886,15 +896,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                   selectionList.clear();
 
-                  noteList.forEach((item) {
+                  appInfo.notes.forEach((item) {
                     item.isSelected = false;
                   });
 
-                  List<Note> list =
-                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
+                  appInfo.notes = await NoteHelper.getNotes(
+                      appInfo.sortMode, currentView);
 
                   setState(() {
-                    noteList = list;
                     isSelectorVisible = false;
                     syncing = true;
                     queueList.add(1);
@@ -914,10 +923,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                 noteBackup[i].copyWith(isDeleted: 0));
                           }
 
-                          List<Note> list = await NoteHelper.getNotes(
+                          appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
                           setState(() {
-                            noteList = list;
                             syncing = true;
                             queueList.add(1);
                           });
@@ -981,11 +989,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                 await NoteHelper.delete(selectionList[i].id);
                               }
 
-                              List<Note> list = await NoteHelper.getNotes(
-                                  appInfo.sortMode, NotesReturnMode.DELETED);
-                              setState(() => noteList = list);
+                              appInfo.notes = await NoteHelper.getNotes(
+                                  appInfo.sortMode, currentView);
 
-                              noteList.forEach((item) {
+                              appInfo.notes.forEach((item) {
                                 item.isSelected = false;
                               });
 
@@ -1030,7 +1037,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                   for (int i = 0; i < selectionListLenght; i++) {
                     await NoteHelper.update(
-                      noteList
+                      appInfo.notes
                           .firstWhere((note) => note == selectionList[i])
                           .copyWith(isArchived: 1, isDeleted: 0, isStarred: 0),
                     );
@@ -1039,15 +1046,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   bool multipleItems = selectionListLenght > 1;
                   selectionList.clear();
 
-                  noteList.forEach((item) {
+                  appInfo.notes.forEach((item) {
                     item.isSelected = false;
                   });
 
-                  List<Note> list =
-                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
+                  appInfo.notes = await NoteHelper.getNotes(
+                      appInfo.sortMode, currentView);
 
                   setState(() {
-                    noteList = list;
                     isSelectorVisible = false;
                     syncing = true;
                     queueList.add(1);
@@ -1067,10 +1073,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                 noteBackup[i].copyWith(isArchived: 0));
                           }
 
-                          List<Note> list = await NoteHelper.getNotes(
+                          appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
                           setState(() {
-                            noteList = list;
                             syncing = true;
                             queueList.add(1);
                           });
@@ -1117,7 +1122,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                     for (int i = 0; i < selectionList.length; i++) {
                       await NoteHelper.update(
-                        noteList
+                        appInfo.notes
                             .firstWhere((note) => note == selectionList[i])
                             .copyWith(isArchived: 0),
                       );
@@ -1125,15 +1130,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                     selectionList.clear();
 
-                    noteList.forEach((item) {
+                    appInfo.notes.forEach((item) {
                       item.isSelected = false;
                     });
 
-                    List<Note> list = await NoteHelper.getNotes(
+                    appInfo.notes = await NoteHelper.getNotes(
                         appInfo.sortMode, currentView);
 
                     setState(() {
-                      noteList = list;
                       isSelectorVisible = false;
                       syncing = true;
                       queueList.add(1);
@@ -1153,10 +1157,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                   noteBackup[i].copyWith(isArchived: 1));
                             }
 
-                            List<Note> list = await NoteHelper.getNotes(
+                            appInfo.notes = await NoteHelper.getNotes(
                                 appInfo.sortMode, currentView);
                             setState(() {
-                              noteList = list;
                               syncing = true;
                               queueList.add(1);
                             });
@@ -1194,7 +1197,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                     for (int i = 0; i < selectionList.length; i++) {
                       await NoteHelper.update(
-                        noteList
+                        appInfo.notes
                             .firstWhere((note) => note == selectionList[i])
                             .copyWith(isDeleted: 0),
                       );
@@ -1202,15 +1205,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
                     selectionList.clear();
 
-                    noteList.forEach((item) {
+                    appInfo.notes.forEach((item) {
                       item.isSelected = false;
                     });
 
-                    List<Note> list = await NoteHelper.getNotes(
+                    appInfo.notes = await NoteHelper.getNotes(
                         appInfo.sortMode, currentView);
 
                     setState(() {
-                      noteList = list;
                       isSelectorVisible = false;
                       syncing = true;
                       queueList.add(1);
@@ -1235,10 +1237,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               }
                             }
 
-                            List<Note> list = await NoteHelper.getNotes(
+                            appInfo.notes = await NoteHelper.getNotes(
                                 appInfo.sortMode, currentView);
                             setState(() {
-                              noteList = list;
                               syncing = true;
                               queueList.add(1);
                             });
@@ -1295,7 +1296,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               Share.share(shareText);
                               Navigator.pop(context);
 
-                              noteList.forEach((item) {
+                              appInfo.notes.forEach((item) {
                                 item.isSelected = false;
                               });
 
@@ -1328,7 +1329,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           }
 
                           for (int i = 0; i < selectionList.length; i++) {
-                            Note curNote = noteList
+                            Note curNote = appInfo.notes
                                 .firstWhere((note) => note == selectionList[i]);
 
                             String noteExportPath =
@@ -1359,7 +1360,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               .checkPermissionStatus(PermissionGroup.storage);
                         }
 
-                        noteList.forEach((item) {
+                        appInfo.notes.forEach((item) {
                           item.isSelected = false;
                         });
 
@@ -1400,7 +1401,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                   payload: selectionList[0].id.toString());
                               Navigator.pop(context);
 
-                              noteList.forEach((item) {
+                              appInfo.notes.forEach((item) {
                                 item.isSelected = false;
                               });
 
@@ -1440,16 +1441,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         ),
       ));
 
-      for (int i = 0; i < noteList.length; i++) {
-        int bIndex = (noteList.length - 1) - i;
-        if (noteList[bIndex].isStarred == 1) {
+      for (int i = 0; i < appInfo.notes.length; i++) {
+        int bIndex = (appInfo.notes.length - 1) - i;
+        if (appInfo.notes[bIndex].isStarred == 1) {
           pinnedNotes.add(noteListItem(context, bIndex, false));
         }
       }
 
-      for (int i = 0; i < noteList.length; i++) {
-        int bIndex = (noteList.length - 1) - i;
-        if (noteList[bIndex].isStarred == 0) {
+      for (int i = 0; i < appInfo.notes.length; i++) {
+        int bIndex = (appInfo.notes.length - 1) - i;
+        if (appInfo.notes[bIndex].isStarred == 0) {
           normalNotes.add(noteListItem(context, bIndex, false));
         }
       }
@@ -1503,14 +1504,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         ),
       ));
 
-      for (int i = 0; i < noteList.length; i++) {
-        if (noteList[i].isStarred == 1) {
+      for (int i = 0; i < appInfo.notes.length; i++) {
+        if (appInfo.notes[i].isStarred == 1) {
           pinnedIndexes.add(i);
         }
       }
 
-      for (int i = 0; i < noteList.length; i++) {
-        if (noteList[i].isStarred == 0) {
+      for (int i = 0; i < appInfo.notes.length; i++) {
+        if (appInfo.notes[i].isStarred == 0) {
           normalIndexes.add(i);
         }
       }
@@ -1635,15 +1636,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
-    if (result != null) {
+    if (result == true) {
       setState(() {
-        noteList = result;
         syncing = true;
         queueList.add(1);
       });
 
       if (appInfo.userToken != null) {
-        await OnlineNoteHelper.save(noteList.last);
+        await OnlineNoteHelper.save(appInfo.notes.last);
       }
 
       queueList.removeLast();
@@ -1680,13 +1680,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
 
     setState(() {
-      noteList = list;
+      appInfo.notes = list;
       syncing = true;
       queueList.add(1);
     });
 
     if (appInfo.userToken != null) {
-      await OnlineNoteHelper.save(noteList.last);
+      await OnlineNoteHelper.save(appInfo.notes.last);
     }
 
     queueList.removeLast();
@@ -1705,18 +1705,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     final result = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SearchNotesRoute(noteList: noteList)));
+            builder: (context) => SearchNotesRoute(noteList: appInfo.notes)));
 
-    if (result != null) setState(() => noteList = result);
+    if (result != null) setState(() => appInfo.notes = result);
   }
 
-  void _settingsCaller(BuildContext context) async {
-    await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SettingsRoute()));
-
-    List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
-    setState(() => noteList = list);
-  }
+  void _settingsCaller(BuildContext context) async => await Navigator.push(context,
+      MaterialPageRoute(builder: (context) => SettingsRoute()));
 
   Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {
     final appInfo = Provider.of<AppInfoProvider>(context);
@@ -1738,7 +1733,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
     Color getTextColorFromNoteColor(int index, bool isContent) {
       double noteColorBrightness =
-          Color(noteList[index].color).computeLuminance();
+          Color(appInfo.notes[index].color).computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =
@@ -1752,13 +1747,13 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     }
 
     Color getBorderColor() {
-      if (noteList[index].isSelected) {
-        if (noteList[index].color != null) {
+      if (appInfo.notes[index].isSelected) {
+        if (appInfo.notes[index].color != null) {
           return Theme.of(context).textTheme.title.color;
         } else {
           return Theme.of(context).accentColor;
         }
-      } else if (noteList[index].color != null) {
+      } else if (appInfo.notes[index].color != null) {
         return Colors.transparent;
       } else {
         if (Theme.of(context).brightness == Brightness.light) {
@@ -1792,28 +1787,28 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: getBorderColor(), width: 2),
         ),
-        color: noteList[index].color == null
+        color: appInfo.notes[index].color == null
             ? (Theme.of(context).brightness == Brightness.light
                 ? null
                 : Theme.of(context).scaffoldBackgroundColor)
-            : Color(noteList[index].color),
+            : Color(appInfo.notes[index].color),
         child: InkWell(
             borderRadius: BorderRadius.circular(12.0),
             onTap: () {
               if (isSelectorVisible) {
                 setState(() {
-                  noteList[index].isSelected = !noteList[index].isSelected;
-                  if (noteList[index].isSelected) {
-                    selectionList.add(noteList[index]);
+                  appInfo.notes[index].isSelected = !appInfo.notes[index].isSelected;
+                  if (appInfo.notes[index].isSelected) {
+                    selectionList.add(appInfo.notes[index]);
                   } else {
-                    selectionList.remove(noteList[index]);
+                    selectionList.remove(appInfo.notes[index]);
                     if (selectionList.length == 0) {
                       isSelectorVisible = false;
                     }
                   }
                 });
               } else {
-                _editNoteCaller(context, noteList[index], index.toString());
+                _editNoteCaller(context, appInfo.notes[index], index.toString());
               }
             },
             onDoubleTap: isSelectorVisible
@@ -1825,8 +1820,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               if (!isSelectorVisible)
                 setState(() {
                   isSelectorVisible = true;
-                  noteList[index].isSelected = true;
-                  selectionList.add(noteList[index]);
+                  appInfo.notes[index].isSelected = true;
+                  selectionList.add(appInfo.notes[index]);
                 });
             },
             child: Column(
@@ -1834,16 +1829,16 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Visibility(
-                  visible: noteList[index].imagePath != null,
+                  visible: appInfo.notes[index].imagePath != null,
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12)),
-                      child: noteList[index].imagePath == null
+                      child: appInfo.notes[index].imagePath == null
                           ? Container()
                           : Center(
                               child: CachedNetworkImage(
-                                imageUrl: noteList[index].imagePath,
+                                imageUrl: appInfo.notes[index].imagePath,
                                 fit: BoxFit.fill,
                                 fadeInDuration: Duration(milliseconds: 0),
                                 fadeOutDuration: Duration(milliseconds: 0),
@@ -1871,15 +1866,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                             )),
                 ),
                 Visibility(
-                  visible: noteList[index].hideContent == 1 ||
-                      noteList[index].reminders != null,
+                  visible: appInfo.notes[index].hideContent == 1 ||
+                      appInfo.notes[index].reminders != null,
                   child: Container(
                     margin: EdgeInsets.fromLTRB(
                         20,
                         14,
                         20,
-                        noteList[index].hideContent == 1 &&
-                                noteList[index].title == ""
+                        appInfo.notes[index].hideContent == 1 &&
+                                appInfo.notes[index].title == ""
                             ? 14
                             : 0),
                     child: Row(
@@ -1887,12 +1882,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Visibility(
-                          visible: noteList[index].reminders != null,
+                          visible: appInfo.notes[index].reminders != null,
                           child: Center(
                             child: Icon(
                               Icons.alarm,
                               size: 12,
-                              color: noteList[index].color == null
+                              color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
                                       .title
@@ -1903,15 +1898,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           ),
                         ),
                         Visibility(
-                          visible: noteList[index].hideContent == 1,
+                          visible: appInfo.notes[index].hideContent == 1,
                           child: Center(
                             child: Icon(
-                              noteList[index].pin != null ||
-                                      noteList[index].password != null
+                              appInfo.notes[index].pin != null ||
+                                      appInfo.notes[index].password != null
                                   ? Icons.lock
                                   : Icons.remove_red_eye,
                               size: 12,
-                              color: noteList[index].color == null
+                              color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
                                       .title
@@ -1922,23 +1917,23 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           ),
                         ),
                         Visibility(
-                          visible: (noteList[index].hideContent == 1 &&
-                                  noteList[index].reminders == null) ||
-                              (noteList[index].hideContent == 0 &&
-                                  noteList[index].reminders != null),
+                          visible: (appInfo.notes[index].hideContent == 1 &&
+                                  appInfo.notes[index].reminders == null) ||
+                              (appInfo.notes[index].hideContent == 0 &&
+                                  appInfo.notes[index].reminders != null),
                           child: Container(
                             padding: EdgeInsets.only(left: 8),
                             width: oneSideOnly
                                 ? MediaQuery.of(context).size.width / 2 - 80
                                 : MediaQuery.of(context).size.width - 100,
-                            child: (noteList[index].hideContent == 1 &&
-                                    noteList[index].reminders == null)
+                            child: (appInfo.notes[index].hideContent == 1 &&
+                                    appInfo.notes[index].reminders == null)
                                 ? Text(
                                     locales
                                         .notesMainPageRoute_note_hiddenContent,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: noteList[index].color == null
+                                      color: appInfo.notes[index].color == null
                                           ? Theme.of(context)
                                               .textTheme
                                               .title
@@ -1948,14 +1943,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                               index, false),
                                     ),
                                   )
-                                : (noteList[index].hideContent == 0 &&
-                                        noteList[index].reminders != null)
+                                : (appInfo.notes[index].hideContent == 0 &&
+                                        appInfo.notes[index].reminders != null)
                                     ? Text(
                                         locales
                                             .notesMainPageRoute_note_remindersSet,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: noteList[index].color == null
+                                          color: appInfo.notes[index].color == null
                                               ? Theme.of(context)
                                                   .textTheme
                                                   .title
@@ -1977,9 +1972,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(20, 14, 20, 0),
                     child: Text(
-                      "Note id: " + noteList[index].id.toString(),
+                      "Note id: " + appInfo.notes[index].id.toString(),
                       style: TextStyle(
-                        color: noteList[index].color == null
+                        color: appInfo.notes[index].color == null
                             ? null
                             : getTextColorFromNoteColor(index, false),
                       ),
@@ -1987,7 +1982,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   ),
                 ),
                 Visibility(
-                  visible: noteList[index].title != "",
+                  visible: appInfo.notes[index].title != "",
                   child: Container(
                     margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
                     width: oneSideOnly
@@ -1996,11 +1991,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 12.0),
                       child: Text(
-                        noteList[index].title ?? "",
+                        appInfo.notes[index].title ?? "",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 4,
                         style: TextStyle(
-                          color: noteList[index].color == null
+                          color: appInfo.notes[index].color == null
                               ? Theme.of(context)
                                   .textTheme
                                   .title
@@ -2015,26 +2010,26 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   ),
                 ),
                 Visibility(
-                  visible: noteList[index].hideContent == 0,
+                  visible: appInfo.notes[index].hideContent == 0,
                   child: Container(
                     margin: EdgeInsets.fromLTRB(
-                        20, noteList[index].title == "" ? 14 : 0, 20, 14),
+                        20, appInfo.notes[index].title == "" ? 14 : 0, 20, 14),
                     width: oneSideOnly
                         ? MediaQuery.of(context).size.width / 2
                         : MediaQuery.of(context).size.width,
-                    child: noteList[index].isList == 1
+                    child: appInfo.notes[index].isList == 1
                         ? Column(
                             children: generateListWidgets(index, oneSideOnly),
                           )
                         : Text(
-                            noteList[index].content ?? "",
+                            appInfo.notes[index].content ?? "",
                             overflow: TextOverflow.ellipsis,
                             textWidthBasis: TextWidthBasis.parent,
                             maxLines: 11,
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
-                              color: noteList[index].color == null
+                              color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
                                       .title
@@ -2058,7 +2053,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
     Color getTextColorFromNoteColor(int index, bool isContent) {
       double noteColorBrightness =
-          Color(noteList[index].color).computeLuminance();
+          Color(appInfo.notes[index].color).computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =
@@ -2071,7 +2066,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       }
     }
 
-    List<String> rawList = noteList[index].listParseString.split("\'..\'");
+    List<String> rawList = appInfo.notes[index].listParseString.split("\'..\'");
 
     for (int i = 0; i < rawList.length; i++) {
       List<dynamic> rawStrings = rawList[i].split("\',,\'");
@@ -2097,7 +2092,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         children: <Widget>[
           Icon(Icons.check_box_outline_blank,
               size: 14,
-              color: noteList[index].color == null
+              color: appInfo.notes[index].color == null
                   ? Theme.of(context).iconTheme.color
                   : getTextColorFromNoteColor(index, true)),
           Container(
@@ -2110,7 +2105,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
-                  color: noteList[index].color == null
+                  color: appInfo.notes[index].color == null
                       ? Theme.of(context).textTheme.title.color
                       : getTextColorFromNoteColor(index, true)),
             ),
@@ -2125,7 +2120,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         children: <Widget>[
           Icon(Icons.check_box,
               size: 14,
-              color: noteList[index].color == null
+              color: appInfo.notes[index].color == null
                   ? Theme.of(context).iconTheme.color
                   : getTextColorFromNoteColor(index, true)),
           Container(
@@ -2138,7 +2133,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
-                color: noteList[index].color == null
+                color: appInfo.notes[index].color == null
                     ? Theme.of(context).textTheme.title.color
                     : getTextColorFromNoteColor(index, true),
                 decoration: TextDecoration.lineThrough,
@@ -2155,7 +2150,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         children: <Widget>[
           Icon(Icons.add,
               size: 14,
-              color: noteList[index].color == null
+              color: appInfo.notes[index].color == null
                   ? Theme.of(context).iconTheme.color
                   : getTextColorFromNoteColor(index, true)),
           Container(
@@ -2167,7 +2162,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               checkedList.length.toString() +
                   locales.notesMainPageRoute_note_list_selectedEntries,
               style: TextStyle(
-                  color: noteList[index].color == null
+                  color: appInfo.notes[index].color == null
                       ? Theme.of(context).textTheme.title.color
                       : getTextColorFromNoteColor(index, true)),
             ),
@@ -2180,20 +2175,20 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   }
 
   void toggleStarNote(int index) async {
-    if (noteList[index].isStarred == 0) {
+    if (appInfo.notes[index].isStarred == 0) {
       await NoteHelper.update(
-        noteList[index].copyWith(isStarred: 1),
+        appInfo.notes[index].copyWith(isStarred: 1),
       );
       List<Note> list =
           await NoteHelper.getNotes(appInfo.sortMode, currentView);
-      setState(() => noteList = list);
-    } else if (noteList[index].isStarred == 1) {
+      setState(() => appInfo.notes = list);
+    } else if (appInfo.notes[index].isStarred == 1) {
       await NoteHelper.update(
-        noteList[index].copyWith(isStarred: 0),
+        appInfo.notes[index].copyWith(isStarred: 0),
       );
       List<Note> list =
           await NoteHelper.getNotes(appInfo.sortMode, currentView);
-      setState(() => noteList = list);
+      setState(() => appInfo.notes = list);
     }
   }
 }

@@ -847,9 +847,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     await NoteHelper.insert(note);
 
-    List<Note> noteList =
-        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
-    Navigator.pop(context, noteList);
+    appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    Navigator.pop(context, true);
   }
 
   void showImageActionDialog(BuildContext context) {

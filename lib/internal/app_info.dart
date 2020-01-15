@@ -22,6 +22,7 @@ class AppInfoProvider extends ChangeNotifier {
 
   static MethodChannel _channel = MethodChannel("potato_notes_utils");
 
+  List<Note> _notes = [];
   bool _welcomeScreenSeen = true;
   bool _followSystemTheme = true;
   int _themeMode = 0;
@@ -53,6 +54,7 @@ class AppInfoProvider extends ChangeNotifier {
   bool _password = false;
   String _version = '1.0';
 
+  List<Note> get notes => _notes;
   bool get welcomeScreenSeen => _welcomeScreenSeen;
   bool get followSystemTheme => _followSystemTheme;
   int get themeMode => _themeMode;
@@ -96,6 +98,12 @@ class AppInfoProvider extends ChangeNotifier {
       ];
 
   bool supportsSystemAccent = true;
+
+  set notes(List<Note> newNotes) {
+    _notes.clear();
+    _notes = List.from(newNotes);
+    notifyListeners();
+  }
 
   set welcomeScreenSeen(bool seen) {
     _welcomeScreenSeen = seen;
@@ -286,6 +294,7 @@ class AppInfoProvider extends ChangeNotifier {
     storageStatus = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
     sortMode = preferences.getSortMode();
+    notes = await NoteHelper.getNotes(sortMode, NotesReturnMode.NORMAL);
 
     userToken = preferences.getUserToken();
     userName = preferences.getUserName();

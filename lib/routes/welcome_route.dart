@@ -10,10 +10,6 @@ import 'package:potato_notes/ui/rgb_color_picker.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeRoute extends StatefulWidget {
-  final List<Note> noteList;
-
-  WelcomeRoute({this.noteList});
-
   @override
   _WelcomeRouteState createState() => _WelcomeRouteState();
 }
@@ -105,13 +101,14 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                           ? () => controller.nextPage(
                               curve: Curves.easeInOutCubic,
                               duration: Duration(milliseconds: 700))
-                          : () {
+                          : () async {
                               appInfo.welcomeScreenSeen = true;
+                              appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+                              
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NotesMainPageRoute(
-                                        noteList: widget.noteList),
+                                    builder: (context) => NotesMainPageRoute(),
                                   ));
                             },
                     )
