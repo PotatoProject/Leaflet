@@ -23,7 +23,7 @@ class AppLocalizations {
 
   /* -- General strings -- */
 
-  String get notes => Intl.message("Notes", name: "notes");
+  String get home => Intl.message("Home", name: "home");
   String get trash => Intl.message("Trash", name: "trash");
   String get archive => Intl.message("Archive", name: "archive");
 
@@ -596,6 +596,48 @@ class AppLocalizations {
   String get syncManageRoute_sync_autoSyncInterval => Intl.message(
         "Auto-sync time interval (seconds)",
         name: "syncManageRoute_sync_autoSyncInterval",
+      );
+  
+  /* -- WelcomeRoute related -- */
+
+  String get welcomeRoute_firstPage_catchPhrase => Intl.message(
+        "Your new favourite notes app",
+        name: "welcomeRoute_firstPage_catchPhrase",
+      );
+
+  String get welcomeRoute_secondPage_title => Intl.message(
+        "Basic customization",
+        name: "welcomeRoute_secondPage_title",
+      );
+
+  String get welcomeRoute_thirdPage_description => Intl.message(
+        "With a free PotatoSync account, you can sync your notes between multiple devices. And it’s super easy to get one!",
+        name: "welcomeRoute_thirdPage_description",
+      );
+
+  String get welcomeRoute_thirdPage_success => Intl.message(
+        "PotatoSync has been configured successfully. Well done!",
+        name: "welcomeRoute_thirdPage_success",
+      );
+
+  String get welcomeRoute_thirdPage_getStarted => Intl.message(
+        "Get started",
+        name: "welcomeRoute_thirdPage_getStarted",
+      );
+
+  String get welcomeRoute_fourthPage_title => Intl.message(
+        "Setup complete",
+        name: "welcomeRoute_fourthPage_title",
+      );
+
+  String get welcomeRoute_fourthPage_description => Intl.message(
+        "And with this you’re finally done. Now you can finally have fun! Hooray!",
+        name: "welcomeRoute_fourthPage_description",
+      );
+
+  String get welcomeRoute_fourthPage_thankyou => Intl.message(
+        "Thanks for choosing PotatoNotes",
+        name: "welcomeRoute_fourthPage_thankyou",
       );
 
   /* -- General note related -- */

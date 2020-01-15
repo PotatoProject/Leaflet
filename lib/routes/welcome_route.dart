@@ -104,7 +104,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                           : () async {
                               appInfo.welcomeScreenSeen = true;
                               appInfo.notes = await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
-                              
+
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -147,7 +147,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
             height: 12,
           ),
           Text(
-            "Your new favourite notes app",
+            locales.welcomeRoute_firstPage_catchPhrase,
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: "GoogleSans",
@@ -164,7 +164,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Basic customization",
+              locales.welcomeRoute_secondPage_title,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
@@ -383,7 +383,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: Text(
-                    "With a free PotatoSync account, you can sync your notes between multiple devices. And it’s super easy to get one!",
+                    locales.welcomeRoute_thirdPage_description,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -391,7 +391,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 ),
                 Spacer(),
                 FlatButton(
-                  child: Text("Get started"),
+                  child: Text(locales.welcomeRoute_thirdPage_getStarted),
                   textColor: Theme.of(context).cardColor,
                   color: Theme.of(context).accentColor,
                   shape: RoundedRectangleBorder(
@@ -436,7 +436,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: Text(
-                    "PotatoSync has been configured successfully. Well done!",
+                    locales.welcomeRoute_thirdPage_success,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -456,7 +456,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Setup complete",
+              locales.welcomeRoute_fourthPage_title,
               style: TextStyle(
                 fontSize: 22,
                 fontFamily: "GoogleSans",
@@ -470,7 +470,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Text(
-                    "And with this you’re finally done. Now you can finally have fun! Hooray!",
+                    locales.welcomeRoute_fourthPage_description,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -480,7 +480,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
                   child: Text(
-                    "Thanks for choosing PotatoNotes",
+                    locales.welcomeRoute_fourthPage_thankyou,
                     style: TextStyle(fontSize: 18, letterSpacing: 0.75),
                   ),
                 ),

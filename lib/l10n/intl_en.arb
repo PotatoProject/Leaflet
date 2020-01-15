@@ -1,7 +1,7 @@
 {
-  "@@last_modified": "2019-11-10T11:25:03.268082",
-  "notes": "Notes",
-  "@notes": {
+  "@@last_modified": "2020-01-15T20:28:44.174789",
+  "home": "Home",
+  "@home": {
     "type": "text",
     "placeholders": {}
   },
@@ -607,6 +607,46 @@
   },
   "syncManageRoute_sync_autoSyncInterval": "Auto-sync time interval (seconds)",
   "@syncManageRoute_sync_autoSyncInterval": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_firstPage_catchPhrase": "Your new favourite notes app",
+  "@welcomeRoute_firstPage_catchPhrase": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_secondPage_title": "Basic customization",
+  "@welcomeRoute_secondPage_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_thirdPage_description": "With a free PotatoSync account, you can sync your notes between multiple devices. And it’s super easy to get one!",
+  "@welcomeRoute_thirdPage_description": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_thirdPage_success": "PotatoSync has been configured successfully. Well done!",
+  "@welcomeRoute_thirdPage_success": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_thirdPage_getStarted": "Get started",
+  "@welcomeRoute_thirdPage_getStarted": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_fourthPage_title": "Setup complete",
+  "@welcomeRoute_fourthPage_title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_fourthPage_description": "And with this you’re finally done. Now you can finally have fun! Hooray!",
+  "@welcomeRoute_fourthPage_description": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeRoute_fourthPage_thankyou": "Thanks for choosing PotatoNotes",
+  "@welcomeRoute_fourthPage_thankyou": {
     "type": "text",
     "placeholders": {}
   },

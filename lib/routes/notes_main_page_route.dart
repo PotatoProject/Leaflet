@@ -438,7 +438,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                 .withOpacity(0.7),
                       ),
                       text: Text(
-                        locales.notes,
+                        locales.home,
                         style: TextStyle(
                             color: currentView == NotesReturnMode.NORMAL
                                 ? Theme.of(context).accentColor
