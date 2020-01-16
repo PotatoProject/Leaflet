@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Notes",
-    "@notes": {
+    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "home": "Accueil",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -70,7 +70,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_noNotes": "Aucune note ajoutée",
+    "notesMainPageRoute_noNotes": "Aucune note encore ajoutée",
     "@notesMainPageRoute_noNotes": {
         "type": "text",
         "placeholders": {}
@@ -607,6 +607,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "Intervalle de synchronisation automatique (secondes)",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "Votre nouvelle application de notes préférée",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "Personnalisation basique",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "Avec un compte PotatoSync gratuit, vous pouvez synchroniser vos notes entre plusieurs appareils. Et c'est super easy d'en avoir un !",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "PotatoSync à été configuré correctement. Bravo !",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "Commencer",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "Setup terminé",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "Et vous en avez fini avec ça. Maintenant vous pouvez enfin vous amuser ! Ouaiiis !",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "Merci d'avoir choisi PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },

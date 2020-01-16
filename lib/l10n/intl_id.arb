@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Catatan",
-    "@notes": {
+    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "home": "Halaman utama",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -80,12 +80,12 @@
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "Anda tidak memiliki cataran dalam arsip",
+    "notesMainPageRoute_emptyArchive": "Anda tidak memiliki catatan dalam arsip",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_writeNote": "Tulis sebuah catatan",
+    "notesMainPageRoute_writeNote": "Tulis catatan",
     "@notesMainPageRoute_writeNote": {
         "type": "text",
         "placeholders": {}
@@ -368,7 +368,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_regenDbEntries": "Memperbarui entri database",
+    "settingsRoute_backupAndRestore_regenDbEntries": "Perbarui entri database",
     "@settingsRoute_backupAndRestore_regenDbEntries": {
         "type": "text",
         "placeholders": {}
@@ -403,7 +403,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_idLabels": "Tampilkan label info",
+    "settingsRoute_dev_idLabels": "Tampilkan label id catatan",
     "@settingsRoute_dev_idLabels": {
         "type": "text",
         "placeholders": {}
@@ -607,6 +607,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "Selang waktu sinkronisasi otomatis (detik)",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "Aplikasi catatan baru favoritmu",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "Kustomisasi Dasar",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "Dengan akun gratis PotatoSync, kamu bisa menyinkronkan catatanmu dengan beberapa perangkat. Dan sangat mudah untuk mendapatkannya!",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "PotatoSync telah berhasil dikonfigurasi. Mantap!",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "Mulai sekarang",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "Setup selesai",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "Dan dengan ini akhirnya kamu telah selesai. Sekarang kamu bisa bersenang-senang! Hore!",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "Terima kasih untuk memilih PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },

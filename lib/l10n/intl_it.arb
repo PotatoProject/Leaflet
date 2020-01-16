@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Appunti",
-    "@notes": {
+    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "home": "Principale",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -607,6 +607,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "Intervallo di tempo in secondi per la sincronizzazione automatica",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "La tua nuova app per gli appunti preferita",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "Personalizzazione di base",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "Con un account gratuito PotatoSync, puoi sincronizzare i tuoi appunti tra dispositivi vari. Ed è super semplice ottenerne uno!",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "Hai configurato PotatoSync con successo. Ben fatto!",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "Iniziamo",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "Setup completato",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "E con questo hai finito. Finalmente ti puoi divertire! Evviva!",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "Grazie per aver scelto PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },

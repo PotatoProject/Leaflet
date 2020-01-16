@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Нотатки",
-    "@notes": {
+    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "home": "Головна",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -607,6 +607,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "Інтервал часу автосинхронізації (в секундах)",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "Ваша улюблена програма для заміток",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "Базове налаштування",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "З безкоштовним аккаунтом PotatoSync, ви можете синхронізувати замітки між декількома пристроями. І отримати його дуже просто!",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "PotatoSync успішно налаштований. Чудово!",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "Розпочати",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "Налаштування завершено",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "І разом з цим ви нарешті закінчили. Тепер ви, нарешті, можете розважитися! Ура!",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "Дякуємо, що обрали PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },
