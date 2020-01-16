@@ -218,7 +218,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     }
   }
 
-  void updateSystemBrightness() async {
+  void updateColors() async {
     //This is so hacky lmao
     
     if(appInfo.followSystemTheme) {
@@ -226,6 +226,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           ? Brightness.dark
           : Brightness.light;
     } else appInfo.themeMode = (await SharedPreferences.getInstance()).getInt("theme_mode") ?? 0;
+
+    appInfo.updateMainColor();
   }
 
   @override
@@ -241,7 +243,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       autoSyncLastTimeout = appInfo.autoSyncTimeInterval;
     }
     
-    updateSystemBrightness();
+    updateColors();
 
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,

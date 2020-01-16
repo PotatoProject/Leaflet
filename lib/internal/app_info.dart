@@ -269,7 +269,9 @@ class AppInfoProvider extends ChangeNotifier {
 
   Future<void> updateMainColor() async {
     if (supportsSystemAccent) {
-      int sysAccent = await channel.invokeMethod("getAccentColor");
+      int sysAccent = systemBrightness == Brightness.dark
+          ? await channel.invokeMethod("getDarkAccentColor")
+          : await channel.invokeMethod("getLightAccentColor");
 
       if (sysAccent == null) {
         supportsSystemAccent = false;

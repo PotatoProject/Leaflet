@@ -25,8 +25,11 @@ public class MainActivity extends FlutterActivity {
         @Override
         public void onMethodCall(MethodCall call, Result result) {
           switch(call.method) {
-            case "getAccentColor":
-              result.success(getAccentColor());
+            case "getLightAccentColor":
+              result.success(getLightAccentColor());
+              break;
+            case "getDarkAccentColor":
+              result.success(getDarkAccentColor());
               break;
             case "isCurrentThemeDark":
               result.success(isCurrentThemeDark());
@@ -40,7 +43,24 @@ public class MainActivity extends FlutterActivity {
     );
   }
 
-  private Integer getAccentColor() {
+  private Integer getLightAccentColor() {
+    String colResName = "accent_device_default_light";
+    Resources res = null;
+    try {
+      res = this.getPackageManager().getResourcesForApplication("android");
+      int resId = res.getIdentifier("android:color/" + colResName, null, null);
+      try {
+        return res.getColor(resId);
+      } catch (Resources.NotFoundException e) {
+        return null;
+      }
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    return 0;
+  }
+
+  private Integer getDarkAccentColor() {
     String colResName = "accent_device_default_dark";
     Resources res = null;
     try {
