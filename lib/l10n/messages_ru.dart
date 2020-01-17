@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm" : MessageLookupByLibrary.simpleMessage("Подтвердить"),
     "dark" : MessageLookupByLibrary.simpleMessage("Темная"),
     "done" : MessageLookupByLibrary.simpleMessage("Готово"),
+    "home" : MessageLookupByLibrary.simpleMessage("Главная страница"),
     "light" : MessageLookupByLibrary.simpleMessage("Светлая"),
     "modifyNotesRoute_color_change" : MessageLookupByLibrary.simpleMessage("Изменить цвет записки"),
     "modifyNotesRoute_color_dialogTitle" : MessageLookupByLibrary.simpleMessage("Цвет записок"),
@@ -106,7 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchNotesRoute_nothingFound" : MessageLookupByLibrary.simpleMessage("Не найдено записок соответствующих критериям поиска"),
     "searchNotesRoute_searchbar" : MessageLookupByLibrary.simpleMessage("Поиск..."),
     "securityNoteRoute_request_password" : MessageLookupByLibrary.simpleMessage("Требуется пароль, чтобы открыть заметку"),
-    "securityNoteRoute_request_pin" : MessageLookupByLibrary.simpleMessage("Требуется ПИН, чтобы открыть заметку"),
+    "securityNoteRoute_request_pin" : MessageLookupByLibrary.simpleMessage("Требуется PIN, чтобы открыть заметку"),
     "securityNoteRoute_wrong_password" : MessageLookupByLibrary.simpleMessage("Неверный пароль"),
     "securityNoteRoute_wrong_pin" : MessageLookupByLibrary.simpleMessage("Неверный PIN-код"),
     "settingsRoute_about" : MessageLookupByLibrary.simpleMessage("О программе"),
@@ -132,7 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsRoute_themes_systemDarkMode" : MessageLookupByLibrary.simpleMessage("Автоматический ночной режим"),
     "settingsRoute_themes_useCustomAccent" : MessageLookupByLibrary.simpleMessage("Использовать пользовательский акцент"),
     "settingsRoute_title" : MessageLookupByLibrary.simpleMessage("Настройки"),
-    "syncLoginRoute_emailOrUsername" : MessageLookupByLibrary.simpleMessage("Email или имя пользователя"),
+    "syncLoginRoute_emailOrUsername" : MessageLookupByLibrary.simpleMessage("Эл. почта или имя пользователя"),
     "syncLoginRoute_emptyField" : MessageLookupByLibrary.simpleMessage("Это поле не может быть пустым!"),
     "syncLoginRoute_login" : MessageLookupByLibrary.simpleMessage("Вход"),
     "syncLoginRoute_noteConflictDialog_content" : MessageLookupByLibrary.simpleMessage("Сохранённые и синхронизированные заметки конфликтуют.\nЧто вы хотите сделать?"),
@@ -178,6 +179,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "undo" : MessageLookupByLibrary.simpleMessage("Отменить"),
     "userInfoRoute_avatar_change" : MessageLookupByLibrary.simpleMessage("Изменить аватар"),
     "userInfoRoute_avatar_remove" : MessageLookupByLibrary.simpleMessage("Удалить аватар"),
-    "userInfoRoute_sortByDate" : MessageLookupByLibrary.simpleMessage("Сортировать заметки по дате")
+    "userInfoRoute_sortByDate" : MessageLookupByLibrary.simpleMessage("Сортировать заметки по дате"),
+    "welcomeRoute_firstPage_catchPhrase" : MessageLookupByLibrary.simpleMessage("Ваше новое любимое приложение для заметок"),
+    "welcomeRoute_fourthPage_description" : MessageLookupByLibrary.simpleMessage("И с этим вы, наконец, сделали. Теперь вы, наконец, можете повеселиться! Ура!"),
+    "welcomeRoute_fourthPage_thankyou" : MessageLookupByLibrary.simpleMessage("Спасибо за выбор PotatoNotes"),
+    "welcomeRoute_fourthPage_title" : MessageLookupByLibrary.simpleMessage("Настройка завершена"),
+    "welcomeRoute_secondPage_title" : MessageLookupByLibrary.simpleMessage("Основные настройки"),
+    "welcomeRoute_thirdPage_description" : MessageLookupByLibrary.simpleMessage("С помощью бесплатной учетной записи PotatoSync вы можете синхронизировать свои заметки между несколькими устройствами. Это очень просто!"),
+    "welcomeRoute_thirdPage_getStarted" : MessageLookupByLibrary.simpleMessage("Начать"),
+    "welcomeRoute_thirdPage_success" : MessageLookupByLibrary.simpleMessage("PotatoSync настроен успешно. Отлично сработано!")
   };
 }
