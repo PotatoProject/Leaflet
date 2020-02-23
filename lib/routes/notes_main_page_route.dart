@@ -97,16 +97,22 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           _editNoteCaller(
               context,
               Note(
-                  id: int.parse(payloadSplitted[0]),
-                  title: note.title,
-                  content: note.content,
-                  isStarred: note.isStarred,
-                  date: note.date,
-                  color: note.color,
-                  imagePath: note.imagePath,
-                  isList: note.isList,
-                  listParseString: note.listParseString,
-                  reminders: remindersString.join(":")),
+                id: int.parse(payloadSplitted[0]),
+                title: note.title,
+                content: note.content,
+                isStarred: note.isStarred,
+                date: note.date,
+                color: note.color,
+                imagePath: note.imagePath,
+                isList: note.isList,
+                listParseString: note.listParseString,
+                reminders: remindersString.join(":"),
+                hideContent: note.hideContent,
+                pin: note.pin,
+                password: note.password,
+                isArchived: note.isArchived,
+                isDeleted: note.isDeleted,
+              ),
               "");
         } else {
           appInfo.notificationsIdList.remove(payloadSplitted[0]);
@@ -139,31 +145,35 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
 
           bool shouldUpdate() {
-            if (parsedList.length != list.length) {
-              return true;
-            } else {
-              for (int i = 0; i < parsedList.length; i++) {
-                Note parsedNote = parsedList[i];
-                Note note = list[i];
-
-                if (parsedNote.title != note.title ||
-                    parsedNote.content != note.content ||
-                    parsedNote.isStarred != note.isStarred ||
-                    parsedNote.date != note.date ||
-                    parsedNote.color != note.color ||
-                    parsedNote.imagePath != note.imagePath ||
-                    parsedNote.isList != note.isList ||
-                    parsedNote.listParseString != note.listParseString ||
-                    parsedNote.reminders != note.reminders ||
-                    parsedNote.hideContent != note.hideContent ||
-                    parsedNote.pin != note.pin ||
-                    parsedNote.password != note.password ||
-                    parsedNote.isDeleted != note.isDeleted ||
-                    parsedNote.isArchived != note.isArchived) {
-                  return true;
-                }
-              }
+            if (syncing) {
               return false;
+            } else {
+              if (parsedList.length != list.length) {
+                return true;
+              } else {
+                for (int i = 0; i < parsedList.length; i++) {
+                  Note parsedNote = parsedList[i];
+                  Note note = list[i];
+
+                  if (parsedNote.title != note.title ||
+                      parsedNote.content != note.content ||
+                      parsedNote.isStarred != note.isStarred ||
+                      parsedNote.date != note.date ||
+                      parsedNote.color != note.color ||
+                      parsedNote.imagePath != note.imagePath ||
+                      parsedNote.isList != note.isList ||
+                      parsedNote.listParseString != note.listParseString ||
+                      parsedNote.reminders != note.reminders ||
+                      parsedNote.hideContent != note.hideContent ||
+                      parsedNote.pin != note.pin ||
+                      parsedNote.password != note.password ||
+                      parsedNote.isDeleted != note.isDeleted ||
+                      parsedNote.isArchived != note.isArchived) {
+                    return true;
+                  }
+                }
+                return false;
+              }
             }
           }
 
@@ -220,12 +230,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
   void updateColors() async {
     //This is so hacky lmao
-    
-    if(appInfo.followSystemTheme) {
-      appInfo.systemBrightness = await AppInfoProvider.channel.invokeMethod("isCurrentThemeDark")
-          ? Brightness.dark
-          : Brightness.light;
-    } else appInfo.themeMode = (await SharedPreferences.getInstance()).getInt("theme_mode") ?? 0;
+
+    if (appInfo.followSystemTheme) {
+      appInfo.systemBrightness =
+          await AppInfoProvider.channel.invokeMethod("isCurrentThemeDark")
+              ? Brightness.dark
+              : Brightness.light;
+    } else
+      appInfo.themeMode =
+          (await SharedPreferences.getInstance()).getInt("theme_mode") ?? 0;
 
     appInfo.updateMainColor();
   }
@@ -242,7 +255,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       autoSyncLastStatus = appInfo.autoSync;
       autoSyncLastTimeout = appInfo.autoSyncTimeInterval;
     }
-    
+
     updateColors();
 
     return Scaffold(
@@ -259,31 +272,36 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     await NoteHelper.getNotes(SortMode.ID, NotesReturnMode.ALL);
 
                 bool shouldUpdate() {
-                  if (parsedList.length != list.length) {
-                    return true;
-                  } else {
-                    for (int i = 0; i < parsedList.length; i++) {
-                      Note parsedNote = parsedList[i];
-                      Note note = list[i];
-
-                      if (parsedNote.title != note.title ||
-                          parsedNote.content != note.content ||
-                          parsedNote.isStarred != note.isStarred ||
-                          parsedNote.date != note.date ||
-                          parsedNote.color != note.color ||
-                          parsedNote.imagePath != note.imagePath ||
-                          parsedNote.isList != note.isList ||
-                          parsedNote.listParseString != note.listParseString ||
-                          parsedNote.reminders != note.reminders ||
-                          parsedNote.hideContent != note.hideContent ||
-                          parsedNote.pin != note.pin ||
-                          parsedNote.password != note.password ||
-                          parsedNote.isDeleted != note.isDeleted ||
-                          parsedNote.isArchived != note.isArchived) {
-                        return true;
-                      }
-                    }
+                  if (syncing) {
                     return false;
+                  } else {
+                    if (parsedList.length != list.length) {
+                      return true;
+                    } else {
+                      for (int i = 0; i < parsedList.length; i++) {
+                        Note parsedNote = parsedList[i];
+                        Note note = list[i];
+
+                        if (parsedNote.title != note.title ||
+                            parsedNote.content != note.content ||
+                            parsedNote.isStarred != note.isStarred ||
+                            parsedNote.date != note.date ||
+                            parsedNote.color != note.color ||
+                            parsedNote.imagePath != note.imagePath ||
+                            parsedNote.isList != note.isList ||
+                            parsedNote.listParseString !=
+                                note.listParseString ||
+                            parsedNote.reminders != note.reminders ||
+                            parsedNote.hideContent != note.hideContent ||
+                            parsedNote.pin != note.pin ||
+                            parsedNote.password != note.password ||
+                            parsedNote.isDeleted != note.isDeleted ||
+                            parsedNote.isArchived != note.isArchived) {
+                          return true;
+                        }
+                      }
+                      return false;
+                    }
                   }
                 }
 
@@ -311,6 +329,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: ListView(
+            addSemanticIndexes: true,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             children: <Widget>[
               appInfo.notes.length != 0
@@ -349,8 +368,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                       ? OMIcons.archive
                                       : OMIcons.note,
                               size: 50.0,
-                              color: HSLColor.fromColor(
-                                      Theme.of(context).textTheme.title.color)
+                              color: HSLColor.fromColor(Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .color)
                                   .withAlpha(0.4)
                                   .toColor()),
                           Text(
@@ -362,8 +383,10 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
-                              color: HSLColor.fromColor(
-                                      Theme.of(context).textTheme.title.color)
+                              color: HSLColor.fromColor(Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .color)
                                   .withAlpha(0.4)
                                   .toColor(),
                             ),
@@ -382,6 +405,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   child: Icon(Icons.add),
                   elevation: 2,
                   backgroundColor: Theme.of(context).accentColor,
+                  tooltip: "Add new note",
                   onPressed: () {
                     _addNoteCaller(context);
                     selectionList.clear();
@@ -399,7 +423,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   Widget get bottomBar {
     return Container(
       height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
@@ -412,62 +435,397 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           ]),
       child: Material(
         color: Colors.transparent,
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(CommunityMaterialIcons.menu),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              onPressed: () => showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => UserInfoDialog(
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  onSettingsTileClick: () => _settingsCaller(context),
-                  onPotatoSyncTileClick: () async {
-                    if (appInfo.userToken != null) {
-                      await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SyncManageRoute()));
-                    } else {
-                      await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SyncLoginRoute()));
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(CommunityMaterialIcons.menu),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                tooltip: "Open menu",
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => UserInfoDialog(
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    onSettingsTileClick: () => _settingsCaller(context),
+                    onPotatoSyncTileClick: () async {
+                      if (appInfo.userToken != null) {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SyncManageRoute()));
+                      } else {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SyncLoginRoute()));
+                      }
+
+                      List<Note> list = await NoteHelper.getNotes(
+                          appInfo.sortMode, currentView);
+                      setState(() => appInfo.notes = list);
+                    },
+                    extraItems: <Widget>[
+                      UserInfoListTile(
+                        icon: Icon(
+                          CommunityMaterialIcons.home_variant_outline,
+                          color: currentView == NotesReturnMode.NORMAL
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context)
+                                  .iconTheme
+                                  .color
+                                  .withOpacity(0.7),
+                        ),
+                        text: Text(
+                          locales.home,
+                          style: TextStyle(
+                              color: currentView == NotesReturnMode.NORMAL
+                                  ? Theme.of(context).accentColor
+                                  : null,
+                              fontWeight: currentView == NotesReturnMode.NORMAL
+                                  ? FontWeight.w500
+                                  : FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                        onTap: () async {
+                          if (currentView != NotesReturnMode.NORMAL) {
+                            currentView = NotesReturnMode.NORMAL;
+                            appInfo.notes = await NoteHelper.getNotes(
+                                appInfo.sortMode, currentView);
+                            Navigator.pop(context);
+
+                            appInfo.notes.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            setState(() {
+                              selectionList.clear();
+                              isSelectorVisible = false;
+                            });
+
+                            Brightness systemBarsIconBrightness =
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Brightness.light
+                                    : Brightness.dark;
+
+                            changeSystemBarsColors(
+                                Theme.of(context).scaffoldBackgroundColor,
+                                systemBarsIconBrightness);
+                          }
+                        },
+                      ),
+                      UserInfoListTile(
+                        icon: Icon(
+                          OMIcons.archive,
+                          color: currentView == NotesReturnMode.ARCHIVED
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context)
+                                  .iconTheme
+                                  .color
+                                  .withOpacity(0.7),
+                        ),
+                        text: Text(
+                          locales.archive,
+                          style: TextStyle(
+                              color: currentView == NotesReturnMode.ARCHIVED
+                                  ? Theme.of(context).accentColor
+                                  : null,
+                              fontWeight:
+                                  currentView == NotesReturnMode.ARCHIVED
+                                      ? FontWeight.w500
+                                      : FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                        onTap: () async {
+                          if (currentView != NotesReturnMode.ARCHIVED) {
+                            currentView = NotesReturnMode.ARCHIVED;
+                            appInfo.notes = await NoteHelper.getNotes(
+                                appInfo.sortMode, currentView);
+                            Navigator.pop(context);
+
+                            appInfo.notes.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            setState(() {
+                              selectionList.clear();
+                              isSelectorVisible = false;
+                            });
+
+                            Brightness systemBarsIconBrightness =
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Brightness.light
+                                    : Brightness.dark;
+
+                            changeSystemBarsColors(
+                                Theme.of(context).scaffoldBackgroundColor,
+                                systemBarsIconBrightness);
+                          }
+                        },
+                      ),
+                      UserInfoListTile(
+                        icon: Icon(
+                          CommunityMaterialIcons.trash_can_outline,
+                          color: currentView == NotesReturnMode.DELETED
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context)
+                                  .iconTheme
+                                  .color
+                                  .withOpacity(0.7),
+                        ),
+                        text: Text(
+                          locales.trash,
+                          style: TextStyle(
+                              color: currentView == NotesReturnMode.DELETED
+                                  ? Theme.of(context).accentColor
+                                  : null,
+                              fontWeight: currentView == NotesReturnMode.DELETED
+                                  ? FontWeight.w500
+                                  : FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                        onTap: () async {
+                          if (currentView != NotesReturnMode.DELETED) {
+                            currentView = NotesReturnMode.DELETED;
+                            appInfo.notes = await NoteHelper.getNotes(
+                                appInfo.sortMode, currentView);
+                            Navigator.pop(context);
+
+                            appInfo.notes.forEach((item) {
+                              item.isSelected = false;
+                            });
+
+                            setState(() {
+                              selectionList.clear();
+                              isSelectorVisible = false;
+                            });
+
+                            Brightness systemBarsIconBrightness =
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Brightness.light
+                                    : Brightness.dark;
+
+                            changeSystemBarsColors(
+                                Theme.of(context).scaffoldBackgroundColor,
+                                systemBarsIconBrightness);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                tooltip: "Search notes",
+                onPressed: () => _searchNoteCaller(context, appInfo.notes,
+                    Theme.of(context).scaffoldBackgroundColor),
+              ),
+              IconButton(
+                icon: appInfo.isGridView
+                    ? Icon(OMIcons.viewAgenda)
+                    : Icon(CommunityMaterialIcons.view_dashboard_outline),
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                tooltip: appInfo.isGridView
+                    ? "Switch to list view"
+                    : "Switch to grid view",
+                onPressed: () async {
+                  if (controller.status == AnimationStatus.completed) {
+                    await controller.animateTo(0);
+                    appInfo.isGridView = !appInfo.isGridView;
+                    await controller.animateTo(1);
+                  }
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Visibility(
+                  visible: syncing,
+                  child: ControlledAnimation(
+                    playback: Playback.LOOP,
+                    tween: Tween<double>(begin: 0, end: 360),
+                    duration: Duration(milliseconds: 900),
+                    builder: (context, animation) {
+                      return Transform.rotate(
+                        angle: -(animation * pi) / 180,
+                        child: Icon(Icons.sync),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Spacer(),
+              Visibility(
+                visible: currentView == NotesReturnMode.DELETED,
+                child: PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == 0) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            title: Text(locales
+                                .notesMainPageRoute_note_emptyTrash_title),
+                            content: Text(locales
+                                .notesMainPageRoute_note_emptyTrash_content),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text(locales.cancel),
+                                onPressed: () => Navigator.pop(context),
+                                textColor: appInfo.mainColor,
+                              ),
+                              FlatButton(
+                                child: Text(locales.confirm),
+                                color: appInfo.mainColor,
+                                textColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                onPressed: () async {
+                                  Navigator.pop(context);
+
+                                  for (int i = 0;
+                                      i < appInfo.notes.length;
+                                      i++) {
+                                    await NoteHelper.delete(
+                                        appInfo.notes[i].id);
+                                  }
+
+                                  List<Note> list = await NoteHelper.getNotes(
+                                      appInfo.sortMode,
+                                      NotesReturnMode.DELETED);
+                                  setState(() {
+                                    appInfo.notes = list;
+                                    syncing = true;
+                                    queueList.add(1);
+                                  });
+
+                                  for (int i = 0;
+                                      i < appInfo.notes.length;
+                                      i++) {
+                                    if (appInfo.userToken != null) {
+                                      await OnlineNoteHelper.delete(
+                                          appInfo.notes[i].id);
+                                    }
+                                  }
+
+                                  queueList.removeLast();
+                                  if (queueList.length == 0) {
+                                    setState(() => syncing = false);
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
-
-                    List<Note> list = await NoteHelper.getNotes(
-                        appInfo.sortMode, currentView);
-                    setState(() => appInfo.notes = list);
                   },
-                  extraItems: <Widget>[
-                    UserInfoListTile(
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        enabled: appInfo.notes.length != 0,
+                        value: 0,
+                        child: Text(locales.note_emptyTrash),
+                      ),
+                    ];
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get selectorBottomBar {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 2,
+              offset: Offset(0, -0.1),
+              spreadRadius: 2,
+            )
+          ]),
+      child: Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: appInfo.mainColor,
+                ),
+                tooltip: "Close selector",
+                onPressed: () async {
+                  selectionList.clear();
+                  appInfo.notes.forEach((item) {
+                    item.isSelected = false;
+                  });
+                  setState(() => isSelectorVisible = false);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  selectionList.length.toString(),
+                  semanticsLabel: selectionList.length.toString() + " note selected",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Spacer(),
+              Visibility(
+                visible: currentView != NotesReturnMode.DELETED,
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
                       icon: Icon(
-                        CommunityMaterialIcons.home_variant_outline,
-                        color: currentView == NotesReturnMode.NORMAL
-                            ? Theme.of(context).accentColor
-                            : Theme.of(context)
-                                .iconTheme
-                                .color
-                                .withOpacity(0.7),
+                        selectionList
+                              .where((note) => note.isStarred == 0)
+                              .toList()
+                              .length != 0
+                            ? Icons.star
+                            : Icons.star_border,
                       ),
-                      text: Text(
-                        locales.home,
-                        style: TextStyle(
-                            color: currentView == NotesReturnMode.NORMAL
-                                ? Theme.of(context).accentColor
-                                : null,
-                            fontWeight: currentView == NotesReturnMode.NORMAL
-                                ? FontWeight.w500
-                                : FontWeight.w400,
-                            fontSize: 16),
-                      ),
-                      onTap: () async {
-                        if (currentView != NotesReturnMode.NORMAL) {
-                          currentView = NotesReturnMode.NORMAL;
+                      tooltip: selectionList
+                              .where((note) => note.isStarred == 0)
+                              .toList()
+                              .length != 0
+                          ? "Add notes to favourites"
+                          : "Remove notes from favourites",
+                      onPressed: () async {
+                        bool starOrNot = selectionList
+                                .where((note) => note.isStarred == 0)
+                                .toList()
+                                .length !=
+                            0;
+
+                        List<Note> selectionListCopy = List.from(selectionList);
+
+                        if (starOrNot) {
+                          for (int i = 0; i < selectionList.length; i++) {
+                            await NoteHelper.update(
+                              appInfo.notes
+                                  .firstWhere(
+                                      (note) => note == selectionList[i])
+                                  .copyWith(isStarred: 1),
+                            );
+                          }
+
                           appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
-                          Navigator.pop(context);
 
                           appInfo.notes.forEach((item) {
                             item.isSelected = false;
@@ -476,171 +834,205 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           setState(() {
                             selectionList.clear();
                             isSelectorVisible = false;
+                            syncing = true;
                           });
 
-                          Brightness systemBarsIconBrightness =
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Brightness.light
-                                  : Brightness.dark;
+                          for (int i = 0; i < selectionListCopy.length; i++) {
+                            if (appInfo.userToken != null) {
+                              await OnlineNoteHelper.save(appInfo.notes
+                                  .firstWhere((note) =>
+                                      note.id == selectionListCopy[i].id)
+                                  .copyWith(isStarred: 1));
+                            }
+                          }
 
-                          changeSystemBarsColors(
-                              Theme.of(context).scaffoldBackgroundColor,
-                              systemBarsIconBrightness);
+                          setState(() => syncing = false);
+                        } else {
+                          for (int i = 0; i < selectionList.length; i++) {
+                            await NoteHelper.update(
+                              appInfo.notes
+                                  .firstWhere(
+                                      (note) => note == selectionList[i])
+                                  .copyWith(isStarred: 0),
+                            );
+                          }
+
+                          appInfo.notes = await NoteHelper.getNotes(
+                              appInfo.sortMode, currentView);
+
+                          appInfo.notes.forEach((item) {
+                            item.isSelected = false;
+                          });
+
+                          setState(() {
+                            selectionList.clear();
+                            isSelectorVisible = false;
+                            syncing = true;
+                            queueList.add(1);
+                          });
+
+                          for (int i = 0; i < selectionListCopy.length; i++) {
+                            if (appInfo.userToken != null) {
+                              await OnlineNoteHelper.save(appInfo.notes
+                                  .firstWhere((note) =>
+                                      note.id == selectionListCopy[i].id)
+                                  .copyWith(isStarred: 0));
+                            }
+                          }
+
+                          queueList.removeLast();
+
+                          if (queueList.length == 0) {
+                            setState(() => syncing = false);
+                          }
                         }
                       },
                     ),
-                    UserInfoListTile(
+                    IconButton(
                       icon: Icon(
-                        OMIcons.archive,
-                        color: currentView == NotesReturnMode.ARCHIVED
-                            ? Theme.of(context).accentColor
-                            : Theme.of(context)
-                                .iconTheme
-                                .color
-                                .withOpacity(0.7),
+                        OMIcons.colorLens,
                       ),
-                      text: Text(
-                        locales.archive,
-                        style: TextStyle(
-                            color: currentView == NotesReturnMode.ARCHIVED
-                                ? Theme.of(context).accentColor
-                                : null,
-                            fontWeight: currentView == NotesReturnMode.ARCHIVED
-                                ? FontWeight.w500
-                                : FontWeight.w400,
-                            fontSize: 16),
-                      ),
-                      onTap: () async {
-                        if (currentView != NotesReturnMode.ARCHIVED) {
-                          currentView = NotesReturnMode.ARCHIVED;
+                      tooltip: "Change note color",
+                      onPressed: () async {
+                        var result = await showDialog(
+                            context: context,
+                            builder: (context) {
+                              return NoteColorDialog(
+                                noteColor: null,
+                              );
+                            });
+
+                        List<Note> selectionListCopy = List.from(selectionList);
+
+                        if (result != null) {
+                          for (int i = 0; i < selectionList.length; i++) {
+                            await NoteHelper.update(
+                              appInfo.notes
+                                  .firstWhere(
+                                      (note) => note == selectionList[i])
+                                  .copyWith(color: result),
+                            );
+                          }
+
                           appInfo.notes = await NoteHelper.getNotes(
                               appInfo.sortMode, currentView);
-                          Navigator.pop(context);
-
-                          appInfo.notes.forEach((item) {
-                            item.isSelected = false;
-                          });
-
                           setState(() {
                             selectionList.clear();
                             isSelectorVisible = false;
+                            syncing = true;
+                            queueList.add(1);
                           });
 
-                          Brightness systemBarsIconBrightness =
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Brightness.light
-                                  : Brightness.dark;
+                          for (int i = 0; i < selectionListCopy.length; i++) {
+                            if (appInfo.userToken != null) {
+                              await OnlineNoteHelper.save(
+                                  selectionListCopy[i].copyWith(color: result));
+                            }
+                          }
 
-                          changeSystemBarsColors(
-                              Theme.of(context).scaffoldBackgroundColor,
-                              systemBarsIconBrightness);
-                        }
-                      },
-                    ),
-                    UserInfoListTile(
-                      icon: Icon(
-                        CommunityMaterialIcons.trash_can_outline,
-                        color: currentView == NotesReturnMode.DELETED
-                            ? Theme.of(context).accentColor
-                            : Theme.of(context)
-                                .iconTheme
-                                .color
-                                .withOpacity(0.7),
-                      ),
-                      text: Text(
-                        locales.trash,
-                        style: TextStyle(
-                            color: currentView == NotesReturnMode.DELETED
-                                ? Theme.of(context).accentColor
-                                : null,
-                            fontWeight: currentView == NotesReturnMode.DELETED
-                                ? FontWeight.w500
-                                : FontWeight.w400,
-                            fontSize: 16),
-                      ),
-                      onTap: () async {
-                        if (currentView != NotesReturnMode.DELETED) {
-                          currentView = NotesReturnMode.DELETED;
-                          appInfo.notes = await NoteHelper.getNotes(
-                              appInfo.sortMode, currentView);
-                          Navigator.pop(context);
+                          queueList.removeLast();
 
-                          appInfo.notes.forEach((item) {
-                            item.isSelected = false;
-                          });
-
-                          setState(() {
-                            selectionList.clear();
-                            isSelectorVisible = false;
-                          });
-
-                          Brightness systemBarsIconBrightness =
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Brightness.light
-                                  : Brightness.dark;
-
-                          changeSystemBarsColors(
-                              Theme.of(context).scaffoldBackgroundColor,
-                              systemBarsIconBrightness);
+                          if (queueList.length == 0) {
+                            setState(() => syncing = false);
+                          }
                         }
                       },
                     ),
                   ],
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              onPressed: () => _searchNoteCaller(context, appInfo.notes,
-                  Theme.of(context).scaffoldBackgroundColor),
-            ),
-            IconButton(
-              icon: appInfo.isGridView
-                  ? Icon(OMIcons.viewAgenda)
-                  : Icon(CommunityMaterialIcons.view_dashboard_outline),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              onPressed: () async {
-                if (controller.status == AnimationStatus.completed) {
-                  await controller.animateTo(0);
-                  appInfo.isGridView = !appInfo.isGridView;
-                  await controller.animateTo(1);
-                }
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Visibility(
-                visible: syncing,
-                child: ControlledAnimation(
-                  playback: Playback.LOOP,
-                  tween: Tween<double>(begin: 0, end: 360),
-                  duration: Duration(milliseconds: 900),
-                  builder: (context, animation) {
-                    return Transform.rotate(
-                      angle: -(animation * pi) / 180,
-                      child: Icon(Icons.sync),
-                    );
-                  },
+              IconButton(
+                icon: Icon(
+                  OMIcons.delete,
                 ),
-              ),
-            ),
-            Spacer(),
-            Visibility(
-              visible: currentView == NotesReturnMode.DELETED,
-              child: PopupMenuButton(
-                onSelected: (value) {
-                  if (value == 0) {
+                tooltip: "Delete selected notes",
+                onPressed: () async {
+                  if (currentView != NotesReturnMode.DELETED) {
+                    List<Note> noteBackup = List.from(selectionList);
+
+                    for (int i = 0; i < selectionList.length; i++) {
+                      await NoteHelper.update(
+                        appInfo.notes
+                            .firstWhere((note) => note == selectionList[i])
+                            .copyWith(isDeleted: 1, isStarred: 0),
+                      );
+                    }
+
+                    selectionList.clear();
+
+                    appInfo.notes.forEach((item) {
+                      item.isSelected = false;
+                    });
+
+                    appInfo.notes = await NoteHelper.getNotes(
+                        appInfo.sortMode, currentView);
+
+                    setState(() {
+                      isSelectorVisible = false;
+                      syncing = true;
+                      queueList.add(1);
+                    });
+
+                    scaffoldKey.currentState.removeCurrentSnackBar();
+                    scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text(noteBackup.length > 1
+                            ? locales.notes_delete_snackbar
+                            : locales.note_delete_snackbar),
+                        action: SnackBarAction(
+                          label: locales.undo,
+                          onPressed: () async {
+                            for (int i = 0; i < noteBackup.length; i++) {
+                              await NoteHelper.insert(
+                                  noteBackup[i].copyWith(isDeleted: 0));
+                            }
+
+                            appInfo.notes = await NoteHelper.getNotes(
+                                appInfo.sortMode, currentView);
+                            setState(() {
+                              syncing = true;
+                              queueList.add(1);
+                            });
+
+                            for (int i = 0; i < noteBackup.length; i++) {
+                              if (appInfo.userToken != null) {
+                                await OnlineNoteHelper.save(
+                                    noteBackup[i].copyWith(isDeleted: 0));
+                              }
+                            }
+
+                            queueList.removeLast();
+                            if (queueList.length == 0) {
+                              setState(() => syncing = false);
+                            }
+                          },
+                        ),
+                      ),
+                    );
+
+                    for (int i = 0; i < noteBackup.length; i++) {
+                      if (appInfo.userToken != null) {
+                        await OnlineNoteHelper.save(
+                            noteBackup[i].copyWith(isDeleted: 1, isStarred: 0));
+                      }
+                    }
+
+                    queueList.removeLast();
+
+                    if (queueList.length == 0) {
+                      setState(() => syncing = false);
+                    }
+                  } else {
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
-                          title: Text(
-                              locales.notesMainPageRoute_note_emptyTrash_title),
+                          title: Text(locales
+                              .notesMainPageRoute_note_deleteDialog_title),
                           content: Text(locales
-                              .notesMainPageRoute_note_emptyTrash_content),
+                              .notesMainPageRoute_note_deleteDialog_content),
                           actions: <Widget>[
                             FlatButton(
                               child: Text(locales.cancel),
@@ -654,23 +1046,33 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                   Theme.of(context).scaffoldBackgroundColor,
                               onPressed: () async {
                                 Navigator.pop(context);
+                                List<Note> selectionListCopy =
+                                    List.from(selectionList);
 
-                                for (int i = 0; i < appInfo.notes.length; i++) {
-                                  await NoteHelper.delete(appInfo.notes[i].id);
+                                for (int i = 0; i < selectionList.length; i++) {
+                                  await NoteHelper.delete(selectionList[i].id);
                                 }
 
-                                List<Note> list = await NoteHelper.getNotes(
-                                    appInfo.sortMode, NotesReturnMode.DELETED);
+                                appInfo.notes = await NoteHelper.getNotes(
+                                    appInfo.sortMode, currentView);
+
+                                appInfo.notes.forEach((item) {
+                                  item.isSelected = false;
+                                });
+
                                 setState(() {
-                                  appInfo.notes = list;
+                                  selectionList.clear();
+                                  isSelectorVisible = false;
                                   syncing = true;
                                   queueList.add(1);
                                 });
 
-                                for (int i = 0; i < appInfo.notes.length; i++) {
+                                for (int i = 0;
+                                    i < selectionListCopy.length;
+                                    i++) {
                                   if (appInfo.userToken != null) {
                                     await OnlineNoteHelper.delete(
-                                        appInfo.notes[i].id);
+                                        selectionListCopy[i].id);
                                   }
                                 }
 
@@ -686,342 +1088,153 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     );
                   }
                 },
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      enabled: appInfo.notes.length != 0,
-                      value: 0,
-                      child: Text(locales.note_emptyTrash),
-                    ),
-                  ];
-                },
               ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+              Visibility(
+                visible: currentView != NotesReturnMode.ARCHIVED,
+                child: IconButton(
+                  icon: Icon(
+                    OMIcons.archive,
+                  ),
+                  tooltip: "Archive selected notes",
+                  onPressed: () async {
+                    List<Note> noteBackup = List.from(selectionList);
+                    int selectionListLenght = selectionList.length;
 
-  Widget get selectorBottomBar {
-    return Container(
-      height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 2,
-              offset: Offset(0, -0.1),
-              spreadRadius: 2,
-            )
-          ]),
-      child: Material(
-        color: Colors.transparent,
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.close,
-                color: appInfo.mainColor,
-              ),
-              onPressed: () async {
-                selectionList.clear();
-                appInfo.notes.forEach((item) {
-                  item.isSelected = false;
-                });
-                setState(() => isSelectorVisible = false);
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                selectionList.length.toString(),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                    for (int i = 0; i < selectionListLenght; i++) {
+                      await NoteHelper.update(
+                        appInfo.notes
+                            .firstWhere((note) => note == selectionList[i])
+                            .copyWith(
+                                isArchived: 1, isDeleted: 0, isStarred: 0),
+                      );
+                    }
+
+                    bool multipleItems = selectionListLenght > 1;
+                    selectionList.clear();
+
+                    appInfo.notes.forEach((item) {
+                      item.isSelected = false;
+                    });
+
+                    appInfo.notes = await NoteHelper.getNotes(
+                        appInfo.sortMode, currentView);
+
+                    setState(() {
+                      isSelectorVisible = false;
+                      syncing = true;
+                      queueList.add(1);
+                    });
+
+                    scaffoldKey.currentState.removeCurrentSnackBar();
+                    scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text(multipleItems
+                            ? locales.notes_archive_snackbar
+                            : locales.note_archive_snackbar),
+                        action: SnackBarAction(
+                          label: locales.undo,
+                          onPressed: () async {
+                            for (int i = 0; i < noteBackup.length; i++) {
+                              await NoteHelper.insert(
+                                  noteBackup[i].copyWith(isArchived: 0));
+                            }
+
+                            appInfo.notes = await NoteHelper.getNotes(
+                                appInfo.sortMode, currentView);
+                            setState(() {
+                              syncing = true;
+                              queueList.add(1);
+                            });
+
+                            for (int i = 0; i < noteBackup.length; i++) {
+                              if (appInfo.userToken != null) {
+                                await OnlineNoteHelper.save(
+                                    noteBackup[i].copyWith(isArchived: 0));
+                              }
+                            }
+
+                            queueList.removeLast();
+                            if (queueList.length == 0) {
+                              setState(() => syncing = false);
+                            }
+                          },
+                        ),
+                      ),
+                    );
+
+                    for (int i = 0; i < noteBackup.length; i++) {
+                      if (appInfo.userToken != null) {
+                        await OnlineNoteHelper.save(noteBackup[i].copyWith(
+                            isArchived: 1, isDeleted: 0, isStarred: 0));
+                      }
+                    }
+
+                    queueList.removeLast();
+                    if (queueList.length == 0) {
+                      setState(() => syncing = false);
+                    }
+                  },
                 ),
               ),
-            ),
-            Spacer(),
-            Visibility(
-              visible: currentView != NotesReturnMode.DELETED,
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      selectionList
-                                  .where((note) => note.isStarred == 0)
-                                  .toList()
-                                  .length !=
-                              0
-                          ? Icons.star
-                          : Icons.star_border,
-                    ),
-                    onPressed: () async {
-                      bool starOrNot = selectionList
-                              .where((note) => note.isStarred == 0)
-                              .toList()
-                              .length !=
-                          0;
-
-                      List<Note> selectionListCopy = List.from(selectionList);
-
-                      if (starOrNot) {
-                        for (int i = 0; i < selectionList.length; i++) {
-                          await NoteHelper.update(
-                            appInfo.notes
-                                .firstWhere((note) => note == selectionList[i])
-                                .copyWith(isStarred: 1),
-                          );
-                        }
-
-                        appInfo.notes = await NoteHelper.getNotes(
-                            appInfo.sortMode, currentView);
-
-                        appInfo.notes.forEach((item) {
-                          item.isSelected = false;
-                        });
-
-                        setState(() {
-                          selectionList.clear();
-                          isSelectorVisible = false;
-                          syncing = true;
-                        });
-
-                        for (int i = 0; i < selectionListCopy.length; i++) {
-                          if (appInfo.userToken != null) {
-                            await OnlineNoteHelper.save(appInfo.notes
-                                .firstWhere((note) =>
-                                    note.id == selectionListCopy[i].id)
-                                .copyWith(isStarred: 1));
-                          }
-                        }
-
-                        setState(() => syncing = false);
-                      } else {
-                        for (int i = 0; i < selectionList.length; i++) {
-                          await NoteHelper.update(
-                            appInfo.notes
-                                .firstWhere((note) => note == selectionList[i])
-                                .copyWith(isStarred: 0),
-                          );
-                        }
-
-                        appInfo.notes = await NoteHelper.getNotes(
-                            appInfo.sortMode, currentView);
-
-                        appInfo.notes.forEach((item) {
-                          item.isSelected = false;
-                        });
-
-                        setState(() {
-                          selectionList.clear();
-                          isSelectorVisible = false;
-                          syncing = true;
-                          queueList.add(1);
-                        });
-
-                        for (int i = 0; i < selectionListCopy.length; i++) {
-                          if (appInfo.userToken != null) {
-                            await OnlineNoteHelper.save(appInfo.notes
-                                .firstWhere((note) =>
-                                    note.id == selectionListCopy[i].id)
-                                .copyWith(isStarred: 0));
-                          }
-                        }
-
-                        queueList.removeLast();
-
-                        if (queueList.length == 0) {
-                          setState(() => syncing = false);
-                        }
-                      }
-                    },
+              Visibility(
+                visible: currentView != NotesReturnMode.NORMAL,
+                child: IconButton(
+                  icon: Icon(
+                    OMIcons.settingsBackupRestore,
                   ),
-                  IconButton(
-                    icon: Icon(
-                      OMIcons.colorLens,
-                    ),
-                    onPressed: () async {
-                      var result = await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return NoteColorDialog(
-                              noteColor: null,
-                            );
-                          });
+                  tooltip: "Restore selected notes",
+                  onPressed: () async {
+                    if (currentView == NotesReturnMode.ARCHIVED) {
+                      List<Note> noteBackup = List.from(selectionList);
 
-                      List<Note> selectionListCopy = List.from(selectionList);
-
-                      if (result != null) {
-                        for (int i = 0; i < selectionList.length; i++) {
-                          await NoteHelper.update(
-                            appInfo.notes
-                                .firstWhere((note) => note == selectionList[i])
-                                .copyWith(color: result),
-                          );
-                        }
-
-                        appInfo.notes = await NoteHelper.getNotes(
-                            appInfo.sortMode, currentView);
-                        setState(() {
-                          selectionList.clear();
-                          isSelectorVisible = false;
-                          syncing = true;
-                          queueList.add(1);
-                        });
-
-                        for (int i = 0; i < selectionListCopy.length; i++) {
-                          if (appInfo.userToken != null) {
-                            await OnlineNoteHelper.save(
-                                selectionListCopy[i].copyWith(color: result));
-                          }
-                        }
-
-                        queueList.removeLast();
-
-                        if (queueList.length == 0) {
-                          setState(() => syncing = false);
-                        }
+                      for (int i = 0; i < selectionList.length; i++) {
+                        await NoteHelper.update(
+                          appInfo.notes
+                              .firstWhere((note) => note == selectionList[i])
+                              .copyWith(isArchived: 0),
+                        );
                       }
-                    },
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: Icon(
-                OMIcons.delete,
-              ),
-              onPressed: () async {
-                if (currentView != NotesReturnMode.DELETED) {
-                  List<Note> noteBackup = List.from(selectionList);
 
-                  for (int i = 0; i < selectionList.length; i++) {
-                    await NoteHelper.update(
-                      appInfo.notes
-                          .firstWhere((note) => note == selectionList[i])
-                          .copyWith(isDeleted: 1, isStarred: 0),
-                    );
-                  }
+                      selectionList.clear();
 
-                  selectionList.clear();
+                      appInfo.notes.forEach((item) {
+                        item.isSelected = false;
+                      });
 
-                  appInfo.notes.forEach((item) {
-                    item.isSelected = false;
-                  });
+                      appInfo.notes = await NoteHelper.getNotes(
+                          appInfo.sortMode, currentView);
 
-                  appInfo.notes =
-                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
+                      setState(() {
+                        isSelectorVisible = false;
+                        syncing = true;
+                        queueList.add(1);
+                      });
 
-                  setState(() {
-                    isSelectorVisible = false;
-                    syncing = true;
-                    queueList.add(1);
-                  });
-
-                  scaffoldKey.currentState.removeCurrentSnackBar();
-                  scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(noteBackup.length > 1
-                          ? locales.notes_delete_snackbar
-                          : locales.note_delete_snackbar),
-                      action: SnackBarAction(
-                        label: locales.undo,
-                        onPressed: () async {
-                          for (int i = 0; i < noteBackup.length; i++) {
-                            await NoteHelper.insert(
-                                noteBackup[i].copyWith(isDeleted: 0));
-                          }
-
-                          appInfo.notes = await NoteHelper.getNotes(
-                              appInfo.sortMode, currentView);
-                          setState(() {
-                            syncing = true;
-                            queueList.add(1);
-                          });
-
-                          for (int i = 0; i < noteBackup.length; i++) {
-                            if (appInfo.userToken != null) {
-                              await OnlineNoteHelper.save(
-                                  noteBackup[i].copyWith(isDeleted: 0));
-                            }
-                          }
-
-                          queueList.removeLast();
-                          if (queueList.length == 0) {
-                            setState(() => syncing = false);
-                          }
-                        },
-                      ),
-                    ),
-                  );
-
-                  for (int i = 0; i < noteBackup.length; i++) {
-                    if (appInfo.userToken != null) {
-                      await OnlineNoteHelper.save(
-                          noteBackup[i].copyWith(isDeleted: 1, isStarred: 0));
-                    }
-                  }
-
-                  queueList.removeLast();
-
-                  if (queueList.length == 0) {
-                    setState(() => syncing = false);
-                  }
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        title: Text(
-                            locales.notesMainPageRoute_note_deleteDialog_title),
-                        content: Text(locales
-                            .notesMainPageRoute_note_deleteDialog_content),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(locales.cancel),
-                            onPressed: () => Navigator.pop(context),
-                            textColor: appInfo.mainColor,
-                          ),
-                          FlatButton(
-                            child: Text(locales.confirm),
-                            color: appInfo.mainColor,
-                            textColor:
-                                Theme.of(context).scaffoldBackgroundColor,
+                      scaffoldKey.currentState.removeCurrentSnackBar();
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(noteBackup.length > 1
+                              ? locales.notes_removeFromArchive_snackbar
+                              : locales.note_removeFromArchive_snackbar),
+                          action: SnackBarAction(
+                            label: locales.undo,
                             onPressed: () async {
-                              Navigator.pop(context);
-                              List<Note> selectionListCopy =
-                                  List.from(selectionList);
-
-                              for (int i = 0; i < selectionList.length; i++) {
-                                await NoteHelper.delete(selectionList[i].id);
+                              for (int i = 0; i < noteBackup.length; i++) {
+                                await NoteHelper.insert(
+                                    noteBackup[i].copyWith(isArchived: 1));
                               }
 
                               appInfo.notes = await NoteHelper.getNotes(
                                   appInfo.sortMode, currentView);
-
-                              appInfo.notes.forEach((item) {
-                                item.isSelected = false;
-                              });
-
                               setState(() {
-                                selectionList.clear();
-                                isSelectorVisible = false;
                                 syncing = true;
                                 queueList.add(1);
                               });
 
-                              for (int i = 0;
-                                  i < selectionListCopy.length;
-                                  i++) {
+                              for (int i = 0; i < noteBackup.length; i++) {
                                 if (appInfo.userToken != null) {
-                                  await OnlineNoteHelper.delete(
-                                      selectionListCopy[i].id);
+                                  await OnlineNoteHelper.save(
+                                      noteBackup[i].copyWith(isArchived: 1));
                                 }
                               }
 
@@ -1031,405 +1244,249 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               }
                             },
                           ),
-                        ],
+                        ),
                       );
-                    },
-                  );
-                }
-              },
-            ),
-            Visibility(
-              visible: currentView != NotesReturnMode.ARCHIVED,
-              child: IconButton(
-                icon: Icon(
-                  OMIcons.archive,
+
+                      for (int i = 0; i < noteBackup.length; i++) {
+                        if (appInfo.userToken != null) {
+                          await OnlineNoteHelper.save(
+                              noteBackup[i].copyWith(isArchived: 0));
+                        }
+                      }
+
+                      queueList.removeLast();
+
+                      if (queueList.length == 0) {
+                        setState(() => syncing = false);
+                      }
+                    } else if (currentView == NotesReturnMode.DELETED) {
+                      List<Note> noteBackup = List.from(selectionList);
+
+                      for (int i = 0; i < selectionList.length; i++) {
+                        await NoteHelper.update(
+                          appInfo.notes
+                              .firstWhere((note) => note == selectionList[i])
+                              .copyWith(isDeleted: 0),
+                        );
+                      }
+
+                      selectionList.clear();
+
+                      appInfo.notes.forEach((item) {
+                        item.isSelected = false;
+                      });
+
+                      appInfo.notes = await NoteHelper.getNotes(
+                          appInfo.sortMode, currentView);
+
+                      setState(() {
+                        isSelectorVisible = false;
+                        syncing = true;
+                        queueList.add(1);
+                      });
+
+                      scaffoldKey.currentState.removeCurrentSnackBar();
+                      scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(noteBackup.length > 1
+                              ? locales.notes_restore_snackbar
+                              : locales.note_restore_snackbar),
+                          action: SnackBarAction(
+                            label: locales.undo,
+                            onPressed: () async {
+                              for (int i = 0; i < noteBackup.length; i++) {
+                                await NoteHelper.insert(
+                                    noteBackup[i].copyWith(isDeleted: 1));
+
+                                if (appInfo.userToken != null) {
+                                  await OnlineNoteHelper.save(
+                                      noteBackup[i].copyWith(isDeleted: 1));
+                                }
+                              }
+
+                              appInfo.notes = await NoteHelper.getNotes(
+                                  appInfo.sortMode, currentView);
+                              setState(() {
+                                syncing = true;
+                                queueList.add(1);
+                              });
+
+                              for (int i = 0; i < noteBackup.length; i++) {
+                                if (appInfo.userToken != null) {
+                                  await OnlineNoteHelper.save(
+                                      noteBackup[i].copyWith(isDeleted: 1));
+                                }
+                              }
+
+                              queueList.removeLast();
+                              if (queueList.length == 0) {
+                                setState(() => syncing = false);
+                              }
+                            },
+                          ),
+                        ),
+                      );
+
+                      for (int i = 0; i < noteBackup.length; i++) {
+                        if (appInfo.userToken != null) {
+                          await OnlineNoteHelper.save(
+                              noteBackup[i].copyWith(isDeleted: 0));
+                        }
+                      }
+
+                      queueList.removeLast();
+
+                      if (queueList.length == 0) {
+                        setState(() => syncing = false);
+                      }
+                    }
+                  },
                 ),
-                onPressed: () async {
-                  List<Note> noteBackup = List.from(selectionList);
-                  int selectionListLenght = selectionList.length;
+              ),
+              PopupMenuButton(
+                icon: Icon(OMIcons.moreVert, color: appInfo.mainColor),
+                onSelected: null,
+                itemBuilder: (context) {
+                  return [
+                    (selectionList.length == 1
+                        ? PopupMenuItem(
+                            enabled: false,
+                            child: ListTile(
+                              title: Text(locales.note_share),
+                              onTap: () {
+                                String shareText = "";
 
-                  for (int i = 0; i < selectionListLenght; i++) {
-                    await NoteHelper.update(
-                      appInfo.notes
-                          .firstWhere((note) => note == selectionList[i])
-                          .copyWith(isArchived: 1, isDeleted: 0, isStarred: 0),
-                    );
-                  }
+                                if (selectionList[0].title != "")
+                                  shareText += selectionList[0].title + "\n\n";
+                                shareText += selectionList[0].content;
 
-                  bool multipleItems = selectionListLenght > 1;
-                  selectionList.clear();
+                                Share.share(shareText);
+                                Navigator.pop(context);
 
-                  appInfo.notes.forEach((item) {
-                    item.isSelected = false;
-                  });
+                                appInfo.notes.forEach((item) {
+                                  item.isSelected = false;
+                                });
 
-                  appInfo.notes =
-                      await NoteHelper.getNotes(appInfo.sortMode, currentView);
+                                setState(() {
+                                  selectionList.clear();
+                                  isSelectorVisible = false;
+                                });
+                              },
+                            ),
+                          )
+                        : null),
+                    PopupMenuItem(
+                      enabled: false,
+                      child: ListTile(
+                        title: Text(locales.note_export),
+                        onTap: () async {
+                          Navigator.pop(context);
 
-                  setState(() {
-                    isSelectorVisible = false;
-                    syncing = true;
-                    queueList.add(1);
-                  });
+                          if (appInfo.storageStatus ==
+                              PermissionStatus.granted) {
+                            DateTime now = DateTime.now();
 
-                  scaffoldKey.currentState.removeCurrentSnackBar();
-                  scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(multipleItems
-                          ? locales.notes_archive_snackbar
-                          : locales.note_archive_snackbar),
-                      action: SnackBarAction(
-                        label: locales.undo,
-                        onPressed: () async {
-                          for (int i = 0; i < noteBackup.length; i++) {
-                            await NoteHelper.insert(
-                                noteBackup[i].copyWith(isArchived: 0));
+                            bool backupDirExists = await Directory(
+                                    '/storage/emulated/0/PotatoNotes/exported')
+                                .exists();
+
+                            if (!backupDirExists) {
+                              await Directory(
+                                      '/storage/emulated/0/PotatoNotes/exported')
+                                  .create(recursive: true);
+                            }
+
+                            for (int i = 0; i < selectionList.length; i++) {
+                              Note curNote = appInfo.notes.firstWhere(
+                                  (note) => note == selectionList[i]);
+
+                              String noteExportPath =
+                                  '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
+                                      DateFormat("dd-MM-yyyy_HH-mm")
+                                          .format(now) +
+                                      '_' +
+                                      curNote.id.toString() +
+                                      '.md';
+
+                              String noteContents = "";
+
+                              if (curNote.title != "")
+                                noteContents += "# " + curNote.title + "\n\n";
+
+                              noteContents += curNote.content;
+
+                              File(noteExportPath).writeAsString(noteContents);
+                            }
+
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text(locales.done),
+                              elevation: 3,
+                            ));
+                          } else {
+                            await PermissionHandler()
+                                .requestPermissions([PermissionGroup.storage]);
+                            appInfo.storageStatus = await PermissionHandler()
+                                .checkPermissionStatus(PermissionGroup.storage);
                           }
 
-                          appInfo.notes = await NoteHelper.getNotes(
-                              appInfo.sortMode, currentView);
-                          setState(() {
-                            syncing = true;
-                            queueList.add(1);
+                          appInfo.notes.forEach((item) {
+                            item.isSelected = false;
                           });
 
-                          for (int i = 0; i < noteBackup.length; i++) {
-                            if (appInfo.userToken != null) {
-                              await OnlineNoteHelper.save(
-                                  noteBackup[i].copyWith(isArchived: 0));
-                            }
-                          }
-
-                          queueList.removeLast();
-                          if (queueList.length == 0) {
-                            setState(() => syncing = false);
-                          }
+                          setState(() {
+                            selectionList.clear();
+                            isSelectorVisible = false;
+                          });
                         },
                       ),
                     ),
-                  );
+                    (selectionList.length == 1
+                        ? PopupMenuItem(
+                            enabled: false,
+                            child: ListTile(
+                              title: Text(locales.note_pinToNotifs),
+                              enabled: !appInfo.notificationsIdList
+                                  .contains(selectionList[0].id.toString()),
+                              onTap: () async {
+                                appInfo.notificationsIdList
+                                    .add(selectionList[0].id.toString());
+                                await FlutterLocalNotificationsPlugin().show(
+                                    int.parse(appInfo.notificationsIdList.last),
+                                    selectionList[0].title != ""
+                                        ? selectionList[0].title
+                                        : "Pinned note",
+                                    selectionList[0].content,
+                                    NotificationDetails(
+                                        AndroidNotificationDetails(
+                                          '0',
+                                          'note_pinned_notifications',
+                                          'idk',
+                                          priority: Priority.High,
+                                          playSound: true,
+                                          importance: Importance.High,
+                                          ongoing: true,
+                                        ),
+                                        IOSNotificationDetails()),
+                                    payload: selectionList[0].id.toString());
+                                Navigator.pop(context);
 
-                  for (int i = 0; i < noteBackup.length; i++) {
-                    if (appInfo.userToken != null) {
-                      await OnlineNoteHelper.save(noteBackup[i]
-                          .copyWith(isArchived: 1, isDeleted: 0, isStarred: 0));
-                    }
-                  }
+                                appInfo.notes.forEach((item) {
+                                  item.isSelected = false;
+                                });
 
-                  queueList.removeLast();
-                  if (queueList.length == 0) {
-                    setState(() => syncing = false);
-                  }
+                                setState(() {
+                                  selectionList.clear();
+                                  isSelectorVisible = false;
+                                });
+                              },
+                            ),
+                          )
+                        : null),
+                  ];
                 },
               ),
-            ),
-            Visibility(
-              visible: currentView != NotesReturnMode.NORMAL,
-              child: IconButton(
-                icon: Icon(
-                  OMIcons.settingsBackupRestore,
-                ),
-                onPressed: () async {
-                  if (currentView == NotesReturnMode.ARCHIVED) {
-                    List<Note> noteBackup = List.from(selectionList);
-
-                    for (int i = 0; i < selectionList.length; i++) {
-                      await NoteHelper.update(
-                        appInfo.notes
-                            .firstWhere((note) => note == selectionList[i])
-                            .copyWith(isArchived: 0),
-                      );
-                    }
-
-                    selectionList.clear();
-
-                    appInfo.notes.forEach((item) {
-                      item.isSelected = false;
-                    });
-
-                    appInfo.notes = await NoteHelper.getNotes(
-                        appInfo.sortMode, currentView);
-
-                    setState(() {
-                      isSelectorVisible = false;
-                      syncing = true;
-                      queueList.add(1);
-                    });
-
-                    scaffoldKey.currentState.removeCurrentSnackBar();
-                    scaffoldKey.currentState.showSnackBar(
-                      SnackBar(
-                        content: Text(noteBackup.length > 1
-                            ? locales.notes_removeFromArchive_snackbar
-                            : locales.note_removeFromArchive_snackbar),
-                        action: SnackBarAction(
-                          label: locales.undo,
-                          onPressed: () async {
-                            for (int i = 0; i < noteBackup.length; i++) {
-                              await NoteHelper.insert(
-                                  noteBackup[i].copyWith(isArchived: 1));
-                            }
-
-                            appInfo.notes = await NoteHelper.getNotes(
-                                appInfo.sortMode, currentView);
-                            setState(() {
-                              syncing = true;
-                              queueList.add(1);
-                            });
-
-                            for (int i = 0; i < noteBackup.length; i++) {
-                              if (appInfo.userToken != null) {
-                                await OnlineNoteHelper.save(
-                                    noteBackup[i].copyWith(isArchived: 1));
-                              }
-                            }
-
-                            queueList.removeLast();
-                            if (queueList.length == 0) {
-                              setState(() => syncing = false);
-                            }
-                          },
-                        ),
-                      ),
-                    );
-
-                    for (int i = 0; i < noteBackup.length; i++) {
-                      if (appInfo.userToken != null) {
-                        await OnlineNoteHelper.save(
-                            noteBackup[i].copyWith(isArchived: 0));
-                      }
-                    }
-
-                    queueList.removeLast();
-
-                    if (queueList.length == 0) {
-                      setState(() => syncing = false);
-                    }
-                  } else if (currentView == NotesReturnMode.DELETED) {
-                    List<Note> noteBackup = List.from(selectionList);
-
-                    for (int i = 0; i < selectionList.length; i++) {
-                      await NoteHelper.update(
-                        appInfo.notes
-                            .firstWhere((note) => note == selectionList[i])
-                            .copyWith(isDeleted: 0),
-                      );
-                    }
-
-                    selectionList.clear();
-
-                    appInfo.notes.forEach((item) {
-                      item.isSelected = false;
-                    });
-
-                    appInfo.notes = await NoteHelper.getNotes(
-                        appInfo.sortMode, currentView);
-
-                    setState(() {
-                      isSelectorVisible = false;
-                      syncing = true;
-                      queueList.add(1);
-                    });
-
-                    scaffoldKey.currentState.removeCurrentSnackBar();
-                    scaffoldKey.currentState.showSnackBar(
-                      SnackBar(
-                        content: Text(noteBackup.length > 1
-                            ? locales.notes_restore_snackbar
-                            : locales.note_restore_snackbar),
-                        action: SnackBarAction(
-                          label: locales.undo,
-                          onPressed: () async {
-                            for (int i = 0; i < noteBackup.length; i++) {
-                              await NoteHelper.insert(
-                                  noteBackup[i].copyWith(isDeleted: 1));
-
-                              if (appInfo.userToken != null) {
-                                await OnlineNoteHelper.save(
-                                    noteBackup[i].copyWith(isDeleted: 1));
-                              }
-                            }
-
-                            appInfo.notes = await NoteHelper.getNotes(
-                                appInfo.sortMode, currentView);
-                            setState(() {
-                              syncing = true;
-                              queueList.add(1);
-                            });
-
-                            for (int i = 0; i < noteBackup.length; i++) {
-                              if (appInfo.userToken != null) {
-                                await OnlineNoteHelper.save(
-                                    noteBackup[i].copyWith(isDeleted: 1));
-                              }
-                            }
-
-                            queueList.removeLast();
-                            if (queueList.length == 0) {
-                              setState(() => syncing = false);
-                            }
-                          },
-                        ),
-                      ),
-                    );
-
-                    for (int i = 0; i < noteBackup.length; i++) {
-                      if (appInfo.userToken != null) {
-                        await OnlineNoteHelper.save(
-                            noteBackup[i].copyWith(isDeleted: 0));
-                      }
-                    }
-
-                    queueList.removeLast();
-
-                    if (queueList.length == 0) {
-                      setState(() => syncing = false);
-                    }
-                  }
-                },
-              ),
-            ),
-            PopupMenuButton(
-              icon: Icon(OMIcons.moreVert, color: appInfo.mainColor),
-              onSelected: null,
-              itemBuilder: (context) {
-                return [
-                  (selectionList.length == 1
-                      ? PopupMenuItem(
-                          enabled: false,
-                          child: ListTile(
-                            title: Text(locales.note_share),
-                            onTap: () {
-                              String shareText = "";
-
-                              if (selectionList[0].title != "")
-                                shareText += selectionList[0].title + "\n\n";
-                              shareText += selectionList[0].content;
-
-                              Share.share(shareText);
-                              Navigator.pop(context);
-
-                              appInfo.notes.forEach((item) {
-                                item.isSelected = false;
-                              });
-
-                              setState(() {
-                                selectionList.clear();
-                                isSelectorVisible = false;
-                              });
-                            },
-                          ),
-                        )
-                      : null),
-                  PopupMenuItem(
-                    enabled: false,
-                    child: ListTile(
-                      title: Text(locales.note_export),
-                      onTap: () async {
-                        Navigator.pop(context);
-
-                        if (appInfo.storageStatus == PermissionStatus.granted) {
-                          DateTime now = DateTime.now();
-
-                          bool backupDirExists = await Directory(
-                                  '/storage/emulated/0/PotatoNotes/exported')
-                              .exists();
-
-                          if (!backupDirExists) {
-                            await Directory(
-                                    '/storage/emulated/0/PotatoNotes/exported')
-                                .create(recursive: true);
-                          }
-
-                          for (int i = 0; i < selectionList.length; i++) {
-                            Note curNote = appInfo.notes
-                                .firstWhere((note) => note == selectionList[i]);
-
-                            String noteExportPath =
-                                '/storage/emulated/0/PotatoNotes/exported/exported_note_' +
-                                    DateFormat("dd-MM-yyyy_HH-mm").format(now) +
-                                    '_' +
-                                    curNote.id.toString() +
-                                    '.md';
-
-                            String noteContents = "";
-
-                            if (curNote.title != "")
-                              noteContents += "# " + curNote.title + "\n\n";
-
-                            noteContents += curNote.content;
-
-                            File(noteExportPath).writeAsString(noteContents);
-                          }
-
-                          scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text(locales.done),
-                            elevation: 3,
-                          ));
-                        } else {
-                          await PermissionHandler()
-                              .requestPermissions([PermissionGroup.storage]);
-                          appInfo.storageStatus = await PermissionHandler()
-                              .checkPermissionStatus(PermissionGroup.storage);
-                        }
-
-                        appInfo.notes.forEach((item) {
-                          item.isSelected = false;
-                        });
-
-                        setState(() {
-                          selectionList.clear();
-                          isSelectorVisible = false;
-                        });
-                      },
-                    ),
-                  ),
-                  (selectionList.length == 1
-                      ? PopupMenuItem(
-                          enabled: false,
-                          child: ListTile(
-                            title: Text(locales.note_pinToNotifs),
-                            enabled: !appInfo.notificationsIdList
-                                .contains(selectionList[0].id.toString()),
-                            onTap: () async {
-                              appInfo.notificationsIdList
-                                  .add(selectionList[0].id.toString());
-                              await FlutterLocalNotificationsPlugin().show(
-                                  int.parse(appInfo.notificationsIdList.last),
-                                  selectionList[0].title != ""
-                                      ? selectionList[0].title
-                                      : "Pinned note",
-                                  selectionList[0].content,
-                                  NotificationDetails(
-                                      AndroidNotificationDetails(
-                                        '0',
-                                        'note_pinned_notifications',
-                                        'idk',
-                                        priority: Priority.High,
-                                        playSound: true,
-                                        importance: Importance.High,
-                                        ongoing: true,
-                                      ),
-                                      IOSNotificationDetails()),
-                                  payload: selectionList[0].id.toString());
-                              Navigator.pop(context);
-
-                              appInfo.notes.forEach((item) {
-                                item.isSelected = false;
-                              });
-
-                              setState(() {
-                                selectionList.clear();
-                                isSelectorVisible = false;
-                              });
-                            },
-                          ),
-                        )
-                      : null),
-                ];
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -1448,7 +1505,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           locales.notesMainPageRoute_starred,
           style: TextStyle(
               fontSize: 14.0,
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+              color: HSLColor.fromColor(
+                      Theme.of(context).textTheme.headline6.color)
                   .withAlpha(0.4)
                   .toColor()),
         ),
@@ -1474,7 +1532,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           locales.notesMainPageRoute_other,
           style: TextStyle(
               fontSize: 14.0,
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+              color: HSLColor.fromColor(
+                      Theme.of(context).textTheme.headline6.color)
                   .withAlpha(0.4)
                   .toColor()),
         ),
@@ -1511,7 +1570,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           locales.notesMainPageRoute_starred,
           style: TextStyle(
               fontSize: 14.0,
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+              color: HSLColor.fromColor(
+                      Theme.of(context).textTheme.headline6.color)
                   .withAlpha(0.4)
                   .toColor()),
         ),
@@ -1540,9 +1600,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
         child: Text(
           locales.notesMainPageRoute_other,
+          semanticsLabel: locales.notesMainPageRoute_other,
           style: TextStyle(
               fontSize: 14.0,
-              color: HSLColor.fromColor(Theme.of(context).textTheme.title.color)
+              color: HSLColor.fromColor(
+                      Theme.of(context).textTheme.headline6.color)
                   .withAlpha(0.4)
                   .toColor()),
         ),
@@ -1737,7 +1799,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       }
     }
 
-    Color cardColor = Theme.of(context).textTheme.title.color;
+    Color cardColor = Theme.of(context).textTheme.headline6.color;
 
     double cardBrightness = getAlphaFromTheme();
 
@@ -1762,7 +1824,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     Color getBorderColor() {
       if (appInfo.notes[index].isSelected) {
         if (appInfo.notes[index].color != null) {
-          return Theme.of(context).textTheme.title.color;
+          return Theme.of(context).textTheme.headline6.color;
         } else {
           return Theme.of(context).accentColor;
         }
@@ -1905,7 +1967,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .color
                                       .withAlpha(140)
                                   : getTextColorFromNoteColor(index, false),
@@ -1924,7 +1986,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .color
                                       .withAlpha(140)
                                   : getTextColorFromNoteColor(index, false),
@@ -1951,7 +2013,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                       color: appInfo.notes[index].color == null
                                           ? Theme.of(context)
                                               .textTheme
-                                              .title
+                                              .headline6
                                               .color
                                               .withAlpha(140)
                                           : getTextColorFromNoteColor(
@@ -1969,7 +2031,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                               appInfo.notes[index].color == null
                                                   ? Theme.of(context)
                                                       .textTheme
-                                                      .title
+                                                      .headline6
                                                       .color
                                                       .withAlpha(140)
                                                   : getTextColorFromNoteColor(
@@ -2014,7 +2076,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                           color: appInfo.notes[index].color == null
                               ? Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .headline6
                                   .color
                                   .withAlpha(220)
                               : getTextColorFromNoteColor(index, false),
@@ -2048,7 +2110,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                               color: appInfo.notes[index].color == null
                                   ? Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .color
                                       .withAlpha(180)
                                   : getTextColorFromNoteColor(index, true),
@@ -2118,11 +2180,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 : MediaQuery.of(context).size.width - 108,
             child: Text(
               uncheckedList[i].title,
+              semanticsLabel: uncheckedList[i].title + ": unchecked",
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
                   color: appInfo.notes[index].color == null
-                      ? Theme.of(context).textTheme.title.color
+                      ? Theme.of(context).textTheme.headline6.color
                       : getTextColorFromNoteColor(index, true)),
             ),
           )
@@ -2146,11 +2209,12 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 : MediaQuery.of(context).size.width - 108,
             child: Text(
               checkedList[i].title,
+              semanticsLabel: checkedList[i].title + ": checked",
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
                 color: appInfo.notes[index].color == null
-                    ? Theme.of(context).textTheme.title.color
+                    ? Theme.of(context).textTheme.headline6.color
                     : getTextColorFromNoteColor(index, true),
                 decoration: TextDecoration.lineThrough,
               ),
@@ -2159,33 +2223,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         ],
       ));
     }
-
-    /*if (checkedList.length != 0) {
-      widgets.add(Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Icon(Icons.add,
-              size: 14,
-              color: appInfo.notes[index].color == null
-                  ? Theme.of(context).iconTheme.color
-                  : getTextColorFromNoteColor(index, true)),
-          Container(
-            width: oneSideOnly
-                ? MediaQuery.of(context).size.width / 2 - 88
-                : MediaQuery.of(context).size.width - 108,
-            padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
-            child: Text(
-              checkedList.length.toString() +
-                  locales.notesMainPageRoute_note_list_selectedEntries,
-              style: TextStyle(
-                  color: appInfo.notes[index].color == null
-                      ? Theme.of(context).textTheme.title.color
-                      : getTextColorFromNoteColor(index, true)),
-            ),
-          )
-        ],
-      ));
-    }*/
 
     return widgets;
   }

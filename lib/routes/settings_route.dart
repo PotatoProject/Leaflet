@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -359,6 +358,7 @@ class _SettingsState extends State<SettingsRoute> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_back),
+                        tooltip: "Back",
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -463,7 +463,7 @@ class _SettingsState extends State<SettingsRoute> {
                         "PotatoProject 2019",
                         style: TextStyle(
                             color: HSLColor.fromColor(
-                                    Theme.of(context).textTheme.title.color)
+                                    Theme.of(context).textTheme.headline6.color)
                                 .withAlpha(0.5)
                                 .toColor(),
                             fontSize: 14),
@@ -473,7 +473,7 @@ class _SettingsState extends State<SettingsRoute> {
                         appInfo.version,
                         style: TextStyle(
                             color: HSLColor.fromColor(
-                                    Theme.of(context).textTheme.title.color)
+                                    Theme.of(context).textTheme.headline6.color)
                                 .withAlpha(0.5)
                                 .toColor(),
                             fontSize: 14),

@@ -80,6 +80,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                     IconButton(
                       iconSize: 28,
                       icon: Icon(Icons.chevron_left),
+                      tooltip: "Previous page",
                       onPressed: currentPage != 0
                           ? () => controller.previousPage(
                               curve: Curves.easeInOutCubic,
@@ -97,6 +98,9 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                       icon: currentPage != (totalPages - 1)
                           ? Icon(Icons.chevron_right)
                           : Icon(Icons.done),
+                      tooltip: currentPage != (totalPages - 1)
+                          ? "Next page"
+                          : "Exit setup",
                       onPressed: currentPage != (totalPages - 1)
                           ? () => controller.nextPage(
                               curve: Curves.easeInOutCubic,
@@ -153,7 +157,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                 fontSize: 20,
                 fontFamily: "GoogleSans",
                 color:
-                    Theme.of(context).textTheme.title.color.withOpacity(0.7)),
+                    Theme.of(context).textTheme.headline6.color.withOpacity(0.7)),
           ),
         ],
       );
@@ -503,8 +507,11 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: dots(context),
+    return Semantics(
+      label: "Page ${page + 1} of $totalPages",
+      child: Row(
+        children: dots(context),
+      ),
     );
   }
 

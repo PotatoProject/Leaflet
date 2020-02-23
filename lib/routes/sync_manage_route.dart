@@ -49,6 +49,7 @@ class _SyncManageRouteState extends State<SyncManageRoute> {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(Icons.refresh),
+                          tooltip: "Refresh login",
                           onPressed: () async {
                             Response info = await get(
                                 "https://potatosync.herokuapp.com/api/users/info",

@@ -49,7 +49,7 @@ class SyncInputField extends StatelessWidget {
                           ? Theme.of(context).accentColor
                           : Theme.of(context)
                               .textTheme
-                              .title
+                              .headline6
                               .color
                               .withAlpha(100),
                   width: 1.5,
@@ -64,6 +64,10 @@ class SyncInputField extends StatelessWidget {
                         obscureText: !showPassword,
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          hintText: title,
+                          hintStyle: TextStyle(
+                            color: Colors.transparent
+                          ),
                         ),
                         controller: controller,
                         autocorrect: false,

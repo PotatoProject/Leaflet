@@ -74,7 +74,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                         Icon(Icons.short_text,
                             size: 50.0,
                             color: HSLColor.fromColor(
-                                    Theme.of(context).textTheme.title.color)
+                                    Theme.of(context).textTheme.headline6.color)
                                 .withAlpha(0.4)
                                 .toColor()),
                         Text(
@@ -83,7 +83,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
                             color: HSLColor.fromColor(
-                                    Theme.of(context).textTheme.title.color)
+                                    Theme.of(context).textTheme.headline6.color)
                                 .withAlpha(0.4)
                                 .toColor(),
                           ),
@@ -101,7 +101,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                             Icon(Icons.search,
                                 size: 50.0,
                                 color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.title.color)
+                                        Theme.of(context).textTheme.headline6.color)
                                     .withAlpha(0.4)
                                     .toColor()),
                             Text(
@@ -110,7 +110,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
                                 color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.title.color)
+                                        Theme.of(context).textTheme.headline6.color)
                                     .withAlpha(0.4)
                                     .toColor(),
                               ),
@@ -135,6 +135,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_back),
+                        tooltip: "Back",
                         onPressed: () {
                           Navigator.pop(context);
                           setState(() => searchTerms = "");
@@ -164,6 +165,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                       ),
                       IconButton(
                         icon: Icon(Icons.filter_list),
+                        tooltip: "Search filters",
                         onPressed: () async {
                           showFiltersScrollableBottomSheet(context);
                         },
@@ -317,7 +319,7 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           circleSize: 24,
                           color: searchFilters.color == null
                               ? HSLColor.fromColor(
-                                      Theme.of(context).textTheme.title.color)
+                                      Theme.of(context).textTheme.headline6.color)
                                   .withAlpha(0.4)
                                   .toColor()
                               : Color(searchFilters.color),

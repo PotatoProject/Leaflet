@@ -194,7 +194,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           iconTheme:
               IconThemeData(color: getElementsColorBasedOnThemeContext()),
           textTheme: TextTheme(
-            subhead: Theme.of(context).textTheme.subhead.copyWith(
+            subtitle1: Theme.of(context).textTheme.subtitle1.copyWith(
                   color: getElementsColorBasedOnThemeContext(),
                 ),
           ),
@@ -245,7 +245,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       visible: noteImagePath != null,
                       child: noteImagePath == null
                           ? Container()
-                          : CachedNetworkImage(
+                          : Semantics(
+                            label: "Note image",
+                            child: CachedNetworkImage(
                               imageUrl: noteImagePath,
                               fit: BoxFit.fill,
                               fadeInDuration: Duration(milliseconds: 0),
@@ -271,6 +273,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                 );
                               },
                             ),
+                          ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -340,6 +343,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                         children: <Widget>[
                           IconButton(
                             icon: Icon(Icons.arrow_back),
+                            tooltip: "Back",
                             onPressed: () {
                               saveAndPop(true);
                             },
@@ -358,6 +362,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                     (notePin != null || notePassword != null)
                                 ? OMIcons.lock
                                 : OMIcons.removeRedEye),
+                            tooltip: "Note security options",
                             onPressed: () {
                               appInfo.hideContent = noteHideContent;
                               appInfo.useProtectionForNoteContent =
@@ -375,6 +380,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           ),
                           IconButton(
                             icon: Icon(Icons.add),
+                            tooltip: "Add element to note",
                             onPressed: () {
                               showAddElementScrollableBottomSheet(
                                   context,
@@ -389,6 +395,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                             icon: noteIsStarred == 0
                                 ? Icon(Icons.star_border)
                                 : Icon(Icons.star),
+                            tooltip: "Star note",
                             onPressed: () {
                               if (noteIsStarred == 0) {
                                 setState(() => noteIsStarred = 1);
@@ -545,6 +552,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                 )
                               : IconButton(
                                   icon: Icon(OMIcons.colorLens),
+                                  tooltip: "Change note color",
                                   onPressed: () async {
                                     int result = await showDialog(
                                         context: context,
@@ -1074,7 +1082,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 color: iconTextColor,
               ),
               textTheme: TextTheme(
-                subhead: Theme.of(context).textTheme.subhead.copyWith(
+                subtitle1: Theme.of(context).textTheme.subtitle1.copyWith(
                       color: iconTextColor,
                     ),
               ),
@@ -1165,7 +1173,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                   color: iconTextColor,
                 ),
                 textTheme: TextTheme(
-                  subhead: Theme.of(context).textTheme.subhead.copyWith(
+                  subtitle1: Theme.of(context).textTheme.subtitle1.copyWith(
                         color: iconTextColor,
                       ),
                 ),
@@ -1408,8 +1416,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width / 1.70,
+              Expanded(
                 child: TextField(
                   controller: controller,
                   obscureText: hideText,
@@ -1446,6 +1453,9 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                       ? Theme.of(context).iconTheme.color.withAlpha(120)
                       : Theme.of(context).iconTheme.color,
                 ),
+                tooltip: hideText
+                    ? "Show text"
+                    : "Hide text",
                 onPressed: () {
                   setState(() => hideText = !hideText);
                 },

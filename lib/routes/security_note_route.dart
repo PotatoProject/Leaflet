@@ -53,6 +53,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.arrow_back),
+                  tooltip: "Back",
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -212,6 +213,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.arrow_back),
+                  tooltip: "Back",
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -393,10 +395,10 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             height: 18,
             width: 18,
             decoration: BoxDecoration(
-                color: Theme.of(context).textTheme.title.color,
+                color: Theme.of(context).textTheme.headline6.color,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: Theme.of(context).textTheme.title.color,
+                    color: Theme.of(context).textTheme.headline6.color,
                     width: 1.5)),
           ),
         ));
@@ -420,6 +422,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
           vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 8),
       child: IconButton(
         iconSize: portrait ? 60 : 50,
+        tooltip: char,
         icon: Text(
           char,
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
@@ -454,6 +457,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
           vertical: portrait ? 16 : 6, horizontal: portrait ? 20 : 10),
       child: IconButton(
         iconSize: portrait ? 60 : 50,
+        tooltip: "Delete last digit",
         icon: Icon(
           Icons.keyboard_backspace,
           size: 30,

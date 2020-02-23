@@ -42,7 +42,7 @@ class _DrawState extends State<DrawScreen> {
       Colors.green,
       Colors.blue,
       Colors.amber,
-      Theme.of(context).textTheme.title.color
+      Theme.of(context).textTheme.headline6.color
     ];
 
     if (!firstTimeRunning) {
