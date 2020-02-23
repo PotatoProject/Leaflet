@@ -197,6 +197,25 @@ class _SettingsState extends State<SettingsRoute> {
                     },
                   ),
                 ),
+                ListTile(
+                  leading: Icon(OMIcons.language),
+                  title: Text("App language"),
+                  trailing: DropdownButton(
+                    value: appInfo.customLocale,
+                    underline: Container(),
+                    items: List.generate(AppInfoProvider.supportedLocales.length + 1, (index) {
+                      return DropdownMenuItem(
+                        child: Text(
+                          index == 0
+                              ? "System"
+                              : Locale(AppInfoProvider.supportedLocales[index - 1]).toLanguageTag()
+                        ),
+                        value: index - 1,
+                      );
+                    }),
+                    onChanged: (newLocale) => appInfo.customLocale = newLocale,
+                  ),
+                ),
                 ListLabelDivider(
                   label: locales.settingsRoute_gestures,
                 ),

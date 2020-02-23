@@ -38,6 +38,7 @@ class AppInfoProvider extends ChangeNotifier {
   List<String> _remindersNotifIdList = [];
   PermissionStatus _storageStatus = PermissionStatus.unknown;
   SortMode _sortMode = SortMode.ID;
+  int _customLocale = -1;
 
   String _userImage;
   String _userName = "";
@@ -71,6 +72,7 @@ class AppInfoProvider extends ChangeNotifier {
   List<String> get remindersNotifIdList => _remindersNotifIdList;
   PermissionStatus get storageStatus => _storageStatus;
   SortMode get sortMode => _sortMode;
+  int get customLocale => _customLocale;
 
   String get userImage => _userImage;
   String get userName => _userName;
@@ -194,6 +196,12 @@ class AppInfoProvider extends ChangeNotifier {
   set sortMode(SortMode sort) {
     _sortMode = sort;
     preferences.setSortMode(sort);
+    notifyListeners();
+  }
+
+  set customLocale(int newLocale) {
+    _customLocale = newLocale;
+    preferences.setCustomLocale(newLocale);
     notifyListeners();
   }
 

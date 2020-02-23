@@ -129,6 +129,14 @@ class Preferences {
     prefs.setInt('notes_sort_mode', sort == SortMode.ID ? 0 : 1);
   }
 
+  int getCustomLocale() {
+    return prefs.getInt('custom_locale') ?? -1;
+  }
+
+  void setCustomLocale(int newLocale) {
+    prefs.setInt('custom_locale', newLocale);
+  }
+
   String getUserImage() {
     return prefs.getString('user_image') ?? null;
   }

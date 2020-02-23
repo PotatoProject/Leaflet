@@ -165,6 +165,9 @@ class NotesRoot extends StatelessWidget {
           ),
           home: showWelcomeScreen ? WelcomeRoute() : NotesMainPageRoute(),
           debugShowCheckedModeBanner: false,
+          locale: appInfo.customLocale != -1
+              ? Locale(AppInfoProvider.supportedLocales[appInfo.customLocale])
+              : null,
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)
               : (appInfo.themeMode == 0
