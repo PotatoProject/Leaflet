@@ -43,7 +43,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   String noteContent = "";
   int noteIsStarred = 0;
   int noteDate = 0;
-  int noteColor;
+  int noteColor = 0;
   String noteImagePath;
   int noteIsList = 0;
   String noteListParseString;
@@ -60,7 +60,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     this.noteContent = note.content;
     this.noteIsStarred = note.isStarred ?? 0;
     this.noteDate = note.date;
-    this.noteColor = note.color;
+    this.noteColor = note.color ?? 0;
     this.noteImagePath = note.imagePath;
     this.noteIsList = note.isList ?? 0;
     this.noteListParseString = note.listParseString;
@@ -116,7 +116,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   Brightness getBarsColorFromNoteColor() {
     double noteColorBrightness =
-        Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]).computeLuminance();
+        Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"])
+            .computeLuminance();
 
     if (noteColorBrightness > 0.5) {
       return Brightness.dark;
@@ -249,7 +250,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       child: noteImagePath == null
                           ? Container()
                           : Semantics(
-                              label: "Note image",
+                              label: locales.semantics_modifyNotes_image,
                               child: CachedNetworkImage(
                                 imageUrl: noteImagePath,
                                 fit: BoxFit.fill,
@@ -337,7 +338,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 child: Material(
                   color: (noteColor ?? 0) == 0
                       ? Theme.of(context).scaffoldBackgroundColor
-                      : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
+                      : Color(
+                          NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
                   child: Container(
                     height: 60,
                     child: Padding(
@@ -346,7 +348,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                         children: <Widget>[
                           IconButton(
                             icon: Icon(Icons.arrow_back),
-                            tooltip: "Back",
+                            tooltip: locales.semantics_back,
                             onPressed: () {
                               saveAndPop(true);
                             },
@@ -365,7 +367,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                     (notePin != null || notePassword != null)
                                 ? OMIcons.lock
                                 : OMIcons.removeRedEye),
-                            tooltip: "Note security options",
+                            tooltip: locales.semantics_modifyNotes_security,
                             onPressed: () {
                               appInfo.hideContent = noteHideContent;
                               appInfo.useProtectionForNoteContent =
@@ -377,22 +379,22 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                   (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(NoteColors
-                                          .colorList(context)[noteColor ?? 0]["hex"]),
+                                      : Color(NoteColors.colorList(
+                                          context)[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
                           IconButton(
                             icon: Icon(Icons.add),
-                            tooltip: "Add element to note",
+                            tooltip: "Add element",
                             onPressed: () {
                               showAddElementScrollableBottomSheet(
                                   context,
                                   (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(NoteColors
-                                          .colorList(context)[noteColor ?? 0]["hex"]),
+                                      : Color(NoteColors.colorList(
+                                          context)[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -400,7 +402,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                             icon: noteIsStarred == 0
                                 ? Icon(Icons.star_border)
                                 : Icon(Icons.star),
-                            tooltip: "Star note",
+                            tooltip: noteIsStarred == 0
+                                ? locales.semantics_modifyNotes_star
+                                : locales.semantics_modifyNotes_unstar,
                             onPressed: () {
                               if (noteIsStarred == 0) {
                                 setState(() => noteIsStarred = 1);
@@ -552,7 +556,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                 )
                               : IconButton(
                                   icon: Icon(OMIcons.colorLens),
-                                  tooltip: "Change note color",
+                                  tooltip:
+                                      locales.modifyNotesRoute_color_change,
                                   onPressed: () async {
                                     int result = await showDialog(
                                         context: context,
@@ -563,8 +568,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                         });
 
                                     setState(() {
-                                      if (result != null)
-                                        noteColor = result;
+                                      if (result != null) noteColor = result;
                                     });
                                   },
                                 ),
@@ -709,9 +713,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               border: InputBorder.none,
               hintText: locales.modifyNotesRoute_list_entry),
           textCapitalization: TextCapitalization.sentences,
-          onChanged: (text) {
-            //entryTextController.selection = TextSelection.collapsed(offset: text.length);
-          },
           onSubmitted: (text) {
             checkList.add(ListPair(checkValue: 0, title: text));
             textControllers.add(TextEditingController(text: text));
@@ -1417,7 +1418,9 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                       ? Theme.of(context).iconTheme.color.withAlpha(120)
                       : Theme.of(context).iconTheme.color,
                 ),
-                tooltip: hideText ? "Show text" : "Hide text",
+                tooltip: hideText
+                    ? locales.semantics_showText
+                    : locales.semantics_hideText,
                 onPressed: () {
                   setState(() => hideText = !hideText);
                 },

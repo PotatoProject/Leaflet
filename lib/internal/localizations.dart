@@ -31,6 +31,7 @@ class AppLocalizations {
   String get save => Intl.message("Save", name: "save");
   String get confirm => Intl.message("Confirm", name: "confirm");
   String get cancel => Intl.message("Cancel", name: "cancel");
+  String get close => Intl.message("Close", name: "close");
   String get remove => Intl.message("Remove", name: "remove");
   String get reset => Intl.message("Reset", name: "reset");
   String get undo => Intl.message("Undo", name: "undo");
@@ -43,6 +44,11 @@ class AppLocalizations {
   String get black => Intl.message("Black", name: "black");
 
   /* -- Semantics related -- */
+
+  String get semantics_back => Intl.message(
+        "Back",
+        name: "semantics_back",
+      );
 
   String get semantics_color_beige => Intl.message(
         "Beige",
@@ -83,7 +89,136 @@ class AppLocalizations {
         "Yellow",
         name: "semantics_color_yellow",
       );
-  
+
+  String get semantics_hideText => Intl.message(
+        "Hide text",
+        name: "semantics_hideText",
+      );
+
+  String get semantics_modifyNotes_addElement => Intl.message(
+        "Add element",
+        name: "semantics_modifyNotes_addElement",
+      );
+
+  String get semantics_modifyNotes_image => Intl.message(
+        "Note image",
+        name: "semantics_modifyNotes_image",
+      );
+
+  String get semantics_modifyNotes_security => Intl.message(
+        "Security options",
+        name: "semantics_modifyNotes_security",
+      );
+
+  String get semantics_modifyNotes_star => Intl.message(
+        "Star note",
+        name: "semantics_modifyNotes_star",
+      );
+
+  String get semantics_modifyNotes_unstar => Intl.message(
+        "Unstar note",
+        name: "semantics_modifyNotes_unstar",
+      );
+
+  String get semantics_notesMainPage_addNote => Intl.message(
+        "Add new note",
+        name: "semantics_notesMainPage_addNote",
+      );
+
+  String get semantics_notesMainPage_archive => Intl.message(
+        "Archive selected notes",
+        name: "semantics_notesMainPage_archive",
+      );
+
+  String get semantics_notesMainPage_changeColor => Intl.message(
+        "Change notes color",
+        name: "semantics_notesMainPage_changeColor",
+      );
+
+  String get semantics_notesMainPage_closeSelector => Intl.message(
+        "Close selector",
+        name: "semantics_notesMainPage_closeSelector",
+      );
+
+  String get semantics_notesMainPage_delete => Intl.message(
+        "Delete selected notes",
+        name: "semantics_notesMainPage_delete",
+      );
+
+  String get semantics_notesMainPage_favouritesAdd => Intl.message(
+        "Add notes to favourites",
+        name: "semantics_notesMainPage_favouritesAdd",
+      );
+
+  String get semantics_notesMainPage_favouritesRemove => Intl.message(
+        "Remove notes to favourites",
+        name: "semantics_notesMainPage_favouritesRemove",
+      );
+
+  String get semantics_notesMainPage_grid => Intl.message(
+        "Switch to grid view",
+        name: "semantics_notesMainPage_grid",
+      );
+
+  String get semantics_notesMainPage_list => Intl.message(
+        "Switch to list view",
+        name: "semantics_notesMainPage_list",
+      );
+
+  String get semantics_notesMainPage_openMenu => Intl.message(
+        "Open menu",
+        name: "semantics_notesMainPage_openMenu",
+      );
+
+  String get semantics_notesMainPage_restore => Intl.message(
+        "Restore selected notes",
+        name: "semantics_notesMainPage_restore",
+      );
+
+  String get semantics_notesMainPage_search => Intl.message(
+        "Search notes",
+        name: "semantics_notesMainPage_search",
+      );
+
+  String semantics_notesMainPage_noteSelected(String noteSelected) =>
+      Intl.message(
+        "$noteSelected note selected",
+        name: "semantics_notesMainPage_noteSelected",
+        args: [noteSelected],
+      );
+
+  String semantics_notesMainPage_notesSelected(String noteSelected) =>
+      Intl.message(
+        "$noteSelected notes selected",
+        name: "semantics_notesMainPage_notesSelected",
+        args: [noteSelected],
+      );
+
+  String get semantics_showText => Intl.message(
+        "Show text",
+        name: "semantics_showText",
+      );
+
+  String get semantics_welcome_next => Intl.message(
+        "Next page",
+        name: "semantics_welcome_next",
+      );
+
+  String semantics_welcome_pageIndicator(int currentPage, int totalPages) =>
+      Intl.message("Page $currentPage of $totalPages",
+          name: "semantics_welcome_pageIndicator",
+          args: [currentPage, totalPages]);
+
+  String get semantics_welcome_previous => Intl.message(
+        "Previous page",
+        name: "semantics_welcome_previous",
+      );
+
+  String get semantics_welcome_exit => Intl.message(
+        "Exit setup",
+        name: "semantics_welcome_exit",
+      );
+
   /* -- NotesMainPageRoute related -- */
 
   String get notesMainPageRoute_noNotes => Intl.message(
@@ -349,6 +484,16 @@ class AppLocalizations {
         name: "settingsRoute_themes_customAccentColor",
       );
 
+  String get settingsRoute_themes_appLanguage => Intl.message(
+        "App language",
+        name: "settingsRoute_themes_appLanguage",
+      );
+
+  String get settingsRoute_themes_systemDefault => Intl.message(
+        "System",
+        name: "settingsRoute_themes_systemDefault",
+      );
+
   String get settingsRoute_gestures => Intl.message(
         "Gestures",
         name: "settingsRoute_gestures",
@@ -429,6 +574,11 @@ class AppLocalizations {
   String get settingsRoute_dev_idLabels => Intl.message(
         "Show id labels",
         name: "settingsRoute_dev_idLabels",
+      );
+
+  String get settingsRoute_dev_welcomeScreen => Intl.message(
+        "Show welcome screen on next startup",
+        name: "settingsRoute_dev_welcomeScreen",
       );
 
   /* -- SearchNotesRoute related -- */

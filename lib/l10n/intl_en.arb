@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-15T20:28:44.174789",
+  "@@last_modified": "2020-02-24T17:02:26.750824",
   "home": "Home",
   "@home": {
     "type": "text",
@@ -35,6 +35,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "close": "Close",
+  "@close": {
+    "type": "text",
+    "placeholders": {}
+  },
   "remove": "Remove",
   "@remove": {
     "type": "text",
@@ -67,6 +72,183 @@
   },
   "black": "Black",
   "@black": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_back": "Back",
+  "@semantics_back": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_beige": "Beige",
+  "@semantics_color_beige": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_blue": "Blue",
+  "@semantics_color_blue": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_green": "Green",
+  "@semantics_color_green": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_none": "None",
+  "@semantics_color_none": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_orange": "Orange",
+  "@semantics_color_orange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_pink": "Pink",
+  "@semantics_color_pink": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_purple": "Purple",
+  "@semantics_color_purple": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_color_yellow": "Yellow",
+  "@semantics_color_yellow": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_hideText": "Hide text",
+  "@semantics_hideText": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_modifyNotes_addElement": "Add element",
+  "@semantics_modifyNotes_addElement": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_modifyNotes_image": "Note image",
+  "@semantics_modifyNotes_image": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_modifyNotes_security": "Security options",
+  "@semantics_modifyNotes_security": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_modifyNotes_star": "Star note",
+  "@semantics_modifyNotes_star": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_modifyNotes_unstar": "Unstar note",
+  "@semantics_modifyNotes_unstar": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_addNote": "Add new note",
+  "@semantics_notesMainPage_addNote": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_archive": "Archive selected notes",
+  "@semantics_notesMainPage_archive": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_changeColor": "Change notes color",
+  "@semantics_notesMainPage_changeColor": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_closeSelector": "Close selector",
+  "@semantics_notesMainPage_closeSelector": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_delete": "Delete selected notes",
+  "@semantics_notesMainPage_delete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_favouritesAdd": "Add notes to favourites",
+  "@semantics_notesMainPage_favouritesAdd": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_favouritesRemove": "Remove notes to favourites",
+  "@semantics_notesMainPage_favouritesRemove": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_grid": "Switch to grid view",
+  "@semantics_notesMainPage_grid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_list": "Switch to list view",
+  "@semantics_notesMainPage_list": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_openMenu": "Open menu",
+  "@semantics_notesMainPage_openMenu": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_restore": "Restore selected notes",
+  "@semantics_notesMainPage_restore": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_search": "Search notes",
+  "@semantics_notesMainPage_search": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_notesMainPage_noteSelected": "{noteSelected} note selected",
+  "@semantics_notesMainPage_noteSelected": {
+    "type": "text",
+    "placeholders": {
+      "noteSelected": {}
+    }
+  },
+  "semantics_notesMainPage_notesSelected": "{noteSelected} notes selected",
+  "@semantics_notesMainPage_notesSelected": {
+    "type": "text",
+    "placeholders": {
+      "noteSelected": {}
+    }
+  },
+  "semantics_showText": "Show text",
+  "@semantics_showText": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_welcome_next": "Next page",
+  "@semantics_welcome_next": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_welcome_pageIndicator": "Page {currentPage} of {totalPages}",
+  "@semantics_welcome_pageIndicator": {
+    "type": "text",
+    "placeholders": {
+      "currentPage": {},
+      "totalPages": {}
+    }
+  },
+  "semantics_welcome_previous": "Previous page",
+  "@semantics_welcome_previous": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_welcome_exit": "Exit setup",
+  "@semantics_welcome_exit": {
     "type": "text",
     "placeholders": {}
   },
@@ -326,6 +508,16 @@
     "type": "text",
     "placeholders": {}
   },
+  "settingsRoute_themes_appLanguage": "App language",
+  "@settingsRoute_themes_appLanguage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_themes_systemDefault": "System",
+  "@settingsRoute_themes_systemDefault": {
+    "type": "text",
+    "placeholders": {}
+  },
   "settingsRoute_gestures": "Gestures",
   "@settingsRoute_gestures": {
     "type": "text",
@@ -405,6 +597,11 @@
   },
   "settingsRoute_dev_idLabels": "Show id labels",
   "@settingsRoute_dev_idLabels": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsRoute_dev_welcomeScreen": "Show welcome screen on next startup",
+  "@settingsRoute_dev_welcomeScreen": {
     "type": "text",
     "placeholders": {}
   },

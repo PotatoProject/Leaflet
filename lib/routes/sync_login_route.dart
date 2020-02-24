@@ -122,8 +122,8 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                                     : Theme.of(context).disabledColor,
                                 icon: Icon(Icons.remove_red_eye),
                                 tooltip: showPassword
-                                    ? "Hide password"
-                                    : "Show password",
+                                    ? locales.semantics_hideText
+                                    : locales.semantics_showText,
                                 onPressed: () {
                                   setState(() => showPassword = !showPassword);
                                 },
@@ -408,7 +408,7 @@ class _SyncLoginRouteState extends State<SyncLoginRoute> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_back),
-                        tooltip: "Back",
+                        tooltip: locales.semantics_back,
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],

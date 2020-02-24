@@ -80,7 +80,7 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                     IconButton(
                       iconSize: 28,
                       icon: Icon(Icons.chevron_left),
-                      tooltip: "Previous page",
+                      tooltip: locales.semantics_welcome_previous,
                       onPressed: currentPage != 0
                           ? () => controller.previousPage(
                               curve: Curves.easeInOutCubic,
@@ -99,8 +99,8 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                           ? Icon(Icons.chevron_right)
                           : Icon(Icons.done),
                       tooltip: currentPage != (totalPages - 1)
-                          ? "Next page"
-                          : "Exit setup",
+                          ? locales.semantics_welcome_next
+                          : locales.semantics_welcome_exit,
                       onPressed: currentPage != (totalPages - 1)
                           ? () => controller.nextPage(
                               curve: Curves.easeInOutCubic,
@@ -358,6 +358,26 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
                   },
                   activeColor: appInfo.mainColor,
                 ),
+                ListTile(
+                  leading: Icon(OMIcons.language),
+                  title: Text(locales.settingsRoute_themes_appLanguage),
+                  trailing: DropdownButton(
+                    value: appInfo.customLocale,
+                    underline: Container(),
+                    items: List.generate(
+                        AppInfoProvider.supportedLocales.length + 1, (index) {
+                      return DropdownMenuItem(
+                        child: Text(index == 0
+                            ? locales.settingsRoute_themes_systemDefault
+                            : Locale(
+                                    AppInfoProvider.supportedLocales[index - 1])
+                                .toLanguageTag()),
+                        value: index - 1,
+                      );
+                    }),
+                    onChanged: (newLocale) => appInfo.customLocale = newLocale,
+                  ),
+                ),
               ],
             ),
           ),
@@ -510,8 +530,10 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locales = AppLocalizations.of(context);
+
     return Semantics(
-      label: "Page ${page + 1} of $totalPages",
+      label: locales.semantics_welcome_pageIndicator(page + 1, totalPages),
       child: Row(
         children: dots(context),
       ),

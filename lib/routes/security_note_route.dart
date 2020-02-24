@@ -53,7 +53,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.arrow_back),
-                  tooltip: "Back",
+                  tooltip: locales.semantics_back,
                   onPressed: () {
                     Navigator.pop(context);
                   },

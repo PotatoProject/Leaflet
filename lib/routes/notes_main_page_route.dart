@@ -40,7 +40,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   AnimationController controller;
 
   static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  static GlobalKey<RefreshIndicatorState> indicatorKey = GlobalKey<RefreshIndicatorState>();
+  static GlobalKey<RefreshIndicatorState> indicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   List<Note> selectionList = List<Note>();
   bool isSelectorVisible = false;
@@ -428,7 +429,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   child: Icon(Icons.add),
                   elevation: 2,
                   backgroundColor: Theme.of(context).accentColor,
-                  tooltip: "Add new note",
+                  tooltip: locales.semantics_notesMainPage_addNote,
                   onPressed: () {
                     _addNoteCaller(context);
                     selectionList.clear();
@@ -465,7 +466,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               IconButton(
                 icon: Icon(CommunityMaterialIcons.menu),
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                tooltip: "Open menu",
+                tooltip: locales.semantics_notesMainPage_openMenu,
                 onPressed: () => showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -642,7 +643,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
               IconButton(
                 icon: Icon(Icons.search),
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                tooltip: "Search notes",
+                tooltip: locales.semantics_notesMainPage_search,
                 onPressed: () => _searchNoteCaller(context, appInfo.notes,
                     Theme.of(context).scaffoldBackgroundColor),
               ),
@@ -652,8 +653,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     : Icon(CommunityMaterialIcons.view_dashboard_outline),
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 tooltip: appInfo.isGridView
-                    ? "Switch to list view"
-                    : "Switch to grid view",
+                    ? locales.semantics_notesMainPage_list
+                    : locales.semantics_notesMainPage_grid,
                 onPressed: () async {
                   if (controller.status == AnimationStatus.completed) {
                     await controller.animateTo(0);
@@ -788,7 +789,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   Icons.close,
                   color: appInfo.mainColor,
                 ),
-                tooltip: "Close selector",
+                tooltip: locales.semantics_notesMainPage_closeSelector,
                 onPressed: () async {
                   selectionList.clear();
                   appInfo.notes.forEach((item) {
@@ -801,8 +802,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
                   selectionList.length.toString(),
-                  semanticsLabel:
-                      selectionList.length.toString() + " note selected",
+                  semanticsLabel: selectionList.length > 1
+                      ? locales.semantics_notesMainPage_notesSelected(
+                          selectionList.length.toString())
+                      : locales.semantics_notesMainPage_noteSelected(
+                          selectionList.length.toString()),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -829,8 +833,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                   .toList()
                                   .length !=
                               0
-                          ? "Add notes to favourites"
-                          : "Remove notes from favourites",
+                          ? locales.semantics_notesMainPage_favouritesAdd
+                          : locales.semantics_notesMainPage_favouritesRemove,
                       onPressed: () async {
                         bool starOrNot = selectionList
                                 .where((note) => note.isStarred == 0)
@@ -918,7 +922,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       icon: Icon(
                         OMIcons.colorLens,
                       ),
-                      tooltip: "Change note color",
+                      tooltip: locales.semantics_notesMainPage_changeColor,
                       onPressed: () async {
                         int result = await showDialog(
                             context: context,
@@ -927,7 +931,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                 noteColor: 0,
                               );
                             });
-                          
+
                         print(result);
 
                         List<Note> selectionListCopy = List.from(selectionList);
@@ -973,7 +977,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 icon: Icon(
                   OMIcons.delete,
                 ),
-                tooltip: "Delete selected notes",
+                tooltip: locales.semantics_notesMainPage_delete,
                 onPressed: () async {
                   if (currentView != NotesReturnMode.DELETED) {
                     List<Note> noteBackup = List.from(selectionList);
@@ -1123,7 +1127,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   icon: Icon(
                     OMIcons.archive,
                   ),
-                  tooltip: "Archive selected notes",
+                  tooltip: locales.semantics_notesMainPage_archive,
                   onPressed: () async {
                     List<Note> noteBackup = List.from(selectionList);
                     int selectionListLenght = selectionList.length;
@@ -1210,7 +1214,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                   icon: Icon(
                     OMIcons.settingsBackupRestore,
                   ),
-                  tooltip: "Restore selected notes",
+                  tooltip: locales.semantics_notesMainPage_restore,
                   onPressed: () async {
                     if (currentView == NotesReturnMode.ARCHIVED) {
                       List<Note> noteBackup = List.from(selectionList);

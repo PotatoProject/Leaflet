@@ -24,6 +24,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "${method} length can\'t be less than ${minLength}";
 
+  static m4(noteSelected) => "${noteSelected} note selected";
+
+  static m5(noteSelected) => "${noteSelected} notes selected";
+
+  static m6(currentPage, totalPages) => "Page ${currentPage} of ${totalPages}";
+
   static m2(path) => "Backup located at: ${path}";
 
   static m3(username) => "Logged in as: ${username}";
@@ -34,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("Black"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("Choose action"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "dark": MessageLookupByLibrary.simpleMessage("Dark"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
@@ -171,6 +178,63 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Wrong password"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("Wrong PIN"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Back"),
+        "semantics_color_beige": MessageLookupByLibrary.simpleMessage("Beige"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Blue"),
+        "semantics_color_green": MessageLookupByLibrary.simpleMessage("Green"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("None"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Orange"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Pink"),
+        "semantics_color_purple":
+            MessageLookupByLibrary.simpleMessage("Purple"),
+        "semantics_color_yellow":
+            MessageLookupByLibrary.simpleMessage("Yellow"),
+        "semantics_hideText": MessageLookupByLibrary.simpleMessage("Hide text"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Add element"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Note image"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Security options"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Star note"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Unstar note"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Add new note"),
+        "semantics_notesMainPage_archive":
+            MessageLookupByLibrary.simpleMessage("Archive selected notes"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Change notes color"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Close selector"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Delete selected notes"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage("Add notes to favourites"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage("Remove notes to favourites"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Switch to grid view"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Switch to list view"),
+        "semantics_notesMainPage_noteSelected": m4,
+        "semantics_notesMainPage_notesSelected": m5,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Open menu"),
+        "semantics_notesMainPage_restore":
+            MessageLookupByLibrary.simpleMessage("Restore selected notes"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Search notes"),
+        "semantics_showText": MessageLookupByLibrary.simpleMessage("Show text"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Exit setup"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("Next page"),
+        "semantics_welcome_pageIndicator": m6,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Previous page"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("About"),
         "settingsRoute_about_potatonotes":
             MessageLookupByLibrary.simpleMessage("About PotatoNotes"),
@@ -199,11 +263,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Developer options"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("Show id labels"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Show welcome screen on next startup"),
         "settingsRoute_gestures":
             MessageLookupByLibrary.simpleMessage("Gestures"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage("Double tap note to star"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Themes"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("App language"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("App theme"),
         "settingsRoute_themes_customAccentColor":
@@ -212,6 +280,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Follow system theme"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("Auto dark theme mode"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("System"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage("Use custom accent color"),
         "settingsRoute_title": MessageLookupByLibrary.simpleMessage("Settings"),

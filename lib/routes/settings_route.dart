@@ -199,7 +199,7 @@ class _SettingsState extends State<SettingsRoute> {
                 ),
                 ListTile(
                   leading: Icon(OMIcons.language),
-                  title: Text("App language"),
+                  title: Text(locales.settingsRoute_themes_appLanguage),
                   trailing: DropdownButton(
                     value: appInfo.customLocale,
                     underline: Container(),
@@ -207,7 +207,7 @@ class _SettingsState extends State<SettingsRoute> {
                         AppInfoProvider.supportedLocales.length + 1, (index) {
                       return DropdownMenuItem(
                         child: Text(index == 0
-                            ? "System"
+                            ? locales.settingsRoute_themes_systemDefault
                             : Locale(
                                     AppInfoProvider.supportedLocales[index - 1])
                                 .toLanguageTag()),
@@ -359,7 +359,7 @@ class _SettingsState extends State<SettingsRoute> {
                 SwitchListTile(
                   activeColor: Theme.of(context).accentColor,
                   secondary: Icon(OMIcons.removeRedEye),
-                  title: Text("Show welcome screen on next startup"),
+                  title: Text(locales.settingsRoute_dev_welcomeScreen),
                   value: !appInfo.welcomeScreenSeen,
                   onChanged: (value) => appInfo.welcomeScreenSeen = !value,
                 ),
@@ -378,7 +378,7 @@ class _SettingsState extends State<SettingsRoute> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_back),
-                        tooltip: "Back",
+                        tooltip: locales.semantics_back,
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -505,7 +505,7 @@ class _SettingsState extends State<SettingsRoute> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     FlatButton(
-                      child: Text("Close"),
+                      child: Text(locales.close),
                       onPressed: () => Navigator.pop(context),
                       textColor: appInfo.mainColor,
                       hoverColor: appInfo.mainColor,
