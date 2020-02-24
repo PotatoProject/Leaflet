@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,6 +22,7 @@ import 'package:potato_notes/routes/settings_route.dart';
 import 'package:potato_notes/routes/sync_login_route.dart';
 import 'package:potato_notes/routes/sync_manage_route.dart';
 import 'package:potato_notes/routes/user_info_route.dart';
+import 'package:potato_notes/ui/note_view.dart';
 import 'package:potato_notes/ui/user_info_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -778,7 +778,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
                   selectionList.length.toString(),
-                  semanticsLabel: selectionList.length.toString() + " note selected",
+                  semanticsLabel:
+                      selectionList.length.toString() + " note selected",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -793,16 +794,18 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                     IconButton(
                       icon: Icon(
                         selectionList
-                              .where((note) => note.isStarred == 0)
-                              .toList()
-                              .length != 0
+                                    .where((note) => note.isStarred == 0)
+                                    .toList()
+                                    .length !=
+                                0
                             ? Icons.star
                             : Icons.star_border,
                       ),
                       tooltip: selectionList
-                              .where((note) => note.isStarred == 0)
-                              .toList()
-                              .length != 0
+                                  .where((note) => note.isStarred == 0)
+                                  .toList()
+                                  .length !=
+                              0
                           ? "Add notes to favourites"
                           : "Remove notes from favourites",
                       onPressed: () async {
@@ -1492,6 +1495,44 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     );
   }
 
+  Widget noteViewBuilder(int index) {
+    Note note = appInfo.notes[index];
+
+    return NoteView(
+      note: note,
+      onTap: () {
+        if (isSelectorVisible) {
+          setState(() {
+            note.isSelected = !note.isSelected;
+            if (note.isSelected) {
+              selectionList.add(note);
+            } else {
+              selectionList.remove(note);
+              if (selectionList.length == 0) {
+                isSelectorVisible = false;
+              }
+            }
+          });
+        } else {
+          _editNoteCaller(context, note, index.toString());
+        }
+      },
+      onDoubleTap: isSelectorVisible
+          ? null
+          : appInfo.isQuickStarredGestureOn
+              ? () => toggleStarNote(index)
+              : null,
+      onLongTap: () {
+        if (!isSelectorVisible)
+          setState(() {
+            isSelectorVisible = true;
+            note.isSelected = true;
+            selectionList.add(note);
+          });
+      },
+    );
+  }
+
   List<Widget> noteListBuilder(BuildContext context) {
     final appInfo = Provider.of<AppInfoProvider>(context);
 
@@ -1515,14 +1556,14 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       for (int i = 0; i < appInfo.notes.length; i++) {
         int bIndex = (appInfo.notes.length - 1) - i;
         if (appInfo.notes[bIndex].isStarred == 1) {
-          pinnedNotes.add(noteListItem(context, bIndex, false));
+          pinnedNotes.add(noteViewBuilder(bIndex));
         }
       }
 
       for (int i = 0; i < appInfo.notes.length; i++) {
         int bIndex = (appInfo.notes.length - 1) - i;
         if (appInfo.notes[bIndex].isStarred == 0) {
-          normalNotes.add(noteListItem(context, bIndex, false));
+          normalNotes.add(noteViewBuilder(bIndex));
         }
       }
 
@@ -1647,9 +1688,9 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     for (int i = 0; i < indexes.length; i++) {
       int bIndex = (indexes.length - 1) - i;
       if (bIndex.isEven) {
-        columnOne.add(noteListItem(context, indexes[bIndex], true));
+        columnOne.add(noteViewBuilder(indexes[bIndex]));
       } else {
-        columnTwo.add(noteListItem(context, indexes[bIndex], true));
+        columnTwo.add(noteViewBuilder(indexes[bIndex]));
       }
     }
 
@@ -1787,445 +1828,6 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
   void _settingsCaller(BuildContext context) async => await Navigator.push(
       context, MaterialPageRoute(builder: (context) => SettingsRoute()));
-
-  Widget noteListItem(BuildContext context, int index, bool oneSideOnly) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
-    double getAlphaFromTheme() {
-      if (Theme.of(context).brightness == Brightness.light) {
-        return 0.1;
-      } else {
-        return 0.2;
-      }
-    }
-
-    Color cardColor = Theme.of(context).textTheme.headline6.color;
-
-    double cardBrightness = getAlphaFromTheme();
-
-    Color borderColor =
-        HSLColor.fromColor(cardColor).withAlpha(cardBrightness).toColor();
-
-    Color getTextColorFromNoteColor(int index, bool isContent) {
-      double noteColorBrightness =
-          Color(appInfo.notes[index].color).computeLuminance();
-      Color contentWhite =
-          HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
-      Color contentBlack =
-          HSLColor.fromColor(Colors.black).withAlpha(0.7).toColor();
-
-      if (noteColorBrightness > 0.5) {
-        return isContent ? contentBlack : Colors.black;
-      } else {
-        return isContent ? contentWhite : Colors.white;
-      }
-    }
-
-    Color getBorderColor() {
-      if (appInfo.notes[index].isSelected) {
-        if (appInfo.notes[index].color != null) {
-          return Theme.of(context).textTheme.headline6.color;
-        } else {
-          return Theme.of(context).accentColor;
-        }
-      } else if (appInfo.notes[index].color != null) {
-        return Colors.transparent;
-      } else {
-        if (Theme.of(context).brightness == Brightness.light) {
-          return borderColor;
-        } else {
-          if (appInfo.followSystemTheme) {
-            if (MediaQuery.of(context).platformBrightness == Brightness.dark) {
-              return Colors.transparent;
-            } else {
-              return borderColor;
-            }
-          } else {
-            if (appInfo.themeMode != 0) {
-              return Colors.transparent;
-            } else {
-              return borderColor;
-            }
-          }
-        }
-      }
-    }
-
-    return Hero(
-      createRectTween: (Rect begin, Rect end) {
-        return MaterialRectArcTween(begin: begin, end: end);
-      },
-      tag: "note" + index.toString(),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(color: getBorderColor(), width: 2),
-        ),
-        color: appInfo.notes[index].color == null
-            ? (Theme.of(context).brightness == Brightness.light
-                ? null
-                : Theme.of(context).scaffoldBackgroundColor)
-            : Color(appInfo.notes[index].color),
-        child: InkWell(
-            borderRadius: BorderRadius.circular(12.0),
-            onTap: () {
-              if (isSelectorVisible) {
-                setState(() {
-                  appInfo.notes[index].isSelected =
-                      !appInfo.notes[index].isSelected;
-                  if (appInfo.notes[index].isSelected) {
-                    selectionList.add(appInfo.notes[index]);
-                  } else {
-                    selectionList.remove(appInfo.notes[index]);
-                    if (selectionList.length == 0) {
-                      isSelectorVisible = false;
-                    }
-                  }
-                });
-              } else {
-                _editNoteCaller(
-                    context, appInfo.notes[index], index.toString());
-              }
-            },
-            onDoubleTap: isSelectorVisible
-                ? null
-                : appInfo.isQuickStarredGestureOn
-                    ? () => toggleStarNote(index)
-                    : null,
-            onLongPress: () {
-              if (!isSelectorVisible)
-                setState(() {
-                  isSelectorVisible = true;
-                  appInfo.notes[index].isSelected = true;
-                  selectionList.add(appInfo.notes[index]);
-                });
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Visibility(
-                  visible: appInfo.notes[index].imagePath != null,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12)),
-                      child: appInfo.notes[index].imagePath == null
-                          ? Container()
-                          : Center(
-                              child: CachedNetworkImage(
-                                imageUrl: appInfo.notes[index].imagePath,
-                                fit: BoxFit.fill,
-                                fadeInDuration: Duration(milliseconds: 0),
-                                fadeOutDuration: Duration(milliseconds: 0),
-                                placeholder: (context, url) {
-                                  return ControlledAnimation(
-                                    playback: Playback.MIRROR,
-                                    tween: Tween<double>(begin: 0.2, end: 1),
-                                    duration: Duration(milliseconds: 400),
-                                    builder: (context, animation) {
-                                      return Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 40),
-                                        child: Opacity(
-                                          opacity: animation,
-                                          child: Icon(
-                                            Icons.image,
-                                            size: 56,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            )),
-                ),
-                Visibility(
-                  visible: appInfo.notes[index].hideContent == 1 ||
-                      appInfo.notes[index].reminders != null,
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(
-                        20,
-                        14,
-                        20,
-                        appInfo.notes[index].hideContent == 1 &&
-                                appInfo.notes[index].title == ""
-                            ? 14
-                            : 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Visibility(
-                          visible: appInfo.notes[index].reminders != null,
-                          child: Center(
-                            child: Icon(
-                              Icons.alarm,
-                              size: 12,
-                              color: appInfo.notes[index].color == null
-                                  ? Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .color
-                                      .withAlpha(140)
-                                  : getTextColorFromNoteColor(index, false),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: appInfo.notes[index].hideContent == 1,
-                          child: Center(
-                            child: Icon(
-                              appInfo.notes[index].pin != null ||
-                                      appInfo.notes[index].password != null
-                                  ? Icons.lock
-                                  : Icons.remove_red_eye,
-                              size: 12,
-                              color: appInfo.notes[index].color == null
-                                  ? Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .color
-                                      .withAlpha(140)
-                                  : getTextColorFromNoteColor(index, false),
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: (appInfo.notes[index].hideContent == 1 &&
-                                  appInfo.notes[index].reminders == null) ||
-                              (appInfo.notes[index].hideContent == 0 &&
-                                  appInfo.notes[index].reminders != null),
-                          child: Container(
-                            padding: EdgeInsets.only(left: 8),
-                            width: oneSideOnly
-                                ? MediaQuery.of(context).size.width / 2 - 80
-                                : MediaQuery.of(context).size.width - 100,
-                            child: (appInfo.notes[index].hideContent == 1 &&
-                                    appInfo.notes[index].reminders == null)
-                                ? Text(
-                                    locales
-                                        .notesMainPageRoute_note_hiddenContent,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: appInfo.notes[index].color == null
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .headline6
-                                              .color
-                                              .withAlpha(140)
-                                          : getTextColorFromNoteColor(
-                                              index, false),
-                                    ),
-                                  )
-                                : (appInfo.notes[index].hideContent == 0 &&
-                                        appInfo.notes[index].reminders != null)
-                                    ? Text(
-                                        locales
-                                            .notesMainPageRoute_note_remindersSet,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color:
-                                              appInfo.notes[index].color == null
-                                                  ? Theme.of(context)
-                                                      .textTheme
-                                                      .headline6
-                                                      .color
-                                                      .withAlpha(140)
-                                                  : getTextColorFromNoteColor(
-                                                      index, false),
-                                        ),
-                                      )
-                                    : Container(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: appInfo.devShowIdLabels,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(20, 14, 20, 0),
-                    child: Text(
-                      "Note id: " + appInfo.notes[index].id.toString(),
-                      style: TextStyle(
-                        color: appInfo.notes[index].color == null
-                            ? null
-                            : getTextColorFromNoteColor(index, false),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: appInfo.notes[index].title != "",
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(20, 14, 20, 0),
-                    width: oneSideOnly
-                        ? MediaQuery.of(context).size.width / 2
-                        : MediaQuery.of(context).size.width,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        appInfo.notes[index].title ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 4,
-                        style: TextStyle(
-                          color: appInfo.notes[index].color == null
-                              ? Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .color
-                                  .withAlpha(220)
-                              : getTextColorFromNoteColor(index, false),
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: appInfo.notes[index].hideContent == 0,
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(
-                        20, appInfo.notes[index].title == "" ? 14 : 0, 20, 14),
-                    width: oneSideOnly
-                        ? MediaQuery.of(context).size.width / 2
-                        : MediaQuery.of(context).size.width,
-                    child: appInfo.notes[index].isList == 1
-                        ? Column(
-                            children: generateListWidgets(index, oneSideOnly),
-                          )
-                        : Text(
-                            appInfo.notes[index].content ?? "",
-                            overflow: TextOverflow.ellipsis,
-                            textWidthBasis: TextWidthBasis.parent,
-                            maxLines: 11,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w400,
-                              color: appInfo.notes[index].color == null
-                                  ? Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .color
-                                      .withAlpha(180)
-                                  : getTextColorFromNoteColor(index, true),
-                            ),
-                          ),
-                  ),
-                ),
-              ],
-            )),
-      ),
-    );
-  }
-
-  List<Widget> generateListWidgets(int index, bool oneSideOnly) {
-    List<Widget> widgets = List<Widget>();
-    List<ListPair> checkedList = List<ListPair>();
-    List<ListPair> uncheckedList = List<ListPair>();
-
-    Color getTextColorFromNoteColor(int index, bool isContent) {
-      double noteColorBrightness =
-          Color(appInfo.notes[index].color).computeLuminance();
-      Color contentWhite =
-          HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
-      Color contentBlack =
-          HSLColor.fromColor(Colors.black).withAlpha(0.7).toColor();
-
-      if (noteColorBrightness > 0.5) {
-        return isContent ? contentBlack : Colors.black;
-      } else {
-        return isContent ? contentWhite : Colors.white;
-      }
-    }
-
-    List<String> rawList = appInfo.notes[index].listParseString.split("\'..\'");
-
-    for (int i = 0; i < rawList.length; i++) {
-      List<dynamic> rawStrings = rawList[i].split("\',,\'");
-
-      int checkValue = rawStrings[0] == "" ? 0 : int.parse(rawStrings[0]);
-
-      if (checkValue == 1) {
-        try {
-          checkedList
-              .add(ListPair(checkValue: checkValue, title: rawStrings[1]));
-        } on RangeError {}
-      } else {
-        try {
-          uncheckedList
-              .add(ListPair(checkValue: checkValue, title: rawStrings[1]));
-        } on RangeError {}
-      }
-    }
-
-    for (int i = 0; i < uncheckedList.length; i++) {
-      widgets.add(Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Icon(Icons.check_box_outline_blank,
-              size: 14,
-              color: appInfo.notes[index].color == null
-                  ? Theme.of(context).iconTheme.color
-                  : getTextColorFromNoteColor(index, true)),
-          Container(
-            padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
-            width: oneSideOnly
-                ? MediaQuery.of(context).size.width / 2 - 88
-                : MediaQuery.of(context).size.width - 108,
-            child: Text(
-              uncheckedList[i].title,
-              semanticsLabel: uncheckedList[i].title + ": unchecked",
-              overflow: TextOverflow.ellipsis,
-              textWidthBasis: TextWidthBasis.parent,
-              style: TextStyle(
-                  color: appInfo.notes[index].color == null
-                      ? Theme.of(context).textTheme.headline6.color
-                      : getTextColorFromNoteColor(index, true)),
-            ),
-          )
-        ],
-      ));
-    }
-
-    for (int i = 0; i < checkedList.length; i++) {
-      widgets.add(Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Icon(Icons.check_box,
-              size: 14,
-              color: appInfo.notes[index].color == null
-                  ? Theme.of(context).iconTheme.color
-                  : getTextColorFromNoteColor(index, true)),
-          Container(
-            padding: EdgeInsets.only(left: 6, top: 4, bottom: 4),
-            width: oneSideOnly
-                ? MediaQuery.of(context).size.width / 2 - 88
-                : MediaQuery.of(context).size.width - 108,
-            child: Text(
-              checkedList[i].title,
-              semanticsLabel: checkedList[i].title + ": checked",
-              overflow: TextOverflow.ellipsis,
-              textWidthBasis: TextWidthBasis.parent,
-              style: TextStyle(
-                color: appInfo.notes[index].color == null
-                    ? Theme.of(context).textTheme.headline6.color
-                    : getTextColorFromNoteColor(index, true),
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-          )
-        ],
-      ));
-    }
-
-    return widgets;
-  }
 
   void toggleStarNote(int index) async {
     if (appInfo.notes[index].isStarred == 0) {
