@@ -536,14 +536,15 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                     NotificationDetails(
                                                         AndroidNotificationDetails(
                                                           '0',
-                                                          'note_pinned_notifications',
-                                                          'idk',
+                                                          'Pinned notes',
+                                                          'This channel contains the notes that you pin',
                                                           priority:
                                                               Priority.High,
                                                           playSound: true,
                                                           importance:
                                                               Importance.High,
                                                           ongoing: true,
+                                                          color: appInfo.mainColor,
                                                         ),
                                                         IOSNotificationDetails()),
                                                     payload: noteId.toString());
@@ -1043,11 +1044,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                             NotificationDetails(
                                 AndroidNotificationDetails(
                                   '1',
-                                  'note_reminders_notifications',
-                                  'Reminders channel',
+                                  'Reminders',
+                                  'This channel contains remainders that you set',
                                   priority: Priority.High,
                                   playSound: true,
                                   importance: Importance.High,
+                                  color: appInfo.mainColor,
                                 ),
                                 IOSNotificationDetails()),
                             payload: noteId.toString() +

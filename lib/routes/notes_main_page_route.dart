@@ -69,7 +69,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           FlutterLocalNotificationsPlugin();
 
       AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings('@mipmap/ic_launcher_fg');
+          AndroidInitializationSettings('@drawable/notes_icon');
       IOSInitializationSettings initializationSettingsIOS =
           IOSInitializationSettings();
       InitializationSettings initializationSettings =
@@ -1497,6 +1497,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                           playSound: true,
                                           importance: Importance.High,
                                           ongoing: true,
+                                          color: Theme.of(context).accentColor,
                                         ),
                                         IOSNotificationDetails()),
                                     payload: selectionList[0].id.toString());
