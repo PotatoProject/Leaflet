@@ -7,15 +7,15 @@ import 'package:path/path.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/search_filters.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/routes/welcome_route.dart';
 import 'package:potato_notes/ui/no_glow_scroll_behavior.dart';
 import 'package:potato_notes/ui/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'internal/methods.dart';
 
 Future<Database> database;
 AppInfoProvider appInfo;
@@ -111,17 +111,17 @@ class NotesRoot extends StatelessWidget {
         if (appInfo.followSystemTheme) {
           switch(appInfo.systemBrightness) {
             case Brightness.light:
-              changeSystemBarsColors(
+              Utils.changeSystemBarsColors(
                   CustomThemes.light(appInfo).scaffoldBackgroundColor,
                   Brightness.dark);
               break;
             case Brightness.dark:
               if(appInfo.darkThemeMode == 0) {
-                changeSystemBarsColors(
+                Utils.changeSystemBarsColors(
                     CustomThemes.dark(appInfo).scaffoldBackgroundColor,
                     Brightness.light);
               } else {
-                changeSystemBarsColors(
+                Utils.changeSystemBarsColors(
                     CustomThemes.black(appInfo).scaffoldBackgroundColor,
                     Brightness.light);
               }
@@ -130,17 +130,17 @@ class NotesRoot extends StatelessWidget {
         } else {
           switch(appInfo.themeMode) {
             case 0:
-              changeSystemBarsColors(
+              Utils.changeSystemBarsColors(
                   CustomThemes.light(appInfo).scaffoldBackgroundColor,
                   Brightness.dark);
               break;
             case 1:
-              changeSystemBarsColors(
+              Utils.changeSystemBarsColors(
                   CustomThemes.dark(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
               break;
             case 2:
-              changeSystemBarsColors(
+              Utils.changeSystemBarsColors(
                   CustomThemes.black(appInfo).scaffoldBackgroundColor,
                   Brightness.light);
               break;

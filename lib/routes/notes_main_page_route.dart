@@ -13,9 +13,9 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/search_filters.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 import 'package:potato_notes/routes/search_notes_route.dart';
 import 'package:potato_notes/routes/security_note_route.dart';
@@ -509,7 +509,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                     ? Brightness.light
                                     : Brightness.dark;
 
-                            changeSystemBarsColors(
+                            Utils.changeSystemBarsColors(
                                 Theme.of(context).scaffoldBackgroundColor,
                                 systemBarsIconBrightness);
                           }
@@ -558,7 +558,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                     ? Brightness.light
                                     : Brightness.dark;
 
-                            changeSystemBarsColors(
+                            Utils.changeSystemBarsColors(
                                 Theme.of(context).scaffoldBackgroundColor,
                                 systemBarsIconBrightness);
                           }
@@ -606,7 +606,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                     ? Brightness.light
                                     : Brightness.dark;
 
-                            changeSystemBarsColors(
+                            Utils.changeSystemBarsColors(
                                 Theme.of(context).scaffoldBackgroundColor,
                                 systemBarsIconBrightness);
                           }
@@ -1708,7 +1708,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
             ? Brightness.light
             : Brightness.dark;
 
-    changeSystemBarsColors(
+    Utils.changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
     if (result == true) {
@@ -1749,7 +1749,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
             ? Brightness.light
             : Brightness.dark;
 
-    changeSystemBarsColors(
+    Utils.changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
     List<Note> list = await NoteHelper.getNotes(appInfo.sortMode, currentView);
@@ -2243,26 +2243,5 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
           await NoteHelper.getNotes(appInfo.sortMode, currentView);
       setState(() => appInfo.notes = list);
     }
-  }
-}
-
-class AutoSyncExecutor {
-  Timer timer;
-  bool isRunning = false;
-
-  AutoSyncExecutor(int timeout, Function(Timer) callback) {
-    timer = Timer.periodic(Duration(seconds: timeout), callback);
-    isRunning = true;
-  }
-
-  stop() {
-    timer.cancel();
-    isRunning = false;
-  }
-
-  update(int timeout, Function(Timer) callback) {
-    timer.cancel();
-    timer = Timer.periodic(Duration(seconds: timeout), callback);
-    isRunning = true;
   }
 }

@@ -16,8 +16,8 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -173,7 +173,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     final appInfo = Provider.of<AppInfoProvider>(context);
 
-    changeSystemBarsColors(
+    Utils.changeSystemBarsColors(
         noteColor == null
             ? Theme.of(context).scaffoldBackgroundColor
             : Color(noteColor),

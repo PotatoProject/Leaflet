@@ -7,7 +7,7 @@ import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/sync_register_route.dart';
-import 'package:potato_notes/ui/custom_icons_icons.dart';
+import 'package:potato_notes/ui/custom_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
 import 'package:provider/provider.dart';
 

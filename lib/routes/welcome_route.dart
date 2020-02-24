@@ -5,7 +5,7 @@ import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/routes/notes_main_page_route.dart';
 import 'package:potato_notes/routes/sync_login_route.dart';
-import 'package:potato_notes/ui/custom_icons_icons.dart';
+import 'package:potato_notes/ui/custom_icons.dart';
 import 'package:potato_notes/ui/rgb_color_picker.dart';
 import 'package:provider/provider.dart';
 

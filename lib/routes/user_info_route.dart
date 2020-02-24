@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/ui/custom_icons_icons.dart';
+import 'package:potato_notes/ui/custom_icons.dart';
 import 'package:potato_notes/ui/user_info_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations/controlled_animation.dart';

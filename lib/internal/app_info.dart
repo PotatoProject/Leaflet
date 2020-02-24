@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/preferences.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   Preferences preferences;

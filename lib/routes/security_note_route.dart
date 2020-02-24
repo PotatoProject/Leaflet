@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/modify_notes_route.dart';
 
 class SecurityNoteRoute extends StatefulWidget {
@@ -39,7 +39,7 @@ class _SecurityNoteRouteState extends State<SecurityNoteRoute> {
             ? Brightness.light
             : Brightness.dark;
 
-    changeSystemBarsColors(
+    Utils.changeSystemBarsColors(
         Theme.of(context).scaffoldBackgroundColor, systemBarsIconBrightness);
 
     List<Widget> portraitContent = <Widget>[

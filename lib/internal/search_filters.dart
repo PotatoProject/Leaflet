@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/methods.dart';
+import 'package:potato_notes/internal/preferences.dart';
 
 class SearchFiltersProvider extends ChangeNotifier {
   Preferences preferences;

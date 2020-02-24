@@ -9,8 +9,8 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
-import 'package:potato_notes/internal/methods.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/easteregg_route.dart';
 import 'package:potato_notes/ui/list_label_divider.dart';
 import 'package:potato_notes/ui/rgb_color_picker.dart';
@@ -343,7 +343,7 @@ class _SettingsState extends State<SettingsRoute> {
                   leading: Icon(OMIcons.code),
                   title: Text(locales.settingsRoute_about_sourceCode),
                   onTap: () =>
-                      launchUrl("https://github.com/HrX03/PotatoNotes"),
+                      Utils.launchUrl("https://github.com/HrX03/PotatoNotes"),
                 ),
                 ListLabelDivider(
                   label: locales.settingsRoute_dev,

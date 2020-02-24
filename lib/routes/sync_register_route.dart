@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/ui/custom_icons_icons.dart';
+import 'package:potato_notes/ui/custom_icons.dart';
 import 'package:potato_notes/ui/sync_inputfield.dart';
 
 class SyncRegisterRoute extends StatefulWidget {
