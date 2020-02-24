@@ -45,7 +45,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
           decoration: BoxDecoration(
               color: currentColor,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12), topRight: Radius.circular(8))),
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12))),
           margin: EdgeInsets.only(bottom: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,

@@ -22,6 +22,7 @@ import 'package:potato_notes/routes/settings_route.dart';
 import 'package:potato_notes/routes/sync_login_route.dart';
 import 'package:potato_notes/routes/sync_manage_route.dart';
 import 'package:potato_notes/routes/user_info_route.dart';
+import 'package:potato_notes/ui/note_color_selector.dart';
 import 'package:potato_notes/ui/note_view.dart';
 import 'package:potato_notes/ui/user_info_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -127,8 +128,21 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   }
 
   void initNotes() async {
-    appInfo.notes =
+    List<Note> notes =
         await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+    
+    if(notes.any((note) => note.color == null || (note.color ?? 0) >= NoteColors.colorList.length)) {
+      List<Note> notesToSanitize = notes.where((note) => note.color == null || (note.color ?? 0) >= NoteColors.colorList.length).toList();
+
+      for(int i = 0; i < notesToSanitize.length; i++) {
+        await NoteHelper.update(notesToSanitize[i].copyWith(color: 0));
+        if(appInfo.userToken != null)
+          await OnlineNoteHelper.save(notesToSanitize[i].copyWith(color: 0));
+      }
+    }
+
+    appInfo.notes =
+      await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
   }
 
   void updateAutosyncExecutor(bool execute, int timeout) {

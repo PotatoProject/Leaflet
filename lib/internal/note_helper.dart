@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:potato_notes/main.dart';
+import 'package:potato_notes/ui/note_color_selector.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NoteHelper {

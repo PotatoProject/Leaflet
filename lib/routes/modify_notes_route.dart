@@ -8,7 +8,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +17,7 @@ import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/ui/note_color_selector.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -115,7 +115,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Brightness getBarsColorFromNoteColor() {
-    double noteColorBrightness = Color(noteColor).computeLuminance();
+    double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
 
     if (noteColorBrightness > 0.5) {
       return Brightness.dark;
@@ -154,12 +154,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     Color getElementsColorBasedOnThemeContext() {
       Color colorToReturn;
-      if (noteColor == null) {
+      if ((noteColor ?? 0) == 0) {
         Theme.of(context).brightness == Brightness.dark
             ? colorToReturn = Colors.white
             : colorToReturn = Colors.black;
       } else {
-        double noteColorBrightness = Color(noteColor).computeLuminance();
+        double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
 
         if (noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
@@ -174,10 +174,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     final appInfo = Provider.of<AppInfoProvider>(context);
 
     Utils.changeSystemBarsColors(
-        noteColor == null
+        (noteColor ?? 0) == 0
             ? Theme.of(context).scaffoldBackgroundColor
-            : Color(noteColor),
-        noteColor == null
+            : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+        (noteColor ?? 0) == 0
             ? systemBarsIconBrightness
             : getBarsColorFromNoteColor());
 
@@ -210,25 +210,25 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               HSLColor.fromColor(getElementsColorBasedOnThemeContext())
                   .withAlpha(0.5)
                   .toColor(),
-          scaffoldBackgroundColor: noteColor == null
+          scaffoldBackgroundColor: (noteColor ?? 0) == 0
               ? Theme.of(context).cardColor
-              : Color(noteColor),
+              : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
           accentColor: getElementsColorBasedOnThemeContext(),
           dividerColor:
               HSLColor.fromColor(getElementsColorBasedOnThemeContext())
                   .withAlpha(0.12)
                   .toColor(),
           bottomSheetTheme: BottomSheetThemeData(
-            backgroundColor: noteColor == null
+            backgroundColor: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(noteColor),
+                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
           ),
           buttonTheme: ButtonThemeData(
               textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
           popupMenuTheme: PopupMenuThemeData(
-            color: noteColor == null
+            color: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(noteColor),
+                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
           ),
         ),
         child: Scaffold(
@@ -332,9 +332,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Material(
-                  color: noteColor == null
+                  color: (noteColor ?? 0) == 0
                       ? Theme.of(context).scaffoldBackgroundColor
-                      : Color(noteColor),
+                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
                   child: Container(
                     height: 60,
                     child: Padding(
@@ -371,10 +371,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                               appInfo.password = notePassword != null;
                               showHideContentScrollableBottomSheet(
                                   context,
-                                  noteColor == null
+                                  (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(noteColor),
+                                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -384,10 +384,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                             onPressed: () {
                               showAddElementScrollableBottomSheet(
                                   context,
-                                  noteColor == null
+                                  (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(noteColor),
+                                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -594,12 +594,12 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     Color getElementsColorBasedOnThemeContext() {
       Color colorToReturn;
-      if (noteColor == null) {
+      if ((noteColor ?? 0) == 0) {
         Theme.of(context).brightness == Brightness.dark
             ? colorToReturn = Colors.white
             : colorToReturn = Colors.black;
       } else {
-        double noteColorBrightness = Color(noteColor).computeLuminance();
+        double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
 
         if (noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
@@ -637,9 +637,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             activeColor: noteColor != null
                 ? getElementsColorBasedOnThemeContext()
                 : appInfo.mainColor,
-            checkColor: noteColor == null
+            checkColor: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(noteColor),
+                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
             value: checkList[i].checkValue == 1,
             onChanged: (value) {
               if (value) {
@@ -1285,84 +1285,45 @@ class NoteColorDialog extends StatefulWidget {
 }
 
 class _NoteColorDialogState extends State<NoteColorDialog> {
-  List<ColorSwatch<dynamic>> colors = <ColorSwatch>[
-    MaterialColor(0x00000000, {500: Colors.transparent}),
-    MaterialColor(0xFFFFB182, {500: Color(0xFFFFB182)}),
-    MaterialColor(0xFFFFF18E, {500: Color(0xFFFFF18E)}),
-    MaterialColor(0xFFFFE8D1, {500: Color(0xFFFFE8D1)}),
-    MaterialColor(0xFFD8D4F2, {500: Color(0xFFD8D4F2)}),
-    MaterialColor(0xFFB9D6F2, {500: Color(0xFFB9D6F2)}),
-    MaterialColor(0xFFFFB8D1, {500: Color(0xFFFFB8D1)}),
-    MaterialColor(0xFFBCFFC3, {500: Color(0xFFBCFFC3)}),
-  ];
-
-  Color currentColor;
-
-  @override
-  void initState() {
-    super.initState();
-    currentColor =
-        widget.noteColor == null ? Colors.transparent : Color(widget.noteColor);
-  }
+  int currentColor = 0;
 
   @override
   Widget build(BuildContext context) {
+    AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
     AppLocalizations locales = AppLocalizations.of(context);
+
     return AlertDialog(
-      title: Text(
-        locales.modifyNotesRoute_color_dialogTitle,
-        style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
-        ),
-      ),
-      content: MaterialColorPicker(
-        colors: colors,
-        allowShades: false,
-        circleSize: 70.0,
-        onMainColorChange: (color) {
+      contentPadding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      semanticLabel: locales.modifyNotesRoute_color_dialogTitle,
+      content: NoteColorSelector(
+        selectedColor: currentColor,
+        onColorSelect: (color) {
           setState(() => currentColor = color);
         },
-        selectedColor: currentColor,
       ),
       actions: <Widget>[
         FlatButton(
           child: Text(
             locales.cancel,
             style: TextStyle(
-                color: currentColor.toString() ==
-                            "MaterialColor(primary value: Color(0x00000000))" ||
-                        currentColor.toString() == "Color(0x00000000)"
-                    ? null
-                    : currentColor),
+              color: appInfo.mainColor,
+            ),
           ),
           onPressed: () => Navigator.pop(context),
-          textColor: Theme.of(context).accentColor,
+          textColor: appInfo.mainColor,
         ),
         FlatButton(
           child: Text(
             locales.confirm,
             style: TextStyle(
-                color: currentColor.toString() ==
-                            "MaterialColor(primary value: Color(0x00000000))" ||
-                        currentColor.toString() == "Color(0x00000000)"
-                    ? null
-                    : currentColor),
+              color: appInfo.mainColor,
+            ),
           ),
           onPressed: () {
-            int returnValue;
-
-            if (currentColor.toString() ==
-                    "MaterialColor(primary value: Color(0x00000000))" ||
-                currentColor.toString() == "Color(0x00000000)") {
-              returnValue = 0;
-            } else {
-              returnValue = currentColor.value;
-            }
-            Navigator.pop(context, returnValue);
+            Navigator.pop(context, currentColor);
           },
-          textColor: Theme.of(context).accentColor,
+          textColor: appInfo.mainColor,
         ),
       ],
     );

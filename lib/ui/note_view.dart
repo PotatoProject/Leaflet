@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
 import 'package:potato_notes/internal/note_helper.dart';
+import 'package:potato_notes/ui/note_color_selector.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_animations/simple_animations.dart';
 
@@ -39,9 +40,11 @@ class NoteView extends StatelessWidget {
     Color borderColor =
         HSLColor.fromColor(cardColor).withAlpha(cardBrightness).toColor();
 
+    Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
+
     Color getTextColorFromNoteColor(bool isContent) {
       double noteColorBrightness =
-          Color(note.color).computeLuminance();
+          noteColor.computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =
@@ -56,12 +59,12 @@ class NoteView extends StatelessWidget {
 
     Color getBorderColor() {
       if (note.isSelected) {
-        if (note.color != null) {
+        if (noteColor != null) {
           return Theme.of(context).textTheme.headline6.color;
         } else {
           return Theme.of(context).accentColor;
         }
-      } else if (note.color != null) {
+      } else if (noteColor != null) {
         return Colors.transparent;
       } else {
         if (Theme.of(context).brightness == Brightness.light) {
@@ -90,16 +93,14 @@ class NoteView extends StatelessWidget {
       },
       tag: "note" + appInfo.notes.indexOf(note).toString(),
       child: Card(
-        elevation: 0,
+        elevation: 1.4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: getBorderColor(), width: 2),
         ),
-        color: note.color == null
-            ? (Theme.of(context).brightness == Brightness.light
-                ? null
-                : Theme.of(context).scaffoldBackgroundColor)
-            : Color(note.color),
+        color: (note.color ?? 0) == 0
+            ? Theme.of(context).scaffoldBackgroundColor
+            : noteColor,
         child: InkWell(
             borderRadius: BorderRadius.circular(12.0),
             onTap: onTap,
@@ -168,7 +169,7 @@ class NoteView extends StatelessWidget {
                             child: Icon(
                               Icons.alarm,
                               size: 12,
-                              color: note.color == null
+                              color: (note.color ?? 0) == 0
                                   ? Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -187,7 +188,7 @@ class NoteView extends StatelessWidget {
                                   ? Icons.lock
                                   : Icons.remove_red_eye,
                               size: 12,
-                              color: note.color == null
+                              color: (note.color ?? 0) == 0
                                   ? Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -214,7 +215,7 @@ class NoteView extends StatelessWidget {
                                         .notesMainPageRoute_note_hiddenContent,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: note.color == null
+                                      color: (note.color ?? 0) == 0
                                           ? Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -231,7 +232,7 @@ class NoteView extends StatelessWidget {
                                         style: TextStyle(
                                           fontSize: 12,
                                           color:
-                                              note.color == null
+                                              (note.color ?? 0) == 0
                                                   ? Theme.of(context)
                                                       .textTheme
                                                       .headline6
@@ -254,7 +255,7 @@ class NoteView extends StatelessWidget {
                     child: Text(
                       "Note id: " + note.id.toString(),
                       style: TextStyle(
-                        color: note.color == null
+                        color: (note.color ?? 0) == 0
                             ? null
                             : getTextColorFromNoteColor(false),
                       ),
@@ -275,7 +276,7 @@ class NoteView extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 4,
                         style: TextStyle(
-                          color: note.color == null
+                          color: (note.color ?? 0) == 0
                               ? Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -309,7 +310,7 @@ class NoteView extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
-                              color: note.color == null
+                              color: (note.color ?? 0) == 0
                                   ? Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -333,9 +334,11 @@ class NoteView extends StatelessWidget {
     List<ListPair> checkedList = List<ListPair>();
     List<ListPair> uncheckedList = List<ListPair>();
 
+    Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
+
     Color getTextColorFromNoteColor(bool isContent) {
       double noteColorBrightness =
-          Color(note.color).computeLuminance();
+          noteColor.computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =
@@ -374,7 +377,7 @@ class NoteView extends StatelessWidget {
         children: <Widget>[
           Icon(Icons.check_box_outline_blank,
               size: 14,
-              color: note.color == null
+              color: (note.color ?? 0) == 0
                   ? Theme.of(context).iconTheme.color
                   : getTextColorFromNoteColor(true)),
           Container(
@@ -388,7 +391,7 @@ class NoteView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
-                  color: note.color == null
+                  color: (note.color ?? 0) == 0
                       ? Theme.of(context).textTheme.headline6.color
                       : getTextColorFromNoteColor(true)),
             ),
@@ -403,7 +406,7 @@ class NoteView extends StatelessWidget {
         children: <Widget>[
           Icon(Icons.check_box,
               size: 14,
-              color: note.color == null
+              color: (note.color ?? 0) == 0
                   ? Theme.of(context).iconTheme.color
                   : getTextColorFromNoteColor(true)),
           Container(
@@ -417,7 +420,7 @@ class NoteView extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textWidthBasis: TextWidthBasis.parent,
               style: TextStyle(
-                color: note.color == null
+                color: (note.color ?? 0) == 0
                     ? Theme.of(context).textTheme.headline6.color
                     : getTextColorFromNoteColor(true),
                 decoration: TextDecoration.lineThrough,
