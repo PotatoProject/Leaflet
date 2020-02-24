@@ -43,8 +43,7 @@ class NoteView extends StatelessWidget {
     Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
 
     Color getTextColorFromNoteColor(bool isContent) {
-      double noteColorBrightness =
-          noteColor.computeLuminance();
+      double noteColorBrightness = noteColor.computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =
@@ -148,17 +147,10 @@ class NoteView extends StatelessWidget {
                             )),
                 ),
                 Visibility(
-                  visible: note.hideContent == 1 ||
-                      note.reminders != null,
+                  visible: note.hideContent == 1 || note.reminders != null,
                   child: Container(
-                    margin: EdgeInsets.fromLTRB(
-                        20,
-                        14,
-                        20,
-                        note.hideContent == 1 &&
-                                note.title == ""
-                            ? 14
-                            : 0),
+                    margin: EdgeInsets.fromLTRB(20, 14, 20,
+                        note.hideContent == 1 && note.title == "" ? 14 : 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,8 +175,7 @@ class NoteView extends StatelessWidget {
                           visible: note.hideContent == 1,
                           child: Center(
                             child: Icon(
-                              note.pin != null ||
-                                      note.password != null
+                              note.pin != null || note.password != null
                                   ? Icons.lock
                                   : Icons.remove_red_eye,
                               size: 12,
@@ -201,8 +192,7 @@ class NoteView extends StatelessWidget {
                         Visibility(
                           visible: (note.hideContent == 1 &&
                                   note.reminders == null) ||
-                              (note.hideContent == 0 &&
-                                  note.reminders != null),
+                              (note.hideContent == 0 && note.reminders != null),
                           child: Container(
                             padding: EdgeInsets.only(left: 8),
                             width: appInfo.isGridView
@@ -231,14 +221,14 @@ class NoteView extends StatelessWidget {
                                             .notesMainPageRoute_note_remindersSet,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color:
-                                              (note.color ?? 0) == 0
-                                                  ? Theme.of(context)
-                                                      .textTheme
-                                                      .headline6
-                                                      .color
-                                                      .withAlpha(140)
-                                                  : getTextColorFromNoteColor(false),
+                                          color: (note.color ?? 0) == 0
+                                              ? Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .color
+                                                  .withAlpha(140)
+                                              : getTextColorFromNoteColor(
+                                                  false),
                                         ),
                                       )
                                     : Container(),
@@ -337,8 +327,7 @@ class NoteView extends StatelessWidget {
     Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
 
     Color getTextColorFromNoteColor(bool isContent) {
-      double noteColorBrightness =
-          noteColor.computeLuminance();
+      double noteColorBrightness = noteColor.computeLuminance();
       Color contentWhite =
           HSLColor.fromColor(Colors.white).withAlpha(0.7).toColor();
       Color contentBlack =

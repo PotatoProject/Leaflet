@@ -203,13 +203,14 @@ class _SettingsState extends State<SettingsRoute> {
                   trailing: DropdownButton(
                     value: appInfo.customLocale,
                     underline: Container(),
-                    items: List.generate(AppInfoProvider.supportedLocales.length + 1, (index) {
+                    items: List.generate(
+                        AppInfoProvider.supportedLocales.length + 1, (index) {
                       return DropdownMenuItem(
-                        child: Text(
-                          index == 0
-                              ? "System"
-                              : Locale(AppInfoProvider.supportedLocales[index - 1]).toLanguageTag()
-                        ),
+                        child: Text(index == 0
+                            ? "System"
+                            : Locale(
+                                    AppInfoProvider.supportedLocales[index - 1])
+                                .toLanguageTag()),
                         value: index - 1,
                       );
                     }),

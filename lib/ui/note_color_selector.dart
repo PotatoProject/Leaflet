@@ -44,10 +44,10 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
 
   Widget noteColorItem(int index, double size, bool selected) {
     Color getIconColor() {
-      if(index == 0) {
+      if (index == 0) {
         Brightness themeBrightness = Theme.of(context).brightness;
 
-        if(themeBrightness == Brightness.light)
+        if (themeBrightness == Brightness.light)
           return ThemeData.light().iconTheme.color;
         else
           return ThemeData.dark().iconTheme.color;

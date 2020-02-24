@@ -100,8 +100,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           children: <Widget>[
                             Icon(Icons.search,
                                 size: 50.0,
-                                color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.headline6.color)
+                                color: HSLColor.fromColor(Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .color)
                                     .withAlpha(0.4)
                                     .toColor()),
                             Text(
@@ -109,8 +111,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
-                                color: HSLColor.fromColor(
-                                        Theme.of(context).textTheme.headline6.color)
+                                color: HSLColor.fromColor(Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .color)
                                     .withAlpha(0.4)
                                     .toColor(),
                               ),
@@ -318,8 +322,10 @@ class _SearchNotesState extends State<SearchNotesRoute> {
                           elevation: 0,
                           circleSize: 24,
                           color: searchFilters.color == null
-                              ? HSLColor.fromColor(
-                                      Theme.of(context).textTheme.headline6.color)
+                              ? HSLColor.fromColor(Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .color)
                                   .withAlpha(0.4)
                                   .toColor()
                               : Color(searchFilters.color),

@@ -65,9 +65,7 @@ class SyncInputField extends StatelessWidget {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: title,
-                          hintStyle: TextStyle(
-                            color: Colors.transparent
-                          ),
+                          hintStyle: TextStyle(color: Colors.transparent),
                         ),
                         controller: controller,
                         autocorrect: false,

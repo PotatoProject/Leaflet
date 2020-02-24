@@ -130,19 +130,25 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
   void initNotes() async {
     List<Note> notes =
         await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
-    
-    if(notes.any((note) => note.color == null || (note.color ?? 0) >= NoteColors.colorList.length)) {
-      List<Note> notesToSanitize = notes.where((note) => note.color == null || (note.color ?? 0) >= NoteColors.colorList.length).toList();
 
-      for(int i = 0; i < notesToSanitize.length; i++) {
+    if (notes.any((note) =>
+        note.color == null ||
+        (note.color ?? 0) >= NoteColors.colorList.length)) {
+      List<Note> notesToSanitize = notes
+          .where((note) =>
+              note.color == null ||
+              (note.color ?? 0) >= NoteColors.colorList.length)
+          .toList();
+
+      for (int i = 0; i < notesToSanitize.length; i++) {
         await NoteHelper.update(notesToSanitize[i].copyWith(color: 0));
-        if(appInfo.userToken != null)
+        if (appInfo.userToken != null)
           await OnlineNoteHelper.save(notesToSanitize[i].copyWith(color: 0));
       }
     }
 
     appInfo.notes =
-      await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+        await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
   }
 
   void updateAutosyncExecutor(bool execute, int timeout) {

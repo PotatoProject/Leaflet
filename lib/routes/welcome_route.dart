@@ -156,8 +156,11 @@ class _WelcomeRouteState extends State<WelcomeRoute> {
             style: TextStyle(
                 fontSize: 20,
                 fontFamily: "GoogleSans",
-                color:
-                    Theme.of(context).textTheme.headline6.color.withOpacity(0.7)),
+                color: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .color
+                    .withOpacity(0.7)),
           ),
         ],
       );

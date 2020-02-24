@@ -115,7 +115,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   Brightness getBarsColorFromNoteColor() {
-    double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
+    double noteColorBrightness =
+        Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
 
     if (noteColorBrightness > 0.5) {
       return Brightness.dark;
@@ -159,7 +160,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             ? colorToReturn = Colors.white
             : colorToReturn = Colors.black;
       } else {
-        double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
+        double noteColorBrightness =
+            Color(NoteColors.colorList[noteColor ?? 0]["hex"])
+                .computeLuminance();
 
         if (noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
@@ -246,34 +249,34 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       child: noteImagePath == null
                           ? Container()
                           : Semantics(
-                            label: "Note image",
-                            child: CachedNetworkImage(
-                              imageUrl: noteImagePath,
-                              fit: BoxFit.fill,
-                              fadeInDuration: Duration(milliseconds: 0),
-                              fadeOutDuration: Duration(milliseconds: 0),
-                              placeholder: (context, url) {
-                                return ControlledAnimation(
-                                  playback: Playback.MIRROR,
-                                  tween: Tween<double>(begin: 0.2, end: 1),
-                                  duration: Duration(milliseconds: 400),
-                                  builder: (context, animation) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 30),
-                                      child: Opacity(
-                                        opacity: animation,
-                                        child: Icon(
-                                          OMIcons.image,
-                                          size: 56,
+                              label: "Note image",
+                              child: CachedNetworkImage(
+                                imageUrl: noteImagePath,
+                                fit: BoxFit.fill,
+                                fadeInDuration: Duration(milliseconds: 0),
+                                fadeOutDuration: Duration(milliseconds: 0),
+                                placeholder: (context, url) {
+                                  return ControlledAnimation(
+                                    playback: Playback.MIRROR,
+                                    tween: Tween<double>(begin: 0.2, end: 1),
+                                    duration: Duration(milliseconds: 400),
+                                    builder: (context, animation) {
+                                      return Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 30),
+                                        child: Opacity(
+                                          opacity: animation,
+                                          child: Icon(
+                                            OMIcons.image,
+                                            size: 56,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -374,7 +377,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                   (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                                      : Color(NoteColors
+                                          .colorList[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -387,7 +391,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                   (noteColor ?? 0) == 0
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
-                                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                                      : Color(NoteColors
+                                          .colorList[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -599,7 +604,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             ? colorToReturn = Colors.white
             : colorToReturn = Colors.black;
       } else {
-        double noteColorBrightness = Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
+        double noteColorBrightness =
+            Color(NoteColors.colorList[noteColor ?? 0]["hex"])
+                .computeLuminance();
 
         if (noteColorBrightness > 0.5) {
           colorToReturn = Colors.black;
@@ -1414,9 +1421,7 @@ class _ProtectionDialogState extends State<ProtectionDialog> {
                       ? Theme.of(context).iconTheme.color.withAlpha(120)
                       : Theme.of(context).iconTheme.color,
                 ),
-                tooltip: hideText
-                    ? "Show text"
-                    : "Hide text",
+                tooltip: hideText ? "Show text" : "Hide text",
                 onPressed: () {
                   setState(() => hideText = !hideText);
                 },
