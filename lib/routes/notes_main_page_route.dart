@@ -39,7 +39,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
 
-  static GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  static GlobalKey<RefreshIndicatorState> indicatorKey = GlobalKey<RefreshIndicatorState>();
 
   List<Note> selectionList = List<Note>();
   bool isSelectorVisible = false;
@@ -133,11 +134,11 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
     if (notes.any((note) =>
         note.color == null ||
-        (note.color ?? 0) >= NoteColors.colorList.length)) {
+        (note.color ?? 0) >= NoteColors.colorList(context).length)) {
       List<Note> notesToSanitize = notes
           .where((note) =>
               note.color == null ||
-              (note.color ?? 0) >= NoteColors.colorList.length)
+              (note.color ?? 0) >= NoteColors.colorList(context).length)
           .toList();
 
       for (int i = 0; i < notesToSanitize.length; i++) {
@@ -149,6 +150,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
 
     appInfo.notes =
         await NoteHelper.getNotes(appInfo.sortMode, NotesReturnMode.NORMAL);
+
+    indicatorKey.currentState.show();
   }
 
   void updateAutosyncExecutor(bool execute, int timeout) {
@@ -282,7 +285,7 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
       backgroundColor: Theme.of(context).cardColor,
       key: scaffoldKey,
       body: RefreshIndicator(
-        displacement: 160,
+        key: indicatorKey,
         onRefresh: appInfo.userToken == null
             ? () async {}
             : () async {
@@ -917,13 +920,15 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                       ),
                       tooltip: "Change note color",
                       onPressed: () async {
-                        var result = await showDialog(
+                        int result = await showDialog(
                             context: context,
                             builder: (context) {
                               return NoteColorDialog(
-                                noteColor: null,
+                                noteColor: 0,
                               );
                             });
+                          
+                        print(result);
 
                         List<Note> selectionListCopy = List.from(selectionList);
 

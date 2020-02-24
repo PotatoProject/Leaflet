@@ -40,7 +40,7 @@ class NoteView extends StatelessWidget {
     Color borderColor =
         HSLColor.fromColor(cardColor).withAlpha(cardBrightness).toColor();
 
-    Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
+    Color noteColor = Color(NoteColors.colorList(context)[note.color ?? 0]["hex"]);
 
     Color getTextColorFromNoteColor(bool isContent) {
       double noteColorBrightness = noteColor.computeLuminance();
@@ -58,12 +58,12 @@ class NoteView extends StatelessWidget {
 
     Color getBorderColor() {
       if (note.isSelected) {
-        if (noteColor != null) {
+        if (note.color != 0) {
           return Theme.of(context).textTheme.headline6.color;
         } else {
           return Theme.of(context).accentColor;
         }
-      } else if (noteColor != null) {
+      } else if (note.color != 0) {
         return Colors.transparent;
       } else {
         if (Theme.of(context).brightness == Brightness.light) {
@@ -92,7 +92,7 @@ class NoteView extends StatelessWidget {
       },
       tag: "note" + appInfo.notes.indexOf(note).toString(),
       child: Card(
-        elevation: 1.4,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(color: getBorderColor(), width: 2),
@@ -324,7 +324,7 @@ class NoteView extends StatelessWidget {
     List<ListPair> checkedList = List<ListPair>();
     List<ListPair> uncheckedList = List<ListPair>();
 
-    Color noteColor = Color(NoteColors.colorList[note.color ?? 0]["hex"]);
+    Color noteColor = Color(NoteColors.colorList(context)[note.color ?? 0]["hex"]);
 
     Color getTextColorFromNoteColor(bool isContent) {
       double noteColorBrightness = noteColor.computeLuminance();

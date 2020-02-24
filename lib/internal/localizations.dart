@@ -42,6 +42,48 @@ class AppLocalizations {
   String get dark => Intl.message("Dark", name: "dark");
   String get black => Intl.message("Black", name: "black");
 
+  /* -- Semantics related -- */
+
+  String get semantics_color_beige => Intl.message(
+        "Beige",
+        name: "semantics_color_beige",
+      );
+
+  String get semantics_color_blue => Intl.message(
+        "Blue",
+        name: "semantics_color_blue",
+      );
+
+  String get semantics_color_green => Intl.message(
+        "Green",
+        name: "semantics_color_green",
+      );
+
+  String get semantics_color_none => Intl.message(
+        "None",
+        name: "semantics_color_none",
+      );
+
+  String get semantics_color_orange => Intl.message(
+        "Orange",
+        name: "semantics_color_orange",
+      );
+
+  String get semantics_color_pink => Intl.message(
+        "Pink",
+        name: "semantics_color_pink",
+      );
+
+  String get semantics_color_purple => Intl.message(
+        "Purple",
+        name: "semantics_color_purple",
+      );
+
+  String get semantics_color_yellow => Intl.message(
+        "Yellow",
+        name: "semantics_color_yellow",
+      );
+  
   /* -- NotesMainPageRoute related -- */
 
   String get notesMainPageRoute_noNotes => Intl.message(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/ui/themes.dart';
+import 'package:potato_notes/internal/localizations.dart';
 
 const double _kDialogCorners = 12.0;
 
@@ -14,14 +14,13 @@ class NoteColorSelector extends StatefulWidget {
 }
 
 class _NoteColorSelectorState extends State<NoteColorSelector> {
-  int get rowsNumber => (NoteColors.colorList.length / 4).ceil();
+  int rowsNumber = 0;
 
   @override
   Widget build(BuildContext context) {
+    rowsNumber = (NoteColors.colorList(context).length / 4).ceil();
     double dialogPadding = MediaQuery.of(context).viewInsets.horizontal + 80.0;
     double boxWidth = MediaQuery.of(context).size.width - dialogPadding;
-
-    print(widget.selectedColor);
 
     return ClipRRect(
       borderRadius: BorderRadius.only(
@@ -52,7 +51,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
         else
           return ThemeData.dark().iconTheme.color;
       } else {
-        Color color = Color(NoteColors.colorList[index]["hex"]);
+        Color color = Color(NoteColors.colorList(context)[index]["hex"]);
 
         if (color.computeLuminance() > 0.5)
           return Colors.black;
@@ -64,11 +63,11 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     return Builder(
       builder: (context) {
         return Material(
-          color: Color(NoteColors.colorList[index]["hex"]),
+          color: Color(NoteColors.colorList(context)[index]["hex"]),
           child: SizedBox.fromSize(
             size: Size.square(size),
             child: Tooltip(
-              message: NoteColors.colorList[index]["label"],
+              message: NoteColors.colorList(context)[index]["label"],
               child: InkWell(
                 onTap: () => widget.onColorSelect(index),
                 child: Center(
@@ -90,52 +89,86 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
 }
 
 class NoteColors {
-  static List<Map<String, dynamic>> get colorList => [
-        NoteColors.none,
-        NoteColors.orange,
-        NoteColors.yellow,
-        NoteColors.beige,
-        NoteColors.purple,
-        NoteColors.blue,
-        NoteColors.pink,
-        NoteColors.green,
+  static List<Map<String, dynamic>> colorList(BuildContext context) => [
+        NoteColors.none(context),
+        NoteColors.orange(context),
+        NoteColors.yellow(context),
+        NoteColors.beige(context),
+        NoteColors.purple(context),
+        NoteColors.blue(context),
+        NoteColors.pink(context),
+        NoteColors.green(context),
       ];
 
-  static Map<String, dynamic> get none => {
-        "label": "None",
-        "hex": 0x00000000,
-      };
+  static Map<String, dynamic> none(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
 
-  static Map<String, dynamic> get orange => {
-        "label": "Orange",
-        "hex": 0xFFFFB182,
-      };
+    return {
+      "label": locales.semantics_color_none,
+      "hex": 0x00000000,
+    };
+  }
 
-  static Map<String, dynamic> get yellow => {
-        "label": "Yellow",
-        "hex": 0xFFFFF18E,
-      };
+  static Map<String, dynamic> orange(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
 
-  static Map<String, dynamic> get beige =>
-      {"label": "Beige", "hex": 0xFFFFE8D1};
+    return {
+      "label": locales.semantics_color_orange,
+      "hex": 0xFFFFB182,
+    };
+  }
 
-  static Map<String, dynamic> get purple => {
-        "label": "Purple",
-        "hex": 0xFFD8D4F2,
-      };
+  static Map<String, dynamic> yellow(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
 
-  static Map<String, dynamic> get blue => {
-        "label": "Blue",
-        "hex": 0xFFB9D6F2,
-      };
+    return {
+      "label": locales.semantics_color_yellow,
+      "hex": 0xFFFFF18E,
+    };
+  }
 
-  static Map<String, dynamic> get pink => {
-        "label": "Pink",
-        "hex": 0xFFFFB8D1,
-      };
+  static Map<String, dynamic> beige(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
 
-  static Map<String, dynamic> get green => {
-        "label": "Green",
-        "hex": 0xFFBCFFC3,
-      };
+    return {
+      "label": locales.semantics_color_beige,
+      "hex": 0xFFFFE8D1,
+    };
+  }
+
+  static Map<String, dynamic> purple(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
+
+    return {
+      "label": locales.semantics_color_purple,
+      "hex": 0xFFD8D4F2,
+    };
+  }
+
+  static Map<String, dynamic> blue(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
+
+    return {
+      "label": locales.semantics_color_blue,
+      "hex": 0xFFB9D6F2,
+    };
+  }
+
+  static Map<String, dynamic> pink(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
+
+    return {
+      "label": locales.semantics_color_pink,
+      "hex": 0xFFFFB8D1,
+    };
+  }
+
+  static Map<String, dynamic> green(BuildContext context) {
+    AppLocalizations locales = AppLocalizations.of(context);
+
+    return {
+      "label": locales.semantics_color_green,
+      "hex": 0xFFBCFFC3,
+    };
+  }
 }

@@ -336,7 +336,7 @@ class Note {
       content: this.content,
       isStarred: isStarred ?? this.isStarred,
       date: this.date,
-      color: color == 0 ? null : color == null ? this.color : color,
+      color: color == null ? this.color : color,
       imagePath: this.imagePath,
       isList: isList ?? this.isList,
       listParseString: this.listParseString,
@@ -407,7 +407,7 @@ class Note {
         content: list[i]["content"],
         isStarred: list[i]["is_starred"] ? 1 : 0,
         date: DateTime.parse(list[i]["date"]).millisecondsSinceEpoch,
-        color: list[i]["color"] == 0 ? null : list[i]["color"],
+        color: list[i]["color"],
         imagePath: list[i]["image_url"] == "" || list[i]["image_url"] == "null"
             ? null
             : list[i]["image_url"],

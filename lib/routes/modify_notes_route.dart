@@ -116,7 +116,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
   Brightness getBarsColorFromNoteColor() {
     double noteColorBrightness =
-        Color(NoteColors.colorList[noteColor ?? 0]["hex"]).computeLuminance();
+        Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]).computeLuminance();
 
     if (noteColorBrightness > 0.5) {
       return Brightness.dark;
@@ -161,7 +161,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             : colorToReturn = Colors.black;
       } else {
         double noteColorBrightness =
-            Color(NoteColors.colorList[noteColor ?? 0]["hex"])
+            Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"])
                 .computeLuminance();
 
         if (noteColorBrightness > 0.5) {
@@ -179,7 +179,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
     Utils.changeSystemBarsColors(
         (noteColor ?? 0) == 0
             ? Theme.of(context).scaffoldBackgroundColor
-            : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+            : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
         (noteColor ?? 0) == 0
             ? systemBarsIconBrightness
             : getBarsColorFromNoteColor());
@@ -215,7 +215,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                   .toColor(),
           scaffoldBackgroundColor: (noteColor ?? 0) == 0
               ? Theme.of(context).cardColor
-              : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+              : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
           accentColor: getElementsColorBasedOnThemeContext(),
           dividerColor:
               HSLColor.fromColor(getElementsColorBasedOnThemeContext())
@@ -224,14 +224,14 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
           bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
           ),
           buttonTheme: ButtonThemeData(
               textTheme: ButtonTextTheme.accent, hoverColor: appInfo.mainColor),
           popupMenuTheme: PopupMenuThemeData(
             color: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
           ),
         ),
         child: Scaffold(
@@ -337,7 +337,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 child: Material(
                   color: (noteColor ?? 0) == 0
                       ? Theme.of(context).scaffoldBackgroundColor
-                      : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                      : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
                   child: Container(
                     height: 60,
                     child: Padding(
@@ -378,7 +378,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
                                       : Color(NoteColors
-                                          .colorList[noteColor ?? 0]["hex"]),
+                                          .colorList(context)[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -392,7 +392,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                       ? Theme.of(context)
                                           .scaffoldBackgroundColor
                                       : Color(NoteColors
-                                          .colorList[noteColor ?? 0]["hex"]),
+                                          .colorList(context)[noteColor ?? 0]["hex"]),
                                   getElementsColorBasedOnThemeContext());
                             },
                           ),
@@ -429,13 +429,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                 });
 
                                             setState(() {
-                                              if (result != null) {
-                                                if (result == 0) {
-                                                  noteColor = null;
-                                                } else {
-                                                  noteColor = result;
-                                                }
-                                              }
+                                              if (result != null)
+                                                noteColor = result;
                                             });
                                           },
                                         ),
@@ -568,13 +563,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                         });
 
                                     setState(() {
-                                      if (result != null) {
-                                        if (result == 0) {
-                                          noteColor = null;
-                                        } else {
-                                          noteColor = result;
-                                        }
-                                      }
+                                      if (result != null)
+                                        noteColor = result;
                                     });
                                   },
                                 ),
@@ -605,7 +595,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
             : colorToReturn = Colors.black;
       } else {
         double noteColorBrightness =
-            Color(NoteColors.colorList[noteColor ?? 0]["hex"])
+            Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"])
                 .computeLuminance();
 
         if (noteColorBrightness > 0.5) {
@@ -646,7 +636,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                 : appInfo.mainColor,
             checkColor: (noteColor ?? 0) == 0
                 ? Theme.of(context).cardColor
-                : Color(NoteColors.colorList[noteColor ?? 0]["hex"]),
+                : Color(NoteColors.colorList(context)[noteColor ?? 0]["hex"]),
             value: checkList[i].checkValue == 1,
             onChanged: (value) {
               if (value) {
@@ -910,8 +900,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       if (imgurBody["success"]) {
                         setState(
                             () => noteImagePath = imgurBody["data"]["link"]);
-                      } else {
-                        print("k");
                       }
                     }
                   },
@@ -1295,6 +1283,12 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
   int currentColor = 0;
 
   @override
+  void initState() {
+    currentColor = widget.noteColor;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
     AppLocalizations locales = AppLocalizations.of(context);
@@ -1306,6 +1300,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
       content: NoteColorSelector(
         selectedColor: currentColor,
         onColorSelect: (color) {
+          print(color);
           setState(() => currentColor = color);
         },
       ),
@@ -1328,6 +1323,7 @@ class _NoteColorDialogState extends State<NoteColorDialog> {
             ),
           ),
           onPressed: () {
+            print(currentColor);
             Navigator.pop(context, currentColor);
           },
           textColor: appInfo.mainColor,
