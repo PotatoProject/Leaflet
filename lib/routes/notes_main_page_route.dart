@@ -65,6 +65,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
         value: 1.0, duration: Duration(milliseconds: 150), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print(Localizations.localeOf(context));
+
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
           FlutterLocalNotificationsPlugin();
 
@@ -1491,8 +1493,8 @@ class _NotesMainPageState extends State<NotesMainPageRoute>
                                     NotificationDetails(
                                         AndroidNotificationDetails(
                                           '0',
-                                          'note_pinned_notifications',
-                                          'idk',
+                                          'Pinned notes',
+                                          'This channel contains the notes that you pin',
                                           priority: Priority.High,
                                           playSound: true,
                                           importance: Importance.High,

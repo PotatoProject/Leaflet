@@ -24,15 +24,15 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "${method} length can\'t be less than ${minLength}";
 
-  static m4(noteSelected) => "${noteSelected} note selected";
+  static m2(noteSelected) => "${noteSelected} note selected";
 
-  static m5(noteSelected) => "${noteSelected} notes selected";
+  static m3(noteSelected) => "${noteSelected} notes selected";
 
-  static m6(currentPage, totalPages) => "Page ${currentPage} of ${totalPages}";
+  static m4(currentPage, totalPages) => "Page ${currentPage} of ${totalPages}";
 
-  static m2(path) => "Backup located at: ${path}";
+  static m5(path) => "Backup located at: ${path}";
 
-  static m3(username) => "Logged in as: ${username}";
+  static m6(username) => "Logged in as: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -214,13 +214,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "semantics_notesMainPage_favouritesAdd":
             MessageLookupByLibrary.simpleMessage("Add notes to favourites"),
         "semantics_notesMainPage_favouritesRemove":
-            MessageLookupByLibrary.simpleMessage("Remove notes to favourites"),
+            MessageLookupByLibrary.simpleMessage(
+                "Remove notes from favourites"),
         "semantics_notesMainPage_grid":
             MessageLookupByLibrary.simpleMessage("Switch to grid view"),
         "semantics_notesMainPage_list":
             MessageLookupByLibrary.simpleMessage("Switch to list view"),
-        "semantics_notesMainPage_noteSelected": m4,
-        "semantics_notesMainPage_notesSelected": m5,
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
         "semantics_notesMainPage_openMenu":
             MessageLookupByLibrary.simpleMessage("Open menu"),
         "semantics_notesMainPage_restore":
@@ -232,7 +233,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Exit setup"),
         "semantics_welcome_next":
             MessageLookupByLibrary.simpleMessage("Next page"),
-        "semantics_welcome_pageIndicator": m6,
+        "semantics_welcome_pageIndicator": m4,
         "semantics_welcome_previous":
             MessageLookupByLibrary.simpleMessage("Previous page"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("About"),
@@ -250,7 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Backup & restore"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Backup (Experimental)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage("Regenerate database entries"),
         "settingsRoute_backupAndRestore_restore":
@@ -314,7 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Change username"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Guest"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Logout"),
         "syncManageRoute_sync": MessageLookupByLibrary.simpleMessage("Sync"),

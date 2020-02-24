@@ -25,9 +25,16 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "${method} panjangnya tidak bisa kurang dari ${minLength}";
 
-  static m2(path) => "Cadangan terletak di: ${path}";
+  static m2(noteSelected) => "${noteSelected} catatan terpilih";
 
-  static m3(username) => "Masuk sebagai: ${username}";
+  static m3(noteSelected) => "${noteSelected} catatan dipilih";
+
+  static m4(currentPage, totalPages) =>
+      "Halaman ${currentPage} dari ${totalPages}";
+
+  static m5(path) => "Cadangan terletak di: ${path}";
+
+  static m6(username) => "Masuk sebagai: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -35,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("Hitam"),
         "cancel": MessageLookupByLibrary.simpleMessage("Batalkan"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("Pilih tindakan"),
+        "close": MessageLookupByLibrary.simpleMessage("Tutup"),
         "confirm": MessageLookupByLibrary.simpleMessage("Konfirmasi"),
         "dark": MessageLookupByLibrary.simpleMessage("Gelap"),
         "done": MessageLookupByLibrary.simpleMessage("Selesai"),
@@ -177,6 +185,67 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kata sandi salah"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("PIN salah"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Kembali"),
+        "semantics_color_beige": MessageLookupByLibrary.simpleMessage("Krem"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Biru"),
+        "semantics_color_green": MessageLookupByLibrary.simpleMessage("Hijau"),
+        "semantics_color_none":
+            MessageLookupByLibrary.simpleMessage("Tidak ada"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Jingga"),
+        "semantics_color_pink":
+            MessageLookupByLibrary.simpleMessage("Merah muda"),
+        "semantics_color_purple": MessageLookupByLibrary.simpleMessage("Ungu"),
+        "semantics_color_yellow":
+            MessageLookupByLibrary.simpleMessage("Kuning"),
+        "semantics_hideText":
+            MessageLookupByLibrary.simpleMessage("Sembunyikan teks"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Tambah elemen"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Gambar catatan"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Opsi keamanan"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Catatan berbintang"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Catatan tidak berbintang"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Tambahkan catatan baru"),
+        "semantics_notesMainPage_archive":
+            MessageLookupByLibrary.simpleMessage("Arsipkan catatan terpilih"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Ubah warna catatan"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Tutup pemilih"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Hapus catatan terpilih"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage(
+                "Tambahkan catatan ke favorit"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage("Hapus catatan dari favorit"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Ubah ke tampilan garis"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Ubah ke tampilan daftar"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Buka menu"),
+        "semantics_notesMainPage_restore": MessageLookupByLibrary.simpleMessage(
+            "Mengembalikan catatan terpilih"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Cari catatan"),
+        "semantics_showText":
+            MessageLookupByLibrary.simpleMessage("Tampilkan teks"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Keluar setup"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("Halaman selanjutnya"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Halaman sebelumnya"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("Tentang"),
         "settingsRoute_about_potatonotes":
             MessageLookupByLibrary.simpleMessage("Tentang PotatoNotes"),
@@ -192,7 +261,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Cadangkan & Pulihkan"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Cadangkan (Eksperimental)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage("Perbarui entri database"),
         "settingsRoute_backupAndRestore_restore":
@@ -205,12 +274,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Opsi Pengembang"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("Tampilkan label id catatan"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Tampilkan layar selamat datang di setup selanjutnya"),
         "settingsRoute_gestures":
             MessageLookupByLibrary.simpleMessage("Gestur"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage(
                 "Ketuk dua kali catatan untuk memberi bintang"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Tema"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("Bahasa aplikasi"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("Tema aplikasi"),
         "settingsRoute_themes_customAccentColor":
@@ -219,6 +292,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ikuti tema sistem"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("Mode tema gelap otomatis"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("Sistem"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage("Gunakan warna label kustom"),
         "settingsRoute_title":
@@ -253,7 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ganti nama pengguna"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Guest"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Keluar"),
         "syncManageRoute_sync": MessageLookupByLibrary.simpleMessage("Sinkron"),

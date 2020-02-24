@@ -1,5 +1,5 @@
 {
-    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "@@last_modified": "2020-02-24T17:02:26.750824",
     "home": "Halaman utama",
     "@home": {
         "type": "text",
@@ -35,6 +35,11 @@
         "type": "text",
         "placeholders": {}
     },
+    "close": "Tutup",
+    "@close": {
+        "type": "text",
+        "placeholders": {}
+    },
     "remove": "Hapus",
     "@remove": {
         "type": "text",
@@ -67,6 +72,183 @@
     },
     "black": "Hitam",
     "@black": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_back": "Kembali",
+    "@semantics_back": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_beige": "Krem",
+    "@semantics_color_beige": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_blue": "Biru",
+    "@semantics_color_blue": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_green": "Hijau",
+    "@semantics_color_green": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_none": "Tidak ada",
+    "@semantics_color_none": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_orange": "Jingga",
+    "@semantics_color_orange": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_pink": "Merah muda",
+    "@semantics_color_pink": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_purple": "Ungu",
+    "@semantics_color_purple": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_yellow": "Kuning",
+    "@semantics_color_yellow": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_hideText": "Sembunyikan teks",
+    "@semantics_hideText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_addElement": "Tambah elemen",
+    "@semantics_modifyNotes_addElement": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_image": "Gambar catatan",
+    "@semantics_modifyNotes_image": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_security": "Opsi keamanan",
+    "@semantics_modifyNotes_security": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_star": "Catatan berbintang",
+    "@semantics_modifyNotes_star": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_unstar": "Catatan tidak berbintang",
+    "@semantics_modifyNotes_unstar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_addNote": "Tambahkan catatan baru",
+    "@semantics_notesMainPage_addNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_archive": "Arsipkan catatan terpilih",
+    "@semantics_notesMainPage_archive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_changeColor": "Ubah warna catatan",
+    "@semantics_notesMainPage_changeColor": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_closeSelector": "Tutup pemilih",
+    "@semantics_notesMainPage_closeSelector": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_delete": "Hapus catatan terpilih",
+    "@semantics_notesMainPage_delete": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesAdd": "Tambahkan catatan ke favorit",
+    "@semantics_notesMainPage_favouritesAdd": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesRemove": "Hapus catatan dari favorit",
+    "@semantics_notesMainPage_favouritesRemove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_grid": "Ubah ke tampilan garis",
+    "@semantics_notesMainPage_grid": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_list": "Ubah ke tampilan daftar",
+    "@semantics_notesMainPage_list": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_openMenu": "Buka menu",
+    "@semantics_notesMainPage_openMenu": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_restore": "Mengembalikan catatan terpilih",
+    "@semantics_notesMainPage_restore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_search": "Cari catatan",
+    "@semantics_notesMainPage_search": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_noteSelected": "{noteSelected} catatan terpilih",
+    "@semantics_notesMainPage_noteSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_notesMainPage_notesSelected": "{noteSelected} catatan dipilih",
+    "@semantics_notesMainPage_notesSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_showText": "Tampilkan teks",
+    "@semantics_showText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_next": "Halaman selanjutnya",
+    "@semantics_welcome_next": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_pageIndicator": "Halaman {currentPage} dari {totalPages}",
+    "@semantics_welcome_pageIndicator": {
+        "type": "text",
+        "placeholders": {
+            "currentPage": {},
+            "totalPages": {}
+        }
+    },
+    "semantics_welcome_previous": "Halaman sebelumnya",
+    "@semantics_welcome_previous": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_exit": "Keluar setup",
+    "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
@@ -326,6 +508,16 @@
         "type": "text",
         "placeholders": {}
     },
+    "settingsRoute_themes_appLanguage": "Bahasa aplikasi",
+    "@settingsRoute_themes_appLanguage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_systemDefault": "Sistem",
+    "@settingsRoute_themes_systemDefault": {
+        "type": "text",
+        "placeholders": {}
+    },
     "settingsRoute_gestures": "Gestur",
     "@settingsRoute_gestures": {
         "type": "text",
@@ -405,6 +597,11 @@
     },
     "settingsRoute_dev_idLabels": "Tampilkan label id catatan",
     "@settingsRoute_dev_idLabels": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev_welcomeScreen": "Tampilkan layar selamat datang di setup selanjutnya",
+    "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },

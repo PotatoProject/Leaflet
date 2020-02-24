@@ -23,9 +23,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(method, minLength) => "${method} 長度請勿短於 ${minLength} 個字元";
 
-  static m2(path) => "已備份於：${path}";
+  static m2(noteSelected) => "已選取 ${noteSelected} 則筆記";
 
-  static m3(username) => "登入為：${username}";
+  static m3(noteSelected) => "已選取 ${noteSelected} 則筆記";
+
+  static m4(currentPage, totalPages) => "${totalPages} 中的第 ${currentPage} 頁";
+
+  static m5(path) => "已備份於：${path}";
+
+  static m6(username) => "登入為：${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -33,9 +39,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("黑色"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("選擇動作"),
+        "close": MessageLookupByLibrary.simpleMessage("關閉"),
         "confirm": MessageLookupByLibrary.simpleMessage("確認"),
         "dark": MessageLookupByLibrary.simpleMessage("深色"),
         "done": MessageLookupByLibrary.simpleMessage("完成"),
+        "home": MessageLookupByLibrary.simpleMessage("首頁"),
         "light": MessageLookupByLibrary.simpleMessage("亮色"),
         "modifyNotesRoute_color_change":
             MessageLookupByLibrary.simpleMessage("變更記事顏色"),
@@ -155,6 +163,59 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("密碼錯誤"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("PIN 碼錯誤"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("返回"),
+        "semantics_color_beige": MessageLookupByLibrary.simpleMessage("米白色"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("藍色"),
+        "semantics_color_green": MessageLookupByLibrary.simpleMessage("綠色"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("無"),
+        "semantics_color_orange": MessageLookupByLibrary.simpleMessage("橘色"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("粉色"),
+        "semantics_color_purple": MessageLookupByLibrary.simpleMessage("紫色"),
+        "semantics_color_yellow": MessageLookupByLibrary.simpleMessage("黃色"),
+        "semantics_hideText": MessageLookupByLibrary.simpleMessage("隱藏文字"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("新增元件"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("筆記圖片"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("安全性選項"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("為筆記加上星號"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("取消筆記星號"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("新增筆記"),
+        "semantics_notesMainPage_archive":
+            MessageLookupByLibrary.simpleMessage("封存選取的筆記"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("變更筆記色彩"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("關閉選取工具"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("刪除選取的筆記"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage("新增筆記至最愛"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage("從最愛移除筆記"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("切換至格狀檢視"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("切換至列表檢視"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("開啟選單"),
+        "semantics_notesMainPage_restore":
+            MessageLookupByLibrary.simpleMessage("還原選取的筆記"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("搜尋筆記"),
+        "semantics_showText": MessageLookupByLibrary.simpleMessage("顯示文字"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("離開快速設定"),
+        "semantics_welcome_next": MessageLookupByLibrary.simpleMessage("下一頁"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("上一頁"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("關於"),
         "settingsRoute_about_potatonotes":
             MessageLookupByLibrary.simpleMessage("關於 PotatoNotes"),
@@ -168,7 +229,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("備份與還原"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("備份 (實驗性)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage("重新產生資料庫項目"),
         "settingsRoute_backupAndRestore_restore":
@@ -180,10 +241,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsRoute_dev": MessageLookupByLibrary.simpleMessage("開發人員選項"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("顯示編號標籤"),
+        "settingsRoute_dev_welcomeScreen":
+            MessageLookupByLibrary.simpleMessage("下次開啟時顯示歡迎頁面"),
         "settingsRoute_gestures": MessageLookupByLibrary.simpleMessage("手勢"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage("輕觸兩下記事來加上星號"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("主題"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("應用程式語言"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("應用程式主題"),
         "settingsRoute_themes_customAccentColor":
@@ -192,6 +257,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("根據裝置主題進行設定"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("自動深色模式"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("系統"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage("使用自訂強調色"),
         "settingsRoute_title": MessageLookupByLibrary.simpleMessage("設定"),
@@ -219,7 +286,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("變更使用者名稱"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("訪客"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("登出"),
         "syncManageRoute_sync": MessageLookupByLibrary.simpleMessage("同步"),
@@ -277,6 +344,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "userInfoRoute_avatar_remove":
             MessageLookupByLibrary.simpleMessage("移除個人資料相片"),
         "userInfoRoute_sortByDate":
-            MessageLookupByLibrary.simpleMessage("以日期排序")
+            MessageLookupByLibrary.simpleMessage("以日期排序"),
+        "welcomeRoute_firstPage_catchPhrase":
+            MessageLookupByLibrary.simpleMessage("讓您愛不釋手的筆記"),
+        "welcomeRoute_fourthPage_description":
+            MessageLookupByLibrary.simpleMessage("再幾步即可完成設定！"),
+        "welcomeRoute_fourthPage_thankyou":
+            MessageLookupByLibrary.simpleMessage("感謝您使用 PotatoNotes"),
+        "welcomeRoute_fourthPage_title":
+            MessageLookupByLibrary.simpleMessage("設定完成"),
+        "welcomeRoute_secondPage_title":
+            MessageLookupByLibrary.simpleMessage("基本設定"),
+        "welcomeRoute_thirdPage_description":
+            MessageLookupByLibrary.simpleMessage(
+                "有了 PotatoSync 帳號，您將可在多個裝置間同步筆，且輕鬆即可取得！"),
+        "welcomeRoute_thirdPage_getStarted":
+            MessageLookupByLibrary.simpleMessage("立即開始"),
+        "welcomeRoute_thirdPage_success":
+            MessageLookupByLibrary.simpleMessage("PotatoSync 設定成功！")
       };
 }

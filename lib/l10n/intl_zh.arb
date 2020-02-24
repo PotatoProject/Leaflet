@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "記事",
-    "@notes": {
+    "@@last_modified": "2020-02-24T17:02:26.750824",
+    "home": "首頁",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -32,6 +32,11 @@
     },
     "cancel": "取消",
     "@cancel": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "close": "關閉",
+    "@close": {
         "type": "text",
         "placeholders": {}
     },
@@ -67,6 +72,183 @@
     },
     "black": "黑色",
     "@black": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_back": "返回",
+    "@semantics_back": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_beige": "米白色",
+    "@semantics_color_beige": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_blue": "藍色",
+    "@semantics_color_blue": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_green": "綠色",
+    "@semantics_color_green": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_none": "無",
+    "@semantics_color_none": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_orange": "橘色",
+    "@semantics_color_orange": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_pink": "粉色",
+    "@semantics_color_pink": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_purple": "紫色",
+    "@semantics_color_purple": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_yellow": "黃色",
+    "@semantics_color_yellow": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_hideText": "隱藏文字",
+    "@semantics_hideText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_addElement": "新增元件",
+    "@semantics_modifyNotes_addElement": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_image": "筆記圖片",
+    "@semantics_modifyNotes_image": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_security": "安全性選項",
+    "@semantics_modifyNotes_security": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_star": "為筆記加上星號",
+    "@semantics_modifyNotes_star": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_unstar": "取消筆記星號",
+    "@semantics_modifyNotes_unstar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_addNote": "新增筆記",
+    "@semantics_notesMainPage_addNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_archive": "封存選取的筆記",
+    "@semantics_notesMainPage_archive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_changeColor": "變更筆記色彩",
+    "@semantics_notesMainPage_changeColor": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_closeSelector": "關閉選取工具",
+    "@semantics_notesMainPage_closeSelector": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_delete": "刪除選取的筆記",
+    "@semantics_notesMainPage_delete": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesAdd": "新增筆記至最愛",
+    "@semantics_notesMainPage_favouritesAdd": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesRemove": "從最愛移除筆記",
+    "@semantics_notesMainPage_favouritesRemove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_grid": "切換至格狀檢視",
+    "@semantics_notesMainPage_grid": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_list": "切換至列表檢視",
+    "@semantics_notesMainPage_list": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_openMenu": "開啟選單",
+    "@semantics_notesMainPage_openMenu": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_restore": "還原選取的筆記",
+    "@semantics_notesMainPage_restore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_search": "搜尋筆記",
+    "@semantics_notesMainPage_search": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_noteSelected": "已選取 {noteSelected} 則筆記",
+    "@semantics_notesMainPage_noteSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_notesMainPage_notesSelected": "已選取 {noteSelected} 則筆記",
+    "@semantics_notesMainPage_notesSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_showText": "顯示文字",
+    "@semantics_showText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_next": "下一頁",
+    "@semantics_welcome_next": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_pageIndicator": "{totalPages} 中的第 {currentPage} 頁",
+    "@semantics_welcome_pageIndicator": {
+        "type": "text",
+        "placeholders": {
+            "currentPage": {},
+            "totalPages": {}
+        }
+    },
+    "semantics_welcome_previous": "上一頁",
+    "@semantics_welcome_previous": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_exit": "離開快速設定",
+    "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
@@ -326,6 +508,16 @@
         "type": "text",
         "placeholders": {}
     },
+    "settingsRoute_themes_appLanguage": "應用程式語言",
+    "@settingsRoute_themes_appLanguage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_systemDefault": "系統",
+    "@settingsRoute_themes_systemDefault": {
+        "type": "text",
+        "placeholders": {}
+    },
     "settingsRoute_gestures": "手勢",
     "@settingsRoute_gestures": {
         "type": "text",
@@ -405,6 +597,11 @@
     },
     "settingsRoute_dev_idLabels": "顯示編號標籤",
     "@settingsRoute_dev_idLabels": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev_welcomeScreen": "下次開啟時顯示歡迎頁面",
+    "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },
@@ -607,6 +804,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "自動同步間隔（秒）",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "讓您愛不釋手的筆記",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "基本設定",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "有了 PotatoSync 帳號，您將可在多個裝置間同步筆，且輕鬆即可取得！",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "PotatoSync 設定成功！",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "立即開始",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "設定完成",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "再幾步即可完成設定！",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "感謝您使用 PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },

@@ -180,7 +180,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "semantics_notesMainPage_favouritesRemove": "Remove notes to favourites",
+  "semantics_notesMainPage_favouritesRemove": "Remove notes from favourites",
   "@semantics_notesMainPage_favouritesRemove": {
     "type": "text",
     "placeholders": {}

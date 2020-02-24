@@ -25,9 +25,15 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "Długość ${method} nie może być krótsza niż ${minLength}";
 
-  static m2(path) => "Kopia zapasowa zlokalizowana w: ${path}";
+  static m2(noteSelected) => "${noteSelected} wybrano notatkę";
 
-  static m3(username) => "Zalogowano jako: ${username}";
+  static m3(noteSelected) => "${noteSelected} wybrano notatki";
+
+  static m4(currentPage, totalPages) => "Strona ${currentPage} z ${totalPages}";
+
+  static m5(path) => "Kopia zapasowa zlokalizowana w: ${path}";
+
+  static m6(username) => "Zalogowano jako: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -35,9 +41,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("Czarny"),
         "cancel": MessageLookupByLibrary.simpleMessage("Anuluj"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("Wybierz akcję"),
+        "close": MessageLookupByLibrary.simpleMessage("Zamknij"),
         "confirm": MessageLookupByLibrary.simpleMessage("Potwierdź"),
         "dark": MessageLookupByLibrary.simpleMessage("Ciemny"),
         "done": MessageLookupByLibrary.simpleMessage("Gotowe"),
+        "home": MessageLookupByLibrary.simpleMessage("Start"),
         "light": MessageLookupByLibrary.simpleMessage("Jasny"),
         "modifyNotesRoute_color_change":
             MessageLookupByLibrary.simpleMessage("Zmień kolor notatki"),
@@ -173,6 +181,66 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nieprawidłowe hasło"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("Nieprawidłowy kod PIN"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Wróć"),
+        "semantics_color_beige": MessageLookupByLibrary.simpleMessage("Beżowy"),
+        "semantics_color_blue":
+            MessageLookupByLibrary.simpleMessage("Niebieski"),
+        "semantics_color_green":
+            MessageLookupByLibrary.simpleMessage("Zielony"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Żaden"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Pomarańczowy"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Różowy"),
+        "semantics_color_purple":
+            MessageLookupByLibrary.simpleMessage("Fioletowy"),
+        "semantics_color_yellow": MessageLookupByLibrary.simpleMessage("Żółty"),
+        "semantics_hideText":
+            MessageLookupByLibrary.simpleMessage("Ukryj tekst"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Dodaj element"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Obraz notatki"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Ustawienia bezpieczeństwa"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Oznacz gwiazdką"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Usuń gwiazdkę"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Dodaj nową notatkę"),
+        "semantics_notesMainPage_archive":
+            MessageLookupByLibrary.simpleMessage("Archiwizuj wybrane notatki"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Zmień kolor notatki"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Zamknij"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Usuń zaznaczone notatki"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage("Dodaj do ulubionych"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage("Usuń z ulubionych"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Przejdź do widoku siatki"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Przejdź do widoku listy"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Otwórz menu"),
+        "semantics_notesMainPage_restore":
+            MessageLookupByLibrary.simpleMessage("Przywróć wybrane notatki"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Przeszukaj notatki"),
+        "semantics_showText":
+            MessageLookupByLibrary.simpleMessage("Pokaż tekst"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Zakończ konfigurację"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("Następna strona"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Poprzednia strona"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("O"),
         "settingsRoute_about_potatonotes":
             MessageLookupByLibrary.simpleMessage("O PotatoNotes"),
@@ -189,7 +257,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage(
                 "Kopia zapasowa (eksperymentalna)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage(
                 "Wygeneruj ponownie wpisy bazy danych"),
@@ -204,11 +272,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Opcje programistyczne"),
         "settingsRoute_dev_idLabels": MessageLookupByLibrary.simpleMessage(
             "Pokaż etykiety identyfikatorów"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Pokaż ekran powitalny przy następnym uruchomieniu"),
         "settingsRoute_gestures": MessageLookupByLibrary.simpleMessage("Gesty"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage(
                 "Dwukrotnie stuknij na notatkę, by dodać gwiazdkę"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Motywy"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("Język aplikacji"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("Motyw aplikacji"),
         "settingsRoute_themes_customAccentColor":
@@ -217,6 +289,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Z motywu systemu"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("Automatyczny tryb ciemny"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("System"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage(
                 "Użyj niestandardowego koloru akcentu"),
@@ -254,7 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Zmień nazwę użytkownika"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Gość"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Wyloguj się"),
         "syncManageRoute_sync":
@@ -319,6 +393,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "userInfoRoute_avatar_remove":
             MessageLookupByLibrary.simpleMessage("Usuń awatar"),
         "userInfoRoute_sortByDate":
-            MessageLookupByLibrary.simpleMessage("Sortuj notatki według daty")
+            MessageLookupByLibrary.simpleMessage("Sortuj notatki według daty"),
+        "welcomeRoute_firstPage_catchPhrase":
+            MessageLookupByLibrary.simpleMessage(
+                "Twoja nowa aplikacja do ulubionych notatek"),
+        "welcomeRoute_fourthPage_description":
+            MessageLookupByLibrary.simpleMessage(
+                "I w końcu skończyłeś. Nareszcie możesz się bawić! Hurra!"),
+        "welcomeRoute_fourthPage_thankyou":
+            MessageLookupByLibrary.simpleMessage(
+                "Dziękujemy za wybranie PotatoNotes"),
+        "welcomeRoute_fourthPage_title":
+            MessageLookupByLibrary.simpleMessage("Konfiguracja ukończona"),
+        "welcomeRoute_secondPage_title":
+            MessageLookupByLibrary.simpleMessage("Podstawowe dostosowywanie"),
+        "welcomeRoute_thirdPage_description": MessageLookupByLibrary.simpleMessage(
+            "Dzięki darmowemu kontu PotatoSync możesz synchronizować swoje notatki między wieloma urządzeniami. I bardzo łatwo jest je uzyskać!"),
+        "welcomeRoute_thirdPage_getStarted":
+            MessageLookupByLibrary.simpleMessage("Rozpocznij"),
+        "welcomeRoute_thirdPage_success": MessageLookupByLibrary.simpleMessage(
+            "PotatoSync został skonfigurowany pomyślnie. Dobra robota!")
       };
 }

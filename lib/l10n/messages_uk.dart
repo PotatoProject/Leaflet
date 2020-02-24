@@ -25,9 +25,16 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "довжина ${method} не може бути меншою за ${minLength}";
 
-  static m2(path) => "Бекап розташовано в: ${path}";
+  static m2(noteSelected) => "${noteSelected} Вибрана нотатка";
 
-  static m3(username) => "Ви ввійшли як: ${username}";
+  static m3(noteSelected) => "${noteSelected} Вибрані нотатки";
+
+  static m4(currentPage, totalPages) =>
+      "Сторінка ${currentPage} з ${totalPages}";
+
+  static m5(path) => "Бекап розташовано в: ${path}";
+
+  static m6(username) => "Ви ввійшли як: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -35,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("Чорна"),
         "cancel": MessageLookupByLibrary.simpleMessage("Скасувати"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("Виберіть дію"),
+        "close": MessageLookupByLibrary.simpleMessage("Закрити"),
         "confirm": MessageLookupByLibrary.simpleMessage("Підтвердити"),
         "dark": MessageLookupByLibrary.simpleMessage("Темна"),
         "done": MessageLookupByLibrary.simpleMessage("Готово"),
@@ -172,11 +180,73 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Треба пароль, щоб відкрити нотанку"),
         "securityNoteRoute_request_pin": MessageLookupByLibrary.simpleMessage(
-            "Треба PIN, щоб відкрити нотанку"),
+            "Введіть PIN, щоб відкрити нотанку"),
         "securityNoteRoute_wrong_password":
             MessageLookupByLibrary.simpleMessage("Неправильний пароль"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("Неправильний PIN-код"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Назад"),
+        "semantics_color_beige":
+            MessageLookupByLibrary.simpleMessage("Бежевий"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Синій"),
+        "semantics_color_green":
+            MessageLookupByLibrary.simpleMessage("Зелений"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Ніякий"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Помаранчевий"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Розовий"),
+        "semantics_color_purple":
+            MessageLookupByLibrary.simpleMessage("Фіолетовий"),
+        "semantics_color_yellow":
+            MessageLookupByLibrary.simpleMessage("Жовтий"),
+        "semantics_hideText":
+            MessageLookupByLibrary.simpleMessage("Сховати текст"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Добавити елемент"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Примітка"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Налаштування безпеки"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Обрана нотатка"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Видалити зірку"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Додати нову замітку"),
+        "semantics_notesMainPage_archive":
+            MessageLookupByLibrary.simpleMessage("Архівувати вибрані нотатки"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Змінити колір нотаток"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Закрити вибір"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Видалити вибрані нотатки"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage("Додати нотатку до улюблених"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage(
+                "Видалити нотатку з улюблених"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Переключити до режиму сітки"),
+        "semantics_notesMainPage_list": MessageLookupByLibrary.simpleMessage(
+            "Переключити до режиму списку"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Відкрити меню"),
+        "semantics_notesMainPage_restore":
+            MessageLookupByLibrary.simpleMessage("Відновити вибрані нотатки"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Шукати нотатки"),
+        "semantics_showText":
+            MessageLookupByLibrary.simpleMessage("Показати текст"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Вийти з установки"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("Наступна сторінка"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Попередня сторінка"),
         "settingsRoute_about":
             MessageLookupByLibrary.simpleMessage("Про програму"),
         "settingsRoute_about_potatonotes":
@@ -193,7 +263,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Бекап та відновлення"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Бекап (Експерементальний)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage("Регенерувати базу данних"),
         "settingsRoute_backupAndRestore_restore":
@@ -208,11 +278,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Параметри для розробників"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("Показувати id нотанок"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Показати екран привітання при наступному запуску"),
         "settingsRoute_gestures": MessageLookupByLibrary.simpleMessage("Жести"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage(
                 "Подвійне натискання для позначення"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Теми"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("Мова програми"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("Тема програми"),
         "settingsRoute_themes_customAccentColor":
@@ -221,7 +295,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Використовувати системну тему"),
         "settingsRoute_themes_systemDarkMode":
-            MessageLookupByLibrary.simpleMessage("Автоматичний нічний режим"),
+            MessageLookupByLibrary.simpleMessage("Автоматичний темний режим"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("Система"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage(
                 "Використовувати свій колір акценту"),
@@ -258,7 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Змінити ім\'я користувача"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Гість"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Вихід"),
         "syncManageRoute_sync":

@@ -1,5 +1,5 @@
 {
-    "@@last_modified": "2020-01-15T20:28:44.174789",
+    "@@last_modified": "2020-02-24T17:02:26.750824",
     "home": "Principale",
     "@home": {
         "type": "text",
@@ -35,6 +35,11 @@
         "type": "text",
         "placeholders": {}
     },
+    "close": "Chiudi",
+    "@close": {
+        "type": "text",
+        "placeholders": {}
+    },
     "remove": "Rimuovi",
     "@remove": {
         "type": "text",
@@ -67,6 +72,183 @@
     },
     "black": "Nero",
     "@black": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_back": "Indietro",
+    "@semantics_back": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_beige": "Beige",
+    "@semantics_color_beige": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_blue": "Blu",
+    "@semantics_color_blue": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_green": "Verde",
+    "@semantics_color_green": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_none": "Nessuno",
+    "@semantics_color_none": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_orange": "Arancione",
+    "@semantics_color_orange": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_pink": "Rosa",
+    "@semantics_color_pink": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_purple": "Viola",
+    "@semantics_color_purple": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_yellow": "Giallo",
+    "@semantics_color_yellow": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_hideText": "Nascondi testo",
+    "@semantics_hideText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_addElement": "Aggiungi elemento",
+    "@semantics_modifyNotes_addElement": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_image": "Immagine dell'appunto",
+    "@semantics_modifyNotes_image": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_security": "Opzioni di sicurezza",
+    "@semantics_modifyNotes_security": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_star": "Aggiungi ai preferiti",
+    "@semantics_modifyNotes_star": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_unstar": "Rimuovi dai preferiti",
+    "@semantics_modifyNotes_unstar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_addNote": "Aggiungi appunto",
+    "@semantics_notesMainPage_addNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_archive": "Archivia appunti selezionati",
+    "@semantics_notesMainPage_archive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_changeColor": "Cambia colore degli appunti",
+    "@semantics_notesMainPage_changeColor": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_closeSelector": "Chiudi selettore",
+    "@semantics_notesMainPage_closeSelector": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_delete": "Elimina appunti selezionati",
+    "@semantics_notesMainPage_delete": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesAdd": "Aggiungi appunti ai preferiti",
+    "@semantics_notesMainPage_favouritesAdd": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesRemove": "Rimuovi appunti dai preferiti",
+    "@semantics_notesMainPage_favouritesRemove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_grid": "Passa alla vista a griglia",
+    "@semantics_notesMainPage_grid": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_list": "Passa alla vista a lista",
+    "@semantics_notesMainPage_list": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_openMenu": "Apri menu",
+    "@semantics_notesMainPage_openMenu": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_restore": "Ripristina appunti selezionati",
+    "@semantics_notesMainPage_restore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_search": "Cerca negli appunti",
+    "@semantics_notesMainPage_search": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_noteSelected": "{noteSelected} appunto selezionato",
+    "@semantics_notesMainPage_noteSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_notesMainPage_notesSelected": "{noteSelected} appunti selezionati",
+    "@semantics_notesMainPage_notesSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_showText": "Mostra testo",
+    "@semantics_showText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_next": "Pagina successiva",
+    "@semantics_welcome_next": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_pageIndicator": "Pagina {currentPage} di {totalPages}",
+    "@semantics_welcome_pageIndicator": {
+        "type": "text",
+        "placeholders": {
+            "currentPage": {},
+            "totalPages": {}
+        }
+    },
+    "semantics_welcome_previous": "Pagina precedente",
+    "@semantics_welcome_previous": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_exit": "Completa setup",
+    "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
@@ -326,6 +508,16 @@
         "type": "text",
         "placeholders": {}
     },
+    "settingsRoute_themes_appLanguage": "Linguaggio dell'app",
+    "@settingsRoute_themes_appLanguage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_systemDefault": "Sistema",
+    "@settingsRoute_themes_systemDefault": {
+        "type": "text",
+        "placeholders": {}
+    },
     "settingsRoute_gestures": "Gesti",
     "@settingsRoute_gestures": {
         "type": "text",
@@ -405,6 +597,11 @@
     },
     "settingsRoute_dev_idLabels": "Mostra etichette dell'id",
     "@settingsRoute_dev_idLabels": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev_welcomeScreen": "Mostra la schermata di benvenuto al prossimo avvio",
+    "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },

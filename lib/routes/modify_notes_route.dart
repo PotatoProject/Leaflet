@@ -544,7 +544,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                           importance:
                                                               Importance.High,
                                                           ongoing: true,
-                                                          color: appInfo.mainColor,
+                                                          color:
+                                                              appInfo.mainColor,
                                                         ),
                                                         IOSNotificationDetails()),
                                                     payload: noteId.toString());

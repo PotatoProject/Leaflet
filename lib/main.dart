@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/localizations.dart';
@@ -79,6 +80,8 @@ void main() async {
     version: 5,
   );
 
+  print(await findSystemLocale());
+
   Preferences preferences = await Preferences().create();
   List<Note> noteList = await NoteHelper.getNotes(
       preferences.getSortMode(), NotesReturnMode.NORMAL);
@@ -149,7 +152,14 @@ class NotesRoot extends StatelessWidget {
 
         List<Locale> supportedLocales = [];
         for (int i = 0; i < AppInfoProvider.supportedLocales.length; i++) {
-          supportedLocales.add(Locale(AppInfoProvider.supportedLocales[i]));
+          if (AppInfoProvider.supportedLocales.contains("_")) {
+            List<String> localeParts =
+                AppInfoProvider.supportedLocales[i].split("_");
+            supportedLocales.add(Locale.fromSubtags(
+                languageCode: localeParts[0], countryCode: localeParts[1]));
+          } else {
+            supportedLocales.add(Locale(AppInfoProvider.supportedLocales[i]));
+          }
         }
 
         return MaterialApp(
@@ -166,8 +176,17 @@ class NotesRoot extends StatelessWidget {
           home: showWelcomeScreen ? WelcomeRoute() : NotesMainPageRoute(),
           debugShowCheckedModeBanner: false,
           locale: appInfo.customLocale != -1
-              ? Locale(AppInfoProvider.supportedLocales[appInfo.customLocale])
+              ? supportedLocales[appInfo.customLocale]
               : null,
+          localeResolutionCallback:
+              (Locale locale, Iterable<Locale> supportedLocales) {
+            for (var supportedLocale in supportedLocales) {
+              if (locale.toString() == supportedLocale.toString()) {
+                return supportedLocale;
+              }
+            }
+            return locale;
+          },
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)
               : (appInfo.themeMode == 0

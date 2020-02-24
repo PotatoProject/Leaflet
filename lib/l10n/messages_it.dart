@@ -25,9 +25,16 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "La lunghezza del ${method} non può essere minore di ${minLength}";
 
-  static m2(path) => "Backup situato su: ${path}";
+  static m2(noteSelected) => "${noteSelected} appunto selezionato";
 
-  static m3(username) => "Accesso eseguito come: ${username}";
+  static m3(noteSelected) => "${noteSelected} appunti selezionati";
+
+  static m4(currentPage, totalPages) =>
+      "Pagina ${currentPage} di ${totalPages}";
+
+  static m5(path) => "Backup situato su: ${path}";
+
+  static m6(username) => "Accesso eseguito come: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -35,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "black": MessageLookupByLibrary.simpleMessage("Nero"),
         "cancel": MessageLookupByLibrary.simpleMessage("Annulla"),
         "chooseAction": MessageLookupByLibrary.simpleMessage("Scegli azione"),
+        "close": MessageLookupByLibrary.simpleMessage("Chiudi"),
         "confirm": MessageLookupByLibrary.simpleMessage("Conferma"),
         "dark": MessageLookupByLibrary.simpleMessage("Scuro"),
         "done": MessageLookupByLibrary.simpleMessage("Fatto"),
@@ -179,6 +187,66 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Password errata"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("PIN errato"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Indietro"),
+        "semantics_color_beige": MessageLookupByLibrary.simpleMessage("Beige"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Blu"),
+        "semantics_color_green": MessageLookupByLibrary.simpleMessage("Verde"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Nessuno"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Arancione"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Rosa"),
+        "semantics_color_purple": MessageLookupByLibrary.simpleMessage("Viola"),
+        "semantics_color_yellow":
+            MessageLookupByLibrary.simpleMessage("Giallo"),
+        "semantics_hideText":
+            MessageLookupByLibrary.simpleMessage("Nascondi testo"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Aggiungi elemento"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Immagine dell\'appunto"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Opzioni di sicurezza"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Aggiungi ai preferiti"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Rimuovi dai preferiti"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Aggiungi appunto"),
+        "semantics_notesMainPage_archive": MessageLookupByLibrary.simpleMessage(
+            "Archivia appunti selezionati"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Cambia colore degli appunti"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Chiudi selettore"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Elimina appunti selezionati"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage(
+                "Aggiungi appunti ai preferiti"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage(
+                "Rimuovi appunti dai preferiti"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Passa alla vista a griglia"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Passa alla vista a lista"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Apri menu"),
+        "semantics_notesMainPage_restore": MessageLookupByLibrary.simpleMessage(
+            "Ripristina appunti selezionati"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Cerca negli appunti"),
+        "semantics_showText":
+            MessageLookupByLibrary.simpleMessage("Mostra testo"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Completa setup"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("Pagina successiva"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Pagina precedente"),
         "settingsRoute_about": MessageLookupByLibrary.simpleMessage("Crediti"),
         "settingsRoute_about_potatonotes": MessageLookupByLibrary.simpleMessage(
             "A proposito di PotatoNotes..."),
@@ -194,7 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Backup & ripristino"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Backup (Sperimentale)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage(
                 "Rigenera le colonne del database"),
@@ -209,11 +277,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Opzioni sviluppatore"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("Mostra etichette dell\'id"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Mostra la schermata di benvenuto al prossimo avvio"),
         "settingsRoute_gestures": MessageLookupByLibrary.simpleMessage("Gesti"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage(
                 "Doppio tocco per mettere tra i preferiti"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Temi"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("Linguaggio dell\'app"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("Tema dell\'app"),
         "settingsRoute_themes_customAccentColor":
@@ -222,6 +294,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Segui il tema di sistema"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("Tema scuro di sistema"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("Sistema"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage(
                 "Utilizza un colore di accento personalizzato"),
@@ -257,7 +331,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Cambia username"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Ospite"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Esci"),
         "syncManageRoute_sync":

@@ -1,7 +1,7 @@
 {
-    "@@last_modified": "2019-11-10T11:25:03.268082",
-    "notes": "Notatki",
-    "@notes": {
+    "@@last_modified": "2020-02-24T17:02:26.750824",
+    "home": "Start",
+    "@home": {
         "type": "text",
         "placeholders": {}
     },
@@ -32,6 +32,11 @@
     },
     "cancel": "Anuluj",
     "@cancel": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "close": "Zamknij",
+    "@close": {
         "type": "text",
         "placeholders": {}
     },
@@ -67,6 +72,183 @@
     },
     "black": "Czarny",
     "@black": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_back": "Wróć",
+    "@semantics_back": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_beige": "Beżowy",
+    "@semantics_color_beige": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_blue": "Niebieski",
+    "@semantics_color_blue": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_green": "Zielony",
+    "@semantics_color_green": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_none": "Żaden",
+    "@semantics_color_none": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_orange": "Pomarańczowy",
+    "@semantics_color_orange": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_pink": "Różowy",
+    "@semantics_color_pink": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_purple": "Fioletowy",
+    "@semantics_color_purple": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_color_yellow": "Żółty",
+    "@semantics_color_yellow": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_hideText": "Ukryj tekst",
+    "@semantics_hideText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_addElement": "Dodaj element",
+    "@semantics_modifyNotes_addElement": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_image": "Obraz notatki",
+    "@semantics_modifyNotes_image": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_security": "Ustawienia bezpieczeństwa",
+    "@semantics_modifyNotes_security": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_star": "Oznacz gwiazdką",
+    "@semantics_modifyNotes_star": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_modifyNotes_unstar": "Usuń gwiazdkę",
+    "@semantics_modifyNotes_unstar": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_addNote": "Dodaj nową notatkę",
+    "@semantics_notesMainPage_addNote": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_archive": "Archiwizuj wybrane notatki",
+    "@semantics_notesMainPage_archive": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_changeColor": "Zmień kolor notatki",
+    "@semantics_notesMainPage_changeColor": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_closeSelector": "Zamknij",
+    "@semantics_notesMainPage_closeSelector": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_delete": "Usuń zaznaczone notatki",
+    "@semantics_notesMainPage_delete": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesAdd": "Dodaj do ulubionych",
+    "@semantics_notesMainPage_favouritesAdd": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_favouritesRemove": "Usuń z ulubionych",
+    "@semantics_notesMainPage_favouritesRemove": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_grid": "Przejdź do widoku siatki",
+    "@semantics_notesMainPage_grid": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_list": "Przejdź do widoku listy",
+    "@semantics_notesMainPage_list": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_openMenu": "Otwórz menu",
+    "@semantics_notesMainPage_openMenu": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_restore": "Przywróć wybrane notatki",
+    "@semantics_notesMainPage_restore": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_search": "Przeszukaj notatki",
+    "@semantics_notesMainPage_search": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_notesMainPage_noteSelected": "{noteSelected} wybrano notatkę",
+    "@semantics_notesMainPage_noteSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_notesMainPage_notesSelected": "{noteSelected} wybrano notatki",
+    "@semantics_notesMainPage_notesSelected": {
+        "type": "text",
+        "placeholders": {
+            "noteSelected": {}
+        }
+    },
+    "semantics_showText": "Pokaż tekst",
+    "@semantics_showText": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_next": "Następna strona",
+    "@semantics_welcome_next": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_pageIndicator": "Strona {currentPage} z {totalPages}",
+    "@semantics_welcome_pageIndicator": {
+        "type": "text",
+        "placeholders": {
+            "currentPage": {},
+            "totalPages": {}
+        }
+    },
+    "semantics_welcome_previous": "Poprzednia strona",
+    "@semantics_welcome_previous": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantics_welcome_exit": "Zakończ konfigurację",
+    "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
@@ -326,6 +508,16 @@
         "type": "text",
         "placeholders": {}
     },
+    "settingsRoute_themes_appLanguage": "Język aplikacji",
+    "@settingsRoute_themes_appLanguage": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_themes_systemDefault": "System",
+    "@settingsRoute_themes_systemDefault": {
+        "type": "text",
+        "placeholders": {}
+    },
     "settingsRoute_gestures": "Gesty",
     "@settingsRoute_gestures": {
         "type": "text",
@@ -405,6 +597,11 @@
     },
     "settingsRoute_dev_idLabels": "Pokaż etykiety identyfikatorów",
     "@settingsRoute_dev_idLabels": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "settingsRoute_dev_welcomeScreen": "Pokaż ekran powitalny przy następnym uruchomieniu",
+    "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },
@@ -607,6 +804,46 @@
     },
     "syncManageRoute_sync_autoSyncInterval": "Interwał czasu automatycznej synchronizacji (sekundy)",
     "@syncManageRoute_sync_autoSyncInterval": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_firstPage_catchPhrase": "Twoja nowa aplikacja do ulubionych notatek",
+    "@welcomeRoute_firstPage_catchPhrase": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_secondPage_title": "Podstawowe dostosowywanie",
+    "@welcomeRoute_secondPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_description": "Dzięki darmowemu kontu PotatoSync możesz synchronizować swoje notatki między wieloma urządzeniami. I bardzo łatwo jest je uzyskać!",
+    "@welcomeRoute_thirdPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_success": "PotatoSync został skonfigurowany pomyślnie. Dobra robota!",
+    "@welcomeRoute_thirdPage_success": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_thirdPage_getStarted": "Rozpocznij",
+    "@welcomeRoute_thirdPage_getStarted": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_title": "Konfiguracja ukończona",
+    "@welcomeRoute_fourthPage_title": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_description": "I w końcu skończyłeś. Nareszcie możesz się bawić! Hurra!",
+    "@welcomeRoute_fourthPage_description": {
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeRoute_fourthPage_thankyou": "Dziękujemy za wybranie PotatoNotes",
+    "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },

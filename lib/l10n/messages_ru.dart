@@ -25,9 +25,16 @@ class MessageLookup extends MessageLookupByLibrary {
   static m1(method, minLength) =>
       "длина ${method} не может быть меньше ${minLength}";
 
-  static m2(path) => "Бэкап расположен в: ${path}";
+  static m2(noteSelected) => "${noteSelected} заметка выбрана";
 
-  static m3(username) => "Вход выполнен как: ${username}";
+  static m3(noteSelected) => "${noteSelected} заметок выбрано";
+
+  static m4(currentPage, totalPages) =>
+      "Страница ${currentPage} из ${totalPages}";
+
+  static m5(path) => "Бэкап расположен в: ${path}";
+
+  static m6(username) => "Вход выполнен как: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -36,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
         "chooseAction":
             MessageLookupByLibrary.simpleMessage("Выберите действие"),
+        "close": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "confirm": MessageLookupByLibrary.simpleMessage("Подтвердить"),
         "dark": MessageLookupByLibrary.simpleMessage("Темная"),
         "done": MessageLookupByLibrary.simpleMessage("Готово"),
@@ -178,6 +186,69 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Неверный пароль"),
         "securityNoteRoute_wrong_pin":
             MessageLookupByLibrary.simpleMessage("Неверный PIN-код"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Назад"),
+        "semantics_color_beige":
+            MessageLookupByLibrary.simpleMessage("Бежевый"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Синий"),
+        "semantics_color_green":
+            MessageLookupByLibrary.simpleMessage("Зеленый"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Нет"),
+        "semantics_color_orange":
+            MessageLookupByLibrary.simpleMessage("Оранжевый"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Розовый"),
+        "semantics_color_purple":
+            MessageLookupByLibrary.simpleMessage("Фиолетовый"),
+        "semantics_color_yellow":
+            MessageLookupByLibrary.simpleMessage("Желтый"),
+        "semantics_hideText":
+            MessageLookupByLibrary.simpleMessage("Скрыть текст"),
+        "semantics_modifyNotes_addElement":
+            MessageLookupByLibrary.simpleMessage("Добавить элемент"),
+        "semantics_modifyNotes_image":
+            MessageLookupByLibrary.simpleMessage("Изображение заметки"),
+        "semantics_modifyNotes_security":
+            MessageLookupByLibrary.simpleMessage("Параметры безопасности"),
+        "semantics_modifyNotes_star":
+            MessageLookupByLibrary.simpleMessage("Звездная заметка"),
+        "semantics_modifyNotes_unstar":
+            MessageLookupByLibrary.simpleMessage("Убрать звезду"),
+        "semantics_notesMainPage_addNote":
+            MessageLookupByLibrary.simpleMessage("Добавить новую заметку"),
+        "semantics_notesMainPage_archive": MessageLookupByLibrary.simpleMessage(
+            "Архивировать выбранные заметки"),
+        "semantics_notesMainPage_changeColor":
+            MessageLookupByLibrary.simpleMessage("Изменить цвет заметок"),
+        "semantics_notesMainPage_closeSelector":
+            MessageLookupByLibrary.simpleMessage("Закрыть селектор"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Удалить выбранные заметки"),
+        "semantics_notesMainPage_favouritesAdd":
+            MessageLookupByLibrary.simpleMessage(
+                "Добавить заметки в избранное"),
+        "semantics_notesMainPage_favouritesRemove":
+            MessageLookupByLibrary.simpleMessage(
+                "Удалить заметки из избранных"),
+        "semantics_notesMainPage_grid": MessageLookupByLibrary.simpleMessage(
+            "Переключиться к старому виду"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Переключиться к новому виду"),
+        "semantics_notesMainPage_noteSelected": m2,
+        "semantics_notesMainPage_notesSelected": m3,
+        "semantics_notesMainPage_openMenu":
+            MessageLookupByLibrary.simpleMessage("Открыть меню"),
+        "semantics_notesMainPage_restore": MessageLookupByLibrary.simpleMessage(
+            "Восстановить выбранные файлы"),
+        "semantics_notesMainPage_search":
+            MessageLookupByLibrary.simpleMessage("Поиск заметок"),
+        "semantics_showText":
+            MessageLookupByLibrary.simpleMessage("Показать текст"),
+        "semantics_welcome_exit":
+            MessageLookupByLibrary.simpleMessage("Выйти из настроек"),
+        "semantics_welcome_next":
+            MessageLookupByLibrary.simpleMessage("След. страница"),
+        "semantics_welcome_pageIndicator": m4,
+        "semantics_welcome_previous":
+            MessageLookupByLibrary.simpleMessage("Пред. страница "),
         "settingsRoute_about":
             MessageLookupByLibrary.simpleMessage("О программе"),
         "settingsRoute_about_potatonotes":
@@ -194,7 +265,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Бэкап и восстановление"),
         "settingsRoute_backupAndRestore_backup":
             MessageLookupByLibrary.simpleMessage("Бэкап (Экспериментальный)"),
-        "settingsRoute_backupAndRestore_backup_done": m2,
+        "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage("Регенерировать базу данных"),
         "settingsRoute_backupAndRestore_restore":
@@ -209,10 +280,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Опции для разработчиков"),
         "settingsRoute_dev_idLabels":
             MessageLookupByLibrary.simpleMessage("Показывать id записок"),
+        "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
+            "Показывать экран приветствия при следующем запуске"),
         "settingsRoute_gestures": MessageLookupByLibrary.simpleMessage("Жесты"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage("Двойное нажатие для пометки"),
         "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Темы"),
+        "settingsRoute_themes_appLanguage":
+            MessageLookupByLibrary.simpleMessage("Язык приложения"),
         "settingsRoute_themes_appTheme":
             MessageLookupByLibrary.simpleMessage("Тема приложения"),
         "settingsRoute_themes_customAccentColor":
@@ -221,6 +296,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Следовать системной теме"),
         "settingsRoute_themes_systemDarkMode":
             MessageLookupByLibrary.simpleMessage("Автоматический ночной режим"),
+        "settingsRoute_themes_systemDefault":
+            MessageLookupByLibrary.simpleMessage("Система"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage(
                 "Использовать пользовательский акцент"),
@@ -257,7 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Изменить имя пользователя"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Гость"),
-        "syncManageRoute_account_loggedInAs": m3,
+        "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
             MessageLookupByLibrary.simpleMessage("Выход"),
         "syncManageRoute_sync":

@@ -1,240 +1,240 @@
 {
     "@@last_modified": "2020-02-24T17:02:26.750824",
-    "home": "Головна",
+    "home": "Inicio",
     "@home": {
         "type": "text",
         "placeholders": {}
     },
-    "trash": "Корзина",
+    "trash": "Lixeira",
     "@trash": {
         "type": "text",
         "placeholders": {}
     },
-    "archive": "Архів",
+    "archive": "Arquivar",
     "@archive": {
         "type": "text",
         "placeholders": {}
     },
-    "done": "Готово",
+    "done": "Concluído",
     "@done": {
         "type": "text",
         "placeholders": {}
     },
-    "save": "Зберегти",
+    "save": "Salvar",
     "@save": {
         "type": "text",
         "placeholders": {}
     },
-    "confirm": "Підтвердити",
+    "confirm": "Confirmar",
     "@confirm": {
         "type": "text",
         "placeholders": {}
     },
-    "cancel": "Скасувати",
+    "cancel": "Cancelar",
     "@cancel": {
         "type": "text",
         "placeholders": {}
     },
-    "close": "Закрити",
+    "close": "Fechar",
     "@close": {
         "type": "text",
         "placeholders": {}
     },
-    "remove": "Видалити",
+    "remove": "Remover",
     "@remove": {
         "type": "text",
         "placeholders": {}
     },
-    "reset": "Скинути",
+    "reset": "Redefinir",
     "@reset": {
         "type": "text",
         "placeholders": {}
     },
-    "undo": "Відмінити",
+    "undo": "Desfazer",
     "@undo": {
         "type": "text",
         "placeholders": {}
     },
-    "chooseAction": "Виберіть дію",
+    "chooseAction": "Escolher ação",
     "@chooseAction": {
         "type": "text",
         "placeholders": {}
     },
-    "light": "Світла",
+    "light": "Claro",
     "@light": {
         "type": "text",
         "placeholders": {}
     },
-    "dark": "Темна",
+    "dark": "Escuro",
     "@dark": {
         "type": "text",
         "placeholders": {}
     },
-    "black": "Чорна",
+    "black": "Preto",
     "@black": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_back": "Назад",
+    "semantics_back": "Voltar",
     "@semantics_back": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_beige": "Бежевий",
+    "semantics_color_beige": "Bege",
     "@semantics_color_beige": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_blue": "Синій",
+    "semantics_color_blue": "Azul",
     "@semantics_color_blue": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_green": "Зелений",
+    "semantics_color_green": "Verde",
     "@semantics_color_green": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_none": "Ніякий",
+    "semantics_color_none": "Nenhum(a)",
     "@semantics_color_none": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_orange": "Помаранчевий",
+    "semantics_color_orange": "Laranja",
     "@semantics_color_orange": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_pink": "Розовий",
+    "semantics_color_pink": "Rosa",
     "@semantics_color_pink": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_purple": "Фіолетовий",
+    "semantics_color_purple": "Roxo",
     "@semantics_color_purple": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_yellow": "Жовтий",
+    "semantics_color_yellow": "Amarelo",
     "@semantics_color_yellow": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_hideText": "Сховати текст",
+    "semantics_hideText": "Ocultar texto",
     "@semantics_hideText": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_addElement": "Добавити елемент",
+    "semantics_modifyNotes_addElement": "Adicionar Elemento",
     "@semantics_modifyNotes_addElement": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_image": "Примітка",
+    "semantics_modifyNotes_image": "Imagem da nota",
     "@semantics_modifyNotes_image": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_security": "Налаштування безпеки",
+    "semantics_modifyNotes_security": "Opções de segurança",
     "@semantics_modifyNotes_security": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_star": "Обрана нотатка",
+    "semantics_modifyNotes_star": "Adicionar estrela na nota",
     "@semantics_modifyNotes_star": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_unstar": "Видалити зірку",
+    "semantics_modifyNotes_unstar": "Remover estrela da Nota",
     "@semantics_modifyNotes_unstar": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_addNote": "Додати нову замітку",
+    "semantics_notesMainPage_addNote": "Adicionar uma nova nota",
     "@semantics_notesMainPage_addNote": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_archive": "Архівувати вибрані нотатки",
+    "semantics_notesMainPage_archive": "Arquivar notas selecionadas",
     "@semantics_notesMainPage_archive": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_changeColor": "Змінити колір нотаток",
+    "semantics_notesMainPage_changeColor": "Trocar cor das notas",
     "@semantics_notesMainPage_changeColor": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_closeSelector": "Закрити вибір",
+    "semantics_notesMainPage_closeSelector": "Fechar seletor",
     "@semantics_notesMainPage_closeSelector": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_delete": "Видалити вибрані нотатки",
+    "semantics_notesMainPage_delete": "Deletar notas selecionadas",
     "@semantics_notesMainPage_delete": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_favouritesAdd": "Додати нотатку до улюблених",
+    "semantics_notesMainPage_favouritesAdd": "Adicionar notas aos favoritos",
     "@semantics_notesMainPage_favouritesAdd": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_favouritesRemove": "Видалити нотатку з улюблених",
+    "semantics_notesMainPage_favouritesRemove": "Remover notas dos favoritos",
     "@semantics_notesMainPage_favouritesRemove": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_grid": "Переключити до режиму сітки",
+    "semantics_notesMainPage_grid": "Alterado para exibição em grade",
     "@semantics_notesMainPage_grid": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_list": "Переключити до режиму списку",
+    "semantics_notesMainPage_list": "Alternar para visualização em lista",
     "@semantics_notesMainPage_list": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_openMenu": "Відкрити меню",
+    "semantics_notesMainPage_openMenu": "Abrir menu",
     "@semantics_notesMainPage_openMenu": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_restore": "Відновити вибрані нотатки",
+    "semantics_notesMainPage_restore": "Restaurar notas selecionadas",
     "@semantics_notesMainPage_restore": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_search": "Шукати нотатки",
+    "semantics_notesMainPage_search": "Procurar notas",
     "@semantics_notesMainPage_search": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_noteSelected": "{noteSelected} Вибрана нотатка",
+    "semantics_notesMainPage_noteSelected": "{noteSelected} nota selecionada",
     "@semantics_notesMainPage_noteSelected": {
         "type": "text",
         "placeholders": {
             "noteSelected": {}
         }
     },
-    "semantics_notesMainPage_notesSelected": "{noteSelected} Вибрані нотатки",
+    "semantics_notesMainPage_notesSelected": "{noteSelected} nota selecionada",
     "@semantics_notesMainPage_notesSelected": {
         "type": "text",
         "placeholders": {
             "noteSelected": {}
         }
     },
-    "semantics_showText": "Показати текст",
+    "semantics_showText": "Exibir Texto",
     "@semantics_showText": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_next": "Наступна сторінка",
+    "semantics_welcome_next": "Próxima página",
     "@semantics_welcome_next": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_pageIndicator": "Сторінка {currentPage} з {totalPages}",
+    "semantics_welcome_pageIndicator": "Página {currentPage} de {totalPages}",
     "@semantics_welcome_pageIndicator": {
         "type": "text",
         "placeholders": {
@@ -242,206 +242,206 @@
             "totalPages": {}
         }
     },
-    "semantics_welcome_previous": "Попередня сторінка",
+    "semantics_welcome_previous": "Página anterior",
     "@semantics_welcome_previous": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_exit": "Вийти з установки",
+    "semantics_welcome_exit": "Sair da Configuração Inicial",
     "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_noNotes": "Нотатки ще не додані",
+    "notesMainPageRoute_noNotes": "Nenhuma nota adicionada... ainda",
     "@notesMainPageRoute_noNotes": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyTrash": "Корзина пуста",
+    "notesMainPageRoute_emptyTrash": "Sua lixeira está vazia",
     "@notesMainPageRoute_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "У вас немає нотаток в архіві",
+    "notesMainPageRoute_emptyArchive": "Você não tem nenhuma nota arquivada",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_writeNote": "Написати нотатку",
+    "notesMainPageRoute_writeNote": "Escreva uma anotação",
     "@notesMainPageRoute_writeNote": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_starred": "Обрані нотатки",
+    "notesMainPageRoute_starred": "Notas Favoritas",
     "@notesMainPageRoute_starred": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_other": "Інші нотатки",
+    "notesMainPageRoute_other": "Outras notas",
     "@notesMainPageRoute_other": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_hiddenContent": "Вміст сховано",
+    "notesMainPageRoute_note_hiddenContent": "Conteúdo oculto",
     "@notesMainPageRoute_note_hiddenContent": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_remindersSet": "Нагадування встановлено для нотатки",
+    "notesMainPageRoute_note_remindersSet": "Lembretes definidos para nota",
     "@notesMainPageRoute_note_remindersSet": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_title": "Видалити вибрані нотатки?",
+    "notesMainPageRoute_note_deleteDialog_title": "Excluir notas selecionadas?",
     "@notesMainPageRoute_note_deleteDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_content": "Після видалення нотаток звідси, ви не можете відновити їх.\nВи дійсно бажаєте продовжити?",
+    "notesMainPageRoute_note_deleteDialog_content": "Uma vez que as anotações são excluídas, você não pode restaurá-las.\nTem certeza que deseja continuar?",
     "@notesMainPageRoute_note_deleteDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_title": "Очистити корзину?",
+    "notesMainPageRoute_note_emptyTrash_title": "Esvaziar lixeira?",
     "@notesMainPageRoute_note_emptyTrash_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_content": "Після видалення нотаток звідси, ви не можете відновити їх.\nВи дійсно бажаєте продовжити?",
+    "notesMainPageRoute_note_emptyTrash_content": "Uma vez que as anotações são excluídas, você não pode restaurá-las.\nTem certeza que deseja continuar?",
     "@notesMainPageRoute_note_emptyTrash_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_list_selectedEntries": " нотаток выбрано",
+    "notesMainPageRoute_note_list_selectedEntries": " itens selecionados",
     "@notesMainPageRoute_note_list_selectedEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_pinnedNote": "Закріплена нотатка",
+    "notesMainPageRoute_pinnedNote": "Nota fixada",
     "@notesMainPageRoute_pinnedNote": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_sortByDate": "Сортувати нотатки за датою",
+    "userInfoRoute_sortByDate": "Ordenar notas por data",
     "@userInfoRoute_sortByDate": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_change": "Змінити аватар",
+    "userInfoRoute_avatar_change": "Alterar Imagem de Perfil",
     "@userInfoRoute_avatar_change": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_remove": "Видалити аватар",
+    "userInfoRoute_avatar_remove": "Remover Imagem de Perfil",
     "@userInfoRoute_avatar_remove": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_title": "Заголовок",
+    "modifyNotesRoute_title": "Título",
     "@modifyNotesRoute_title": {
         "description": "Title textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_content": "Вміст",
+    "modifyNotesRoute_content": "Conteúdo",
     "@modifyNotesRoute_content": {
         "description": "Content textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list": "Список",
+    "modifyNotesRoute_list": "Lista",
     "@modifyNotesRoute_list": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_entry": "Запис",
+    "modifyNotesRoute_list_entry": "Entrada",
     "@modifyNotesRoute_list_entry": {
         "description": "List entry textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_selectedEntries": " нотаток вибрано",
+    "modifyNotesRoute_list_selectedEntries": " entradas verificadas",
     "@modifyNotesRoute_list_selectedEntries": {
         "description": "Text that appears on checked entries header widget",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image": "Зображення",
+    "modifyNotesRoute_image": "Imagem",
     "@modifyNotesRoute_image": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_add": "Додати зображення",
+    "modifyNotesRoute_image_add": "Adicionar imagem",
     "@modifyNotesRoute_image_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_update": "Оновити зображення",
+    "modifyNotesRoute_image_update": "Atualizar imagem",
     "@modifyNotesRoute_image_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_remove": "Видалити зображення",
+    "modifyNotesRoute_image_remove": "Remover imagem",
     "@modifyNotesRoute_image_remove": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder": "Нагадування",
+    "modifyNotesRoute_reminder": "Lembrete",
     "@modifyNotesRoute_reminder": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_add": "Додати нагадування",
+    "modifyNotesRoute_reminder_add": "Adicionar um novo lembrete",
     "@modifyNotesRoute_reminder_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_update": "Оновити нагадування",
+    "modifyNotesRoute_reminder_update": "Atualizar lembrete",
     "@modifyNotesRoute_reminder_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_time": "Час",
+    "modifyNotesRoute_reminder_time": "Hora",
     "@modifyNotesRoute_reminder_time": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_date": "Дата",
+    "modifyNotesRoute_reminder_date": "Data",
     "@modifyNotesRoute_reminder_date": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_hideContent": "Приховати вміст нотатки на головній",
+    "modifyNotesRoute_security_hideContent": "Ocultar conteúdo da nota na página principal",
     "@modifyNotesRoute_security_hideContent": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_protectionText": "Використовувати захист",
+    "modifyNotesRoute_security_protectionText": "Usar uma proteção para esconder",
     "@modifyNotesRoute_security_protectionText": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_pin": "PIN-код",
+    "modifyNotesRoute_security_pin": "PIN",
     "@modifyNotesRoute_security_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_password": "Пароль",
+    "modifyNotesRoute_security_password": "Senha",
     "@modifyNotesRoute_security_password": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePin": "Встановити або оновити PIN",
+    "modifyNotesRoute_security_dialog_titlePin": "Definir ou atualizar PIN",
     "@modifyNotesRoute_security_dialog_titlePin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePassword": "Встановити чи оновити пароль",
+    "modifyNotesRoute_security_dialog_titlePassword": "Definir ou atualizar senha",
     "@modifyNotesRoute_security_dialog_titlePassword": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_lengthExceed": "довжина {method} не може перевищувати {maxLength}",
+    "modifyNotesRoute_security_dialog_lengthExceed": "{method} comprimento não pode exceder {maxLength}",
     "@modifyNotesRoute_security_dialog_lengthExceed": {
         "type": "text",
         "placeholders": {
@@ -449,7 +449,7 @@
             "maxLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_lengthShort": "довжина {method} не може бути меншою за {minLength}",
+    "modifyNotesRoute_security_dialog_lengthShort": "{method} tamanho não pode exceder {minLength}",
     "@modifyNotesRoute_security_dialog_lengthShort": {
         "type": "text",
         "placeholders": {
@@ -457,567 +457,567 @@
             "minLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_valid": " дійсне",
+    "modifyNotesRoute_security_dialog_valid": " válido",
     "@modifyNotesRoute_security_dialog_valid": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_dialogTitle": "Колір нотаток",
+    "modifyNotesRoute_color_dialogTitle": "Seletor de cores da nota",
     "@modifyNotesRoute_color_dialogTitle": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_change": "Змінити колір нотатки",
+    "modifyNotesRoute_color_change": "Alterar cor da nota",
     "@modifyNotesRoute_color_change": {
         "description": "Used in the three dots menu on modify notes route, for modifying note color",
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_title": "Налаштування",
+    "settingsRoute_title": "Configurações",
     "@settingsRoute_title": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes": "Теми",
+    "settingsRoute_themes": "Temas",
     "@settingsRoute_themes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_followSystem": "Використовувати системну тему",
+    "settingsRoute_themes_followSystem": "Seguir tema do sistema",
     "@settingsRoute_themes_followSystem": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_systemDarkMode": "Автоматичний темний режим",
+    "settingsRoute_themes_systemDarkMode": "Modo de tema escuro automático",
     "@settingsRoute_themes_systemDarkMode": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_appTheme": "Тема програми",
+    "settingsRoute_themes_appTheme": "Tema do aplicativo",
     "@settingsRoute_themes_appTheme": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_useCustomAccent": "Використовувати свій колір акценту",
+    "settingsRoute_themes_useCustomAccent": "Usar cor personalizada de destaque",
     "@settingsRoute_themes_useCustomAccent": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_customAccentColor": "Користувацький колір",
+    "settingsRoute_themes_customAccentColor": "Cor personalizada",
     "@settingsRoute_themes_customAccentColor": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_appLanguage": "Мова програми",
+    "settingsRoute_themes_appLanguage": "Idiomas do Aplicativo",
     "@settingsRoute_themes_appLanguage": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_systemDefault": "Система",
+    "settingsRoute_themes_systemDefault": "Sistema",
     "@settingsRoute_themes_systemDefault": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures": "Жести",
+    "settingsRoute_gestures": "Gestos",
     "@settingsRoute_gestures": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures_quickStar": "Подвійне натискання для позначення",
+    "settingsRoute_gestures_quickStar": "Toque duas vezes em nota para adicionar aos favoritos",
     "@settingsRoute_gestures_quickStar": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore": "Бекап та відновлення",
+    "settingsRoute_backupAndRestore": "Restauração e Backup",
     "@settingsRoute_backupAndRestore": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_backup": "Бекап (Експерементальний)",
+    "settingsRoute_backupAndRestore_backup": "Backup (Experimental)",
     "@settingsRoute_backupAndRestore_backup": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_backup_done": "Бекап розташовано в: {path}",
+    "settingsRoute_backupAndRestore_backup_done": "Backup localizado em: {path}",
     "@settingsRoute_backupAndRestore_backup_done": {
         "type": "text",
         "placeholders": {
             "path": {}
         }
     },
-    "settingsRoute_backupAndRestore_restore": "Відновити (Експерементально)",
+    "settingsRoute_backupAndRestore_restore": "Restaurar (Experimental)",
     "@settingsRoute_backupAndRestore_restore": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_success": "Готово!",
+    "settingsRoute_backupAndRestore_restore_success": "Concluído!",
     "@settingsRoute_backupAndRestore_restore_success": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_fail": "База данних пошкоджена або недійсна!",
+    "settingsRoute_backupAndRestore_restore_fail": "DB corrompido ou inválido!",
     "@settingsRoute_backupAndRestore_restore_fail": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_regenDbEntries": "Регенерувати базу данних",
+    "settingsRoute_backupAndRestore_regenDbEntries": "Regenerar entradas do banco de dados",
     "@settingsRoute_backupAndRestore_regenDbEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about": "Про програму",
+    "settingsRoute_about": "Sobre",
     "@settingsRoute_about": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes": "Про PotatoNotes",
+    "settingsRoute_about_potatonotes": "Sobre PotatoNotes",
     "@settingsRoute_about_potatonotes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_development": "Розробка та підтримка: Hrx03",
+    "settingsRoute_about_potatonotes_development": "Desenvolvido e mantido por HrX03",
     "@settingsRoute_about_potatonotes_development": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_design": "Дизайн, брендинг та логотип: RshBfn",
+    "settingsRoute_about_potatonotes_design": "Design, marca e logotipo da app por RshBfn",
     "@settingsRoute_about_potatonotes_design": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_sourceCode": "Вихідний код PotatoNotes",
+    "settingsRoute_about_sourceCode": "Código fonte de PotatoNotes",
     "@settingsRoute_about_sourceCode": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev": "Параметри для розробників",
+    "settingsRoute_dev": "Opções do desenvolvedor",
     "@settingsRoute_dev": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_idLabels": "Показувати id нотанок",
+    "settingsRoute_dev_idLabels": "Mostrar rótulos de identificação",
     "@settingsRoute_dev_idLabels": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_welcomeScreen": "Показати екран привітання при наступному запуску",
+    "settingsRoute_dev_welcomeScreen": "Mostrar tela de boas-vindas na próxima inicialização",
     "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_searchbar": "Пошук...",
+    "searchNotesRoute_searchbar": "Pesquisar...",
     "@searchNotesRoute_searchbar": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_noQuery": "Введіть що-небудь, щоб почати пошук",
+    "searchNotesRoute_noQuery": "Digite algo para iniciar a pesquisa",
     "@searchNotesRoute_noQuery": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_nothingFound": "Не знайдено нотаток, що відповідають вашим умовам пошуку",
+    "searchNotesRoute_nothingFound": "Nenhuma nota encontrada que corresponda aos seus termos de pesquisa",
     "@searchNotesRoute_nothingFound": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_title": "Фільтри пошуку",
+    "searchNotesRoute_filters_title": "Filtros de pesquisa",
     "@searchNotesRoute_filters_title": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_case": "З урахуванням регістру",
+    "searchNotesRoute_filters_case": "Maiúsculas e minúsculas",
     "@searchNotesRoute_filters_case": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_color": "Колірний фільтр",
+    "searchNotesRoute_filters_color": "Filtro de Cor",
     "@searchNotesRoute_filters_color": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_date": "По даті",
+    "searchNotesRoute_filters_date": "Filtro de Data",
     "@searchNotesRoute_filters_date": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_pin": "Введіть PIN, щоб відкрити нотанку",
+    "securityNoteRoute_request_pin": "Uma senha é solicitada para abrir a nota",
     "@securityNoteRoute_request_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_password": "Треба пароль, щоб відкрити нотанку",
+    "securityNoteRoute_request_password": "Uma senha é solicitada para abrir a nota",
     "@securityNoteRoute_request_password": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_pin": "Неправильний PIN-код",
+    "securityNoteRoute_wrong_pin": "Senha incorreta",
     "@securityNoteRoute_wrong_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_password": "Неправильний пароль",
+    "securityNoteRoute_wrong_password": "Senha incorreta",
     "@securityNoteRoute_wrong_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emailOrUsername": "Ел. пошта або ім'я користувача",
+    "syncLoginRoute_emailOrUsername": "E-mail ou nome de usuário",
     "@syncLoginRoute_emailOrUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emptyField": "Це поле не може бути порожнім!",
+    "syncLoginRoute_emptyField": "Este campo não pode ficar vazio!",
     "@syncLoginRoute_emptyField": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_password": "Пароль",
+    "syncLoginRoute_password": "Senha",
     "@syncLoginRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_register": "Реєстрація",
+    "syncLoginRoute_register": "Registrar-se",
     "@syncLoginRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_successfulRegistration": "Успішно зареєстровано",
+    "syncLoginRoute_successfulRegistration": "Registrado com sucesso",
     "@syncLoginRoute_successfulRegistration": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_login": "Вхід",
+    "syncLoginRoute_login": "Conectar-se",
     "@syncLoginRoute_login": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_title": "Нотатки знайдені в вашому профілі",
+    "syncLoginRoute_noteConflictDialog_title": "Notas encontradas em sua conta",
     "@syncLoginRoute_noteConflictDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_content": "Збережені та синхронізовані нотатки конфліктують.\nЩо ви хочете зробити?",
+    "syncLoginRoute_noteConflictDialog_content": "Salvar anotações e conflito de notas sincronizadas.\nO que você deseja fazer?",
     "@syncLoginRoute_noteConflictDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_keep": "Зберегти поточні та загрузити їх",
+    "syncLoginRoute_noteConflictDialog_keep": "Mantenha-se atualizado e faça o upload",
     "@syncLoginRoute_noteConflictDialog_keep": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_replace": "Замінити на збережені у хмарі",
+    "syncLoginRoute_noteConflictDialog_replace": "Substituir salvo com nuvem",
     "@syncLoginRoute_noteConflictDialog_replace": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_register": "Зареєструватися",
+    "syncRegisterRoute_register": "Registrar-se",
     "@syncRegisterRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username": "Ім'я користувача",
+    "syncRegisterRoute_username": "Nome do usuário",
     "@syncRegisterRoute_username": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username_empty": "Ім'я не може бути порожнім",
+    "syncRegisterRoute_username_empty": "O usuário não pode estar em branco",
     "@syncRegisterRoute_username_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email": "Ел. пошта",
+    "syncRegisterRoute_email": "E-mail",
     "@syncRegisterRoute_email": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_empty": "Ел. пошта не може бути порожньою",
+    "syncRegisterRoute_email_empty": "O e-mail não pode estar em branco",
     "@syncRegisterRoute_email_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_invalidFormat": "Невірний формат ел. пошти",
+    "syncRegisterRoute_email_invalidFormat": "Formato de e-mail inválido",
     "@syncRegisterRoute_email_invalidFormat": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password": "Пароль",
+    "syncRegisterRoute_password": "Senha",
     "@syncRegisterRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password_empty": "Пароль не може бути порожнім",
+    "syncRegisterRoute_password_empty": "A senha não pode estar em branco",
     "@syncRegisterRoute_password_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword": "Підтвердження пароля",
+    "syncRegisterRoute_confirmPassword": "Confirmar a senha",
     "@syncRegisterRoute_confirmPassword": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword_noMatch": "Паролі не збігаються",
+    "syncRegisterRoute_confirmPassword_noMatch": "As senhas não conferem",
     "@syncRegisterRoute_confirmPassword_noMatch": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account": "Профіль",
+    "syncManageRoute_account": "Conta",
     "@syncManageRoute_account": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_loggedInAs": "Ви ввійшли як: {username}",
+    "syncManageRoute_account_loggedInAs": "Conectado como: {username}",
     "@syncManageRoute_account_loggedInAs": {
         "type": "text",
         "placeholders": {
             "username": {}
         }
     },
-    "syncManageRoute_account_logout": "Вихід",
+    "syncManageRoute_account_logout": "Desconectar",
     "@syncManageRoute_account_logout": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_guest": "Гість",
+    "syncManageRoute_account_guest": "Convidado",
     "@syncManageRoute_account_guest": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeUsername": "Змінити ім'я користувача",
+    "syncManageRoute_account_changeUsername": "Alterar nome de usuário",
     "@syncManageRoute_account_changeUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeImage": "Змінити зображення",
+    "syncManageRoute_account_changeImage": "Alterar Imagem",
     "@syncManageRoute_account_changeImage": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync": "Синхронізувати",
+    "syncManageRoute_sync": "Sincronizar",
     "@syncManageRoute_sync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_enableAutoSync": "Увімкнути автосинхронізацію",
+    "syncManageRoute_sync_enableAutoSync": "Habilitar Sincronização Automática",
     "@syncManageRoute_sync_enableAutoSync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_autoSyncInterval": "Інтервал часу автосинхронізації (в секундах)",
+    "syncManageRoute_sync_autoSyncInterval": "Intervalo de tempo de sincronização automática (segundos)",
     "@syncManageRoute_sync_autoSyncInterval": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_firstPage_catchPhrase": "Ваша улюблена програма для заміток",
+    "welcomeRoute_firstPage_catchPhrase": "O seu novo app de notas favorito",
     "@welcomeRoute_firstPage_catchPhrase": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_secondPage_title": "Базове налаштування",
+    "welcomeRoute_secondPage_title": "Personalizações Básicas",
     "@welcomeRoute_secondPage_title": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_description": "З безкоштовним аккаунтом PotatoSync, ви можете синхронізувати замітки між декількома пристроями. І отримати його дуже просто!",
+    "welcomeRoute_thirdPage_description": "Com uma conta gratuita do PotatoSync, você pode sincronizar as suas notas entre vários dispositivos. E é muito fácil obter uma!",
     "@welcomeRoute_thirdPage_description": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_success": "PotatoSync успішно налаштований. Чудово!",
+    "welcomeRoute_thirdPage_success": "O PotatoSync foi configurado com sucesso. Muito bem!",
     "@welcomeRoute_thirdPage_success": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_getStarted": "Розпочати",
+    "welcomeRoute_thirdPage_getStarted": "Comece agora! :)",
     "@welcomeRoute_thirdPage_getStarted": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_title": "Налаштування завершено",
+    "welcomeRoute_fourthPage_title": "Configuração concluída",
     "@welcomeRoute_fourthPage_title": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_description": "І разом з цим ви нарешті закінчили. Тепер ви, нарешті, можете розважитися! Ура!",
+    "welcomeRoute_fourthPage_description": "E com isso você finalmente terminou. Agora você pode finalmente se divertir! Viva!",
     "@welcomeRoute_fourthPage_description": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_thankyou": "Дякуємо, що обрали PotatoNotes",
+    "welcomeRoute_fourthPage_thankyou": "Obrigado por escolher o PotatoNotes",
     "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },
-    "note_select": "Вибрати",
+    "note_select": "Selecionar",
     "@note_select": {
         "description": "String for selecting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_edit": "Редагувати",
+    "note_edit": "Editar",
     "@note_edit": {
         "description": "String for editing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_emptyTrash": "Очистити кошик",
+    "note_emptyTrash": "Esvaziar lixeira",
     "@note_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "note_delete": "Видалити",
+    "note_delete": "Deletar",
     "@note_delete": {
         "description": "String for deleting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_delete_snackbar": "Нотатку видалено",
+    "note_delete_snackbar": "Nota excluída",
     "@note_delete_snackbar": {
         "description": "Appears on snackbar upon note deletion",
         "type": "text",
         "placeholders": {}
     },
-    "notes_delete_snackbar": "Нотатки видалено",
+    "notes_delete_snackbar": "Notas excluídas",
     "@notes_delete_snackbar": {
         "description": "Appears on snackbar upon notes deletion",
         "type": "text",
         "placeholders": {}
     },
-    "note_restore_snackbar": "Нотатку відновлено",
+    "note_restore_snackbar": "Nota restaurada",
     "@note_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "notes_restore_snackbar": "Нотатки відновлено",
+    "notes_restore_snackbar": "Notas restauradas",
     "@notes_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "note_archive_snackbar": "Нотатка переміщена в архів",
+    "note_archive_snackbar": "Nota arquivada",
     "@note_archive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_archive_snackbar": "Нотатки переміщені в архів",
+    "notes_archive_snackbar": "Notas arquivadas",
     "@notes_archive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_removeFromArchive_snackbar": "Нотатку видалено з архіву",
+    "note_removeFromArchive_snackbar": "Notas removidas de arquivados",
     "@note_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_removeFromArchive_snackbar": "Нотатки видалено з архіву",
+    "notes_removeFromArchive_snackbar": "Notas removidas dos arquivados",
     "@notes_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_star": "Позначити",
+    "note_star": "Favorito",
     "@note_star": {
         "description": "String for starring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_unstar": "Зняти позначення",
+    "note_unstar": "Remover dos Favoritos",
     "@note_unstar": {
         "description": "String for unstarring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_share": "Поділитись",
+    "note_share": "Compartilhar",
     "@note_share": {
         "description": "String for sharing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_export": "Експортувати",
+    "note_export": "Exportar",
     "@note_export": {
         "description": "String for exporting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_exportLocation": "Нотатку експортовано в",
+    "note_exportLocation": "Nota exportada em",
     "@note_exportLocation": {
         "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
         "type": "text",
         "placeholders": {}
     },
-    "note_lockedOptions": "Нотатку заблоковано, використовуйте опції на екрані нотаток",
+    "note_lockedOptions": "Nota bloqueada, use as opções na tela de anotações",
     "@note_lockedOptions": {
         "type": "text",
         "placeholders": {}
     },
-    "note_pinToNotifs": "Закріпити до сповіщень",
+    "note_pinToNotifs": "Fixado na área de notificações",
     "@note_pinToNotifs": {
         "description": "String for pinning a note to notifications",
         "type": "text",
         "placeholders": {}
     },
-    "sync_malformedEmailError": "Неправильна чи відсутня ел. пошта",
+    "sync_malformedEmailError": "E-mail malformado ou ausente",
     "@sync_malformedEmailError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameOutOfBoundsError": "Введене ім'я користувача занадто довге або занадто коротке",
+    "sync_usernameOutOfBoundsError": "O nome de usuário inserido é muito longo ou muito curto",
     "@sync_usernameOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_passOutOfBoundsError": "Введений пароль занадто довгий або занадто короткий",
+    "sync_passOutOfBoundsError": "A senha que você digitou é muito longa ou muito curta",
     "@sync_passOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_dbConnectionError": "Виникла проблема при з'єднанні з базою даних, спробуйте пізніше",
+    "sync_dbConnectionError": "Houve um problema na conexão com o banco de dados, tente novamente mais tarde",
     "@sync_dbConnectionError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_emailAlreadyExistsError": "Введена ел. пошта вже зареєстрована",
+    "sync_emailAlreadyExistsError": "O e-mail inserido já está registrado",
     "@sync_emailAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameAlreadyExistsError": "Введене ім'я користувача вже зареєстровано",
+    "sync_usernameAlreadyExistsError": "O nome de usuário inserido já está registrado",
     "@sync_usernameAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameNotFoundError": "Це ім'я користувача не зареєстровано",
+    "sync_usernameNotFoundError": "Este nome de usuário não está registrado",
     "@sync_usernameNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_invalidCredentialsError": "Неправильне ім'я користувача/ел. пошта або пароль",
+    "sync_invalidCredentialsError": "Usuário/e-mail e combinação de senha inválidos",
     "@sync_invalidCredentialsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_notFoundError": "Профіль не знайдено",
+    "sync_notFoundError": "A conta não foi encontrada",
     "@sync_notFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_userNotFoundError": "Користувача не зайдено",
+    "sync_userNotFoundError": "O usuário não foi encontrado",
     "@sync_userNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_outOfBoundsError": "Введені дані занадто довгі або занадто короткі",
+    "sync_outOfBoundsError": "O valor de entrada inserido é muito longo ou muito curto",
     "@sync_outOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_accNotFoundError": "Профіль не знайдено",
+    "sync_accNotFoundError": "A conta não foi encontrada",
     "@sync_accNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_missingNoteIdError": "Неможливо створити нотатку без id",
+    "sync_missingNoteIdError": "Você não pode criar uma nota sem uma identificação",
     "@sync_missingNoteIdError": {
         "type": "text",
         "placeholders": {}
