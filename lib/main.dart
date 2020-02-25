@@ -177,15 +177,17 @@ class NotesRoot extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: appInfo.customLocale != -1
               ? supportedLocales[appInfo.customLocale]
-              : Locale("en"),
+              : null,
           localeResolutionCallback:
               (Locale locale, Iterable<Locale> supportedLocales) {
             for (var supportedLocale in supportedLocales) {
-              if (locale.toString() == supportedLocale.toString()) {
+              if (locale.toString().split("_")[0] == supportedLocale.toString()) {
                 return supportedLocale;
-              }
+              }  
             }
-            return locale;
+            print("The " + locale.toString() + " is not supported");
+            print("Defaulting to the en locale");
+            return Locale("en");
           },
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)
