@@ -177,7 +177,7 @@ class NotesRoot extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: appInfo.customLocale != -1
               ? supportedLocales[appInfo.customLocale]
-              : null,
+              : Locale("en"),
           localeResolutionCallback:
               (Locale locale, Iterable<Locale> supportedLocales) {
             for (var supportedLocale in supportedLocales) {
