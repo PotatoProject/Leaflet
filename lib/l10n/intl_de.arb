@@ -1,81 +1,81 @@
 {
     "@@last_modified": "2020-02-24T17:02:26.750824",
-    "home": "Startpagina",
+    "home": "Startseite",
     "@home": {
         "type": "text",
         "placeholders": {}
     },
-    "trash": "Prullenbak",
+    "trash": "Papierkorb",
     "@trash": {
         "type": "text",
         "placeholders": {}
     },
-    "archive": "Archiveren",
+    "archive": "Archivieren",
     "@archive": {
         "type": "text",
         "placeholders": {}
     },
-    "done": "Gereed",
+    "done": "fertig",
     "@done": {
         "type": "text",
         "placeholders": {}
     },
-    "save": "Opslaan",
+    "save": "speichern",
     "@save": {
         "type": "text",
         "placeholders": {}
     },
-    "confirm": "Bevestigen",
+    "confirm": "bestätigen",
     "@confirm": {
         "type": "text",
         "placeholders": {}
     },
-    "cancel": "Annuleren",
+    "cancel": "abbrechen",
     "@cancel": {
         "type": "text",
         "placeholders": {}
     },
-    "close": "Sluiten",
+    "close": "schließen",
     "@close": {
         "type": "text",
         "placeholders": {}
     },
-    "remove": "Verwijderen",
+    "remove": "entfernen",
     "@remove": {
         "type": "text",
         "placeholders": {}
     },
-    "reset": "Standaardwaarden",
+    "reset": "zurücksetzen",
     "@reset": {
         "type": "text",
         "placeholders": {}
     },
-    "undo": "Ongedaan maken",
+    "undo": "rückgängig machen",
     "@undo": {
         "type": "text",
         "placeholders": {}
     },
-    "chooseAction": "Kies een actie",
+    "chooseAction": "Wähle Aktion",
     "@chooseAction": {
         "type": "text",
         "placeholders": {}
     },
-    "light": "Licht",
+    "light": "Hell",
     "@light": {
         "type": "text",
         "placeholders": {}
     },
-    "dark": "Donker",
+    "dark": "Dunkel",
     "@dark": {
         "type": "text",
         "placeholders": {}
     },
-    "black": "Zwart",
+    "black": "zurück",
     "@black": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_back": "Terug",
+    "semantics_back": "Zurück",
     "@semantics_back": {
         "type": "text",
         "placeholders": {}
@@ -85,156 +85,156 @@
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_blue": "Blauw",
+    "semantics_color_blue": "Blau",
     "@semantics_color_blue": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_green": "Groen",
+    "semantics_color_green": "Grün",
     "@semantics_color_green": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_none": "Geen",
+    "semantics_color_none": "Keine",
     "@semantics_color_none": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_orange": "Oranje",
+    "semantics_color_orange": "Orange",
     "@semantics_color_orange": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_pink": "Roze",
+    "semantics_color_pink": "Pink",
     "@semantics_color_pink": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_purple": "Paars",
+    "semantics_color_purple": "Lila",
     "@semantics_color_purple": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_color_yellow": "Geel",
+    "semantics_color_yellow": "Gelb",
     "@semantics_color_yellow": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_hideText": "Verberg Tekst",
+    "semantics_hideText": "verstecke Text",
     "@semantics_hideText": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_addElement": "Element toevoegen",
+    "semantics_modifyNotes_addElement": "Element hinzufügen",
     "@semantics_modifyNotes_addElement": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_image": "Notitie afbeelding",
+    "semantics_modifyNotes_image": "Notiz Bild",
     "@semantics_modifyNotes_image": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_security": "Beveiligingsopties",
+    "semantics_modifyNotes_security": "Sicherheits optionen",
     "@semantics_modifyNotes_security": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_star": "Ster notitie",
+    "semantics_modifyNotes_star": "Stern hinzufügen",
     "@semantics_modifyNotes_star": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_modifyNotes_unstar": "Ster verwijderen",
+    "semantics_modifyNotes_unstar": "Stern entfernen",
     "@semantics_modifyNotes_unstar": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_addNote": "Voeg een nieuwe notitie toe",
+    "semantics_notesMainPage_addNote": "Neue Notiz hinzufügen",
     "@semantics_notesMainPage_addNote": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_archive": "Geselecteerde notities archiveren",
+    "semantics_notesMainPage_archive": "Ausgewählte Notizen archivieren",
     "@semantics_notesMainPage_archive": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_changeColor": "Notitie kleur wijzigen",
+    "semantics_notesMainPage_changeColor": "Notiz Farbe ändern",
     "@semantics_notesMainPage_changeColor": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_closeSelector": "Sluit kiezer",
+    "semantics_notesMainPage_closeSelector": "schließe Auswahl",
     "@semantics_notesMainPage_closeSelector": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_delete": "Geselecteerde notities verwijderen",
+    "semantics_notesMainPage_delete": "lösche ausgewählte Notizen",
     "@semantics_notesMainPage_delete": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_favouritesAdd": "Notities toevoegen aan favorieten",
+    "semantics_notesMainPage_favouritesAdd": "Notizen zu Favoriten hinzufügen",
     "@semantics_notesMainPage_favouritesAdd": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_favouritesRemove": "Notities uit favorieten verwijderen",
+    "semantics_notesMainPage_favouritesRemove": "Notizen von Favoriten entfernen",
     "@semantics_notesMainPage_favouritesRemove": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_grid": "Schakel over naar rasterweergave",
+    "semantics_notesMainPage_grid": "Wechsel zur Gitteransicht",
     "@semantics_notesMainPage_grid": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_list": "Schakel over naar lijstweergave",
+    "semantics_notesMainPage_list": "Wechsel zur Listenansicht",
     "@semantics_notesMainPage_list": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_openMenu": "Menu openen",
+    "semantics_notesMainPage_openMenu": "Öffne Menu",
     "@semantics_notesMainPage_openMenu": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_restore": "Geselecteerde notities herstellen",
+    "semantics_notesMainPage_restore": "Stelle ausgewählte Notizen wieder her",
     "@semantics_notesMainPage_restore": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_search": "Notities zoeken",
+    "semantics_notesMainPage_search": "Durchsuche Notizen",
     "@semantics_notesMainPage_search": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_notesMainPage_noteSelected": "{noteSelected} notitie geselecteerd",
+    "semantics_notesMainPage_noteSelected": "{noteSelected} Notiz ausgewählt",
     "@semantics_notesMainPage_noteSelected": {
         "type": "text",
         "placeholders": {
             "noteSelected": {}
         }
     },
-    "semantics_notesMainPage_notesSelected": "{noteSelected} notities geselecteerd",
+    "semantics_notesMainPage_notesSelected": "{noteSelected} Notizen ausgewählt",
     "@semantics_notesMainPage_notesSelected": {
         "type": "text",
         "placeholders": {
             "noteSelected": {}
         }
     },
-    "semantics_showText": "Toon tekst",
+    "semantics_showText": "Zeige Text",
     "@semantics_showText": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_next": "Volgende pagina",
+    "semantics_welcome_next": "Nächste Seite",
     "@semantics_welcome_next": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_pageIndicator": "Pagina {currentPage} van {totalPages}",
+    "semantics_welcome_pageIndicator": "Seite {currentPage} von {totalPages}",
     "@semantics_welcome_pageIndicator": {
         "type": "text",
         "placeholders": {
@@ -242,97 +242,97 @@
             "totalPages": {}
         }
     },
-    "semantics_welcome_previous": "Vorige pagina",
+    "semantics_welcome_previous": "Vorherige Seite",
     "@semantics_welcome_previous": {
         "type": "text",
         "placeholders": {}
     },
-    "semantics_welcome_exit": "Setup afsluiten",
+    "semantics_welcome_exit": "Beende Einrichtung ",
     "@semantics_welcome_exit": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_noNotes": "Nog geen notities toegevoegd...",
+    "notesMainPageRoute_noNotes": "Bisher noch keine Notizen hinzugefügt ...",
     "@notesMainPageRoute_noNotes": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyTrash": "Je prullenbak is leeg",
+    "notesMainPageRoute_emptyTrash": "Dein Papierkorb ist leer",
     "@notesMainPageRoute_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_emptyArchive": "U heeft geen notities in uw archief",
+    "notesMainPageRoute_emptyArchive": "Du hast keine Notizen in deinem Archiv",
     "@notesMainPageRoute_emptyArchive": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_writeNote": "Maak een notitie",
+    "notesMainPageRoute_writeNote": "Schreibe eine Notiz",
     "@notesMainPageRoute_writeNote": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_starred": "Items met ster",
+    "notesMainPageRoute_starred": "Mit Stern markierte Notizen",
     "@notesMainPageRoute_starred": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_other": "Andere notities",
+    "notesMainPageRoute_other": "Andere Notizen",
     "@notesMainPageRoute_other": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_hiddenContent": "Verborgen inhoud",
+    "notesMainPageRoute_note_hiddenContent": "Verborgener Inhalt",
     "@notesMainPageRoute_note_hiddenContent": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_remindersSet": "Herinneringen ingesteld voor notitie",
+    "notesMainPageRoute_note_remindersSet": "Erinnerung für Notiz gestzt",
     "@notesMainPageRoute_note_remindersSet": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_title": "Geselecteerde notities verwijderen?",
+    "notesMainPageRoute_note_deleteDialog_title": "lösche ausgewählte Notizen?",
     "@notesMainPageRoute_note_deleteDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_deleteDialog_content": "Als je de notities verwijderd kun je ze niet meer herstellen.\nWeet je het zeker dat je verder wilt gaan?",
+    "notesMainPageRoute_note_deleteDialog_content": "Du kannst gelöschte Notizen nicht wiederherstellen.\nBist du sicher das du fortfahren möchtest?",
     "@notesMainPageRoute_note_deleteDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_title": "Prullenbak legen?",
+    "notesMainPageRoute_note_emptyTrash_title": "Papierkorb leeren?",
     "@notesMainPageRoute_note_emptyTrash_title": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_emptyTrash_content": "Als je de notities verweiderd kun je ze niet meer herstellen.\nWeet je het zeker dat je veder wilt gaan?",
+    "notesMainPageRoute_note_emptyTrash_content": "Du kannst gelöschte Notizen nicht wiederherstellen.\nBist du sicher das du fortfahren möchtest?",
     "@notesMainPageRoute_note_emptyTrash_content": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_note_list_selectedEntries": " items geselecteerd",
+    "notesMainPageRoute_note_list_selectedEntries": " Einträge ausgewählt",
     "@notesMainPageRoute_note_list_selectedEntries": {
         "type": "text",
         "placeholders": {}
     },
-    "notesMainPageRoute_pinnedNote": "Vastgemaakte notitie",
+    "notesMainPageRoute_pinnedNote": "Angeheftete Notiz",
     "@notesMainPageRoute_pinnedNote": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_sortByDate": "Sorteer notities op datum",
+    "userInfoRoute_sortByDate": "Sortiere Notizen nach Datum",
     "@userInfoRoute_sortByDate": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_change": "Avatar wijzigen",
+    "userInfoRoute_avatar_change": "Avatar ändern",
     "@userInfoRoute_avatar_change": {
         "type": "text",
         "placeholders": {}
     },
-    "userInfoRoute_avatar_remove": "Avatar verwijderen",
+    "userInfoRoute_avatar_remove": "Avatar löschen",
     "@userInfoRoute_avatar_remove": {
         "type": "text",
         "placeholders": {}
@@ -343,65 +343,65 @@
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_content": "Inhoud",
+    "modifyNotesRoute_content": "Inhalt",
     "@modifyNotesRoute_content": {
         "description": "Content textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list": "Lijst",
+    "modifyNotesRoute_list": "Liste",
     "@modifyNotesRoute_list": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_entry": "Invoer",
+    "modifyNotesRoute_list_entry": "Eintrag",
     "@modifyNotesRoute_list_entry": {
         "description": "List entry textfield hint",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_list_selectedEntries": " afgevinkte items",
+    "modifyNotesRoute_list_selectedEntries": " ausgewhäte Einträge",
     "@modifyNotesRoute_list_selectedEntries": {
         "description": "Text that appears on checked entries header widget",
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image": "Afbeelding",
+    "modifyNotesRoute_image": "Bild",
     "@modifyNotesRoute_image": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_add": "Voeg afbeelding toe",
+    "modifyNotesRoute_image_add": "Füge Bild hinzu",
     "@modifyNotesRoute_image_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_update": "Werk afbeelding bij",
+    "modifyNotesRoute_image_update": "ändere Bild",
     "@modifyNotesRoute_image_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_image_remove": "Verwijder afbeelding",
+    "modifyNotesRoute_image_remove": "lösche Bild",
     "@modifyNotesRoute_image_remove": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder": "Herinnering",
+    "modifyNotesRoute_reminder": "Erinnerung",
     "@modifyNotesRoute_reminder": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_add": "Voeg een nieuwe herinnering toe",
+    "modifyNotesRoute_reminder_add": "Füge eine neue Erinnerung hinzu",
     "@modifyNotesRoute_reminder_add": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_update": "Herinnering bijwerken",
+    "modifyNotesRoute_reminder_update": "Aktualisiere",
     "@modifyNotesRoute_reminder_update": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_reminder_time": "Tijd",
+    "modifyNotesRoute_reminder_time": "Zeit",
     "@modifyNotesRoute_reminder_time": {
         "type": "text",
         "placeholders": {}
@@ -411,37 +411,37 @@
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_hideContent": "Verberg notitieinhoud op hoofdpagina",
+    "modifyNotesRoute_security_hideContent": "Verstecke Notizen Inhalt auf der Startseite",
     "@modifyNotesRoute_security_hideContent": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_protectionText": "Beveilig het verbergen",
+    "modifyNotesRoute_security_protectionText": "Sichere Notizen mit PIN/Password",
     "@modifyNotesRoute_security_protectionText": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_pin": "Pincode",
+    "modifyNotesRoute_security_pin": "PIN",
     "@modifyNotesRoute_security_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_password": "Wachtwoord",
+    "modifyNotesRoute_security_password": "Passwort",
     "@modifyNotesRoute_security_password": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePin": "Pincode instellen of bijwerken",
+    "modifyNotesRoute_security_dialog_titlePin": "Setze oder ändere PIN",
     "@modifyNotesRoute_security_dialog_titlePin": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_titlePassword": "Wachtwoord instellen of bijwerken",
+    "modifyNotesRoute_security_dialog_titlePassword": "Setze oder ändere Passwort",
     "@modifyNotesRoute_security_dialog_titlePassword": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_security_dialog_lengthExceed": "{method} lengte kan niet groter zijn dan {maxLength}",
+    "modifyNotesRoute_security_dialog_lengthExceed": "{method} länge darf nicht länger sein als {maxLength}",
     "@modifyNotesRoute_security_dialog_lengthExceed": {
         "type": "text",
         "placeholders": {
@@ -449,7 +449,7 @@
             "maxLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_lengthShort": "{method} lengte kan niet kleiner zijn dan {minLength}",
+    "modifyNotesRoute_security_dialog_lengthShort": "{method} länge darf nicht kürzer sein als {minLength}",
     "@modifyNotesRoute_security_dialog_lengthShort": {
         "type": "text",
         "placeholders": {
@@ -457,33 +457,33 @@
             "minLength": {}
         }
     },
-    "modifyNotesRoute_security_dialog_valid": " geldig",
+    "modifyNotesRoute_security_dialog_valid": " gültig",
     "@modifyNotesRoute_security_dialog_valid": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_dialogTitle": "Selecteer notitiekleur",
+    "modifyNotesRoute_color_dialogTitle": "Notiz Farbauswahl",
     "@modifyNotesRoute_color_dialogTitle": {
         "type": "text",
         "placeholders": {}
     },
-    "modifyNotesRoute_color_change": "Wijzig notitiekleur",
+    "modifyNotesRoute_color_change": "Ändere Notiz Farbe",
     "@modifyNotesRoute_color_change": {
         "description": "Used in the three dots menu on modify notes route, for modifying note color",
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_title": "Instellingen",
+    "settingsRoute_title": "Einstellungen",
     "@settingsRoute_title": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes": "Thema's",
+    "settingsRoute_themes": "Themes",
     "@settingsRoute_themes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_followSystem": "Volg systeemthema",
+    "settingsRoute_themes_followSystem": "Benutze System Theme",
     "@settingsRoute_themes_followSystem": {
         "type": "text",
         "placeholders": {}
@@ -493,37 +493,37 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_appTheme": "App thema",
+    "settingsRoute_themes_appTheme": "App Theme",
     "@settingsRoute_themes_appTheme": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_useCustomAccent": "Gebruik aangepaste accentkleur",
+    "settingsRoute_themes_useCustomAccent": "Benutze eigene Akzent Farbe",
     "@settingsRoute_themes_useCustomAccent": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_customAccentColor": "Aangepaste kleur",
+    "settingsRoute_themes_customAccentColor": "Eigene Farbe",
     "@settingsRoute_themes_customAccentColor": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_appLanguage": "App taal",
+    "settingsRoute_themes_appLanguage": "App Sprache",
     "@settingsRoute_themes_appLanguage": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_themes_systemDefault": "Systeem",
+    "settingsRoute_themes_systemDefault": "System",
     "@settingsRoute_themes_systemDefault": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures": "Gebaren",
+    "settingsRoute_gestures": "Gesten",
     "@settingsRoute_gestures": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_gestures_quickStar": "Dubbeltik op notitie om ster toe te voegen",
+    "settingsRoute_gestures_quickStar": "Notiz doppelt antippen um Stern zu setzen",
     "@settingsRoute_gestures_quickStar": {
         "type": "text",
         "placeholders": {}
@@ -533,7 +533,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_backup": "Back-up (experimenteel)",
+    "settingsRoute_backupAndRestore_backup": "Back-up (experimentell)",
     "@settingsRoute_backupAndRestore_backup": {
         "type": "text",
         "placeholders": {}
@@ -545,22 +545,22 @@
             "path": {}
         }
     },
-    "settingsRoute_backupAndRestore_restore": "Herstellen (experimenteel)",
+    "settingsRoute_backupAndRestore_restore": "Wiederherstellen (experimentell)",
     "@settingsRoute_backupAndRestore_restore": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_success": "Klaar!",
+    "settingsRoute_backupAndRestore_restore_success": "Fertig!",
     "@settingsRoute_backupAndRestore_restore_success": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_restore_fail": "Corrupte of ongeldige DB!",
+    "settingsRoute_backupAndRestore_restore_fail": "Fehlerhafte oder ungültige DB",
     "@settingsRoute_backupAndRestore_restore_fail": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_backupAndRestore_regenDbEntries": "Database items opnieuw genereren",
+    "settingsRoute_backupAndRestore_regenDbEntries": "Regeneriere Datenbank einträge",
     "@settingsRoute_backupAndRestore_regenDbEntries": {
         "type": "text",
         "placeholders": {}
@@ -570,67 +570,67 @@
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes": "Over PotatoNotes",
+    "settingsRoute_about_potatonotes": "Über PotatoNotes",
     "@settingsRoute_about_potatonotes": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_development": "Ontwikkeld en onderhouden door HrX03",
+    "settingsRoute_about_potatonotes_development": "Entwickelt und maintained von HrX03",
     "@settingsRoute_about_potatonotes_development": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_potatonotes_design": "Ontwerp, design en logo door RshBfn",
+    "settingsRoute_about_potatonotes_design": "Design, App Branding und App Logo von RshBfn",
     "@settingsRoute_about_potatonotes_design": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_about_sourceCode": "PotatoNotes broncode",
+    "settingsRoute_about_sourceCode": "PotatoNotes Quellcode",
     "@settingsRoute_about_sourceCode": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev": "Ontwikkelaarsopties",
+    "settingsRoute_dev": "Entwickleroptionen",
     "@settingsRoute_dev": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_idLabels": "Toon id labels",
+    "settingsRoute_dev_idLabels": "Zeige id Labels",
     "@settingsRoute_dev_idLabels": {
         "type": "text",
         "placeholders": {}
     },
-    "settingsRoute_dev_welcomeScreen": "Toon welkomstscherm bij de volgende start",
+    "settingsRoute_dev_welcomeScreen": "Zeige Willkommensseite beim nächsten App start",
     "@settingsRoute_dev_welcomeScreen": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_searchbar": "Zoeken...",
+    "searchNotesRoute_searchbar": "Suchen...",
     "@searchNotesRoute_searchbar": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_noQuery": "Voer iets in om te beginnen met zoeken",
+    "searchNotesRoute_noQuery": "Tippe etwas um die Suche zu starten",
     "@searchNotesRoute_noQuery": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_nothingFound": "Geen notities gevonden die overeenkomen met uw zoektermen",
+    "searchNotesRoute_nothingFound": "Es wurde keine Notizen zu deiner Suche gefunden",
     "@searchNotesRoute_nothingFound": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_title": "Zoekfilters",
+    "searchNotesRoute_filters_title": "Such Filter",
     "@searchNotesRoute_filters_title": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_case": "Hoofdlettergevoelig",
+    "searchNotesRoute_filters_case": "Groß- und Kleinschreibung",
     "@searchNotesRoute_filters_case": {
         "type": "text",
         "placeholders": {}
     },
-    "searchNotesRoute_filters_color": "Kleurfilter",
+    "searchNotesRoute_filters_color": "Farb Filter",
     "@searchNotesRoute_filters_color": {
         "type": "text",
         "placeholders": {}
@@ -640,122 +640,122 @@
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_pin": "Een PIN is nodig om de notitie te openen",
+    "securityNoteRoute_request_pin": "PIN benötigt um Notiz zu öffnen",
     "@securityNoteRoute_request_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_request_password": "Een wachtwoord is nodig om de notitie te openen",
+    "securityNoteRoute_request_password": "Password benötigt um Notiz zu öffnen",
     "@securityNoteRoute_request_password": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_pin": "Onjuiste PIN",
+    "securityNoteRoute_wrong_pin": "Falscher PIN",
     "@securityNoteRoute_wrong_pin": {
         "type": "text",
         "placeholders": {}
     },
-    "securityNoteRoute_wrong_password": "Onjuist wachtwoord",
+    "securityNoteRoute_wrong_password": "Falsches Passwort",
     "@securityNoteRoute_wrong_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emailOrUsername": "E-mailadres of gebruikersnaam",
+    "syncLoginRoute_emailOrUsername": "E-mail oder Benutzername",
     "@syncLoginRoute_emailOrUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_emptyField": "Dit veld mag niet leeg zijn!",
+    "syncLoginRoute_emptyField": "Dieses Feld darf nicht leer sein!",
     "@syncLoginRoute_emptyField": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_password": "Wachtwoord",
+    "syncLoginRoute_password": "Passwort",
     "@syncLoginRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_register": "Registreer",
+    "syncLoginRoute_register": "Registrieren",
     "@syncLoginRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_successfulRegistration": "Registratie succesvol",
+    "syncLoginRoute_successfulRegistration": "Registrierung erfolgreich",
     "@syncLoginRoute_successfulRegistration": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_login": "Aanmelden",
+    "syncLoginRoute_login": "Anmelden",
     "@syncLoginRoute_login": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_title": "Notities gevonden op je account",
+    "syncLoginRoute_noteConflictDialog_title": "Es wurden Notizen auf deinem Account gefunden",
     "@syncLoginRoute_noteConflictDialog_title": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_content": "Opgeslagen notities en gesynchroniseerde notities kunnen niet samengevoegd worden.\nWat wilt u doen?",
+    "syncLoginRoute_noteConflictDialog_content": "Gespeicherte und Synchronisierte Notizen konflikt.\nWas möchtest du tun?",
     "@syncLoginRoute_noteConflictDialog_content": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_keep": "Huidige houden en uploaden",
+    "syncLoginRoute_noteConflictDialog_keep": "Behalte lokale Notizen und lade diese hoch",
     "@syncLoginRoute_noteConflictDialog_keep": {
         "type": "text",
         "placeholders": {}
     },
-    "syncLoginRoute_noteConflictDialog_replace": "Vervang opgeslagen notities met die in de cloud",
+    "syncLoginRoute_noteConflictDialog_replace": "Ersetze lokale Notizen mit Cloud Notizen",
     "@syncLoginRoute_noteConflictDialog_replace": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_register": "Registreer",
+    "syncRegisterRoute_register": "Registrieren",
     "@syncRegisterRoute_register": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username": "Gebruikersnaam",
+    "syncRegisterRoute_username": "Benutzername",
     "@syncRegisterRoute_username": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_username_empty": "Gebruikersnaam mag niet leeg zijn",
+    "syncRegisterRoute_username_empty": "Benutzername darf nicht leer sein",
     "@syncRegisterRoute_username_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email": "E-mailadres",
+    "syncRegisterRoute_email": "E-mail",
     "@syncRegisterRoute_email": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_empty": "E-mail mag niet leeg zijn",
+    "syncRegisterRoute_email_empty": "E-mail darf nicht leer sein",
     "@syncRegisterRoute_email_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_email_invalidFormat": "Ongeldig e-mailformaat",
+    "syncRegisterRoute_email_invalidFormat": "Ungültige Email",
     "@syncRegisterRoute_email_invalidFormat": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password": "Wachtwoord",
+    "syncRegisterRoute_password": "Passwort",
     "@syncRegisterRoute_password": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_password_empty": "Wachtwoord mag niet leeg zijn",
+    "syncRegisterRoute_password_empty": "Passwort darf nicht leer sein",
     "@syncRegisterRoute_password_empty": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword": "Bevestig wachtwoord",
+    "syncRegisterRoute_confirmPassword": "Beschtätige Passwort",
     "@syncRegisterRoute_confirmPassword": {
         "type": "text",
         "placeholders": {}
     },
-    "syncRegisterRoute_confirmPassword_noMatch": "Wachtwoord komt niet overeen",
+    "syncRegisterRoute_confirmPassword_noMatch": "Passwörter sind nicht die gleichen",
     "@syncRegisterRoute_confirmPassword_noMatch": {
         "type": "text",
         "placeholders": {}
@@ -765,14 +765,14 @@
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_loggedInAs": "Ingelogd als: {username}",
+    "syncManageRoute_account_loggedInAs": "Eingeloggt als: {username}",
     "@syncManageRoute_account_loggedInAs": {
         "type": "text",
         "placeholders": {
             "username": {}
         }
     },
-    "syncManageRoute_account_logout": "Uitloggen",
+    "syncManageRoute_account_logout": "Ausloggen",
     "@syncManageRoute_account_logout": {
         "type": "text",
         "placeholders": {}
@@ -782,242 +782,242 @@
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeUsername": "Gebruikersnaam wijzigen",
+    "syncManageRoute_account_changeUsername": "Ändere Benutzername",
     "@syncManageRoute_account_changeUsername": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_account_changeImage": "Afbeelding wijzigen",
+    "syncManageRoute_account_changeImage": "Ändere Bild",
     "@syncManageRoute_account_changeImage": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync": "Synchroniseren",
+    "syncManageRoute_sync": "Synchronisieren",
     "@syncManageRoute_sync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_enableAutoSync": "Automatische synchronisatie inschakelen",
+    "syncManageRoute_sync_enableAutoSync": "Automatische synchronisation aktivieren",
     "@syncManageRoute_sync_enableAutoSync": {
         "type": "text",
         "placeholders": {}
     },
-    "syncManageRoute_sync_autoSyncInterval": "Tijdsinterval automatische synchronisatie (seconden)",
+    "syncManageRoute_sync_autoSyncInterval": "Automatischer Synchronisierung Interval (Sekunden)",
     "@syncManageRoute_sync_autoSyncInterval": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_firstPage_catchPhrase": "Je nieuwe favoriete app voor notities",
+    "welcomeRoute_firstPage_catchPhrase": "Deine neue lieblings Notiz App",
     "@welcomeRoute_firstPage_catchPhrase": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_secondPage_title": "Basis personalisatie",
+    "welcomeRoute_secondPage_title": "Basis personalisierung",
     "@welcomeRoute_secondPage_title": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_description": "Met een gratis PotatoSync account kunt u uw notities synchroniseren tussen meerdere apparaten. En het is super eenvoudig om er een te krijgen!",
+    "welcomeRoute_thirdPage_description": "Mit einem kostenlosen PotatoSync Account kannst du deine Notizen zwischen mehrere Geräten Synchronisieren. Es ist super einfach einen zu bekommen!",
     "@welcomeRoute_thirdPage_description": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_success": "PotatoSync is succesvol geconfigureerd. Goed gedaan!",
+    "welcomeRoute_thirdPage_success": "PotatoSync hat sich erfolgreich konfiguriert. Gut gemacht!",
     "@welcomeRoute_thirdPage_success": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_thirdPage_getStarted": "Aan de slag",
+    "welcomeRoute_thirdPage_getStarted": "Leg los",
     "@welcomeRoute_thirdPage_getStarted": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_title": "Installatie voltooid",
+    "welcomeRoute_fourthPage_title": "Einrichtung abgeschlossen",
     "@welcomeRoute_fourthPage_title": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_description": "En hiermee ben je eindelijk klaar. Nu kun je eindelijk plezier hebben! Hoera!",
+    "welcomeRoute_fourthPage_description": "Und hiermit bist du endlich fertig. Jetzt kannst du spaß haben! Juhu!",
     "@welcomeRoute_fourthPage_description": {
         "type": "text",
         "placeholders": {}
     },
-    "welcomeRoute_fourthPage_thankyou": "Bedankt voor het kiezen van PotatoNotes",
+    "welcomeRoute_fourthPage_thankyou": "Danke das du dich für PotatoNotes entschieden hast",
     "@welcomeRoute_fourthPage_thankyou": {
         "type": "text",
         "placeholders": {}
     },
-    "note_select": "Selecteer",
+    "note_select": "Auswählen",
     "@note_select": {
         "description": "String for selecting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_edit": "Bewerk",
+    "note_edit": "Bearbeiten",
     "@note_edit": {
         "description": "String for editing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_emptyTrash": "Prullenbak leegmaken",
+    "note_emptyTrash": "Papierkorb leeren",
     "@note_emptyTrash": {
         "type": "text",
         "placeholders": {}
     },
-    "note_delete": "Verwijder",
+    "note_delete": "löschen",
     "@note_delete": {
         "description": "String for deleting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_delete_snackbar": "Notitie verwijderd",
+    "note_delete_snackbar": "Notiz gelöscht",
     "@note_delete_snackbar": {
         "description": "Appears on snackbar upon note deletion",
         "type": "text",
         "placeholders": {}
     },
-    "notes_delete_snackbar": "Notities verwijderd",
+    "notes_delete_snackbar": "Notizen gelöscht",
     "@notes_delete_snackbar": {
         "description": "Appears on snackbar upon notes deletion",
         "type": "text",
         "placeholders": {}
     },
-    "note_restore_snackbar": "Notitie hersteld",
+    "note_restore_snackbar": "Notiz wiederhergestellt",
     "@note_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "notes_restore_snackbar": "Notitie hersteld",
+    "notes_restore_snackbar": "Notizen wiederhergestellt",
     "@notes_restore_snackbar": {
         "type": "text",
         "placeholders": {}
     },
-    "note_archive_snackbar": "Notitie gearchiveerd",
+    "note_archive_snackbar": "Notiz archiviert",
     "@note_archive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_archive_snackbar": "Notitie gearchiveerd",
+    "notes_archive_snackbar": "Notizen archiviert",
     "@notes_archive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_removeFromArchive_snackbar": "Notitie verwijderd uit gearchiveerd",
+    "note_removeFromArchive_snackbar": "Notiz aus dem Archiv entfernt",
     "@note_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon note archivation",
         "type": "text",
         "placeholders": {}
     },
-    "notes_removeFromArchive_snackbar": "Notitie verwijderd uit gearchiveerd",
+    "notes_removeFromArchive_snackbar": "Notizen aus dem Archiv entfernt",
     "@notes_removeFromArchive_snackbar": {
         "description": "Appears on snackbar upon notes archivation",
         "type": "text",
         "placeholders": {}
     },
-    "note_star": "Voeg ster toe",
+    "note_star": "Stern hinzufügen",
     "@note_star": {
         "description": "String for starring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_unstar": "Verwijder ster",
+    "note_unstar": "Stern entfernen",
     "@note_unstar": {
         "description": "String for unstarring a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_share": "Delen",
+    "note_share": "Teilen",
     "@note_share": {
         "description": "String for sharing a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_export": "Exporteren",
+    "note_export": "Exportieren",
     "@note_export": {
         "description": "String for exporting a note",
         "type": "text",
         "placeholders": {}
     },
-    "note_exportLocation": "Notitie geëxporteerd op",
+    "note_exportLocation": "Notiz exportiert nach",
     "@note_exportLocation": {
         "description": "Used on the snackbar that appears when exporting a note, followed by the note path",
         "type": "text",
         "placeholders": {}
     },
-    "note_lockedOptions": "Notitie is vergrendeld, gebruik de opties op het notitiescherm",
+    "note_lockedOptions": "Notiz ist gesperrt, benutze die Einstellung auf der Notiz seite",
     "@note_lockedOptions": {
         "type": "text",
         "placeholders": {}
     },
-    "note_pinToNotifs": "Maak notitie vast aan meldingen",
+    "note_pinToNotifs": "Hefte Notiz an Benachrichtigungen an",
     "@note_pinToNotifs": {
         "description": "String for pinning a note to notifications",
         "type": "text",
         "placeholders": {}
     },
-    "sync_malformedEmailError": "Misvormde of ontbrekende e-mail",
+    "sync_malformedEmailError": "Falsche oder keine E-mail",
     "@sync_malformedEmailError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameOutOfBoundsError": "De gebruikersnaam die je hebt ingevoerd is te lang of te kort",
+    "sync_usernameOutOfBoundsError": "Der Benutzername ist zu lang oder zu kurz",
     "@sync_usernameOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_passOutOfBoundsError": "Het wachtwoord dat je hebt ingevoerd is te lang of te kort",
+    "sync_passOutOfBoundsError": "Das Passwort ist zu lang oder zu kurz",
     "@sync_passOutOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_dbConnectionError": "Er was een probleem met het verbinden met de database, probeer het later opnieuw",
+    "sync_dbConnectionError": "Ein Fehler ist bei der Verbindung zur Datenbank aufgetreten, versuche es später erneut",
     "@sync_dbConnectionError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_emailAlreadyExistsError": "Het e-mailadres dat u hebt ingevoerd lijkt al geregistreerd te zijn",
+    "sync_emailAlreadyExistsError": "Die E-Mail wurde bereits registriert",
     "@sync_emailAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameAlreadyExistsError": "De gebruikersnaam die je hebt ingevoerd lijkt al geregistreerd te zijn",
+    "sync_usernameAlreadyExistsError": "Der Benutzername wurde bereits registriert",
     "@sync_usernameAlreadyExistsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_usernameNotFoundError": "Deze gebruikersnaam is niet geregistreerd",
+    "sync_usernameNotFoundError": "Der Benutzername ist nicht registriert",
     "@sync_usernameNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_invalidCredentialsError": "Verkeerde gebruikersnaam/e-mail en wachtwoord combinatie",
+    "sync_invalidCredentialsError": "Falsche Benutzername/E-Mail und Passwort kombination",
     "@sync_invalidCredentialsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_notFoundError": "Het account is niet gevonden",
+    "sync_notFoundError": "Der Account wurde nicht gefunden",
     "@sync_notFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_userNotFoundError": "De gebruiker is niet gevonden",
+    "sync_userNotFoundError": "Der Benutzer wurde nicht gefunden",
     "@sync_userNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_outOfBoundsError": "De invoer die u hebt ingevoerd is te lang of te kort",
+    "sync_outOfBoundsError": "Der eingegebene Text ist zu lang oder zu kurz",
     "@sync_outOfBoundsError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_accNotFoundError": "Het account is niet gevonden",
+    "sync_accNotFoundError": "Der Account wurde nicht gefunden",
     "@sync_accNotFoundError": {
         "type": "text",
         "placeholders": {}
     },
-    "sync_missingNoteIdError": "U kunt geen notitie maken zonder een id",
+    "sync_missingNoteIdError": "Du kannst keine Notiz ohne ID erstellen",
     "@sync_missingNoteIdError": {
         "type": "text",
         "placeholders": {}
