@@ -181,11 +181,11 @@ class NotesRoot extends StatelessWidget {
           localeResolutionCallback:
               (Locale locale, Iterable<Locale> supportedLocales) {
             for (var supportedLocale in supportedLocales) {
-              if (locale.toString().split("_")[0] == supportedLocale.toString()) {
+              if (locale.languageCode == supportedLocale.languageCode) {
                 return supportedLocale;
               }  
             }
-            print("The " + locale.toString() + " is not supported");
+            print("The " + locale.toString() + " locale is not supported");
             print("Defaulting to the en locale");
             return Locale("en");
           },
