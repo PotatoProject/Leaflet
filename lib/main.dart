@@ -181,11 +181,13 @@ class NotesRoot extends StatelessWidget {
           localeResolutionCallback:
               (Locale locale, Iterable<Locale> supportedLocales) {
             for (var supportedLocale in supportedLocales) {
-              if (locale.toString() == supportedLocale.toString()) {
+              if (locale.languageCode == supportedLocale.languageCode) {
                 return supportedLocale;
-              }
+              }  
             }
-            return locale;
+            print("The " + locale.toString() + " locale is not supported");
+            print("Defaulting to the en locale");
+            return Locale("en");
           },
           theme: appInfo.followSystemTheme
               ? CustomThemes.light(appInfo)
