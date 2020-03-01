@@ -711,6 +711,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
         ),
         title: TextField(
           controller: entryTextController,
+          autofocus: true,
           decoration: InputDecoration(
               border: InputBorder.none,
               hintText: locales.modifyNotesRoute_list_entry),
