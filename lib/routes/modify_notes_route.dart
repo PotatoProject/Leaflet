@@ -1117,12 +1117,14 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           if (noteIsList == 0) {
                             noteIsList = 1;
                             checkList.clear();
-                            List<String> initialList = noteContent.split("\n");
-                            initialList.forEach((item) {
-                              checkList
-                                  .add(ListPair(checkValue: 0, title: item));
-                            });
-                            updateListParseString();
+                            if (noteContent.trim() != "") {
+                              List<String> initialList = noteContent.split("\n");
+                              initialList.forEach((item) {
+                                checkList
+                                    .add(ListPair(checkValue: 0, title: item));
+                              });
+                              updateListParseString();
+                            }
                           } else {
                             noteIsList = 0;
                             List<String> titleList = List<String>();
