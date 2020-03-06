@@ -312,20 +312,15 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                       visible: noteIsList == 0,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: TextField(
+                        child: TextFormField(
                           controller: contentController,
                           scrollPhysics: NeverScrollableScrollPhysics(),
                           focusNode: contentNode,
                           decoration: InputDecoration(
                               hintText: locales.modifyNotesRoute_content,
                               border: InputBorder.none),
-                          onChanged: (text) {
-                            noteContent = text;
-                          },
                           textCapitalization: TextCapitalization.sentences,
-                          maxLines: noteImagePath != null
-                              ? noteContent.split("\n").length
-                              : 32,
+                          maxLines: contentController.text.split("\n").length + 1,
                           keyboardType: TextInputType.multiline,
                         ),
                       ),
