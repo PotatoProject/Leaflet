@@ -96,6 +96,7 @@ class AppInfoProvider extends ChangeNotifier {
         'fr',
         "id",
         "it",
+        "nl",
         "pl",
         "pt",
         "ru",

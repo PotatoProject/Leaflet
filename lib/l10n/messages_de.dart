@@ -20,404 +20,405 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
   static m0(method, maxLength) =>
-      "${method} lengte kan niet groter zijn dan ${maxLength}";
+      "${method} Länge darf ${maxLength} nicht überschreiten";
 
   static m1(method, minLength) =>
-      "${method} lengte kan niet kleiner zijn dan ${minLength}";
+      "${method} Länge darf nicht kürzer als ${minLength} sein";
 
-  static m2(noteSelected) => "${noteSelected} notitie geselecteerd";
+  static m2(noteSelected) => "${noteSelected} Notiz ausgewählt";
 
-  static m3(noteSelected) => "${noteSelected} notities geselecteerd";
+  static m3(noteSelected) => "${noteSelected} Notizen ausgewählt";
 
   static m4(currentPage, totalPages) =>
-      "Pagina ${currentPage} van ${totalPages}";
+      "Seite ${currentPage} von ${totalPages}";
 
-  static m5(path) => "Back-up in: ${path}";
+  static m5(path) => "Backup in Pfad: ${path}";
 
-  static m6(username) => "Ingelogd als: ${username}";
+  static m6(username) => "Angemeldet als: ${username}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
-        "archive": MessageLookupByLibrary.simpleMessage("Archiveren"),
-        "black": MessageLookupByLibrary.simpleMessage("Zwart"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Annuleren"),
-        "chooseAction": MessageLookupByLibrary.simpleMessage("Kies een actie"),
-        "close": MessageLookupByLibrary.simpleMessage("Sluiten"),
-        "confirm": MessageLookupByLibrary.simpleMessage("Bevestigen"),
-        "dark": MessageLookupByLibrary.simpleMessage("Donker"),
-        "done": MessageLookupByLibrary.simpleMessage("Gereed"),
-        "home": MessageLookupByLibrary.simpleMessage("Startpagina"),
-        "light": MessageLookupByLibrary.simpleMessage("Licht"),
+        "archive": MessageLookupByLibrary.simpleMessage("Archiv"),
+        "black": MessageLookupByLibrary.simpleMessage("Schwarz"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Abbrechen"),
+        "chooseAction": MessageLookupByLibrary.simpleMessage("Aktion wählen"),
+        "close": MessageLookupByLibrary.simpleMessage("Schließen"),
+        "confirm": MessageLookupByLibrary.simpleMessage("Bestätigen"),
+        "dark": MessageLookupByLibrary.simpleMessage("Dunkel"),
+        "done": MessageLookupByLibrary.simpleMessage("Fertig"),
+        "home": MessageLookupByLibrary.simpleMessage("Hauptseite"),
+        "light": MessageLookupByLibrary.simpleMessage("Hell"),
         "modifyNotesRoute_color_change":
-            MessageLookupByLibrary.simpleMessage("Wijzig notitiekleur"),
+            MessageLookupByLibrary.simpleMessage("Notizfarbe ändern"),
         "modifyNotesRoute_color_dialogTitle":
-            MessageLookupByLibrary.simpleMessage("Selecteer notitiekleur"),
+            MessageLookupByLibrary.simpleMessage("Notizfarbenauswahl"),
         "modifyNotesRoute_content":
-            MessageLookupByLibrary.simpleMessage("Inhoud"),
-        "modifyNotesRoute_image":
-            MessageLookupByLibrary.simpleMessage("Afbeelding"),
+            MessageLookupByLibrary.simpleMessage("Inhalt"),
+        "modifyNotesRoute_image": MessageLookupByLibrary.simpleMessage("Bild"),
         "modifyNotesRoute_image_add":
-            MessageLookupByLibrary.simpleMessage("Voeg afbeelding toe"),
+            MessageLookupByLibrary.simpleMessage("Profilbild hinzufügen"),
         "modifyNotesRoute_image_remove":
-            MessageLookupByLibrary.simpleMessage("Verwijder afbeelding"),
+            MessageLookupByLibrary.simpleMessage("Bild entfernen"),
         "modifyNotesRoute_image_update":
-            MessageLookupByLibrary.simpleMessage("Werk afbeelding bij"),
-        "modifyNotesRoute_list": MessageLookupByLibrary.simpleMessage("Lijst"),
+            MessageLookupByLibrary.simpleMessage("Profilbild Aktualisieren"),
+        "modifyNotesRoute_list": MessageLookupByLibrary.simpleMessage("Liste"),
         "modifyNotesRoute_list_entry":
-            MessageLookupByLibrary.simpleMessage("Invoer"),
+            MessageLookupByLibrary.simpleMessage("Eintrag"),
         "modifyNotesRoute_list_selectedEntries":
-            MessageLookupByLibrary.simpleMessage(" afgevinkte items"),
+            MessageLookupByLibrary.simpleMessage(" überprüfte Einträge"),
         "modifyNotesRoute_reminder":
-            MessageLookupByLibrary.simpleMessage("Herinnering"),
-        "modifyNotesRoute_reminder_add": MessageLookupByLibrary.simpleMessage(
-            "Voeg een nieuwe herinnering toe"),
+            MessageLookupByLibrary.simpleMessage("Erinnern"),
+        "modifyNotesRoute_reminder_add":
+            MessageLookupByLibrary.simpleMessage("Neue erinnerung hinzufügen"),
         "modifyNotesRoute_reminder_date":
             MessageLookupByLibrary.simpleMessage("Datum"),
         "modifyNotesRoute_reminder_time":
-            MessageLookupByLibrary.simpleMessage("Tijd"),
+            MessageLookupByLibrary.simpleMessage("Zeit"),
         "modifyNotesRoute_reminder_update":
-            MessageLookupByLibrary.simpleMessage("Herinnering bijwerken"),
+            MessageLookupByLibrary.simpleMessage("Erinnerungen aktualisieren"),
         "modifyNotesRoute_security_dialog_lengthExceed": m0,
         "modifyNotesRoute_security_dialog_lengthShort": m1,
         "modifyNotesRoute_security_dialog_titlePassword":
             MessageLookupByLibrary.simpleMessage(
-                "Wachtwoord instellen of bijwerken"),
+                "Passwort festlegen oder aktualisieren"),
         "modifyNotesRoute_security_dialog_titlePin":
             MessageLookupByLibrary.simpleMessage(
-                "Pincode instellen of bijwerken"),
+                "PIN festlegen oder aktualisieren"),
         "modifyNotesRoute_security_dialog_valid":
-            MessageLookupByLibrary.simpleMessage(" geldig"),
+            MessageLookupByLibrary.simpleMessage(" gültig"),
         "modifyNotesRoute_security_hideContent":
             MessageLookupByLibrary.simpleMessage(
-                "Verberg notitieinhoud op hoofdpagina"),
+                "Notizen Inhalt auf Hauptbildschirm"),
         "modifyNotesRoute_security_password":
-            MessageLookupByLibrary.simpleMessage("Wachtwoord"),
+            MessageLookupByLibrary.simpleMessage("Passwort"),
         "modifyNotesRoute_security_pin":
-            MessageLookupByLibrary.simpleMessage("Pincode"),
+            MessageLookupByLibrary.simpleMessage("PIN"),
         "modifyNotesRoute_security_protectionText":
-            MessageLookupByLibrary.simpleMessage("Beveilig het verbergen"),
+            MessageLookupByLibrary.simpleMessage(
+                "Verwende einen Schutz zum Verstecken"),
         "modifyNotesRoute_title": MessageLookupByLibrary.simpleMessage("Titel"),
         "note_archive_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notitie gearchiveerd"),
-        "note_delete": MessageLookupByLibrary.simpleMessage("Verwijder"),
+            MessageLookupByLibrary.simpleMessage("Notiz archiviert"),
+        "note_delete": MessageLookupByLibrary.simpleMessage("Löschen"),
         "note_delete_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notitie verwijderd"),
-        "note_edit": MessageLookupByLibrary.simpleMessage("Bewerk"),
+            MessageLookupByLibrary.simpleMessage("Notiz gelöscht"),
+        "note_edit": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
         "note_emptyTrash":
-            MessageLookupByLibrary.simpleMessage("Prullenbak leegmaken"),
-        "note_export": MessageLookupByLibrary.simpleMessage("Exporteren"),
+            MessageLookupByLibrary.simpleMessage("Papierkorb leeren"),
+        "note_export": MessageLookupByLibrary.simpleMessage("Exportieren"),
         "note_exportLocation":
-            MessageLookupByLibrary.simpleMessage("Notitie geëxporteerd op"),
+            MessageLookupByLibrary.simpleMessage("Notiz exportiert am"),
         "note_lockedOptions": MessageLookupByLibrary.simpleMessage(
-            "Notitie is vergrendeld, gebruik de opties op het notitiescherm"),
+            "Notiz ist gesperrt, verwenden Sie die Optionen auf dem Notizbildschirm"),
         "note_pinToNotifs": MessageLookupByLibrary.simpleMessage(
-            "Maak notitie vast aan meldingen"),
-        "note_removeFromArchive_snackbar": MessageLookupByLibrary.simpleMessage(
-            "Notitie verwijderd uit gearchiveerd"),
+            "An Benachrichtigungen anheften"),
+        "note_removeFromArchive_snackbar":
+            MessageLookupByLibrary.simpleMessage("Notiz aus Archiv entfernt"),
         "note_restore_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notitie hersteld"),
-        "note_select": MessageLookupByLibrary.simpleMessage("Selecteer"),
-        "note_share": MessageLookupByLibrary.simpleMessage("Delen"),
-        "note_star": MessageLookupByLibrary.simpleMessage("Voeg ster toe"),
-        "note_unstar": MessageLookupByLibrary.simpleMessage("Verwijder ster"),
+            MessageLookupByLibrary.simpleMessage("Notiz wiederhergestellt"),
+        "note_select": MessageLookupByLibrary.simpleMessage("Auswählen"),
+        "note_share": MessageLookupByLibrary.simpleMessage("Teilen"),
+        "note_star":
+            MessageLookupByLibrary.simpleMessage("Mit Stern markieren"),
+        "note_unstar":
+            MessageLookupByLibrary.simpleMessage("Stern-Markierung entfernen"),
         "notesMainPageRoute_emptyArchive": MessageLookupByLibrary.simpleMessage(
-            "U heeft geen notities in uw archief"),
+            "Sie haben keine Notizen im Archiv"),
         "notesMainPageRoute_emptyTrash":
-            MessageLookupByLibrary.simpleMessage("Je prullenbak is leeg"),
+            MessageLookupByLibrary.simpleMessage("Ihr Papierkorb ist leer"),
         "notesMainPageRoute_noNotes": MessageLookupByLibrary.simpleMessage(
-            "Nog geen notities toegevoegd..."),
+            "Keine notizen hinzugefügt... bisher"),
         "notesMainPageRoute_note_deleteDialog_content":
             MessageLookupByLibrary.simpleMessage(
-                "Als je de notities verwijderd kun je ze niet meer herstellen.\nWeet je het zeker dat je verder wilt gaan?"),
+                "Sobald die Notizen von hier gelöscht wurden, können Sie sie nicht wiederherstellen.\nSind Sie sicher, dass Sie fortfahren möchten?"),
         "notesMainPageRoute_note_deleteDialog_title":
             MessageLookupByLibrary.simpleMessage(
-                "Geselecteerde notities verwijderen?"),
+                "Ausgewählte Notizen löschen?"),
         "notesMainPageRoute_note_emptyTrash_content":
             MessageLookupByLibrary.simpleMessage(
-                "Als je de notities verweiderd kun je ze niet meer herstellen.\nWeet je het zeker dat je veder wilt gaan?"),
+                "Sobald die Notizen von hier gelöscht wurden, können Sie sie nicht wiederherstellen.\nSind Sie sicher, dass Sie fortfahren möchten?"),
         "notesMainPageRoute_note_emptyTrash_title":
-            MessageLookupByLibrary.simpleMessage("Prullenbak legen?"),
+            MessageLookupByLibrary.simpleMessage("Papierkorb leeren?"),
         "notesMainPageRoute_note_hiddenContent":
-            MessageLookupByLibrary.simpleMessage("Verborgen inhoud"),
+            MessageLookupByLibrary.simpleMessage("Inhalt versteckt"),
         "notesMainPageRoute_note_list_selectedEntries":
-            MessageLookupByLibrary.simpleMessage(" items geselecteerd"),
+            MessageLookupByLibrary.simpleMessage(" einträge ausgewählt"),
         "notesMainPageRoute_note_remindersSet":
             MessageLookupByLibrary.simpleMessage(
-                "Herinneringen ingesteld voor notitie"),
+                "Erinnerungen für Notizen setzen"),
         "notesMainPageRoute_other":
-            MessageLookupByLibrary.simpleMessage("Andere notities"),
+            MessageLookupByLibrary.simpleMessage("Andere Notizen"),
         "notesMainPageRoute_pinnedNote":
-            MessageLookupByLibrary.simpleMessage("Vastgemaakte notitie"),
+            MessageLookupByLibrary.simpleMessage("Angeheftete Notizen"),
         "notesMainPageRoute_starred":
-            MessageLookupByLibrary.simpleMessage("Items met ster"),
+            MessageLookupByLibrary.simpleMessage("Wichtig Notizen"),
         "notesMainPageRoute_writeNote":
-            MessageLookupByLibrary.simpleMessage("Maak een notitie"),
+            MessageLookupByLibrary.simpleMessage("Notiz schreiben"),
         "notes_archive_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notitie gearchiveerd"),
+            MessageLookupByLibrary.simpleMessage("Notizen archiviert"),
         "notes_delete_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notities verwijderd"),
+            MessageLookupByLibrary.simpleMessage("Notizen gelöscht"),
         "notes_removeFromArchive_snackbar":
-            MessageLookupByLibrary.simpleMessage(
-                "Notitie verwijderd uit gearchiveerd"),
+            MessageLookupByLibrary.simpleMessage("Notizen aus Archiv entfernt"),
         "notes_restore_snackbar":
-            MessageLookupByLibrary.simpleMessage("Notitie hersteld"),
-        "remove": MessageLookupByLibrary.simpleMessage("Verwijderen"),
-        "reset": MessageLookupByLibrary.simpleMessage("Standaardwaarden"),
-        "save": MessageLookupByLibrary.simpleMessage("Opslaan"),
-        "searchNotesRoute_filters_case":
-            MessageLookupByLibrary.simpleMessage("Hoofdlettergevoelig"),
+            MessageLookupByLibrary.simpleMessage("Notizen wiederhergestellt"),
+        "remove": MessageLookupByLibrary.simpleMessage("Entfernen"),
+        "reset": MessageLookupByLibrary.simpleMessage("Zurücksetzen"),
+        "save": MessageLookupByLibrary.simpleMessage("Speichern"),
+        "searchNotesRoute_filters_case": MessageLookupByLibrary.simpleMessage(
+            "Unterscheide Groß-/Kleinschreibung"),
         "searchNotesRoute_filters_color":
-            MessageLookupByLibrary.simpleMessage("Kleurfilter"),
+            MessageLookupByLibrary.simpleMessage("Farbfilter"),
         "searchNotesRoute_filters_date":
-            MessageLookupByLibrary.simpleMessage("Datumfilter"),
+            MessageLookupByLibrary.simpleMessage("Datumsfilter"),
         "searchNotesRoute_filters_title":
-            MessageLookupByLibrary.simpleMessage("Zoekfilters"),
+            MessageLookupByLibrary.simpleMessage("Suchfilter"),
         "searchNotesRoute_noQuery": MessageLookupByLibrary.simpleMessage(
-            "Voer iets in om te beginnen met zoeken"),
+            "Geben Sie etwas ein, um die Suche zu starten"),
         "searchNotesRoute_nothingFound": MessageLookupByLibrary.simpleMessage(
-            "Geen notities gevonden die overeenkomen met uw zoektermen"),
+            "Keine Notizen gefunden, die mit Ihren Suchbegriffen übereinstimmen"),
         "searchNotesRoute_searchbar":
-            MessageLookupByLibrary.simpleMessage("Zoeken..."),
+            MessageLookupByLibrary.simpleMessage("Suchen..."),
         "securityNoteRoute_request_password":
             MessageLookupByLibrary.simpleMessage(
-                "Een wachtwoord is nodig om de notitie te openen"),
+                "Zum Öffnen der Notiz wird ein Passwort angefordert"),
         "securityNoteRoute_request_pin": MessageLookupByLibrary.simpleMessage(
-            "Een PIN is nodig om de notitie te openen"),
+            "Zum Öffnen der Notiz wird eine PIN angefordert"),
         "securityNoteRoute_wrong_password":
-            MessageLookupByLibrary.simpleMessage("Onjuist wachtwoord"),
+            MessageLookupByLibrary.simpleMessage("Falsches Passwort"),
         "securityNoteRoute_wrong_pin":
-            MessageLookupByLibrary.simpleMessage("Onjuiste PIN"),
-        "semantics_back": MessageLookupByLibrary.simpleMessage("Terug"),
+            MessageLookupByLibrary.simpleMessage("Falsche PIN"),
+        "semantics_back": MessageLookupByLibrary.simpleMessage("Zurück"),
         "semantics_color_beige": MessageLookupByLibrary.simpleMessage("Beige"),
-        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Blauw"),
-        "semantics_color_green": MessageLookupByLibrary.simpleMessage("Groen"),
-        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Geen"),
+        "semantics_color_blue": MessageLookupByLibrary.simpleMessage("Blau"),
+        "semantics_color_green": MessageLookupByLibrary.simpleMessage("Grün"),
+        "semantics_color_none": MessageLookupByLibrary.simpleMessage("Nichts"),
         "semantics_color_orange":
-            MessageLookupByLibrary.simpleMessage("Oranje"),
-        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Roze"),
-        "semantics_color_purple": MessageLookupByLibrary.simpleMessage("Paars"),
-        "semantics_color_yellow": MessageLookupByLibrary.simpleMessage("Geel"),
+            MessageLookupByLibrary.simpleMessage("Orange"),
+        "semantics_color_pink": MessageLookupByLibrary.simpleMessage("Rosa"),
+        "semantics_color_purple": MessageLookupByLibrary.simpleMessage("Lila"),
+        "semantics_color_yellow": MessageLookupByLibrary.simpleMessage("Gelb"),
         "semantics_hideText":
-            MessageLookupByLibrary.simpleMessage("Verberg Tekst"),
+            MessageLookupByLibrary.simpleMessage("Text ausblenden"),
         "semantics_modifyNotes_addElement":
-            MessageLookupByLibrary.simpleMessage("Element toevoegen"),
+            MessageLookupByLibrary.simpleMessage("Element hinzufügen"),
         "semantics_modifyNotes_image":
-            MessageLookupByLibrary.simpleMessage("Notitie afbeelding"),
+            MessageLookupByLibrary.simpleMessage("Notizbild"),
         "semantics_modifyNotes_security":
-            MessageLookupByLibrary.simpleMessage("Beveiligingsopties"),
+            MessageLookupByLibrary.simpleMessage("Sicherheitsoptionen"),
         "semantics_modifyNotes_star":
-            MessageLookupByLibrary.simpleMessage("Ster notitie"),
+            MessageLookupByLibrary.simpleMessage("Stern hinzufügen"),
         "semantics_modifyNotes_unstar":
-            MessageLookupByLibrary.simpleMessage("Ster verwijderen"),
+            MessageLookupByLibrary.simpleMessage("Stern entfernen"),
         "semantics_notesMainPage_addNote":
-            MessageLookupByLibrary.simpleMessage("Voeg een nieuwe notitie toe"),
+            MessageLookupByLibrary.simpleMessage("Notiz hinzufügen"),
         "semantics_notesMainPage_archive": MessageLookupByLibrary.simpleMessage(
-            "Geselecteerde notities archiveren"),
+            "Ausgewählte Notizen archivieren"),
         "semantics_notesMainPage_changeColor":
-            MessageLookupByLibrary.simpleMessage("Notitie kleur wijzigen"),
+            MessageLookupByLibrary.simpleMessage("Notizfarbe ändern"),
         "semantics_notesMainPage_closeSelector":
-            MessageLookupByLibrary.simpleMessage("Sluit kiezer"),
-        "semantics_notesMainPage_delete": MessageLookupByLibrary.simpleMessage(
-            "Geselecteerde notities verwijderen"),
+            MessageLookupByLibrary.simpleMessage("Auswahl schließen"),
+        "semantics_notesMainPage_delete":
+            MessageLookupByLibrary.simpleMessage("Ausgewählte Notizen löschen"),
         "semantics_notesMainPage_favouritesAdd":
             MessageLookupByLibrary.simpleMessage(
-                "Notities toevoegen aan favorieten"),
+                "Notizen zu Favoriten hinzufügen"),
         "semantics_notesMainPage_favouritesRemove":
             MessageLookupByLibrary.simpleMessage(
-                "Notities uit favorieten verwijderen"),
-        "semantics_notesMainPage_grid": MessageLookupByLibrary.simpleMessage(
-            "Schakel over naar rasterweergave"),
-        "semantics_notesMainPage_list": MessageLookupByLibrary.simpleMessage(
-            "Schakel over naar lijstweergave"),
+                "Notiz aus Favoriten entfernen"),
+        "semantics_notesMainPage_grid":
+            MessageLookupByLibrary.simpleMessage("Zu Rasteransicht wechseln"),
+        "semantics_notesMainPage_list":
+            MessageLookupByLibrary.simpleMessage("Zur Listenansicht wechseln"),
         "semantics_notesMainPage_noteSelected": m2,
         "semantics_notesMainPage_notesSelected": m3,
         "semantics_notesMainPage_openMenu":
-            MessageLookupByLibrary.simpleMessage("Menu openen"),
+            MessageLookupByLibrary.simpleMessage("Öffne Menü"),
         "semantics_notesMainPage_restore": MessageLookupByLibrary.simpleMessage(
-            "Geselecteerde notities herstellen"),
+            "Ausgewählte Notizen wiederherstellen"),
         "semantics_notesMainPage_search":
-            MessageLookupByLibrary.simpleMessage("Notities zoeken"),
+            MessageLookupByLibrary.simpleMessage("Notizen suchen"),
         "semantics_showText":
-            MessageLookupByLibrary.simpleMessage("Toon tekst"),
+            MessageLookupByLibrary.simpleMessage("Text anzeigen"),
         "semantics_welcome_exit":
-            MessageLookupByLibrary.simpleMessage("Setup afsluiten"),
+            MessageLookupByLibrary.simpleMessage("Setup beenden"),
         "semantics_welcome_next":
-            MessageLookupByLibrary.simpleMessage("Volgende pagina"),
+            MessageLookupByLibrary.simpleMessage("Nächste Seite"),
         "semantics_welcome_pageIndicator": m4,
         "semantics_welcome_previous":
-            MessageLookupByLibrary.simpleMessage("Vorige pagina"),
-        "settingsRoute_about": MessageLookupByLibrary.simpleMessage("Over"),
+            MessageLookupByLibrary.simpleMessage("Vorherige Seite"),
+        "settingsRoute_about": MessageLookupByLibrary.simpleMessage("Über uns"),
         "settingsRoute_about_potatonotes":
-            MessageLookupByLibrary.simpleMessage("Over PotatoNotes"),
+            MessageLookupByLibrary.simpleMessage("Über PotatoNotes"),
         "settingsRoute_about_potatonotes_design":
             MessageLookupByLibrary.simpleMessage(
-                "Ontwerp, design en logo door RshBfn"),
+                "Design, App-Branding und App-Logo von RshBfn"),
         "settingsRoute_about_potatonotes_development":
             MessageLookupByLibrary.simpleMessage(
-                "Ontwikkeld en onderhouden door HrX03"),
+                "Entwickelt und betreut von HrX03"),
         "settingsRoute_about_sourceCode":
-            MessageLookupByLibrary.simpleMessage("PotatoNotes broncode"),
+            MessageLookupByLibrary.simpleMessage("PotatoNotes Quellcode"),
         "settingsRoute_backupAndRestore":
-            MessageLookupByLibrary.simpleMessage("Back-up & herstellen"),
+            MessageLookupByLibrary.simpleMessage("Sichern & Wiederherstellen"),
         "settingsRoute_backupAndRestore_backup":
-            MessageLookupByLibrary.simpleMessage("Back-up (experimenteel)"),
+            MessageLookupByLibrary.simpleMessage("Sichern (experimentell)"),
         "settingsRoute_backupAndRestore_backup_done": m5,
         "settingsRoute_backupAndRestore_regenDbEntries":
             MessageLookupByLibrary.simpleMessage(
-                "Database items opnieuw genereren"),
+                "Datenbankeinträge neu generieren"),
         "settingsRoute_backupAndRestore_restore":
-            MessageLookupByLibrary.simpleMessage("Herstellen (experimenteel)"),
+            MessageLookupByLibrary.simpleMessage(
+                "Wiederherstellen (experimentell)"),
         "settingsRoute_backupAndRestore_restore_fail":
-            MessageLookupByLibrary.simpleMessage("Corrupte of ongeldige DB!"),
+            MessageLookupByLibrary.simpleMessage(
+                "Beschädigte oder ungültige DB!"),
         "settingsRoute_backupAndRestore_restore_success":
-            MessageLookupByLibrary.simpleMessage("Klaar!"),
+            MessageLookupByLibrary.simpleMessage("Fertig!"),
         "settingsRoute_dev":
-            MessageLookupByLibrary.simpleMessage("Ontwikkelaarsopties"),
+            MessageLookupByLibrary.simpleMessage("Entwickleroptionen"),
         "settingsRoute_dev_idLabels":
-            MessageLookupByLibrary.simpleMessage("Toon id labels"),
+            MessageLookupByLibrary.simpleMessage("ID-Labels anzeigen"),
         "settingsRoute_dev_welcomeScreen": MessageLookupByLibrary.simpleMessage(
-            "Toon welkomstscherm bij de volgende start"),
+            "Willkommensbildschirm beim nächsten Start anzeigen"),
         "settingsRoute_gestures":
-            MessageLookupByLibrary.simpleMessage("Gebaren"),
+            MessageLookupByLibrary.simpleMessage("Gesten"),
         "settingsRoute_gestures_quickStar":
             MessageLookupByLibrary.simpleMessage(
-                "Dubbeltik op notitie om ster toe te voegen"),
-        "settingsRoute_themes":
-            MessageLookupByLibrary.simpleMessage("Thema\'s"),
+                "Doppeltippen auf Notiz zum mit Stern zu markieren"),
+        "settingsRoute_themes": MessageLookupByLibrary.simpleMessage("Themen"),
         "settingsRoute_themes_appLanguage":
-            MessageLookupByLibrary.simpleMessage("App taal"),
+            MessageLookupByLibrary.simpleMessage("App Sprache"),
         "settingsRoute_themes_appTheme":
-            MessageLookupByLibrary.simpleMessage("App thema"),
+            MessageLookupByLibrary.simpleMessage("App-Thema"),
         "settingsRoute_themes_customAccentColor":
-            MessageLookupByLibrary.simpleMessage("Aangepaste kleur"),
+            MessageLookupByLibrary.simpleMessage("Benutzerdefinierte Farbe"),
         "settingsRoute_themes_followSystem":
-            MessageLookupByLibrary.simpleMessage("Volg systeemthema"),
+            MessageLookupByLibrary.simpleMessage("System-Thema folgen"),
         "settingsRoute_themes_systemDarkMode":
-            MessageLookupByLibrary.simpleMessage(
-                "Automatische donker thema modus"),
+            MessageLookupByLibrary.simpleMessage("Nachtmodus-Thema"),
         "settingsRoute_themes_systemDefault":
-            MessageLookupByLibrary.simpleMessage("Systeem"),
+            MessageLookupByLibrary.simpleMessage("System"),
         "settingsRoute_themes_useCustomAccent":
             MessageLookupByLibrary.simpleMessage(
-                "Gebruik aangepaste accentkleur"),
+                "Verwende benutzerdefinierte Akzentfarbe"),
         "settingsRoute_title":
-            MessageLookupByLibrary.simpleMessage("Instellingen"),
-        "syncLoginRoute_emailOrUsername": MessageLookupByLibrary.simpleMessage(
-            "E-mailadres of gebruikersnaam"),
+            MessageLookupByLibrary.simpleMessage("Einstellungen"),
+        "syncLoginRoute_emailOrUsername":
+            MessageLookupByLibrary.simpleMessage("E-Mail oder Nutzername"),
         "syncLoginRoute_emptyField": MessageLookupByLibrary.simpleMessage(
-            "Dit veld mag niet leeg zijn!"),
+            "Dieses Feld darf nicht leer sein!"),
         "syncLoginRoute_login":
-            MessageLookupByLibrary.simpleMessage("Aanmelden"),
+            MessageLookupByLibrary.simpleMessage("Anmeldung"),
         "syncLoginRoute_noteConflictDialog_content":
             MessageLookupByLibrary.simpleMessage(
-                "Opgeslagen notities en gesynchroniseerde notities kunnen niet samengevoegd worden.\nWat wilt u doen?"),
+                "Konflikt zwischen gespeicherten und synchronisierten Notizen. Was möchten Sie tun?"),
         "syncLoginRoute_noteConflictDialog_keep":
-            MessageLookupByLibrary.simpleMessage("Huidige houden en uploaden"),
+            MessageLookupByLibrary.simpleMessage(
+                "Aktuelle behalten und hochladen"),
         "syncLoginRoute_noteConflictDialog_replace":
             MessageLookupByLibrary.simpleMessage(
-                "Vervang opgeslagen notities met die in de cloud"),
+                "Ersetze gespeicherte mit Cloud"),
         "syncLoginRoute_noteConflictDialog_title":
             MessageLookupByLibrary.simpleMessage(
-                "Notities gevonden op je account"),
+                "Notizen auf Ihrem Konto gefunden"),
         "syncLoginRoute_password":
-            MessageLookupByLibrary.simpleMessage("Wachtwoord"),
+            MessageLookupByLibrary.simpleMessage("Passwort"),
         "syncLoginRoute_register":
-            MessageLookupByLibrary.simpleMessage("Registreer"),
+            MessageLookupByLibrary.simpleMessage("Registrieren"),
         "syncLoginRoute_successfulRegistration":
-            MessageLookupByLibrary.simpleMessage("Registratie succesvol"),
+            MessageLookupByLibrary.simpleMessage("Erfolgreich registriert"),
         "syncManageRoute_account":
-            MessageLookupByLibrary.simpleMessage("Account"),
+            MessageLookupByLibrary.simpleMessage("Konto"),
         "syncManageRoute_account_changeImage":
-            MessageLookupByLibrary.simpleMessage("Afbeelding wijzigen"),
+            MessageLookupByLibrary.simpleMessage("Bild ändern"),
         "syncManageRoute_account_changeUsername":
-            MessageLookupByLibrary.simpleMessage("Gebruikersnaam wijzigen"),
+            MessageLookupByLibrary.simpleMessage("Benutzername ändern"),
         "syncManageRoute_account_guest":
             MessageLookupByLibrary.simpleMessage("Gast"),
         "syncManageRoute_account_loggedInAs": m6,
         "syncManageRoute_account_logout":
-            MessageLookupByLibrary.simpleMessage("Uitloggen"),
+            MessageLookupByLibrary.simpleMessage("Abmelden"),
         "syncManageRoute_sync":
-            MessageLookupByLibrary.simpleMessage("Synchroniseren"),
+            MessageLookupByLibrary.simpleMessage("Synchronisieren"),
         "syncManageRoute_sync_autoSyncInterval":
             MessageLookupByLibrary.simpleMessage(
-                "Tijdsinterval automatische synchronisatie (seconden)"),
+                "Auto-Sync Zeitintervall (Sekunden)"),
         "syncManageRoute_sync_enableAutoSync":
-            MessageLookupByLibrary.simpleMessage(
-                "Automatische synchronisatie inschakelen"),
+            MessageLookupByLibrary.simpleMessage("Auto-Sync aktivieren"),
         "syncRegisterRoute_confirmPassword":
-            MessageLookupByLibrary.simpleMessage("Bevestig wachtwoord"),
+            MessageLookupByLibrary.simpleMessage("Passwort bestätigen"),
         "syncRegisterRoute_confirmPassword_noMatch":
             MessageLookupByLibrary.simpleMessage(
-                "Wachtwoord komt niet overeen"),
+                "Passwörter stimmen nicht überein"),
         "syncRegisterRoute_email":
-            MessageLookupByLibrary.simpleMessage("E-mailadres"),
+            MessageLookupByLibrary.simpleMessage("E-Mail"),
         "syncRegisterRoute_email_empty":
-            MessageLookupByLibrary.simpleMessage("E-mail mag niet leeg zijn"),
+            MessageLookupByLibrary.simpleMessage("Name darf nicht leer sein"),
         "syncRegisterRoute_email_invalidFormat":
-            MessageLookupByLibrary.simpleMessage("Ongeldig e-mailformaat"),
+            MessageLookupByLibrary.simpleMessage("Ungültiges E-Mail-Format"),
         "syncRegisterRoute_password":
-            MessageLookupByLibrary.simpleMessage("Wachtwoord"),
+            MessageLookupByLibrary.simpleMessage("Passwort"),
         "syncRegisterRoute_password_empty":
             MessageLookupByLibrary.simpleMessage(
-                "Wachtwoord mag niet leeg zijn"),
+                "Passwort darf nicht leer sein"),
         "syncRegisterRoute_register":
-            MessageLookupByLibrary.simpleMessage("Registreer"),
+            MessageLookupByLibrary.simpleMessage("Registrieren"),
         "syncRegisterRoute_username":
-            MessageLookupByLibrary.simpleMessage("Gebruikersnaam"),
+            MessageLookupByLibrary.simpleMessage("Benutzername"),
         "syncRegisterRoute_username_empty":
             MessageLookupByLibrary.simpleMessage(
-                "Gebruikersnaam mag niet leeg zijn"),
+                "Benutzername darf nicht leer sein"),
         "sync_accNotFoundError": MessageLookupByLibrary.simpleMessage(
-            "Het account is niet gevonden"),
+            "Das Konto wurde nicht gefunden"),
         "sync_dbConnectionError": MessageLookupByLibrary.simpleMessage(
-            "Er was een probleem met het verbinden met de database, probeer het later opnieuw"),
+            "Beim Verbinden mit der Datenbank ist ein Problem aufgetreten, versuche es später erneut"),
         "sync_emailAlreadyExistsError": MessageLookupByLibrary.simpleMessage(
-            "Het e-mailadres dat u hebt ingevoerd lijkt al geregistreerd te zijn"),
+            "Die eingegebene E-Mail scheint bereits registriert zu sein"),
         "sync_invalidCredentialsError": MessageLookupByLibrary.simpleMessage(
-            "Verkeerde gebruikersnaam/e-mail en wachtwoord combinatie"),
+            "Falsche Kombination von Benutzername/E-Mail und Passwort"),
         "sync_malformedEmailError": MessageLookupByLibrary.simpleMessage(
-            "Misvormde of ontbrekende e-mail"),
+            "Falsche oder fehlende E-Mail"),
         "sync_missingNoteIdError": MessageLookupByLibrary.simpleMessage(
-            "U kunt geen notitie maken zonder een id"),
+            "Sie können keine Notiz ohne ID erstellen"),
         "sync_notFoundError": MessageLookupByLibrary.simpleMessage(
-            "Het account is niet gevonden"),
+            "Das Konto wurde nicht gefunden"),
         "sync_outOfBoundsError": MessageLookupByLibrary.simpleMessage(
-            "De invoer die u hebt ingevoerd is te lang of te kort"),
+            "Die Eingabe ist zu lang oder zu kurz"),
         "sync_passOutOfBoundsError": MessageLookupByLibrary.simpleMessage(
-            "Het wachtwoord dat je hebt ingevoerd is te lang of te kort"),
+            "Das eingegebene Passwort ist zu lang oder zu kurz"),
         "sync_userNotFoundError": MessageLookupByLibrary.simpleMessage(
-            "De gebruiker is niet gevonden"),
+            "Der Benutzer wurde nicht gefunden"),
         "sync_usernameAlreadyExistsError": MessageLookupByLibrary.simpleMessage(
-            "De gebruikersnaam die je hebt ingevoerd lijkt al geregistreerd te zijn"),
+            "Der eingegebene Benutzername scheint bereits registriert zu sein"),
         "sync_usernameNotFoundError": MessageLookupByLibrary.simpleMessage(
-            "Deze gebruikersnaam is niet geregistreerd"),
+            "Dieser Benutzername ist nicht registriert"),
         "sync_usernameOutOfBoundsError": MessageLookupByLibrary.simpleMessage(
-            "De gebruikersnaam die je hebt ingevoerd is te lang of te kort"),
-        "trash": MessageLookupByLibrary.simpleMessage("Prullenbak"),
-        "undo": MessageLookupByLibrary.simpleMessage("Ongedaan maken"),
+            "Der eingegebene Benutzername ist zu lang oder zu kurz"),
+        "trash": MessageLookupByLibrary.simpleMessage("Papierkorb"),
+        "undo": MessageLookupByLibrary.simpleMessage("Rückgängig machen"),
         "userInfoRoute_avatar_change":
-            MessageLookupByLibrary.simpleMessage("Avatar wijzigen"),
+            MessageLookupByLibrary.simpleMessage("Profilbild ändern"),
         "userInfoRoute_avatar_remove":
-            MessageLookupByLibrary.simpleMessage("Avatar verwijderen"),
-        "userInfoRoute_sortByDate":
-            MessageLookupByLibrary.simpleMessage("Sorteer notities op datum"),
+            MessageLookupByLibrary.simpleMessage("Profilbild entfernen"),
+        "userInfoRoute_sortByDate": MessageLookupByLibrary.simpleMessage(
+            "Notizen nach Datum sortieren"),
         "welcomeRoute_firstPage_catchPhrase":
             MessageLookupByLibrary.simpleMessage(
-                "Je nieuwe favoriete app voor notities"),
+                "Ihre neue Lieblings-Notiz-App"),
         "welcomeRoute_fourthPage_description": MessageLookupByLibrary.simpleMessage(
-            "En hiermee ben je eindelijk klaar. Nu kun je eindelijk plezier hebben! Hoera!"),
+            "Und damit bist du endlich fertig! Jetzt kannst du endlich Spaß haben!"),
         "welcomeRoute_fourthPage_thankyou":
             MessageLookupByLibrary.simpleMessage(
-                "Bedankt voor het kiezen van PotatoNotes"),
+                "Danke, dass du PotatoNotes gewählt hast"),
         "welcomeRoute_fourthPage_title":
-            MessageLookupByLibrary.simpleMessage("Installatie voltooid"),
+            MessageLookupByLibrary.simpleMessage("Einrichtung abgeschlossen"),
         "welcomeRoute_secondPage_title":
-            MessageLookupByLibrary.simpleMessage("Basis personalisatie"),
+            MessageLookupByLibrary.simpleMessage("Grundlegende Anpassungen"),
         "welcomeRoute_thirdPage_description": MessageLookupByLibrary.simpleMessage(
-            "Met een gratis PotatoSync account kunt u uw notities synchroniseren tussen meerdere apparaten. En het is super eenvoudig om er een te krijgen!"),
+            "Mit einem kostenlosen PotatoSync-Konto kannst du deine Notizen zwischen mehreren Geräten synchronisieren. Und es ist super einfach, eins zu erstellen!"),
         "welcomeRoute_thirdPage_getStarted":
-            MessageLookupByLibrary.simpleMessage("Aan de slag"),
+            MessageLookupByLibrary.simpleMessage("Los geht\'s"),
         "welcomeRoute_thirdPage_success": MessageLookupByLibrary.simpleMessage(
-            "PotatoSync is succesvol geconfigureerd. Goed gedaan!")
+            "PotatoSync wurde erfolgreich konfiguriert. Gut gemacht!")
       };
 }

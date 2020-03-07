@@ -183,7 +183,7 @@ class NotesRoot extends StatelessWidget {
             for (var supportedLocale in supportedLocales) {
               if (locale.languageCode == supportedLocale.languageCode) {
                 return supportedLocale;
-              }  
+              }
             }
             print("The " + locale.toString() + " locale is not supported");
             print("Defaulting to the en locale");

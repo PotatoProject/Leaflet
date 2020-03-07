@@ -320,7 +320,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                               hintText: locales.modifyNotesRoute_content,
                               border: InputBorder.none),
                           textCapitalization: TextCapitalization.sentences,
-                          maxLines: contentController.text.split("\n").length + 1,
+                          maxLines:
+                              contentController.text.split("\n").length + 1,
                           keyboardType: TextInputType.multiline,
                         ),
                       ),
