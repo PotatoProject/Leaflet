@@ -286,9 +286,6 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                         decoration: InputDecoration(
                             hintText: locales.modifyNotesRoute_title,
                             border: InputBorder.none),
-                        onChanged: (text) {
-                          noteTitle = text;
-                        },
                         textCapitalization: TextCapitalization.sentences,
                         style: TextStyle(
                           fontSize: 18.0,
@@ -441,9 +438,9 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                           onTap: () {
                                             Navigator.pop(context);
                                             String shareText = "";
-                                            if (noteTitle != "")
-                                              shareText += noteTitle + "\n\n";
-                                            shareText += noteContent;
+                                            if (titleController.text != "")
+                                              shareText += titleController.text + "\n\n";
+                                            shareText += contentController.text;
                                             Share.share(shareText);
                                           },
                                         ),
@@ -477,11 +474,11 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
                                               String noteContents = "";
 
-                                              if (noteTitle != "")
+                                              if (titleController.text != "")
                                                 noteContents +=
-                                                    "# " + noteTitle + "\n\n";
+                                                    "# " + titleController.text + "\n\n";
 
-                                              noteContents += noteContent;
+                                              noteContents += contentController.text;
 
                                               File(noteExportPath)
                                                   .writeAsString(noteContents)
@@ -524,11 +521,11 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                                                     int.parse(appInfo
                                                         .notificationsIdList
                                                         .last),
-                                                    noteTitle != ""
-                                                        ? noteTitle
+                                                    titleController.text != ""
+                                                        ? titleController.text
                                                         : locales
                                                             .notesMainPageRoute_pinnedNote,
-                                                    noteContent,
+                                                    contentController.text,
                                                     NotificationDetails(
                                                         AndroidNotificationDetails(
                                                           '0',
@@ -791,7 +788,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
   }
 
   bool saveAndPop(bool stopDefaultButtonEvent) {
-    if (((noteContent != "" || noteTitle != "") && noteIsList == 0) ||
+    if (((contentController.text != "" || titleController.text != "") && noteIsList == 0) ||
         (noteIsList == 1 && noteListParseString != null)) {
       asyncExecutor();
     } else {
@@ -829,8 +826,8 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
 
     Note note = Note(
       id: noteId,
-      title: noteTitle,
-      content: noteContent,
+      title: titleController.text,
+      content: contentController.text,
       isStarred: noteIsStarred,
       date: noteDate,
       color: noteColor,
@@ -1033,10 +1030,10 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                         appInfo.remindersNotifIdList.add(notifId);
                         await FlutterLocalNotificationsPlugin().schedule(
                             int.parse(appInfo.remindersNotifIdList.last),
-                            noteTitle != ""
-                                ? noteTitle
+                            titleController.text != ""
+                                ? titleController.text
                                 : locales.modifyNotesRoute_reminder,
-                            noteContent,
+                            contentController.text,
                             completeReminder,
                             NotificationDetails(
                                 AndroidNotificationDetails(
@@ -1112,7 +1109,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                           if (noteIsList == 0) {
                             noteIsList = 1;
                             checkList.clear();
-                            List<String> initialList = noteContent.split("\n");
+                            List<String> initialList = contentController.text.split("\n");
                             initialList.forEach((item) {
                               checkList
                                   .add(ListPair(checkValue: 0, title: item));
@@ -1124,7 +1121,7 @@ class _ModifyNotesState extends State<ModifyNotesRoute>
                             for (int i = 0; i < checkList.length; i++) {
                               titleList.add(checkList[i].title);
                             }
-                            noteContent = titleList.join("\n");
+                            contentController.text = titleList.join("\n");
                             checkList.clear();
                           }
                         });
