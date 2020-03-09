@@ -1,6 +1,6 @@
 name: potato_notes
 description: Official POSP note app
-version: 1.5.1+13
+version: 1.5.2+14
 
 environment:
   sdk: '>=2.0.0 <3.0.0'
