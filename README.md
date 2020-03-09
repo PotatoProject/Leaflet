@@ -29,7 +29,13 @@ POSP official notes application, written in flutter, beautiful, fast and secure.
 ## Compiling the app
 Before anything, be sure to have a working flutter sdk setup.
 
-Be sure to disable signing on build.gradle or change keystore to sign the app
+Be sure to disable signing on build.gradle or change keystore to sign the app.
+
+For now the required flutter channel is master, so issue those two commands before starting building:
+```
+~$ flutter channel master
+~$ flutter update
+```
 
 After that, building is simple as this:
 ```
@@ -42,3 +48,7 @@ After that, building is simple as this:
 ## Contributing
 The entire app and even the [online sync api](https://github.com/ATechnoHazard/potatosync) is completely open source.  
 Feel free to open a PR to suggest fixes, features or whatever you want, just remember that PRs are subjected to manual review so you gotta wait for actual people to look at your contributions
+
+For translations, head over to our [Crowdin](https://crowdin.com/project/potatonotes).
+
+If you want to receive the latest news head over to our [Telegram channel](t.me/potatonotesnews), if you want to chat we even got the [Telegram group](t.me/potatonotes).
