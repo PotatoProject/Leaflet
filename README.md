@@ -51,4 +51,4 @@ Feel free to open a PR to suggest fixes, features or whatever you want, just rem
 
 For translations, head over to our [Crowdin](https://crowdin.com/project/potatonotes).
 
-If you want to receive the latest news head over to our [Telegram channel](t.me/potatonotesnews), if you want to chat we even got the [Telegram group](t.me/potatonotes).
+If you want to receive the latest news head over to our [Telegram channel](https://t.me/potatonotesnews), if you want to chat we even got the [Telegram group](https://t.me/potatonotes).
