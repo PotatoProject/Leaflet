@@ -17,6 +17,9 @@ dependencies:
   path_provider:
   outline_material_icons:
   community_material_icon:
+  flutter_staggered_grid_view:
+  spicy_components:
+    git: https://github.com/HrX03/SpicyUIComponents
 
 dev_dependencies:
   flutter_test:
