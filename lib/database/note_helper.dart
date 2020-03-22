@@ -20,56 +20,57 @@ class NoteHelper {
   }
 
   initDB() async {
-    Directory documentsDir = await getApplicationDocumentsDirectory();
-    String path = join(documentsDir.path, 'notes_database.db');
+    String documentsDir = await getDatabasesPath();
+    print(documentsDir);
+    String path = join(documentsDir, 'notes_database.db');
+
+    Future<void> _createTable(Database db, String name) async {
+      db.execute('''
+          CREATE TABLE $name(
+            id INTEGER PRIMARY KEY,
+            title TEXT,
+            content TEXT,
+            starred INTEGER DEFAULT 0,
+            creationDate INTEGER,
+            lastModifyDate INTEGER,
+            color INTEGER DEFAULT 0,
+            images TEXT,
+            list INTEGER DEFAULT 0,
+            listContent TEXT,
+            reminders TEXT,
+            hideContent INTEGER DEFAULT 0,
+            pin TEXT,
+            password TEXT,
+            usesBiometrics INTEGER DEFAULT 0,
+            deleted INTEGER DEFAULT 0,
+            archived INTEGER DEFAULT 0,
+            synced INTEGER DEFAULT 0
+          )
+      ''');
+    }
 
     return await openDatabase(
       path,
       version: 6,
       onCreate: (db, version) async {
-        await db.execute('''
-                CREATE TABLE notes(
-                    id INTEGER PRIMARY KEY,
-                    title TEXT,
-                    content TEXT,
-                    starred INTEGER DEFAULT 0,
-                    creationDate INTEGER,
-                    lastModifyDate INTEGER,
-                    color INTEGER DEFAULT 0,
-                    images TEXT,
-                    list INTEGER DEFAULT 0,
-                    listContent TEXT,
-                    reminders TEXT,
-                    hideContent INTEGER DEFAULT 0,
-                    pin TEXT,
-                    password TEXT,
-                    usesBiometrics INTEGER DEFAULT 0,
-                    deleted INTEGER DEFAULT 0,
-                    archived INTEGER DEFAULT 0,
-                    synced INTEGER DEFAULT 0,
-                )
-            ''');
+        await _createTable(db, "notes");
       },
       onUpgrade: (db, from, to) async {
-        if(from == 5) {
-          await db
-              .execute('ALTER TABLE notes RENAME COLUMN isStarred TO starred');
-          await db
-              .execute('ALTER TABLE notes RENAME COLUMN date TO creationDate');
-          await db.execute('ALTER TABLE notes RENAME COLUMN imagePath TO images');
-          await db.execute('ALTER TABLE notes RENAME COLUMN isList TO list');
-          await db.execute(
-              'ALTER TABLE notes RENAME COLUMN listParseString TO listContent');
-          await db
-              .execute('ALTER TABLE notes RENAME COLUMN isDeleted TO deleted');
-          await db
-              .execute('ALTER TABLE notes RENAME COLUMN isArchived TO archived');
-          await db.execute(
-              'ALTER TABLE notes ADD COLUMN lastModifyDate INTEGER DEFAULT 0');
-          await db.execute(
-              'ALTER TABLE notes ADD COLUMN usesBiometrics INTEGER DEFAULT 0');
-          await db
-              .execute('ALTER TABLE notes ADD COLUMN synced INTEGER DEFAULT 0');
+        if (from == 5) {
+          await _createTable(db, "notes_temp");
+          await db.execute('''
+              INSERT INTO notes_temp(
+                id, title, content, starred, creationDate, color,
+                images, list, listContent, reminders, hideContent, pin,
+                password, deleted, archived
+              )
+              SELECT id, title, content, isStarred, date, color,
+                imagePath, isList, listParseString, reminders, hideContent, pin,
+                password, isDeleted, isArchived
+              FROM notes;
+          ''');
+          await db.execute('DROP TABLE notes');
+          await db.execute('ALTER TABLE notes_temp RENAME TO notes');
         }
       },
     );
@@ -83,16 +84,18 @@ class NoteHelper {
   listNotes() async {
     final db = await database;
     final query = await db.query("notes");
-    List<Note> notes = List.generate(query.length, (index) => Note.fromJson(query[index]));
+    List<Note> notes =
+        List.generate(query.length, (index) => Note.fromJson(query[index]));
     return notes;
   }
-  
-  updateNote(Note note) async {
-		final db = await database;
-		var res = await db.update("notes", note.toJson, where: "id = ?", whereArgs: [note.id]);
 
-		return res;
-	}
+  updateNote(Note note) async {
+    final db = await database;
+    var res = await db
+        .update("notes", note.toJson, where: "id = ?", whereArgs: [note.id]);
+
+    return res;
+  }
 
   deleteNote(int id) async {
     final db = await database;
