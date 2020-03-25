@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/database/model/note.dart';
 import 'package:sqflite/sqflite.dart';
@@ -21,7 +19,6 @@ class NoteHelper {
 
   initDB() async {
     String documentsDir = await getDatabasesPath();
-    print(documentsDir);
     String path = join(documentsDir, 'notes_database.db');
 
     Future<void> _createTable(Database db, String name) async {
@@ -78,7 +75,10 @@ class NoteHelper {
 
   newNote(Note note) async {
     final db = await database;
-    await db.insert("notes", note.toJson);
+    await db.insert(
+      "notes", note.toJson,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   listNotes() async {
