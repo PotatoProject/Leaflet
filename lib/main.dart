@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:potato_notes/database/bloc/bloc_provider.dart';
 import 'package:potato_notes/database/bloc/notes_bloc.dart';
 import 'package:potato_notes/database/internal/app_info.dart';
@@ -16,11 +17,37 @@ class PotatoNotes extends StatelessWidget {
       child: Builder(
         builder: (context) => ChangeNotifierProvider.value(
           value: AppInfoProvider(context),
-          child: MaterialApp(
-            title: "PotatoNotes",
-            theme: SpicyThemes.light(Colors.orangeAccent),
-            home: MainPage(),
-            debugShowCheckedModeBanner: false,
+          child: Builder(
+            builder: (context) {
+              final appInfo = Provider.of<AppInfoProvider>(context);
+
+              switch(appInfo.systemTheme) {
+                case Brightness.light:
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                    systemNavigationBarColor: SpicyThemes.light(appInfo.mainColor).cardColor,
+                    statusBarColor: Colors.transparent,
+                    systemNavigationBarIconBrightness: Brightness.dark,
+                    statusBarIconBrightness: Brightness.dark,
+                  ));
+                  break;
+                case Brightness.dark:
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                    systemNavigationBarColor: SpicyThemes.dark(appInfo.mainColor).cardColor,
+                    statusBarColor: Colors.transparent,
+                    systemNavigationBarIconBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.light,
+                  ));
+                  break;
+              }
+
+              return MaterialApp(
+                title: "PotatoNotes",
+                theme: SpicyThemes.light(appInfo.mainColor),
+                darkTheme: SpicyThemes.dark(appInfo.mainColor),
+                home: MainPage(),
+                debugShowCheckedModeBanner: false,
+              );
+            },
           ),
         ),
       ),

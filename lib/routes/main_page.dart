@@ -20,6 +20,13 @@ class _MainPageState extends State<MainPage> {
   int numOfColumns;
   int numOfImages;
   AppInfoProvider appInfo;
+
+  @override
+  void dispose() {
+    appInfo.accentSubscription.cancel();
+    appInfo.themeSubscription.cancel();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
