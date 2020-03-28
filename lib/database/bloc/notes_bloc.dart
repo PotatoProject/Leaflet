@@ -11,19 +11,24 @@ class NotesBloc implements BlocBase {
 
 	Stream<List<Note>> get notes => _notesController.stream;
 
-	final _addNoteController = StreamController<Note>.broadcast();
-	StreamSink<Note> get inAddNote => _addNoteController.sink;
+	final _saveNoteController = StreamController<Note>.broadcast();
+	StreamSink<Note> get saveQueue => _saveNoteController.sink;
+
+  final _deleteNoteController = StreamController<int>.broadcast();
+	StreamSink<int> get deleteQueue => _deleteNoteController.sink;
 
 	NotesBloc() {
 		getNotes();
 
-		_addNoteController.stream.listen(_handleAddNote);
+		_saveNoteController.stream.listen(_handleSaveNote);
+		_deleteNoteController.stream.listen(_handleDeleteNote);
 	}
 
 	@override
 	void dispose() {
 		_notesController.close();
-		_addNoteController.close();
+		_saveNoteController.close();
+    _deleteNoteController.close();
 	}
 
 	void getNotes() async {
@@ -32,8 +37,14 @@ class NotesBloc implements BlocBase {
 		_inNotes.add(notes);
 	}
 
-	void _handleAddNote(Note note) async {
-		await NoteHelper.db.newNote(note);
+	void _handleSaveNote(Note note) async {
+		await NoteHelper.db.saveNote(note);
+
+		getNotes();
+	}
+
+	void _handleDeleteNote(int id) async {
+		await NoteHelper.db.deleteNote(id);
 
 		getNotes();
 	}

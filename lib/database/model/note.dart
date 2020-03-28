@@ -65,7 +65,6 @@ class Note {
     if (json["listContent"] != null) {
       if ((json["listContent"] as String).startsWith("[")) {
         List<dynamic> parsedList = j.json.decode(json["listContent"]);
-        print(parsedList);
         this.listContent = List.generate(parsedList?.length ?? 0,
             (index) => ListItem.fromJson(parsedList[index]));
       } else {

@@ -73,7 +73,7 @@ class NoteHelper {
     );
   }
 
-  newNote(Note note) async {
+  saveNote(Note note) async {
     final db = await database;
     await db.insert(
       "notes", note.toJson,
@@ -87,14 +87,6 @@ class NoteHelper {
     List<Note> notes =
         List.generate(query.length, (index) => Note.fromJson(query[index]));
     return notes;
-  }
-
-  updateNote(Note note) async {
-    final db = await database;
-    var res = await db
-        .update("notes", note.toJson, where: "id = ?", whereArgs: [note.id]);
-
-    return res;
   }
 
   deleteNote(int id) async {

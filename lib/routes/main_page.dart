@@ -3,9 +3,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/database/bloc/bloc_provider.dart';
 import 'package:potato_notes/database/bloc/notes_bloc.dart';
+import 'package:potato_notes/database/internal/app_info.dart';
 import 'package:potato_notes/database/model/list_item.dart';
 import 'package:potato_notes/database/model/note.dart';
+import 'package:potato_notes/database/note_helper.dart';
 import 'package:potato_notes/widget/note_view.dart';
+import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class MainPage extends StatefulWidget {
@@ -14,18 +17,16 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  NotesBloc _notesBloc;
   int numOfColumns;
   int numOfImages;
-
-  @override
-  void initState() {
-    _notesBloc = BlocProvider.of<NotesBloc>(context);
-    super.initState();
-  }
-
+  AppInfoProvider appInfo;
+  
   @override
   Widget build(BuildContext context) {
+    if(appInfo == null) {
+      appInfo = Provider.of<AppInfoProvider>(context);
+    }
+
     double width = MediaQuery.of(context).size.width;
 
     if(width >= 1280) {
@@ -47,7 +48,7 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       body: StreamBuilder<List<Note>>(
-        stream: _notesBloc.notes,
+        stream: appInfo.notesBloc.notes,
         builder: (context, snapshot) {
           if((snapshot.data?.length ?? 0) != 0) {
             return StaggeredGridView.countBuilder(
@@ -55,7 +56,7 @@ class _MainPageState extends State<MainPage> {
               itemBuilder: (context, index) => NoteView(
                 note: snapshot.data[index],
                 onTap: () {
-                  _notesBloc.inAddNote.add(
+                  appInfo.notesBloc.saveQueue.add(
                     (snapshot.data[index]..listContent.add(
                       ListItem(
                         "bruh",
@@ -64,8 +65,9 @@ class _MainPageState extends State<MainPage> {
                     )..list = true));
                 },
                 onLongPress: () {
-                  _notesBloc.inAddNote.add(
+                  appInfo.notesBloc.saveQueue.add(
                     (snapshot.data[index]..images.removeLast()));
+
                 },
                 numOfImages: numOfImages,
               ),
@@ -75,12 +77,13 @@ class _MainPageState extends State<MainPage> {
                 4,
                 4 + MediaQuery.of(context).padding.top,
                 4,
-                4,
+                4.0 + 56,
               ),
             );
           } else return Text("bruh");
         },
       ),
+      extendBody: true,
       bottomNavigationBar: SpicyBottomBar(
         leftItems: [
           IconButton(
@@ -95,6 +98,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Icon(OMIcons.edit),
+        backgroundColor: Theme.of(context).accentColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );

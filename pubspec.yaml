@@ -15,6 +15,7 @@ dependencies:
 
   sqflite:
   path_provider:
+  provider:
   outline_material_icons:
   community_material_icon:
   flutter_staggered_grid_view:
