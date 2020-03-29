@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/database/bloc/bloc_provider.dart';
+import 'package:potato_notes/database/bloc/notes_bloc.dart';
 import 'package:potato_notes/database/model/note.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
+import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -25,20 +29,42 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    note = widget.note ?? Note();
-    titleController = TextEditingController(text: note.title ?? "");
+    note = widget.note ?? Note()
+        ..id = 13
+        ..title = ""
+        ..content = ""
+        ..starred = false
+        ..creationDate = DateTime.now()
+        ..lastModifyDate = DateTime.now()
+        ..color = 0
+        ..images = []
+        ..list = false
+        ..listContent = []
+        ..reminders = []
+        ..hideContent = false
+        ..pin = null
+        ..password = null
+        ..usesBiometrics = false
+        ..deleted = false
+        ..archived = false
+        ..synced = false;
+    
+    titleController = TextEditingController(text: note.title);
     titleController.addListener(() {
       note.title = titleController.text;
     });
 
     contentController =
-        SpannableTextEditingController(text: note.content ?? "");
+        SpannableTextEditingController(text: note.content);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final appInfo = Provider.of<AppInfoProvider>(context);
+    final notesBloc = BlocProvider.of<NotesBloc>(context);
+
     return Scaffold(
       body: ListView(
         padding:
