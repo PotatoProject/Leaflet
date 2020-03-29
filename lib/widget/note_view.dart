@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/database/model/list_item.dart';
 import 'package:potato_notes/database/model/note.dart';
 import 'package:potato_notes/widget/note_view_images.dart';

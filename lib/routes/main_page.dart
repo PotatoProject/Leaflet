@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:potato_notes/database/bloc/bloc_provider.dart';
-import 'package:potato_notes/database/bloc/notes_bloc.dart';
 import 'package:potato_notes/database/internal/app_info.dart';
 import 'package:potato_notes/database/model/list_item.dart';
 import 'package:potato_notes/database/model/note.dart';
-import 'package:potato_notes/database/note_helper.dart';
+import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
@@ -62,15 +60,13 @@ class _MainPageState extends State<MainPage> {
               crossAxisCount: numOfColumns,
               itemBuilder: (context, index) => NoteView(
                 note: snapshot.data[index],
-                onTap: () {
-                  appInfo.notesBloc.saveQueue.add(
-                    (snapshot.data[index]..listContent.add(
-                      ListItem(
-                        "bruh",
-                        true,
-                      ),
-                    )..list = true));
-                },
+                onTap: () => Navigator.push(context,
+                  MaterialPageRoute(
+                    builder: (context) => NotePage(
+                      note: snapshot.data[index],
+                    ),
+                  ),
+                ),
                 onLongPress: () {
                   appInfo.notesBloc.saveQueue.add(
                     (snapshot.data[index]..images.removeLast()));
@@ -103,7 +99,11 @@ class _MainPageState extends State<MainPage> {
         notched: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.push(context,
+          MaterialPageRoute(
+            builder: (context) => NotePage(),
+          ),
+        ),
         child: Icon(OMIcons.edit),
         backgroundColor: Theme.of(context).accentColor,
       ),
