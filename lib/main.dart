@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/database/bloc/bloc_provider.dart';
 import 'package:potato_notes/database/bloc/notes_bloc.dart';
-import 'package:potato_notes/database/internal/app_info.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';

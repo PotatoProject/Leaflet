@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:potato_notes/database/bloc/bloc_provider.dart';
 import 'package:potato_notes/database/bloc/notes_bloc.dart';
 import 'package:streams_channel/streams_channel.dart';
@@ -11,14 +12,7 @@ class AppInfoProvider extends ChangeNotifier {
   
   AppInfoProvider(BuildContext context) {
     notesBloc = BlocProvider.of<NotesBloc>(context);
-    accentSubscription = accentStreamChannel
-        .receiveBroadcastStream()
-        .listen((data) => mainColor = Color(data));
-    accentSubscription = themeStreamChannel
-        .receiveBroadcastStream()
-        .listen((data) => systemTheme = data
-            ? Brightness.dark
-            : Brightness.light);
+    loadData();
   }
 
   // ignore: cancel_subscriptions
@@ -41,5 +35,18 @@ class AppInfoProvider extends ChangeNotifier {
   set systemTheme(Brightness newTheme) {
     _systemTheme = newTheme;
     notifyListeners();
+  }
+
+  void loadData() async {
+    themeSubscription = themeStreamChannel
+        .receiveBroadcastStream()
+        .listen((data) => systemTheme = data
+            ? Brightness.dark
+            : Brightness.light);
+    accentSubscription = accentStreamChannel
+        .receiveBroadcastStream()
+        .listen((data) => mainColor = Color(data));
+    
+    accentSubscription.onDone(() => print("bruh"));
   }
 }
