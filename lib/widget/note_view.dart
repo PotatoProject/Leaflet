@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:potato_notes/database/model/list_item.dart';
-import 'package:potato_notes/database/model/note.dart';
+import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/list_item.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:rich_text_editor/rich_text_editor.dart';
 
 const double _kBorderRadius = 8.0;
 
@@ -20,6 +24,7 @@ class NoteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kBorderRadius),
@@ -32,13 +37,13 @@ class NoteView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            note.images.isNotEmpty
+            note.images.images.isNotEmpty
                 ? NoteViewImages(
-                    note.images.sublist(
+                    note.images.images.sublist(
                         0,
-                        note.images.length > numOfImages * 2
+                        note.images.images.length > numOfImages * 2
                             ? numOfImages * 2
-                            : note.images.length),
+                            : note.images.images.length),
                     numOfImages,
                     _kBorderRadius,
                   )
@@ -67,19 +72,35 @@ class NoteView extends StatelessWidget {
                   ),
                   Visibility(
                     visible: note.content.trim() != "" || note.content != null,
-                    child: Text(
-                      note.content,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context)
-                            .textTheme
-                            .title
-                            .color
-                            .withOpacity(0.5),
-                      ),
-                      maxLines: 8,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    child: note.styleJson != null
+                        ? RichText(
+                          text: SpannableList.fromJson(parsedStyleJson).toTextSpan(
+                            note.content,
+                            defaultStyle: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .title
+                                  .color
+                                  .withOpacity(0.5),
+                            ),
+                          ),
+                          maxLines: 8,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                        : Text(
+                          note.content,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context)
+                                .textTheme
+                                .title
+                                .color
+                                .withOpacity(0.5),
+                          ),
+                          maxLines: 8,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   ),
                   Visibility(
                     visible: note.list,
@@ -99,10 +120,13 @@ class NoteView extends StatelessWidget {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-          (note.listContent?.length ?? 0) > 5
+          (note.listContent?.content?.length ?? 0) > 5
               ? 5
-              : (note.listContent?.length ?? 0), (index) {
-        ListItem item = note.listContent[index];
+              : (note.listContent?.content?.length ?? 0), (index) {
+        ListItem item = ListItem(
+          note.listContent.content.keys.toList()[index],
+          note.listContent.content.values.toList()[index],
+        );
 
         return Padding(
           padding: EdgeInsets.only(top: 8),

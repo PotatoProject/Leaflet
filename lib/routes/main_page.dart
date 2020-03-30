@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
-import 'package:potato_notes/database/model/note.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:provider/provider.dart';
@@ -50,9 +50,11 @@ class _MainPageState extends State<MainPage> {
       numOfImages = 2;
     }
 
+    final database = Provider.of<AppDatabase>(context);
+
     return Scaffold(
       body: StreamBuilder<List<Note>>(
-        stream: appInfo.notesBloc.notes,
+        stream: database.watchAllNotes(),
         builder: (context, snapshot) {
           if((snapshot.data?.length ?? 0) != 0) {
             return StaggeredGridView.countBuilder(
@@ -67,9 +69,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 onLongPress: () {
-                  appInfo.notesBloc.saveQueue.add(
-                    (snapshot.data[index]..images.removeLast()));
-
+                  database.updateNote(snapshot.data[index]..images.images.removeLast());
                 },
                 numOfImages: numOfImages,
               ),

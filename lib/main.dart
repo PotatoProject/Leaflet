@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:potato_notes/database/bloc/bloc_provider.dart';
-import 'package:potato_notes/database/bloc/notes_bloc.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +11,18 @@ main() => runApp(PotatoNotes());
 class PotatoNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      bloc: NotesBloc(),
+    return MultiProvider(
+      providers: [
+        Provider.value(
+          value: AppDatabase(),
+        ),
+        ChangeNotifierProvider.value(
+          value: AppInfoProvider(),
+        ),
+      ],
       child: Builder(
         builder: (context) => ChangeNotifierProvider.value(
-          value: AppInfoProvider(context),
+          value: AppInfoProvider(),
           child: Builder(
             builder: (context) {
               final appInfo = Provider.of<AppInfoProvider>(context);

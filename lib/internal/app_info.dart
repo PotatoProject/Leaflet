@@ -2,16 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:potato_notes/database/bloc/bloc_provider.dart';
-import 'package:potato_notes/database/bloc/notes_bloc.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
   static final StreamsChannel accentStreamChannel = StreamsChannel('potato_notes_accents');
   static final StreamsChannel themeStreamChannel = StreamsChannel('potato_notes_themes');
   
-  AppInfoProvider(BuildContext context) {
-    notesBloc = BlocProvider.of<NotesBloc>(context);
+  AppInfoProvider() {
     loadData();
   }
 
@@ -23,7 +20,6 @@ class AppInfoProvider extends ChangeNotifier {
   Color _mainColor = Colors.blueAccent;
   Brightness _systemTheme = Brightness.light;
 
-  NotesBloc notesBloc;
   Color get mainColor => _mainColor;
   Brightness get systemTheme => _systemTheme;
 

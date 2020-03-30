@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:potato_notes/database/bloc/bloc_provider.dart';
-import 'package:potato_notes/database/bloc/notes_bloc.dart';
-import 'package:potato_notes/database/model/note.dart';
-import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/model/content_style.dart';
+import 'package:potato_notes/data/model/image_list.dart';
+import 'package:potato_notes/data/model/list_content.dart';
+import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
@@ -21,6 +25,7 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   Note note;
+  AppDatabase database;
 
   bool keyboardVisible = false;
 
@@ -29,42 +34,56 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    note = widget.note ?? Note()
-        ..id = 13
-        ..title = ""
-        ..content = ""
-        ..starred = false
-        ..creationDate = DateTime.now()
-        ..lastModifyDate = DateTime.now()
-        ..color = 0
-        ..images = []
-        ..list = false
-        ..listContent = []
-        ..reminders = []
-        ..hideContent = false
-        ..pin = null
-        ..password = null
-        ..usesBiometrics = false
-        ..deleted = false
-        ..archived = false
-        ..synced = false;
-    
+    note = widget.note ??
+        Note(
+          id: null,
+          title: "",
+          content: "",
+          styleJson: null,
+          starred: false,
+          creationDate: DateTime.now(),
+          lastModifyDate: DateTime.now(),
+          color: 0,
+          images: ImageList([]),
+          list: false,
+          listContent: ListContent({}),
+          reminders: ReminderList([]),
+          hideContent: false,
+          pin: null,
+          password: null,
+          usesBiometrics: false,
+          deleted: false,
+          archived: false,
+          synced: false,
+        );
+
     titleController = TextEditingController(text: note.title);
     titleController.addListener(() {
-      note.title = titleController.text;
+      note = note.copyWith(title: titleController.text);
     });
 
-    contentController =
-        SpannableTextEditingController(text: note.content);
+    String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson?.data ?? []));
+    contentController = SpannableTextEditingController(
+      text: note.content,
+      styleList: note.styleJson != null
+          ? SpannableList.fromJson(parsedStyleJson)
+          : null,
+    );
 
     super.initState();
   }
 
+  void generateId() async {
+    Note lastNote = await database.getLastNote();
+    print(lastNote);
+    note = note.copyWith(id: lastNote.id + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-    final notesBloc = BlocProvider.of<NotesBloc>(context);
-
+    if (database == null) {
+      database = Provider.of<AppDatabase>(context);
+    }
     return Scaffold(
       body: ListView(
         padding:
@@ -130,7 +149,24 @@ class _NotePageState extends State<NotePage> {
                 IconButton(
                   icon: Icon(Icons.arrow_back),
                   padding: EdgeInsets.all(0),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    List<int> styleJson = gzip.encode(utf8.encode(contentController.styleList.toJson()));
+                    Note lastNote;
+                    List<Note> notes = await database.getAllNotes();
+
+                    if(notes.isNotEmpty) {
+                      lastNote = notes.last;
+                    }
+
+                    note = note.copyWith(
+                      id: note.id ?? (lastNote?.id ?? 0) + 1,
+                      styleJson: ContentStyle(styleJson),
+                      content: contentController.text,
+                    );
+
+                    database.insertNote(note);
+                    Navigator.pop(context);
+                  },
                 ),
               ],
               elevation: 0,

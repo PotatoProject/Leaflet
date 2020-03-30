@@ -13,6 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  moor_flutter: ^1.4.0
+  json_serializable:
   sqflite:
   path_provider:
   provider:
@@ -30,6 +32,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  moor_generator: ^1.4.0
+  build_runner:
 
 flutter:
   uses-material-design: true
