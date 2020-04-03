@@ -1,0 +1,679 @@
+From 675cfd648bc3b80e56d20773cf300726e6168957 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Tue, 31 Mar 2020 15:49:50 +0200
+Subject: [PATCH 2/3] notes: Preparing for offline multiple accounts
+
+---
+ 1                                  | 35 +++++++++++++
+ lib/data/dao/account_helper.dart   | 32 ++++++++++++
+ lib/data/dao/account_helper.g.dart | 11 ++++
+ lib/data/dao/note_helper.dart      | 35 +++++++++++++
+ lib/data/dao/note_helper.g.dart    | 11 ++++
+ lib/data/database.dart             | 45 +++-------------
+ lib/data/database.g.dart           | 83 +++++++++++++++++++++++-------
+ lib/internal/app_info.dart         | 24 +--------
+ lib/main.dart                      |  5 +-
+ lib/routes/main_page.dart          |  9 ++--
+ lib/routes/note_page.dart          | 16 +++---
+ 11 files changed, 216 insertions(+), 90 deletions(-)
+ create mode 100644 1
+ create mode 100644 lib/data/dao/account_helper.dart
+ create mode 100644 lib/data/dao/account_helper.g.dart
+ create mode 100644 lib/data/dao/note_helper.dart
+ create mode 100644 lib/data/dao/note_helper.g.dart
+
+diff --git a/1 b/1
+new file mode 100644
+index 0000000..f0e6493
+--- /dev/null
++++ b/1
+@@ -0,0 +1,35 @@
++notes: Introducing Accounts
++
++This commit is very incomplete and misses stuff that will get added in
++later commits
++# Immetti il messaggio di commit per le modifiche. Le righe che iniziano
++# con '#' saranno ignorate e un messaggio vuoto interromperà il commit.
++#
++# Sul branch rewrite
++# Modifiche di cui verrà eseguito il commit:
++#	modificato:             android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
++#	eliminato:              lib/data/converter/content_style_converter.dart
++#	eliminato:              lib/data/converter/image_list_converter.dart
++#	eliminato:              lib/data/converter/list_content_converter.dart
++#	eliminato:              lib/data/converter/reminder_list_converter.dart
++#	modificato:             lib/data/database.dart
++#	modificato:             lib/data/database.g.dart
++#	modificato:             lib/data/model/content_style.dart
++#	modificato:             lib/data/model/image_list.dart
++#	modificato:             lib/data/model/list_content.dart
++#	nuovo file:             lib/data/model/preferences.dart
++#	nuovo file:             lib/data/model/preferences.g.dart
++#	modificato:             lib/data/model/reminder_list.dart
++#	nuovo file:             lib/data/model/user_image.dart
++#	nuovo file:             lib/data/model/user_image.g.dart
++#	modificato:             lib/internal/app_info.dart
++#	nuovo file:             lib/internal/shared_prefs.dart
++#	modificato:             lib/main.dart
++#	modificato:             lib/routes/main_page.dart
++#	modificato:             lib/widget/note_view.dart
++#	modificato:             pubspec.lock
++#	modificato:             pubspec.yaml
++#
++# Modifiche non nell'area di staging per il commit:
++#	modificato:             .flutter-plugins-dependencies
++#
+diff --git a/lib/data/dao/account_helper.dart b/lib/data/dao/account_helper.dart
+new file mode 100644
+index 0000000..86d395a
+--- /dev/null
++++ b/lib/data/dao/account_helper.dart
+@@ -0,0 +1,32 @@
++import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/database.dart';
++
++part 'account_helper.g.dart';
++
++@UseDao(tables: [Accounts])
++class AccountHelper extends DatabaseAccessor<AppDatabase> with _$AccountHelperMixin {
++  final AppDatabase db;
++
++  // Called by the AppDatabase class
++  AccountHelper(this.db) : super(db);
++
++  Future<List<Account>> getAccounts() => select(accounts).get();
++
++  Stream<List<Account>> watchAllNotes() => select(accounts).watch();
++
++  Future<Account> getAccountByID(int id) async {
++    Account returnAccount;
++
++    try {
++      returnAccount = (await (select(accounts)..where((t) => t.id.equals(id))).get())[0];
++    } on StateError {
++      returnAccount = null;
++    }
++
++    return returnAccount;
++  }
++  
++  Future saveAccount(Account account) => into(accounts).insert(account, orReplace: true);
++
++  Future deleteNote(Account account) => delete(accounts).delete(account);
++}
+\ No newline at end of file
+diff --git a/lib/data/dao/account_helper.g.dart b/lib/data/dao/account_helper.g.dart
+new file mode 100644
+index 0000000..37ced8b
+--- /dev/null
++++ b/lib/data/dao/account_helper.g.dart
+@@ -0,0 +1,11 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'account_helper.dart';
++
++// **************************************************************************
++// DaoGenerator
++// **************************************************************************
++
++mixin _$AccountHelperMixin on DatabaseAccessor<AppDatabase> {
++  $AccountsTable get accounts => db.accounts;
++}
+diff --git a/lib/data/dao/note_helper.dart b/lib/data/dao/note_helper.dart
+new file mode 100644
+index 0000000..d42193a
+--- /dev/null
++++ b/lib/data/dao/note_helper.dart
+@@ -0,0 +1,35 @@
++import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/database.dart';
++
++part 'note_helper.g.dart';
++
++@UseDao(tables: [Notes])
++class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
++  final AppDatabase db;
++
++  // Called by the AppDatabase class
++  NoteHelper(this.db) : super(db);
++
++  Future<List<Note>> getAllNotes() => select(notes).get();
++
++  Stream<List<Note>> watchAllNotes() => (select(notes)
++        ..orderBy([
++          (table) => OrderingTerm(
++              expression: table.creationDate, mode: OrderingMode.desc)
++        ]))
++      .watch();
++
++  Future<Note> getLastNote() async => (await (select(notes)
++            ..orderBy([
++              (table) =>
++                  OrderingTerm(expression: table.id, mode: OrderingMode.asc)
++            ]))
++          .get())
++      .last;
++
++  Future insertNote(Note note) => into(notes).insert(note, orReplace: true);
++
++  Future updateNote(Note note) => update(notes).replace(note);
++
++  Future deleteNote(Note note) => delete(notes).delete(note);
++}
+\ No newline at end of file
+diff --git a/lib/data/dao/note_helper.g.dart b/lib/data/dao/note_helper.g.dart
+new file mode 100644
+index 0000000..4b7cb6e
+--- /dev/null
++++ b/lib/data/dao/note_helper.g.dart
+@@ -0,0 +1,11 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'note_helper.dart';
++
++// **************************************************************************
++// DaoGenerator
++// **************************************************************************
++
++mixin _$NoteHelperMixin on DatabaseAccessor<AppDatabase> {
++  $NotesTable get notes => db.notes;
++}
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index 0d33249..e8ff24a 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -1,4 +1,6 @@
+ import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/dao/account_helper.dart';
++import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+ import 'package:potato_notes/data/model/image_list.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
+@@ -10,6 +12,7 @@ part 'database.g.dart';
+ 
+ class Notes extends Table {
+   IntColumn get id => integer()();
++  IntColumn get accountId => integer()();
+   TextColumn get title => text().nullable()();
+   TextColumn get content => text().withLength(min: 1)();
+   TextColumn get styleJson => text().map(const ContentStyleConverter())();
+@@ -44,7 +47,10 @@ class Accounts extends Table {
+   BoolColumn get online => boolean().withDefault(Constant(false))();
+ }
+ 
+-@UseMoor(tables: [Notes, Accounts])
++@UseMoor(
++  tables: [Notes, Accounts],
++  daos: [NoteHelper, AccountHelper]
++)
+ class AppDatabase extends _$AppDatabase {
+   AppDatabase()
+       : super((FlutterQueryExecutor.inDatabaseFolder(
+@@ -54,41 +60,4 @@ class AppDatabase extends _$AppDatabase {
+ 
+   @override
+   int get schemaVersion => 6;
+-
+-  Future<List<Note>> getAllNotes() => select(notes).get();
+-
+-  Stream<List<Note>> watchAllNotes() => (select(notes)
+-        ..orderBy([
+-          (table) => OrderingTerm(
+-              expression: table.creationDate, mode: OrderingMode.desc)
+-        ]))
+-      .watch();
+-
+-  Future<Note> getLastNote() async => (await (select(notes)
+-            ..orderBy([
+-              (table) =>
+-                  OrderingTerm(expression: table.id, mode: OrderingMode.asc)
+-            ]))
+-          .get())
+-      .last;
+-
+-  Future insertNote(Note note) => into(notes).insert(note, orReplace: true);
+-
+-  Future updateNote(Note note) => update(notes).replace(note);
+-
+-  Future deleteNote(Note note) => delete(notes).delete(note);
+-
+-  Future<Account> getAccountByID(int id) async {
+-    Account returnAccount;
+-
+-    try {
+-      returnAccount = (await (select(accounts)..where((t) => t.id.equals(id))).get())[0];
+-    } on StateError {
+-      returnAccount = null;
+-    }
+-
+-    return returnAccount;
+-  }
+-  
+-  Future insertAccount(Account account) => into(accounts).insert(account, orReplace: true);
+ }
+\ No newline at end of file
+diff --git a/lib/data/database.g.dart b/lib/data/database.g.dart
+index 5647e7d..bbf1498 100644
+--- a/lib/data/database.g.dart
++++ b/lib/data/database.g.dart
+@@ -9,6 +9,7 @@ part of 'database.dart';
+ // ignore_for_file: unnecessary_brace_in_string_interps
+ class Note extends DataClass implements Insertable<Note> {
+   final int id;
++  final int accountId;
+   final String title;
+   final String content;
+   final ContentStyle styleJson;
+@@ -29,6 +30,7 @@ class Note extends DataClass implements Insertable<Note> {
+   final bool synced;
+   Note(
+       {@required this.id,
++      @required this.accountId,
+       this.title,
+       @required this.content,
+       @required this.styleJson,
+@@ -56,6 +58,8 @@ class Note extends DataClass implements Insertable<Note> {
+     final dateTimeType = db.typeSystem.forDartType<DateTime>();
+     return Note(
+       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
++      accountId:
++          intType.mapFromDatabaseResponse(data['${effectivePrefix}account_id']),
+       title:
+           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
+       content:
+@@ -95,6 +99,7 @@ class Note extends DataClass implements Insertable<Note> {
+       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+     return Note(
+       id: serializer.fromJson<int>(json['id']),
++      accountId: serializer.fromJson<int>(json['accountId']),
+       title: serializer.fromJson<String>(json['title']),
+       content: serializer.fromJson<String>(json['content']),
+       styleJson: serializer.fromJson<ContentStyle>(json['styleJson']),
+@@ -120,6 +125,7 @@ class Note extends DataClass implements Insertable<Note> {
+       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+     return {
+       'id': serializer.toJson<int>(id),
++      'accountId': serializer.toJson<int>(accountId),
+       'title': serializer.toJson<String>(title),
+       'content': serializer.toJson<String>(content),
+       'styleJson': serializer.toJson<ContentStyle>(styleJson),
+@@ -145,6 +151,9 @@ class Note extends DataClass implements Insertable<Note> {
+   T createCompanion<T extends UpdateCompanion<Note>>(bool nullToAbsent) {
+     return NotesCompanion(
+       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
++      accountId: accountId == null && nullToAbsent
++          ? const Value.absent()
++          : Value(accountId),
+       title:
+           title == null && nullToAbsent ? const Value.absent() : Value(title),
+       content: content == null && nullToAbsent
+@@ -196,6 +205,7 @@ class Note extends DataClass implements Insertable<Note> {
+ 
+   Note copyWith(
+           {int id,
++          int accountId,
+           String title,
+           String content,
+           ContentStyle styleJson,
+@@ -216,6 +226,7 @@ class Note extends DataClass implements Insertable<Note> {
+           bool synced}) =>
+       Note(
+         id: id ?? this.id,
++        accountId: accountId ?? this.accountId,
+         title: title ?? this.title,
+         content: content ?? this.content,
+         styleJson: styleJson ?? this.styleJson,
+@@ -239,6 +250,7 @@ class Note extends DataClass implements Insertable<Note> {
+   String toString() {
+     return (StringBuffer('Note(')
+           ..write('id: $id, ')
++          ..write('accountId: $accountId, ')
+           ..write('title: $title, ')
+           ..write('content: $content, ')
+           ..write('styleJson: $styleJson, ')
+@@ -265,49 +277,51 @@ class Note extends DataClass implements Insertable<Note> {
+   int get hashCode => $mrjf($mrjc(
+       id.hashCode,
+       $mrjc(
+-          title.hashCode,
++          accountId.hashCode,
+           $mrjc(
+-              content.hashCode,
++              title.hashCode,
+               $mrjc(
+-                  styleJson.hashCode,
++                  content.hashCode,
+                   $mrjc(
+-                      starred.hashCode,
++                      styleJson.hashCode,
+                       $mrjc(
+-                          creationDate.hashCode,
++                          starred.hashCode,
+                           $mrjc(
+-                              lastModifyDate.hashCode,
++                              creationDate.hashCode,
+                               $mrjc(
+-                                  color.hashCode,
++                                  lastModifyDate.hashCode,
+                                   $mrjc(
+-                                      images.hashCode,
++                                      color.hashCode,
+                                       $mrjc(
+-                                          list.hashCode,
++                                          images.hashCode,
+                                           $mrjc(
+-                                              listContent.hashCode,
++                                              list.hashCode,
+                                               $mrjc(
+-                                                  reminders.hashCode,
++                                                  listContent.hashCode,
+                                                   $mrjc(
+-                                                      hideContent.hashCode,
++                                                      reminders.hashCode,
+                                                       $mrjc(
+-                                                          pin.hashCode,
++                                                          hideContent.hashCode,
+                                                           $mrjc(
+-                                                              password.hashCode,
++                                                              pin.hashCode,
+                                                               $mrjc(
+-                                                                  usesBiometrics
++                                                                  password
+                                                                       .hashCode,
+                                                                   $mrjc(
+-                                                                      deleted
++                                                                      usesBiometrics
+                                                                           .hashCode,
+                                                                       $mrjc(
+-                                                                          archived
++                                                                          deleted
+                                                                               .hashCode,
+-                                                                          synced
+-                                                                              .hashCode)))))))))))))))))));
++                                                                          $mrjc(
++                                                                              archived.hashCode,
++                                                                              synced.hashCode))))))))))))))))))));
+   @override
+   bool operator ==(other) =>
+       identical(this, other) ||
+       (other is Note &&
+           other.id == id &&
++          other.accountId == accountId &&
+           other.title == title &&
+           other.content == content &&
+           other.styleJson == styleJson &&
+@@ -330,6 +344,7 @@ class Note extends DataClass implements Insertable<Note> {
+ 
+ class NotesCompanion extends UpdateCompanion<Note> {
+   final Value<int> id;
++  final Value<int> accountId;
+   final Value<String> title;
+   final Value<String> content;
+   final Value<ContentStyle> styleJson;
+@@ -350,6 +365,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+   final Value<bool> synced;
+   const NotesCompanion({
+     this.id = const Value.absent(),
++    this.accountId = const Value.absent(),
+     this.title = const Value.absent(),
+     this.content = const Value.absent(),
+     this.styleJson = const Value.absent(),
+@@ -371,6 +387,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+   });
+   NotesCompanion copyWith(
+       {Value<int> id,
++      Value<int> accountId,
+       Value<String> title,
+       Value<String> content,
+       Value<ContentStyle> styleJson,
+@@ -391,6 +408,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+       Value<bool> synced}) {
+     return NotesCompanion(
+       id: id ?? this.id,
++      accountId: accountId ?? this.accountId,
+       title: title ?? this.title,
+       content: content ?? this.content,
+       styleJson: styleJson ?? this.styleJson,
+@@ -429,6 +447,18 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+     );
+   }
+ 
++  final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
++  GeneratedIntColumn _accountId;
++  @override
++  GeneratedIntColumn get accountId => _accountId ??= _constructAccountId();
++  GeneratedIntColumn _constructAccountId() {
++    return GeneratedIntColumn(
++      'account_id',
++      $tableName,
++      false,
++    );
++  }
++
+   final VerificationMeta _titleMeta = const VerificationMeta('title');
+   GeneratedTextColumn _title;
+   @override
+@@ -624,6 +654,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+   @override
+   List<GeneratedColumn> get $columns => [
+         id,
++        accountId,
+         title,
+         content,
+         styleJson,
+@@ -658,6 +689,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+     } else if (id.isRequired && isInserting) {
+       context.missing(_idMeta);
+     }
++    if (d.accountId.present) {
++      context.handle(_accountIdMeta,
++          accountId.isAcceptableValue(d.accountId.value, _accountIdMeta));
++    } else if (accountId.isRequired && isInserting) {
++      context.missing(_accountIdMeta);
++    }
+     if (d.title.present) {
+       context.handle(
+           _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
+@@ -768,6 +805,9 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+     if (d.id.present) {
+       map['id'] = Variable<int, IntType>(d.id.value);
+     }
++    if (d.accountId.present) {
++      map['account_id'] = Variable<int, IntType>(d.accountId.value);
++    }
+     if (d.title.present) {
+       map['title'] = Variable<String, StringType>(d.title.value);
+     }
+@@ -1163,6 +1203,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
+   $NotesTable get notes => _notes ??= $NotesTable(this);
+   $AccountsTable _accounts;
+   $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
++  NoteHelper _noteHelper;
++  NoteHelper get noteHelper => _noteHelper ??= NoteHelper(this as AppDatabase);
++  AccountHelper _accountHelper;
++  AccountHelper get accountHelper =>
++      _accountHelper ??= AccountHelper(this as AppDatabase);
+   @override
+   List<TableInfo> get allTables => [notes, accounts];
+ }
+diff --git a/lib/internal/app_info.dart b/lib/internal/app_info.dart
+index ac521c6..6a023f2 100644
+--- a/lib/internal/app_info.dart
++++ b/lib/internal/app_info.dart
+@@ -2,6 +2,7 @@ import 'dart:async';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
++import 'package:potato_notes/data/dao/account_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/preferences.dart';
+ import 'package:potato_notes/internal/shared_prefs.dart';
+@@ -47,7 +48,6 @@ class AppInfoProvider extends ChangeNotifier {
+   set accountId(int newId) {
+     _accountId = newId;
+     prefs.setCurrentAccount(newId);
+-    updateAccount();
+     notifyListeners();
+   }
+ 
+@@ -56,28 +56,6 @@ class AppInfoProvider extends ChangeNotifier {
+     notifyListeners();
+   }
+ 
+-  void updateAccount() async {
+-    final database = Provider.of<AppDatabase>(context, listen: false);
+-    Account accountById = await database.getAccountByID(accountId);
+-
+-    if(accountById != null) {
+-      account = accountById;
+-    } else {
+-      Account newAccount = Account(
+-        id: 0,
+-        token: null,
+-        name: null,
+-        image: null,
+-        preferences: Preferences(gridMode: false),
+-        online: false,
+-      );
+-
+-      database.insertAccount(newAccount);
+-
+-      account = newAccount;
+-    }
+-  }
+-
+   void loadData() async {
+     prefs = await SharedPrefs.newInstance();
+ 
+diff --git a/lib/main.dart b/lib/main.dart
+index 4c9e3da..4a8561c 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -14,7 +14,10 @@ class PotatoNotes extends StatelessWidget {
+     return MultiProvider(
+       providers: [
+         Provider.value(
+-          value: AppDatabase(),
++          value: AppDatabase().noteHelper,
++        ),
++        Provider.value(
++          value: AppDatabase().accountHelper,
+         ),
+         ChangeNotifierProvider.value(
+           value: AppInfoProvider(context),
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index 4e48eee..b1d6b74 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -2,6 +2,8 @@ import 'package:community_material_icon/community_material_icon.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
++import 'package:potato_notes/data/dao/account_helper.dart';
++import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/preferences.dart';
+ import 'package:potato_notes/internal/app_info.dart';
+@@ -52,11 +54,12 @@ class _MainPageState extends State<MainPage> {
+       numOfImages = 2;
+     }
+ 
+-    final database = Provider.of<AppDatabase>(context);
++    final noteHelper = Provider.of<NoteHelper>(context);
++    final accountHelper = Provider.of<AccountHelper>(context);
+ 
+     return Scaffold(
+       body: StreamBuilder<List<Note>>(
+-        stream: database.watchAllNotes(),
++        stream: noteHelper.watchAllNotes(),
+         builder: (context, snapshot) {
+           if((snapshot.data?.length ?? 0) != 0) {
+             if(appInfo.account.preferences.gridMode) {
+@@ -123,7 +126,7 @@ class _MainPageState extends State<MainPage> {
+                 : CommunityMaterialIcons.view_dashboard_outline),
+             padding: EdgeInsets.all(0),
+             onPressed: () async {
+-              database.insertAccount(appInfo.account.copyWith(
++              accountHelper.saveAccount(appInfo.account.copyWith(
+                 preferences: Preferences(
+                   gridMode: !appInfo.account.preferences.gridMode
+                 ),
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index ab83f6f..2c74a19 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -2,11 +2,13 @@ import 'dart:convert';
+ import 'dart:io';
+ 
+ import 'package:flutter/material.dart';
++import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+ import 'package:potato_notes/data/model/image_list.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
+ import 'package:potato_notes/data/model/reminder_list.dart';
++import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/widget/note_toolbar.dart';
+ import 'package:provider/provider.dart';
+ import 'package:rich_text_editor/rich_text_editor.dart';
+@@ -25,7 +27,7 @@ class NotePage extends StatefulWidget {
+ 
+ class _NotePageState extends State<NotePage> {
+   Note note;
+-  AppDatabase database;
++  NoteHelper helper;
+ 
+   bool keyboardVisible = false;
+ 
+@@ -34,9 +36,11 @@ class _NotePageState extends State<NotePage> {
+ 
+   @override
+   void initState() {
++    final appInfo = Provider.of<AppInfoProvider>(context);
+     note = widget.note ??
+         Note(
+           id: null,
++          accountId: appInfo.accountId,
+           title: "",
+           content: "",
+           styleJson: null,
+@@ -74,15 +78,15 @@ class _NotePageState extends State<NotePage> {
+   }
+ 
+   void generateId() async {
+-    Note lastNote = await database.getLastNote();
++    Note lastNote = await helper.getLastNote();
+     print(lastNote);
+     note = note.copyWith(id: lastNote.id + 1);
+   }
+ 
+   @override
+   Widget build(BuildContext context) {
+-    if (database == null) {
+-      database = Provider.of<AppDatabase>(context);
++    if (helper == null) {
++      helper = Provider.of<NoteHelper>(context);
+     }
+     return Scaffold(
+       body: ListView(
+@@ -152,7 +156,7 @@ class _NotePageState extends State<NotePage> {
+                   onPressed: () async {
+                     List<int> styleJson = gzip.encode(utf8.encode(contentController.styleList.toJson()));
+                     Note lastNote;
+-                    List<Note> notes = await database.getAllNotes();
++                    List<Note> notes = await helper.getAllNotes();
+ 
+                     if(notes.isNotEmpty) {
+                       lastNote = notes.last;
+@@ -164,7 +168,7 @@ class _NotePageState extends State<NotePage> {
+                       content: contentController.text,
+                     );
+ 
+-                    database.insertNote(note);
++                    helper.insertNote(note);
+                     Navigator.pop(context);
+                   },
+                 ),
+-- 
+2.26.0
+

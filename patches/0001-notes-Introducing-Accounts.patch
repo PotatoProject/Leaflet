@@ -1,0 +1,1368 @@
+From 75f9a4b98111a9813f8569163939c4f64ef8e8bb Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Tue, 31 Mar 2020 13:51:11 +0200
+Subject: [PATCH 1/3] notes: Introducing Accounts
+
+This commit is very incomplete and misses stuff that will get added in
+later commits
+---
+ .../plugins/GeneratedPluginRegistrant.java    |   1 +
+ .../converter/content_style_converter.dart    |  25 --
+ lib/data/converter/image_list_converter.dart  |  25 --
+ .../converter/list_content_converter.dart     |  25 --
+ .../converter/reminder_list_converter.dart    |  25 --
+ lib/data/database.dart                        |  58 +++-
+ lib/data/database.g.dart                      | 315 +++++++++++++++++-
+ lib/data/model/content_style.dart             |  23 ++
+ lib/data/model/image_list.dart                |  23 ++
+ lib/data/model/list_content.dart              |  23 ++
+ lib/data/model/preferences.dart               |  40 +++
+ lib/data/model/preferences.g.dart             |  18 +
+ lib/data/model/reminder_list.dart             |  23 ++
+ lib/data/model/user_image.dart                |  38 +++
+ lib/data/model/user_image.g.dart              |  17 +
+ lib/internal/app_info.dart                    |  51 ++-
+ lib/internal/shared_prefs.dart                |  19 ++
+ lib/main.dart                                 |  67 ++--
+ lib/routes/main_page.dart                     |  84 +++--
+ lib/widget/note_view.dart                     |   5 +-
+ pubspec.lock                                  |  49 ++-
+ pubspec.yaml                                  |  12 +-
+ 22 files changed, 768 insertions(+), 198 deletions(-)
+ delete mode 100644 lib/data/converter/content_style_converter.dart
+ delete mode 100644 lib/data/converter/image_list_converter.dart
+ delete mode 100644 lib/data/converter/list_content_converter.dart
+ delete mode 100644 lib/data/converter/reminder_list_converter.dart
+ create mode 100644 lib/data/model/preferences.dart
+ create mode 100644 lib/data/model/preferences.g.dart
+ create mode 100644 lib/data/model/user_image.dart
+ create mode 100644 lib/data/model/user_image.g.dart
+ create mode 100644 lib/internal/shared_prefs.dart
+
+diff --git a/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java b/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+index 309551f..a72a778 100644
+--- a/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
++++ b/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+@@ -15,6 +15,7 @@ public final class GeneratedPluginRegistrant {
+   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
+     ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
+       io.flutter.plugins.pathprovider.PathProviderPlugin.registerWith(shimPluginRegistry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
++    flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
+     flutterEngine.getPlugins().add(new com.tekartik.sqflite.SqflitePlugin());
+     flutterEngine.getPlugins().add(new app.loup.streams_channel.StreamsChannelPlugin());
+   }
+diff --git a/lib/data/converter/content_style_converter.dart b/lib/data/converter/content_style_converter.dart
+deleted file mode 100644
+index e07d2b0..0000000
+--- a/lib/data/converter/content_style_converter.dart
++++ /dev/null
+@@ -1,25 +0,0 @@
+-
+-import 'dart:convert';
+-
+-import 'package:moor_flutter/moor_flutter.dart';
+-import 'package:potato_notes/data/model/content_style.dart';
+-
+-class ContentStyleConverter extends TypeConverter<ContentStyle, String> {
+-  const ContentStyleConverter();
+-  @override
+-  ContentStyle mapToDart(String fromDb) {
+-    if (fromDb == null) {
+-      return null;
+-    }
+-    return ContentStyle.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+-  }
+-
+-  @override
+-  String mapToSql(ContentStyle value) {
+-    if (value == null) {
+-      return null;
+-    }
+-
+-    return json.encode(value.toJson());
+-  }
+-}
+\ No newline at end of file
+diff --git a/lib/data/converter/image_list_converter.dart b/lib/data/converter/image_list_converter.dart
+deleted file mode 100644
+index e707ca0..0000000
+--- a/lib/data/converter/image_list_converter.dart
++++ /dev/null
+@@ -1,25 +0,0 @@
+-
+-import 'dart:convert';
+-
+-import 'package:moor_flutter/moor_flutter.dart';
+-import 'package:potato_notes/data/model/image_list.dart';
+-
+-class ImageListConverter extends TypeConverter<ImageList, String> {
+-  const ImageListConverter();
+-  @override
+-  ImageList mapToDart(String fromDb) {
+-    if (fromDb == null) {
+-      return null;
+-    }
+-    return ImageList.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+-  }
+-
+-  @override
+-  String mapToSql(ImageList value) {
+-    if (value == null) {
+-      return null;
+-    }
+-
+-    return json.encode(value.toJson());
+-  }
+-}
+\ No newline at end of file
+diff --git a/lib/data/converter/list_content_converter.dart b/lib/data/converter/list_content_converter.dart
+deleted file mode 100644
+index 5604066..0000000
+--- a/lib/data/converter/list_content_converter.dart
++++ /dev/null
+@@ -1,25 +0,0 @@
+-
+-import 'dart:convert';
+-
+-import 'package:moor_flutter/moor_flutter.dart';
+-import 'package:potato_notes/data/model/list_content.dart';
+-
+-class ListContentConverter extends TypeConverter<ListContent, String> {
+-  const ListContentConverter();
+-  @override
+-  ListContent mapToDart(String fromDb) {
+-    if (fromDb == null) {
+-      return null;
+-    }
+-    return ListContent.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+-  }
+-
+-  @override
+-  String mapToSql(ListContent value) {
+-    if (value == null) {
+-      return null;
+-    }
+-
+-    return json.encode(value.toJson());
+-  }
+-}
+\ No newline at end of file
+diff --git a/lib/data/converter/reminder_list_converter.dart b/lib/data/converter/reminder_list_converter.dart
+deleted file mode 100644
+index 97ddaa6..0000000
+--- a/lib/data/converter/reminder_list_converter.dart
++++ /dev/null
+@@ -1,25 +0,0 @@
+-
+-import 'dart:convert';
+-
+-import 'package:moor_flutter/moor_flutter.dart';
+-import 'package:potato_notes/data/model/reminder_list.dart';
+-
+-class ReminderListConverter extends TypeConverter<ReminderList, String> {
+-  const ReminderListConverter();
+-  @override
+-  ReminderList mapToDart(String fromDb) {
+-    if (fromDb == null) {
+-      return null;
+-    }
+-    return ReminderList.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+-  }
+-
+-  @override
+-  String mapToSql(ReminderList value) {
+-    if (value == null) {
+-      return null;
+-    }
+-
+-    return json.encode(value.toJson());
+-  }
+-}
+\ No newline at end of file
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index 8c56292..0d33249 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -1,12 +1,10 @@
+ import 'package:moor_flutter/moor_flutter.dart';
+-import 'package:potato_notes/data/converter/content_style_converter.dart';
+-import 'package:potato_notes/data/converter/image_list_converter.dart';
+-import 'package:potato_notes/data/converter/list_content_converter.dart';
+-import 'package:potato_notes/data/converter/reminder_list_converter.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+ import 'package:potato_notes/data/model/image_list.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
++import 'package:potato_notes/data/model/preferences.dart';
+ import 'package:potato_notes/data/model/reminder_list.dart';
++import 'package:potato_notes/data/model/user_image.dart';
+ 
+ part 'database.g.dart';
+ 
+@@ -16,8 +14,10 @@ class Notes extends Table {
+   TextColumn get content => text().withLength(min: 1)();
+   TextColumn get styleJson => text().map(const ContentStyleConverter())();
+   BoolColumn get starred => boolean().withDefault(Constant(false))();
+-  DateTimeColumn get creationDate => dateTime().withDefault(Constant(DateTime.now()))();
+-  DateTimeColumn get lastModifyDate => dateTime().withDefault(Constant(DateTime.now()))();
++  DateTimeColumn get creationDate =>
++      dateTime().withDefault(Constant(DateTime.now()))();
++  DateTimeColumn get lastModifyDate =>
++      dateTime().withDefault(Constant(DateTime.now()))();
+   IntColumn get color => integer().withDefault(Constant(0))();
+   TextColumn get images => text().map(const ImageListConverter())();
+   BoolColumn get list => boolean().withDefault(Constant(false))();
+@@ -35,30 +35,60 @@ class Notes extends Table {
+   Set<Column> get primaryKey => {id, synced};
+ }
+ 
+-@UseMoor(tables: [Notes])
++class Accounts extends Table {
++  IntColumn get id => integer().autoIncrement()();
++  TextColumn get token => text().nullable()();
++  TextColumn get name => text().withDefault(Constant("Guest"))();
++  TextColumn get image => text().nullable().map(const UserImageConverter())();
++  TextColumn get preferences => text().map(const PreferencesConverter())();
++  BoolColumn get online => boolean().withDefault(Constant(false))();
++}
++
++@UseMoor(tables: [Notes, Accounts])
+ class AppDatabase extends _$AppDatabase {
+   AppDatabase()
+       : super((FlutterQueryExecutor.inDatabaseFolder(
+           path: 'notes_database.db',
+           logStatements: false,
+         )));
+-  
++
+   @override
+   int get schemaVersion => 6;
+ 
+   Future<List<Note>> getAllNotes() => select(notes).get();
+ 
+-  Stream<List<Note>> watchAllNotes() => (select(notes)..orderBy([
+-    (table) => OrderingTerm(expression: table.creationDate, mode: OrderingMode.desc)
+-  ])).watch();
++  Stream<List<Note>> watchAllNotes() => (select(notes)
++        ..orderBy([
++          (table) => OrderingTerm(
++              expression: table.creationDate, mode: OrderingMode.desc)
++        ]))
++      .watch();
+ 
+-  Future<Note> getLastNote() async => (await (select(notes)..orderBy([
+-    (table) => OrderingTerm(expression: table.id, mode: OrderingMode.asc)
+-  ])).get()).last;
++  Future<Note> getLastNote() async => (await (select(notes)
++            ..orderBy([
++              (table) =>
++                  OrderingTerm(expression: table.id, mode: OrderingMode.asc)
++            ]))
++          .get())
++      .last;
+ 
+   Future insertNote(Note note) => into(notes).insert(note, orReplace: true);
+ 
+   Future updateNote(Note note) => update(notes).replace(note);
+ 
+   Future deleteNote(Note note) => delete(notes).delete(note);
++
++  Future<Account> getAccountByID(int id) async {
++    Account returnAccount;
++
++    try {
++      returnAccount = (await (select(accounts)..where((t) => t.id.equals(id))).get())[0];
++    } on StateError {
++      returnAccount = null;
++    }
++
++    return returnAccount;
++  }
++  
++  Future insertAccount(Account account) => into(accounts).insert(account, orReplace: true);
+ }
+\ No newline at end of file
+diff --git a/lib/data/database.g.dart b/lib/data/database.g.dart
+index be20f7a..5647e7d 100644
+--- a/lib/data/database.g.dart
++++ b/lib/data/database.g.dart
+@@ -846,10 +846,323 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+   static ReminderListConverter $converter3 = const ReminderListConverter();
+ }
+ 
++class Account extends DataClass implements Insertable<Account> {
++  final int id;
++  final String token;
++  final String name;
++  final UserImage image;
++  final Preferences preferences;
++  final bool online;
++  Account(
++      {@required this.id,
++      this.token,
++      @required this.name,
++      this.image,
++      @required this.preferences,
++      @required this.online});
++  factory Account.fromData(Map<String, dynamic> data, GeneratedDatabase db,
++      {String prefix}) {
++    final effectivePrefix = prefix ?? '';
++    final intType = db.typeSystem.forDartType<int>();
++    final stringType = db.typeSystem.forDartType<String>();
++    final boolType = db.typeSystem.forDartType<bool>();
++    return Account(
++      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
++      token:
++          stringType.mapFromDatabaseResponse(data['${effectivePrefix}token']),
++      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
++      image: $AccountsTable.$converter0.mapToDart(
++          stringType.mapFromDatabaseResponse(data['${effectivePrefix}image'])),
++      preferences: $AccountsTable.$converter1.mapToDart(stringType
++          .mapFromDatabaseResponse(data['${effectivePrefix}preferences'])),
++      online:
++          boolType.mapFromDatabaseResponse(data['${effectivePrefix}online']),
++    );
++  }
++  factory Account.fromJson(Map<String, dynamic> json,
++      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
++    return Account(
++      id: serializer.fromJson<int>(json['id']),
++      token: serializer.fromJson<String>(json['token']),
++      name: serializer.fromJson<String>(json['name']),
++      image: serializer.fromJson<UserImage>(json['image']),
++      preferences: serializer.fromJson<Preferences>(json['preferences']),
++      online: serializer.fromJson<bool>(json['online']),
++    );
++  }
++  @override
++  Map<String, dynamic> toJson(
++      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
++    return {
++      'id': serializer.toJson<int>(id),
++      'token': serializer.toJson<String>(token),
++      'name': serializer.toJson<String>(name),
++      'image': serializer.toJson<UserImage>(image),
++      'preferences': serializer.toJson<Preferences>(preferences),
++      'online': serializer.toJson<bool>(online),
++    };
++  }
++
++  @override
++  T createCompanion<T extends UpdateCompanion<Account>>(bool nullToAbsent) {
++    return AccountsCompanion(
++      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
++      token:
++          token == null && nullToAbsent ? const Value.absent() : Value(token),
++      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
++      image:
++          image == null && nullToAbsent ? const Value.absent() : Value(image),
++      preferences: preferences == null && nullToAbsent
++          ? const Value.absent()
++          : Value(preferences),
++      online:
++          online == null && nullToAbsent ? const Value.absent() : Value(online),
++    ) as T;
++  }
++
++  Account copyWith(
++          {int id,
++          String token,
++          String name,
++          UserImage image,
++          Preferences preferences,
++          bool online}) =>
++      Account(
++        id: id ?? this.id,
++        token: token ?? this.token,
++        name: name ?? this.name,
++        image: image ?? this.image,
++        preferences: preferences ?? this.preferences,
++        online: online ?? this.online,
++      );
++  @override
++  String toString() {
++    return (StringBuffer('Account(')
++          ..write('id: $id, ')
++          ..write('token: $token, ')
++          ..write('name: $name, ')
++          ..write('image: $image, ')
++          ..write('preferences: $preferences, ')
++          ..write('online: $online')
++          ..write(')'))
++        .toString();
++  }
++
++  @override
++  int get hashCode => $mrjf($mrjc(
++      id.hashCode,
++      $mrjc(
++          token.hashCode,
++          $mrjc(
++              name.hashCode,
++              $mrjc(image.hashCode,
++                  $mrjc(preferences.hashCode, online.hashCode))))));
++  @override
++  bool operator ==(other) =>
++      identical(this, other) ||
++      (other is Account &&
++          other.id == id &&
++          other.token == token &&
++          other.name == name &&
++          other.image == image &&
++          other.preferences == preferences &&
++          other.online == online);
++}
++
++class AccountsCompanion extends UpdateCompanion<Account> {
++  final Value<int> id;
++  final Value<String> token;
++  final Value<String> name;
++  final Value<UserImage> image;
++  final Value<Preferences> preferences;
++  final Value<bool> online;
++  const AccountsCompanion({
++    this.id = const Value.absent(),
++    this.token = const Value.absent(),
++    this.name = const Value.absent(),
++    this.image = const Value.absent(),
++    this.preferences = const Value.absent(),
++    this.online = const Value.absent(),
++  });
++  AccountsCompanion copyWith(
++      {Value<int> id,
++      Value<String> token,
++      Value<String> name,
++      Value<UserImage> image,
++      Value<Preferences> preferences,
++      Value<bool> online}) {
++    return AccountsCompanion(
++      id: id ?? this.id,
++      token: token ?? this.token,
++      name: name ?? this.name,
++      image: image ?? this.image,
++      preferences: preferences ?? this.preferences,
++      online: online ?? this.online,
++    );
++  }
++}
++
++class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
++  final GeneratedDatabase _db;
++  final String _alias;
++  $AccountsTable(this._db, [this._alias]);
++  final VerificationMeta _idMeta = const VerificationMeta('id');
++  GeneratedIntColumn _id;
++  @override
++  GeneratedIntColumn get id => _id ??= _constructId();
++  GeneratedIntColumn _constructId() {
++    return GeneratedIntColumn('id', $tableName, false,
++        hasAutoIncrement: true, declaredAsPrimaryKey: true);
++  }
++
++  final VerificationMeta _tokenMeta = const VerificationMeta('token');
++  GeneratedTextColumn _token;
++  @override
++  GeneratedTextColumn get token => _token ??= _constructToken();
++  GeneratedTextColumn _constructToken() {
++    return GeneratedTextColumn(
++      'token',
++      $tableName,
++      true,
++    );
++  }
++
++  final VerificationMeta _nameMeta = const VerificationMeta('name');
++  GeneratedTextColumn _name;
++  @override
++  GeneratedTextColumn get name => _name ??= _constructName();
++  GeneratedTextColumn _constructName() {
++    return GeneratedTextColumn('name', $tableName, false,
++        defaultValue: Constant("Guest"));
++  }
++
++  final VerificationMeta _imageMeta = const VerificationMeta('image');
++  GeneratedTextColumn _image;
++  @override
++  GeneratedTextColumn get image => _image ??= _constructImage();
++  GeneratedTextColumn _constructImage() {
++    return GeneratedTextColumn(
++      'image',
++      $tableName,
++      true,
++    );
++  }
++
++  final VerificationMeta _preferencesMeta =
++      const VerificationMeta('preferences');
++  GeneratedTextColumn _preferences;
++  @override
++  GeneratedTextColumn get preferences =>
++      _preferences ??= _constructPreferences();
++  GeneratedTextColumn _constructPreferences() {
++    return GeneratedTextColumn(
++      'preferences',
++      $tableName,
++      false,
++    );
++  }
++
++  final VerificationMeta _onlineMeta = const VerificationMeta('online');
++  GeneratedBoolColumn _online;
++  @override
++  GeneratedBoolColumn get online => _online ??= _constructOnline();
++  GeneratedBoolColumn _constructOnline() {
++    return GeneratedBoolColumn('online', $tableName, false,
++        defaultValue: Constant(false));
++  }
++
++  @override
++  List<GeneratedColumn> get $columns =>
++      [id, token, name, image, preferences, online];
++  @override
++  $AccountsTable get asDslTable => this;
++  @override
++  String get $tableName => _alias ?? 'accounts';
++  @override
++  final String actualTableName = 'accounts';
++  @override
++  VerificationContext validateIntegrity(AccountsCompanion d,
++      {bool isInserting = false}) {
++    final context = VerificationContext();
++    if (d.id.present) {
++      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
++    } else if (id.isRequired && isInserting) {
++      context.missing(_idMeta);
++    }
++    if (d.token.present) {
++      context.handle(
++          _tokenMeta, token.isAcceptableValue(d.token.value, _tokenMeta));
++    } else if (token.isRequired && isInserting) {
++      context.missing(_tokenMeta);
++    }
++    if (d.name.present) {
++      context.handle(
++          _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
++    } else if (name.isRequired && isInserting) {
++      context.missing(_nameMeta);
++    }
++    context.handle(_imageMeta, const VerificationResult.success());
++    context.handle(_preferencesMeta, const VerificationResult.success());
++    if (d.online.present) {
++      context.handle(
++          _onlineMeta, online.isAcceptableValue(d.online.value, _onlineMeta));
++    } else if (online.isRequired && isInserting) {
++      context.missing(_onlineMeta);
++    }
++    return context;
++  }
++
++  @override
++  Set<GeneratedColumn> get $primaryKey => {id};
++  @override
++  Account map(Map<String, dynamic> data, {String tablePrefix}) {
++    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
++    return Account.fromData(data, _db, prefix: effectivePrefix);
++  }
++
++  @override
++  Map<String, Variable> entityToSql(AccountsCompanion d) {
++    final map = <String, Variable>{};
++    if (d.id.present) {
++      map['id'] = Variable<int, IntType>(d.id.value);
++    }
++    if (d.token.present) {
++      map['token'] = Variable<String, StringType>(d.token.value);
++    }
++    if (d.name.present) {
++      map['name'] = Variable<String, StringType>(d.name.value);
++    }
++    if (d.image.present) {
++      final converter = $AccountsTable.$converter0;
++      map['image'] =
++          Variable<String, StringType>(converter.mapToSql(d.image.value));
++    }
++    if (d.preferences.present) {
++      final converter = $AccountsTable.$converter1;
++      map['preferences'] =
++          Variable<String, StringType>(converter.mapToSql(d.preferences.value));
++    }
++    if (d.online.present) {
++      map['online'] = Variable<bool, BoolType>(d.online.value);
++    }
++    return map;
++  }
++
++  @override
++  $AccountsTable createAlias(String alias) {
++    return $AccountsTable(_db, alias);
++  }
++
++  static UserImageConverter $converter0 = const UserImageConverter();
++  static PreferencesConverter $converter1 = const PreferencesConverter();
++}
++
+ abstract class _$AppDatabase extends GeneratedDatabase {
+   _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
+   $NotesTable _notes;
+   $NotesTable get notes => _notes ??= $NotesTable(this);
++  $AccountsTable _accounts;
++  $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
+   @override
+-  List<TableInfo> get allTables => [notes];
++  List<TableInfo> get allTables => [notes, accounts];
+ }
+diff --git a/lib/data/model/content_style.dart b/lib/data/model/content_style.dart
+index 6a13c88..4351623 100644
+--- a/lib/data/model/content_style.dart
++++ b/lib/data/model/content_style.dart
+@@ -1,4 +1,7 @@
++import 'dart:convert';
++
+ import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
+ 
+ part 'content_style.g.dart';
+ 
+@@ -12,4 +15,24 @@ class ContentStyle {
+       _$ContentStyleFromJson(json);
+ 
+   Map<String, dynamic> toJson() => _$ContentStyleToJson(this);
++}
++
++class ContentStyleConverter extends TypeConverter<ContentStyle, String> {
++  const ContentStyleConverter();
++  @override
++  ContentStyle mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return ContentStyle.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(ContentStyle value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
+ }
+\ No newline at end of file
+diff --git a/lib/data/model/image_list.dart b/lib/data/model/image_list.dart
+index da5f3ea..97a1856 100644
+--- a/lib/data/model/image_list.dart
++++ b/lib/data/model/image_list.dart
+@@ -1,4 +1,7 @@
++import 'dart:convert';
++
+ import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
+ 
+ part 'image_list.g.dart';
+ 
+@@ -12,4 +15,24 @@ class ImageList {
+       _$ImageListFromJson(json);
+ 
+   Map<String, dynamic> toJson() => _$ImageListToJson(this);
++}
++
++class ImageListConverter extends TypeConverter<ImageList, String> {
++  const ImageListConverter();
++  @override
++  ImageList mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return ImageList.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(ImageList value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
+ }
+\ No newline at end of file
+diff --git a/lib/data/model/list_content.dart b/lib/data/model/list_content.dart
+index 4f04099..ca580a4 100644
+--- a/lib/data/model/list_content.dart
++++ b/lib/data/model/list_content.dart
+@@ -1,4 +1,7 @@
++import 'dart:convert';
++
+ import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
+ 
+ part 'list_content.g.dart';
+ 
+@@ -12,4 +15,24 @@ class ListContent {
+       _$ListContentFromJson(json);
+ 
+   Map<String, dynamic> toJson() => _$ListContentToJson(this);
++}
++
++class ListContentConverter extends TypeConverter<ListContent, String> {
++  const ListContentConverter();
++  @override
++  ListContent mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return ListContent.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(ListContent value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
+ }
+\ No newline at end of file
+diff --git a/lib/data/model/preferences.dart b/lib/data/model/preferences.dart
+new file mode 100644
+index 0000000..952bb3d
+--- /dev/null
++++ b/lib/data/model/preferences.dart
+@@ -0,0 +1,40 @@
++import 'dart:convert';
++
++import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
++
++part 'preferences.g.dart';
++
++@JsonSerializable()
++class Preferences {
++  bool gridMode;
++
++  Preferences({
++    this.gridMode = false,
++  });
++
++  factory Preferences.fromJson(Map<String, dynamic> json) =>
++      _$PreferencesFromJson(json);
++
++  Map<String, dynamic> toJson() => _$PreferencesToJson(this);
++}
++
++class PreferencesConverter extends TypeConverter<Preferences, String> {
++  const PreferencesConverter();
++  @override
++  Preferences mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return Preferences.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(Preferences value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
++}
+\ No newline at end of file
+diff --git a/lib/data/model/preferences.g.dart b/lib/data/model/preferences.g.dart
+new file mode 100644
+index 0000000..5368abf
+--- /dev/null
++++ b/lib/data/model/preferences.g.dart
+@@ -0,0 +1,18 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'preferences.dart';
++
++// **************************************************************************
++// JsonSerializableGenerator
++// **************************************************************************
++
++Preferences _$PreferencesFromJson(Map<String, dynamic> json) {
++  return Preferences(
++    gridMode: json['gridMode'] as bool,
++  );
++}
++
++Map<String, dynamic> _$PreferencesToJson(Preferences instance) =>
++    <String, dynamic>{
++      'gridMode': instance.gridMode,
++    };
+diff --git a/lib/data/model/reminder_list.dart b/lib/data/model/reminder_list.dart
+index 3f75a88..307f38c 100644
+--- a/lib/data/model/reminder_list.dart
++++ b/lib/data/model/reminder_list.dart
+@@ -1,4 +1,7 @@
++import 'dart:convert';
++
+ import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
+ 
+ part 'reminder_list.g.dart';
+ 
+@@ -12,4 +15,24 @@ class ReminderList {
+       _$ReminderListFromJson(json);
+ 
+   Map<String, dynamic> toJson() => _$ReminderListToJson(this);
++}
++
++class ReminderListConverter extends TypeConverter<ReminderList, String> {
++  const ReminderListConverter();
++  @override
++  ReminderList mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return ReminderList.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(ReminderList value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
+ }
+\ No newline at end of file
+diff --git a/lib/data/model/user_image.dart b/lib/data/model/user_image.dart
+new file mode 100644
+index 0000000..94da8fd
+--- /dev/null
++++ b/lib/data/model/user_image.dart
+@@ -0,0 +1,38 @@
++import 'dart:convert';
++
++import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
++
++part 'user_image.g.dart';
++
++@JsonSerializable()
++class UserImage {
++  Uri path;
++
++  UserImage(this.path);
++
++  factory UserImage.fromJson(Map<String, dynamic> json) =>
++      _$UserImageFromJson(json);
++
++  Map<String, dynamic> toJson() => _$UserImageToJson(this);
++}
++
++class UserImageConverter extends TypeConverter<UserImage, String> {
++  const UserImageConverter();
++  @override
++  UserImage mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return UserImage.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(UserImage value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
++}
+\ No newline at end of file
+diff --git a/lib/data/model/user_image.g.dart b/lib/data/model/user_image.g.dart
+new file mode 100644
+index 0000000..fa08d0b
+--- /dev/null
++++ b/lib/data/model/user_image.g.dart
+@@ -0,0 +1,17 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'user_image.dart';
++
++// **************************************************************************
++// JsonSerializableGenerator
++// **************************************************************************
++
++UserImage _$UserImageFromJson(Map<String, dynamic> json) {
++  return UserImage(
++    json['path'] == null ? null : Uri.parse(json['path'] as String),
++  );
++}
++
++Map<String, dynamic> _$UserImageToJson(UserImage instance) => <String, dynamic>{
++      'path': instance.path?.toString(),
++    };
+diff --git a/lib/internal/app_info.dart b/lib/internal/app_info.dart
+index d8d3a6f..ac521c6 100644
+--- a/lib/internal/app_info.dart
++++ b/lib/internal/app_info.dart
+@@ -2,13 +2,20 @@ import 'dart:async';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
++import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/data/model/preferences.dart';
++import 'package:potato_notes/internal/shared_prefs.dart';
++import 'package:provider/provider.dart';
+ import 'package:streams_channel/streams_channel.dart';
+ 
+ class AppInfoProvider extends ChangeNotifier {
+   static final StreamsChannel accentStreamChannel = StreamsChannel('potato_notes_accents');
+   static final StreamsChannel themeStreamChannel = StreamsChannel('potato_notes_themes');
++
++  SharedPrefs prefs;
++  BuildContext context;
+   
+-  AppInfoProvider() {
++  AppInfoProvider(this.context) {
+     loadData();
+   }
+ 
+@@ -19,9 +26,13 @@ class AppInfoProvider extends ChangeNotifier {
+ 
+   Color _mainColor = Colors.blueAccent;
+   Brightness _systemTheme = Brightness.light;
++  int _accountId = 0;
++  Account _account;
+ 
+   Color get mainColor => _mainColor;
+   Brightness get systemTheme => _systemTheme;
++  int get accountId => _accountId;
++  Account get account => _account;
+ 
+   set mainColor(Color newColor) {
+     _mainColor = newColor;
+@@ -33,7 +44,43 @@ class AppInfoProvider extends ChangeNotifier {
+     notifyListeners();
+   }
+ 
++  set accountId(int newId) {
++    _accountId = newId;
++    prefs.setCurrentAccount(newId);
++    updateAccount();
++    notifyListeners();
++  }
++
++  set account(Account newAccount) {
++    _account = newAccount;
++    notifyListeners();
++  }
++
++  void updateAccount() async {
++    final database = Provider.of<AppDatabase>(context, listen: false);
++    Account accountById = await database.getAccountByID(accountId);
++
++    if(accountById != null) {
++      account = accountById;
++    } else {
++      Account newAccount = Account(
++        id: 0,
++        token: null,
++        name: null,
++        image: null,
++        preferences: Preferences(gridMode: false),
++        online: false,
++      );
++
++      database.insertAccount(newAccount);
++
++      account = newAccount;
++    }
++  }
++
+   void loadData() async {
++    prefs = await SharedPrefs.newInstance();
++
+     themeSubscription = themeStreamChannel
+         .receiveBroadcastStream()
+         .listen((data) => systemTheme = data
+@@ -43,6 +90,6 @@ class AppInfoProvider extends ChangeNotifier {
+         .receiveBroadcastStream()
+         .listen((data) => mainColor = Color(data));
+     
+-    accentSubscription.onDone(() => print("bruh"));
++    accountId = await prefs.getCurrentAccount();
+   }
+ }
+\ No newline at end of file
+diff --git a/lib/internal/shared_prefs.dart b/lib/internal/shared_prefs.dart
+new file mode 100644
+index 0000000..e112d1c
+--- /dev/null
++++ b/lib/internal/shared_prefs.dart
+@@ -0,0 +1,19 @@
++import 'package:shared_preferences/shared_preferences.dart';
++
++class SharedPrefs {
++  SharedPreferences prefs;
++
++  SharedPrefs._(this.prefs);
++  static Future<SharedPrefs> newInstance() async {
++    SharedPreferences preferences = await SharedPreferences.getInstance();
++    return SharedPrefs._(preferences);
++  }
++
++  Future<int> getCurrentAccount() async {
++    return prefs.getInt("account_id") ?? 0;
++  }
++
++  void setCurrentAccount(int value) async {
++    await prefs.setInt("account_id", value);
++  }
++}
+\ No newline at end of file
+diff --git a/lib/main.dart b/lib/main.dart
+index 6cf0304..4c9e3da 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -17,46 +17,43 @@ class PotatoNotes extends StatelessWidget {
+           value: AppDatabase(),
+         ),
+         ChangeNotifierProvider.value(
+-          value: AppInfoProvider(),
++          value: AppInfoProvider(context),
+         ),
+       ],
+       child: Builder(
+-        builder: (context) => ChangeNotifierProvider.value(
+-          value: AppInfoProvider(),
+-          child: Builder(
+-            builder: (context) {
+-              final appInfo = Provider.of<AppInfoProvider>(context);
++        builder: (context) {
++          final appInfo = Provider.of<AppInfoProvider>(context);
+ 
+-              switch(appInfo.systemTheme) {
+-                case Brightness.light:
+-                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+-                    systemNavigationBarColor: SpicyThemes.light(appInfo.mainColor).cardColor,
+-                    statusBarColor: Colors.transparent,
+-                    systemNavigationBarIconBrightness: Brightness.dark,
+-                    statusBarIconBrightness: Brightness.dark,
+-                  ));
+-                  break;
+-                case Brightness.dark:
+-                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+-                    systemNavigationBarColor: SpicyThemes.dark(appInfo.mainColor).cardColor,
+-                    statusBarColor: Colors.transparent,
+-                    systemNavigationBarIconBrightness: Brightness.light,
+-                    statusBarIconBrightness: Brightness.light,
+-                  ));
+-                  break;
+-              }
++          switch (appInfo.systemTheme) {
++            case Brightness.light:
++              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
++                systemNavigationBarColor:
++                    SpicyThemes.light(appInfo.mainColor).cardColor,
++                statusBarColor: Colors.transparent,
++                systemNavigationBarIconBrightness: Brightness.dark,
++                statusBarIconBrightness: Brightness.dark,
++              ));
++              break;
++            case Brightness.dark:
++              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
++                systemNavigationBarColor:
++                    SpicyThemes.dark(appInfo.mainColor).cardColor,
++                statusBarColor: Colors.transparent,
++                systemNavigationBarIconBrightness: Brightness.light,
++                statusBarIconBrightness: Brightness.light,
++              ));
++              break;
++          }
+ 
+-              return MaterialApp(
+-                title: "PotatoNotes",
+-                theme: SpicyThemes.light(appInfo.mainColor),
+-                darkTheme: SpicyThemes.dark(appInfo.mainColor),
+-                home: MainPage(),
+-                debugShowCheckedModeBanner: false,
+-              );
+-            },
+-          ),
+-        ),
++          return MaterialApp(
++            title: "PotatoNotes",
++            theme: SpicyThemes.light(appInfo.mainColor),
++            darkTheme: SpicyThemes.dark(appInfo.mainColor),
++            home: MainPage(),
++            debugShowCheckedModeBanner: false,
++          );
++        },
+       ),
+     );
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index 0cf3270..4e48eee 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -1,7 +1,9 @@
++import 'package:community_material_icon/community_material_icon.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/data/model/preferences.dart';
+ import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/routes/note_page.dart';
+ import 'package:potato_notes/widget/note_view.dart';
+@@ -57,32 +59,54 @@ class _MainPageState extends State<MainPage> {
+         stream: database.watchAllNotes(),
+         builder: (context, snapshot) {
+           if((snapshot.data?.length ?? 0) != 0) {
+-            return StaggeredGridView.countBuilder(
+-              crossAxisCount: numOfColumns,
+-              itemBuilder: (context, index) => NoteView(
+-                note: snapshot.data[index],
+-                onTap: () => Navigator.push(context,
+-                  MaterialPageRoute(
+-                    builder: (context) => NotePage(
+-                      note: snapshot.data[index],
++            if(appInfo.account.preferences.gridMode) {
++              return StaggeredGridView.countBuilder(
++                crossAxisCount: numOfColumns,
++                itemBuilder: (context, index) => NoteView(
++                  note: snapshot.data[index],
++                  onTap: () => Navigator.push(context,
++                    MaterialPageRoute(
++                      builder: (context) => NotePage(
++                        note: snapshot.data[index],
++                      ),
+                     ),
+                   ),
++                  numOfImages: numOfImages,
+                 ),
+-                onLongPress: () {
+-                  database.updateNote(snapshot.data[index]..images.images.removeLast());
+-                },
+-                numOfImages: numOfImages,
+-              ),
+-              staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+-              itemCount: snapshot.data.length,
+-              padding: EdgeInsets.fromLTRB(
+-                4,
+-                4 + MediaQuery.of(context).padding.top,
+-                4,
+-                4.0 + 56,
+-              ),
+-            );
+-          } else return Text("bruh");
++                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
++                itemCount: snapshot.data.length,
++                padding: EdgeInsets.fromLTRB(
++                  4,
++                  4 + MediaQuery.of(context).padding.top,
++                  4,
++                  4.0 + 56,
++                ),
++              );
++            } else {
++              return ListView.builder(
++                itemBuilder: (context, index) => NoteView(
++                  note: snapshot.data[index],
++                  onTap: () => Navigator.push(context,
++                    MaterialPageRoute(
++                      builder: (context) => NotePage(
++                        note: snapshot.data[index],
++                      ),
++                    ),
++                  ),
++                  numOfImages: numOfImages,
++                ),
++                itemCount: snapshot.data.length,
++                padding: EdgeInsets.fromLTRB(
++                  4,
++                  4 + MediaQuery.of(context).padding.top,
++                  4,
++                  4.0 + 56,
++                ),
++              );
++            }
++          } else return Center(
++            child: Text("Empty"),
++          );
+         },
+       ),
+       extendBody: true,
+@@ -93,6 +117,20 @@ class _MainPageState extends State<MainPage> {
+             padding: EdgeInsets.all(0),
+             onPressed: () {},
+           ),
++          IconButton(
++            icon: Icon(appInfo.account.preferences.gridMode
++                ? OMIcons.viewAgenda
++                : CommunityMaterialIcons.view_dashboard_outline),
++            padding: EdgeInsets.all(0),
++            onPressed: () async {
++              database.insertAccount(appInfo.account.copyWith(
++                preferences: Preferences(
++                  gridMode: !appInfo.account.preferences.gridMode
++                ),
++              ));
++              appInfo.accountId = appInfo.accountId;
++            },
++          ),
+         ],
+         elevation: 12,
+         notched: true,
+diff --git a/lib/widget/note_view.dart b/lib/widget/note_view.dart
+index ccc9d57..e530648 100644
+--- a/lib/widget/note_view.dart
++++ b/lib/widget/note_view.dart
+@@ -32,6 +32,7 @@ class NoteView extends StatelessWidget {
+       elevation: 3,
+       margin: EdgeInsets.all(4),
+       child: InkWell(
++        borderRadius: BorderRadius.circular(_kBorderRadius),
+         onTap: onTap,
+         onLongPress: onLongPress,
+         child: Column(
+@@ -54,9 +55,9 @@ class NoteView extends StatelessWidget {
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Visibility(
+-                    visible: note.title != null,
++                    visible: note.title != "",
+                     child: Text(
+-                      note.title ?? "",
++                      note.title,
+                       style: TextStyle(
+                         fontSize: 18,
+                         fontWeight: FontWeight.w500,
+diff --git a/pubspec.lock b/pubspec.lock
+index 39dc723..3f5fc7f 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -181,13 +181,6 @@ packages:
+     description: flutter
+     source: sdk
+     version: "0.0.0"
+-  flutter_markdown:
+-    dependency: "direct main"
+-    description:
+-      name: flutter_markdown
+-      url: "https://pub.dartlang.org"
+-    source: hosted
+-    version: "0.3.4"
+   flutter_staggered_grid_view:
+     dependency: "direct main"
+     description:
+@@ -200,6 +193,11 @@ packages:
+     description: flutter
+     source: sdk
+     version: "0.0.0"
++  flutter_web_plugins:
++    dependency: transitive
++    description: flutter
++    source: sdk
++    version: "0.0.0"
+   front_end:
+     dependency: transitive
+     description:
+@@ -298,13 +296,6 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "0.11.4"
+-  markdown:
+-    dependency: transitive
+-    description:
+-      name: markdown
+-      url: "https://pub.dartlang.org"
+-    source: hosted
+-    version: "2.1.3"
+   matcher:
+     dependency: transitive
+     description:
+@@ -475,6 +466,34 @@ packages:
+       url: "https://github.com/namhyun-gu/flutter_rich_text_editor"
+     source: git
+     version: "0.0.1"
++  shared_preferences:
++    dependency: "direct main"
++    description:
++      name: shared_preferences
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.5.6+3"
++  shared_preferences_macos:
++    dependency: transitive
++    description:
++      name: shared_preferences_macos
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.0.1+6"
++  shared_preferences_platform_interface:
++    dependency: transitive
++    description:
++      name: shared_preferences_platform_interface
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.3"
++  shared_preferences_web:
++    dependency: transitive
++    description:
++      name: shared_preferences_web
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.1.2+4"
+   shelf:
+     dependency: transitive
+     description:
+@@ -645,4 +664,4 @@ packages:
+     version: "2.2.0"
+ sdks:
+   dart: ">=2.7.0 <3.0.0"
+-  flutter: ">=1.12.1 <2.0.0"
++  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+diff --git a/pubspec.yaml b/pubspec.yaml
+index dd5d436..135c38c 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -13,26 +13,26 @@ dependencies:
+   flutter:
+     sdk: flutter
+ 
+-  moor_flutter: ^1.4.0
++  moor_flutter:
+   json_serializable:
+   sqflite:
+   path_provider:
+   provider:
+   streams_channel:
+-  flutter_markdown:
+-  rich_text_editor:
+-    git:
+-      url: https://github.com/namhyun-gu/flutter_rich_text_editor
+   outline_material_icons:
+   community_material_icon:
+   flutter_staggered_grid_view:
++  shared_preferences:
++
++  rich_text_editor:
++    git: https://github.com/namhyun-gu/flutter_rich_text_editor
+   spicy_components:
+     git: https://github.com/HrX03/SpicyUIComponents
+ 
+ dev_dependencies:
+   flutter_test:
+     sdk: flutter
+-  moor_generator: ^1.4.0
++  moor_generator:
+   build_runner:
+ 
+ flutter:
+-- 
+2.26.0
+

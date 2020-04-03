@@ -1,0 +1,645 @@
+From db3bca968d0a1da14743f7272bea310097490dc7 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Fri, 3 Apr 2020 21:30:19 +0200
+Subject: [PATCH 3/3] notes: Implement welcome page + db preferences
+
+---
+ lib/data/dao/account_helper.dart           |   4 +-
+ lib/data/database.dart                     |   3 +-
+ lib/data/database.g.dart                   |  52 +++++++++-
+ lib/internal/constants.dart                |   6 ++
+ lib/main.dart                              |   4 +-
+ lib/routes/main_page.dart                  |   3 +-
+ lib/routes/note_page.dart                  |   3 +-
+ lib/routes/welcome_page.dart               |  39 +++++++
+ lib/widget/account_list_tile.dart          |  58 +++++++++++
+ lib/widget/note_view.dart                  |   8 +-
+ lib/widget/note_view_images.dart           |   6 +-
+ lib/widget/welcome_pages/account_page.dart | 114 +++++++++++++++++++++
+ lib/widget/welcome_pages/page_model.dart   |   6 ++
+ 13 files changed, 286 insertions(+), 20 deletions(-)
+ create mode 100644 lib/internal/constants.dart
+ create mode 100644 lib/routes/welcome_page.dart
+ create mode 100644 lib/widget/account_list_tile.dart
+ create mode 100644 lib/widget/welcome_pages/account_page.dart
+ create mode 100644 lib/widget/welcome_pages/page_model.dart
+
+diff --git a/lib/data/dao/account_helper.dart b/lib/data/dao/account_helper.dart
+index 86d395a..220a123 100644
+--- a/lib/data/dao/account_helper.dart
++++ b/lib/data/dao/account_helper.dart
+@@ -12,7 +12,7 @@ class AccountHelper extends DatabaseAccessor<AppDatabase> with _$AccountHelperMi
+ 
+   Future<List<Account>> getAccounts() => select(accounts).get();
+ 
+-  Stream<List<Account>> watchAllNotes() => select(accounts).watch();
++  Stream<List<Account>> watchAccounts() => select(accounts).watch();
+ 
+   Future<Account> getAccountByID(int id) async {
+     Account returnAccount;
+@@ -28,5 +28,5 @@ class AccountHelper extends DatabaseAccessor<AppDatabase> with _$AccountHelperMi
+   
+   Future saveAccount(Account account) => into(accounts).insert(account, orReplace: true);
+ 
+-  Future deleteNote(Account account) => delete(accounts).delete(account);
++  Future deleteAccount(Account account) => delete(accounts).delete(account);
+ }
+\ No newline at end of file
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index e8ff24a..5aa4017 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -41,7 +41,8 @@ class Notes extends Table {
+ class Accounts extends Table {
+   IntColumn get id => integer().autoIncrement()();
+   TextColumn get token => text().nullable()();
+-  TextColumn get name => text().withDefault(Constant("Guest"))();
++  TextColumn get name => text()();
++  TextColumn get email => text().nullable()();
+   TextColumn get image => text().nullable().map(const UserImageConverter())();
+   TextColumn get preferences => text().map(const PreferencesConverter())();
+   BoolColumn get online => boolean().withDefault(Constant(false))();
+diff --git a/lib/data/database.g.dart b/lib/data/database.g.dart
+index bbf1498..00d8816 100644
+--- a/lib/data/database.g.dart
++++ b/lib/data/database.g.dart
+@@ -890,6 +890,7 @@ class Account extends DataClass implements Insertable<Account> {
+   final int id;
+   final String token;
+   final String name;
++  final String email;
+   final UserImage image;
+   final Preferences preferences;
+   final bool online;
+@@ -897,6 +898,7 @@ class Account extends DataClass implements Insertable<Account> {
+       {@required this.id,
+       this.token,
+       @required this.name,
++      this.email,
+       this.image,
+       @required this.preferences,
+       @required this.online});
+@@ -911,6 +913,8 @@ class Account extends DataClass implements Insertable<Account> {
+       token:
+           stringType.mapFromDatabaseResponse(data['${effectivePrefix}token']),
+       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
++      email:
++          stringType.mapFromDatabaseResponse(data['${effectivePrefix}email']),
+       image: $AccountsTable.$converter0.mapToDart(
+           stringType.mapFromDatabaseResponse(data['${effectivePrefix}image'])),
+       preferences: $AccountsTable.$converter1.mapToDart(stringType
+@@ -925,6 +929,7 @@ class Account extends DataClass implements Insertable<Account> {
+       id: serializer.fromJson<int>(json['id']),
+       token: serializer.fromJson<String>(json['token']),
+       name: serializer.fromJson<String>(json['name']),
++      email: serializer.fromJson<String>(json['email']),
+       image: serializer.fromJson<UserImage>(json['image']),
+       preferences: serializer.fromJson<Preferences>(json['preferences']),
+       online: serializer.fromJson<bool>(json['online']),
+@@ -937,6 +942,7 @@ class Account extends DataClass implements Insertable<Account> {
+       'id': serializer.toJson<int>(id),
+       'token': serializer.toJson<String>(token),
+       'name': serializer.toJson<String>(name),
++      'email': serializer.toJson<String>(email),
+       'image': serializer.toJson<UserImage>(image),
+       'preferences': serializer.toJson<Preferences>(preferences),
+       'online': serializer.toJson<bool>(online),
+@@ -950,6 +956,8 @@ class Account extends DataClass implements Insertable<Account> {
+       token:
+           token == null && nullToAbsent ? const Value.absent() : Value(token),
+       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
++      email:
++          email == null && nullToAbsent ? const Value.absent() : Value(email),
+       image:
+           image == null && nullToAbsent ? const Value.absent() : Value(image),
+       preferences: preferences == null && nullToAbsent
+@@ -964,6 +972,7 @@ class Account extends DataClass implements Insertable<Account> {
+           {int id,
+           String token,
+           String name,
++          String email,
+           UserImage image,
+           Preferences preferences,
+           bool online}) =>
+@@ -971,6 +980,7 @@ class Account extends DataClass implements Insertable<Account> {
+         id: id ?? this.id,
+         token: token ?? this.token,
+         name: name ?? this.name,
++        email: email ?? this.email,
+         image: image ?? this.image,
+         preferences: preferences ?? this.preferences,
+         online: online ?? this.online,
+@@ -981,6 +991,7 @@ class Account extends DataClass implements Insertable<Account> {
+           ..write('id: $id, ')
+           ..write('token: $token, ')
+           ..write('name: $name, ')
++          ..write('email: $email, ')
+           ..write('image: $image, ')
+           ..write('preferences: $preferences, ')
+           ..write('online: $online')
+@@ -995,8 +1006,10 @@ class Account extends DataClass implements Insertable<Account> {
+           token.hashCode,
+           $mrjc(
+               name.hashCode,
+-              $mrjc(image.hashCode,
+-                  $mrjc(preferences.hashCode, online.hashCode))))));
++              $mrjc(
++                  email.hashCode,
++                  $mrjc(image.hashCode,
++                      $mrjc(preferences.hashCode, online.hashCode)))))));
+   @override
+   bool operator ==(other) =>
+       identical(this, other) ||
+@@ -1004,6 +1017,7 @@ class Account extends DataClass implements Insertable<Account> {
+           other.id == id &&
+           other.token == token &&
+           other.name == name &&
++          other.email == email &&
+           other.image == image &&
+           other.preferences == preferences &&
+           other.online == online);
+@@ -1013,6 +1027,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
+   final Value<int> id;
+   final Value<String> token;
+   final Value<String> name;
++  final Value<String> email;
+   final Value<UserImage> image;
+   final Value<Preferences> preferences;
+   final Value<bool> online;
+@@ -1020,6 +1035,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
+     this.id = const Value.absent(),
+     this.token = const Value.absent(),
+     this.name = const Value.absent(),
++    this.email = const Value.absent(),
+     this.image = const Value.absent(),
+     this.preferences = const Value.absent(),
+     this.online = const Value.absent(),
+@@ -1028,6 +1044,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
+       {Value<int> id,
+       Value<String> token,
+       Value<String> name,
++      Value<String> email,
+       Value<UserImage> image,
+       Value<Preferences> preferences,
+       Value<bool> online}) {
+@@ -1035,6 +1052,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
+       id: id ?? this.id,
+       token: token ?? this.token,
+       name: name ?? this.name,
++      email: email ?? this.email,
+       image: image ?? this.image,
+       preferences: preferences ?? this.preferences,
+       online: online ?? this.online,
+@@ -1072,8 +1090,23 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+   @override
+   GeneratedTextColumn get name => _name ??= _constructName();
+   GeneratedTextColumn _constructName() {
+-    return GeneratedTextColumn('name', $tableName, false,
+-        defaultValue: Constant("Guest"));
++    return GeneratedTextColumn(
++      'name',
++      $tableName,
++      false,
++    );
++  }
++
++  final VerificationMeta _emailMeta = const VerificationMeta('email');
++  GeneratedTextColumn _email;
++  @override
++  GeneratedTextColumn get email => _email ??= _constructEmail();
++  GeneratedTextColumn _constructEmail() {
++    return GeneratedTextColumn(
++      'email',
++      $tableName,
++      true,
++    );
+   }
+ 
+   final VerificationMeta _imageMeta = const VerificationMeta('image');
+@@ -1113,7 +1146,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+ 
+   @override
+   List<GeneratedColumn> get $columns =>
+-      [id, token, name, image, preferences, online];
++      [id, token, name, email, image, preferences, online];
+   @override
+   $AccountsTable get asDslTable => this;
+   @override
+@@ -1141,6 +1174,12 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+     } else if (name.isRequired && isInserting) {
+       context.missing(_nameMeta);
+     }
++    if (d.email.present) {
++      context.handle(
++          _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
++    } else if (email.isRequired && isInserting) {
++      context.missing(_emailMeta);
++    }
+     context.handle(_imageMeta, const VerificationResult.success());
+     context.handle(_preferencesMeta, const VerificationResult.success());
+     if (d.online.present) {
+@@ -1172,6 +1211,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+     if (d.name.present) {
+       map['name'] = Variable<String, StringType>(d.name.value);
+     }
++    if (d.email.present) {
++      map['email'] = Variable<String, StringType>(d.email.value);
++    }
+     if (d.image.present) {
+       final converter = $AccountsTable.$converter0;
+       map['image'] =
+diff --git a/lib/internal/constants.dart b/lib/internal/constants.dart
+new file mode 100644
+index 0000000..a142816
+--- /dev/null
++++ b/lib/internal/constants.dart
+@@ -0,0 +1,6 @@
++class Constants {
++  static const double noteCornerRadius = 6.0;
++  static const double dialogCornerRadius = 8.0;
++  static const double positiveButtonCornerRadius = 2.0;
++  static const double bottomBarElevation = 8.0;
++}
+\ No newline at end of file
+diff --git a/lib/main.dart b/lib/main.dart
+index 4a8561c..ca83b6f 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/internal/app_info.dart';
+-import 'package:potato_notes/routes/main_page.dart';
++import 'package:potato_notes/routes/welcome_page.dart';
+ import 'package:provider/provider.dart';
+ import 'package:spicy_components/spicy_components.dart';
+ 
+@@ -52,7 +52,7 @@ class PotatoNotes extends StatelessWidget {
+             title: "PotatoNotes",
+             theme: SpicyThemes.light(appInfo.mainColor),
+             darkTheme: SpicyThemes.dark(appInfo.mainColor),
+-            home: MainPage(),
++            home: WelcomePage(),
+             debugShowCheckedModeBanner: false,
+           );
+         },
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index b1d6b74..15e2272 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -7,6 +7,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/preferences.dart';
+ import 'package:potato_notes/internal/app_info.dart';
++import 'package:potato_notes/internal/constants.dart';
+ import 'package:potato_notes/routes/note_page.dart';
+ import 'package:potato_notes/widget/note_view.dart';
+ import 'package:provider/provider.dart';
+@@ -135,7 +136,7 @@ class _MainPageState extends State<MainPage> {
+             },
+           ),
+         ],
+-        elevation: 12,
++        elevation: Constants.bottomBarElevation,
+         notched: true,
+       ),
+       floatingActionButton: FloatingActionButton(
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index 2c74a19..494387a 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -9,6 +9,7 @@ import 'package:potato_notes/data/model/image_list.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
+ import 'package:potato_notes/data/model/reminder_list.dart';
+ import 'package:potato_notes/internal/app_info.dart';
++import 'package:potato_notes/internal/constants.dart';
+ import 'package:potato_notes/widget/note_toolbar.dart';
+ import 'package:provider/provider.dart';
+ import 'package:rich_text_editor/rich_text_editor.dart';
+@@ -131,7 +132,7 @@ class _NotePageState extends State<NotePage> {
+       ),
+       bottomNavigationBar: Material(
+         color: Theme.of(context).cardColor,
+-        elevation: 8,
++        elevation: Constants.bottomBarElevation,
+         child: Column(
+           mainAxisSize: MainAxisSize.min,
+           children: [
+diff --git a/lib/routes/welcome_page.dart b/lib/routes/welcome_page.dart
+new file mode 100644
+index 0000000..804c2fb
+--- /dev/null
++++ b/lib/routes/welcome_page.dart
+@@ -0,0 +1,39 @@
++import 'package:flutter/material.dart';
++import 'package:potato_notes/internal/constants.dart';
++import 'package:potato_notes/widget/welcome_pages/account_page.dart';
++
++class WelcomePage extends StatefulWidget {
++  @override
++  _WelcomePageState createState() => _WelcomePageState();
++}
++
++class _WelcomePageState extends State<WelcomePage> {
++  PageController controller = PageController();
++
++  
++
++  @override
++  Widget build(BuildContext context) {
++    return Scaffold(
++      body: PageView(
++        controller: controller,
++        children: [
++          AccountPage()
++        ],
++      ),
++      bottomNavigationBar: BottomAppBar(
++        elevation: Constants.bottomBarElevation,
++        shape: CircularNotchedRectangle(),
++        child: Container(
++          height: 56,
++          alignment: Alignment.center,
++          child: pageView(context),
++        ),
++      ),
++    );
++  }
++
++  Widget pageView(BuildContext context) {
++    return Container();
++  }
++}
+\ No newline at end of file
+diff --git a/lib/widget/account_list_tile.dart b/lib/widget/account_list_tile.dart
+new file mode 100644
+index 0000000..cc2526e
+--- /dev/null
++++ b/lib/widget/account_list_tile.dart
+@@ -0,0 +1,58 @@
++import 'dart:io';
++
++import 'package:flutter/material.dart';
++import 'package:outline_material_icons/outline_material_icons.dart';
++import 'package:potato_notes/data/database.dart';
++
++class AccountListTile extends StatelessWidget {
++  final Account account;
++  final Function() onDismiss;
++  final Future<bool> Function() confirmDismiss;
++
++  AccountListTile({
++    @required this.account,
++    this.onDismiss,
++    this.confirmDismiss,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return Dismissible(
++      key: Key(account.toString()),
++      onDismissed: (direction) => onDismiss(),
++      confirmDismiss: confirmDismiss != null
++          ? (direction) => confirmDismiss()
++          : null,
++      direction: DismissDirection.startToEnd,
++      background: Container(
++        color: Colors.red[400],
++        alignment: Alignment.centerLeft,
++        padding: EdgeInsets.symmetric(horizontal: 16),
++        child: Icon(
++          OMIcons.delete,
++          color: Theme.of(context).scaffoldBackgroundColor,
++        ),
++      ),
++      child: ListTile(
++        leading: CircleAvatar(
++          backgroundImage: account.image != null
++              ? account.image.path.scheme == "file"
++                  ? FileImage(File(account.image.path.path))
++                  : NetworkImage(account.image.path.path)
++              : null,
++          backgroundColor: Theme.of(context).iconTheme.color.withOpacity(0.2),
++          child: account.image == null
++              ? Icon(
++                  OMIcons.person,
++                  color: Theme.of(context).iconTheme.color,
++                )
++              : null,
++        ),
++        title: Text(account.name),
++        subtitle: account.email != null
++            ? Text(account.email)
++            : null,
++      ),
++    );
++  }
++}
+\ No newline at end of file
+diff --git a/lib/widget/note_view.dart b/lib/widget/note_view.dart
+index e530648..cde6b5d 100644
+--- a/lib/widget/note_view.dart
++++ b/lib/widget/note_view.dart
+@@ -3,12 +3,11 @@ import 'dart:io';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/constants.dart';
+ import 'package:potato_notes/internal/list_item.dart';
+ import 'package:potato_notes/widget/note_view_images.dart';
+ import 'package:rich_text_editor/rich_text_editor.dart';
+ 
+-const double _kBorderRadius = 8.0;
+-
+ class NoteView extends StatelessWidget {
+   final Note note;
+   final Function() onTap;
+@@ -27,12 +26,12 @@ class NoteView extends StatelessWidget {
+     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
+     return Card(
+       shape: RoundedRectangleBorder(
+-        borderRadius: BorderRadius.circular(_kBorderRadius),
++        borderRadius: BorderRadius.circular(Constants.noteCornerRadius),
+       ),
+       elevation: 3,
+       margin: EdgeInsets.all(4),
+       child: InkWell(
+-        borderRadius: BorderRadius.circular(_kBorderRadius),
++        borderRadius: BorderRadius.circular(Constants.noteCornerRadius),
+         onTap: onTap,
+         onLongPress: onLongPress,
+         child: Column(
+@@ -46,7 +45,6 @@ class NoteView extends StatelessWidget {
+                             ? numOfImages * 2
+                             : note.images.images.length),
+                     numOfImages,
+-                    _kBorderRadius,
+                   )
+                 : Container(),
+             Padding(
+diff --git a/lib/widget/note_view_images.dart b/lib/widget/note_view_images.dart
+index e4dbe0d..b639ed3 100644
+--- a/lib/widget/note_view_images.dart
++++ b/lib/widget/note_view_images.dart
+@@ -2,13 +2,13 @@ import 'dart:io';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
++import 'package:potato_notes/internal/constants.dart';
+ 
+ class NoteViewImages extends StatefulWidget {
+   final List<Uri> images;
+   final int numOfImages;
+-  final double borderRadius;
+ 
+-  NoteViewImages(this.images, this.numOfImages, this.borderRadius);
++  NoteViewImages(this.images, this.numOfImages);
+ 
+   @override
+   _NoteViewImagesState createState() => _NoteViewImagesState();
+@@ -23,7 +23,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+ 
+         return ClipRRect(
+           borderRadius:
+-              BorderRadius.vertical(top: Radius.circular(widget.borderRadius)),
++              BorderRadius.vertical(top: Radius.circular(Constants.noteCornerRadius)),
+           child: SizedBox(
+             width: maxWidth,
+             height: widget.images.length > widget.numOfImages
+diff --git a/lib/widget/welcome_pages/account_page.dart b/lib/widget/welcome_pages/account_page.dart
+new file mode 100644
+index 0000000..8728aeb
+--- /dev/null
++++ b/lib/widget/welcome_pages/account_page.dart
+@@ -0,0 +1,114 @@
++import 'package:flutter/material.dart';
++import 'package:potato_notes/data/dao/account_helper.dart';
++import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/data/model/preferences.dart';
++import 'package:potato_notes/internal/constants.dart';
++import 'package:potato_notes/widget/account_list_tile.dart';
++import 'package:potato_notes/widget/welcome_pages/page_model.dart';
++import 'package:provider/provider.dart';
++
++class AccountPage extends PageModel {
++  AccountHelper helper;
++  bool enoughAccounts = false;
++
++  @override
++  bool get allowSwipe => false;
++
++  @override
++  FloatingActionButton get fab => enoughAccounts
++      ? FloatingActionButton(
++        child: Icon(Icons.arrow_forward),
++        onPressed: () {},
++      )
++      : null;
++
++  @override
++  Widget build(BuildContext context) {
++    helper = Provider.of<AccountHelper>(context);
++
++    return ListView(
++      children: [
++        accountList(context),
++      ],
++      shrinkWrap: true,
++    );
++  }
++
++  Widget accountList(BuildContext context) => FutureBuilder(
++    future: accounts(context),
++    initialData: [],
++    builder: (context, snapshot) {
++      return ListView(
++        children: [
++          ...snapshot.data,
++          ListTile(
++            leading: Icon(Icons.add),
++            title: Text("Add new account"),
++            onTap: () async {
++              List<Account> accounts = await helper.getAccounts();
++
++              await helper.saveAccount(Account(
++                id: accounts.isNotEmpty
++                    ? accounts.last.id + 1
++                    : 1,
++                name: "Guest",
++                preferences: Preferences(gridMode: false),
++                online: false,
++              ));
++
++              enoughAccounts = true;
++            },
++          ),
++        ],
++        shrinkWrap: true,
++      );
++    },
++  );
++
++  Future<List<Widget>> accounts(BuildContext context) async {
++    List<Account> accounts = await helper.getAccounts() ?? [];
++
++    return List.generate(accounts.length, (index) {
++      return AccountListTile(
++        account: accounts[index],
++        confirmDismiss: () async {
++          return await showDialog(
++            context: context,
++            builder: (context) => AlertDialog(
++              title: Text("Confirm account deletion"),
++              content: Text("Once the account is deleted you can't recover it. Go on only if you know you won't need this account anymore."),
++              shape: RoundedRectangleBorder(
++                borderRadius: BorderRadius.circular(Constants.dialogCornerRadius),
++              ),
++              actions: [
++                FlatButton(
++                  child: Text("Cancel"),
++                  onPressed: () => Navigator.pop(context, false),
++                  textColor: Theme.of(context).accentColor,
++                ),
++                FlatButton(
++                  child: Text("Confirm"),
++                  color: Theme.of(context).accentColor,
++                  textColor: Theme.of(context).dialogBackgroundColor,
++                  shape: RoundedRectangleBorder(
++                    borderRadius: BorderRadius.circular(Constants.positiveButtonCornerRadius),
++                  ),
++                  onPressed: () async {
++                    await helper.deleteAccount(accounts[index]);
++
++                    int accountAmount = (await helper.getAccounts()).length;
++
++                    if(accountAmount == 0)
++                        enoughAccounts = false;
++
++                    Navigator.pop(context, true);
++                  },
++                ),
++              ],
++            ),
++          );
++        },
++      );
++    });
++  }
++}
+\ No newline at end of file
+diff --git a/lib/widget/welcome_pages/page_model.dart b/lib/widget/welcome_pages/page_model.dart
+new file mode 100644
+index 0000000..d5272ef
+--- /dev/null
++++ b/lib/widget/welcome_pages/page_model.dart
+@@ -0,0 +1,6 @@
++import 'package:flutter/material.dart';
++
++abstract class PageModel extends StatelessWidget {
++  FloatingActionButton get fab;
++  bool get allowSwipe;
++}
+\ No newline at end of file
+-- 
+2.26.0
+
