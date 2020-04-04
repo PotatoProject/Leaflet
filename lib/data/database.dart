@@ -13,8 +13,10 @@ class Notes extends Table {
   TextColumn get content => text().withLength(min: 1)();
   TextColumn get styleJson => text().map(const ContentStyleConverter())();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
-  DateTimeColumn get creationDate => dateTime().withDefault(Constant(DateTime.now()))();
-  DateTimeColumn get lastModifyDate => dateTime().withDefault(Constant(DateTime.now()))();
+  DateTimeColumn get creationDate =>
+      dateTime().withDefault(Constant(DateTime.now()))();
+  DateTimeColumn get lastModifyDate =>
+      dateTime().withDefault(Constant(DateTime.now()))();
   IntColumn get color => integer().withDefault(Constant(0))();
   TextColumn get images => text().map(const ImageListConverter())();
   BoolColumn get list => boolean().withDefault(Constant(false))();
@@ -32,17 +34,14 @@ class Notes extends Table {
   Set<Column> get primaryKey => {id, synced};
 }
 
-@UseMoor(
-  tables: [Notes],
-  daos: [NoteHelper]
-)
+@UseMoor(tables: [Notes], daos: [NoteHelper])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super((FlutterQueryExecutor.inDatabaseFolder(
           path: 'notes_database.db',
           logStatements: false,
         )));
-  
+
   @override
   int get schemaVersion => 6;
 }

@@ -69,7 +69,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                       SizedBox.expand(
                         child: Visibility(
                           visible: (index == widget.images.length - 1 &&
-                              widget.numPlusImages > 0) &&
+                                  widget.numPlusImages > 0) &&
                               widget.showPlusImages,
                           child: Container(
                             alignment: Alignment.center,

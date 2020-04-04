@@ -26,27 +26,25 @@ class _MainPageState extends State<MainPage> {
     appInfo.themeSubscription.cancel();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    if(appInfo == null)
-      appInfo = Provider.of<AppInfoProvider>(context);
-    
-    if(helper == null)
-      helper = Provider.of<NoteHelper>(context);
+    if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
+
+    if (helper == null) helper = Provider.of<NoteHelper>(context);
 
     double width = MediaQuery.of(context).size.width;
 
-    if(width >= 1280) {
+    if (width >= 1280) {
       numOfColumns = 5;
       numOfImages = 4;
-    } else if(width >= 900) {
+    } else if (width >= 900) {
       numOfColumns = 4;
       numOfImages = 3;
-    } else if(width >= 600) {
+    } else if (width >= 600) {
       numOfColumns = 3;
       numOfImages = 3;
-    } else if(width >= 360) {
+    } else if (width >= 360) {
       numOfColumns = 2;
       numOfImages = 2;
     } else {
@@ -58,12 +56,13 @@ class _MainPageState extends State<MainPage> {
       body: StreamBuilder<List<Note>>(
         stream: helper.noteStream(),
         builder: (context, snapshot) {
-          if((snapshot.data?.length ?? 0) != 0) {
+          if ((snapshot.data?.length ?? 0) != 0) {
             return StaggeredGridView.countBuilder(
               crossAxisCount: numOfColumns,
               itemBuilder: (context, index) => NoteView(
                 note: snapshot.data[index],
-                onTap: () => Navigator.push(context,
+                onTap: () => Navigator.push(
+                  context,
                   MaterialPageRoute(
                     builder: (context) => NotePage(
                       note: snapshot.data[index],
@@ -81,7 +80,8 @@ class _MainPageState extends State<MainPage> {
                 4.0 + 56,
               ),
             );
-          } else return Text("bruh");
+          } else
+            return Text("bruh");
         },
       ),
       extendBody: true,
@@ -97,7 +97,8 @@ class _MainPageState extends State<MainPage> {
         notched: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(context,
+        onPressed: () => Navigator.push(
+          context,
           MaterialPageRoute(
             builder: (context) => NotePage(),
           ),

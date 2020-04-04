@@ -107,12 +107,14 @@ class _NotePageState extends State<NotePage> {
               numPlusImages: note.images.images.length < 4
                   ? 0
                   : note.images.images.length - 4,
-              onImageTap: (index) => Navigator.push(context, MaterialPageRoute(
-                builder: (context) => NotePageImageGallery(
-                  note: note,
-                  currentImage: index,
-                ),
-              )),
+              onImageTap: (index) => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotePageImageGallery(
+                      note: note,
+                      currentImage: index,
+                    ),
+                  )),
             ),
           ),
           Padding(

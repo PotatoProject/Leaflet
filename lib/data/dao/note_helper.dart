@@ -11,13 +11,20 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes() => select(notes).get();
 
-  Stream<List<Note>> noteStream() => (select(notes)..orderBy([
-    (table) => OrderingTerm(expression: table.creationDate, mode: OrderingMode.desc)
-  ])).watch();
+  Stream<List<Note>> noteStream() => (select(notes)
+        ..orderBy([
+          (table) => OrderingTerm(
+              expression: table.creationDate, mode: OrderingMode.desc)
+        ]))
+      .watch();
 
-  Future<Note> getLastNote() async => (await (select(notes)..orderBy([
-    (table) => OrderingTerm(expression: table.id, mode: OrderingMode.asc)
-  ])).get()).last;
+  Future<Note> getLastNote() async => (await (select(notes)
+            ..orderBy([
+              (table) =>
+                  OrderingTerm(expression: table.id, mode: OrderingMode.asc)
+            ]))
+          .get())
+      .last;
 
   Future saveNote(Note note) => into(notes).insert(note, orReplace: true);
 

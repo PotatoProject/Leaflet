@@ -117,8 +117,8 @@ class _NoteToolbarState extends State<NoteToolbar> {
         .map((style) => IconButton(
               icon: CircleAvatar(
                 backgroundColor: spannableStyle.hasStyle(style)
-                      ? Theme.of(context).accentColor.withOpacity(0.2)
-                      : Colors.transparent,
+                    ? Theme.of(context).accentColor.withOpacity(0.2)
+                    : Colors.transparent,
                 child: SizedBox.fromSize(
                   size: Size.square(36),
                   child: Icon(
