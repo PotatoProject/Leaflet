@@ -1,4 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -31,7 +32,10 @@ class Notes extends Table {
   Set<Column> get primaryKey => {id, synced};
 }
 
-@UseMoor(tables: [Notes])
+@UseMoor(
+  tables: [Notes],
+  daos: [NoteHelper]
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super((FlutterQueryExecutor.inDatabaseFolder(
@@ -41,20 +45,4 @@ class AppDatabase extends _$AppDatabase {
   
   @override
   int get schemaVersion => 6;
-
-  Future<List<Note>> getAllNotes() => select(notes).get();
-
-  Stream<List<Note>> watchAllNotes() => (select(notes)..orderBy([
-    (table) => OrderingTerm(expression: table.creationDate, mode: OrderingMode.desc)
-  ])).watch();
-
-  Future<Note> getLastNote() async => (await (select(notes)..orderBy([
-    (table) => OrderingTerm(expression: table.id, mode: OrderingMode.asc)
-  ])).get()).last;
-
-  Future insertNote(Note note) => into(notes).insert(note, orReplace: true);
-
-  Future updateNote(Note note) => update(notes).replace(note);
-
-  Future deleteNote(Note note) => delete(notes).delete(note);
 }

@@ -16,6 +16,9 @@ class PotatoNotes extends StatelessWidget {
         Provider.value(
           value: AppDatabase(),
         ),
+        Provider.value(
+          value: AppDatabase().noteHelper,
+        ),
         ChangeNotifierProvider.value(
           value: AppInfoProvider(),
         ),

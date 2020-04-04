@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
@@ -25,7 +26,7 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   Note note;
-  AppDatabase database;
+  NoteHelper helper;
 
   bool keyboardVisible = false;
 
@@ -74,15 +75,14 @@ class _NotePageState extends State<NotePage> {
   }
 
   void generateId() async {
-    Note lastNote = await database.getLastNote();
-    print(lastNote);
+    Note lastNote = await helper.getLastNote();
     note = note.copyWith(id: lastNote.id + 1);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (database == null) {
-      database = Provider.of<AppDatabase>(context);
+    if (helper == null) {
+      helper = Provider.of<NoteHelper>(context);
     }
     return Scaffold(
       body: ListView(
@@ -152,7 +152,7 @@ class _NotePageState extends State<NotePage> {
                   onPressed: () async {
                     List<int> styleJson = gzip.encode(utf8.encode(contentController.styleList.toJson()));
                     Note lastNote;
-                    List<Note> notes = await database.getAllNotes();
+                    List<Note> notes = await helper.listNotes();
 
                     if(notes.isNotEmpty) {
                       lastNote = notes.last;
@@ -164,7 +164,7 @@ class _NotePageState extends State<NotePage> {
                       content: contentController.text,
                     );
 
-                    database.insertNote(note);
+                    helper.saveNote(note);
                     Navigator.pop(context);
                   },
                 ),

@@ -850,6 +850,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
   $NotesTable _notes;
   $NotesTable get notes => _notes ??= $NotesTable(this);
+  NoteHelper _noteHelper;
+  NoteHelper get noteHelper => _noteHelper ??= NoteHelper(this as AppDatabase);
   @override
   List<TableInfo> get allTables => [notes];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -17,6 +18,7 @@ class _MainPageState extends State<MainPage> {
   int numOfColumns;
   int numOfImages;
   AppInfoProvider appInfo;
+  NoteHelper helper;
 
   @override
   void dispose() {
@@ -27,9 +29,11 @@ class _MainPageState extends State<MainPage> {
   
   @override
   Widget build(BuildContext context) {
-    if(appInfo == null) {
+    if(appInfo == null)
       appInfo = Provider.of<AppInfoProvider>(context);
-    }
+    
+    if(helper == null)
+      helper = Provider.of<NoteHelper>(context);
 
     double width = MediaQuery.of(context).size.width;
 
@@ -50,11 +54,9 @@ class _MainPageState extends State<MainPage> {
       numOfImages = 2;
     }
 
-    final database = Provider.of<AppDatabase>(context);
-
     return Scaffold(
       body: StreamBuilder<List<Note>>(
-        stream: database.watchAllNotes(),
+        stream: helper.noteStream(),
         builder: (context, snapshot) {
           if((snapshot.data?.length ?? 0) != 0) {
             return StaggeredGridView.countBuilder(
@@ -68,9 +70,6 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ),
-                onLongPress: () {
-                  database.updateNote(snapshot.data[index]..images.images.removeLast());
-                },
                 numOfImages: numOfImages,
               ),
               staggeredTileBuilder: (index) => StaggeredTile.fit(1),
