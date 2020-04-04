@@ -8,7 +8,9 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
+import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 import 'package:spicy_components/spicy_components.dart';
@@ -63,7 +65,8 @@ class _NotePageState extends State<NotePage> {
       note = note.copyWith(title: titleController.text);
     });
 
-    String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson?.data ?? []));
+    String parsedStyleJson =
+        utf8.decode(gzip.decode(note.styleJson?.data ?? []));
     contentController = SpannableTextEditingController(
       text: note.content,
       styleList: note.styleJson != null
@@ -86,42 +89,89 @@ class _NotePageState extends State<NotePage> {
     }
     return Scaffold(
       body: ListView(
-        padding:
-            EdgeInsets.fromLTRB(16, MediaQuery.of(context).padding.top, 16, 16),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+          bottom: 16,
+        ),
         children: [
-          TextFormField(
-            controller: titleController,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Title",
-              hintStyle: TextStyle(
-                color: Theme.of(context).textTheme.title.color.withOpacity(0.5),
-              ),
-            ),
-            scrollPadding: EdgeInsets.all(0),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).textTheme.title.color.withOpacity(0.7),
+          Visibility(
+            visible: note.images.images.isNotEmpty,
+            child: NoteViewImages(
+              images: note.images.images.sublist(
+                  0,
+                  note.images.images.length > 4
+                      ? 4
+                      : note.images.images.length),
+              numOfImages: 2,
+              showPlusImages: true,
+              numPlusImages: note.images.images.length < 4
+                  ? 0
+                  : note.images.images.length - 4,
+              onImageTap: (index) => Navigator.push(context, MaterialPageRoute(
+                builder: (context) => NotePageImageGallery(
+                  note: note,
+                  currentImage: index,
+                ),
+              )),
             ),
           ),
-          TextField(
-            controller: contentController,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Content",
-              hintStyle: TextStyle(
-                color: Theme.of(context).textTheme.title.color.withOpacity(0.3),
-              ),
-              isDense: true,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Title",
+                    hintStyle: TextStyle(
+                      color: Theme.of(context)
+                          .textTheme
+                          .title
+                          .color
+                          .withOpacity(0.5),
+                    ),
+                  ),
+                  scrollPadding: EdgeInsets.all(0),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context)
+                        .textTheme
+                        .title
+                        .color
+                        .withOpacity(0.7),
+                  ),
+                ),
+                TextField(
+                  controller: contentController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Content",
+                    hintStyle: TextStyle(
+                      color: Theme.of(context)
+                          .textTheme
+                          .title
+                          .color
+                          .withOpacity(0.3),
+                    ),
+                    isDense: true,
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  scrollPadding: EdgeInsets.all(0),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context)
+                        .textTheme
+                        .title
+                        .color
+                        .withOpacity(0.5),
+                  ),
+                  maxLines: null,
+                ),
+              ],
             ),
-            keyboardType: TextInputType.multiline,
-            scrollPadding: EdgeInsets.all(0),
-            style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(context).textTheme.title.color.withOpacity(0.5),
-            ),
-            maxLines: null,
           ),
         ],
       ),
@@ -150,11 +200,12 @@ class _NotePageState extends State<NotePage> {
                   icon: Icon(Icons.arrow_back),
                   padding: EdgeInsets.all(0),
                   onPressed: () async {
-                    List<int> styleJson = gzip.encode(utf8.encode(contentController.styleList.toJson()));
+                    List<int> styleJson = gzip.encode(
+                        utf8.encode(contentController.styleList.toJson()));
                     Note lastNote;
                     List<Note> notes = await helper.listNotes();
 
-                    if(notes.isNotEmpty) {
+                    if (notes.isNotEmpty) {
                       lastNote = notes.last;
                     }
 

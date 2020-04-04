@@ -7,8 +7,18 @@ class NoteViewImages extends StatefulWidget {
   final List<Uri> images;
   final int numOfImages;
   final double borderRadius;
+  final bool showPlusImages;
+  final int numPlusImages;
+  final Function(int) onImageTap;
 
-  NoteViewImages(this.images, this.numOfImages, this.borderRadius);
+  NoteViewImages({
+    @required this.images,
+    this.numOfImages = 3,
+    this.borderRadius = 0,
+    this.showPlusImages = false,
+    this.numPlusImages = 0,
+    this.onImageTap,
+  });
 
   @override
   _NoteViewImagesState createState() => _NoteViewImagesState();
@@ -46,9 +56,37 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   image = FileImage(File(widget.images[index].path));
                 }
 
-                return Image(
-                  image: image,
-                  fit: BoxFit.cover,
+                return InkWell(
+                  onTap: () => widget.onImageTap(index),
+                  child: Stack(
+                    children: [
+                      SizedBox.expand(
+                        child: Image(
+                          image: image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox.expand(
+                        child: Visibility(
+                          visible: (index == widget.images.length - 1 &&
+                              widget.numPlusImages > 0) &&
+                              widget.showPlusImages,
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.black.withOpacity(0.4),
+                            child: Text(
+                              "+" + widget.numPlusImages.toString(),
+                              style: TextStyle(
+                                fontSize: 36.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
               staggeredTileBuilder: (index) {

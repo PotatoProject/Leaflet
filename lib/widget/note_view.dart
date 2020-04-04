@@ -34,20 +34,24 @@ class NoteView extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
+        borderRadius: BorderRadius.circular(_kBorderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            note.images.images.isNotEmpty
-                ? NoteViewImages(
-                    note.images.images.sublist(
-                        0,
-                        note.images.images.length > numOfImages * 2
-                            ? numOfImages * 2
-                            : note.images.images.length),
-                    numOfImages,
-                    _kBorderRadius,
-                  )
-                : Container(),
+            IgnorePointer(
+              child: Visibility(
+                visible: note.images.images.isNotEmpty,
+                child: NoteViewImages(
+                  images: note.images.images.sublist(
+                      0,
+                      note.images.images.length > numOfImages * 2
+                          ? numOfImages * 2
+                          : note.images.images.length),
+                  numOfImages: numOfImages,
+                  borderRadius: _kBorderRadius,
+                ),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -74,9 +78,24 @@ class NoteView extends StatelessWidget {
                     visible: note.content.trim() != "" || note.content != null,
                     child: note.styleJson != null
                         ? RichText(
-                          text: SpannableList.fromJson(parsedStyleJson).toTextSpan(
+                            text: SpannableList.fromJson(parsedStyleJson)
+                                .toTextSpan(
+                              note.content,
+                              defaultStyle: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .title
+                                    .color
+                                    .withOpacity(0.5),
+                              ),
+                            ),
+                            maxLines: 8,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : Text(
                             note.content,
-                            defaultStyle: TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               color: Theme.of(context)
                                   .textTheme
@@ -84,23 +103,9 @@ class NoteView extends StatelessWidget {
                                   .color
                                   .withOpacity(0.5),
                             ),
+                            maxLines: 8,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 8,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                        : Text(
-                          note.content,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context)
-                                .textTheme
-                                .title
-                                .color
-                                .withOpacity(0.5),
-                          ),
-                          maxLines: 8,
-                          overflow: TextOverflow.ellipsis,
-                        ),
                   ),
                   Visibility(
                     visible: note.list,

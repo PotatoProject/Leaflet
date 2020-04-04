@@ -20,12 +20,14 @@ dependencies:
   provider:
   streams_channel:
   flutter_markdown:
-  rich_text_editor:
-    git:
-      url: https://github.com/namhyun-gu/flutter_rich_text_editor
   outline_material_icons:
   community_material_icon:
   flutter_staggered_grid_view:
+  photo_view:
+  
+  rich_text_editor:
+    git:
+      url: https://github.com/namhyun-gu/flutter_rich_text_editor
   spicy_components:
     git: https://github.com/HrX03/SpicyUIComponents
 
