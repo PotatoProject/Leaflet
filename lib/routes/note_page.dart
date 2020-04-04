@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/content_style.dart';
@@ -191,6 +192,43 @@ class _NotePageState extends State<NotePage> {
               ),
               child: NoteToolbar(
                 controller: contentController,
+                rightActions: [
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    padding: EdgeInsets.all(0),
+                    onPressed: () => SpicyUtils.showBottomSheet(
+                      context: context,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.photo),
+                          title: Text("Image from gallery"),
+                          onTap: () async {
+                            File image = await ImagePicker.pickImage(
+                                source: ImageSource.gallery);
+
+                            if (image != null) {
+                              note.images.images.add(image.uri);
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.camera),
+                          title: Text("Take a photo"),
+                          onTap: () async {
+                            File image = await ImagePicker.pickImage(
+                                source: ImageSource.camera);
+
+                            if (image != null) {
+                              note.images.images.add(image.uri);
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Divider(

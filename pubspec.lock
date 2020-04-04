@@ -188,6 +188,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -256,6 +263,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.4"
   io:
     dependency: transitive
     description:
@@ -520,7 +534,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "6ebf9aa0ae499f541174d31f4ad081943fb8e4a7"
+      resolved-ref: "78e4d04cee97f7165cf95ff6c67fee8a7b014944"
       url: "https://github.com/HrX03/SpicyUIComponents"
     source: git
     version: "0.0.1"
@@ -652,4 +666,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.1 <2.0.0"
+  flutter: ">=1.12.13 <2.0.0"

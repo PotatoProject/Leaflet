@@ -29,6 +29,7 @@ import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteToolbar extends StatefulWidget {
   final SpannableTextEditingController controller;
+  final List<Widget> rightActions;
   final Color toolbarActionToggleColor;
   final Color toolbarBackgroundColor;
   final Color toolbarActionColor;
@@ -37,6 +38,7 @@ class NoteToolbar extends StatefulWidget {
   NoteToolbar({
     Key key,
     this.controller,
+    this.rightActions = const [],
     this.stayFocused = true,
     this.toolbarActionToggleColor,
     this.toolbarBackgroundColor,
@@ -89,6 +91,8 @@ class _NoteToolbarState extends State<NoteToolbar> {
                     currentStyle ?? SpannableStyle(),
                     currentSelection,
                   ),
+                  Spacer(),
+                  ...widget.rightActions,
                 ],
               ),
             ),

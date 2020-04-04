@@ -24,6 +24,7 @@ dependencies:
   community_material_icon:
   flutter_staggered_grid_view:
   photo_view:
+  image_picker:
   
   rich_text_editor:
     git:
