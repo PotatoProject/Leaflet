@@ -7,7 +7,7 @@ part 'list_content.g.dart';
 
 @JsonSerializable()
 class ListContent {
-  Map<String, bool> content;
+  List<ListItem> content;
 
   ListContent(this.content);
 
@@ -15,6 +15,20 @@ class ListContent {
       _$ListContentFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListContentToJson(this);
+}
+
+@JsonSerializable()
+class ListItem {
+  int id;
+  String text;
+  bool status;
+
+  ListItem(this.id, this.text, this.status);
+
+  factory ListItem.fromJson(Map<String, dynamic> json) =>
+      _$ListItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ListItemToJson(this);
 }
 
 class ListContentConverter extends TypeConverter<ListContent, String> {

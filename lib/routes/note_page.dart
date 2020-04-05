@@ -36,6 +36,10 @@ class _NotePageState extends State<NotePage> {
   TextEditingController titleController;
   SpannableTextEditingController contentController;
 
+  List<TextEditingController> listContentControllers = [];
+  List<FocusNode> listContentNodes = [];
+  bool needsFocus = false;
+
   @override
   void initState() {
     note = widget.note ??
@@ -50,7 +54,7 @@ class _NotePageState extends State<NotePage> {
           color: 0,
           images: ImageList([]),
           list: false,
-          listContent: ListContent({}),
+          listContent: ListContent([]),
           reminders: ReminderList([]),
           hideContent: false,
           pin: null,
@@ -75,6 +79,8 @@ class _NotePageState extends State<NotePage> {
           : null,
     );
 
+    buildListContentElements();
+
     super.initState();
   }
 
@@ -84,10 +90,16 @@ class _NotePageState extends State<NotePage> {
   }
 
   @override
+  void dispose() {
+    listContentNodes.forEach((node) => node.dispose());
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (helper == null) {
-      helper = Provider.of<NoteHelper>(context);
-    }
+    if (helper == null)
+        helper = Provider.of<NoteHelper>(context);
+    
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.only(
@@ -176,6 +188,93 @@ class _NotePageState extends State<NotePage> {
               ],
             ),
           ),
+          Visibility(
+            visible: note.list,
+            child: Column(
+              children: <Widget>[
+                ...List.generate(note.listContent.content.length, (index) {
+                  ListItem currentItem = note.listContent.content[index];
+
+                  if(needsFocus && index == note.listContent.content.length - 1) {
+                    print("bruh");
+                    needsFocus = false;
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).requestFocus(listContentNodes.last);
+                  }
+
+                  return Dismissible(
+                    key: Key(currentItem.id.toString()),
+                    onDismissed: (_) {
+                      note.listContent.content.removeAt(index);
+                      listContentControllers.removeAt(index);
+                      listContentNodes.removeAt(index);
+                    },
+                    background: Container(
+                      color: Colors.red[400],
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      alignment: Alignment.centerLeft,
+                      child: Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                    ),
+                    direction: DismissDirection.startToEnd,
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: currentItem.status,
+                        onChanged: (value) {
+                          note.listContent.content[index].status = value;
+                        },
+                        activeColor: Theme.of(context).accentColor,
+                        checkColor: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      title: TextField(
+                        controller: listContentControllers[index],
+                        decoration: InputDecoration.collapsed(hintText: "Input"),
+                        style: TextStyle(color: Theme.of(context).iconTheme.color),
+                        onChanged: (text) => note.listContent.content[index].text = text,
+                        focusNode: listContentNodes[index],
+                      ),
+                    ),
+                  );
+                }),
+                AnimatedOpacity(
+                  opacity: note.listContent.content.last.text != "" ? 1 : 0,
+                  duration: note.listContent.content.last.text != ""
+                      ? Duration(milliseconds: 300)
+                      : Duration(milliseconds: 0),
+                  child: ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text(
+                      "Add item",
+                      style: TextStyle(color: Theme.of(context).iconTheme.color),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 28),
+                    onTap: note.listContent.content.last.text != ""
+                        ? () {
+                          List<ListItem> sortedList = note.listContent.content;
+                          sortedList.sort((a, b) => a.id.compareTo(b.id));
+
+                          int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
+
+                          note.listContent.content.add(ListItem(
+                            id, "", false,
+                          ));
+
+                          listContentControllers.add(TextEditingController());
+
+                          FocusNode node = FocusNode();
+                          listContentNodes.add(node);
+
+                          needsFocus = true;
+                        }
+                        : null
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: Material(
@@ -199,6 +298,17 @@ class _NotePageState extends State<NotePage> {
                     onPressed: () => SpicyUtils.showBottomSheet(
                       context: context,
                       children: [
+                        ListTile(
+                          leading: Icon(note.list
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline),
+                          title: Text("Toggle list"),
+                          onTap: () {
+                            note = note.copyWith(list: !note.list);
+
+                            Navigator.pop(context);
+                          },
+                        ),
                         ListTile(
                           leading: Icon(Icons.photo),
                           title: Text("Image from gallery"),
@@ -255,6 +365,8 @@ class _NotePageState extends State<NotePage> {
                       content: contentController.text,
                     );
 
+                    note.listContent.content.removeWhere((item) => item.text.trim() == "");
+
                     helper.saveNote(note);
                     Navigator.pop(context);
                   },
@@ -266,5 +378,16 @@ class _NotePageState extends State<NotePage> {
         ),
       ),
     );
+  }
+
+  void buildListContentElements() {
+    listContentControllers.clear();
+    listContentNodes.clear();
+    for(int i = 0; i < note.listContent.content.length; i++) {
+      listContentControllers.add(TextEditingController(text: note.listContent.content[i].text));
+
+      FocusNode node = FocusNode();
+      listContentNodes.add(node);
+    }
   }
 }

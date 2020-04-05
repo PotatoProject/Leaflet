@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/list_item.dart';
+import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
@@ -58,7 +58,7 @@ class NoteView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Visibility(
-                    visible: note.title != null,
+                    visible: note.title != "",
                     child: Text(
                       note.title ?? "",
                       style: TextStyle(
@@ -128,28 +128,41 @@ class NoteView extends StatelessWidget {
           (note.listContent?.content?.length ?? 0) > 5
               ? 5
               : (note.listContent?.content?.length ?? 0), (index) {
-        ListItem item = ListItem(
-          note.listContent.content.keys.toList()[index],
-          note.listContent.content.values.toList()[index],
-        );
+        ListItem item = note.listContent.content[index];
 
-        return Padding(
+        return Container(
           padding: EdgeInsets.only(top: 8),
-          child: Builder(
-            builder: (context) => Row(
-              children: [
-                Icon(
-                  item.status ? Icons.check_box : Icons.check_box_outline_blank,
-                  color: item.status ? Theme.of(context).accentColor : null,
-                  size: 20,
-                ),
-                VerticalDivider(
-                  color: Colors.transparent,
-                  width: 8,
-                ),
-                Text(item.text),
-              ],
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Row(
+                children: [
+                  Icon(
+                    item.status
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: item.status ? Theme.of(context).accentColor : null,
+                    size: 20,
+                  ),
+                  VerticalDivider(
+                    color: Colors.transparent,
+                    width: 8,
+                  ),
+                  SizedBox(
+                    width: constraints.maxWidth - 28,
+                    child: Text(
+                      item.text,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.title.color.withOpacity(
+                          item.status ? 0.5 : 0.7
+                        ),
+                        decoration: item.status ? TextDecoration.lineThrough : null
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         );
       });
