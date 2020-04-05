@@ -1,0 +1,844 @@
+From 401dcffc6a51b5aa27db9257fd76be21309b6872 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Sun, 5 Apr 2020 20:00:56 +0200
+Subject: [PATCH 1/1] notes: [INCOMPLETE] Add drawing support
+
+---
+ lib/data/model/draw_object.dart         |  40 +++++
+ lib/data/model/draw_object.g.dart       |  20 +++
+ lib/data/model/image_list.dart          |  26 ++-
+ lib/data/model/image_list.g.dart        |  22 ++-
+ lib/routes/draw_page.dart               | 204 ++++++++++++++++++++++++
+ lib/routes/note_page.dart               |  38 +++--
+ lib/routes/note_page_image_gallery.dart |  39 ++++-
+ lib/widget/drawing_board.dart           |  64 ++++++++
+ lib/widget/note_view.dart               |   8 +-
+ lib/widget/note_view_images.dart        | 146 +++++++++++++----
+ 10 files changed, 546 insertions(+), 61 deletions(-)
+ create mode 100644 lib/data/model/draw_object.dart
+ create mode 100644 lib/data/model/draw_object.g.dart
+ create mode 100644 lib/routes/draw_page.dart
+ create mode 100644 lib/widget/drawing_board.dart
+
+diff --git a/lib/data/model/draw_object.dart b/lib/data/model/draw_object.dart
+new file mode 100644
+index 0000000..dc5655c
+--- /dev/null
++++ b/lib/data/model/draw_object.dart
+@@ -0,0 +1,40 @@
++import 'dart:convert';
++
++import 'package:flutter/material.dart';
++import 'package:json_annotation/json_annotation.dart';
++import 'package:moor_flutter/moor_flutter.dart';
++
++part 'draw_object.g.dart';
++
++@JsonSerializable()
++class DrawObject {
++  Paint paint;
++  List<Offset> points = [];
++
++  DrawObject(this.paint, [this.points]);
++
++  factory DrawObject.fromJson(Map<String, dynamic> json) =>
++      _$DrawObjectFromJson(json);
++
++  Map<String, dynamic> toJson() => _$DrawObjectToJson(this);
++}
++
++class DrawObjectConverter extends TypeConverter<DrawObject, String> {
++  const DrawObjectConverter();
++  @override
++  DrawObject mapToDart(String fromDb) {
++    if (fromDb == null) {
++      return null;
++    }
++    return DrawObject.fromJson(json.decode(fromDb) as Map<String, dynamic>);
++  }
++
++  @override
++  String mapToSql(DrawObject value) {
++    if (value == null) {
++      return null;
++    }
++
++    return json.encode(value.toJson());
++  }
++}
+diff --git a/lib/data/model/draw_object.g.dart b/lib/data/model/draw_object.g.dart
+new file mode 100644
+index 0000000..80ef37f
+--- /dev/null
++++ b/lib/data/model/draw_object.g.dart
+@@ -0,0 +1,20 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'draw_object.dart';
++
++// **************************************************************************
++// JsonSerializableGenerator
++// **************************************************************************
++
++DrawObject _$DrawObjectFromJson(Map<String, dynamic> json) {
++  return DrawObject(
++    json['paint'],
++    json['points'] as List,
++  );
++}
++
++Map<String, dynamic> _$DrawObjectToJson(DrawObject instance) =>
++    <String, dynamic>{
++      'paint': instance.paint,
++      'points': instance.points,
++    };
+diff --git a/lib/data/model/image_list.dart b/lib/data/model/image_list.dart
+index 9f5196f..147e1a7 100644
+--- a/lib/data/model/image_list.dart
++++ b/lib/data/model/image_list.dart
+@@ -2,14 +2,23 @@ import 'dart:convert';
+ 
+ import 'package:json_annotation/json_annotation.dart';
+ import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/model/draw_object.dart';
+ 
+ part 'image_list.g.dart';
+ 
+ @JsonSerializable()
+ class ImageList {
+-  List<Uri> images;
++  List<ImageData> data;
+ 
+-  ImageList(this.images);
++  ImageList(this.data);
++
++  List<ImageData> get uris {
++    return data.where((imageData) => imageData.image != null);
++  }
++
++  List<ImageData> get drawings {
++    return data.where((imageData) => imageData.drawing != null);
++  }
+ 
+   factory ImageList.fromJson(Map<String, dynamic> json) =>
+       _$ImageListFromJson(json);
+@@ -17,6 +26,19 @@ class ImageList {
+   Map<String, dynamic> toJson() => _$ImageListToJson(this);
+ }
+ 
++@JsonSerializable()
++class ImageData {
++  Uri image;
++  List<DrawObject> drawing;
++
++  ImageData(this.image, this.drawing);
++
++  factory ImageData.fromJson(Map<String, dynamic> json) =>
++      _$ImageDataFromJson(json);
++
++  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
++}
++
+ class ImageListConverter extends TypeConverter<ImageList, String> {
+   const ImageListConverter();
+   @override
+diff --git a/lib/data/model/image_list.g.dart b/lib/data/model/image_list.g.dart
+index 6a5e52e..98a7928 100644
+--- a/lib/data/model/image_list.g.dart
++++ b/lib/data/model/image_list.g.dart
+@@ -8,12 +8,28 @@ part of 'image_list.dart';
+ 
+ ImageList _$ImageListFromJson(Map<String, dynamic> json) {
+   return ImageList(
+-    (json['images'] as List)
+-        ?.map((e) => e == null ? null : Uri.parse(e as String))
++    (json['data'] as List)
++        ?.map((e) =>
++            e == null ? null : ImageData.fromJson(e as Map<String, dynamic>))
+         ?.toList(),
+   );
+ }
+ 
+ Map<String, dynamic> _$ImageListToJson(ImageList instance) => <String, dynamic>{
+-      'images': instance.images?.map((e) => e?.toString())?.toList(),
++      'data': instance.data,
++    };
++
++ImageData _$ImageDataFromJson(Map<String, dynamic> json) {
++  return ImageData(
++    json['image'] == null ? null : Uri.parse(json['image'] as String),
++    (json['drawing'] as List)
++        ?.map((e) =>
++            e == null ? null : DrawObject.fromJson(e as Map<String, dynamic>))
++        ?.toList(),
++  );
++}
++
++Map<String, dynamic> _$ImageDataToJson(ImageData instance) => <String, dynamic>{
++      'image': instance.image?.toString(),
++      'drawing': instance.drawing,
+     };
+diff --git a/lib/routes/draw_page.dart b/lib/routes/draw_page.dart
+new file mode 100644
+index 0000000..02fea2b
+--- /dev/null
++++ b/lib/routes/draw_page.dart
+@@ -0,0 +1,204 @@
++import 'dart:math';
++import 'dart:ui';
++
++import 'package:community_material_icon/community_material_icon.dart';
++import 'package:flutter/material.dart';
++import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/data/model/draw_object.dart';
++import 'package:potato_notes/data/model/image_list.dart';
++import 'package:potato_notes/widget/drawing_board.dart';
++import 'package:spicy_components/spicy_components.dart';
++
++class Draw extends StatefulWidget {
++  final Note note;
++  final ImageProvider imageProvider;
++
++  Draw({
++    this.note,
++    this.imageProvider,
++  });
++
++  @override
++  _DrawState createState() => _DrawState();
++}
++
++class _DrawState extends State<Draw> {
++  List<DrawObject> objects = [];
++  List<DrawObject> backupObjects = [];
++  int currentIndex;
++  int actionQueueIndex = 0;
++  double strokeWidth = 6;
++
++  bool eraserMode = false;
++
++  @override
++  void initState() {
++    super.initState();
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    return Scaffold(
++      body: Container(
++        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
++        width: MediaQuery.of(context).size.width,
++        height: MediaQuery.of(context).size.height -
++            MediaQuery.of(context).padding.top,
++        child: GestureDetector(
++          onPanStart: eraserMode ? _eraserModePan : _normalModePanStart,
++          onPanUpdate: eraserMode ? _eraserModePan : _normalModePanUpdate,
++          onPanEnd: eraserMode ? null : _normalModePanEnd,
++          child: DrawingBoard(
++            objects: objects,
++            size: Size(
++              MediaQuery.of(context).size.width,
++              MediaQuery.of(context).size.height -
++                  MediaQuery.of(context).padding.top,
++            ),
++            decoration: BoxDecoration(
++              color: Colors.grey[50],
++              image: widget.imageProvider != null
++                  ? DecorationImage(
++                      image: widget.imageProvider, fit: BoxFit.cover)
++                  : null,
++            ),
++          ),
++        ),
++      ),
++      bottomNavigationBar: SpicyBottomBar(
++        elevation: 12,
++        leftItems: [
++          IconButton(
++            icon: Icon(CommunityMaterialIcons.undo),
++            padding: EdgeInsets.all(0),
++            onPressed: objects.isNotEmpty
++                ? () {
++                    objects.removeLast();
++                    actionQueueIndex = objects.length - 1;
++                  }
++                : null,
++          ),
++          IconButton(
++            icon: Icon(CommunityMaterialIcons.redo),
++            padding: EdgeInsets.all(0),
++            onPressed: actionQueueIndex < backupObjects.length - 1
++                ? () {
++                    actionQueueIndex = objects.length;
++                    objects.add(backupObjects[actionQueueIndex]);
++                  }
++                : null,
++          ),
++          IconButton(
++            icon: Icon(CommunityMaterialIcons.eraser_variant),
++            color: eraserMode ? Theme.of(context).accentColor : null,
++            padding: EdgeInsets.all(0),
++            onPressed: () => setState(() => eraserMode = !eraserMode),
++          ),
++        ],
++        rightItems: <Widget>[
++          /*Slider(
++            value: strokeWidth,
++            min: 2,
++            max: 50,
++            divisions: 24,
++            label: strokeWidth.toString(),
++            onChanged: (value) => setState(() => strokeWidth = value),
++            activeColor: Theme.of(context).accentColor,
++            inactiveColor: Theme.of(context).accentColor.withOpacity(0.2),
++          ),*/
++          IconButton(
++            icon: Icon(CommunityMaterialIcons.eraser_variant),
++            color: eraserMode ? Theme.of(context).accentColor : null,
++            padding: EdgeInsets.all(0),
++            onPressed: () {
++              widget.note.images.data.add(ImageData(
++                Uri(), objects
++              ));
++              Navigator.pop(context);
++            },
++          ),
++        ],
++      ),
++    );
++  }
++
++  void _normalModePanStart(details) {
++    objects.add(DrawObject(
++        Paint()
++          ..strokeCap = StrokeCap.round
++          ..isAntiAlias = true
++          ..color = Colors.black
++          ..strokeWidth = strokeWidth
++          ..strokeJoin = StrokeJoin.round
++          ..style = PaintingStyle.stroke,
++        []));
++    currentIndex = objects.length - 1;
++    actionQueueIndex = currentIndex;
++
++    RenderBox box = context.findRenderObject();
++
++    Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
++        details.globalPosition.dy - MediaQuery.of(context).padding.top));
++
++    objects[currentIndex].points.add(point);
++  }
++
++  void _normalModePanUpdate(details) {
++    RenderBox box = context.findRenderObject();
++
++    Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
++        details.globalPosition.dy - MediaQuery.of(context).padding.top));
++
++    objects[currentIndex].points.add(point);
++  }
++
++  void _eraserModePan(details) {
++    RenderBox box = context.findRenderObject();
++
++    for (int i = 0; i < objects.length; i++) {
++      DrawObject object = objects[i];
++      Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
++          details.globalPosition.dy - MediaQuery.of(context).padding.top));
++
++      if (object.points.length > 1) {
++        for (int j = 1; j < object.points.length - 1; j++) {
++          double distanceAC =
++              distanceBetweenPoints(object.points[j], touchPoint);
++          double distanceCB =
++              distanceBetweenPoints(touchPoint, object.points[j + 1]);
++          double distanceAB =
++              distanceBetweenPoints(object.points[j], object.points[j + 1]);
++
++          if (distanceAB - distanceCB >=
++              distanceAC - (object.paint.strokeWidth / 2)) {
++            objects.remove(object);
++            actionQueueIndex = objects.length - 1;
++          }
++        }
++      } else {
++        double distanceAC = distanceBetweenPoints(object.points[0], touchPoint);
++
++        if (distanceAC < object.paint.strokeWidth / 2) {
++          objects.remove(object);
++          actionQueueIndex = objects.length - 1;
++        }
++      }
++    }
++  }
++
++  void _normalModePanEnd(details) {
++    currentIndex = null;
++    backupObjects = List.from(objects);
++  }
++
++  double distanceBetweenPoints(Offset p1, Offset p2) {
++    double pXDifference = p2.dx - p1.dx;
++    double pYDifference = p2.dy - p1.dy;
++
++    double xDiffPlusYDiff =
++        (pXDifference * pXDifference) + (pYDifference * pYDifference);
++    double squaredXDiffPlusYDiff = sqrt(xDiffPlusYDiff);
++
++    return squaredXDiffPlusYDiff;
++  }
++}
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index b55e7a3..8486203 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -1,14 +1,17 @@
+ import 'dart:convert';
+ import 'dart:io';
+ 
++import 'package:community_material_icon/community_material_icon.dart';
+ import 'package:flutter/material.dart';
+ import 'package:image_picker/image_picker.dart';
++import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+ import 'package:potato_notes/data/model/image_list.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
+ import 'package:potato_notes/data/model/reminder_list.dart';
++import 'package:potato_notes/routes/draw_page.dart';
+ import 'package:potato_notes/routes/note_page_image_gallery.dart';
+ import 'package:potato_notes/widget/note_toolbar.dart';
+ import 'package:potato_notes/widget/note_view_images.dart';
+@@ -96,18 +99,18 @@ class _NotePageState extends State<NotePage> {
+         ),
+         children: [
+           Visibility(
+-            visible: note.images.images.isNotEmpty,
++            visible: note.images.data.isNotEmpty,
+             child: NoteViewImages(
+-              images: note.images.images.sublist(
++              images: note.images.data.sublist(
+                   0,
+-                  note.images.images.length > 4
++                  note.images.data.length > 4
+                       ? 4
+-                      : note.images.images.length),
++                      : note.images.data.length),
+               numOfImages: 2,
+               showPlusImages: true,
+-              numPlusImages: note.images.images.length < 4
++              numPlusImages: note.images.data.length < 4
+                   ? 0
+-                  : note.images.images.length - 4,
++                  : note.images.data.length - 4,
+               onImageTap: (index) => Navigator.push(
+                   context,
+                   MaterialPageRoute(
+@@ -200,31 +203,46 @@ class _NotePageState extends State<NotePage> {
+                       context: context,
+                       children: [
+                         ListTile(
+-                          leading: Icon(Icons.photo),
++                          leading: Icon(OMIcons.photo),
+                           title: Text("Image from gallery"),
+                           onTap: () async {
+                             File image = await ImagePicker.pickImage(
+                                 source: ImageSource.gallery);
+ 
+                             if (image != null) {
+-                              note.images.images.add(image.uri);
++                              note.images.data.add(
++                                ImageData(image.uri, [])
++                              );
+                               Navigator.pop(context);
+                             }
+                           },
+                         ),
+                         ListTile(
+-                          leading: Icon(Icons.camera),
++                          leading: Icon(OMIcons.camera),
+                           title: Text("Take a photo"),
+                           onTap: () async {
+                             File image = await ImagePicker.pickImage(
+                                 source: ImageSource.camera);
+ 
+                             if (image != null) {
+-                              note.images.images.add(image.uri);
++                              note.images.data.add(
++                                ImageData(image.uri, [])
++                              );
+                               Navigator.pop(context);
+                             }
+                           },
+                         ),
++                        ListTile(
++                          leading: Icon(CommunityMaterialIcons.pencil_outline),
++                          title: Text("Add drawing"),
++                          onTap: () async {
++                            await Navigator.push(context, MaterialPageRoute(
++                              builder: (context) => Draw(
++                                note: note,
++                              ),
++                            ));
++                          },
++                        ),
+                       ],
+                     ),
+                   ),
+diff --git a/lib/routes/note_page_image_gallery.dart b/lib/routes/note_page_image_gallery.dart
+index 4148544..33d9e5e 100644
+--- a/lib/routes/note_page_image_gallery.dart
++++ b/lib/routes/note_page_image_gallery.dart
+@@ -1,9 +1,11 @@
+ import 'dart:io';
+ 
++import 'package:community_material_icon/community_material_icon.dart';
+ import 'package:flutter/material.dart';
+ import 'package:photo_view/photo_view.dart';
+ import 'package:photo_view/photo_view_gallery.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/routes/draw_page.dart';
+ import 'package:spicy_components/spicy_components.dart';
+ 
+ class NotePageImageGallery extends StatefulWidget {
+@@ -34,15 +36,15 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
+   Widget build(BuildContext context) {
+     return Scaffold(
+       body: PhotoViewGallery.builder(
+-        itemCount: widget.note.images.images.length,
++        itemCount: widget.note.images.data.length,
+         builder: (context, index) {
+           ImageProvider image;
+-          String scheme = widget.note.images.images[index].scheme;
++          String scheme = widget.note.images.data[index].image.scheme;
+ 
+           if (scheme.startsWith("http")) {
+-            image = NetworkImage(widget.note.images.images[index].toString());
++            image = NetworkImage(widget.note.images.data[index].image.toString());
+           } else {
+-            image = FileImage(File(widget.note.images.images[index].path));
++            image = FileImage(File(widget.note.images.data[index].image.path));
+           }
+ 
+           return PhotoViewGalleryPageOptions(
+@@ -65,19 +67,42 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
+           Text(
+             (currentPage + 1).toString() +
+                 " of " +
+-                widget.note.images.images.length.toString(),
++                widget.note.images.data.length.toString(),
+             style: TextStyle(
+               fontSize: 18,
+             ),
+           ),
+         ],
+         rightItems: [
++          IconButton(
++            icon: Icon(CommunityMaterialIcons.pencil_outline),
++            padding: EdgeInsets.all(0),
++            onPressed: () async {
++              ImageProvider image;
++              String scheme = widget.note.images.data[currentPage].image.scheme;
++
++              if (scheme.startsWith("http")) {
++                image = NetworkImage(widget.note.images.data[currentPage].image.toString());
++              } else {
++                image = FileImage(File(widget.note.images.data[currentPage].image.path));
++              }
++              
++              await Navigator.push(
++                  context,
++                  MaterialPageRoute(
++                    builder: (context) => Draw(
++                      imageProvider: image,
++                      note: widget.note,
++                    ),
++                  ));
++            },
++          ),
+           IconButton(
+             icon: Icon(Icons.delete_outline),
+             padding: EdgeInsets.all(0),
+             onPressed: () {
+-              setState(() => widget.note.images.images.removeAt(currentPage));
+-              if (widget.note.images.images.length == 0) Navigator.pop(context);
++              setState(() => widget.note.images.data.removeAt(currentPage));
++              Navigator.pop(context);
+             },
+           ),
+         ],
+diff --git a/lib/widget/drawing_board.dart b/lib/widget/drawing_board.dart
+new file mode 100644
+index 0000000..278234a
+--- /dev/null
++++ b/lib/widget/drawing_board.dart
+@@ -0,0 +1,64 @@
++import 'package:flutter/material.dart';
++import 'package:potato_notes/data/model/draw_object.dart';
++
++class DrawingBoard extends StatelessWidget {
++  final Key key;
++  final List<DrawObject> objects;
++  final Decoration decoration;
++  final Size size;
++
++  DrawingBoard({
++    this.key,
++    @required this.objects,
++    this.decoration,
++    @required this.size,
++  });
++
++  @override
++  Widget build(BuildContext context) {
++    return RepaintBoundary(
++      key: key,
++      child: Container(
++        decoration: decoration,
++        child: CustomPaint(
++          size: size,
++          painter: DrawPainter(objects),
++          isComplex: true,
++        ),
++      ),
++    );
++  }
++}
++
++class DrawPainter extends CustomPainter {
++  List<DrawObject> objects;
++
++  DrawPainter(this.objects);
++
++  @override
++  void paint(Canvas canvas, Size size) {
++    for (int i = 0; i < objects.length; i++) {
++      DrawObject object = objects[i];
++
++      if (object.points.length > 1) {
++        Path path = Path();
++
++        List<Offset> offsets = [];
++
++        object.points.forEach((item) {
++          offsets.add(item);
++        });
++
++        path.addPolygon(offsets, false);
++
++        canvas.drawPath(path, object.paint);
++      } else {
++        canvas.drawCircle(
++            object.points.last, object.paint.strokeWidth / 16, object.paint);
++      }
++    }
++  }
++
++  @override
++  bool shouldRepaint(CustomPainter oldDelegate) => true;
++}
+diff --git a/lib/widget/note_view.dart b/lib/widget/note_view.dart
+index b45777f..0e63c05 100644
+--- a/lib/widget/note_view.dart
++++ b/lib/widget/note_view.dart
+@@ -40,13 +40,13 @@ class NoteView extends StatelessWidget {
+           children: [
+             IgnorePointer(
+               child: Visibility(
+-                visible: note.images.images.isNotEmpty,
++                visible: note.images.data.isNotEmpty,
+                 child: NoteViewImages(
+-                  images: note.images.images.sublist(
++                  images: note.images.data.sublist(
+                       0,
+-                      note.images.images.length > numOfImages * 2
++                      note.images.data.length > numOfImages * 2
+                           ? numOfImages * 2
+-                          : note.images.images.length),
++                          : note.images.data.length),
+                   numOfImages: numOfImages,
+                   borderRadius: _kBorderRadius,
+                 ),
+diff --git a/lib/widget/note_view_images.dart b/lib/widget/note_view_images.dart
+index 0c71703..c7098da 100644
+--- a/lib/widget/note_view_images.dart
++++ b/lib/widget/note_view_images.dart
+@@ -1,10 +1,16 @@
+ import 'dart:io';
++import 'dart:typed_data';
++import 'dart:ui' as ui;
+ 
+ import 'package:flutter/material.dart';
++import 'package:flutter/services.dart';
+ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
++import 'package:potato_notes/data/model/draw_object.dart';
++import 'package:potato_notes/data/model/image_list.dart';
++import 'package:potato_notes/widget/drawing_board.dart';
+ 
+ class NoteViewImages extends StatefulWidget {
+-  final List<Uri> images;
++  final List<ImageData> images;
+   final int numOfImages;
+   final double borderRadius;
+   final bool showPlusImages;
+@@ -47,47 +53,102 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+                   ? widget.numOfImages * 2
+                   : widget.images.length,
+               itemBuilder: (context, index) {
+-                ImageProvider image;
+-                String scheme = widget.images[index].scheme;
+-
+-                if (scheme.startsWith("http")) {
+-                  image = NetworkImage(widget.images[index].toString());
++                if (widget.images[index].drawing.isNotEmpty) {
++                  return InkWell(
++                    onTap: () => widget.onImageTap(index),
++                    child: Stack(
++                      children: [
++                        SizedBox.expand(
++                          child: Container(
++                            color: Colors.white,
++                            child: ClipRRect(
++                              child: Transform.scale(
++                                scale: 0.5,
++                                alignment: Alignment.topLeft,
++                                child: DrawingBoard(
++                                  objects: widget.images[index].drawing,
++                                  size: MediaQuery.of(context).size / 2,
++                                  decoration: BoxDecoration(color: Colors.white),
++                                ),
++                              ),
++                          ),
++                          ),
++                          /*child: FutureBuilder<ByteData>(
++                            future: renderDrawing(widget.images[index].drawing),
++                            builder: (context, snapshot) {
++                              ByteBuffer buffer = snapshot.data.buffer;
++                              return Image(
++                                image: MemoryImage(buffer?.asUint8List() ?? Uint8List(12)),
++                                fit: BoxFit.cover,
++                              );
++                            },
++                          ),*/
++                        ),
++                        SizedBox.expand(
++                          child: Visibility(
++                            visible: (index == widget.images.length - 1 &&
++                                    widget.numPlusImages > 0) &&
++                                widget.showPlusImages,
++                            child: Container(
++                              alignment: Alignment.center,
++                              color: Colors.black.withOpacity(0.4),
++                              child: Text(
++                                "+" + widget.numPlusImages.toString(),
++                                style: TextStyle(
++                                  fontSize: 36.0,
++                                  color: Colors.white,
++                                  fontWeight: FontWeight.w500,
++                                ),
++                              ),
++                            ),
++                          ),
++                        ),
++                      ],
++                    ),
++                  );
+                 } else {
+-                  image = FileImage(File(widget.images[index].path));
+-                }
++                  ImageProvider image;
++                  String scheme = widget.images[index].image.scheme;
++
++                  if (scheme.startsWith("http")) {
++                    image = NetworkImage(widget.images[index].toString());
++                  } else {
++                    image = FileImage(File(widget.images[index].image.path));
++                  }
+ 
+-                return InkWell(
+-                  onTap: () => widget.onImageTap(index),
+-                  child: Stack(
+-                    children: [
+-                      SizedBox.expand(
+-                        child: Image(
+-                          image: image,
+-                          fit: BoxFit.cover,
++                  return InkWell(
++                    onTap: () => widget.onImageTap(index),
++                    child: Stack(
++                      children: [
++                        SizedBox.expand(
++                          child: Image(
++                            image: image,
++                            fit: BoxFit.cover,
++                          ),
+                         ),
+-                      ),
+-                      SizedBox.expand(
+-                        child: Visibility(
+-                          visible: (index == widget.images.length - 1 &&
+-                                  widget.numPlusImages > 0) &&
+-                              widget.showPlusImages,
+-                          child: Container(
+-                            alignment: Alignment.center,
+-                            color: Colors.black.withOpacity(0.4),
+-                            child: Text(
+-                              "+" + widget.numPlusImages.toString(),
+-                              style: TextStyle(
+-                                fontSize: 36.0,
+-                                color: Colors.white,
+-                                fontWeight: FontWeight.w500,
++                        SizedBox.expand(
++                          child: Visibility(
++                            visible: (index == widget.images.length - 1 &&
++                                    widget.numPlusImages > 0) &&
++                                widget.showPlusImages,
++                            child: Container(
++                              alignment: Alignment.center,
++                              color: Colors.black.withOpacity(0.4),
++                              child: Text(
++                                "+" + widget.numPlusImages.toString(),
++                                style: TextStyle(
++                                  fontSize: 36.0,
++                                  color: Colors.white,
++                                  fontWeight: FontWeight.w500,
++                                ),
+                               ),
+                             ),
+                           ),
+                         ),
+-                      ),
+-                    ],
+-                  ),
+-                );
++                      ],
++                    ),
++                  );
++                }
+               },
+               staggeredTileBuilder: (index) {
+                 int crossAxisExtent = 1;
+@@ -111,4 +172,19 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+       },
+     );
+   }
++
++  Future<ByteData> renderDrawing(List<DrawObject> objects) async {
++    ui.PictureRecorder recorder = ui.PictureRecorder();
++    Canvas canvas = Canvas(recorder);
++    DrawPainter painter = DrawPainter(objects);
++    Size size = Size(
++      MediaQuery.of(context).size.width,
++      MediaQuery.of(context).size.height
++    );
++    painter.paint(canvas, size);
++    ui.Image image = await recorder.endRecording().toImage(
++        size.width.floor(),
++        size.height.floor());
++    return image.toByteData();
++  }
+ }
+-- 
+2.26.0
+
