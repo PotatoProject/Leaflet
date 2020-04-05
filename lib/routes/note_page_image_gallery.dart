@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
@@ -7,6 +8,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:provider/provider.dart';
+import 'package:potato_notes/routes/draw_page.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class NotePageImageGallery extends StatefulWidget {
@@ -47,15 +49,15 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: PhotoViewGallery.builder(
-        itemCount: widget.note.images.images.length,
+        itemCount: widget.note.images.data.length,
         builder: (context, index) {
           ImageProvider image;
-          String scheme = widget.note.images.images[index].scheme;
+          String scheme = widget.note.images.uris[index].scheme;
 
           if (scheme.startsWith("http")) {
-            image = NetworkImage(widget.note.images.images[index].toString());
+            image = NetworkImage(widget.note.images.data[index].toString());
           } else {
-            image = FileImage(File(widget.note.images.images[index].path));
+            image = FileImage(File(widget.note.images.uris[index].path));
           }
 
           return PhotoViewGalleryPageOptions(
@@ -81,7 +83,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           Text(
             (currentPage + 1).toString() +
                 " of " +
-                widget.note.images.images.length.toString(),
+                widget.note.images.data.length.toString(),
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -89,12 +91,28 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           ),
         ],
         rightItems: [
+          /*IconButton(
+            icon: Icon(CommunityMaterialIcons.pencil_outline),
+            padding: EdgeInsets.all(0),
+            onPressed: widget.note.images.data[currentPage].drawing
+                ? () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DrawPage(
+                            note: widget.note,
+                            data: widget.note.images.data[currentPage],
+                          ),
+                        ));
+                  }
+                : null,
+          ),*/
           IconButton(
             icon: Icon(Icons.delete_outline),
             padding: EdgeInsets.all(0),
             onPressed: () {
-              setState(() => widget.note.images.images.removeAt(currentPage));
-              if (widget.note.images.images.length == 0) Navigator.pop(context);
+              setState(() => widget.note.images.data.removeAt(currentPage));
+              Navigator.pop(context);
             },
             color: Colors.white.withOpacity(0.7),
           ),

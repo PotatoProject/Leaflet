@@ -19,6 +19,7 @@ import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_colors.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
@@ -163,19 +164,19 @@ class _NotePageState extends State<NotePage> {
           ),
           children: [
             Visibility(
-              visible: note.images.images.isNotEmpty,
+              visible: note.images.data.isNotEmpty,
               child: NoteViewImages(
-                  images: note.images.images.sublist(
+                  images: note.images.uris.sublist(
                       0,
-                      note.images.images.length > widget.numOfImages * 2
+                      note.images.data.length > widget.numOfImages * 2
                           ? widget.numOfImages * 2
-                          : note.images.images.length),
+                          : note.images.data.length),
                   numOfImages: widget.numOfImages,
                   showPlusImages: true,
                   numPlusImages:
-                      note.images.images.length < widget.numOfImages * 2
+                      note.images.data.length < widget.numOfImages * 2
                           ? 0
-                          : note.images.images.length - widget.numOfImages * 2,
+                          : note.images.data.length - widget.numOfImages * 2,
                   onImageTap: (index) async {
                     await Navigator.push(
                         context,
@@ -580,7 +581,7 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                note.images.images.add(File(image.path).uri);
+                note.images.data.add(ImageData(File(image.path).uri, false));
                 Navigator.pop(context);
               }
             },
@@ -593,9 +594,18 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                note.images.images.add(File(image.path).uri);
+                note.images.data.add(ImageData(File(image.path).uri, false));
                 Navigator.pop(context);
               }
+            },
+          ),
+          ListTile(
+            leading: Icon(OMIcons.brush),
+            title: Text("Add drawing"),
+            onTap: () async {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DrawPage(note: note),
+              ));
             },
           ),
         ],
