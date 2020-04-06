@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
+import 'package:potato_notes/internal/note_colors.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
@@ -26,6 +27,9 @@ class NoteView extends StatelessWidget {
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
     return Card(
+      color: note.color != 0
+          ? Color(NoteColors.colorList(context)[note.color]["hex"])
+          : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kBorderRadius),
       ),

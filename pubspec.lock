@@ -487,13 +487,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  reorderables:
-    dependency: "direct main"
-    description:
-      name: reorderables
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.2"
   rich_text_editor:
     dependency: "direct main"
     description:
@@ -541,7 +534,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "78e4d04cee97f7165cf95ff6c67fee8a7b014944"
+      resolved-ref: "848fe2a36f0ee756e392438d5207ee1a07b2cf81"
       url: "https://github.com/HrX03/SpicyUIComponents"
     source: git
     version: "0.0.1"

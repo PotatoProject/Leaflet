@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/system_bar_manager.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
@@ -12,12 +13,15 @@ class AppInfoProvider extends ChangeNotifier {
 
   AppInfoProvider() {
     loadData();
+
+    barManager = SystemBarManager(this);
   }
 
   // ignore: cancel_subscriptions
   StreamSubscription<dynamic> accentSubscription;
   // ignore: cancel_subscriptions
   StreamSubscription<dynamic> themeSubscription;
+  SystemBarManager barManager;
 
   Color _mainColor = Colors.blueAccent;
   Brightness _systemTheme = Brightness.light;

@@ -30,26 +30,11 @@ class PotatoNotes extends StatelessWidget {
             builder: (context) {
               final appInfo = Provider.of<AppInfoProvider>(context);
 
-              switch (appInfo.systemTheme) {
-                case Brightness.light:
-                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                    systemNavigationBarColor:
-                        SpicyThemes.light(appInfo.mainColor).cardColor,
-                    statusBarColor: Colors.transparent,
-                    systemNavigationBarIconBrightness: Brightness.dark,
-                    statusBarIconBrightness: Brightness.dark,
-                  ));
-                  break;
-                case Brightness.dark:
-                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                    systemNavigationBarColor:
-                        SpicyThemes.dark(appInfo.mainColor).cardColor,
-                    statusBarColor: Colors.transparent,
-                    systemNavigationBarIconBrightness: Brightness.light,
-                    statusBarIconBrightness: Brightness.light,
-                  ));
-                  break;
-              }
+              appInfo.barManager.lightNavBarColor = SpicyThemes.light(appInfo.mainColor).cardColor;
+              appInfo.barManager.darkNavBarColor = SpicyThemes.dark(appInfo.mainColor).cardColor;
+              appInfo.barManager.lightIconColor = Brightness.light;
+              appInfo.barManager.darkIconColor = Brightness.dark;
+              appInfo.barManager.updateColors();
 
               return MaterialApp(
                 title: "PotatoNotes",

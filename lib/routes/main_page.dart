@@ -97,12 +97,16 @@ class _MainPageState extends State<MainPage> {
         notched: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NotePage(),
-          ),
-        ),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NotePage(),
+            ),
+          );
+          appInfo.barManager.lightNavBarColor = SpicyThemes.light(appInfo.mainColor).cardColor;
+          appInfo.barManager.darkNavBarColor = SpicyThemes.dark(appInfo.mainColor).cardColor;
+        },
         child: Icon(OMIcons.edit),
         backgroundColor: Theme.of(context).accentColor,
       ),
