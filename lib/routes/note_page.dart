@@ -23,9 +23,11 @@ import 'package:spicy_components/spicy_components.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
+  final int numOfImages;
 
   NotePage({
     this.note,
+    this.numOfImages,
   });
 
   @override
@@ -127,6 +129,7 @@ class _NotePageState extends State<NotePage> {
           backgroundColor:
               note.color != 0 ? Theme.of(context).textTheme.title.color : null,
         ),
+        toggleableActiveColor: note.color != 0 ? Theme.of(context).textTheme.title.color : null,
       ),
       child: Scaffold(
         body: ListView(
@@ -140,14 +143,14 @@ class _NotePageState extends State<NotePage> {
               child: NoteViewImages(
                   images: note.images.images.sublist(
                       0,
-                      note.images.images.length > 4
-                          ? 4
+                      note.images.images.length > widget.numOfImages * 2
+                          ? widget.numOfImages * 2
                           : note.images.images.length),
-                  numOfImages: 2,
+                  numOfImages: widget.numOfImages,
                   showPlusImages: true,
-                  numPlusImages: note.images.images.length < 4
+                  numPlusImages: note.images.images.length < widget.numOfImages * 2
                       ? 0
-                      : note.images.images.length - 4,
+                      : note.images.images.length - widget.numOfImages * 2,
                   onImageTap: (index) async {
                     await Navigator.push(
                         context,
@@ -234,7 +237,6 @@ class _NotePageState extends State<NotePage> {
 
                     if (needsFocus &&
                         index == note.listContent.content.length - 1) {
-                      print("bruh");
                       needsFocus = false;
                       FocusScope.of(context).requestFocus(FocusNode());
                       FocusScope.of(context)
@@ -264,8 +266,9 @@ class _NotePageState extends State<NotePage> {
                           onChanged: (value) {
                             note.listContent.content[index].status = value;
                           },
-                          activeColor: Theme.of(context).accentColor,
-                          checkColor: Theme.of(context).scaffoldBackgroundColor,
+                          checkColor: note.color != 0
+                              ? Color(NoteColors.colorList(context)[note.color]["hex"])
+                              : null,
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         title: TextField(
@@ -284,46 +287,26 @@ class _NotePageState extends State<NotePage> {
                   AnimatedOpacity(
                     opacity: note.listContent.content.isNotEmpty
                         ? note.listContent.content.last.text != "" ? 1 : 0
-                        : 0,
+                        : 1,
                     duration: note.listContent.content.isNotEmpty
                         ? note.listContent.content.last.text != ""
                             ? Duration(milliseconds: 300)
                             : Duration(milliseconds: 0)
                         : Duration(milliseconds: 0),
                     child: ListTile(
-                        leading: Icon(Icons.add),
-                        title: Text(
-                          "Add item",
-                          style: TextStyle(
-                              color: Theme.of(context).iconTheme.color),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 28),
-                        onTap: note.listContent.content.isNotEmpty &&
-                                note.listContent.content.last.text != ""
-                            ? () {
-                                List<ListItem> sortedList =
-                                    note.listContent.content;
-                                sortedList.sort((a, b) => a.id.compareTo(b.id));
-
-                                int id = sortedList.isNotEmpty
-                                    ? sortedList.last.id + 1
-                                    : 1;
-
-                                note.listContent.content.add(ListItem(
-                                  id,
-                                  "",
-                                  false,
-                                ));
-
-                                listContentControllers
-                                    .add(TextEditingController());
-
-                                FocusNode node = FocusNode();
-                                listContentNodes.add(node);
-
-                                needsFocus = true;
-                              }
-                            : null),
+                      leading: Icon(Icons.add),
+                      title: Text(
+                        "Add item",
+                        style:
+                            TextStyle(color: Theme.of(context).iconTheme.color),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 28),
+                      onTap: note.listContent.content.isNotEmpty ?
+                          note.listContent.content.last.text != ""
+                              ? () => addListContentItem()
+                              : null
+                          : () => addListContentItem(),
+                    ),
                   ),
                 ],
               ),
@@ -371,9 +354,6 @@ class _NotePageState extends State<NotePage> {
                   ],
                 ),
               ),
-              Divider(
-                height: 1,
-              ),
               SpicyBottomBar(
                 leftItems: [
                   IconButton(
@@ -412,6 +392,26 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
+  void addListContentItem() {
+    List<ListItem> sortedList = note.listContent.content;
+    sortedList.sort((a, b) => a.id.compareTo(b.id));
+
+    int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
+
+    note.listContent.content.add(ListItem(
+      id,
+      "",
+      false,
+    ));
+
+    listContentControllers.add(TextEditingController());
+
+    FocusNode node = FocusNode();
+    listContentNodes.add(node);
+
+    needsFocus = true;
+  }
+
   void showAddElementsDialog() {
     SpicyUtils.showBottomSheet(
       context: context,
@@ -428,7 +428,7 @@ class _NotePageState extends State<NotePage> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.photo),
+          leading: Icon(OMIcons.photo),
           title: Text("Image from gallery"),
           onTap: () async {
             File image =
@@ -441,7 +441,7 @@ class _NotePageState extends State<NotePage> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.camera),
+          leading: Icon(OMIcons.camera),
           title: Text("Take a photo"),
           onTap: () async {
             File image =

@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(
                     builder: (context) => NotePage(
                       note: snapshot.data[index],
+                      numOfImages: numOfImages,
                     ),
                   ),
                 ),
@@ -101,7 +102,9 @@ class _MainPageState extends State<MainPage> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NotePage(),
+              builder: (context) => NotePage(
+                numOfImages: numOfImages,
+              ),
             ),
           );
           appInfo.barManager.lightNavBarColor = SpicyThemes.light(appInfo.mainColor).cardColor;

@@ -45,6 +45,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
     appInfo.barManager.updateColors();
     
     return Scaffold(
+      backgroundColor: Colors.black,
       body: PhotoViewGallery.builder(
         itemCount: widget.note.images.images.length,
         builder: (context, index) {

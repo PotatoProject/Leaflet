@@ -144,7 +144,11 @@ class NoteView extends StatelessWidget {
                     item.status
                         ? Icons.check_box
                         : Icons.check_box_outline_blank,
-                    color: item.status ? Theme.of(context).accentColor : null,
+                    color: item.status
+                        ? note.color != 0
+                            ? Theme.of(context).textTheme.title.color
+                            : Theme.of(context).accentColor
+                        : null,
                     size: 20,
                   ),
                   VerticalDivider(
