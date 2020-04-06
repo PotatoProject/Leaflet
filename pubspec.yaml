@@ -25,6 +25,7 @@ dependencies:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:
+  back_button_interceptor:
   
   rich_text_editor:
     git:

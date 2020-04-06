@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -87,6 +88,7 @@ class _NotePageState extends State<NotePage> {
     );
 
     buildListContentElements();
+    BackButtonInterceptor.add(saveAndPop);
 
     super.initState();
   }
@@ -99,6 +101,7 @@ class _NotePageState extends State<NotePage> {
   @override
   void dispose() {
     listContentNodes.forEach((node) => node.dispose());
+    BackButtonInterceptor.remove(saveAndPop);
     super.dispose();
   }
 
@@ -129,7 +132,8 @@ class _NotePageState extends State<NotePage> {
           backgroundColor:
               note.color != 0 ? Theme.of(context).textTheme.title.color : null,
         ),
-        toggleableActiveColor: note.color != 0 ? Theme.of(context).textTheme.title.color : null,
+        toggleableActiveColor:
+            note.color != 0 ? Theme.of(context).textTheme.title.color : null,
       ),
       child: Scaffold(
         body: ListView(
@@ -148,9 +152,10 @@ class _NotePageState extends State<NotePage> {
                           : note.images.images.length),
                   numOfImages: widget.numOfImages,
                   showPlusImages: true,
-                  numPlusImages: note.images.images.length < widget.numOfImages * 2
-                      ? 0
-                      : note.images.images.length - widget.numOfImages * 2,
+                  numPlusImages:
+                      note.images.images.length < widget.numOfImages * 2
+                          ? 0
+                          : note.images.images.length - widget.numOfImages * 2,
                   onImageTap: (index) async {
                     await Navigator.push(
                         context,
@@ -267,7 +272,8 @@ class _NotePageState extends State<NotePage> {
                             note.listContent.content[index].status = value;
                           },
                           checkColor: note.color != 0
-                              ? Color(NoteColors.colorList(context)[note.color]["hex"])
+                              ? Color(NoteColors.colorList(context)[note.color]
+                                  ["hex"])
                               : null,
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
@@ -301,8 +307,8 @@ class _NotePageState extends State<NotePage> {
                             TextStyle(color: Theme.of(context).iconTheme.color),
                       ),
                       contentPadding: EdgeInsets.symmetric(horizontal: 28),
-                      onTap: note.listContent.content.isNotEmpty ?
-                          note.listContent.content.last.text != ""
+                      onTap: note.listContent.content.isNotEmpty
+                          ? note.listContent.content.last.text != ""
                               ? () => addListContentItem()
                               : null
                           : () => addListContentItem(),
@@ -359,28 +365,7 @@ class _NotePageState extends State<NotePage> {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     padding: EdgeInsets.all(0),
-                    onPressed: () async {
-                      List<int> styleJson = gzip.encode(
-                          utf8.encode(contentController.styleList.toJson()));
-                      Note lastNote;
-                      List<Note> notes = await helper.listNotes();
-
-                      if (notes.isNotEmpty) {
-                        lastNote = notes.last;
-                      }
-
-                      note = note.copyWith(
-                        id: note.id ?? (lastNote?.id ?? 0) + 1,
-                        styleJson: ContentStyle(styleJson),
-                        content: contentController.text,
-                      );
-
-                      note.listContent.content
-                          .removeWhere((item) => item.text.trim() == "");
-
-                      helper.saveNote(note);
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => saveAndPop(true),
                   ),
                 ],
                 elevation: 0,
@@ -390,6 +375,39 @@ class _NotePageState extends State<NotePage> {
         ),
       ),
     );
+  }
+
+  bool saveAndPop(_) {
+    void _internal() async {
+      if(contentController.text.trim() != "") {
+        List<int> styleJson =
+            gzip.encode(utf8.encode(contentController.styleList.toJson()));
+        Note lastNote;
+        List<Note> notes = await helper.listNotes();
+
+        if (notes.isNotEmpty) {
+          lastNote = notes.last;
+        }
+
+        note = note.copyWith(
+          id: note.id ?? (lastNote?.id ?? 0) + 1,
+          title: note.title.trim(),
+          styleJson: ContentStyle(styleJson),
+          content: contentController.text.trim(),
+          list: note.listContent.content.isEmpty
+              ? false
+              : note.list,
+        );
+
+        note.listContent.content.removeWhere((item) => item.text.trim() == "");
+
+        helper.saveNote(note);
+      }
+    }
+    _internal();
+    Navigator.pop(context);
+
+    return false;
   }
 
   void addListContentItem() {
