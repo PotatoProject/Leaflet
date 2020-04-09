@@ -26,6 +26,7 @@ dependencies:
   photo_view:
   image_picker:
   back_button_interceptor:
+  flutter_svg:
   
   rich_text_editor:
     git:
@@ -41,3 +42,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/

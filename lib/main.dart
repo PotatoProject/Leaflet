@@ -19,13 +19,10 @@ class PotatoNotes extends StatelessWidget {
         Provider.value(
           value: AppDatabase().noteHelper,
         ),
-        ChangeNotifierProvider.value(
-          value: AppInfoProvider(),
-        ),
       ],
       child: Builder(
         builder: (context) => ChangeNotifierProvider.value(
-          value: AppInfoProvider(),
+          value: AppInfoProvider(context),
           child: Builder(
             builder: (context) {
               final appInfo = Provider.of<AppInfoProvider>(context);
@@ -35,6 +32,7 @@ class PotatoNotes extends StatelessWidget {
               appInfo.barManager.lightIconColor = Brightness.light;
               appInfo.barManager.darkIconColor = Brightness.dark;
               appInfo.barManager.updateColors();
+              appInfo.updateIllustrations();
 
               return MaterialApp(
                 title: "PotatoNotes",

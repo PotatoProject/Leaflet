@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
@@ -30,7 +32,6 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
-
     if (helper == null) helper = Provider.of<NoteHelper>(context);
 
     double width = MediaQuery.of(context).size.width;
@@ -82,7 +83,25 @@ class _MainPageState extends State<MainPage> {
               ),
             );
           } else
-            return Text("bruh");
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  appInfo?.noNotesIllustration ?? Container(),
+                  SizedBox(height: 24),
+                  Text(
+                    "No notes were added yet.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  )
+                ],
+              ),
+            );
         },
       ),
       extendBody: true,
