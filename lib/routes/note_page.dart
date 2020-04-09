@@ -132,8 +132,9 @@ class _NotePageState extends State<NotePage> {
           backgroundColor:
               note.color != 0 ? Theme.of(context).textTheme.title.color : null,
         ),
-        toggleableActiveColor:
-            note.color != 0 ? Theme.of(context).textTheme.title.color : null,
+        toggleableActiveColor: note.color != 0
+            ? Theme.of(context).textTheme.title.color
+            : Theme.of(context).accentColor,
       ),
       child: Scaffold(
         body: ListView(
@@ -193,6 +194,7 @@ class _NotePageState extends State<NotePage> {
                             .withOpacity(0.5),
                       ),
                     ),
+                    textCapitalization: TextCapitalization.sentences,
                     scrollPadding: EdgeInsets.all(0),
                     style: TextStyle(
                       fontSize: 18,
@@ -218,6 +220,7 @@ class _NotePageState extends State<NotePage> {
                       ),
                       isDense: true,
                     ),
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.multiline,
                     scrollPadding: EdgeInsets.all(0),
                     style: TextStyle(
@@ -281,10 +284,25 @@ class _NotePageState extends State<NotePage> {
                           controller: listContentControllers[index],
                           decoration:
                               InputDecoration.collapsed(hintText: "Input"),
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                               color: Theme.of(context).iconTheme.color),
                           onChanged: (text) =>
                               note.listContent.content[index].text = text,
+                          onSubmitted: (_) {
+                            if(index == note.listContent.content.length - 1) {
+                              if(note.listContent.content.last.text != "")
+                                  addListContentItem();
+                              else {
+                                FocusScope.of(context)
+                                    .requestFocus(listContentNodes[index]);
+                              }
+                            } else {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              FocusScope.of(context)
+                                  .requestFocus(listContentNodes[index + 1]);
+                            }
+                          },
                           focusNode: listContentNodes[index],
                         ),
                       ),
@@ -379,7 +397,7 @@ class _NotePageState extends State<NotePage> {
 
   bool saveAndPop(_) {
     void _internal() async {
-      if(contentController.text.trim() != "") {
+      if (contentController.text.trim() != "") {
         List<int> styleJson =
             gzip.encode(utf8.encode(contentController.styleList.toJson()));
         Note lastNote;
@@ -394,9 +412,7 @@ class _NotePageState extends State<NotePage> {
           title: note.title.trim(),
           styleJson: ContentStyle(styleJson),
           content: contentController.text.trim(),
-          list: note.listContent.content.isEmpty
-              ? false
-              : note.list,
+          list: note.listContent.content.isEmpty ? false : note.list,
         );
 
         note.listContent.content.removeWhere((item) => item.text.trim() == "");
@@ -404,6 +420,7 @@ class _NotePageState extends State<NotePage> {
         helper.saveNote(note);
       }
     }
+
     _internal();
     Navigator.pop(context);
 
