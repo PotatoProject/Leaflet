@@ -27,6 +27,7 @@ dependencies:
   image_picker:
   back_button_interceptor:
   flutter_svg:
+  shared_preferences:
   
   rich_text_editor:
     git:
