@@ -6,7 +6,13 @@ import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
-main() => runApp(PotatoNotes());
+List<Note> initialNotes = [];
+
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initialNotes = await AppDatabase().noteHelper.listNotes();
+  runApp(PotatoNotes());
+}
 
 class PotatoNotes extends StatelessWidget {
   @override
@@ -38,7 +44,7 @@ class PotatoNotes extends StatelessWidget {
                 title: "PotatoNotes",
                 theme: SpicyThemes.light(appInfo.mainColor),
                 darkTheme: SpicyThemes.dark(appInfo.mainColor),
-                home: MainPage(),
+                home: MainPage(initialNotes: initialNotes),
                 debugShowCheckedModeBanner: false,
               );
             },

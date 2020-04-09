@@ -12,6 +12,10 @@ import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class MainPage extends StatefulWidget {
+  final List<Note> initialNotes;
+
+  MainPage({this.initialNotes});
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -55,6 +59,7 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       body: StreamBuilder<List<Note>>(
+        initialData: widget.initialNotes,
         stream: helper.noteStream(),
         builder: (context, snapshot) {
           if ((snapshot.data?.length ?? 0) != 0) {
