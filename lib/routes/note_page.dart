@@ -383,7 +383,7 @@ class _NotePageState extends State<NotePage> {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     padding: EdgeInsets.all(0),
-                    onPressed: () => saveAndPop(true),
+                    onPressed: () => saveAndPop(null),
                   ),
                 ],
                 elevation: 0,
@@ -422,7 +422,8 @@ class _NotePageState extends State<NotePage> {
     }
 
     _internal();
-    Navigator.pop(context);
+    if(_ == null)
+      Navigator.pop(context);
 
     return false;
   }

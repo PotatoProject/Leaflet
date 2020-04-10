@@ -15,12 +15,14 @@ class NoteView extends StatelessWidget {
   final Function() onTap;
   final Function() onLongPress;
   final int numOfImages;
+  final bool selected;
 
   NoteView({
     @required this.note,
     this.onTap,
     this.onLongPress,
     this.numOfImages = 2,
+    this.selected = false,
   });
 
   @override
@@ -32,6 +34,12 @@ class NoteView extends StatelessWidget {
           : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kBorderRadius),
+        side: selected
+            ? BorderSide(
+              color: Theme.of(context).textTheme.title.color,
+              width: 1.5,
+            )
+            : BorderSide.none,
       ),
       elevation: 3,
       margin: EdgeInsets.all(4),

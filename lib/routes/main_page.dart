@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
@@ -9,7 +8,9 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/routes/note_page.dart';
+import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
+import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -32,6 +33,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Preferences prefs;
 
   ReturnMode mode = ReturnMode.NORMAL;
+  bool selecting = false;
+  List<int> selectionList = [];
 
   @override
   void initState() {
@@ -80,57 +83,70 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           if ((snapshot.data?.length ?? 0) != 0) {
             return AnimatedBuilder(
               animation: Tween<double>(begin: 0, end: 1).animate(controller),
-              child: Opacity(
-                opacity: controller.value,
-                child: prefs.useGrid
-                    ? StaggeredGridView.countBuilder(
-                        crossAxisCount: numOfColumns,
-                        itemBuilder: (context, index) => NoteView(
-                          note: snapshot.data[index],
-                          onTap: () => Navigator.push(
+              builder: (context, child) {
+                Widget commonNote(Note note) => NoteView(
+                      note: note,
+                      onTap: () {
+                        if (selecting) {
+                          setState(() {
+                            if (selectionList.contains(note.id)) {
+                              selectionList.remove(note.id);
+                              if (selectionList.isEmpty) selecting = false;
+                            } else {
+                              selectionList.add(note.id);
+                            }
+                          });
+                        } else {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => NotePage(
-                                note: snapshot.data[index],
+                                note: note,
                                 numOfImages: numOfImages,
                               ),
                             ),
+                          );
+                        }
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          selecting = true;
+                          selectionList.add(note.id);
+                        });
+                      },
+                      selected: selectionList.contains(note.id),
+                      numOfImages: numOfImages,
+                    );
+
+                return Opacity(
+                  opacity: controller.value,
+                  child: prefs.useGrid
+                      ? StaggeredGridView.countBuilder(
+                          crossAxisCount: numOfColumns,
+                          itemBuilder: (context, index) =>
+                              commonNote(snapshot.data[index]),
+                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                          itemCount: snapshot.data.length,
+                          padding: EdgeInsets.fromLTRB(
+                            4,
+                            4 + MediaQuery.of(context).padding.top,
+                            4,
+                            4.0 + 56,
                           ),
-                          numOfImages: numOfImages,
-                        ),
-                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                        itemCount: snapshot.data.length,
-                        padding: EdgeInsets.fromLTRB(
-                          4,
-                          4 + MediaQuery.of(context).padding.top,
-                          4,
-                          4.0 + 56,
-                        ),
-                      )
-                    : ListView.builder(
-                        itemBuilder: (context, index) => NoteView(
-                          note: snapshot.data[index],
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NotePage(
-                                note: snapshot.data[index],
-                                numOfImages: numOfImages,
-                              ),
-                            ),
+                        )
+                      : ListView.builder(
+                          itemBuilder: (context, index) =>
+                              commonNote(snapshot.data[index]),
+                          itemCount: snapshot.data.length,
+                          padding: EdgeInsets.fromLTRB(
+                            4,
+                            4 + MediaQuery.of(context).padding.top,
+                            4,
+                            4.0 + 56,
                           ),
-                          numOfImages: numOfImages,
                         ),
-                        itemCount: snapshot.data.length,
-                        padding: EdgeInsets.fromLTRB(
-                          4,
-                          4 + MediaQuery.of(context).padding.top,
-                          4,
-                          4.0 + 56,
-                        ),
-                      ),
-              ),
-              builder: (context, child) => child,
+                );
+              },
             );
           } else
             return Center(
@@ -155,37 +171,26 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         },
       ),
       extendBody: true,
-      bottomNavigationBar: SpicyBottomBar(
-        leftItems: [
-          IconButton(
-            icon: Icon(Icons.menu),
-            padding: EdgeInsets.all(0),
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => navigationSheet,
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              prefs.useGrid
-                  ? OMIcons.viewAgenda
-                  : CommunityMaterialIcons.view_dashboard_outline,
-            ),
-            padding: EdgeInsets.all(0),
-            onPressed: () async {
-              if (controller.status == AnimationStatus.completed) {
-                await controller.animateBack(0);
-                prefs.useGrid = !prefs.useGrid;
-                await controller.animateTo(1);
-              }
+      bottomNavigationBar: selecting
+          ? SelectionBar(
+            selectionList: selectionList,
+            onCloseSelection: () {
+              selecting = false;
+              selectionList.clear();
             },
+          )
+          : MainPageBar(
+            controller: controller,
+            currentMode: mode,
+            onReturnModeChange: (newMode) => mode = newMode,
           ),
-        ],
-        elevation: 12,
-        notched: true,
-      ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:
+          mode == ReturnMode.NORMAL && !selecting ? fab : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    );
+  }
+
+  Widget get fab => FloatingActionButton(
         onPressed: () async {
           await Navigator.push(
             context,
@@ -202,10 +207,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         },
         child: Icon(OMIcons.edit),
         backgroundColor: Theme.of(context).accentColor,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
-  }
+      );
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {
     switch (mode) {
@@ -219,72 +221,4 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
     }
   }
-
-  Widget get navigationSheet => Builder(
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(
-                mode == ReturnMode.NORMAL ? Icons.home : OMIcons.home,
-                color: mode == ReturnMode.NORMAL
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Home",
-                style: TextStyle(
-                  color: mode == ReturnMode.NORMAL
-                      ? Theme.of(context).accentColor
-                      : null,
-                ),
-              ),
-              onTap: () {
-                mode = ReturnMode.NORMAL;
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                mode == ReturnMode.ARCHIVE ? Icons.archive : OMIcons.archive,
-                color: mode == ReturnMode.ARCHIVE
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Archive",
-                style: TextStyle(
-                  color: mode == ReturnMode.ARCHIVE
-                      ? Theme.of(context).accentColor
-                      : null,
-                ),
-              ),
-              onTap: () {
-                mode = ReturnMode.ARCHIVE;
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                mode == ReturnMode.TRASH ? Icons.delete : OMIcons.delete,
-                color: mode == ReturnMode.TRASH
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Trash",
-                style: TextStyle(
-                  color: mode == ReturnMode.TRASH
-                      ? Theme.of(context).accentColor
-                      : null,
-                ),
-              ),
-              onTap: () {
-                mode = ReturnMode.TRASH;
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      );
 }
