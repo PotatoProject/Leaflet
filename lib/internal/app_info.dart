@@ -28,6 +28,8 @@ class AppInfoProvider extends ChangeNotifier {
   SystemBarManager barManager;
 
   Widget noNotesIllustration;
+  Widget emptyArchiveIllustration;
+  Widget emptyTrashIllustration;
 
   Color _mainColor = Colors.blueAccent;
   Brightness _systemTheme = Brightness.light;
@@ -47,6 +49,8 @@ class AppInfoProvider extends ChangeNotifier {
 
   void updateIllustrations() async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
+    emptyArchiveIllustration = await illustrations.emptyArchiveIllustration(systemTheme);
+    emptyTrashIllustration = await illustrations.emptyTrashIllustration(systemTheme);
   }
 
   void loadData() async {

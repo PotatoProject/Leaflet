@@ -96,6 +96,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
+                          onLongPress: () => helper.saveNote(snapshot.data[index].copyWith(archived: false)),
                           numOfImages: numOfImages,
                         ),
                         staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -139,10 +140,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  appInfo?.noNotesIllustration ?? Container(),
+                  getInfoOnCurrentMode.key,
                   SizedBox(height: 24),
                   Text(
-                    "No notes were added yet.",
+                    getInfoOnCurrentMode.value,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -205,6 +206,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
+  }
+
+  MapEntry<Widget, String> get getInfoOnCurrentMode {
+    switch(mode) {
+      case ReturnMode.ALL:
+      case ReturnMode.NORMAL:
+        return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
+      case ReturnMode.ARCHIVE:
+        return MapEntry(appInfo.emptyArchiveIllustration, "The archive is empty");
+      case ReturnMode.TRASH:
+        return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
+    }
   }
 
   Widget get navigationSheet => Builder(
