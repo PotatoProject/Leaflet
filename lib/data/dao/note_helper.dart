@@ -11,6 +11,8 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes(ReturnMode mode) async {
     switch (mode) {
+      case ReturnMode.ALL:
+        return select(notes).get();
       case ReturnMode.NORMAL:
         return (select(notes)
               ..where((table) => and(not(table.archived), not(table.deleted))))
@@ -30,6 +32,9 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 
     switch (mode) {
+      case ReturnMode.ALL:
+        selectQuery = select(notes);
+        break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)
           ..where((table) => and(not(table.archived), not(table.deleted)));
@@ -66,6 +71,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 }
 
 enum ReturnMode {
+  ALL,
   NORMAL,
   ARCHIVE,
   TRASH,

@@ -31,6 +31,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   NoteHelper helper;
   Preferences prefs;
 
+  ReturnMode mode = ReturnMode.NORMAL;
+
   @override
   void initState() {
     controller = AnimationController(
@@ -73,7 +75,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return Scaffold(
       body: StreamBuilder<List<Note>>(
         initialData: widget.initialNotes,
-        stream: helper.noteStream(ReturnMode.NORMAL),
+        stream: helper.noteStream(mode),
         builder: (context, snapshot) {
           if ((snapshot.data?.length ?? 0) != 0) {
             return AnimatedBuilder(
@@ -158,7 +160,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           IconButton(
             icon: Icon(Icons.menu),
             padding: EdgeInsets.all(0),
-            onPressed: () {},
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => navigationSheet,
+            ),
           ),
           IconButton(
             icon: Icon(
@@ -200,4 +206,78 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
+  Widget get navigationSheet => Builder(
+    builder: (context) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          leading: Icon(
+            mode == ReturnMode.NORMAL
+                ? Icons.home
+                : OMIcons.home,
+            color: mode == ReturnMode.NORMAL
+                ? Theme.of(context).accentColor
+                : null,
+          ),
+          title: Text(
+            "Home",
+            style: TextStyle(
+              color: mode == ReturnMode.NORMAL
+                  ? Theme.of(context).accentColor
+                  : null,
+            ),
+          ),
+          onTap: () {
+            mode = ReturnMode.NORMAL;
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            mode == ReturnMode.ARCHIVE
+                ? Icons.archive
+                : OMIcons.archive,
+            color: mode == ReturnMode.ARCHIVE
+                ? Theme.of(context).accentColor
+                : null,
+          ),
+          title: Text(
+            "Archive",
+            style: TextStyle(
+              color: mode == ReturnMode.ARCHIVE
+                  ? Theme.of(context).accentColor
+                  : null,
+            ),
+          ),
+          onTap: () {
+            mode = ReturnMode.ARCHIVE;
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            mode == ReturnMode.TRASH
+                ? Icons.delete
+                : OMIcons.delete,
+            color: mode == ReturnMode.TRASH
+                ? Theme.of(context).accentColor
+                : null,
+          ),
+          title: Text(
+            "Trash",
+            style: TextStyle(
+              color: mode == ReturnMode.TRASH
+                  ? Theme.of(context).accentColor
+                  : null,
+            ),
+          ),
+          onTap: () {
+            mode = ReturnMode.TRASH;
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    ),
+  );
 }
