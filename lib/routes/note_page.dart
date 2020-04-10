@@ -94,8 +94,16 @@ class _NotePageState extends State<NotePage> {
   }
 
   void generateId() async {
-    Note lastNote = await helper.getLastNote();
-    note = note.copyWith(id: lastNote.id + 1);
+    Note lastNote;
+    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+    notes.sort((a, b) => a.id.compareTo(b.id));
+
+    if (notes.isNotEmpty) {
+      lastNote = notes.last;
+    }
+
+    if(note.id == null)
+      note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
   }
 
   @override
@@ -107,7 +115,12 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (helper == null) helper = Provider.of<NoteHelper>(context);
+    if (helper == null) {
+      helper = Provider.of<NoteHelper>(context);
+    
+      generateId();
+    }
+
     final appInfo = Provider.of<AppInfoProvider>(context);
 
     if (note.color != 0) {
@@ -386,6 +399,17 @@ class _NotePageState extends State<NotePage> {
                     onPressed: () => saveAndPop(null),
                   ),
                 ],
+                rightItems: [
+                  IconButton(
+                    icon: Icon(
+                      note.starred
+                          ? Icons.star
+                          : Icons.star_border
+                    ),
+                    padding: EdgeInsets.all(0),
+                    onPressed: () => note = note.copyWith(starred: !note.starred),
+                  ),
+                ],
                 elevation: 0,
               ),
             ],
@@ -400,15 +424,8 @@ class _NotePageState extends State<NotePage> {
       if (contentController.text.trim() != "") {
         List<int> styleJson =
             gzip.encode(utf8.encode(contentController.styleList.toJson()));
-        Note lastNote;
-        List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-
-        if (notes.isNotEmpty) {
-          lastNote = notes.last;
-        }
 
         note = note.copyWith(
-          id: note.id ?? (lastNote?.id ?? 0) + 1,
           title: note.title.trim(),
           styleJson: ContentStyle(styleJson),
           content: contentController.text.trim(),
@@ -422,8 +439,7 @@ class _NotePageState extends State<NotePage> {
     }
 
     _internal();
-    if(_ == null)
-      Navigator.pop(context);
+    if (_ == null) Navigator.pop(context);
 
     return false;
   }

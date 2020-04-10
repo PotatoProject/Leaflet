@@ -11,8 +11,6 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes(ReturnMode mode) async {
     switch (mode) {
-      case ReturnMode.ALL:
-        return select(notes).get();
       case ReturnMode.NORMAL:
         return (select(notes)
               ..where((table) => and(not(table.archived), not(table.deleted))))
@@ -25,6 +23,9 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         return (select(notes)
               ..where((table) => and(not(table.archived), table.deleted)))
             .get();
+      case ReturnMode.ALL:
+      default:
+        return select(notes).get();
     }
   }
 
@@ -56,14 +57,6 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
           ]))
         .watch();
   }
-
-  Future<Note> getLastNote() async => (await (select(notes)
-            ..orderBy([
-              (table) =>
-                  OrderingTerm(expression: table.id, mode: OrderingMode.asc)
-            ]))
-          .get())
-      .last;
 
   Future saveNote(Note note) => into(notes).insert(note, orReplace: true);
 
