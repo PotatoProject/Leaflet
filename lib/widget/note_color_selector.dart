@@ -21,8 +21,10 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.start,
-      children: List.generate(NoteColors.colorList(context).length, (index) =>
-          noteColorItem(index, shortestSide / 5, widget.selectedColor == index)),
+      children: List.generate(
+          NoteColors.colorList(context).length,
+          (index) => noteColorItem(
+              index, shortestSide / 5, widget.selectedColor == index)),
     );
 
     /*return Column(

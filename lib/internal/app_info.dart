@@ -49,8 +49,10 @@ class AppInfoProvider extends ChangeNotifier {
 
   void updateIllustrations() async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
-    emptyArchiveIllustration = await illustrations.emptyArchiveIllustration(systemTheme);
-    emptyTrashIllustration = await illustrations.emptyTrashIllustration(systemTheme);
+    emptyArchiveIllustration =
+        await illustrations.emptyArchiveIllustration(systemTheme);
+    emptyTrashIllustration =
+        await illustrations.emptyTrashIllustration(systemTheme);
   }
 
   void loadData() async {

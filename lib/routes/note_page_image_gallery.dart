@@ -43,7 +43,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
     appInfo.barManager.darkIconColor = Brightness.light;
 
     appInfo.barManager.updateColors();
-    
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: PhotoViewGallery.builder(

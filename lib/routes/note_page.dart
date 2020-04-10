@@ -290,9 +290,9 @@ class _NotePageState extends State<NotePage> {
                           onChanged: (text) =>
                               note.listContent.content[index].text = text,
                           onSubmitted: (_) {
-                            if(index == note.listContent.content.length - 1) {
-                              if(note.listContent.content.last.text != "")
-                                  addListContentItem();
+                            if (index == note.listContent.content.length - 1) {
+                              if (note.listContent.content.last.text != "")
+                                addListContentItem();
                               else {
                                 FocusScope.of(context)
                                     .requestFocus(listContentNodes[index]);

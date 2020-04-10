@@ -161,11 +161,13 @@ class NoteView extends StatelessWidget {
                       item.text,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.title.color.withOpacity(
-                          item.status ? 0.5 : 0.7
-                        ),
-                        decoration: item.status ? TextDecoration.lineThrough : null
-                      ),
+                          color: Theme.of(context)
+                              .textTheme
+                              .title
+                              .color
+                              .withOpacity(item.status ? 0.5 : 0.7),
+                          decoration:
+                              item.status ? TextDecoration.lineThrough : null),
                     ),
                   ),
                 ],

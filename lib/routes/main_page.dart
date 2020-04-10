@@ -96,7 +96,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          onLongPress: () => helper.saveNote(snapshot.data[index].copyWith(archived: false)),
                           numOfImages: numOfImages,
                         ),
                         staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -175,7 +174,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ),
             padding: EdgeInsets.all(0),
             onPressed: () async {
-              if(controller.status == AnimationStatus.completed) {
+              if (controller.status == AnimationStatus.completed) {
                 await controller.animateBack(0);
                 prefs.useGrid = !prefs.useGrid;
                 await controller.animateTo(1);
@@ -209,88 +208,83 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {
-    switch(mode) {
+    switch (mode) {
       case ReturnMode.ALL:
       case ReturnMode.NORMAL:
         return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
       case ReturnMode.ARCHIVE:
-        return MapEntry(appInfo.emptyArchiveIllustration, "The archive is empty");
+        return MapEntry(
+            appInfo.emptyArchiveIllustration, "The archive is empty");
       case ReturnMode.TRASH:
         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
     }
   }
 
   Widget get navigationSheet => Builder(
-    builder: (context) => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ListTile(
-          leading: Icon(
-            mode == ReturnMode.NORMAL
-                ? Icons.home
-                : OMIcons.home,
-            color: mode == ReturnMode.NORMAL
-                ? Theme.of(context).accentColor
-                : null,
-          ),
-          title: Text(
-            "Home",
-            style: TextStyle(
-              color: mode == ReturnMode.NORMAL
-                  ? Theme.of(context).accentColor
-                  : null,
+        builder: (context) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                mode == ReturnMode.NORMAL ? Icons.home : OMIcons.home,
+                color: mode == ReturnMode.NORMAL
+                    ? Theme.of(context).accentColor
+                    : null,
+              ),
+              title: Text(
+                "Home",
+                style: TextStyle(
+                  color: mode == ReturnMode.NORMAL
+                      ? Theme.of(context).accentColor
+                      : null,
+                ),
+              ),
+              onTap: () {
+                mode = ReturnMode.NORMAL;
+                Navigator.pop(context);
+              },
             ),
-          ),
-          onTap: () {
-            mode = ReturnMode.NORMAL;
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            mode == ReturnMode.ARCHIVE
-                ? Icons.archive
-                : OMIcons.archive,
-            color: mode == ReturnMode.ARCHIVE
-                ? Theme.of(context).accentColor
-                : null,
-          ),
-          title: Text(
-            "Archive",
-            style: TextStyle(
-              color: mode == ReturnMode.ARCHIVE
-                  ? Theme.of(context).accentColor
-                  : null,
+            ListTile(
+              leading: Icon(
+                mode == ReturnMode.ARCHIVE ? Icons.archive : OMIcons.archive,
+                color: mode == ReturnMode.ARCHIVE
+                    ? Theme.of(context).accentColor
+                    : null,
+              ),
+              title: Text(
+                "Archive",
+                style: TextStyle(
+                  color: mode == ReturnMode.ARCHIVE
+                      ? Theme.of(context).accentColor
+                      : null,
+                ),
+              ),
+              onTap: () {
+                mode = ReturnMode.ARCHIVE;
+                Navigator.pop(context);
+              },
             ),
-          ),
-          onTap: () {
-            mode = ReturnMode.ARCHIVE;
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            mode == ReturnMode.TRASH
-                ? Icons.delete
-                : OMIcons.delete,
-            color: mode == ReturnMode.TRASH
-                ? Theme.of(context).accentColor
-                : null,
-          ),
-          title: Text(
-            "Trash",
-            style: TextStyle(
-              color: mode == ReturnMode.TRASH
-                  ? Theme.of(context).accentColor
-                  : null,
+            ListTile(
+              leading: Icon(
+                mode == ReturnMode.TRASH ? Icons.delete : OMIcons.delete,
+                color: mode == ReturnMode.TRASH
+                    ? Theme.of(context).accentColor
+                    : null,
+              ),
+              title: Text(
+                "Trash",
+                style: TextStyle(
+                  color: mode == ReturnMode.TRASH
+                      ? Theme.of(context).accentColor
+                      : null,
+                ),
+              ),
+              onTap: () {
+                mode = ReturnMode.TRASH;
+                Navigator.pop(context);
+              },
             ),
-          ),
-          onTap: () {
-            mode = ReturnMode.TRASH;
-            Navigator.pop(context);
-          },
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
