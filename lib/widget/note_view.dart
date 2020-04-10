@@ -6,6 +6,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/note_colors.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 const double _kBorderRadius = 8.0;
@@ -52,7 +53,7 @@ class NoteView extends StatelessWidget {
           children: [
             IgnorePointer(
               child: Visibility(
-                visible: note.images.images.isNotEmpty,
+                visible: note.images.images.isNotEmpty && !note.hideContent,
                 child: NoteViewImages(
                   images: note.images.images.sublist(
                       0,
@@ -69,6 +70,7 @@ class NoteView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  NoteViewStatusbar(note: note),
                   Visibility(
                     visible: note.title != "",
                     child: Text(
@@ -87,7 +89,7 @@ class NoteView extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: note.content.trim() != "" || note.content != null,
+                    visible: (note.content.trim() != "" || note.content != null) && !note.hideContent,
                     child: note.styleJson != null
                         ? RichText(
                             text: SpannableList.fromJson(parsedStyleJson)
@@ -120,7 +122,7 @@ class NoteView extends StatelessWidget {
                           ),
                   ),
                   Visibility(
-                    visible: note.list,
+                    visible: note.list && !note.hideContent,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
