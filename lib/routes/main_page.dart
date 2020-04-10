@@ -34,7 +34,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   ReturnMode mode = ReturnMode.NORMAL;
   bool selecting = false;
-  List<int> selectionList = [];
+  List<Note> selectionList = [];
 
   @override
   void initState() {
@@ -89,11 +89,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       onTap: () {
                         if (selecting) {
                           setState(() {
-                            if (selectionList.contains(note.id)) {
-                              selectionList.remove(note.id);
+                            if (selectionList.any((item) => item.id == note.id)) {
+                              selectionList.removeWhere((item) => item.id == note.id);
                               if (selectionList.isEmpty) selecting = false;
                             } else {
-                              selectionList.add(note.id);
+                              selectionList.add(note);
                             }
                           });
                         } else {
@@ -111,10 +111,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       onLongPress: () {
                         setState(() {
                           selecting = true;
-                          selectionList.add(note.id);
+                          selectionList.add(note);
                         });
                       },
-                      selected: selectionList.contains(note.id),
+                      selected: selectionList.any((item) => item.id == note.id),
                       numOfImages: numOfImages,
                     );
 
@@ -178,6 +178,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               selecting = false;
               selectionList.clear();
             },
+            currentMode: mode,
           )
           : MainPageBar(
             controller: controller,
