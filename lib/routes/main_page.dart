@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return Scaffold(
       body: StreamBuilder<List<Note>>(
         initialData: widget.initialNotes,
-        stream: helper.noteStream(),
+        stream: helper.noteStream(ReturnMode.NORMAL),
         builder: (context, snapshot) {
           if ((snapshot.data?.length ?? 0) != 0) {
             return AnimatedBuilder(

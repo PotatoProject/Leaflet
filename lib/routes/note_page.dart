@@ -401,7 +401,7 @@ class _NotePageState extends State<NotePage> {
         List<int> styleJson =
             gzip.encode(utf8.encode(contentController.styleList.toJson()));
         Note lastNote;
-        List<Note> notes = await helper.listNotes();
+        List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
 
         if (notes.isNotEmpty) {
           lastNote = notes.last;

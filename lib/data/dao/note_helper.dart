@@ -9,14 +9,48 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   NoteHelper(this.db) : super(db);
 
-  Future<List<Note>> listNotes() => select(notes).get();
+  Future<List<Note>> listNotes(ReturnMode mode) async {
+    switch (mode) {
+      case ReturnMode.NORMAL:
+        return (select(notes)
+              ..where((table) => and(not(table.archived), not(table.deleted))))
+            .get();
+      case ReturnMode.ARCHIVE:
+        return (select(notes)
+              ..where((table) => and(table.archived, not(table.deleted))))
+            .get();
+      case ReturnMode.TRASH:
+        return (select(notes)
+              ..where((table) => and(not(table.archived), table.deleted)))
+            .get();
+    }
+  }
 
-  Stream<List<Note>> noteStream() => (select(notes)
-        ..orderBy([
-          (table) => OrderingTerm(
-              expression: table.creationDate, mode: OrderingMode.desc)
-        ]))
-      .watch();
+  Stream<List<Note>> noteStream(ReturnMode mode) {
+    SimpleSelectStatement<$NotesTable, Note> selectQuery;
+
+    switch (mode) {
+      case ReturnMode.NORMAL:
+        selectQuery = select(notes)
+          ..where((table) => and(not(table.archived), not(table.deleted)));
+        break;
+      case ReturnMode.ARCHIVE:
+        selectQuery = select(notes)
+          ..where((table) => and(table.archived, not(table.deleted)));
+        break;
+      case ReturnMode.TRASH:
+        selectQuery = select(notes)
+          ..where((table) => and(not(table.archived), table.deleted));
+        break;
+    }
+
+    return (selectQuery
+          ..orderBy([
+            (table) => OrderingTerm(
+                expression: (table).creationDate, mode: OrderingMode.desc)
+          ]))
+        .watch();
+  }
 
   Future<Note> getLastNote() async => (await (select(notes)
             ..orderBy([
@@ -29,4 +63,10 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   Future saveNote(Note note) => into(notes).insert(note, orReplace: true);
 
   Future deleteNote(Note note) => delete(notes).delete(note);
+}
+
+enum ReturnMode {
+  NORMAL,
+  ARCHIVE,
+  TRASH,
 }

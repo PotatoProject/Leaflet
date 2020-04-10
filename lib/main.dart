@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
@@ -11,7 +12,7 @@ List<Note> initialNotes = [];
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initialNotes = await AppDatabase().noteHelper.listNotes();
+  initialNotes = await AppDatabase().noteHelper.listNotes(ReturnMode.NORMAL);
   runApp(PotatoNotes());
 }
 
