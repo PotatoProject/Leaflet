@@ -44,7 +44,25 @@ class SelectionBar extends StatelessWidget {
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL) {
+      bool anyNotStarred = selectionList.any((item) => !item.starred);
+
       buttons.addAll([
+        IconButton(
+          icon: Icon(
+            anyNotStarred ? Icons.star : Icons.star_border
+          ),
+          padding: EdgeInsets.all(0),
+          onPressed: () async {
+            for (int i = 0; i < selectionList.length; i++) {
+              if(anyNotStarred)
+                await helper.saveNote(selectionList[i].copyWith(starred: true));
+              else
+                await helper.saveNote(selectionList[i].copyWith(starred: false));
+            }
+
+            onCloseSelection();
+          },
+        ),
         IconButton(
           icon: Icon(OMIcons.colorLens),
           padding: EdgeInsets.all(0),
@@ -80,7 +98,7 @@ class SelectionBar extends StatelessWidget {
               onCloseSelection();
             }
           },
-        )
+        ),
       ]);
     }
 

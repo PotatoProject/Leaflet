@@ -89,8 +89,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       onTap: () {
                         if (selecting) {
                           setState(() {
-                            if (selectionList.any((item) => item.id == note.id)) {
-                              selectionList.removeWhere((item) => item.id == note.id);
+                            if (selectionList
+                                .any((item) => item.id == note.id)) {
+                              selectionList
+                                  .removeWhere((item) => item.id == note.id);
                               if (selectionList.isEmpty) selecting = false;
                             } else {
                               selectionList.add(note);
@@ -118,9 +120,94 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       numOfImages: numOfImages,
                     );
 
+                List<Note> starredNotes =
+                    snapshot.data.where((note) => note.starred).toList();
+                List<Note> normalNotes =
+                    snapshot.data.where((note) => !note.starred).toList();
+
                 return Opacity(
                   opacity: controller.value,
-                  child: prefs.useGrid
+                  child: ListView(
+                    children: [
+                      Visibility(
+                          visible: starredNotes.isNotEmpty,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                child: Text(
+                                  "Starred notes",
+                                  style: TextStyle(
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                              ),
+                              prefs.useGrid
+                                  ? StaggeredGridView.countBuilder(
+                                      crossAxisCount: numOfColumns,
+                                      itemBuilder: (context, index) =>
+                                          commonNote(starredNotes[index]),
+                                      staggeredTileBuilder: (index) =>
+                                          StaggeredTile.fit(1),
+                                      itemCount: starredNotes.length,
+                                      padding: EdgeInsets.all(0),
+                                      shrinkWrap: true,
+                                      primary: false,
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) =>
+                                          commonNote(starredNotes[index]),
+                                      itemCount: starredNotes.length,
+                                      padding: EdgeInsets.all(0),
+                                      shrinkWrap: true,
+                                      primary: false,
+                                    ),
+                            ],
+                          )),
+                      Visibility(
+                        visible: starredNotes.isNotEmpty && normalNotes.isNotEmpty,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Text(
+                            "Normal notes",
+                            style: TextStyle(
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                        ),
+                      ),
+                      prefs.useGrid
+                          ? StaggeredGridView.countBuilder(
+                              crossAxisCount: numOfColumns,
+                              itemBuilder: (context, index) =>
+                                  commonNote(normalNotes[index]),
+                              staggeredTileBuilder: (index) =>
+                                  StaggeredTile.fit(1),
+                              itemCount: normalNotes.length,
+                              padding: EdgeInsets.all(0),
+                              shrinkWrap: true,
+                              primary: false,
+                            )
+                          : ListView.builder(
+                              itemBuilder: (context, index) =>
+                                  commonNote(normalNotes[index]),
+                              itemCount: normalNotes.length,
+                              padding: EdgeInsets.all(0),
+                              shrinkWrap: true,
+                              primary: false,
+                            ),
+                    ],
+                    padding: EdgeInsets.fromLTRB(
+                      4,
+                      4 + MediaQuery.of(context).padding.top,
+                      4,
+                      4.0 + 56,
+                    ),
+                  ),
+                  /*child: prefs.useGrid
                       ? StaggeredGridView.countBuilder(
                           crossAxisCount: numOfColumns,
                           itemBuilder: (context, index) =>
@@ -144,7 +231,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                             4,
                             4.0 + 56,
                           ),
-                        ),
+                        ),*/
                 );
               },
             );
@@ -173,18 +260,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       extendBody: true,
       bottomNavigationBar: selecting
           ? SelectionBar(
-            selectionList: selectionList,
-            onCloseSelection: () {
-              selecting = false;
-              selectionList.clear();
-            },
-            currentMode: mode,
-          )
+              selectionList: selectionList,
+              onCloseSelection: () {
+                selecting = false;
+                selectionList.clear();
+              },
+              currentMode: mode,
+            )
           : MainPageBar(
-            controller: controller,
-            currentMode: mode,
-            onReturnModeChange: (newMode) => mode = newMode,
-          ),
+              controller: controller,
+              currentMode: mode,
+              onReturnModeChange: (newMode) => mode = newMode,
+            ),
       floatingActionButton:
           mode == ReturnMode.NORMAL && !selecting ? fab : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
