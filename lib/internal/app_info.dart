@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/system_bar_manager.dart';
 import 'package:streams_channel/streams_channel.dart';
@@ -26,6 +27,9 @@ class AppInfoProvider extends ChangeNotifier {
   StreamSubscription<dynamic> themeSubscription;
   Illustrations illustrations;
   SystemBarManager barManager;
+  bool canCheckBiometrics;
+  List<BiometricType> availableBiometrics;
+
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
@@ -64,5 +68,7 @@ class AppInfoProvider extends ChangeNotifier {
         accentStreamChannel.receiveBroadcastStream().listen((data) {
       mainColor = Color(data);
     });
+    canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
+    availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
   }
 }

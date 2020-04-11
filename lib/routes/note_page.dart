@@ -5,6 +5,8 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -14,6 +16,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
@@ -38,6 +41,8 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   Note note;
   NoteHelper helper;
+  AppInfoProvider appInfo;
+  Preferences prefs;
 
   bool keyboardVisible = false;
 
@@ -119,7 +124,8 @@ class _NotePageState extends State<NotePage> {
       generateId();
     }
 
-    final appInfo = Provider.of<AppInfoProvider>(context);
+    if (prefs == null) prefs = Provider.of<Preferences>(context);
+    if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
 
     if (note.color != 0) {
       appInfo.barManager.darkNavBarColor =
@@ -482,20 +488,41 @@ class _NotePageState extends State<NotePage> {
             ),
             SwitchListTile(
               value: note.lockNote,
-              onChanged: (value) =>
-                  note = note.copyWith(lockNote: !note.lockNote),
+              onChanged: prefs.passType != PassType.NONE
+                  ? (value) => note = note.copyWith(lockNote: !note.lockNote)
+                  : null,
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.lock),
               title: Text("Lock note"),
-            ),
-            SwitchListTile(
-              value: note.usesBiometrics,
-              onChanged: note.lockNote
-                  ? (value) => note = note.copyWith(usesBiometrics: !note.usesBiometrics)
+              subtitle: prefs.passType == PassType.NONE
+                  ? Text(
+                      "You must set a master pin or password from settings",
+                      style: TextStyle(color: Colors.red),
+                    )
                   : null,
-              activeColor: Theme.of(context).accentColor,
-              secondary: Icon(OMIcons.fingerprint),
-              title: Text("Use biometrics to unlock"),
+            ),
+            Visibility(
+              visible: appInfo.canCheckBiometrics,
+              child: SwitchListTile(
+                value: note.usesBiometrics,
+                onChanged: note.lockNote
+                    ? (value) async {
+                      if(value) {
+                        bool enable = await LocalAuthentication().authenticateWithBiometrics(
+                          localizedReason: "",
+                          androidAuthStrings: AndroidAuthMessages(
+                            fingerprintHint: "Confirm fingerprint"
+                          ),
+                          useErrorDialogs: false,
+                        );
+                        note = note.copyWith(usesBiometrics: enable);
+                      } else note = note.copyWith(usesBiometrics: false);
+                    }
+                    : null,
+                activeColor: Theme.of(context).accentColor,
+                secondary: Icon(OMIcons.fingerprint),
+                title: Text("Use biometrics to unlock"),
+              ),
             ),
           ],
         ),

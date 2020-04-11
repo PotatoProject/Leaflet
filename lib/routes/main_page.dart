@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -86,7 +88,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               builder: (context, child) {
                 Widget commonNote(Note note) => NoteView(
                       note: note,
-                      onTap: () {
+                      onTap: () async {
                         if (selecting) {
                           setState(() {
                             if (selectionList
@@ -99,15 +101,30 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                             }
                           });
                         } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NotePage(
-                                note: note,
-                                numOfImages: numOfImages,
+                          bool status = false;
+                          if(note.usesBiometrics) {
+                            status = await LocalAuthentication().authenticateWithBiometrics(
+                              localizedReason: "",
+                              androidAuthStrings: AndroidAuthMessages(
+                                signInTitle: "Scan fingerprint to open note",
+                                fingerprintHint: "",
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            status = true;
+                          }
+
+                          if(status) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NotePage(
+                                  note: note,
+                                  numOfImages: numOfImages,
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       onLongPress: () {

@@ -28,6 +28,7 @@ dependencies:
   back_button_interceptor:
   flutter_svg:
   shared_preferences:
+  local_auth:
   
   rich_text_editor:
     git:

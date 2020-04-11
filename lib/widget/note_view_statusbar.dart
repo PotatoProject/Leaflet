@@ -37,6 +37,17 @@ class NoteViewStatusbar extends StatelessWidget {
   }
 
   List<Widget> getIcons(BuildContext context) {
+    List<MapEntry<String, IconData>> iconData = [
+      MapEntry<String, IconData>(
+          "Content hidden", CommunityMaterialIcons.eye_off_outline),
+      MapEntry<String, IconData>(
+          "Note locked", note.usesBiometrics
+              ? CommunityMaterialIcons.fingerprint
+              : CommunityMaterialIcons.lock_outline),
+      MapEntry<String, IconData>("Reminders set", CommunityMaterialIcons.alarm),
+      MapEntry<String, IconData>("Synced", CommunityMaterialIcons.sync_icon),
+    ];
+
     List<int> iconDataIndexes = [];
     List<Widget> icons = [];
 
@@ -77,12 +88,3 @@ class NoteViewStatusbar extends StatelessWidget {
     return icons;
   }
 }
-
-List<MapEntry<String, IconData>> get iconData => [
-      MapEntry<String, IconData>(
-          "Content hidden", CommunityMaterialIcons.eye_off_outline),
-      MapEntry<String, IconData>(
-          "Content locked", CommunityMaterialIcons.lock_outline),
-      MapEntry<String, IconData>("Reminders set", CommunityMaterialIcons.alarm),
-      MapEntry<String, IconData>("Synced", CommunityMaterialIcons.sync_icon),
-    ];
