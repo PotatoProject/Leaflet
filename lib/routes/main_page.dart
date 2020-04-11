@@ -9,6 +9,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -103,13 +104,19 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         } else {
                           bool status = false;
                           if(note.lockNote && note.usesBiometrics) {
-                            status = await LocalAuthentication().authenticateWithBiometrics(
+                            bool bioAuth = await LocalAuthentication().authenticateWithBiometrics(
                               localizedReason: "",
                               androidAuthStrings: AndroidAuthMessages(
                                 signInTitle: "Scan fingerprint to open note",
                                 fingerprintHint: "",
                               ),
                             );
+
+                            if(bioAuth)
+                              status = bioAuth;
+                            else status = await Utils.showPassChallengeSheet(context, prefs.passType) ?? false;
+                          } else if(note.lockNote && !note.usesBiometrics) {
+                            status = await Utils.showPassChallengeSheet(context, prefs.passType) ?? false;
                           } else {
                             status = true;
                           }

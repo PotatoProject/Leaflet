@@ -17,6 +17,7 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_colors.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
@@ -489,7 +490,14 @@ class _NotePageState extends State<NotePage> {
             SwitchListTile(
               value: note.lockNote,
               onChanged: prefs.passType != PassType.NONE
-                  ? (value) => note = note.copyWith(lockNote: !note.lockNote)
+                  ? (value) async {
+                      bool confirm = await Utils.showPassChallengeSheet(
+                              context, prefs.passType) ??
+                          false;
+
+                      if (confirm)
+                        note = note.copyWith(lockNote: !note.lockNote);
+                    }
                   : null,
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.lock),
@@ -507,17 +515,16 @@ class _NotePageState extends State<NotePage> {
                 value: note.usesBiometrics,
                 onChanged: note.lockNote
                     ? (value) async {
-                      if(value) {
-                        bool enable = await LocalAuthentication().authenticateWithBiometrics(
+                        bool confirm = await LocalAuthentication()
+                            .authenticateWithBiometrics(
                           localizedReason: "",
                           androidAuthStrings: AndroidAuthMessages(
-                            fingerprintHint: "Confirm fingerprint"
-                          ),
-                          useErrorDialogs: false,
+                              fingerprintHint: "Confirm fingerprint"),
                         );
-                        note = note.copyWith(usesBiometrics: enable);
-                      } else note = note.copyWith(usesBiometrics: false);
-                    }
+
+                        if(confirm)
+                          note = note.copyWith(usesBiometrics: value);
+                      }
                     : null,
                 activeColor: Theme.of(context).accentColor,
                 secondary: Icon(OMIcons.fingerprint),
