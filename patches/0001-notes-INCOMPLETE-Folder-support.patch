@@ -1,0 +1,835 @@
+From ef8017d3af2c7eb955e34ee991d97018ad72bebd Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Sat, 11 Apr 2020 22:20:40 +0200
+Subject: [PATCH 1/1] notes: [INCOMPLETE] Folder support
+
+---
+ lib/data/dao/folder_helper.dart   |  19 +++
+ lib/data/dao/folder_helper.g.dart |  11 ++
+ lib/data/dao/note_helper.dart     |   7 +
+ lib/data/database.dart            |  12 +-
+ lib/data/database.g.dart          | 254 ++++++++++++++++++++++++++++--
+ lib/main.dart                     |   3 +
+ lib/routes/folder_manager.dart    |  69 ++++++++
+ lib/routes/main_page.dart         |  27 +---
+ lib/routes/note_page.dart         |  17 ++
+ lib/widget/folder_selector.dart   |  68 ++++++++
+ lib/widget/main_page_bar.dart     |   7 +
+ lib/widget/new_folder.dart        |   0
+ 12 files changed, 457 insertions(+), 37 deletions(-)
+ create mode 100644 lib/data/dao/folder_helper.dart
+ create mode 100644 lib/data/dao/folder_helper.g.dart
+ create mode 100644 lib/routes/folder_manager.dart
+ create mode 100644 lib/widget/folder_selector.dart
+ create mode 100644 lib/widget/new_folder.dart
+
+diff --git a/lib/data/dao/folder_helper.dart b/lib/data/dao/folder_helper.dart
+new file mode 100644
+index 0000000..66dba96
+--- /dev/null
++++ b/lib/data/dao/folder_helper.dart
+@@ -0,0 +1,19 @@
++import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/database.dart';
++
++part 'folder_helper.g.dart';
++
++@UseDao(tables: [Folders])
++class FolderHelper extends DatabaseAccessor<AppDatabase> with _$FolderHelperMixin {
++  final AppDatabase db;
++
++  FolderHelper(this.db) : super(db);
++
++  Future<List<Folder>> listFolders() async => select(folders).get();
++
++  Stream<List<Folder>> folderStream() => select(folders).watch();
++
++  Future saveFolder(Folder folder) => into(folders).insert(folder, orReplace: true);
++
++  Future deleteFolder(Folder folder) => delete(folders).delete(folder);
++}
+\ No newline at end of file
+diff --git a/lib/data/dao/folder_helper.g.dart b/lib/data/dao/folder_helper.g.dart
+new file mode 100644
+index 0000000..f04dc5e
+--- /dev/null
++++ b/lib/data/dao/folder_helper.g.dart
+@@ -0,0 +1,11 @@
++// GENERATED CODE - DO NOT MODIFY BY HAND
++
++part of 'folder_helper.dart';
++
++// **************************************************************************
++// DaoGenerator
++// **************************************************************************
++
++mixin _$FolderHelperMixin on DatabaseAccessor<AppDatabase> {
++  $FoldersTable get folders => db.folders;
++}
+diff --git a/lib/data/dao/note_helper.dart b/lib/data/dao/note_helper.dart
+index 87342db..cd40aa2 100644
+--- a/lib/data/dao/note_helper.dart
++++ b/lib/data/dao/note_helper.dart
+@@ -29,6 +29,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
+     }
+   }
+ 
++  Future<List<Note>> getNotesForFolder(int folderId) async {
++    SimpleSelectStatement<$NotesTable, Note> selectQuery =
++        select(notes)..where((table) => table.id.equals(folderId));
++
++    return selectQuery.get();
++  }
++
+   Stream<List<Note>> noteStream(ReturnMode mode) {
+     SimpleSelectStatement<$NotesTable, Note> selectQuery;
+ 
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index a6bbf07..2f8b9fc 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -1,4 +1,5 @@
+ import 'package:moor_flutter/moor_flutter.dart';
++import 'package:potato_notes/data/dao/folder_helper.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+ import 'package:potato_notes/data/model/image_list.dart';
+@@ -7,6 +8,12 @@ import 'package:potato_notes/data/model/reminder_list.dart';
+ 
+ part 'database.g.dart';
+ 
++class Folders extends Table {
++  IntColumn get id => integer().autoIncrement()();
++  TextColumn get title => text()();
++  IntColumn get color => integer()();
++}
++
+ class Notes extends Table {
+   IntColumn get id => integer()();
+   TextColumn get title => text().nullable()();
+@@ -22,6 +29,7 @@ class Notes extends Table {
+   BoolColumn get list => boolean().withDefault(Constant(false))();
+   TextColumn get listContent => text().map(const ListContentConverter())();
+   TextColumn get reminders => text().map(const ReminderListConverter())();
++  IntColumn get folderId => integer().nullable()();
+   BoolColumn get hideContent => boolean().withDefault(Constant(false))();
+   BoolColumn get lockNote => boolean().withDefault(Constant(false))();
+   BoolColumn get usesBiometrics => boolean().withDefault(Constant(false))();
+@@ -33,11 +41,11 @@ class Notes extends Table {
+   Set<Column> get primaryKey => {id, synced};
+ }
+ 
+-@UseMoor(tables: [Notes], daos: [NoteHelper])
++@UseMoor(tables: [Notes, Folders], daos: [NoteHelper, FolderHelper])
+ class AppDatabase extends _$AppDatabase {
+   AppDatabase()
+       : super((FlutterQueryExecutor.inDatabaseFolder(
+-          path: 'notes_database.db',
++          path: 'db.sqlite',
+           logStatements: false,
+         )));
+ 
+diff --git a/lib/data/database.g.dart b/lib/data/database.g.dart
+index cd8b50b..e9de1f9 100644
+--- a/lib/data/database.g.dart
++++ b/lib/data/database.g.dart
+@@ -20,6 +20,7 @@ class Note extends DataClass implements Insertable<Note> {
+   final bool list;
+   final ListContent listContent;
+   final ReminderList reminders;
++  final int folderId;
+   final bool hideContent;
+   final bool lockNote;
+   final bool usesBiometrics;
+@@ -39,6 +40,7 @@ class Note extends DataClass implements Insertable<Note> {
+       @required this.list,
+       @required this.listContent,
+       @required this.reminders,
++      this.folderId,
+       @required this.hideContent,
+       @required this.lockNote,
+       @required this.usesBiometrics,
+@@ -74,6 +76,8 @@ class Note extends DataClass implements Insertable<Note> {
+           .mapFromDatabaseResponse(data['${effectivePrefix}list_content'])),
+       reminders: $NotesTable.$converter3.mapToDart(stringType
+           .mapFromDatabaseResponse(data['${effectivePrefix}reminders'])),
++      folderId:
++          intType.mapFromDatabaseResponse(data['${effectivePrefix}folder_id']),
+       hideContent: boolType
+           .mapFromDatabaseResponse(data['${effectivePrefix}hide_content']),
+       lockNote:
+@@ -103,6 +107,7 @@ class Note extends DataClass implements Insertable<Note> {
+       list: serializer.fromJson<bool>(json['list']),
+       listContent: serializer.fromJson<ListContent>(json['listContent']),
+       reminders: serializer.fromJson<ReminderList>(json['reminders']),
++      folderId: serializer.fromJson<int>(json['folderId']),
+       hideContent: serializer.fromJson<bool>(json['hideContent']),
+       lockNote: serializer.fromJson<bool>(json['lockNote']),
+       usesBiometrics: serializer.fromJson<bool>(json['usesBiometrics']),
+@@ -127,6 +132,7 @@ class Note extends DataClass implements Insertable<Note> {
+       'list': serializer.toJson<bool>(list),
+       'listContent': serializer.toJson<ListContent>(listContent),
+       'reminders': serializer.toJson<ReminderList>(reminders),
++      'folderId': serializer.toJson<int>(folderId),
+       'hideContent': serializer.toJson<bool>(hideContent),
+       'lockNote': serializer.toJson<bool>(lockNote),
+       'usesBiometrics': serializer.toJson<bool>(usesBiometrics),
+@@ -168,6 +174,9 @@ class Note extends DataClass implements Insertable<Note> {
+       reminders: reminders == null && nullToAbsent
+           ? const Value.absent()
+           : Value(reminders),
++      folderId: folderId == null && nullToAbsent
++          ? const Value.absent()
++          : Value(folderId),
+       hideContent: hideContent == null && nullToAbsent
+           ? const Value.absent()
+           : Value(hideContent),
+@@ -201,6 +210,7 @@ class Note extends DataClass implements Insertable<Note> {
+           bool list,
+           ListContent listContent,
+           ReminderList reminders,
++          int folderId,
+           bool hideContent,
+           bool lockNote,
+           bool usesBiometrics,
+@@ -220,6 +230,7 @@ class Note extends DataClass implements Insertable<Note> {
+         list: list ?? this.list,
+         listContent: listContent ?? this.listContent,
+         reminders: reminders ?? this.reminders,
++        folderId: folderId ?? this.folderId,
+         hideContent: hideContent ?? this.hideContent,
+         lockNote: lockNote ?? this.lockNote,
+         usesBiometrics: usesBiometrics ?? this.usesBiometrics,
+@@ -242,6 +253,7 @@ class Note extends DataClass implements Insertable<Note> {
+           ..write('list: $list, ')
+           ..write('listContent: $listContent, ')
+           ..write('reminders: $reminders, ')
++          ..write('folderId: $folderId, ')
+           ..write('hideContent: $hideContent, ')
+           ..write('lockNote: $lockNote, ')
+           ..write('usesBiometrics: $usesBiometrics, ')
+@@ -278,20 +290,22 @@ class Note extends DataClass implements Insertable<Note> {
+                                               $mrjc(
+                                                   reminders.hashCode,
+                                                   $mrjc(
+-                                                      hideContent.hashCode,
++                                                      folderId.hashCode,
+                                                       $mrjc(
+-                                                          lockNote.hashCode,
++                                                          hideContent.hashCode,
+                                                           $mrjc(
+-                                                              usesBiometrics
+-                                                                  .hashCode,
++                                                              lockNote.hashCode,
+                                                               $mrjc(
+-                                                                  deleted
++                                                                  usesBiometrics
+                                                                       .hashCode,
+                                                                   $mrjc(
+-                                                                      archived
++                                                                      deleted
+                                                                           .hashCode,
+-                                                                      synced
+-                                                                          .hashCode))))))))))))))))));
++                                                                      $mrjc(
++                                                                          archived
++                                                                              .hashCode,
++                                                                          synced
++                                                                              .hashCode)))))))))))))))))));
+   @override
+   bool operator ==(other) =>
+       identical(this, other) ||
+@@ -308,6 +322,7 @@ class Note extends DataClass implements Insertable<Note> {
+           other.list == list &&
+           other.listContent == listContent &&
+           other.reminders == reminders &&
++          other.folderId == folderId &&
+           other.hideContent == hideContent &&
+           other.lockNote == lockNote &&
+           other.usesBiometrics == usesBiometrics &&
+@@ -329,6 +344,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+   final Value<bool> list;
+   final Value<ListContent> listContent;
+   final Value<ReminderList> reminders;
++  final Value<int> folderId;
+   final Value<bool> hideContent;
+   final Value<bool> lockNote;
+   final Value<bool> usesBiometrics;
+@@ -348,6 +364,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+     this.list = const Value.absent(),
+     this.listContent = const Value.absent(),
+     this.reminders = const Value.absent(),
++    this.folderId = const Value.absent(),
+     this.hideContent = const Value.absent(),
+     this.lockNote = const Value.absent(),
+     this.usesBiometrics = const Value.absent(),
+@@ -368,6 +385,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+       Value<bool> list,
+       Value<ListContent> listContent,
+       Value<ReminderList> reminders,
++      Value<int> folderId,
+       Value<bool> hideContent,
+       Value<bool> lockNote,
+       Value<bool> usesBiometrics,
+@@ -387,6 +405,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
+       list: list ?? this.list,
+       listContent: listContent ?? this.listContent,
+       reminders: reminders ?? this.reminders,
++      folderId: folderId ?? this.folderId,
+       hideContent: hideContent ?? this.hideContent,
+       lockNote: lockNote ?? this.lockNote,
+       usesBiometrics: usesBiometrics ?? this.usesBiometrics,
+@@ -532,6 +551,18 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+     );
+   }
+ 
++  final VerificationMeta _folderIdMeta = const VerificationMeta('folderId');
++  GeneratedIntColumn _folderId;
++  @override
++  GeneratedIntColumn get folderId => _folderId ??= _constructFolderId();
++  GeneratedIntColumn _constructFolderId() {
++    return GeneratedIntColumn(
++      'folder_id',
++      $tableName,
++      true,
++    );
++  }
++
+   final VerificationMeta _hideContentMeta =
+       const VerificationMeta('hideContent');
+   GeneratedBoolColumn _hideContent;
+@@ -604,6 +635,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+         list,
+         listContent,
+         reminders,
++        folderId,
+         hideContent,
+         lockNote,
+         usesBiometrics,
+@@ -676,6 +708,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+     }
+     context.handle(_listContentMeta, const VerificationResult.success());
+     context.handle(_remindersMeta, const VerificationResult.success());
++    if (d.folderId.present) {
++      context.handle(_folderIdMeta,
++          folderId.isAcceptableValue(d.folderId.value, _folderIdMeta));
++    } else if (folderId.isRequired && isInserting) {
++      context.missing(_folderIdMeta);
++    }
+     if (d.hideContent.present) {
+       context.handle(_hideContentMeta,
+           hideContent.isAcceptableValue(d.hideContent.value, _hideContentMeta));
+@@ -774,6 +812,9 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+       map['reminders'] =
+           Variable<String, StringType>(converter.mapToSql(d.reminders.value));
+     }
++    if (d.folderId.present) {
++      map['folder_id'] = Variable<int, IntType>(d.folderId.value);
++    }
+     if (d.hideContent.present) {
+       map['hide_content'] = Variable<bool, BoolType>(d.hideContent.value);
+     }
+@@ -806,12 +847,207 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
+   static ReminderListConverter $converter3 = const ReminderListConverter();
+ }
+ 
++class Folder extends DataClass implements Insertable<Folder> {
++  final int id;
++  final String title;
++  final int color;
++  Folder({@required this.id, @required this.title, @required this.color});
++  factory Folder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
++      {String prefix}) {
++    final effectivePrefix = prefix ?? '';
++    final intType = db.typeSystem.forDartType<int>();
++    final stringType = db.typeSystem.forDartType<String>();
++    return Folder(
++      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
++      title:
++          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
++      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color']),
++    );
++  }
++  factory Folder.fromJson(Map<String, dynamic> json,
++      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
++    return Folder(
++      id: serializer.fromJson<int>(json['id']),
++      title: serializer.fromJson<String>(json['title']),
++      color: serializer.fromJson<int>(json['color']),
++    );
++  }
++  @override
++  Map<String, dynamic> toJson(
++      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
++    return {
++      'id': serializer.toJson<int>(id),
++      'title': serializer.toJson<String>(title),
++      'color': serializer.toJson<int>(color),
++    };
++  }
++
++  @override
++  T createCompanion<T extends UpdateCompanion<Folder>>(bool nullToAbsent) {
++    return FoldersCompanion(
++      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
++      title:
++          title == null && nullToAbsent ? const Value.absent() : Value(title),
++      color:
++          color == null && nullToAbsent ? const Value.absent() : Value(color),
++    ) as T;
++  }
++
++  Folder copyWith({int id, String title, int color}) => Folder(
++        id: id ?? this.id,
++        title: title ?? this.title,
++        color: color ?? this.color,
++      );
++  @override
++  String toString() {
++    return (StringBuffer('Folder(')
++          ..write('id: $id, ')
++          ..write('title: $title, ')
++          ..write('color: $color')
++          ..write(')'))
++        .toString();
++  }
++
++  @override
++  int get hashCode =>
++      $mrjf($mrjc(id.hashCode, $mrjc(title.hashCode, color.hashCode)));
++  @override
++  bool operator ==(other) =>
++      identical(this, other) ||
++      (other is Folder &&
++          other.id == id &&
++          other.title == title &&
++          other.color == color);
++}
++
++class FoldersCompanion extends UpdateCompanion<Folder> {
++  final Value<int> id;
++  final Value<String> title;
++  final Value<int> color;
++  const FoldersCompanion({
++    this.id = const Value.absent(),
++    this.title = const Value.absent(),
++    this.color = const Value.absent(),
++  });
++  FoldersCompanion copyWith(
++      {Value<int> id, Value<String> title, Value<int> color}) {
++    return FoldersCompanion(
++      id: id ?? this.id,
++      title: title ?? this.title,
++      color: color ?? this.color,
++    );
++  }
++}
++
++class $FoldersTable extends Folders with TableInfo<$FoldersTable, Folder> {
++  final GeneratedDatabase _db;
++  final String _alias;
++  $FoldersTable(this._db, [this._alias]);
++  final VerificationMeta _idMeta = const VerificationMeta('id');
++  GeneratedIntColumn _id;
++  @override
++  GeneratedIntColumn get id => _id ??= _constructId();
++  GeneratedIntColumn _constructId() {
++    return GeneratedIntColumn('id', $tableName, false,
++        hasAutoIncrement: true, declaredAsPrimaryKey: true);
++  }
++
++  final VerificationMeta _titleMeta = const VerificationMeta('title');
++  GeneratedTextColumn _title;
++  @override
++  GeneratedTextColumn get title => _title ??= _constructTitle();
++  GeneratedTextColumn _constructTitle() {
++    return GeneratedTextColumn(
++      'title',
++      $tableName,
++      false,
++    );
++  }
++
++  final VerificationMeta _colorMeta = const VerificationMeta('color');
++  GeneratedIntColumn _color;
++  @override
++  GeneratedIntColumn get color => _color ??= _constructColor();
++  GeneratedIntColumn _constructColor() {
++    return GeneratedIntColumn(
++      'color',
++      $tableName,
++      false,
++    );
++  }
++
++  @override
++  List<GeneratedColumn> get $columns => [id, title, color];
++  @override
++  $FoldersTable get asDslTable => this;
++  @override
++  String get $tableName => _alias ?? 'folders';
++  @override
++  final String actualTableName = 'folders';
++  @override
++  VerificationContext validateIntegrity(FoldersCompanion d,
++      {bool isInserting = false}) {
++    final context = VerificationContext();
++    if (d.id.present) {
++      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
++    } else if (id.isRequired && isInserting) {
++      context.missing(_idMeta);
++    }
++    if (d.title.present) {
++      context.handle(
++          _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
++    } else if (title.isRequired && isInserting) {
++      context.missing(_titleMeta);
++    }
++    if (d.color.present) {
++      context.handle(
++          _colorMeta, color.isAcceptableValue(d.color.value, _colorMeta));
++    } else if (color.isRequired && isInserting) {
++      context.missing(_colorMeta);
++    }
++    return context;
++  }
++
++  @override
++  Set<GeneratedColumn> get $primaryKey => {id};
++  @override
++  Folder map(Map<String, dynamic> data, {String tablePrefix}) {
++    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
++    return Folder.fromData(data, _db, prefix: effectivePrefix);
++  }
++
++  @override
++  Map<String, Variable> entityToSql(FoldersCompanion d) {
++    final map = <String, Variable>{};
++    if (d.id.present) {
++      map['id'] = Variable<int, IntType>(d.id.value);
++    }
++    if (d.title.present) {
++      map['title'] = Variable<String, StringType>(d.title.value);
++    }
++    if (d.color.present) {
++      map['color'] = Variable<int, IntType>(d.color.value);
++    }
++    return map;
++  }
++
++  @override
++  $FoldersTable createAlias(String alias) {
++    return $FoldersTable(_db, alias);
++  }
++}
++
+ abstract class _$AppDatabase extends GeneratedDatabase {
+   _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
+   $NotesTable _notes;
+   $NotesTable get notes => _notes ??= $NotesTable(this);
++  $FoldersTable _folders;
++  $FoldersTable get folders => _folders ??= $FoldersTable(this);
+   NoteHelper _noteHelper;
+   NoteHelper get noteHelper => _noteHelper ??= NoteHelper(this as AppDatabase);
++  FolderHelper _folderHelper;
++  FolderHelper get folderHelper =>
++      _folderHelper ??= FolderHelper(this as AppDatabase);
+   @override
+-  List<TableInfo> get allTables => [notes];
++  List<TableInfo> get allTables => [notes, folders];
+ }
+diff --git a/lib/main.dart b/lib/main.dart
+index f2387a0..b81d267 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -27,6 +27,9 @@ class PotatoNotes extends StatelessWidget {
+         Provider.value(
+           value: AppDatabase().noteHelper,
+         ),
++        Provider.value(
++          value: AppDatabase().folderHelper,
++        ),
+         ChangeNotifierProvider.value(
+           value: AppInfoProvider(context),
+         ),
+diff --git a/lib/routes/folder_manager.dart b/lib/routes/folder_manager.dart
+new file mode 100644
+index 0000000..1c8e94b
+--- /dev/null
++++ b/lib/routes/folder_manager.dart
+@@ -0,0 +1,69 @@
++import 'package:flutter/material.dart';
++import 'package:outline_material_icons/outline_material_icons.dart';
++import 'package:potato_notes/data/dao/folder_helper.dart';
++import 'package:potato_notes/data/database.dart';
++import 'package:provider/provider.dart';
++import 'package:spicy_components/spicy_components.dart';
++
++class FolderManager extends StatefulWidget {
++  @override
++  _FolderManagerState createState() => _FolderManagerState();
++}
++
++class _FolderManagerState extends State<FolderManager> {
++  FolderHelper helper;
++  @override
++  Widget build(BuildContext context) {
++    if (helper == null) helper = Provider.of<FolderHelper>(context);
++
++    return Scaffold(
++      body: StreamBuilder<List<Folder>>(
++        stream: helper.folderStream(),
++        builder: (context, snapshot) {
++          if (snapshot.data?.isNotEmpty ?? false) {
++            return ListView.builder(
++              itemBuilder: (context, index) => ListTile(
++                leading: Icon(OMIcons.folder),
++              ),
++              itemCount: snapshot.data.length,
++            );
++          } else
++            return Center(
++              child: Text(
++                "No folders added yet",
++                style: TextStyle(
++                  fontSize: 18,
++                  fontWeight: FontWeight.w500,
++                  color: Theme.of(context).iconTheme.color,
++                ),
++              ),
++            );
++        },
++      ),
++      bottomNavigationBar: SpicyBottomBar(
++        leftItems: [
++          IconButton(
++            icon: Icon(Icons.arrow_back),
++            padding: EdgeInsets.all(0),
++            onPressed: () => Navigator.pop(context),
++          ),
++          Text(
++            'Folder manager',
++            style: TextStyle(
++              fontSize: 18,
++              fontWeight: FontWeight.w500,
++              color: Theme.of(context).iconTheme.color,
++            ),
++          ),
++        ],
++        rightItems: [
++          IconButton(
++            icon: Icon(OMIcons.add),
++            padding: EdgeInsets.all(0),
++            onPressed: () => Navigator.pop(context),
++          ),
++        ],
++      ),
++    );
++  }
++}
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index 9236551..e03a791 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -231,31 +231,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+                       4.0 + 56,
+                     ),
+                   ),
+-                  /*child: prefs.useGrid
+-                      ? StaggeredGridView.countBuilder(
+-                          crossAxisCount: numOfColumns,
+-                          itemBuilder: (context, index) =>
+-                              commonNote(snapshot.data[index]),
+-                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+-                          itemCount: snapshot.data.length,
+-                          padding: EdgeInsets.fromLTRB(
+-                            4,
+-                            4 + MediaQuery.of(context).padding.top,
+-                            4,
+-                            4.0 + 56,
+-                          ),
+-                        )
+-                      : ListView.builder(
+-                          itemBuilder: (context, index) =>
+-                              commonNote(snapshot.data[index]),
+-                          itemCount: snapshot.data.length,
+-                          padding: EdgeInsets.fromLTRB(
+-                            4,
+-                            4 + MediaQuery.of(context).padding.top,
+-                            4,
+-                            4.0 + 56,
+-                          ),
+-                        ),*/
+                 );
+               },
+             );
+@@ -275,7 +250,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+                       fontWeight: FontWeight.w500,
+                       color: Theme.of(context).iconTheme.color,
+                     ),
+-                  )
++                  ),
+                 ],
+               ),
+             );
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index 89fc928..a445704 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
+ import 'package:local_auth/auth_strings.dart';
+ import 'package:local_auth/local_auth.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
++import 'package:potato_notes/data/dao/folder_helper.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/content_style.dart';
+@@ -19,6 +20,7 @@ import 'package:potato_notes/internal/note_colors.dart';
+ import 'package:potato_notes/internal/preferences.dart';
+ import 'package:potato_notes/internal/utils.dart';
+ import 'package:potato_notes/routes/note_page_image_gallery.dart';
++import 'package:potato_notes/widget/folder_selector.dart';
+ import 'package:potato_notes/widget/note_color_selector.dart';
+ import 'package:potato_notes/widget/note_toolbar.dart';
+ import 'package:potato_notes/widget/note_view_images.dart';
+@@ -42,6 +44,7 @@ class NotePage extends StatefulWidget {
+ class _NotePageState extends State<NotePage> {
+   Note note;
+   NoteHelper helper;
++  FolderHelper folderHelper;
+   AppInfoProvider appInfo;
+   Preferences prefs;
+ 
+@@ -404,6 +407,11 @@ class _NotePageState extends State<NotePage> {
+                   ),
+                 ],
+                 rightItems: [
++                  IconButton(
++                    icon: Icon(OMIcons.folder),
++                    padding: EdgeInsets.all(0),
++                    onPressed: showFolderSheet,
++                  ),
+                   IconButton(
+                     icon: Icon(OMIcons.removeRedEye),
+                     padding: EdgeInsets.all(0),
+@@ -470,6 +478,15 @@ class _NotePageState extends State<NotePage> {
+     needsFocus = true;
+   }
+ 
++  void showFolderSheet() {
++    showModalBottomSheet(
++      context: context,
++      backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
++      isScrollControlled: true,
++      builder: (context) => FolderSelector(note: note),
++    );
++  }
++
+   void showPrivacyOptionSheet() {
+     showModalBottomSheet(
+       context: context,
+diff --git a/lib/widget/folder_selector.dart b/lib/widget/folder_selector.dart
+new file mode 100644
+index 0000000..8ef0382
+--- /dev/null
++++ b/lib/widget/folder_selector.dart
+@@ -0,0 +1,68 @@
++import 'package:flutter/material.dart';
++import 'package:outline_material_icons/outline_material_icons.dart';
++import 'package:potato_notes/data/dao/folder_helper.dart';
++import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/note_colors.dart';
++import 'package:provider/provider.dart';
++
++class FolderSelector extends StatefulWidget {
++  final Note note;
++
++  FolderSelector({@required this.note});
++
++  @override
++  _FolderSelectorState createState() => _FolderSelectorState();
++}
++
++class _FolderSelectorState extends State<FolderSelector> {
++  FolderHelper helper;
++  @override
++  Widget build(BuildContext context) {
++    if (helper == null) helper = Provider.of<FolderHelper>(context);
++
++    return FractionallySizedBox(
++      heightFactor: 0.4,
++      child: StreamBuilder<List<Folder>>(
++        stream: helper.folderStream(),
++        builder: (context, snapshot) {
++          if (snapshot.data?.isNotEmpty ?? false) {
++            return ListView(
++              children: List<Widget>.generate(
++                snapshot.data.length,
++                (index) => Container(
++                  color: Color(
++                      NoteColors.colorList(context)[snapshot.data[index].color]
++                          ["hex"]),
++                  child: ListTile(
++                    leading: Icon(OMIcons.folder),
++                    title: Text(snapshot.data[index].title),
++                    onTap: () => Navigator.pop(context, snapshot.data[index].id),
++                  ),
++                ),
++              )..insert(
++                  0,
++                  ListTile(
++                    leading: Icon(OMIcons.close),
++                    title: Text("None"),
++                    onTap: () => Navigator.pop(context, null),
++                  ),
++                ),
++            );
++          } else
++            return Center(
++              child: Padding(
++                padding: EdgeInsets.symmetric(horizontal: 16),
++                child: Text(
++                  "No folders added. You can add one by going on the folder manager on the main page.",
++                  textAlign: TextAlign.center,
++                  style: TextStyle(
++                    color: Theme.of(context).iconTheme.color,
++                  ),
++                ),
++              ),
++            );
++        },
++      ),
++    );
++  }
++}
+diff --git a/lib/widget/main_page_bar.dart b/lib/widget/main_page_bar.dart
+index b0714e0..10bbb9a 100644
+--- a/lib/widget/main_page_bar.dart
++++ b/lib/widget/main_page_bar.dart
+@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/internal/preferences.dart';
++import 'package:potato_notes/routes/folder_manager.dart';
+ import 'package:potato_notes/routes/settings_page.dart';
+ import 'package:provider/provider.dart';
+ import 'package:spicy_components/spicy_components.dart';
+@@ -48,6 +49,12 @@ class MainPageBar extends StatelessWidget {
+             }
+           },
+         ),
++        IconButton(
++          icon: Icon(OMIcons.createNewFolder),
++          padding: EdgeInsets.all(0),
++          onPressed: () => Navigator.push(context,
++              MaterialPageRoute(builder: (context) => FolderManager())),
++        ),
+       ],
+       elevation: 12,
+       notched: true,
+diff --git a/lib/widget/new_folder.dart b/lib/widget/new_folder.dart
+new file mode 100644
+index 0000000..e69de29
+-- 
+2.26.0
+
