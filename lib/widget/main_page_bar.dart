@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/routes/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -79,7 +80,9 @@ class MainPageBar extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                currentMode == ReturnMode.ARCHIVE ? Icons.archive : OMIcons.archive,
+                currentMode == ReturnMode.ARCHIVE
+                    ? Icons.archive
+                    : OMIcons.archive,
                 color: currentMode == ReturnMode.ARCHIVE
                     ? Theme.of(context).accentColor
                     : null,
@@ -116,6 +119,16 @@ class MainPageBar extends StatelessWidget {
                 onReturnModeChange(ReturnMode.TRASH);
                 Navigator.pop(context);
               },
+            ),
+            Divider(height: 1),
+            ListTile(
+              leading: Icon(OMIcons.settings),
+              title: Text("Settings"),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(),
+                  )),
             ),
           ],
         ),

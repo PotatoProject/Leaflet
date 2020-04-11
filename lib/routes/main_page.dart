@@ -102,7 +102,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           });
                         } else {
                           bool status = false;
-                          if(note.usesBiometrics) {
+                          if(note.lockNote && note.usesBiometrics) {
                             status = await LocalAuthentication().authenticateWithBiometrics(
                               localizedReason: "",
                               androidAuthStrings: AndroidAuthMessages(
