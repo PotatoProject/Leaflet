@@ -10,7 +10,7 @@ class SharedPrefs {
     return SharedPrefs._(preferences);
   }
 
-  PassType getPassType() {
+  Future<PassType> getPassType() async {
     switch(prefs.getInt("pass_type") ?? 0) {
       case 0:
         return PassType.NONE;
@@ -37,7 +37,7 @@ class SharedPrefs {
     }
   }
 
-  String getMasterPassword() {
+  Future<String> getMasterPassword() async {
     return prefs.getString("master_password");
   }
 
@@ -45,7 +45,7 @@ class SharedPrefs {
     await prefs.setString("master_password", value);
   }
 
-  String getMasterPin() {
+  Future<String> getMasterPin() async {
     return prefs.getString("master_pin");
   }
 
@@ -53,7 +53,7 @@ class SharedPrefs {
     await prefs.setString("master_pin", value);
   }
 
-  bool getUseGrid() {
+  Future<bool> getUseGrid() async {
     return prefs.getBool("use_grid") ?? false;
   }
 

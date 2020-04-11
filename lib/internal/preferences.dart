@@ -45,10 +45,10 @@ class Preferences extends ChangeNotifier {
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
 
-    passType = prefs.getPassType();
-    masterPassword = prefs.getMasterPassword();
-    masterPin = prefs.getMasterPin();
-    useGrid = prefs.getUseGrid();
+    passType = await prefs.getPassType();
+    masterPassword = await prefs.getMasterPassword();
+    masterPin = await prefs.getMasterPin();
+    useGrid = await prefs.getUseGrid();
   }
 }
 
