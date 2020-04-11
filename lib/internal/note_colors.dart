@@ -17,7 +17,7 @@ class NoteColors {
   static Map<String, dynamic> none(BuildContext context) {
     return {
       "label": "None",
-      "hex": 0x00000000,
+      "hex": Theme.of(context).cardColor.value,
     };
   }
 

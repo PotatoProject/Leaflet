@@ -23,8 +23,7 @@ class Notes extends Table {
   TextColumn get listContent => text().map(const ListContentConverter())();
   TextColumn get reminders => text().map(const ReminderListConverter())();
   BoolColumn get hideContent => boolean().withDefault(Constant(false))();
-  TextColumn get pin => text().nullable()();
-  TextColumn get password => text().nullable()();
+  BoolColumn get lockNote => boolean().withDefault(Constant(false))();
   BoolColumn get usesBiometrics => boolean().withDefault(Constant(false))();
   BoolColumn get deleted => boolean().withDefault(Constant(false))();
   BoolColumn get archived => boolean().withDefault(Constant(false))();

@@ -89,7 +89,7 @@ class NoteView extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: (note.content.trim() != "" || note.content != null) && !note.hideContent,
+                    visible: !note.hideContent,
                     child: note.styleJson != null
                         ? RichText(
                             text: SpannableList.fromJson(parsedStyleJson)

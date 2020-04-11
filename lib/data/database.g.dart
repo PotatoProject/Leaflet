@@ -21,8 +21,7 @@ class Note extends DataClass implements Insertable<Note> {
   final ListContent listContent;
   final ReminderList reminders;
   final bool hideContent;
-  final String pin;
-  final String password;
+  final bool lockNote;
   final bool usesBiometrics;
   final bool deleted;
   final bool archived;
@@ -41,8 +40,7 @@ class Note extends DataClass implements Insertable<Note> {
       @required this.listContent,
       @required this.reminders,
       @required this.hideContent,
-      this.pin,
-      this.password,
+      @required this.lockNote,
       @required this.usesBiometrics,
       @required this.deleted,
       @required this.archived,
@@ -78,9 +76,8 @@ class Note extends DataClass implements Insertable<Note> {
           .mapFromDatabaseResponse(data['${effectivePrefix}reminders'])),
       hideContent: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}hide_content']),
-      pin: stringType.mapFromDatabaseResponse(data['${effectivePrefix}pin']),
-      password: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}password']),
+      lockNote:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}lock_note']),
       usesBiometrics: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}uses_biometrics']),
       deleted:
@@ -107,8 +104,7 @@ class Note extends DataClass implements Insertable<Note> {
       listContent: serializer.fromJson<ListContent>(json['listContent']),
       reminders: serializer.fromJson<ReminderList>(json['reminders']),
       hideContent: serializer.fromJson<bool>(json['hideContent']),
-      pin: serializer.fromJson<String>(json['pin']),
-      password: serializer.fromJson<String>(json['password']),
+      lockNote: serializer.fromJson<bool>(json['lockNote']),
       usesBiometrics: serializer.fromJson<bool>(json['usesBiometrics']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       archived: serializer.fromJson<bool>(json['archived']),
@@ -132,8 +128,7 @@ class Note extends DataClass implements Insertable<Note> {
       'listContent': serializer.toJson<ListContent>(listContent),
       'reminders': serializer.toJson<ReminderList>(reminders),
       'hideContent': serializer.toJson<bool>(hideContent),
-      'pin': serializer.toJson<String>(pin),
-      'password': serializer.toJson<String>(password),
+      'lockNote': serializer.toJson<bool>(lockNote),
       'usesBiometrics': serializer.toJson<bool>(usesBiometrics),
       'deleted': serializer.toJson<bool>(deleted),
       'archived': serializer.toJson<bool>(archived),
@@ -176,10 +171,9 @@ class Note extends DataClass implements Insertable<Note> {
       hideContent: hideContent == null && nullToAbsent
           ? const Value.absent()
           : Value(hideContent),
-      pin: pin == null && nullToAbsent ? const Value.absent() : Value(pin),
-      password: password == null && nullToAbsent
+      lockNote: lockNote == null && nullToAbsent
           ? const Value.absent()
-          : Value(password),
+          : Value(lockNote),
       usesBiometrics: usesBiometrics == null && nullToAbsent
           ? const Value.absent()
           : Value(usesBiometrics),
@@ -208,8 +202,7 @@ class Note extends DataClass implements Insertable<Note> {
           ListContent listContent,
           ReminderList reminders,
           bool hideContent,
-          String pin,
-          String password,
+          bool lockNote,
           bool usesBiometrics,
           bool deleted,
           bool archived,
@@ -228,8 +221,7 @@ class Note extends DataClass implements Insertable<Note> {
         listContent: listContent ?? this.listContent,
         reminders: reminders ?? this.reminders,
         hideContent: hideContent ?? this.hideContent,
-        pin: pin ?? this.pin,
-        password: password ?? this.password,
+        lockNote: lockNote ?? this.lockNote,
         usesBiometrics: usesBiometrics ?? this.usesBiometrics,
         deleted: deleted ?? this.deleted,
         archived: archived ?? this.archived,
@@ -251,8 +243,7 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('listContent: $listContent, ')
           ..write('reminders: $reminders, ')
           ..write('hideContent: $hideContent, ')
-          ..write('pin: $pin, ')
-          ..write('password: $password, ')
+          ..write('lockNote: $lockNote, ')
           ..write('usesBiometrics: $usesBiometrics, ')
           ..write('deleted: $deleted, ')
           ..write('archived: $archived, ')
@@ -289,20 +280,18 @@ class Note extends DataClass implements Insertable<Note> {
                                                   $mrjc(
                                                       hideContent.hashCode,
                                                       $mrjc(
-                                                          pin.hashCode,
+                                                          lockNote.hashCode,
                                                           $mrjc(
-                                                              password.hashCode,
+                                                              usesBiometrics
+                                                                  .hashCode,
                                                               $mrjc(
-                                                                  usesBiometrics
+                                                                  deleted
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      deleted
+                                                                      archived
                                                                           .hashCode,
-                                                                      $mrjc(
-                                                                          archived
-                                                                              .hashCode,
-                                                                          synced
-                                                                              .hashCode)))))))))))))))))));
+                                                                      synced
+                                                                          .hashCode))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -320,8 +309,7 @@ class Note extends DataClass implements Insertable<Note> {
           other.listContent == listContent &&
           other.reminders == reminders &&
           other.hideContent == hideContent &&
-          other.pin == pin &&
-          other.password == password &&
+          other.lockNote == lockNote &&
           other.usesBiometrics == usesBiometrics &&
           other.deleted == deleted &&
           other.archived == archived &&
@@ -342,8 +330,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<ListContent> listContent;
   final Value<ReminderList> reminders;
   final Value<bool> hideContent;
-  final Value<String> pin;
-  final Value<String> password;
+  final Value<bool> lockNote;
   final Value<bool> usesBiometrics;
   final Value<bool> deleted;
   final Value<bool> archived;
@@ -362,8 +349,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.listContent = const Value.absent(),
     this.reminders = const Value.absent(),
     this.hideContent = const Value.absent(),
-    this.pin = const Value.absent(),
-    this.password = const Value.absent(),
+    this.lockNote = const Value.absent(),
     this.usesBiometrics = const Value.absent(),
     this.deleted = const Value.absent(),
     this.archived = const Value.absent(),
@@ -383,8 +369,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       Value<ListContent> listContent,
       Value<ReminderList> reminders,
       Value<bool> hideContent,
-      Value<String> pin,
-      Value<String> password,
+      Value<bool> lockNote,
       Value<bool> usesBiometrics,
       Value<bool> deleted,
       Value<bool> archived,
@@ -403,8 +388,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       listContent: listContent ?? this.listContent,
       reminders: reminders ?? this.reminders,
       hideContent: hideContent ?? this.hideContent,
-      pin: pin ?? this.pin,
-      password: password ?? this.password,
+      lockNote: lockNote ?? this.lockNote,
       usesBiometrics: usesBiometrics ?? this.usesBiometrics,
       deleted: deleted ?? this.deleted,
       archived: archived ?? this.archived,
@@ -559,28 +543,13 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         defaultValue: Constant(false));
   }
 
-  final VerificationMeta _pinMeta = const VerificationMeta('pin');
-  GeneratedTextColumn _pin;
+  final VerificationMeta _lockNoteMeta = const VerificationMeta('lockNote');
+  GeneratedBoolColumn _lockNote;
   @override
-  GeneratedTextColumn get pin => _pin ??= _constructPin();
-  GeneratedTextColumn _constructPin() {
-    return GeneratedTextColumn(
-      'pin',
-      $tableName,
-      true,
-    );
-  }
-
-  final VerificationMeta _passwordMeta = const VerificationMeta('password');
-  GeneratedTextColumn _password;
-  @override
-  GeneratedTextColumn get password => _password ??= _constructPassword();
-  GeneratedTextColumn _constructPassword() {
-    return GeneratedTextColumn(
-      'password',
-      $tableName,
-      true,
-    );
+  GeneratedBoolColumn get lockNote => _lockNote ??= _constructLockNote();
+  GeneratedBoolColumn _constructLockNote() {
+    return GeneratedBoolColumn('lock_note', $tableName, false,
+        defaultValue: Constant(false));
   }
 
   final VerificationMeta _usesBiometricsMeta =
@@ -636,8 +605,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         listContent,
         reminders,
         hideContent,
-        pin,
-        password,
+        lockNote,
         usesBiometrics,
         deleted,
         archived,
@@ -714,16 +682,11 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     } else if (hideContent.isRequired && isInserting) {
       context.missing(_hideContentMeta);
     }
-    if (d.pin.present) {
-      context.handle(_pinMeta, pin.isAcceptableValue(d.pin.value, _pinMeta));
-    } else if (pin.isRequired && isInserting) {
-      context.missing(_pinMeta);
-    }
-    if (d.password.present) {
-      context.handle(_passwordMeta,
-          password.isAcceptableValue(d.password.value, _passwordMeta));
-    } else if (password.isRequired && isInserting) {
-      context.missing(_passwordMeta);
+    if (d.lockNote.present) {
+      context.handle(_lockNoteMeta,
+          lockNote.isAcceptableValue(d.lockNote.value, _lockNoteMeta));
+    } else if (lockNote.isRequired && isInserting) {
+      context.missing(_lockNoteMeta);
     }
     if (d.usesBiometrics.present) {
       context.handle(
@@ -814,11 +777,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     if (d.hideContent.present) {
       map['hide_content'] = Variable<bool, BoolType>(d.hideContent.value);
     }
-    if (d.pin.present) {
-      map['pin'] = Variable<String, StringType>(d.pin.value);
-    }
-    if (d.password.present) {
-      map['password'] = Variable<String, StringType>(d.password.value);
+    if (d.lockNote.present) {
+      map['lock_note'] = Variable<bool, BoolType>(d.lockNote.value);
     }
     if (d.usesBiometrics.present) {
       map['uses_biometrics'] = Variable<bool, BoolType>(d.usesBiometrics.value);

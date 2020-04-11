@@ -14,7 +14,7 @@ class NoteViewStatusbar extends StatelessWidget {
     return Visibility(
       visible: icons.isNotEmpty,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 16),
+        padding: EdgeInsets.only(bottom: note.title != "" ? 16 : 0),
         child: IconTheme(
           data: Theme.of(context).iconTheme.copyWith(size: 16),
           child: Wrap(
@@ -42,29 +42,36 @@ class NoteViewStatusbar extends StatelessWidget {
 
     if (note.hideContent) iconDataIndexes.add(0);
 
-    if (note.pin != null || note.password != null) iconDataIndexes.add(1);
+    if (note.lockNote) iconDataIndexes.add(1);
 
     if (note.reminders.reminders.isNotEmpty) iconDataIndexes.add(2);
 
     if (note.synced) iconDataIndexes.add(3);
 
-    if (iconDataIndexes.length > 1) {
+    if (iconDataIndexes.length > 2) {
       iconDataIndexes.forEach((item) => icons.add(Icon(iconData[item].value)));
-    } else if (iconDataIndexes.isNotEmpty) {
-      icons.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(iconData[iconDataIndexes[0]].value),
-          SizedBox(width: 8),
-          Text(
-            iconData[iconDataIndexes[0]].key,
-            style: TextStyle(
-              color: Theme.of(context).iconTheme.color,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ));
+    } else {
+      for(int i = 0; i < iconDataIndexes.length; i++) {
+        if(i == iconDataIndexes.length - 1) {
+          icons.add(Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(iconData[iconDataIndexes[i]].value),
+              SizedBox(width: 4),
+              Text(
+                iconData[iconDataIndexes[i]].key,
+                style: TextStyle(
+                  color: Theme.of(context).iconTheme.color,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ));
+        } else {
+          icons.add(Icon(iconData[iconDataIndexes[i]].value));
+        }
+      }
     }
 
     return icons;

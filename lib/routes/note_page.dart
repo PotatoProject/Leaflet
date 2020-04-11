@@ -65,8 +65,7 @@ class _NotePageState extends State<NotePage> {
           listContent: ListContent([]),
           reminders: ReminderList([]),
           hideContent: false,
-          pin: null,
-          password: null,
+          lockNote: false,
           usesBiometrics: false,
           deleted: false,
           archived: false,
@@ -102,8 +101,7 @@ class _NotePageState extends State<NotePage> {
       lastNote = notes.last;
     }
 
-    if(note.id == null)
-      note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
+    if (note.id == null) note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
   }
 
   @override
@@ -117,7 +115,7 @@ class _NotePageState extends State<NotePage> {
   Widget build(BuildContext context) {
     if (helper == null) {
       helper = Provider.of<NoteHelper>(context);
-    
+
       generateId();
     }
 
@@ -368,25 +366,24 @@ class _NotePageState extends State<NotePage> {
                     IconButton(
                       icon: Icon(OMIcons.colorLens),
                       padding: EdgeInsets.all(0),
-                      onPressed: () => SpicyUtils.showBottomSheet(
+                      onPressed: () => showModalBottomSheet(
                         context: context,
                         backgroundColor: Theme.of(context).cardColor,
-                        children: [
-                          NoteColorSelector(
-                            selectedColor: note.color,
-                            onColorSelect: (color) {
-                              note = note.copyWith(color: color);
+                        isScrollControlled: true,
+                        builder: (context) => NoteColorSelector(
+                          selectedColor: note.color,
+                          onColorSelect: (color) {
+                            note = note.copyWith(color: color);
 
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ),
                     IconButton(
                       icon: Icon(Icons.add),
                       padding: EdgeInsets.all(0),
-                      onPressed: showAddElementsDialog,
+                      onPressed: showAddElementsSheet,
                     ),
                   ],
                 ),
@@ -401,13 +398,15 @@ class _NotePageState extends State<NotePage> {
                 ],
                 rightItems: [
                   IconButton(
-                    icon: Icon(
-                      note.starred
-                          ? Icons.star
-                          : Icons.star_border
-                    ),
+                    icon: Icon(OMIcons.removeRedEye),
                     padding: EdgeInsets.all(0),
-                    onPressed: () => note = note.copyWith(starred: !note.starred),
+                    onPressed: showPrivacyOptionSheet,
+                  ),
+                  IconButton(
+                    icon: Icon(note.starred ? Icons.star : Icons.star_border),
+                    padding: EdgeInsets.all(0),
+                    onPressed: () =>
+                        note = note.copyWith(starred: !note.starred),
                   ),
                 ],
                 elevation: 0,
@@ -464,48 +463,92 @@ class _NotePageState extends State<NotePage> {
     needsFocus = true;
   }
 
-  void showAddElementsDialog() {
-    SpicyUtils.showBottomSheet(
+  void showPrivacyOptionSheet() {
+    showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-      children: [
-        ListTile(
-          leading:
-              Icon(note.list ? Icons.check_circle : Icons.check_circle_outline),
-          title: Text("Toggle list"),
-          onTap: () {
-            note = note.copyWith(list: !note.list);
-
-            Navigator.pop(context);
-          },
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SwitchListTile(
+              value: note.hideContent,
+              onChanged: (value) =>
+                  note = note.copyWith(hideContent: !note.hideContent),
+              activeColor: Theme.of(context).accentColor,
+              secondary: Icon(OMIcons.removeRedEye),
+              title: Text("Hide content on main page"),
+            ),
+            SwitchListTile(
+              value: note.lockNote,
+              onChanged: (value) =>
+                  note = note.copyWith(lockNote: !note.lockNote),
+              activeColor: Theme.of(context).accentColor,
+              secondary: Icon(OMIcons.lock),
+              title: Text("Lock note"),
+            ),
+            SwitchListTile(
+              value: note.usesBiometrics,
+              onChanged: note.lockNote
+                  ? (value) => note = note.copyWith(usesBiometrics: !note.usesBiometrics)
+                  : null,
+              activeColor: Theme.of(context).accentColor,
+              secondary: Icon(OMIcons.fingerprint),
+              title: Text("Use biometrics to unlock"),
+            ),
+          ],
         ),
-        ListTile(
-          leading: Icon(OMIcons.photo),
-          title: Text("Image from gallery"),
-          onTap: () async {
-            File image =
-                await ImagePicker.pickImage(source: ImageSource.gallery);
+      ),
+    );
+  }
 
-            if (image != null) {
-              note.images.images.add(image.uri);
+  void showAddElementsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
+      isScrollControlled: true,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: Icon(
+                note.list ? Icons.check_circle : Icons.check_circle_outline),
+            title: Text("Toggle list"),
+            onTap: () {
+              note = note.copyWith(list: !note.list);
+
               Navigator.pop(context);
-            }
-          },
-        ),
-        ListTile(
-          leading: Icon(OMIcons.camera),
-          title: Text("Take a photo"),
-          onTap: () async {
-            File image =
-                await ImagePicker.pickImage(source: ImageSource.camera);
+            },
+          ),
+          ListTile(
+            leading: Icon(OMIcons.photo),
+            title: Text("Image from gallery"),
+            onTap: () async {
+              File image =
+                  await ImagePicker.pickImage(source: ImageSource.gallery);
 
-            if (image != null) {
-              note.images.images.add(image.uri);
-              Navigator.pop(context);
-            }
-          },
-        ),
-      ],
+              if (image != null) {
+                note.images.images.add(image.uri);
+                Navigator.pop(context);
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(OMIcons.camera),
+            title: Text("Take a photo"),
+            onTap: () async {
+              File image =
+                  await ImagePicker.pickImage(source: ImageSource.camera);
+
+              if (image != null) {
+                note.images.images.add(image.uri);
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
