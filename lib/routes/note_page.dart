@@ -295,7 +295,7 @@ class _NotePageState extends State<NotePage> {
                           checkColor: note.color != 0
                               ? Color(NoteColors.colorList(context)[note.color]
                                   ["hex"])
-                              : null,
+                              : Theme.of(context).scaffoldBackgroundColor,
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         title: TextField(
@@ -515,12 +515,18 @@ class _NotePageState extends State<NotePage> {
                 value: note.usesBiometrics,
                 onChanged: note.lockNote
                     ? (value) async {
-                        bool confirm = await LocalAuthentication()
-                            .authenticateWithBiometrics(
-                          localizedReason: "",
-                          androidAuthStrings: AndroidAuthMessages(
-                              fingerprintHint: "Confirm fingerprint"),
-                        );
+                        bool confirm;
+
+                        try {
+                          confirm = await LocalAuthentication()
+                              .authenticateWithBiometrics(
+                            localizedReason: "",
+                            androidAuthStrings: AndroidAuthMessages(
+                                fingerprintHint: "Confirm fingerprint"),
+                          );
+                        } on PlatformException catch (e) {
+                          confirm = false;
+                        }
 
                         if(confirm)
                           note = note.copyWith(usesBiometrics: value);
