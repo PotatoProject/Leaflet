@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/preferences.dart';
@@ -28,17 +25,15 @@ class _SettingsPageState extends State<SettingsPage> {
             header: "Privacy",
             children: [
               SwitchListTile(
-                value: prefs.passType != PassType.NONE,
+                value: prefs.masterPass != "",
                 onChanged: (value) async {
-                  if (prefs.passType == PassType.NONE) {
+                  if (prefs.masterPass == "") {
                     showMasterPassChoiceSheet(context);
                   } else {
-                    bool confirm = await showPassChallengeSheet(context, prefs.passType, false) ?? false;
+                    bool confirm = await showPassChallengeSheet(context, false) ?? false;
 
                     if(confirm) {
-                      prefs.passType = PassType.NONE;
-                      prefs.masterPassword = null;
-                      prefs.masterPin = null;
+                      prefs.masterPass = "";
                     }
                   }
                 },
@@ -50,26 +45,14 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               ListTile(
                 leading: Icon(CommunityMaterialIcons.textbox_password),
-                title: Text("Modify password"),
+                title: Text("Modify master pass"),
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                enabled: prefs.passType == PassType.PASSWORD,
+                enabled: prefs.masterPass != "",
                 onTap: () async {
-                  bool confirm = await showPassChallengeSheet(context, prefs.passType, false) ?? false;
+                  bool confirm = await showPassChallengeSheet(context, false) ?? false;
                   if(confirm)
-                    showPassChallengeSheet(context, PassType.PASSWORD);
-                },
-              ),
-              ListTile(
-                leading: Icon(CommunityMaterialIcons.dialpad),
-                title: Text("Modify pin"),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                enabled: prefs.passType == PassType.PIN,
-                onTap: () async {
-                  bool confirm = await showPassChallengeSheet(context, prefs.passType, false) ?? false;
-                  if(confirm)
-                    showPassChallengeSheet(context, PassType.PIN);
+                    showPassChallengeSheet(context);
                 },
               ),
             ],
@@ -109,21 +92,12 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text(
                   "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.")),
           ListTile(
-            leading: Icon(CommunityMaterialIcons.textbox_password),
-            title: Text("Password"),
+            leading: Icon(CommunityMaterialIcons.arrow_right),
+            title: Text("Go on"),
             contentPadding: EdgeInsets.symmetric(horizontal: 32),
             onTap: () {
               Navigator.pop(context);
-              showPassChallengeSheet(context, PassType.PASSWORD);
-            },
-          ),
-          ListTile(
-            leading: Icon(CommunityMaterialIcons.dialpad),
-            title: Text("Pin"),
-            contentPadding: EdgeInsets.symmetric(horizontal: 32),
-            onTap: () {
-              Navigator.pop(context);
-              showPassChallengeSheet(context, PassType.PIN);
+              showPassChallengeSheet(context);
             },
           ),
         ],
@@ -131,25 +105,15 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<dynamic> showPassChallengeSheet(BuildContext context, PassType passType, [bool editMode = true]) async {
+  Future<dynamic> showPassChallengeSheet(BuildContext context, [bool editMode = true]) async {
     return await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => PassChallenge(
-        passType: passType,
         editMode: editMode,
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: (text) async {
-          String hash = sha256.convert(utf8.encode(text)).toString();
-          if (passType == PassType.PASSWORD) {
-            prefs.passType = PassType.PASSWORD;
-            prefs.masterPassword = hash;
-            prefs.masterPin = null;
-          } else {
-            prefs.passType = PassType.PIN;
-            prefs.masterPassword = null;
-            prefs.masterPin = hash;
-          }
+          prefs.masterPass = text;
 
           Navigator.pop(context);
         },

@@ -489,10 +489,9 @@ class _NotePageState extends State<NotePage> {
             ),
             SwitchListTile(
               value: note.lockNote,
-              onChanged: prefs.passType != PassType.NONE
+              onChanged: prefs.masterPass != ""
                   ? (value) async {
-                      bool confirm = await Utils.showPassChallengeSheet(
-                              context, prefs.passType) ??
+                      bool confirm = await Utils.showPassChallengeSheet(context) ??
                           false;
 
                       if (confirm)
@@ -502,9 +501,9 @@ class _NotePageState extends State<NotePage> {
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.lock),
               title: Text("Lock note"),
-              subtitle: prefs.passType == PassType.NONE
+              subtitle: prefs.masterPass == ""
                   ? Text(
-                      "You must set a master pin or password from settings",
+                      "You must set a master pass from settings",
                       style: TextStyle(color: Colors.red),
                     )
                   : null,
@@ -524,7 +523,7 @@ class _NotePageState extends State<NotePage> {
                             androidAuthStrings: AndroidAuthMessages(
                                 fingerprintHint: "Confirm fingerprint"),
                           );
-                        } on PlatformException catch (e) {
+                        } on PlatformException {
                           confirm = false;
                         }
 

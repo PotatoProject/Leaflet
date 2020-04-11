@@ -114,9 +114,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
                             if(bioAuth)
                               status = bioAuth;
-                            else status = await Utils.showPassChallengeSheet(context, prefs.passType) ?? false;
+                            else status = await Utils.showPassChallengeSheet(context) ?? false;
                           } else if(note.lockNote && !note.usesBiometrics) {
-                            status = await Utils.showPassChallengeSheet(context, prefs.passType) ?? false;
+                            status = await Utils.showPassChallengeSheet(context) ?? false;
                           } else {
                             status = true;
                           }
@@ -331,6 +331,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             appInfo.emptyArchiveIllustration, "The archive is empty");
       case ReturnMode.TRASH:
         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
+      default:
+        return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
     }
   }
 }

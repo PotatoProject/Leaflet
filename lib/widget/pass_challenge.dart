@@ -1,19 +1,14 @@
-import 'dart:convert';
-
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:provider/provider.dart';
 
 class PassChallenge extends StatefulWidget {
-  final PassType passType;
   final bool editMode;
   final Function(String) onSave;
   final Function() onChallengeSuccess;
 
   PassChallenge({
-    @required this.passType,
     this.editMode = false,
     this.onSave,
     this.onChallengeSuccess,
@@ -36,9 +31,7 @@ class _PassChallengeState extends State<PassChallenge> {
     if (controller == null)
       controller = TextEditingController(
         text: widget.editMode
-            ? widget.passType == PassType.PASSWORD
-                ? prefs.masterPassword ?? ""
-                : prefs.masterPin ?? ""
+            ? prefs.masterPass ?? ""
             : "",
       );
 
@@ -53,7 +46,7 @@ class _PassChallengeState extends State<PassChallenge> {
             padding: EdgeInsets.all(16),
             child: Text(
               (widget.editMode ? "Modify " : "Confirm ") +
-                  (widget.passType == PassType.PASSWORD ? "password" : "pin"),
+                  "master pass",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -66,9 +59,7 @@ class _PassChallengeState extends State<PassChallenge> {
               children: [
                 Expanded(
                   child: TextField(
-                    keyboardType: widget.passType == PassType.PASSWORD
-                        ? TextInputType.visiblePassword
-                        : TextInputType.number,
+                    keyboardType: TextInputType.visiblePassword,
                     controller: controller,
                     obscureText: !showPass,
                   ),
@@ -101,21 +92,11 @@ class _PassChallengeState extends State<PassChallenge> {
                       ? widget.editMode
                           ? () => widget.onSave(controller.text)
                           : () {
-                              String hash = sha256.convert(utf8.encode(controller.text)).toString();
-                              
-                              if (widget.passType == PassType.PASSWORD) {
-                                if (prefs.masterPassword == hash) {
+                              if (prefs.masterPass == controller.text) {
                                   status = null;
                                   widget.onChallengeSuccess();
                                 } else
-                                  status = "Incorrect password";
-                              } else {
-                                if (prefs.masterPin == hash) {
-                                  status = null;
-                                  widget.onChallengeSuccess();
-                                } else
-                                  status = "Incorrect pin";
-                              }
+                                  status = "Incorrect master pass";
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),

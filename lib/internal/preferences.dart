@@ -1,38 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_preferences.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
+  Keystore keystore;
 
   Preferences() {
     loadData();
   }
 
-  PassType _passType = PassType.NONE;
-  String _masterPassword;
-  String _masterPin;
+  String _masterPass;
   bool _useGrid = false;
 
-  PassType get passType => _passType;
-  String get masterPassword => _masterPassword;
-  String get masterPin => _masterPin;
+  String get masterPass => _masterPass;
   bool get useGrid => _useGrid;
 
-  set passType(PassType value) {
-    _passType = value;
-    prefs.setPassType(value);
-    notifyListeners();
-  }
-
-  set masterPassword(String value) {
-    _masterPassword = value;
-    prefs.setMasterPassword(value);
-    notifyListeners();
-  }
-
-  set masterPin(String value) {
-    _masterPin = value;
-    prefs.setMasterPin(value);
+  set masterPass(String value) {
+    _masterPass = value;
+    keystore.setMasterPass(value);
     notifyListeners();
   }
 
@@ -44,16 +30,9 @@ class Preferences extends ChangeNotifier {
 
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
+    keystore = Keystore();
 
-    passType = await prefs.getPassType();
-    masterPassword = await prefs.getMasterPassword();
-    masterPin = await prefs.getMasterPin();
+    masterPass = await keystore.getMasterPass();
     useGrid = await prefs.getUseGrid();
   }
-}
-
-enum PassType {
-  NONE,
-  PIN,
-  PASSWORD,
 }

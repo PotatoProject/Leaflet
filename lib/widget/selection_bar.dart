@@ -138,8 +138,6 @@ class SelectionBar extends StatelessWidget {
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),
         onPressed: () async {
-          List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-
           for (int i = 0; i < selectionList.length; i++)
             await helper.saveNote(selectionList[i].copyWith(deleted: false, archived: false));
 

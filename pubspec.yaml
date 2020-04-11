@@ -30,6 +30,7 @@ dependencies:
   shared_preferences:
   local_auth:
   crypto:
+  flutter_secure_storage:
   
   rich_text_editor:
     git:
