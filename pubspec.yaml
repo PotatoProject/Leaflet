@@ -29,6 +29,7 @@ dependencies:
   flutter_svg:
   shared_preferences:
   local_auth:
+  crypto:
   
   rich_text_editor:
     git:

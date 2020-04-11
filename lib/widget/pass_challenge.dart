@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:provider/provider.dart';
@@ -98,14 +101,16 @@ class _PassChallengeState extends State<PassChallenge> {
                       ? widget.editMode
                           ? () => widget.onSave(controller.text)
                           : () {
+                              String hash = sha256.convert(utf8.encode(controller.text)).toString();
+                              
                               if (widget.passType == PassType.PASSWORD) {
-                                if (prefs.masterPassword == controller.text) {
+                                if (prefs.masterPassword == hash) {
                                   status = null;
                                   widget.onChallengeSuccess();
                                 } else
                                   status = "Incorrect password";
                               } else {
-                                if (prefs.masterPin == controller.text) {
+                                if (prefs.masterPin == hash) {
                                   status = null;
                                   widget.onChallengeSuccess();
                                 } else

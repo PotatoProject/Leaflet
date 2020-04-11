@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/preferences.dart';
@@ -137,14 +140,15 @@ class _SettingsPageState extends State<SettingsPage> {
         editMode: editMode,
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: (text) async {
+          String hash = sha256.convert(utf8.encode(text)).toString();
           if (passType == PassType.PASSWORD) {
             prefs.passType = PassType.PASSWORD;
-            prefs.masterPassword = text;
+            prefs.masterPassword = hash;
             prefs.masterPin = null;
           } else {
             prefs.passType = PassType.PIN;
             prefs.masterPassword = null;
-            prefs.masterPin = text;
+            prefs.masterPin = hash;
           }
 
           Navigator.pop(context);
