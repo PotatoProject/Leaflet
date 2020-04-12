@@ -1,6 +1,8 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/settings_category.dart';
@@ -14,68 +16,89 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   Preferences prefs;
+  bool removingMasterPass = false;
+
   @override
   Widget build(BuildContext context) {
     if (prefs == null) prefs = Provider.of<Preferences>(context);
 
-    return Scaffold(
-      body: ListView(
-        children: [
-          SettingsCategory(
-            header: "Privacy",
-            children: [
-              SwitchListTile(
-                value: prefs.masterPass != "",
-                onChanged: (value) async {
-                  if (prefs.masterPass == "") {
-                    showMasterPassChoiceSheet(context);
-                  } else {
-                    bool confirm = await showPassChallengeSheet(context, false) ?? false;
+    return WillPopScope(
+      onWillPop: () async => removingMasterPass,
+      child: Scaffold(
+        body: ListView(
+          children: [
+            SettingsCategory(
+              header: "Privacy",
+              children: [
+                SwitchListTile(
+                  value: prefs.masterPass != "",
+                  onChanged: (value) async {
+                    if (prefs.masterPass == "") {
+                      showMasterPassChoiceSheet(context);
+                    } else {
+                      bool confirm =
+                          await showPassChallengeSheet(context, false) ?? false;
 
-                    if(confirm) {
-                      prefs.masterPass = "";
+                      if (confirm) {
+                        prefs.masterPass = "";
+
+                        NoteHelper helper =
+                            Provider.of<NoteHelper>(context, listen: false);
+                        List<Note> notes =
+                            await helper.listNotes(ReturnMode.ALL);
+
+                        setState(() => removingMasterPass = true);
+                        for (int i = 0; i < notes.length; i++) {
+                          await helper
+                              .saveNote(notes[i].copyWith(lockNote: false));
+                          print(i);
+                        }
+                        setState(() => removingMasterPass = false);
+                      }
                     }
-                  }
-                },
-                secondary: Icon(OMIcons.vpnKey),
-                title: Text("Use master pass"),
-                activeColor: Theme.of(context).accentColor,
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-              ),
-              ListTile(
-                leading: Icon(CommunityMaterialIcons.textbox_password),
-                title: Text("Modify master pass"),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                enabled: prefs.masterPass != "",
-                onTap: () async {
-                  bool confirm = await showPassChallengeSheet(context, false) ?? false;
-                  if(confirm)
-                    showPassChallengeSheet(context);
-                },
-              ),
-            ],
-          ),
-        ],
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      ),
-      bottomNavigationBar: SpicyBottomBar(
-        leftItems: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            padding: EdgeInsets.all(0),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Text(
-            'Settings',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).iconTheme.color,
+                  },
+                  secondary: Icon(OMIcons.vpnKey),
+                  title: Text("Use master pass"),
+                  activeColor: Theme.of(context).accentColor,
+                  subtitle:
+                      removingMasterPass ? LinearProgressIndicator() : null,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
+                ListTile(
+                  leading: Icon(CommunityMaterialIcons.textbox_password),
+                  title: Text("Modify master pass"),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  enabled: prefs.masterPass != "",
+                  onTap: () async {
+                    bool confirm =
+                        await showPassChallengeSheet(context, false) ?? false;
+                    if (confirm) showPassChallengeSheet(context);
+                  },
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        ),
+        bottomNavigationBar: SpicyBottomBar(
+          leftItems: [
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              padding: EdgeInsets.all(0),
+              onPressed: () => Navigator.pop(context),
+            ),
+            Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -105,7 +128,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<dynamic> showPassChallengeSheet(BuildContext context, [bool editMode = true]) async {
+  Future<dynamic> showPassChallengeSheet(BuildContext context,
+      [bool editMode = true]) async {
     return await showModalBottomSheet(
       context: context,
       isScrollControlled: true,

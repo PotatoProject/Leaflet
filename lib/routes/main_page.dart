@@ -231,31 +231,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       4.0 + 56,
                     ),
                   ),
-                  /*child: prefs.useGrid
-                      ? StaggeredGridView.countBuilder(
-                          crossAxisCount: numOfColumns,
-                          itemBuilder: (context, index) =>
-                              commonNote(snapshot.data[index]),
-                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                          itemCount: snapshot.data.length,
-                          padding: EdgeInsets.fromLTRB(
-                            4,
-                            4 + MediaQuery.of(context).padding.top,
-                            4,
-                            4.0 + 56,
-                          ),
-                        )
-                      : ListView.builder(
-                          itemBuilder: (context, index) =>
-                              commonNote(snapshot.data[index]),
-                          itemCount: snapshot.data.length,
-                          padding: EdgeInsets.fromLTRB(
-                            4,
-                            4 + MediaQuery.of(context).padding.top,
-                            4,
-                            4.0 + 56,
-                          ),
-                        ),*/
                 );
               },
             );
