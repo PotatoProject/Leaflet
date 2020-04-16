@@ -1,6 +1,7 @@
 package com.potatoproject.notes;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 
@@ -54,25 +55,42 @@ public class NotesPlugin implements FlutterPlugin {
         private final Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                SharedPreferences sharedPref = mContext.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+                Long savedThemeMode = sharedPref.getLong("flutter.theme_mode", 0);
+
                 Boolean currentThemeMode = Utils.isCurrentThemeDark(mContext);
                 Integer lightAccent = Utils.getLightAccentColor(mContext);
                 Integer darkAccent = Utils.getDarkAccentColor(mContext);
         
-                if(themeMode != currentThemeMode) {
-                    themeMode = currentThemeMode;
-                    accentColor = themeMode
-                        ? lightAccent
-                        : darkAccent;
-                    eventSink.success(accentColor);
-                } else {
-                    if(themeMode) {
-                        if(accentColor != darkAccent) {
-                            accentColor = darkAccent;
-                            eventSink.success(accentColor);
-                        }
+                if(savedThemeMode == 0 || savedThemeMode == null) {
+                    if(themeMode != currentThemeMode) {
+                        themeMode = currentThemeMode;
+                        accentColor = themeMode
+                            ? lightAccent
+                            : darkAccent;
+                        eventSink.success(accentColor);
                     } else {
+                        if(themeMode) {
+                            if(accentColor != darkAccent) {
+                                accentColor = darkAccent;
+                                eventSink.success(accentColor);
+                            }
+                        } else {
+                            if(accentColor != lightAccent) {
+                                accentColor = lightAccent;
+                                eventSink.success(accentColor);
+                            }
+                        }
+                    }
+                } else {
+                    if(savedThemeMode == 1) {
                         if(accentColor != lightAccent) {
                             accentColor = lightAccent;
+                            eventSink.success(accentColor);
+                        }
+                    } else if(savedThemeMode == 2) {
+                        if(accentColor != darkAccent) {
+                            accentColor = darkAccent;
                             eventSink.success(accentColor);
                         }
                     }

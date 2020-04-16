@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/system_bar_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
@@ -15,6 +17,7 @@ class AppInfoProvider extends ChangeNotifier {
       StreamsChannel('potato_notes_themes');
 
   AppInfoProvider(this.context) {
+    prefs = Provider.of<Preferences>(context);
     illustrations = Illustrations(context);
     loadData();
 
@@ -25,6 +28,7 @@ class AppInfoProvider extends ChangeNotifier {
   StreamSubscription<dynamic> accentSubscription;
   // ignore: cancel_subscriptions
   StreamSubscription<dynamic> themeSubscription;
+  Preferences prefs;
   Illustrations illustrations;
   SystemBarManager barManager;
   bool canCheckBiometrics;
@@ -62,7 +66,17 @@ class AppInfoProvider extends ChangeNotifier {
   void loadData() async {
     themeSubscription =
         themeStreamChannel.receiveBroadcastStream().listen((data) {
-      systemTheme = data ? Brightness.dark : Brightness.light;
+      switch(prefs.themeMode) {
+        case ThemeMode.system:
+          systemTheme = data ? Brightness.dark : Brightness.light;
+          break;
+        case ThemeMode.light:
+          systemTheme = Brightness.light;
+          break;
+        case ThemeMode.dark:
+          systemTheme = Brightness.dark;
+          break;
+      }
     });
     accentSubscription =
         accentStreamChannel.receiveBroadcastStream().listen((data) {

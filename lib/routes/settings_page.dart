@@ -23,10 +23,39 @@ class _SettingsPageState extends State<SettingsPage> {
     if (prefs == null) prefs = Provider.of<Preferences>(context);
 
     return WillPopScope(
-      onWillPop: () async => removingMasterPass,
+      onWillPop: () async => !removingMasterPass,
       child: Scaffold(
         body: ListView(
           children: [
+            SettingsCategory(
+              header: "Personalization",
+              children: [
+                ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  leading: Icon(CommunityMaterialIcons.theme_light_dark),
+                  title: Text("Theme mode"),
+                  trailing: DropdownButton(
+                    items: [
+                      DropdownMenuItem(
+                        child: Text("System"),
+                        value: ThemeMode.system,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Light"),
+                        value: ThemeMode.light,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Dark"),
+                        value: ThemeMode.dark,
+                      ),
+                    ],
+                    onChanged: (value) => prefs.themeMode = value,
+                    value: prefs.themeMode,
+                  ),
+                ),
+              ],
+            ),
             SettingsCategory(
               header: "Privacy",
               children: [

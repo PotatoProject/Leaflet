@@ -28,33 +28,40 @@ class PotatoNotes extends StatelessWidget {
           value: AppDatabase().noteHelper,
         ),
         ChangeNotifierProvider.value(
-          value: AppInfoProvider(context),
-        ),
-        ChangeNotifierProvider.value(
           value: Preferences(),
         ),
       ],
       child: Builder(
-        builder: (context) {
-          final appInfo = Provider.of<AppInfoProvider>(context);
+        builder: (context) => ChangeNotifierProvider.value(
+          value: AppInfoProvider(context),
+          child: Builder(
+            builder: (context) {
+              final appInfo = Provider.of<AppInfoProvider>(context);
+              final prefs = Provider.of<Preferences>(context);
 
-          appInfo.barManager.lightNavBarColor =
-              SpicyThemes.light(appInfo.mainColor).cardColor;
-          appInfo.barManager.darkNavBarColor =
-              SpicyThemes.dark(appInfo.mainColor).cardColor;
-          appInfo.barManager.lightIconColor = Brightness.light;
-          appInfo.barManager.darkIconColor = Brightness.dark;
-          appInfo.barManager.updateColors();
-          appInfo.updateIllustrations();
+              return MaterialApp(
+                title: "PotatoNotes",
+                theme: SpicyThemes.light(appInfo.mainColor),
+                darkTheme: SpicyThemes.dark(appInfo.mainColor),
+                builder: (context, child) {
+                  appInfo.barManager.lightNavBarColor =
+                      SpicyThemes.light(appInfo.mainColor).cardColor;
+                  appInfo.barManager.darkNavBarColor =
+                      SpicyThemes.dark(appInfo.mainColor).cardColor;
+                  appInfo.barManager.lightIconColor = Brightness.light;
+                  appInfo.barManager.darkIconColor = Brightness.dark;
+                  appInfo.barManager.updateColors();
+                  appInfo.updateIllustrations();
 
-          return MaterialApp(
-            title: "PotatoNotes",
-            theme: SpicyThemes.light(appInfo.mainColor),
-            darkTheme: SpicyThemes.dark(appInfo.mainColor),
-            home: MainPage(initialNotes: initialNotes),
-            debugShowCheckedModeBanner: false,
-          );
-        },
+                  return child;
+                },
+                themeMode: prefs.themeMode,
+                home: MainPage(initialNotes: initialNotes),
+                debugShowCheckedModeBanner: false,
+              );
+            },
+          ),
+        ),
       ),
     );
   }

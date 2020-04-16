@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -7,6 +9,36 @@ class SharedPrefs {
   static Future<SharedPrefs> newInstance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return SharedPrefs._(preferences);
+  }
+
+  Future<ThemeMode> getThemeMode() async {
+    int value = prefs.getInt("theme_mode");
+    switch(value) {
+      case 0:
+        return ThemeMode.system;
+      case 1:
+        return ThemeMode.light;
+      case 2:
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
+
+  void setThemeMode(ThemeMode value) async {
+    int newValue;
+    switch(value) {
+      case ThemeMode.system:
+        newValue = 0;
+        break;
+      case ThemeMode.light:
+        newValue = 1;
+        break;
+      case ThemeMode.dark:
+        newValue = 2;
+        break;
+    }
+    await prefs.setInt("theme_mode", newValue);
   }
 
   Future<bool> getUseGrid() async {
