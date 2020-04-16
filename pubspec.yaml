@@ -31,6 +31,8 @@ dependencies:
   local_auth:
   crypto:
   flutter_secure_storage:
+  http:
+  jwt_decode:
   
   rich_text_editor:
     git:
