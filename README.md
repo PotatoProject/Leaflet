@@ -46,7 +46,7 @@ After that, building is simple as this:
 ```
 
 ## Contributing
-The entire app and even the [online sync api](https://github.com/ATechnoHazard/potatosync) is completely open source.  
+The entire app and even the [online sync api](https://github.com/broodroosterdev/potatosync-rust) is completely open source.  
 Feel free to open a PR to suggest fixes, features or whatever you want, just remember that PRs are subjected to manual review so you gotta wait for actual people to look at your contributions
 
 For translations, head over to our [Crowdin](https://crowdin.com/project/potatonotes).
