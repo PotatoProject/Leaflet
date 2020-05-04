@@ -55,82 +55,85 @@ class MainPageBar extends StatelessWidget {
   }
 
   Widget get navigationSheet => Builder(
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(
-                currentMode == ReturnMode.NORMAL ? Icons.home : OMIcons.home,
-                color: currentMode == ReturnMode.NORMAL
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Home",
-                style: TextStyle(
+        builder: (context) => Material(
+          color: Theme.of(context).cardColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  currentMode == ReturnMode.NORMAL ? Icons.home : OMIcons.home,
                   color: currentMode == ReturnMode.NORMAL
                       ? Theme.of(context).accentColor
                       : null,
                 ),
+                title: Text(
+                  "Home",
+                  style: TextStyle(
+                    color: currentMode == ReturnMode.NORMAL
+                        ? Theme.of(context).accentColor
+                        : null,
+                  ),
+                ),
+                onTap: () {
+                  onReturnModeChange(ReturnMode.NORMAL);
+                  Navigator.pop(context);
+                },
               ),
-              onTap: () {
-                onReturnModeChange(ReturnMode.NORMAL);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                currentMode == ReturnMode.ARCHIVE
-                    ? Icons.archive
-                    : OMIcons.archive,
-                color: currentMode == ReturnMode.ARCHIVE
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Archive",
-                style: TextStyle(
+              ListTile(
+                leading: Icon(
+                  currentMode == ReturnMode.ARCHIVE
+                      ? Icons.archive
+                      : OMIcons.archive,
                   color: currentMode == ReturnMode.ARCHIVE
                       ? Theme.of(context).accentColor
                       : null,
                 ),
+                title: Text(
+                  "Archive",
+                  style: TextStyle(
+                    color: currentMode == ReturnMode.ARCHIVE
+                        ? Theme.of(context).accentColor
+                        : null,
+                  ),
+                ),
+                onTap: () {
+                  onReturnModeChange(ReturnMode.ARCHIVE);
+                  Navigator.pop(context);
+                },
               ),
-              onTap: () {
-                onReturnModeChange(ReturnMode.ARCHIVE);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                currentMode == ReturnMode.TRASH ? Icons.delete : OMIcons.delete,
-                color: currentMode == ReturnMode.TRASH
-                    ? Theme.of(context).accentColor
-                    : null,
-              ),
-              title: Text(
-                "Trash",
-                style: TextStyle(
+              ListTile(
+                leading: Icon(
+                  currentMode == ReturnMode.TRASH ? Icons.delete : OMIcons.delete,
                   color: currentMode == ReturnMode.TRASH
                       ? Theme.of(context).accentColor
                       : null,
                 ),
+                title: Text(
+                  "Trash",
+                  style: TextStyle(
+                    color: currentMode == ReturnMode.TRASH
+                        ? Theme.of(context).accentColor
+                        : null,
+                  ),
+                ),
+                onTap: () {
+                  onReturnModeChange(ReturnMode.TRASH);
+                  Navigator.pop(context);
+                },
               ),
-              onTap: () {
-                onReturnModeChange(ReturnMode.TRASH);
-                Navigator.pop(context);
-              },
-            ),
-            Divider(height: 1),
-            ListTile(
-              leading: Icon(OMIcons.settings),
-              title: Text("Settings"),
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsPage(),
-                  )),
-            ),
-          ],
-        ),
+              Divider(height: 1),
+              ListTile(
+                leading: Icon(OMIcons.settings),
+                title: Text("Settings"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(),
+                    )),
+              ),
+            ],
+          ),
+        )
       );
 }

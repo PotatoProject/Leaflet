@@ -15,7 +15,8 @@ class Preferences extends ChangeNotifier {
   }
 
   String _masterPass;
-  ThemeMode _themeMode;
+  ThemeMode _themeMode = ThemeMode.system;
+  bool _useAmoled = false;
   bool _useGrid = false;
   String _apiUrl;
   String _accessToken;
@@ -25,6 +26,7 @@ class Preferences extends ChangeNotifier {
 
   String get masterPass => _masterPass;
   ThemeMode get themeMode => _themeMode;
+  bool get useAmoled => _useAmoled;
   bool get useGrid => _useGrid;
   String get apiUrl => _apiUrl;
   Future<String> get token async => await getToken();
@@ -40,6 +42,12 @@ class Preferences extends ChangeNotifier {
   set themeMode(ThemeMode value) {
     _themeMode = value;
     prefs.setThemeMode(value);
+    notifyListeners();
+  }
+
+  set useAmoled(bool value) {
+    _useAmoled = value;
+    prefs.setUseAmoled(value);
     notifyListeners();
   }
 
@@ -85,6 +93,7 @@ class Preferences extends ChangeNotifier {
 
     masterPass = await keystore.getMasterPass();
     themeMode = await prefs.getThemeMode();
+    useAmoled = await prefs.getUseAmoled();
     useGrid = await prefs.getUseGrid();
     apiUrl = await prefs.getApiUrl();
     accessToken = await prefs.getAccessToken();

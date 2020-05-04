@@ -54,6 +54,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     value: prefs.themeMode,
                   ),
                 ),
+                SwitchListTile(
+                  value: prefs.useAmoled,
+                  onChanged: (value) => prefs.useAmoled = value,
+                  title: Text("Use AMOLED theme"),
+                  secondary: Icon(CommunityMaterialIcons.brightness_6),
+                  activeColor: Theme.of(context).accentColor,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
               ],
             ),
             SettingsCategory(

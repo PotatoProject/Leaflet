@@ -41,6 +41,14 @@ class SharedPrefs {
     await prefs.setInt("theme_mode", newValue);
   }
 
+  Future<bool> getUseAmoled() async {
+    return prefs.getBool("use_amoled") ?? false;
+  }
+
+  void setUseAmoled(bool value) async {
+    await prefs.setBool("use_amoled", value);
+  }
+
   Future<bool> getUseGrid() async {
     return prefs.getBool("use_grid") ?? false;
   }

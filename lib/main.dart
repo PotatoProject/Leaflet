@@ -42,12 +42,15 @@ class PotatoNotes extends StatelessWidget {
               return MaterialApp(
                 title: "PotatoNotes",
                 theme: SpicyThemes.light(appInfo.mainColor),
-                darkTheme: SpicyThemes.dark(appInfo.mainColor),
+                darkTheme: prefs.useAmoled
+                    ? SpicyThemes.black(appInfo.mainColor)
+                    : SpicyThemes.dark(appInfo.mainColor),
                 builder: (context, child) {
                   appInfo.barManager.lightNavBarColor =
                       SpicyThemes.light(appInfo.mainColor).cardColor;
-                  appInfo.barManager.darkNavBarColor =
-                      SpicyThemes.dark(appInfo.mainColor).cardColor;
+                  appInfo.barManager.darkNavBarColor = prefs.useAmoled
+                      ? SpicyThemes.black(appInfo.mainColor).cardColor
+                      : SpicyThemes.dark(appInfo.mainColor).cardColor;
                   appInfo.barManager.lightIconColor = Brightness.light;
                   appInfo.barManager.darkIconColor = Brightness.dark;
                   appInfo.barManager.updateColors();
