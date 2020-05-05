@@ -13,7 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  moor_flutter: ^1.4.0
+  moor_ffi:
+  moor:
   json_serializable:
   sqflite:
   path_provider:
@@ -43,7 +44,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  moor_generator: ^1.4.0
+  moor_generator:
   build_runner:
 
 flutter:

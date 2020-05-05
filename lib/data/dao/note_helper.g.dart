@@ -7,5 +7,5 @@ part of 'note_helper.dart';
 // **************************************************************************
 
 mixin _$NoteHelperMixin on DatabaseAccessor<AppDatabase> {
-  $NotesTable get notes => db.notes;
+  $NotesTable get notes => attachedDatabase.notes;
 }

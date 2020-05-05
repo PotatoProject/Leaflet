@@ -1,4 +1,4 @@
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
@@ -35,11 +35,12 @@ class Notes extends Table {
 
 @UseMoor(tables: [Notes], daos: [NoteHelper])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
-      : super((FlutterQueryExecutor.inDatabaseFolder(
+  AppDatabase(QueryExecutor e) : super(e);
+  
+  /*(FlutterQueryExecutor.inDatabaseFolder(
           path: 'notes_database.db',
           logStatements: false,
-        )));
+        ))*/
 
   @override
   int get schemaVersion => 6;

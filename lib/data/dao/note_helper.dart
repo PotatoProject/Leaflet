@@ -1,4 +1,4 @@
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
 
 part 'note_helper.g.dart';
@@ -13,15 +13,15 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     switch (mode) {
       case ReturnMode.NORMAL:
         return (select(notes)
-              ..where((table) => and(not(table.archived), not(table.deleted))))
+              ..where((table) => table.archived.not() & table.deleted.not()))
             .get();
       case ReturnMode.ARCHIVE:
         return (select(notes)
-              ..where((table) => and(table.archived, not(table.deleted))))
+              ..where((table) => table.archived & table.deleted.not()))
             .get();
       case ReturnMode.TRASH:
         return (select(notes)
-              ..where((table) => and(not(table.archived), table.deleted)))
+              ..where((table) => table.archived.not() & table.deleted))
             .get();
       case ReturnMode.ALL:
       default:
@@ -38,15 +38,15 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)
-          ..where((table) => and(not(table.archived), not(table.deleted)));
+          ..where((table) => table.archived.not() & table.deleted.not());
         break;
       case ReturnMode.ARCHIVE:
         selectQuery = select(notes)
-          ..where((table) => and(table.archived, not(table.deleted)));
+          ..where((table) => table.archived & table.deleted.not());
         break;
       case ReturnMode.TRASH:
         selectQuery = select(notes)
-          ..where((table) => and(not(table.archived), table.deleted));
+          ..where((table) => table.archived.not() & table.deleted);
         break;
     }
 
@@ -58,7 +58,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future saveNote(Note note) => into(notes).insert(note, orReplace: true);
+  Future saveNote(Note note) => into(notes).insert(note, mode: InsertMode.replace);
 
   Future deleteNote(Note note) => delete(notes).delete(note);
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
@@ -8,24 +7,24 @@ import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
 
-List<Note> initialNotes = [];
+import 'data/database/shared.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initialNotes = await AppDatabase().noteHelper.listNotes(ReturnMode.NORMAL);
   runApp(PotatoNotes());
 }
 
 class PotatoNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AppDatabase db = AppDatabase(constructDb());
     return MultiProvider(
       providers: [
         Provider.value(
-          value: AppDatabase(),
+          value: db,
         ),
         Provider.value(
-          value: AppDatabase().noteHelper,
+          value: db.noteHelper,
         ),
         ChangeNotifierProvider.value(
           value: Preferences(),
@@ -59,7 +58,7 @@ class PotatoNotes extends StatelessWidget {
                   return child;
                 },
                 themeMode: prefs.themeMode,
-                home: MainPage(initialNotes: initialNotes),
+                home: MainPage(),
                 debugShowCheckedModeBanner: false,
               );
             },
