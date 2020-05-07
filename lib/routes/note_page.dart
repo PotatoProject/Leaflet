@@ -145,13 +145,13 @@ class _NotePageState extends State<NotePage> {
             ? Color(NoteColors.colorList(context)[note.color]["hex"])
             : null,
         accentColor:
-            note.color != 0 ? Theme.of(context).textTheme.title.color : null,
+            note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor:
-              note.color != 0 ? Theme.of(context).textTheme.title.color : null,
+              note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
         ),
         toggleableActiveColor: note.color != 0
-            ? Theme.of(context).textTheme.title.color
+            ? Theme.of(context).textTheme.caption.color
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
@@ -207,7 +207,7 @@ class _NotePageState extends State<NotePage> {
                       hintStyle: TextStyle(
                         color: Theme.of(context)
                             .textTheme
-                            .title
+                            .caption
                             .color
                             .withOpacity(0.5),
                       ),
@@ -219,7 +219,7 @@ class _NotePageState extends State<NotePage> {
                       fontWeight: FontWeight.w500,
                       color: Theme.of(context)
                           .textTheme
-                          .title
+                          .caption
                           .color
                           .withOpacity(0.7),
                     ),
@@ -232,7 +232,7 @@ class _NotePageState extends State<NotePage> {
                       hintStyle: TextStyle(
                         color: Theme.of(context)
                             .textTheme
-                            .title
+                            .caption
                             .color
                             .withOpacity(0.3),
                       ),
@@ -245,7 +245,7 @@ class _NotePageState extends State<NotePage> {
                       fontSize: 16,
                       color: Theme.of(context)
                           .textTheme
-                          .title
+                          .caption
                           .color
                           .withOpacity(0.5),
                     ),

@@ -37,7 +37,7 @@ class NoteView extends StatelessWidget {
         borderRadius: BorderRadius.circular(_kBorderRadius),
         side: selected
             ? BorderSide(
-              color: Theme.of(context).textTheme.title.color,
+              color: Theme.of(context).textTheme.caption.color,
               width: 1.5,
             )
             : BorderSide.none,
@@ -80,7 +80,7 @@ class NoteView extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         color: Theme.of(context)
                             .textTheme
-                            .title
+                            .caption
                             .color
                             .withOpacity(0.7),
                       ),
@@ -99,7 +99,7 @@ class NoteView extends StatelessWidget {
                                 fontSize: 16,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .title
+                                    .caption
                                     .color
                                     .withOpacity(0.5),
                               ),
@@ -113,7 +113,7 @@ class NoteView extends StatelessWidget {
                               fontSize: 16,
                               color: Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .caption
                                   .color
                                   .withOpacity(0.5),
                             ),
@@ -156,7 +156,7 @@ class NoteView extends StatelessWidget {
                         : Icons.check_box_outline_blank,
                     color: item.status
                         ? note.color != 0
-                            ? Theme.of(context).textTheme.title.color
+                            ? Theme.of(context).textTheme.caption.color
                             : Theme.of(context).accentColor
                         : null,
                     size: 20,
@@ -173,7 +173,7 @@ class NoteView extends StatelessWidget {
                       style: TextStyle(
                           color: Theme.of(context)
                               .textTheme
-                              .title
+                              .caption
                               .color
                               .withOpacity(item.status ? 0.5 : 0.7),
                           decoration:

@@ -9,15 +9,17 @@ import 'package:spicy_components/spicy_components.dart';
 
 import 'data/database/shared.dart';
 
+AppDatabase db;
+
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  db = AppDatabase(constructDb());
   runApp(PotatoNotes());
 }
 
 class PotatoNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AppDatabase db = AppDatabase(constructDb());
     return MultiProvider(
       providers: [
         Provider.value(
