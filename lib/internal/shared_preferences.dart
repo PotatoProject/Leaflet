@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {

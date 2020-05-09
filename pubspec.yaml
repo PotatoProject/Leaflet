@@ -20,7 +20,6 @@ dependencies:
   path_provider:
   provider:
   streams_channel:
-  flutter_markdown:
   outline_material_icons:
   community_material_icon:
   flutter_staggered_grid_view:
@@ -30,10 +29,10 @@ dependencies:
   flutter_svg:
   shared_preferences:
   local_auth:
-  crypto:
   flutter_secure_storage:
   http:
   jwt_decode:
+  animations:
   
   rich_text_editor:
     git:

@@ -1,13 +1,13 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
-
-import 'data/database/shared.dart';
 
 AppDatabase db;
 
@@ -42,10 +42,27 @@ class PotatoNotes extends StatelessWidget {
 
               return MaterialApp(
                 title: "PotatoNotes",
-                theme: SpicyThemes.light(appInfo.mainColor),
-                darkTheme: prefs.useAmoled
-                    ? SpicyThemes.black(appInfo.mainColor)
-                    : SpicyThemes.dark(appInfo.mainColor),
+                theme: SpicyThemes.light(appInfo.mainColor).copyWith(
+                  pageTransitionsTheme: const PageTransitionsTheme(
+                    builders: <TargetPlatform, PageTransitionsBuilder>{
+                      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                        transitionType: SharedAxisTransitionType.scaled,
+                      ),
+                    },
+                  ),
+                ),
+                darkTheme: (prefs.useAmoled
+                        ? SpicyThemes.black(appInfo.mainColor)
+                        : SpicyThemes.dark(appInfo.mainColor))
+                    .copyWith(
+                  pageTransitionsTheme: const PageTransitionsTheme(
+                    builders: <TargetPlatform, PageTransitionsBuilder>{
+                      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                        transitionType: SharedAxisTransitionType.scaled,
+                      ),
+                    },
+                  ),
+                ),
                 builder: (context, child) {
                   appInfo.barManager.lightNavBarColor =
                       SpicyThemes.light(appInfo.mainColor).cardColor;
