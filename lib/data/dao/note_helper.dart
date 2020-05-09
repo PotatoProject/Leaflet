@@ -59,15 +59,22 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<List<Note>> getNotesMatchingQuery(SearchQuery query) async {
-    List<Note> noteList = await select(notes).get();
+    List<Note> noteList;
     List<Note> queryNotes = [];
 
-    String textQuery = query.caseSensitive
-        ? query.input
-        : query.input.toLowerCase();
+    if(query.color != null) {
+      noteList = await (select(notes)
+          ..where((table) => table.color.equals(query.color)))
+        .get();
+    } else {
+      noteList = await select(notes).get();
+    }
 
-    if(textQuery.trim() != "") {
-      for(Note note in noteList) {
+    String textQuery =
+        query.caseSensitive ? query.input : query.input.toLowerCase();
+
+    if (textQuery.trim() != "") {
+      for (Note note in noteList) {
         List<String> splittedTitle = query.caseSensitive
             ? note.title.split(new RegExp("[ ]{1,}"))
             : note.title.toLowerCase().split(new RegExp("[ ]{1,}"));
@@ -75,7 +82,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
             ? note.content.split(new RegExp("[ ]{1,}"))
             : note.content.toLowerCase().split(new RegExp("[ ]{1,}"));
 
-        if(splittedTitle.any((element) => element.startsWith(textQuery)) ||
+        if (splittedTitle.any((element) => element.startsWith(textQuery)) ||
             splittedContent.any((element) => element.startsWith(textQuery))) {
           queryNotes.add(note);
         }
