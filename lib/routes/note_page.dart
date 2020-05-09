@@ -428,6 +428,7 @@ class _NotePageState extends State<NotePage> {
   bool saveAndPop(_) {
     void _internal() async {
       if (contentController.text.trim() != "") {
+        print(contentController.styleList.toJson());
         List<int> styleJson =
             gzip.encode(utf8.encode(contentController.styleList.toJson()));
 

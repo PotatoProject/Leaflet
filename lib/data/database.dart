@@ -37,11 +37,6 @@ class Notes extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
   
-  /*(FlutterQueryExecutor.inDatabaseFolder(
-          path: 'notes_database.db',
-          logStatements: false,
-        ))*/
-
   @override
   int get schemaVersion => 6;
 }
