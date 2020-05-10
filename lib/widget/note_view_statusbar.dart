@@ -41,7 +41,8 @@ class NoteViewStatusbar extends StatelessWidget {
       MapEntry<String, IconData>(
           "Content hidden", CommunityMaterialIcons.eye_off_outline),
       MapEntry<String, IconData>(
-          "Note locked", note.usesBiometrics
+          "Note locked",
+          note.usesBiometrics
               ? CommunityMaterialIcons.fingerprint
               : CommunityMaterialIcons.lock_outline),
       MapEntry<String, IconData>("Reminders set", CommunityMaterialIcons.alarm),
@@ -62,8 +63,8 @@ class NoteViewStatusbar extends StatelessWidget {
     if (iconDataIndexes.length > 2) {
       iconDataIndexes.forEach((item) => icons.add(Icon(iconData[item].value)));
     } else {
-      for(int i = 0; i < iconDataIndexes.length; i++) {
-        if(i == iconDataIndexes.length - 1) {
+      for (int i = 0; i < iconDataIndexes.length; i++) {
+        if (i == iconDataIndexes.length - 1) {
           icons.add(Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

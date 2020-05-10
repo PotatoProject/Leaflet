@@ -85,8 +85,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     if (query.color != null && query.date != null) {
       selectQuery = select(notes)
         ..where((table) =>
-            table.color.equals(query.color) &
-            dateModeBoolExpression(table));
+            table.color.equals(query.color) & dateModeBoolExpression(table));
     } else if (query.color != null) {
       selectQuery = select(notes)
         ..where((table) => table.color.equals(query.color));

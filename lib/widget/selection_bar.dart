@@ -48,16 +48,15 @@ class SelectionBar extends StatelessWidget {
 
       buttons.addAll([
         IconButton(
-          icon: Icon(
-            anyNotStarred ? Icons.star : Icons.star_border
-          ),
+          icon: Icon(anyNotStarred ? Icons.star : Icons.star_border),
           padding: EdgeInsets.all(0),
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
-              if(anyNotStarred)
+              if (anyNotStarred)
                 await helper.saveNote(selectionList[i].copyWith(starred: true));
               else
-                await helper.saveNote(selectionList[i].copyWith(starred: false));
+                await helper
+                    .saveNote(selectionList[i].copyWith(starred: false));
             }
 
             onCloseSelection();
@@ -69,21 +68,22 @@ class SelectionBar extends StatelessWidget {
           onPressed: () async {
             int selectedColor;
 
-            if(selectionList.length > 1) {
+            if (selectionList.length > 1) {
               int color = selectionList[0].color;
 
-              if(selectionList.every((item) => item.color == color))
+              if (selectionList.every((item) => item.color == color))
                 selectedColor = color;
               else
                 selectedColor = 0;
-            } else selectedColor = selectionList[0].color;
+            } else
+              selectedColor = selectionList[0].color;
 
             selectedColor = await showModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
                 selectedColor: selectedColor,
                 onColorSelect: (color) {
-                  if(selectedColor == color)
+                  if (selectedColor == color)
                     Navigator.pop(context, null);
                   else
                     Navigator.pop(context, color);
@@ -91,9 +91,10 @@ class SelectionBar extends StatelessWidget {
               ),
             );
 
-            if(selectedColor != null) {
+            if (selectedColor != null) {
               for (int i = 0; i < selectionList.length; i++)
-                await helper.saveNote(selectionList[i].copyWith(color: selectedColor));
+                await helper
+                    .saveNote(selectionList[i].copyWith(color: selectedColor));
 
               onCloseSelection();
             }
@@ -108,7 +109,8 @@ class SelectionBar extends StatelessWidget {
         padding: EdgeInsets.all(0),
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
-            await helper.saveNote(selectionList[i].copyWith(deleted: false, archived: true));
+            await helper.saveNote(
+                selectionList[i].copyWith(deleted: false, archived: true));
 
           onCloseSelection();
         },
@@ -122,7 +124,7 @@ class SelectionBar extends StatelessWidget {
         for (int i = 0; i < selectionList.length; i++) {
           Note note = selectionList[i];
 
-          if(note.deleted) {
+          if (note.deleted) {
             helper.deleteNote(note);
           } else {
             helper.saveNote(note.copyWith(deleted: true, archived: false));
@@ -133,13 +135,14 @@ class SelectionBar extends StatelessWidget {
       },
     ));
 
-    if(currentMode != ReturnMode.NORMAL) {
+    if (currentMode != ReturnMode.NORMAL) {
       buttons.add(IconButton(
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
-            await helper.saveNote(selectionList[i].copyWith(deleted: false, archived: false));
+            await helper.saveNote(
+                selectionList[i].copyWith(deleted: false, archived: false));
 
           onCloseSelection();
         },

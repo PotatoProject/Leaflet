@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class Keystore {
   FlutterSecureStorage storage;
 
-  Keystore()  {
+  Keystore() {
     this.storage = FlutterSecureStorage();
   }
 

@@ -31,7 +31,7 @@ class AccountController implements AccountInterface {
   Future<bool> login(String emailOrUser, String password) async {
     Map<String, String> body;
 
-    if(emailOrUser.contains("@")) {
+    if (emailOrUser.contains("@")) {
       body = {
         "email": emailOrUser,
         "password": password,
@@ -50,7 +50,7 @@ class AccountController implements AccountInterface {
     bool status = json.decode(login.body)["status"];
     Map<String, dynamic> loginAccountInfo = json.decode(login.body)["account"];
 
-    if(login.statusCode == 200) {
+    if (login.statusCode == 200) {
       prefs.accessToken = loginAccountInfo["access_token"];
       prefs.refreshToken = loginAccountInfo["refresh_token"];
       prefs.username = loginAccountInfo["username"];

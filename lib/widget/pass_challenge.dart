@@ -30,9 +30,7 @@ class _PassChallengeState extends State<PassChallenge> {
     if (prefs == null) prefs = Provider.of<Preferences>(context);
     if (controller == null)
       controller = TextEditingController(
-        text: widget.editMode
-            ? prefs.masterPass ?? ""
-            : "",
+        text: widget.editMode ? prefs.masterPass ?? "" : "",
       );
 
     return Padding(
@@ -45,8 +43,7 @@ class _PassChallengeState extends State<PassChallenge> {
           Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              (widget.editMode ? "Modify " : "Confirm ") +
-                  "master pass",
+              (widget.editMode ? "Modify " : "Confirm ") + "master pass",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -93,10 +90,10 @@ class _PassChallengeState extends State<PassChallenge> {
                           ? () => widget.onSave(controller.text)
                           : () {
                               if (prefs.masterPass == controller.text) {
-                                  status = null;
-                                  widget.onChallengeSuccess();
-                                } else
-                                  status = "Incorrect master pass";
+                                status = null;
+                                widget.onChallengeSuccess();
+                              } else
+                                status = "Incorrect master pass";
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),

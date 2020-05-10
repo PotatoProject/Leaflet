@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void initState() {
     controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 150), value: 1);
+
     super.initState();
   }
 
@@ -98,8 +99,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           });
                         } else {
                           bool status = false;
-                          if(note.lockNote && note.usesBiometrics) {
-                            bool bioAuth = await LocalAuthentication().authenticateWithBiometrics(
+                          if (note.lockNote && note.usesBiometrics) {
+                            bool bioAuth = await LocalAuthentication()
+                                .authenticateWithBiometrics(
                               localizedReason: "",
                               androidAuthStrings: AndroidAuthMessages(
                                 signInTitle: "Scan fingerprint to open note",
@@ -107,16 +109,21 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               ),
                             );
 
-                            if(bioAuth)
+                            if (bioAuth)
                               status = bioAuth;
-                            else status = await Utils.showPassChallengeSheet(context) ?? false;
-                          } else if(note.lockNote && !note.usesBiometrics) {
-                            status = await Utils.showPassChallengeSheet(context) ?? false;
+                            else
+                              status =
+                                  await Utils.showPassChallengeSheet(context) ??
+                                      false;
+                          } else if (note.lockNote && !note.usesBiometrics) {
+                            status =
+                                await Utils.showPassChallengeSheet(context) ??
+                                    false;
                           } else {
                             status = true;
                           }
 
-                          if(status) {
+                          if (status) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -186,7 +193,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                             ],
                           )),
                       Visibility(
-                        visible: starredNotes.isNotEmpty && normalNotes.isNotEmpty,
+                        visible:
+                            starredNotes.isNotEmpty && normalNotes.isNotEmpty,
                         child: Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: 8, vertical: 4),

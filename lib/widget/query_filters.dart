@@ -69,37 +69,34 @@ class _QueryFiltersState extends State<QueryFilters> {
           leading: Icon(OMIcons.dateRange),
           title: Text("Date filter"),
           subtitle: widget.query.date != null
-              ? Text(
-                  DateFormat("EEEE d MMM yyyy").format(widget.query.date) +
+              ? Text(DateFormat("EEEE d MMM yyyy").format(widget.query.date) +
                   " - " +
-                  DateFilterSelector.stringFromDateMode(widget.query.dateMode)
-                )
+                  DateFilterSelector.stringFromDateMode(widget.query.dateMode))
               : null,
           onTap: () async {
             showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => DateFilterSelector(
-                date: widget.query.date,
-                mode: widget.query.dateMode,
-                onConfirm: (date, mode) {
-                  setState(() {
-                    widget.query.date = date;
-                    widget.query.dateMode = mode;
-                  });
-                  if (widget.filterChangedCallback != null)
-                    widget.filterChangedCallback();
-                },
-                onReset: () {
-                  setState(() {
-                    widget.query.date = null;
-                    widget.query.dateMode = DateFilterMode.ONLY;
-                  });
-                  if (widget.filterChangedCallback != null)
-                    widget.filterChangedCallback();
-                },
-              )
-            );
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => DateFilterSelector(
+                      date: widget.query.date,
+                      mode: widget.query.dateMode,
+                      onConfirm: (date, mode) {
+                        setState(() {
+                          widget.query.date = date;
+                          widget.query.dateMode = mode;
+                        });
+                        if (widget.filterChangedCallback != null)
+                          widget.filterChangedCallback();
+                      },
+                      onReset: () {
+                        setState(() {
+                          widget.query.date = null;
+                          widget.query.dateMode = DateFilterMode.ONLY;
+                        });
+                        if (widget.filterChangedCallback != null)
+                          widget.filterChangedCallback();
+                      },
+                    ));
           },
         ),
       ],

@@ -32,7 +32,7 @@ class NotePage extends StatefulWidget {
 
   NotePage({
     this.note,
-    this.numOfImages,
+    this.numOfImages = 2,
   });
 
   @override
@@ -56,27 +56,26 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    note = widget.note ??
-        Note(
-          id: null,
-          title: "",
-          content: "",
-          styleJson: null,
-          starred: false,
-          creationDate: DateTime.now(),
-          lastModifyDate: DateTime.now(),
-          color: 0,
-          images: ImageList([]),
-          list: false,
-          listContent: ListContent([]),
-          reminders: ReminderList([]),
-          hideContent: false,
-          lockNote: false,
-          usesBiometrics: false,
-          deleted: false,
-          archived: false,
-          synced: false,
-        );
+    note = Note(
+      id: widget.note?.id,
+      title: widget.note?.title ?? "",
+      content: widget.note?.content ?? "",
+      styleJson: widget.note?.styleJson,
+      starred: widget.note?.starred ?? false,
+      creationDate: widget.note?.creationDate ?? DateTime.now(),
+      lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
+      color: widget.note?.color ?? 0,
+      images: widget.note?.images ?? ImageList([]),
+      list: widget.note?.list ?? false,
+      listContent: widget.note?.listContent ?? ListContent([]),
+      reminders: widget.note?.reminders ?? ReminderList([]),
+      hideContent: widget.note?.hideContent ?? false,
+      lockNote: widget.note?.lockNote ?? false,
+      usesBiometrics: widget.note?.usesBiometrics ?? false,
+      deleted: widget.note?.deleted ?? false,
+      archived: widget.note?.archived ?? false,
+      synced: widget.note?.synced ?? false,
+    );
 
     titleController = TextEditingController(text: note.title);
     titleController.addListener(() {
@@ -147,8 +146,9 @@ class _NotePageState extends State<NotePage> {
         accentColor:
             note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
         bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor:
-              note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
+          backgroundColor: note.color != 0
+              ? Theme.of(context).textTheme.caption.color
+              : null,
         ),
         toggleableActiveColor: note.color != 0
             ? Theme.of(context).textTheme.caption.color
@@ -428,7 +428,6 @@ class _NotePageState extends State<NotePage> {
   bool saveAndPop(_) {
     void _internal() async {
       if (contentController.text.trim() != "") {
-        print(contentController.styleList.toJson());
         List<int> styleJson =
             gzip.encode(utf8.encode(contentController.styleList.toJson()));
 
@@ -492,8 +491,8 @@ class _NotePageState extends State<NotePage> {
               value: note.lockNote,
               onChanged: prefs.masterPass != ""
                   ? (value) async {
-                      bool confirm = await Utils.showPassChallengeSheet(context) ??
-                          false;
+                      bool confirm =
+                          await Utils.showPassChallengeSheet(context) ?? false;
 
                       if (confirm)
                         note = note.copyWith(lockNote: !note.lockNote);
@@ -528,7 +527,7 @@ class _NotePageState extends State<NotePage> {
                           confirm = false;
                         }
 
-                        if(confirm)
+                        if (confirm)
                           note = note.copyWith(usesBiometrics: value);
                       }
                     : null,

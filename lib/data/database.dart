@@ -36,7 +36,7 @@ class Notes extends Table {
 @UseMoor(tables: [Notes], daos: [NoteHelper])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
-  
+
   @override
   int get schemaVersion => 6;
 }

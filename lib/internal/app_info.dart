@@ -34,7 +34,6 @@ class AppInfoProvider extends ChangeNotifier {
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
 
-
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
@@ -66,7 +65,7 @@ class AppInfoProvider extends ChangeNotifier {
   void loadData() async {
     themeSubscription =
         themeStreamChannel.receiveBroadcastStream().listen((data) {
-      switch(prefs.themeMode) {
+      switch (prefs.themeMode) {
         case ThemeMode.system:
           systemTheme = data ? Brightness.dark : Brightness.light;
           break;

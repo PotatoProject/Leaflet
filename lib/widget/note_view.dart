@@ -37,9 +37,9 @@ class NoteView extends StatelessWidget {
         borderRadius: BorderRadius.circular(_kBorderRadius),
         side: selected
             ? BorderSide(
-              color: Theme.of(context).textTheme.caption.color,
-              width: 1.5,
-            )
+                color: Theme.of(context).textTheme.caption.color,
+                width: 1.5,
+              )
             : BorderSide.none,
       ),
       elevation: 3,

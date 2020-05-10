@@ -12,7 +12,7 @@ class SharedPrefs {
 
   Future<ThemeMode> getThemeMode() async {
     int value = prefs.getInt("theme_mode");
-    switch(value) {
+    switch (value) {
       case 0:
         return ThemeMode.system;
       case 1:
@@ -26,7 +26,7 @@ class SharedPrefs {
 
   void setThemeMode(ThemeMode value) async {
     int newValue;
-    switch(value) {
+    switch (value) {
       case ThemeMode.system:
         newValue = 0;
         break;

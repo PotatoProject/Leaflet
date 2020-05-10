@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "0.2.2"
   animations:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: animations
       url: "https://pub.dartlang.org"

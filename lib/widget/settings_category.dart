@@ -16,7 +16,10 @@ class SettingsCategory extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(
-            16, 16, 16, 0,
+            16,
+            16,
+            16,
+            0,
           ),
           child: headerWidget(header),
         ),

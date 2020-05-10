@@ -13,5 +13,6 @@ QueryExecutor constructDb({bool logStatements = false}) {
       return VmDatabase(dbFile, logStatements: logStatements);
     });
     return executor;
-  } else return null;
+  } else
+    return null;
 }
