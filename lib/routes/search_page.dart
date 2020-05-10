@@ -37,6 +37,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       bottomNavigationBar: Material(
         elevation: 6,
+        color: Theme.of(context).cardColor,
         child: Container(
           height: 56,
           padding: EdgeInsets.symmetric(horizontal: 16),

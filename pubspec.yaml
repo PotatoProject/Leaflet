@@ -33,6 +33,7 @@ dependencies:
   http:
   jwt_decode:
   animations:
+  intl:
   
   rich_text_editor:
     git:

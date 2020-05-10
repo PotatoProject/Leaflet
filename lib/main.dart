@@ -42,27 +42,10 @@ class PotatoNotes extends StatelessWidget {
 
               return MaterialApp(
                 title: "PotatoNotes",
-                theme: SpicyThemes.light(appInfo.mainColor).copyWith(
-                  pageTransitionsTheme: const PageTransitionsTheme(
-                    builders: <TargetPlatform, PageTransitionsBuilder>{
-                      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-                        transitionType: SharedAxisTransitionType.scaled,
-                      ),
-                    },
-                  ),
-                ),
-                darkTheme: (prefs.useAmoled
-                        ? SpicyThemes.black(appInfo.mainColor)
-                        : SpicyThemes.dark(appInfo.mainColor))
-                    .copyWith(
-                  pageTransitionsTheme: const PageTransitionsTheme(
-                    builders: <TargetPlatform, PageTransitionsBuilder>{
-                      TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-                        transitionType: SharedAxisTransitionType.scaled,
-                      ),
-                    },
-                  ),
-                ),
+                theme: SpicyThemes.light(appInfo.mainColor),
+                darkTheme: prefs.useAmoled
+                    ? SpicyThemes.black(appInfo.mainColor)
+                    : SpicyThemes.dark(appInfo.mainColor),
                 builder: (context, child) {
                   appInfo.barManager.lightNavBarColor =
                       SpicyThemes.light(appInfo.mainColor).cardColor;

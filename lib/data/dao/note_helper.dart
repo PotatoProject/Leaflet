@@ -59,16 +59,45 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<List<Note>> getNotesMatchingQuery(SearchQuery query) async {
+    Expression<bool> dateModeBoolExpression($NotesTable table) {
+      Expression<bool> exp;
+
+      switch (query.dateMode) {
+        case DateFilterMode.AFTER:
+          exp = table.creationDate.isBiggerOrEqualValue(query.date);
+          break;
+        case DateFilterMode.BEFORE:
+          exp = table.creationDate.isSmallerOrEqualValue(query.date);
+          break;
+        case DateFilterMode.ONLY:
+        default:
+          exp = table.creationDate.equals(query.date);
+          break;
+      }
+
+      return exp;
+    }
+
+    SimpleSelectStatement<$NotesTable, Note> selectQuery;
     List<Note> noteList;
     List<Note> queryNotes = [];
 
-    if(query.color != null) {
-      noteList = await (select(notes)
-          ..where((table) => table.color.equals(query.color)))
-        .get();
+    if (query.color != null && query.date != null) {
+      selectQuery = select(notes)
+        ..where((table) =>
+            table.color.equals(query.color) &
+            dateModeBoolExpression(table));
+    } else if (query.color != null) {
+      selectQuery = select(notes)
+        ..where((table) => table.color.equals(query.color));
+    } else if (query.date != null) {
+      selectQuery = select(notes)
+        ..where((table) => dateModeBoolExpression(table));
     } else {
-      noteList = await select(notes).get();
+      selectQuery = select(notes);
     }
+
+    noteList = await selectQuery.get();
 
     String textQuery =
         query.caseSensitive ? query.input : query.input.toLowerCase();
@@ -103,15 +132,22 @@ class SearchQuery {
   bool caseSensitive;
   int color;
   DateTime date;
+  DateFilterMode dateMode;
 
   SearchQuery({
     this.input = "",
     this.caseSensitive = true,
     this.color,
     this.date,
+    this.dateMode = DateFilterMode.ONLY,
   });
 }
 
+enum DateFilterMode {
+  AFTER,
+  BEFORE,
+  ONLY,
+}
 enum ReturnMode {
   ALL,
   NORMAL,
