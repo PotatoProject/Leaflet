@@ -12,6 +12,6 @@ class Keystore {
   }
 
   void setMasterPass(String value) async {
-    await storage.write(key: "master_password", value: value);
+    await storage.write(key: "master_pass", value: value);
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:potato_notes/internal/keystore.dart';
-import 'package:potato_notes/internal/shared_preferences.dart';
+import 'package:potato_notes/internal/shared_prefs.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
