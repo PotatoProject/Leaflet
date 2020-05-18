@@ -41,7 +41,7 @@ class NoteController implements NoteInterface {
       Response deleteResponse = await http.delete(
           "${prefs.apiUrl}/api/notes/${id}",
           headers: {"Authorization": token});
-      print(id + " delete:" + deleteResponse.body );
+      print(id + " delete:" + deleteResponse.body);
       bool status = json.decode(deleteResponse.body)["status"];
       return status;
     } catch (e) {
@@ -54,11 +54,12 @@ class NoteController implements NoteInterface {
   Future<bool> deleteAll() async {
     try {
       String token = await prefs.getToken();
-      Response deleteResult = await http.delete("${prefs.apiUrl}/api/notes/all", headers: {"Authorization": token});
+      Response deleteResult = await http.delete(
+          "${prefs.apiUrl}/api/notes/all", headers: {"Authorization": token});
       print("delete-all: " + deleteResult.body);
       bool status = Utils.statusFromResponse(deleteResult);
       return status;
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
       return false;
     }
@@ -69,10 +70,12 @@ class NoteController implements NoteInterface {
     List<Note> notes = List();
     try {
       String token = await prefs.getToken();
-      Response listResult = await http.get("${prefs.apiUrl}/api/notes/list?last_updated=$lastUpdated", headers: {"Authorization": token});
+      Response listResult = await http.get(
+          "${prefs.apiUrl}/api/notes/list?last_updated=$lastUpdated",
+          headers: {"Authorization": token});
       print("list: " + listResult.body);
       bool status = Utils.statusFromResponse(listResult);
-      if(status == true) {
+      if (status == true) {
         final data = jsonDecode(listResult.body);
         for (Map i in data["notes"]) {
           print(i);
@@ -83,7 +86,7 @@ class NoteController implements NoteInterface {
       } else {
         return null;
       }
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
@@ -95,7 +98,8 @@ class NoteController implements NoteInterface {
       String deltaJson = jsonEncode(noteDelta);
       print(deltaJson);
       String token = await prefs.getToken();
-      Response updateResult = await http.patch("${prefs.apiUrl}/api/notes/${id}",
+      Response updateResult = await http.patch(
+          "${prefs.apiUrl}/api/notes/${id}",
           body: deltaJson, headers: {"Authorization": token});
       print(id + " update:" + updateResult.body);
       bool status = Utils.statusFromResponse(updateResult);
