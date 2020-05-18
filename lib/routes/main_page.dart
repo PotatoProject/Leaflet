@@ -13,11 +13,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -29,11 +29,11 @@ import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
-import 'package:potato_notes/widget/tag_editor.dart';
+import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
-import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
+import 'package:potato_notes/widget/tag_editor.dart';
 
 class MainPage extends StatefulWidget {
   @override
