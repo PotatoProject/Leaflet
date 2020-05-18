@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class MainPageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Preferences prefs = Provider.of<Preferences>(context);
+    Preferences prefs = locator<Preferences>();
 
     return SpicyBottomBar(
       leftItems: [

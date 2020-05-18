@@ -4,8 +4,8 @@ import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 class SyncHelper {
   AccountController _account;
 
-  SyncHelper(BuildContext context) {
-    this._account = AccountController(context);
+  SyncHelper() {
+    this._account = AccountController();
   }
 
   Future<bool> accountRegister(

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/sync/interface/account_interface.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:provider/provider.dart';
 
 class AccountController implements AccountInterface {
   Preferences prefs;
 
-  AccountController(BuildContext context) {
-    this.prefs = Provider.of<Preferences>(context);
+  AccountController() {
+    this.prefs = locator<Preferences>();
   }
 
   Future<bool> register(String username, String email, String password) async {

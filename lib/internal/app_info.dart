@@ -9,19 +9,19 @@ import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/system_bar_manager.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:provider/provider.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
-  BuildContext context;
   static final StreamsChannel accentStreamChannel =
       StreamsChannel('potato_notes_accents');
   static final StreamsChannel themeStreamChannel =
       StreamsChannel('potato_notes_themes');
 
-  AppInfoProvider(this.context) {
-    prefs = Provider.of<Preferences>(context);
-    illustrations = Illustrations(context);
+  AppInfoProvider() {
+    prefs = locator<Preferences>();
+    illustrations = Illustrations();
     loadData();
 
     barManager = SystemBarManager(this);

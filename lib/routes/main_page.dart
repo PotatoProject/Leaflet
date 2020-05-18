@@ -14,6 +14,7 @@ import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_options.dart';
@@ -59,8 +60,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
-    if (helper == null) helper = Provider.of<NoteHelper>(context);
-    if (prefs == null) prefs = Provider.of<Preferences>(context);
+    if (helper == null) helper = locator<NoteHelper>();
+    if (prefs == null) prefs = locator<Preferences>();
 
     double width = MediaQuery.of(context).size.width;
 

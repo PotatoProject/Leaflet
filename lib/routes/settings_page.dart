@@ -6,6 +6,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (prefs == null) prefs = Provider.of<Preferences>(context);
+    if (prefs == null) prefs = locator<Preferences>();
 
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
