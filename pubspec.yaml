@@ -58,6 +58,7 @@ dev_dependencies:
     sdk: flutter
   moor_generator:
   build_runner:
+  json_serializable:
 
 flutter:
   uses-material-design: true
