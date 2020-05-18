@@ -20,6 +20,9 @@ import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -148,7 +151,8 @@ class _MainPageState extends State<MainPage>
                     textTheme: Theme.of(context).textTheme,
                     actions: appBarButtons,
                   ),
-            body: StreamBuilder<List<Note>>(
+            body: RefreshIndicator(
+        child: StreamBuilder<List<Note>>(
               stream: helper.noteStream(mode),
               initialData: cachedNotesMap[mode],
               builder: (context, snapshot) {
@@ -683,4 +687,7 @@ class _MainPageState extends State<MainPage>
           ),
         ),
       ];
+  Future<void> sync() async {
+    await SyncRoutine().syncNotes();
+  }
 }
