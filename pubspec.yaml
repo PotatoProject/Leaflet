@@ -32,6 +32,7 @@ dependencies:
   http:
   jwt_decode:
   intl:
+  uuid:
   flutter_local_notifications:
   share:
   animations:

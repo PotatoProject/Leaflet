@@ -9,7 +9,7 @@ import 'package:potato_notes/data/model/tag_list.dart';
 part 'database.g.dart';
 
 class Notes extends Table {
-  IntColumn get id => integer()();
+  TextColumn get id => text()();
   TextColumn get title => text().nullable()();
   TextColumn get content => text().nullable()();
   TextColumn get styleJson => text().map(const ContentStyleConverter()).nullable()();
@@ -32,7 +32,7 @@ class Notes extends Table {
   BoolColumn get synced => boolean().withDefault(Constant(false))();
 
   @override
-  Set<Column> get primaryKey => {id, synced};
+  Set<Column> get primaryKey => {id};
 }
 
 @UseMoor(tables: [Notes], daos: [NoteHelper])

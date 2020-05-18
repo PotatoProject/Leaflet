@@ -9,7 +9,6 @@ import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
@@ -106,15 +105,8 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
-
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
-
-    if (note.id == null) note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
+    var uuid = Uuid();
+    if (note.id == null) note = note.copyWith(id: uuid.v4());
   }
 
   @override
