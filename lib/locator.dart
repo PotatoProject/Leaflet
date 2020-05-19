@@ -5,6 +5,7 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 import 'package:potato_notes/internal/sync/controller/note_controller.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
+import 'package:uuid/uuid.dart';
 
 import 'main.dart';
 
@@ -16,4 +17,5 @@ void setupLocator() {
   locator.registerLazySingleton<SyncRoutine>(() => SyncRoutine());
   locator.registerLazySingleton<NoteController>(() => NoteController());
   locator.registerLazySingleton<AccountController>(() => AccountController());
+  locator.registerLazySingleton<Uuid>(() => Uuid());
 }

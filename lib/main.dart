@@ -10,7 +10,6 @@ import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
