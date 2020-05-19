@@ -14,6 +14,6 @@ void setupLocator() {
   locator.registerSingleton<Preferences>(Preferences());
   locator.registerLazySingleton<NoteHelper>(() => NoteHelper(db));
   locator.registerLazySingleton<SyncRoutine>(() => SyncRoutine());
-  locator.registerLazySingleton(() => NoteController());
-  locator.registerLazySingleton(() => AccountController());
+  locator.registerLazySingleton<NoteController>(() => NoteController());
+  locator.registerLazySingleton<AccountController>(() => AccountController());
 }

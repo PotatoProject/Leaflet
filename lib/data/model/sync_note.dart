@@ -26,24 +26,25 @@ class SyncNote {
   bool synced;
 
   SyncNote(
-      this.note_id,
-      this.title,
-      this.content,
-      this.style_json,
-      this.starred,
-      this.creation_date,
-      this.last_modify_date,
-      this.color,
-      this.images,
-      this.list,
-      this.list_content,
-      this.reminders,
-      this.hide_content,
-      this.lock_note,
-      this.uses_biometrics,
-      this.deleted,
-      this.archived,
-      this.synced);
+    this.note_id,
+    this.title,
+    this.content,
+    this.style_json,
+    this.starred,
+    this.creation_date,
+    this.last_modify_date,
+    this.color,
+    this.images,
+    this.list,
+    this.list_content,
+    this.reminders,
+    this.hide_content,
+    this.lock_note,
+    this.uses_biometrics,
+    this.deleted,
+    this.archived,
+    this.synced,
+  );
 
   static SyncNote fromNote(Note note) {
     String id = note.id;
@@ -65,24 +66,25 @@ class SyncNote {
     bool archived = note.archived;
     bool synced = note.synced;
     return SyncNote(
-        id,
-        title,
-        content,
-        styleJson,
-        starred,
-        creationDate,
-        lastModifyDate,
-        color,
-        images,
-        list,
-        listContent,
-        reminders,
-        hideContent,
-        lockNote,
-        usesBiometrics,
-        deleted,
-        archived,
-        synced);
+      id,
+      title,
+      content,
+      styleJson,
+      starred,
+      creationDate,
+      lastModifyDate,
+      color,
+      images,
+      list,
+      listContent,
+      reminders,
+      hideContent,
+      lockNote,
+      usesBiometrics,
+      deleted,
+      archived,
+      synced,
+    );
   }
 
   /// A necessary factory constructor for creating a new User instance
