@@ -15,10 +15,12 @@ class SyncRoutine {
   Map<Note, Map<String, dynamic>> updatedNotes = Map();
   Preferences preferences;
   NoteHelper noteHelper;
+  NoteController noteController;
 
   SyncRoutine() {
     this.preferences = locator<Preferences>();
     this.noteHelper = locator<NoteHelper>();
+    this.noteController = locator<NoteController>();
   }
 
   Future<bool> checkOnlineStatus() async {
@@ -37,7 +39,6 @@ class SyncRoutine {
       return;
     }
     await updateLists();
-    NoteController noteController = NoteController();
     addedNotes.forEach((note) async {
       bool result = await noteController.add(note);
       if (result == true) {
@@ -74,8 +75,8 @@ class SyncRoutine {
     localNotes.forEach((localNote) {
       Note syncedNote;
       if (syncedNotes.length > 0) {
-        syncedNote = syncedNotes
-            .firstWhere((syncedNote) => syncedNote.id == localNote.id + "-synced");
+        syncedNote = syncedNotes.firstWhere(
+            (syncedNote) => syncedNote.id == localNote.id + "-synced");
       }
       if (syncedNote == null) {
         addedNotes.add(localNote);
@@ -88,8 +89,8 @@ class SyncRoutine {
     });
     if (syncedNotes.length > 0) {
       syncedNotes.forEach((syncedNote) {
-        Note localNote =
-            localNotes.firstWhere((localNote) => localNote.id + "-synced" == syncedNote.id);
+        Note localNote = localNotes.firstWhere(
+            (localNote) => localNote.id + "-synced" == syncedNote.id);
         if (localNote == null) {
           deletedNotes.add(syncedNote);
         }
@@ -102,7 +103,8 @@ class SyncRoutine {
     Map<String, dynamic> syncedMap = SyncNote.fromNote(syncedNote).toJson();
     Map<String, dynamic> noteDelta = Map();
     localMap.forEach((key, localValue) {
-      if (localValue != syncedMap[key] && (key != "note_id" && key != "synced")) {
+      if (localValue != syncedMap[key] &&
+          (key != "note_id" && key != "synced")) {
         print(key + ":" + localValue.toString());
         noteDelta.putIfAbsent(key, () => localValue);
       }

@@ -688,6 +688,6 @@ class _MainPageState extends State<MainPage>
         ),
       ];
   Future<void> sync() async {
-    await SyncRoutine().syncNotes();
+    await locator<SyncRoutine>().syncNotes();
   }
 }

@@ -5,7 +5,7 @@ import 'package:potato_notes/data/database.dart';
 part 'sync_note.g.dart';
 
 @JsonSerializable()
-class SyncNote{
+class SyncNote {
   String note_id;
   String title;
   String content;
@@ -25,14 +25,27 @@ class SyncNote{
   bool archived;
   bool synced;
 
-
-  SyncNote(this.note_id, this.title, this.content, this.style_json, this.starred,
-      this.creation_date, this.last_modify_date, this.color, this.images,
-      this.list, this.list_content, this.reminders, this.hide_content,
-      this.lock_note, this.uses_biometrics, this.deleted, this.archived,
+  SyncNote(
+      this.note_id,
+      this.title,
+      this.content,
+      this.style_json,
+      this.starred,
+      this.creation_date,
+      this.last_modify_date,
+      this.color,
+      this.images,
+      this.list,
+      this.list_content,
+      this.reminders,
+      this.hide_content,
+      this.lock_note,
+      this.uses_biometrics,
+      this.deleted,
+      this.archived,
       this.synced);
 
-  static SyncNote fromNote(Note note){
+  static SyncNote fromNote(Note note) {
     String id = note.id;
     String title = note.title;
     String content = note.content;
@@ -51,13 +64,32 @@ class SyncNote{
     bool deleted = note.deleted;
     bool archived = note.archived;
     bool synced = note.synced;
-    return SyncNote(id, title, content, styleJson, starred, creationDate, lastModifyDate, color, images, list, listContent, reminders, hideContent, lockNote, usesBiometrics, deleted, archived, synced);
+    return SyncNote(
+        id,
+        title,
+        content,
+        styleJson,
+        starred,
+        creationDate,
+        lastModifyDate,
+        color,
+        images,
+        list,
+        listContent,
+        reminders,
+        hideContent,
+        lockNote,
+        usesBiometrics,
+        deleted,
+        archived,
+        synced);
   }
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory SyncNote.fromJson(Map<String, dynamic> json) => _$SyncNoteFromJson(json);
+  factory SyncNote.fromJson(Map<String, dynamic> json) =>
+      _$SyncNoteFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
