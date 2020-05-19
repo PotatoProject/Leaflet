@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/sync_note.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/sync/interface/note_interface.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -20,8 +19,7 @@ class NoteController implements NoteInterface {
   }
 
   String toJson(Note note) {
-    SyncNote savingNote = SyncNote.fromNote(note);
-    return json.encode(savingNote);
+    return json.encode(Utils.toSyncMap(note));
   }
 
   @override

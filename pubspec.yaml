@@ -52,6 +52,8 @@ dependencies:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
+  recase:
+
 
 dev_dependencies:
   flutter_test:
