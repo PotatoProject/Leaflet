@@ -18,17 +18,13 @@ class NoteController implements NoteInterface {
     this.prefs = locator<Preferences>();
   }
 
-  String toJson(Note note) {
-    return json.encode(Utils.toSyncMap(note));
-  }
-
   @override
   Future<bool> add(Note note) async {
     try {
       String token = await prefs.getToken();
-      String json = toJson(note);
+      String noteJson = json.encode(Utils.toSyncMap(note));
       Response addResult = await http.post("${prefs.apiUrl}/api/notes",
-          body: json, headers: {"Authorization": token});
+          body: noteJson, headers: {"Authorization": token});
       bool status = Utils.statusFromResponse(addResult);
       return status;
     } catch (e) {
