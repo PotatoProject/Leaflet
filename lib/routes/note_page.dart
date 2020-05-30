@@ -428,8 +428,17 @@ class _NotePageState extends State<NotePage> {
   bool saveAndPop(_) {
     void _internal() async {
       if (contentController.text.trim() != "") {
+        List<SpannableStyle> trimmedList;
+
+        int startIndex =
+            contentController.text.indexOf(contentController.text.trim());
+        print(startIndex);
+        int endIndex = contentController.text.trim().length + startIndex;
+        trimmedList =
+            contentController.styleList.list.sublist(startIndex, endIndex);
+
         List<int> styleJson =
-            gzip.encode(utf8.encode(contentController.styleList.toJson()));
+            gzip.encode(utf8.encode(SpannableList(trimmedList).toJson()));
 
         note = note.copyWith(
           title: note.title.trim(),
