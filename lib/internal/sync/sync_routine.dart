@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/painting.dart';
 import 'package:http/http.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -7,7 +5,6 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/sync/controller/note_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
-import 'package:provider/provider.dart';
 
 class SyncRoutine {
   List<Note> addedNotes = List();
@@ -34,30 +31,45 @@ class SyncRoutine {
     }
   }
 
-  Future<void> syncNotes() async {
-    if (await checkOnlineStatus() != true) {
-      return;
-    }
-    await updateLists();
-    addedNotes.forEach((note) async {
-      bool result = await noteController.add(note);
-      if (result == true) {
-        saveSynced(note);
-      }
-    });
-    updatedNotes.forEach((note, delta) async {
-      bool result = await noteController.update(note.id, delta);
-      if (result == true) {
-        saveSynced(note);
-      }
-    });
-    deletedNotes.forEach((note) async {
-      bool result = await noteController.delete(note.id);
-      if (result == true) {
-        deleteSynced(note);
+  void syncNotes() {
+    checkOnlineStatus().then((status) {
+      if(status != true) return;
+      else {
+        updateLists().then((_) {
+          addedNotes.forEach((note) {
+            noteController.add(note).then((result) {
+              print("Added note: " + note.id);
+              if (result == true) {
+                saveSynced(note);
+              }
+            });
+          });
+          updatedNotes.forEach((note, delta) {
+            noteController.update(note.id, delta).then((result) {
+              print("Updated note:" + note.id);
+              if (result == true) {
+                saveSynced(note);
+              }
+            });
+          });
+          deletedNotes.forEach((note) {
+            var localNoteId = note.id.replaceFirst("-synced", "");
+            noteController.delete(localNoteId).then((result) {
+              print("Deleted note: " + localNoteId);
+              if (result == true) {
+                deleteSynced(note);
+              }
+            });
+          });
+          addedNotes.clear();
+          updatedNotes.clear();
+          deletedNotes.clear();
+        });
       }
     });
   }
+
+  void sendRequests() {}
 
   void saveSynced(Note note) {
     noteHelper.saveNote(note.copyWith(synced: true));
@@ -73,15 +85,13 @@ class SyncRoutine {
     List<Note> localNotes = await noteHelper.listNotes(ReturnMode.LOCAL);
     List<Note> syncedNotes = await noteHelper.listNotes(ReturnMode.SYNCED);
     localNotes.forEach((localNote) {
-      Note syncedNote;
-      if (syncedNotes.length > 0) {
-        syncedNote = syncedNotes.firstWhere(
-            (syncedNote) => syncedNote.id == localNote.id + "-synced");
-      }
-      if (syncedNote == null) {
+      var syncedIndex = syncedNotes.indexWhere(
+          (syncedNote) => syncedNote.id == localNote.id + "-synced");
+      if (syncedIndex == -1) {
         addedNotes.add(localNote);
       } else {
-        if (localNote.lastModifyDate.isAfter(syncedNote.lastModifyDate)) {
+        var syncedNote = syncedNotes.elementAt(syncedIndex);
+        if (!localNote.synced) {
           updatedNotes.putIfAbsent(
               localNote, () => getNoteDelta(localNote, syncedNote));
         }
@@ -89,9 +99,9 @@ class SyncRoutine {
     });
     if (syncedNotes.length > 0) {
       syncedNotes.forEach((syncedNote) {
-        Note localNote = localNotes.firstWhere(
+        var localIndex = localNotes.indexWhere(
             (localNote) => localNote.id + "-synced" == syncedNote.id);
-        if (localNote == null) {
+        if (localIndex == -1) {
           deletedNotes.add(syncedNote);
         }
       });

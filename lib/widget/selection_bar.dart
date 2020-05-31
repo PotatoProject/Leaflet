@@ -68,10 +68,15 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
               if (anyStarred)
-                await helper
-                    .saveNote(selectionList[i].copyWith(starred: false));
+                await helper.saveNote(selectionList[i].copyWith(
+                    starred: false,
+                    synced: false,
+                    lastModifyDate: DateTime.now()));
               else
-                await helper.saveNote(selectionList[i].copyWith(starred: true));
+                await helper.saveNote(selectionList[i].copyWith(
+                    starred: true,
+                    synced: false,
+                    lastModifyDate: DateTime.now()));
             }
 
             onCloseSelection();
@@ -110,8 +115,10 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
             if (selectedColor != null) {
               for (int i = 0; i < selectionList.length; i++)
-                await helper
-                    .saveNote(selectionList[i].copyWith(color: selectedColor));
+                await helper.saveNote(selectionList[i].copyWith(
+                    color: selectedColor,
+                    synced: false,
+                    lastModifyDate: DateTime.now()));
 
               onCloseSelection();
             }

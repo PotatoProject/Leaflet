@@ -49,7 +49,8 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     switch (mode) {
       case ReturnMode.TAG:
       case ReturnMode.ALL:
-        selectQuery = select(notes);
+        selectQuery = select(notes)
+          ..where((table) => table.id.contains("-synced").not());
         break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)
@@ -70,11 +71,11 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         break;
       case ReturnMode.SYNCED:
         selectQuery = select(notes)
-          ..where((table) => table.id.contains("synced"));
+          ..where((table) => table.id.contains("-synced"));
         break;
       case ReturnMode.LOCAL:
         selectQuery = select(notes)
-          ..where((table) => table.id.contains("synced").not());
+          ..where((table) => table.id.contains("-synced").not());
         break;
     }
 
@@ -86,10 +87,15 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future saveNote(Note note) =>
+  Future saveNote(Note note) {
       into(notes).insert(note, mode: InsertMode.replace);
+      print("The note id is: " + note.id);
+  }
 
-  Future deleteNote(Note note) => delete(notes).delete(note);
+  Future deleteNote(Note note) {
+    delete(notes).delete(note);
+    print("The note id to delete: " + note.id);
+  }
 }
 
 class SearchQuery {

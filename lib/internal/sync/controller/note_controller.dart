@@ -25,6 +25,7 @@ class NoteController implements NoteInterface {
       String noteJson = json.encode(Utils.toSyncMap(note));
       Response addResult = await http.post("${prefs.apiUrl}/api/notes",
           body: noteJson, headers: {"Authorization": token});
+      print(note.id + " add:" + addResult.body);
       bool status = Utils.statusFromResponse(addResult);
       return status;
     } catch (e) {
@@ -35,12 +36,12 @@ class NoteController implements NoteInterface {
 
   @override
   Future<bool> delete(String id) async {
-    // TODO: implement delete
     try {
       String token = await prefs.getToken();
       Response deleteResponse = await http.delete(
           "${prefs.apiUrl}/api/notes/${id}",
           headers: {"Authorization": token});
+      print(id + " delete:" + deleteResponse.body );
       bool status = json.decode(deleteResponse.body)["status"];
       return status;
     } catch (e) {
@@ -67,10 +68,10 @@ class NoteController implements NoteInterface {
       String deltaJson = jsonEncode(noteDelta);
       print(deltaJson);
       String token = await prefs.getToken();
-      Response addResult = await http.patch("${prefs.apiUrl}/api/notes/${id}",
+      Response updateResult = await http.patch("${prefs.apiUrl}/api/notes/${id}",
           body: deltaJson, headers: {"Authorization": token});
-      print(addResult.body);
-      bool status = Utils.statusFromResponse(addResult);
+      print(id + " update:" + updateResult.body);
+      bool status = Utils.statusFromResponse(updateResult);
       return status;
     } catch (e) {
       print(e.toString());
