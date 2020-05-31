@@ -280,25 +280,27 @@ class _SettingsPageState extends State<SettingsPage> {
 
                     List<Note> notes = await helper.listNotes(ReturnMode.ALL);
 
-                    setState(() => removingMasterPass = true);
-                    for (int i = 0; i < notes.length; i++) {
-                      await helper.saveNote(notes[i].copyWith(
-                          lockNote: false,
-                          synced: false,
-                          lastModifyDate: DateTime.now()));
+                        setState(() => removingMasterPass = true);
+                        for (int i = 0; i < notes.length; i++) {
+                          await helper.saveNote(notes[i].copyWith(
+                              lockNote: false,
+                              synced: false,
+                              lastModifyDate: DateTime.now()));
+                        }
+                        setState(() => removingMasterPass = false);
+                      }
                     }
-                    setState(() => removingMasterPass = false);
-                  }
-                }
-              },
-              secondary: Icon(OMIcons.vpnKey),
-              title: Text("Use master pass"),
-              activeColor: Theme.of(context).accentColor,
-              subtitle: removingMasterPass ? LinearProgressIndicator() : null,
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-            ),
-            ListTile(
-              leading: Icon(CommunityMaterialIcons.form_textbox_password),
+                  },
+                  secondary: Icon(OMIcons.vpnKey),
+                  title: Text("Use master pass"),
+                  activeColor: Theme.of(context).accentColor,
+                  subtitle:
+                      removingMasterPass ? LinearProgressIndicator() : null,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
+                ListTile(
+                  leading: Icon(CommunityMaterialIcons.form_textbox_password),
               title: Text("Modify master pass"),
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               enabled: prefs.masterPass != "",

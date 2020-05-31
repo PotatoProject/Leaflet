@@ -31,42 +31,38 @@ class SyncRoutine {
     }
   }
 
-  void syncNotes() {
-    checkOnlineStatus().then((status) {
-      if(status != true) return;
-      else {
-        updateLists().then((_) {
-          addedNotes.forEach((note) {
-            noteController.add(note).then((result) {
-              print("Added note: " + note.id);
-              if (result == true) {
-                saveSynced(note);
-              }
-            });
-          });
-          updatedNotes.forEach((note, delta) {
-            noteController.update(note.id, delta).then((result) {
-              print("Updated note:" + note.id);
-              if (result == true) {
-                saveSynced(note);
-              }
-            });
-          });
-          deletedNotes.forEach((note) {
-            var localNoteId = note.id.replaceFirst("-synced", "");
-            noteController.delete(localNoteId).then((result) {
-              print("Deleted note: " + localNoteId);
-              if (result == true) {
-                deleteSynced(note);
-              }
-            });
-          });
-          addedNotes.clear();
-          updatedNotes.clear();
-          deletedNotes.clear();
-        });
-      }
+  Future<void> syncNotes() async {
+    bool status = await checkOnlineStatus();
+    if (status != true) return;
+    await updateLists();
+    addedNotes.forEach((note) {
+      noteController.add(note).then((result) {
+        print("Added note: " + note.id);
+        if (result == true) {
+          saveSynced(note);
+        }
+      });
     });
+    updatedNotes.forEach((note, delta) {
+      noteController.update(note.id, delta).then((result) {
+        print("Updated note:" + note.id);
+        if (result == true) {
+          saveSynced(note);
+        }
+      });
+    });
+    deletedNotes.forEach((note) {
+      var localNoteId = note.id.replaceFirst("-synced", "");
+      noteController.delete(localNoteId).then((result) {
+        print("Deleted note: " + localNoteId);
+        if (result == true) {
+          deleteSynced(note);
+        }
+      });
+    });
+    addedNotes.clear();
+    updatedNotes.clear();
+    deletedNotes.clear();
   }
 
   void sendRequests() {}
