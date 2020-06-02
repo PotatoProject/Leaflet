@@ -465,11 +465,13 @@ class _NotePageState extends State<NotePage> {
 
     int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
 
-    note.listContent.content.add(ListItem(
-      id,
-      "",
-      false,
-    ));
+    note.listContent.content.add(
+      ListItem(
+        id,
+        "",
+        false,
+      ),
+    );
 
     listContentControllers.add(TextEditingController());
 
@@ -573,11 +575,11 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(OMIcons.photo),
             title: Text("Image from gallery"),
             onTap: () async {
-              File image =
-                  await ImagePicker.pickImage(source: ImageSource.gallery);
+              PickedFile image =
+                  await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                note.images.images.add(image.uri);
+                note.images.images.add(File(image.path).uri);
                 Navigator.pop(context);
               }
             },
@@ -586,11 +588,11 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(OMIcons.camera),
             title: Text("Take a photo"),
             onTap: () async {
-              File image =
-                  await ImagePicker.pickImage(source: ImageSource.camera);
+              PickedFile image =
+                  await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                note.images.images.add(image.uri);
+                note.images.images.add(File(image.path).uri);
                 Navigator.pop(context);
               }
             },

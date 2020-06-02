@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
+import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/system_bar_manager.dart';
 import 'package:provider/provider.dart';
@@ -33,16 +36,24 @@ class AppInfoProvider extends ChangeNotifier {
   SystemBarManager barManager;
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
+  FlutterLocalNotificationsPlugin notifications;
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
 
+  Offset _position = new Offset(0, 0);
   Color _mainColor = Colors.blueAccent;
   Brightness _systemTheme = Brightness.light;
 
+  Offset get position => _position;
   Color get mainColor => _mainColor;
   Brightness get systemTheme => _systemTheme;
+
+  set position(Offset newPosition) {
+    _position = newPosition;
+    notifyListeners();
+  }
 
   set mainColor(Color newColor) {
     _mainColor = newColor;
@@ -62,6 +73,28 @@ class AppInfoProvider extends ChangeNotifier {
         await illustrations.emptyTrashIllustration(systemTheme);
   }
 
+  void _initNotifications() async {
+    notifications = FlutterLocalNotificationsPlugin();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid = AndroidInitializationSettings('notes_icon');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    await notifications.initialize(initializationSettings, onSelectNotification: _handleNotificationTap);
+  }
+
+  Future<dynamic> _handleNotificationTap(String payload) async {
+    NotificationPayload nPayload = NotificationPayload.fromJson(json.decode(payload));
+
+    switch(nPayload.action) {
+      case NotificationAction.PIN:
+        notifications.cancel(nPayload.id);
+        break;
+      case NotificationAction.REMINDER:
+        break;
+    }
+  }
+
   void loadData() async {
     themeSubscription =
         themeStreamChannel.receiveBroadcastStream().listen((data) {
@@ -77,6 +110,7 @@ class AppInfoProvider extends ChangeNotifier {
           break;
       }
     });
+    _initNotifications();
     accentSubscription =
         accentStreamChannel.receiveBroadcastStream().listen((data) {
       mainColor = Color(data);

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -8,6 +11,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -83,69 +87,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             return AnimatedBuilder(
               animation: Tween<double>(begin: 0, end: 1).animate(controller),
               builder: (context, child) {
-                Widget commonNote(Note note) => NoteView(
-                      note: note,
-                      onTap: () async {
-                        if (selecting) {
-                          setState(() {
-                            if (selectionList
-                                .any((item) => item.id == note.id)) {
-                              selectionList
-                                  .removeWhere((item) => item.id == note.id);
-                              if (selectionList.isEmpty) selecting = false;
-                            } else {
-                              selectionList.add(note);
-                            }
-                          });
-                        } else {
-                          bool status = false;
-                          if (note.lockNote && note.usesBiometrics) {
-                            bool bioAuth = await LocalAuthentication()
-                                .authenticateWithBiometrics(
-                              localizedReason: "",
-                              androidAuthStrings: AndroidAuthMessages(
-                                signInTitle: "Scan fingerprint to open note",
-                                fingerprintHint: "",
-                              ),
-                            );
-
-                            if (bioAuth)
-                              status = bioAuth;
-                            else
-                              status =
-                                  await Utils.showPassChallengeSheet(context) ??
-                                      false;
-                          } else if (note.lockNote && !note.usesBiometrics) {
-                            status =
-                                await Utils.showPassChallengeSheet(context) ??
-                                    false;
-                          } else {
-                            status = true;
-                          }
-
-                          if (status) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotePage(
-                                  note: note,
-                                  numOfImages: numOfImages,
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          selecting = true;
-                          selectionList.add(note);
-                        });
-                      },
-                      selected: selectionList.any((item) => item.id == note.id),
-                      numOfImages: numOfImages,
-                    );
-
                 List<Note> starredNotes =
                     snapshot.data.where((note) => note.starred).toList();
                 List<Note> normalNotes =
@@ -312,5 +253,146 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       default:
         return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
     }
+  }
+
+  Widget commonNote(Note note) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onPanDown: (details) {
+        appInfo.position = details.globalPosition;
+      },
+      child: NoteView(
+        note: note,
+        onTap: () async {
+          if (selecting) {
+            setState(() {
+              if (selectionList.any((item) => item.id == note.id)) {
+                selectionList.removeWhere((item) => item.id == note.id);
+                if (selectionList.isEmpty) selecting = false;
+              } else {
+                selectionList.add(note);
+              }
+            });
+          } else {
+            bool status = false;
+            if (note.lockNote && note.usesBiometrics) {
+              bool bioAuth =
+                  await LocalAuthentication().authenticateWithBiometrics(
+                localizedReason: "",
+                androidAuthStrings: AndroidAuthMessages(
+                  signInTitle: "Scan fingerprint to open note",
+                  fingerprintHint: "",
+                ),
+              );
+
+              if (bioAuth)
+                status = bioAuth;
+              else
+                status = await Utils.showPassChallengeSheet(context) ?? false;
+            } else if (note.lockNote && !note.usesBiometrics) {
+              status = await Utils.showPassChallengeSheet(context) ?? false;
+            } else {
+              status = true;
+            }
+
+            if (status) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotePage(
+                    note: note,
+                    numOfImages: numOfImages,
+                  ),
+                ),
+              );
+            }
+          }
+        },
+        onLongPress: () async {
+          if(selecting)
+            return;
+          
+          String action = await showMenu(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              appInfo.position.dx,
+              appInfo.position.dy,
+              appInfo.position.dx,
+              appInfo.position.dy,
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            items: [
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Icon(
+                      CommunityMaterialIcons.check,
+                      color: Theme.of(context).accentColor,
+                    ),
+                    SizedBox(width: 24),
+                    Text("Select"),
+                  ],
+                ),
+                value: 'select',
+              ),
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Icon(
+                      CommunityMaterialIcons.pin_outline,
+                      color: Theme.of(context).accentColor,
+                    ),
+                    SizedBox(width: 24),
+                    Text("Pin to notifications"),
+                  ],
+                ),
+                value: 'pin',
+              ),
+            ],
+          );
+
+          if (action != null) {
+            switch (action) {
+              case 'select':
+                setState(() {
+                  selecting = true;
+                  selectionList.add(note);
+                });
+                break;
+              case 'pin':
+                handlePinNotes(context, note);
+                break;
+            }
+          }
+        },
+        selected: selectionList.any((item) => item.id == note.id),
+        numOfImages: numOfImages,
+      ),
+    );
+  }
+
+  void handlePinNotes(BuildContext context, Note note) {
+    appInfo.notifications.show(
+      note.id,
+      note.title.isEmpty ? "Pinned notification" : note.title,
+      note.content,
+      NotificationDetails(
+        AndroidNotificationDetails(
+          'pinned_notifications',
+          'Pinned notifications',
+          'User pinned notifications',
+          color: Color(0xFFFF9100),
+          ongoing: true,
+        ),
+        IOSNotificationDetails(),
+      ),
+      payload: json.encode(
+        NotificationPayload(
+          action: NotificationAction.PIN,
+          id: note.id,
+        ).toJson(),
+      ),
+    );
   }
 }

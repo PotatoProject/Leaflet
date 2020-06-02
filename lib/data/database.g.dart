@@ -152,6 +152,57 @@ class Note extends DataClass implements Insertable<Note> {
     return map;
   }
 
+  NotesCompanion toCompanion(bool nullToAbsent) {
+    return NotesCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      title:
+          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      content: content == null && nullToAbsent
+          ? const Value.absent()
+          : Value(content),
+      styleJson: styleJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(styleJson),
+      starred: starred == null && nullToAbsent
+          ? const Value.absent()
+          : Value(starred),
+      creationDate: creationDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(creationDate),
+      lastModifyDate: lastModifyDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModifyDate),
+      color:
+          color == null && nullToAbsent ? const Value.absent() : Value(color),
+      images:
+          images == null && nullToAbsent ? const Value.absent() : Value(images),
+      list: list == null && nullToAbsent ? const Value.absent() : Value(list),
+      listContent: listContent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(listContent),
+      reminders: reminders == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminders),
+      hideContent: hideContent == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hideContent),
+      lockNote: lockNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lockNote),
+      usesBiometrics: usesBiometrics == null && nullToAbsent
+          ? const Value.absent()
+          : Value(usesBiometrics),
+      deleted: deleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deleted),
+      archived: archived == null && nullToAbsent
+          ? const Value.absent()
+          : Value(archived),
+      synced:
+          synced == null && nullToAbsent ? const Value.absent() : Value(synced),
+    );
+  }
+
   factory Note.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
