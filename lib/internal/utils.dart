@@ -425,4 +425,43 @@ class Utils {
     });
     return newMap;
   }
+
+  static Note fromSyncMap(Map<String, dynamic> syncMap){
+    Map<String, dynamic> newMap = Map();
+    syncMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).camelCase;
+      switch(key){
+        case "style_json":{
+          var map = json.decode(value);
+          List<int> data = List<int>.from(map.map((i) => i as int)).toList();
+          newValue = new ContentStyle(data);
+          break;
+        }
+        case "images":{
+          var map = json.decode(value);
+          List<Uri> images = List<Uri>.from(map.map((i) => Uri.parse(i))).toList();
+          newValue = new ImageList(images);
+          break;
+        }
+        case "list_content":{
+          var map = json.decode(value);
+          List<ListItem> content = List<ListItem>.from(map.map((i) => ListItem.fromJson(i))).toList();
+          newValue = new ListContent(content);
+          break;
+        }
+        case "reminders":{
+          var map = json.decode(value);
+          List<DateTime> reminders = List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
+          newValue = new ReminderList(reminders);
+          break;
+        }
+      }
+      if(key == "note_id"){
+        newKey = "id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return Note.fromJson(newMap);
+  }
 }

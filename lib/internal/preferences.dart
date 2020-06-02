@@ -31,6 +31,7 @@ class Preferences extends ChangeNotifier {
   String _email;
   int _logLevel = LogEntry.VERBOSE;
   List<TagModel> _tags = [];
+  int _lastUpdated;
 
   String get masterPass => _masterPass;
   ThemeMode get themeMode => _themeMode;
@@ -45,6 +46,7 @@ class Preferences extends ChangeNotifier {
   String get email => _email;
   int get logLevel => _logLevel;
   List<TagModel> get tags => _tags;
+  int get lastUpdated => _lastUpdated;
 
   set masterPass(String value) {
     _masterPass = value;
@@ -136,6 +138,12 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
+  set lastUpdated(int value) {
+    _lastUpdated = value;
+    prefs.setLastUpdated(value);
+    notifyListeners();
+  }
+
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
@@ -158,6 +166,7 @@ class Preferences extends ChangeNotifier {
     email = await prefs.getEmail();
     logLevel = await prefs.getLogLevel();
     tags = await prefs.getTags();
+    lastUpdated = await prefs.getLastUpdated();
   }
 
   Future<String> getToken() async {

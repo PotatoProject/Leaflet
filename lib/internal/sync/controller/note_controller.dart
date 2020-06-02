@@ -51,15 +51,42 @@ class NoteController implements NoteInterface {
   }
 
   @override
-  Future<bool> deleteAll() {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
+  Future<bool> deleteAll() async {
+    try {
+      String token = await prefs.getToken();
+      Response deleteResult = await http.delete("${prefs.apiUrl}/api/notes/all", headers: {"Authorization": token});
+      print("delete-all: " + deleteResult.body);
+      bool status = Utils.statusFromResponse(deleteResult);
+      return status;
+    } catch(e) {
+      print(e.toString());
+      return false;
+    }
   }
 
   @override
-  Future<List<Note>> list() {
-    // TODO: implement list
-    throw UnimplementedError();
+  Future<List<Note>> list(int lastUpdated) async {
+    List<Note> notes = List();
+    try {
+      String token = await prefs.getToken();
+      Response listResult = await http.get("${prefs.apiUrl}/api/notes/list?last_updated=$lastUpdated", headers: {"Authorization": token});
+      print("list: " + listResult.body);
+      bool status = Utils.statusFromResponse(listResult);
+      if(status == true) {
+        final data = jsonDecode(listResult.body);
+        for (Map i in data["notes"]) {
+          print(i);
+          var note = Utils.fromSyncMap(i);
+          notes.add(note.copyWith(synced: true));
+        }
+        return notes;
+      } else {
+        return null;
+      }
+    } catch(e) {
+      print(e.toString());
+      return null;
+    }
   }
 
   @override

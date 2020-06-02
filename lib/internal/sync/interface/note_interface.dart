@@ -9,5 +9,5 @@ abstract class NoteInterface {
 
   Future<bool> deleteAll();
 
-  Future<List<Note>> list();
+  Future<List<Note>> list(int lastUpdated);
 }

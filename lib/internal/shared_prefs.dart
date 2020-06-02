@@ -168,4 +168,12 @@ class SharedPrefs {
       ),
     );
   }
+
+  Future<int> getLastUpdated() async {
+    return prefs.getInt("last_updated") ?? 0;
+  }
+
+  void setLastUpdated(int value) async {
+    await prefs.setInt("last_updated", value);
+  }
 }

@@ -35,6 +35,18 @@ class SyncRoutine {
     bool status = await checkOnlineStatus();
     if (status != true) return;
     await updateLists();
+    await Future(sendUpdates);
+    int lastUpdated = preferences.lastUpdated;
+    List<Note> notes = await noteController.list(lastUpdated);
+    if(notes != null){
+      for(Note note in notes){
+        await noteHelper.saveNote(note);
+      }
+      preferences.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+    }
+  }
+
+  void sendUpdates() {
     addedNotes.forEach((note) {
       noteController.add(note).then((result) {
         print("Added note: " + note.id);
