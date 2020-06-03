@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -432,7 +433,7 @@ class _NotePageState extends State<NotePage> {
 
         int startIndex =
             contentController.text.indexOf(contentController.text.trim());
-        print(startIndex);
+        Loggy.d(message: note);
         int endIndex = contentController.text.trim().length + startIndex;
         trimmedList =
             contentController.styleList.list.sublist(startIndex, endIndex);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
@@ -36,6 +37,9 @@ class PotatoNotes extends StatelessWidget {
           value: AppInfoProvider(context),
           child: Builder(
             builder: (context) {
+              Loggy.generateAppLabel();
+              Loggy.setLogLevel(LogEntry.ERROR);
+
               final appInfo = Provider.of<AppInfoProvider>(context);
               final prefs = Provider.of<Preferences>(context);
 
