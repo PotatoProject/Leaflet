@@ -1,0 +1,25 @@
+name: PR testing
+
+on:
+  pull_request:
+    branches: [ rewrite ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image:  google/dart:latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v1.3.2
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Compile apk
+      run: flutter build apk
+    - uses: actions/upload-artifact@v2
+      with:
+        name: android-apk
+        path: "build/app/outputs/flutter-apk/app-release.apk"
