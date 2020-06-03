@@ -19,6 +19,7 @@ import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class MainPage extends StatefulWidget {
@@ -309,9 +310,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           }
         },
         onLongPress: () async {
-          if(selecting)
-            return;
-          
+          if (selecting) return;
+
           String action = await showMenu(
             context: context,
             position: RelativeRect.fromLTRB(
@@ -347,7 +347,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     Text("Pin to notifications"),
                   ],
                 ),
+                enabled: !note.hideContent,
                 value: 'pin',
+              ),
+              PopupMenuItem(
+                child: Row(
+                  children: [
+                    Icon(
+                      CommunityMaterialIcons.share_variant,
+                      color: Theme.of(context).accentColor,
+                    ),
+                    SizedBox(width: 24),
+                    Text("Share"),
+                  ],
+                ),
+                enabled: !note.hideContent,
+                value: 'share',
               ),
             ],
           );
@@ -362,6 +377,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 break;
               case 'pin':
                 handlePinNotes(context, note);
+                break;
+              case 'share':
+                bool status = note.lockNote
+                    ? await Utils.showPassChallengeSheet(context)
+                    : true;
+                if(status ?? false) {
+                  Share.share(
+                    (note.title.isNotEmpty ? note.title + "\n\n" : "") +
+                        note.content,
+                    subject: "PotatoNotes saved note",
+                  );
+                }
                 break;
             }
           }

@@ -585,6 +585,13 @@ packages:
       url: "https://github.com/namhyun-gu/flutter_rich_text_editor"
     source: git
     version: "0.0.1"
+  share:
+    dependency: "direct main"
+    description:
+      name: share
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.4+3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -598,7 +605,7 @@ packages:
       name: shared_preferences_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+9"
+    version: "0.0.1+10"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
