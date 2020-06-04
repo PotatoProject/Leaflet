@@ -18,10 +18,9 @@ jobs:
     - uses: bltavares/actions/dartfmt@master
     - name: Install dependencies
       run: flutter pub get
-    - uses: bltavares/actions/dartfmt@master
     - name: Compile apk
       run: flutter build apk
     - uses: actions/upload-artifact@v2
       with:
         name: android-apk
-        path: "build/app/outputs/flutter-apk/app-release.apk"
+        path: "build/app/outputs/flutter-apk/app-*-release.apk"
