@@ -47,13 +47,6 @@ android {
     }
 
     signingConfigs {
-        debug {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
@@ -62,13 +55,39 @@ android {
         }
     }
 
-    buildTypes {
-        debug {
-            signingConfig signingConfigs.release
+    flavorDimensions "app"
+    productFlavors {
+        def debugSigning = signingConfigs.debug
+        def releaseSigning = signingConfigs.release
+        
+        dev {
+            signingConfig debugSigning
+            applicationId = "com.potatoproject.notes.dev"
+            dimension "app"
+            manifestPlaceholders = [
+                label: "Notes Dev",
+                icon: "@drawable/ic_launcher_debug",
+            ]
         }
-
-        release {
-            signingConfig signingConfigs.release
+        
+        ci {
+            signingConfig debugSigning
+            applicationId = "com.potatoproject.notes.ci"
+            dimension "app"
+            manifestPlaceholders = [
+                label: "Notes CI",
+                icon: "@drawable/ic_launcher_ci",
+            ]
+        }
+        
+        production {
+            signingConfig releaseSigning
+            applicationId = "com.potatoproject.notes"
+            dimension "app"
+            manifestPlaceholders = [
+                label: "Notes",
+                icon: "@drawable/ic_launcher",
+            ]
         }
     }
 }

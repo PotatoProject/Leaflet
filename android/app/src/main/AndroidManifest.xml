@@ -14,8 +14,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Notes"
-        android:icon="@drawable/ic_launcher"
+        android:label="${label}"
+        android:icon="${icon}"
         android:fullBackupContent="@xml/backup_rules">
         <activity
             android:name=".MainActivity"
