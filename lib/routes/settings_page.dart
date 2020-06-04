@@ -1,5 +1,7 @@
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -113,6 +115,50 @@ class _SettingsPageState extends State<SettingsPage> {
                         await showPassChallengeSheet(context, false) ?? false;
                     if (confirm) showPassChallengeSheet(context);
                   },
+                ),
+              ],
+            ),
+            SettingsCategory(
+              header: "Debug",
+              children: [
+                Visibility(
+                  visible: kDebugMode,
+                  child: ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                    leading: Icon(CommunityMaterialIcons.text),
+                    title: Text("Log level"),
+                    trailing: DropdownButton(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("Verbose"),
+                          value: LogEntry.VERBOSE,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Debug"),
+                          value: LogEntry.DEBUG,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Info"),
+                          value: LogEntry.INFO,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Warn"),
+                          value: LogEntry.WARN,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Error"),
+                          value: LogEntry.ERROR,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("WTF"),
+                          value: LogEntry.WTF,
+                        ),
+                      ],
+                      onChanged: (value) => prefs.logLevel = value,
+                      value: prefs.logLevel,
+                    ),
+                  ),
                 ),
               ],
             ),

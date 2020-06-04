@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loggy/loggy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -94,5 +95,13 @@ class SharedPrefs {
 
   void setEmail(String value) async {
     await prefs.setString("email", value);
+  }
+
+  Future<int> getLogLevel() async {
+    return prefs.getInt("log_level") ?? LogEntry.VERBOSE;
+  }
+
+  void setLogLevel(int value) async {
+    await prefs.setInt("log_level", value);
   }
 }

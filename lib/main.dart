@@ -37,11 +37,11 @@ class PotatoNotes extends StatelessWidget {
           value: AppInfoProvider(context),
           child: Builder(
             builder: (context) {
-              Loggy.generateAppLabel();
-              Loggy.setLogLevel(LogEntry.ERROR);
-
               final appInfo = Provider.of<AppInfoProvider>(context);
               final prefs = Provider.of<Preferences>(context);
+
+              Loggy.generateAppLabel();
+              Loggy.setLogLevel(prefs.logLevel);
 
               return MaterialApp(
                 title: "PotatoNotes",
