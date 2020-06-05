@@ -18,16 +18,14 @@ class Utils {
     );
   }
 
-  static Future<String> showNoteMenu(BuildContext context, [Note note]) async {
-    AppInfoProvider appInfo = Provider.of<AppInfoProvider>(context);
-    
+  static Future<String> showNoteMenu(BuildContext context, Offset position, [Note note]) async {
     return await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
-        appInfo.position.dx,
-        appInfo.position.dy,
-        appInfo.position.dx,
-        appInfo.position.dy,
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       items: [

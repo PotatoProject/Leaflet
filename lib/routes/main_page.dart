@@ -311,7 +311,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         onLongPress: () async {
           if (selecting) return;
 
-          String action = await Utils.showNoteMenu(context, note);
+          String action = await Utils.showNoteMenu(context, appInfo.position, note);
 
           if (action != null) {
             switch (action) {
