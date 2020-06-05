@@ -74,7 +74,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: prefs.masterPass != "",
                   onChanged: (value) async {
                     if (prefs.masterPass == "") {
-                      showMasterPassChoiceSheet(context);
+                      bool status = await showInfoSheet(
+                        context,
+                        content:
+                            "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.",
+                        buttonAction: "Go on",
+                      );
+                      if (status) showPassChallengeSheet(context);
                     } else {
                       bool confirm =
                           await showPassChallengeSheet(context, false) ?? false;
@@ -118,12 +124,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            SettingsCategory(
-              header: "Debug",
-              children: [
-                Visibility(
-                  visible: kDebugMode,
-                  child: ListTile(
+            Visibility(
+              visible: kDebugMode,
+              child: SettingsCategory(
+                header: "Debug",
+                children: [
+                  ListTile(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     leading: Icon(CommunityMaterialIcons.text),
@@ -159,8 +165,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: prefs.logLevel,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -186,29 +192,30 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void showMasterPassChoiceSheet(BuildContext context) async {
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                  "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.")),
-          ListTile(
-            leading: Icon(CommunityMaterialIcons.arrow_right),
-            title: Text("Go on"),
-            contentPadding: EdgeInsets.symmetric(horizontal: 32),
-            onTap: () {
-              Navigator.pop(context);
-              showPassChallengeSheet(context);
-            },
+  Future<bool> showInfoSheet(BuildContext context,
+      {String content, String buttonAction}) async {
+    return await showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(content),
+              ),
+              ListTile(
+                leading: Icon(CommunityMaterialIcons.arrow_right),
+                title: Text(buttonAction),
+                contentPadding: EdgeInsets.symmetric(horizontal: 32),
+                onTap: () {
+                  Navigator.pop(context, true);
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ) ??
+        false;
   }
 
   Future<dynamic> showPassChallengeSheet(BuildContext context,
