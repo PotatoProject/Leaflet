@@ -1,9 +1,8 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/widget/note_options.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
-import 'package:provider/provider.dart';
 
 class Utils {
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -18,59 +17,71 @@ class Utils {
     );
   }
 
-  static Future<String> showNoteMenu(BuildContext context, Offset position, [Note note]) async {
-    return await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        position.dx,
-        position.dy,
-        position.dx,
-        position.dy,
+  static Future<String> showNoteMenu({
+    BuildContext context,
+    Offset position,
+    Note note,
+    int numOfImages,
+    int numOfColumns,
+  }) async {
+    return await Navigator.of(context).push(
+      PageRouteBuilder(
+        fullscreenDialog: false,
+        barrierDismissible: true,
+        opaque: false,
+        pageBuilder: (context, _, __) => NoteOptions(
+          note: note,
+          position: position,
+          numOfImages: numOfImages,
+          numOfColumns: numOfColumns,
+        ),
+        transitionDuration: Duration(milliseconds: 300),
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      items: [
-        PopupMenuItem(
-          child: Row(
-            children: [
-              Icon(
-                CommunityMaterialIcons.check,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(width: 24),
-              Text("Select"),
-            ],
-          ),
-          value: 'select',
-        ),
-        PopupMenuItem(
-          child: Row(
-            children: [
-              Icon(
-                CommunityMaterialIcons.pin_outline,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(width: 24),
-              Text("Pin to notifications"),
-            ],
-          ),
-          enabled: !note.hideContent,
-          value: 'pin',
-        ),
-        PopupMenuItem(
-          child: Row(
-            children: [
-              Icon(
-                CommunityMaterialIcons.share_variant,
-                color: Theme.of(context).accentColor,
-              ),
-              SizedBox(width: 24),
-              Text("Share"),
-            ],
-          ),
-          enabled: !note.hideContent,
-          value: 'share',
-        ),
-      ],
     );
+  }
+
+  static List<PopupMenuItem<String>> popupItems(
+      BuildContext context, Note note) {
+    Widget _popupMenuItem({
+      IconData icon,
+      String title,
+      String value,
+      bool disableOnHide = false,
+    }) =>
+        PopupMenuItem(
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: note.color != 0
+                    ? Theme.of(context).iconTheme.color.withOpacity(1)
+                    : Theme.of(context).accentColor,
+              ),
+              SizedBox(width: 24),
+              Text(title),
+            ],
+          ),
+          enabled: disableOnHide ? !note.hideContent : true,
+          value: value,
+        );
+    return [
+      _popupMenuItem(
+        icon: CommunityMaterialIcons.check,
+        title: "Select",
+        value: 'select',
+      ),
+      _popupMenuItem(
+        icon: CommunityMaterialIcons.pin_outline,
+        title: 'Pin',
+        value: 'pin',
+        disableOnHide: true,
+      ),
+      _popupMenuItem(
+        icon: CommunityMaterialIcons.share_variant,
+        title: 'Share',
+        value: 'share',
+        disableOnHide: true,
+      ),
+    ];
   }
 }

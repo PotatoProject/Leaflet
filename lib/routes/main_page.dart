@@ -10,11 +10,13 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
+import 'package:potato_notes/widget/note_options.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
@@ -256,12 +258,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget commonNote(Note note) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onPanDown: (details) {
-        appInfo.position = details.globalPosition;
-      },
-      child: NoteView(
+    GlobalKey key = GlobalKeyRegistry.get(note.id);
+
+    return NoteView(
+        key: key,
         note: note,
         onTap: () async {
           if (selecting) {
@@ -311,7 +311,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         onLongPress: () async {
           if (selecting) return;
 
-          String action = await Utils.showNoteMenu(context, appInfo.position, note);
+          RenderBox box = key.currentContext.findRenderObject();
+          Offset position = box.localToGlobal(Offset.zero);
+
+          String action = await Utils.showNoteMenu(
+            context: context,
+            position: position,
+            note: note,
+            numOfImages: numOfImages,
+            numOfColumns: numOfColumns,
+          );
 
           if (action != null) {
             switch (action) {
@@ -341,8 +350,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         },
         selected: selectionList.any((item) => item.id == note.id),
         numOfImages: numOfImages,
-      ),
-    );
+      );
   }
 
   void handlePinNotes(BuildContext context, Note note) {

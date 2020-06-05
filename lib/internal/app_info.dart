@@ -42,18 +42,11 @@ class AppInfoProvider extends ChangeNotifier {
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
 
-  Offset _position = new Offset(0, 0);
   Color _mainColor = Colors.blueAccent;
   Brightness _systemTheme = Brightness.light;
 
-  Offset get position => _position;
   Color get mainColor => _mainColor;
   Brightness get systemTheme => _systemTheme;
-
-  set position(Offset newPosition) {
-    _position = newPosition;
-    notifyListeners();
-  }
 
   set mainColor(Color newColor) {
     _mainColor = newColor;
