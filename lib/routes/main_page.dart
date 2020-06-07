@@ -16,7 +16,6 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
-import 'package:potato_notes/widget/note_options.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
@@ -311,12 +310,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         onLongPress: () async {
           if (selecting) return;
 
-          RenderBox box = key.currentContext.findRenderObject();
-          Offset position = box.localToGlobal(Offset.zero);
-
           String action = await Utils.showNoteMenu(
             context: context,
-            position: position,
             note: note,
             numOfImages: numOfImages,
             numOfColumns: numOfColumns,
