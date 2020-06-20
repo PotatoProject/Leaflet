@@ -8,7 +8,10 @@ part of 'image_list.dart';
 
 ImageList _$ImageListFromJson(Map<String, dynamic> json) {
   return ImageList(
-    json['data'] as List,
+    (json['data'] as List)
+        ?.map((e) =>
+            e == null ? null : ImageData.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
