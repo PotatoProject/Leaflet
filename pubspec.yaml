@@ -36,6 +36,7 @@ dependencies:
   flutter_local_notifications:
   share:
   animations:
+  material_design_icons_flutter:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

@@ -37,15 +37,6 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
-    appInfo.barManager.lightNavBarColor = Colors.black;
-    appInfo.barManager.darkNavBarColor = Colors.black;
-    appInfo.barManager.lightIconColor = Brightness.light;
-    appInfo.barManager.darkIconColor = Brightness.light;
-
-    appInfo.barManager.updateColors();
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: PhotoViewGallery.builder(

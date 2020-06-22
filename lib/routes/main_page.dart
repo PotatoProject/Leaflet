@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -17,6 +18,8 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
+import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
@@ -81,6 +84,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("PotatoNotes"),
+        textTheme: Theme.of(context).textTheme,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SearchPage())),
+          ),
+          IconButton(
+            icon: Icon(MdiIcons.cogOutline),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SettingsPage())),
+          ),
+        ],
+      ),
       body: StreamBuilder<List<Note>>(
         stream: helper.noteStream(mode),
         builder: (context, snapshot) {
@@ -92,7 +111,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   4,
                   4 + MediaQuery.of(context).padding.top,
                   4,
-                  4.0 + 56,
+                  4,
                 );
 
                 return Opacity(
@@ -137,7 +156,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             );
         },
       ),
-      extendBody: true,
       bottomNavigationBar: selecting
           ? SelectionBar(
               selectionList: selectionList,
@@ -176,10 +194,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ),
           ),
         );
-        appInfo.barManager.lightNavBarColor =
-            SpicyThemes.light(appInfo.mainColor).cardColor;
-        appInfo.barManager.darkNavBarColor =
-            SpicyThemes.dark(appInfo.mainColor).cardColor;
       },
       child: Icon(OMIcons.edit),
       elevation: 0,

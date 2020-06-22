@@ -1,5 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 
@@ -22,8 +23,8 @@ class MainPageBar extends StatelessWidget {
           title: Text("Home"),
         ),
         BottomNavigationBarItem(
-          icon: Icon(OMIcons.archive),
-          activeIcon: Icon(Icons.archive),
+          icon: Icon(MdiIcons.archiveOutline),
+          activeIcon: Icon(MdiIcons.archive),
           title: Text("Archive"),
         ),
         BottomNavigationBarItem(
@@ -32,8 +33,8 @@ class MainPageBar extends StatelessWidget {
           title: Text("Trash"),
         ),
         BottomNavigationBarItem(
-          icon: Icon(CommunityMaterialIcons.bookmark_outline),
-          activeIcon: Icon(CommunityMaterialIcons.bookmark),
+          icon: Icon(MdiIcons.bookmarkMultipleOutline),
+          activeIcon: Icon(MdiIcons.bookmarkMultiple),
           title: Text("Bookmarks"),
         ),
       ],

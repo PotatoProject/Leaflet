@@ -130,14 +130,6 @@ class _NotePageState extends State<NotePage> {
     if (prefs == null) prefs = locator<Preferences>();
     if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
 
-    if (note.color != 0) {
-      appInfo.barManager.darkNavBarColor =
-          Color(NoteColors.colorList(context)[note.color]["hex"]);
-      appInfo.barManager.lightNavBarColor =
-          Color(NoteColors.colorList(context)[note.color]["hex"]);
-      appInfo.barManager.updateColors();
-    }
-
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: note.color != 0
@@ -187,14 +179,6 @@ class _NotePageState extends State<NotePage> {
                             currentImage: index,
                           ),
                         ));
-
-                    if (note.color != 0) {
-                      appInfo.barManager.darkNavBarColor = Color(
-                          NoteColors.colorList(context)[note.color]["hex"]);
-                      appInfo.barManager.lightNavBarColor = Color(
-                          NoteColors.colorList(context)[note.color]["hex"]);
-                      appInfo.barManager.updateColors();
-                    }
                   }),
             ),
             Padding(

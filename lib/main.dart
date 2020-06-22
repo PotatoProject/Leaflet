@@ -56,14 +56,6 @@ class PotatoNotes extends StatelessWidget {
                     ? Themes.black
                     : Themes.dark,
                 builder: (context, child) {
-                  appInfo.barManager.lightNavBarColor =
-                      Themes.light.cardColor;
-                  appInfo.barManager.darkNavBarColor = prefs.useAmoled
-                      ? Themes.black.cardColor
-                      : Themes.dark.cardColor;
-                  appInfo.barManager.lightIconColor = Brightness.light;
-                  appInfo.barManager.darkIconColor = Brightness.dark;
-                  appInfo.barManager.updateColors();
                   appInfo.updateIllustrations();
 
                   return child;

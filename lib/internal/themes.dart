@@ -9,7 +9,7 @@ class Themes {
       appInfo = providedAppInfo;
 
   static final Color _lightColor = Colors.white;
-  static final Color _darkColor = Color(0xFF1C1C1C);
+  static final Color _darkColor = Color(0xFF161616);
   static final Color _blackColor = Colors.black;
 
   static ThemeData get light => ThemeData.light().copyWith(
@@ -22,6 +22,12 @@ class Themes {
           secondary: _lightColor,
           onPrimary: _lightColor,
           onSecondary: appInfo.mainColor,
+        ),
+        appBarTheme: AppBarTheme(
+          color: _lightColor.withOpacity(0.9),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
+          actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         ),
         textSelectionColor: appInfo.mainColor,
         buttonTheme: ButtonThemeData(
@@ -63,6 +69,12 @@ class Themes {
           onPrimary: _darkColor,
           onSecondary: appInfo.mainColor,
         ),
+        appBarTheme: AppBarTheme(
+          color: _darkColor.withOpacity(0.9),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+        ),
         textSelectionColor: appInfo.mainColor,
         buttonTheme: ButtonThemeData(
           textTheme: ButtonTextTheme.accent,
@@ -102,6 +114,12 @@ class Themes {
           secondary: _blackColor,
           onPrimary: _blackColor,
           onSecondary: appInfo.mainColor,
+        ),
+        appBarTheme: AppBarTheme(
+          color: _blackColor.withOpacity(0.7),
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         ),
         textSelectionColor: appInfo.mainColor,
         buttonTheme: ButtonThemeData(

@@ -8,9 +8,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/internal/system_bar_manager.dart';
 import 'package:potato_notes/locator.dart';
-import 'package:provider/provider.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
@@ -23,8 +21,6 @@ class AppInfoProvider extends ChangeNotifier {
     prefs = locator<Preferences>();
     illustrations = Illustrations();
     loadData();
-
-    barManager = SystemBarManager(this);
   }
 
   // ignore: cancel_subscriptions
@@ -33,7 +29,6 @@ class AppInfoProvider extends ChangeNotifier {
   StreamSubscription<dynamic> themeSubscription;
   Preferences prefs;
   Illustrations illustrations;
-  SystemBarManager barManager;
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
   FlutterLocalNotificationsPlugin notifications;
