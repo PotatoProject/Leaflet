@@ -34,8 +34,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController controller;
 
   AppInfoProvider appInfo;
-  NoteHelper helper;
-  Preferences prefs;
 
   ReturnMode mode = ReturnMode.NORMAL;
   bool selecting = false;
@@ -59,8 +57,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
-    if (helper == null) helper = locator<NoteHelper>();
-    if (prefs == null) prefs = locator<Preferences>();
+    final helper = locator<NoteHelper>();
+    final prefs = locator<Preferences>();
 
     double width = MediaQuery.of(context).size.width;
 
@@ -89,94 +87,30 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             return AnimatedBuilder(
               animation: Tween<double>(begin: 0, end: 1).animate(controller),
               builder: (context, child) {
-                List<Note> starredNotes =
-                    snapshot.data.where((note) => note.starred).toList();
-                List<Note> normalNotes =
-                    snapshot.data.where((note) => !note.starred).toList();
+                EdgeInsets padding = EdgeInsets.fromLTRB(
+                  4,
+                  4 + MediaQuery.of(context).padding.top,
+                  4,
+                  4.0 + 56,
+                );
 
                 return Opacity(
                   opacity: controller.value,
-                  child: ListView(
-                    children: [
-                      Visibility(
-                          visible: starredNotes.isNotEmpty,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Text(
-                                  "Starred notes",
-                                  style: TextStyle(
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                ),
-                              ),
-                              prefs.useGrid
-                                  ? StaggeredGridView.countBuilder(
-                                      crossAxisCount: numOfColumns,
-                                      itemBuilder: (context, index) =>
-                                          commonNote(starredNotes[index]),
-                                      staggeredTileBuilder: (index) =>
-                                          StaggeredTile.fit(1),
-                                      itemCount: starredNotes.length,
-                                      padding: EdgeInsets.all(0),
-                                      shrinkWrap: true,
-                                      primary: false,
-                                    )
-                                  : ListView.builder(
-                                      itemBuilder: (context, index) =>
-                                          commonNote(starredNotes[index]),
-                                      itemCount: starredNotes.length,
-                                      padding: EdgeInsets.all(0),
-                                      shrinkWrap: true,
-                                      primary: false,
-                                    ),
-                            ],
-                          )),
-                      Visibility(
-                        visible:
-                            starredNotes.isNotEmpty && normalNotes.isNotEmpty,
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: Text(
-                            "Normal notes",
-                            style: TextStyle(
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                        ),
+                  child: prefs.useGrid
+                    ? StaggeredGridView.countBuilder(
+                        crossAxisCount: numOfColumns,
+                        itemBuilder: (context, index) =>
+                            commonNote(snapshot.data[index]),
+                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                        itemCount: snapshot.data.length,
+                        padding: padding,
+                      )
+                    : ListView.builder(
+                        itemBuilder: (context, index) =>
+                            commonNote(snapshot.data[index]),
+                        itemCount: snapshot.data.length,
+                        padding: padding,
                       ),
-                      prefs.useGrid
-                          ? StaggeredGridView.countBuilder(
-                              crossAxisCount: numOfColumns,
-                              itemBuilder: (context, index) =>
-                                  commonNote(normalNotes[index]),
-                              staggeredTileBuilder: (index) =>
-                                  StaggeredTile.fit(1),
-                              itemCount: normalNotes.length,
-                              padding: EdgeInsets.all(0),
-                              shrinkWrap: true,
-                              primary: false,
-                            )
-                          : ListView.builder(
-                              itemBuilder: (context, index) =>
-                                  commonNote(normalNotes[index]),
-                              itemCount: normalNotes.length,
-                              padding: EdgeInsets.all(0),
-                              shrinkWrap: true,
-                              primary: false,
-                            ),
-                    ],
-                    padding: EdgeInsets.fromLTRB(
-                      4,
-                      4 + MediaQuery.of(context).padding.top,
-                      4,
-                      4.0 + 56,
-                    ),
-                  ),
                 );
               },
             );
@@ -261,92 +195,92 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     GlobalKey key = GlobalKeyRegistry.get(note.id);
 
     return NoteView(
-        key: key,
-        note: note,
-        onTap: () async {
-          if (selecting) {
-            setState(() {
-              if (selectionList.any((item) => item.id == note.id)) {
-                selectionList.removeWhere((item) => item.id == note.id);
-                if (selectionList.isEmpty) selecting = false;
-              } else {
-                selectionList.add(note);
-              }
-            });
-          } else {
-            bool status = false;
-            if (note.lockNote && note.usesBiometrics) {
-              bool bioAuth =
-                  await LocalAuthentication().authenticateWithBiometrics(
-                localizedReason: "",
-                androidAuthStrings: AndroidAuthMessages(
-                  signInTitle: "Scan fingerprint to open note",
-                  fingerprintHint: "",
-                ),
-              );
-
-              if (bioAuth)
-                status = bioAuth;
-              else
-                status = await Utils.showPassChallengeSheet(context) ?? false;
-            } else if (note.lockNote && !note.usesBiometrics) {
-              status = await Utils.showPassChallengeSheet(context) ?? false;
+      key: key,
+      note: note,
+      onTap: () async {
+        if (selecting) {
+          setState(() {
+            if (selectionList.any((item) => item.id == note.id)) {
+              selectionList.removeWhere((item) => item.id == note.id);
+              if (selectionList.isEmpty) selecting = false;
             } else {
-              status = true;
+              selectionList.add(note);
             }
+          });
+        } else {
+          bool status = false;
+          if (note.lockNote && note.usesBiometrics) {
+            bool bioAuth =
+                await LocalAuthentication().authenticateWithBiometrics(
+              localizedReason: "",
+              androidAuthStrings: AndroidAuthMessages(
+                signInTitle: "Scan fingerprint to open note",
+                fingerprintHint: "",
+              ),
+            );
 
-            if (status) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NotePage(
-                    note: note,
-                    numOfImages: numOfImages,
-                  ),
+            if (bioAuth)
+              status = bioAuth;
+            else
+              status = await Utils.showPassChallengeSheet(context) ?? false;
+          } else if (note.lockNote && !note.usesBiometrics) {
+            status = await Utils.showPassChallengeSheet(context) ?? false;
+          } else {
+            status = true;
+          }
+
+          if (status) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotePage(
+                  note: note,
+                  numOfImages: numOfImages,
                 ),
-              );
-            }
+              ),
+            );
           }
-        },
-        onLongPress: () async {
-          if (selecting) return;
+        }
+      },
+      onLongPress: () async {
+        if (selecting) return;
 
-          String action = await Utils.showNoteMenu(
-            context: context,
-            note: note,
-            numOfImages: numOfImages,
-            numOfColumns: numOfColumns,
-          );
+        String action = await Utils.showNoteMenu(
+          context: context,
+          note: note,
+          numOfImages: numOfImages,
+          numOfColumns: numOfColumns,
+        );
 
-          if (action != null) {
-            switch (action) {
-              case 'select':
-                setState(() {
-                  selecting = true;
-                  selectionList.add(note);
-                });
-                break;
-              case 'pin':
-                handlePinNotes(context, note);
-                break;
-              case 'share':
-                bool status = note.lockNote
-                    ? await Utils.showPassChallengeSheet(context)
-                    : true;
-                if(status ?? false) {
-                  Share.share(
-                    (note.title.isNotEmpty ? note.title + "\n\n" : "") +
-                        note.content,
-                    subject: "PotatoNotes saved note",
-                  );
-                }
-                break;
-            }
+        if (action != null) {
+          switch (action) {
+            case 'select':
+              setState(() {
+                selecting = true;
+                selectionList.add(note);
+              });
+              break;
+            case 'pin':
+              handlePinNotes(context, note);
+              break;
+            case 'share':
+              bool status = note.lockNote
+                  ? await Utils.showPassChallengeSheet(context)
+                  : true;
+              if (status ?? false) {
+                Share.share(
+                  (note.title.isNotEmpty ? note.title + "\n\n" : "") +
+                      note.content,
+                  subject: "PotatoNotes saved note",
+                );
+              }
+              break;
           }
-        },
-        selected: selectionList.any((item) => item.id == note.id),
-        numOfImages: numOfImages,
-      );
+        }
+      },
+      selected: selectionList.any((item) => item.id == note.id),
+      numOfImages: numOfImages,
+    );
   }
 
   void handlePinNotes(BuildContext context, Note note) {

@@ -10,7 +10,7 @@ import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
-const double _kBorderRadius = 8.0;
+const double _kBorderRadius = 10.0;
 
 class NoteView extends StatelessWidget {
   final Note note;
@@ -46,7 +46,7 @@ class NoteView extends StatelessWidget {
               )
             : BorderSide.none,
       ),
-      elevation: 3,
+      elevation: 4,
       margin: EdgeInsets.all(4),
       child: InkWell(
         onTap: onTap,
@@ -78,7 +78,6 @@ class NoteView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  NoteViewStatusbar(note: note),
                   Visibility(
                     visible: note.title != "",
                     child: Text(
@@ -140,6 +139,7 @@ class NoteView extends StatelessWidget {
                 ],
               ),
             ),
+            NoteViewStatusbar(note: note),
             Visibility(
               visible: showOptions,
               child: ListView(
