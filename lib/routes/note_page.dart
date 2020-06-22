@@ -147,7 +147,7 @@ class _NotePageState extends State<NotePage> {
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
           color: note.color != 0
-              ? Color(NoteColors.colorList(context)[note.color]["hex"])
+              ? Color(NoteColors.colorList(context)[note.color]["hex"]).withOpacity(0.9)
               : null,
         ),
         toggleableActiveColor: note.color != 0

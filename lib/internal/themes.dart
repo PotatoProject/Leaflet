@@ -9,8 +9,11 @@ class Themes {
       appInfo = providedAppInfo;
 
   static final Color _lightColor = Colors.white;
-  static final Color _darkColor = Color(0xFF161616);
-  static final Color _blackColor = Colors.black;
+  static final Color _lightSecondaryColor = Color(0xFFF6F6F6);
+  static final Color _darkColor = Color(0xFF212121);
+  static final Color _darkSecondaryColor = Color(0xFF161616);
+  static final Color _blackColor = Color(0xFF0E0E0E);
+  static final Color _blackSecondaryColor = Colors.black;
 
   static ThemeData get light => ThemeData.light().copyWith(
         accentColor: appInfo.mainColor,
@@ -24,7 +27,7 @@ class Themes {
           onSecondary: appInfo.mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _lightColor.withOpacity(0.9),
+          color: _lightSecondaryColor.withOpacity(0.9),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
@@ -41,7 +44,7 @@ class Themes {
           modalBackgroundColor: _lightColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _lightColor,
+        scaffoldBackgroundColor: _lightSecondaryColor,
         cardColor: _lightColor,
         canvasColor: _lightColor,
         buttonColor: appInfo.mainColor,
@@ -70,7 +73,7 @@ class Themes {
           onSecondary: appInfo.mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _darkColor.withOpacity(0.9),
+          color: _darkSecondaryColor.withOpacity(0.9),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
@@ -87,7 +90,7 @@ class Themes {
           modalBackgroundColor: _darkColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _darkColor,
+        scaffoldBackgroundColor: _darkSecondaryColor,
         cardColor: _darkColor,
         canvasColor: _darkColor,
         buttonColor: appInfo.mainColor,
@@ -116,7 +119,7 @@ class Themes {
           onSecondary: appInfo.mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _blackColor.withOpacity(0.7),
+          color: _blackSecondaryColor.withOpacity(0.7),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
@@ -133,7 +136,7 @@ class Themes {
           modalBackgroundColor: _blackColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _blackColor,
+        scaffoldBackgroundColor: _blackSecondaryColor,
         cardColor: _blackColor,
         canvasColor: _blackColor,
         buttonColor: appInfo.mainColor,

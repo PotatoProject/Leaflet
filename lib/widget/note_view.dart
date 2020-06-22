@@ -37,12 +37,6 @@ class NoteView extends StatelessWidget {
 
     if (selected) {
       borderColor = Theme.of(context).textTheme.caption.color;
-    } else if (note.color == 0) {
-      double opacity =
-          Theme.of(context).brightness == Brightness.light ? 0.1 : 0.2;
-
-      borderColor =
-          Theme.of(context).textTheme.caption.color.withOpacity(opacity);
     } else {
       borderColor = Colors.transparent;
     }
@@ -58,6 +52,9 @@ class NoteView extends StatelessWidget {
           width: 1.5,
         ),
       ),
+      elevation: note.color != 0
+          ? 0
+          : 0,
       margin: EdgeInsets.all(4),
       child: InkWell(
         onTap: onTap,

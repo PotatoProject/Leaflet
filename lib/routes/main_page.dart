@@ -196,17 +196,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         );
       },
       child: Icon(OMIcons.edit),
-      elevation: 0,
+      elevation: 2,
       disabledElevation: 0,
-      focusElevation: 0,
-      highlightElevation: 0,
-      hoverElevation: 0,
-      shape: CircleBorder(
-        side: BorderSide(
-          color: borderColor,
-          width: 1.5,
-        ),
-      ),
+      focusElevation: 2,
+      highlightElevation: 2,
+      hoverElevation: 2,
     );
   }
 

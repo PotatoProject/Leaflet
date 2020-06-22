@@ -43,6 +43,8 @@ class _DrawPageState extends State<DrawPage>
   MenuShowReason showReason = MenuShowReason.COLOR_PICKER;
   AnimationController controller;
 
+  String filePath;
+
   final GlobalKey key = new GlobalKey();
 
   @override
@@ -55,11 +57,69 @@ class _DrawPageState extends State<DrawPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(CommunityMaterialIcons.undo),
+            padding: EdgeInsets.all(0),
+            onPressed: objects.isNotEmpty
+                ? () {
+                    objects.removeLast();
+                    actionQueueIndex = objects.length - 1;
+                  }
+                : null,
+          ),
+          IconButton(
+            icon: Icon(CommunityMaterialIcons.redo),
+            padding: EdgeInsets.all(0),
+            onPressed: actionQueueIndex < backupObjects.length - 1
+                ? () {
+                    actionQueueIndex = objects.length;
+                    objects.add(backupObjects[actionQueueIndex]);
+                  }
+                : null,
+          ),
+          IconButton(
+            icon: Icon(CommunityMaterialIcons.content_save_outline),
+            padding: EdgeInsets.all(0),
+            onPressed: () async {
+              ui.Image image = await (key.currentContext.findRenderObject()
+                      as RenderRepaintBoundary)
+                  .toImage();
+              ByteData byteData =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
+              Uint8List pngBytes = byteData.buffer.asUint8List();
+              DateTime now = DateTime.now();
+              String timestamp = DateFormat("HH_ss-MM_dd_yyyy").format(now);
+
+              String drawing;
+              if (widget.data == null) {
+                if(filePath == null) {
+                  drawing =
+                    "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
+                  filePath = drawing;
+                } else {
+                  drawing = filePath;
+                }
+              } else {
+                drawing = widget.data.uri.path;
+              }
+
+              File imgFile = File(drawing);
+              await imgFile.writeAsBytes(pngBytes);
+              Loggy.d(message: drawing);
+              if (!widget.note.images.uris
+                  .any((item) => item == Uri.file(drawing))) {
+                widget.note.images.data.add(ImageData(Uri.file(drawing), true));
+              }
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
       body: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top,
+        height: MediaQuery.of(context).size.height - 56 - 48,
         child: GestureDetector(
           onPanStart: currentTool == DrawTool.ERASER
               ? _eraserModePan
@@ -73,8 +133,7 @@ class _DrawPageState extends State<DrawPage>
             objects: objects,
             size: Size(
               MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.top,
+              MediaQuery.of(context).size.height - 56 - 48,
             ),
             color: Colors.grey[50],
           ),
@@ -209,69 +268,6 @@ class _DrawPageState extends State<DrawPage>
                 ),
               ],
             ),
-            Divider(
-              height: 1,
-            ),
-            SpicyBottomBar(
-              elevation: 0,
-              leftItems: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-              rightItems: <Widget>[
-                IconButton(
-                  icon: Icon(CommunityMaterialIcons.undo),
-                  padding: EdgeInsets.all(0),
-                  onPressed: objects.isNotEmpty
-                      ? () {
-                          objects.removeLast();
-                          actionQueueIndex = objects.length - 1;
-                        }
-                      : null,
-                ),
-                IconButton(
-                  icon: Icon(CommunityMaterialIcons.redo),
-                  padding: EdgeInsets.all(0),
-                  onPressed: actionQueueIndex < backupObjects.length - 1
-                      ? () {
-                          actionQueueIndex = objects.length;
-                          objects.add(backupObjects[actionQueueIndex]);
-                        }
-                      : null,
-                ),
-                IconButton(
-                  icon: Icon(CommunityMaterialIcons.content_save_outline),
-                  padding: EdgeInsets.all(0),
-                  onPressed: () async {
-                    ui.Image image = await (key.currentContext
-                            .findRenderObject() as RenderRepaintBoundary)
-                        .toImage();
-                    ByteData byteData =
-                        await image.toByteData(format: ui.ImageByteFormat.png);
-                    Uint8List pngBytes = byteData.buffer.asUint8List();
-                    DateTime now = DateTime.now();
-                    String timestamp = DateFormat("HH_ss-MM_dd_yyyy").format(now);
-
-                    String drawing;
-                    if(widget.data == null) {
-                      drawing = "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
-                    } else {
-                      drawing = widget.data.uri.path;
-                    }
-                    
-                    File imgFile = File(drawing);
-                    await imgFile.writeAsBytes(pngBytes);
-                    Loggy.d(message: drawing);
-                    if(!widget.note.images.uris.any((item) => item == Uri.file(drawing))) {
-                      widget.note.images.data.add(ImageData(Uri.file(drawing), true));
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -308,7 +304,7 @@ class _DrawPageState extends State<DrawPage>
     RenderBox box = context.findRenderObject();
 
     Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
-        details.globalPosition.dy - MediaQuery.of(context).padding.top));
+        details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
     objects[currentIndex].points.add(point);
   }
@@ -317,7 +313,7 @@ class _DrawPageState extends State<DrawPage>
     RenderBox box = context.findRenderObject();
 
     Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
-        details.globalPosition.dy - MediaQuery.of(context).padding.top));
+        details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
     objects[currentIndex].points.add(point);
   }
