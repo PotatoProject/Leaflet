@@ -5,6 +5,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
@@ -14,6 +15,8 @@ AppDatabase db;
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   db = AppDatabase(constructDb());
+  setupLocator();
+  await locator<Preferences>().loadData();
   runApp(PotatoNotes());
 }
 
@@ -34,11 +37,11 @@ class PotatoNotes extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) => ChangeNotifierProvider.value(
-          value: AppInfoProvider(context),
+          value: AppInfoProvider(),
           child: Builder(
             builder: (context) {
               final appInfo = Provider.of<AppInfoProvider>(context);
-              final prefs = Provider.of<Preferences>(context);
+              final prefs = locator<Preferences>();
 
               Loggy.generateAppLabel();
               Loggy.setLogLevel(prefs.logLevel);
