@@ -23,6 +23,11 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         return (select(notes)
               ..where((table) => table.archived.not() & table.deleted))
             .get();
+      case ReturnMode.BOOKMARKS:
+        return (select(notes)
+              ..where((table) =>
+                  table.starred & table.archived.not() & table.deleted.not()))
+            .get();
       case ReturnMode.ALL:
       default:
         return select(notes).get();
@@ -43,6 +48,11 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
       case ReturnMode.ARCHIVE:
         selectQuery = select(notes)
           ..where((table) => table.archived & table.deleted.not());
+        break;
+      case ReturnMode.BOOKMARKS:
+        selectQuery = select(notes)
+          ..where((table) =>
+              table.starred & table.archived.not() & table.deleted.not());
         break;
       case ReturnMode.TRASH:
         selectQuery = select(notes)
@@ -152,4 +162,5 @@ enum ReturnMode {
   NORMAL,
   ARCHIVE,
   TRASH,
+  BOOKMARKS,
 }

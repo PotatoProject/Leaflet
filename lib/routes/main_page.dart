@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -147,10 +148,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               currentMode: mode,
             )
           : MainPageBar(
-              controller: controller,
               currentMode: mode,
               onReturnModeChange: (newMode) => mode = newMode,
             ),
+      extendBodyBehindAppBar: true,
       floatingActionButton:
           mode == ReturnMode.NORMAL && !selecting ? fab : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
