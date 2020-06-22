@@ -41,6 +41,7 @@ class MainPageBar extends StatelessWidget {
       currentIndex: currentMode.index - 1,
       onTap: (index) => onReturnModeChange(ReturnMode.values[index + 1]),
       type: BottomNavigationBarType.fixed,
+      elevation: 12,
     );
   }
 }

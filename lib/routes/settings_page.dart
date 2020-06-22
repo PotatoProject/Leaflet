@@ -28,6 +28,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
       child: Scaffold(
+        appBar: AppBar(),
+        extendBodyBehindAppBar: true,
         body: ListView(
           children: [
             SettingsCategory(
@@ -62,6 +64,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   onChanged: (value) => prefs.useAmoled = value,
                   title: Text("Use AMOLED theme"),
                   secondary: Icon(CommunityMaterialIcons.brightness_6),
+                  activeColor: Theme.of(context).accentColor,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
+                SwitchListTile(
+                  value: prefs.useGrid,
+                  onChanged: (value) => prefs.useGrid = value,
+                  title: Text("Grid view for notes"),
+                  secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
                   activeColor: Theme.of(context).accentColor,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
@@ -167,24 +178,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ],
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        ),
-        bottomNavigationBar: SpicyBottomBar(
-          leftItems: [
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              padding: EdgeInsets.all(0),
-              onPressed: () => Navigator.pop(context),
-            ),
-            Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).iconTheme.color,
               ),
             ),
           ],

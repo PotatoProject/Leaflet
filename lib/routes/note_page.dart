@@ -145,14 +145,39 @@ class _NotePageState extends State<NotePage> {
               ? Theme.of(context).textTheme.caption.color
               : null,
         ),
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+          color: note.color != 0
+              ? Color(NoteColors.colorList(context)[note.color]["hex"])
+              : null,
+        ),
         toggleableActiveColor: note.color != 0
             ? Theme.of(context).textTheme.caption.color
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            padding: EdgeInsets.all(0),
+            onPressed: () => saveAndPop(null),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(OMIcons.removeRedEye),
+              padding: EdgeInsets.all(0),
+              onPressed: showPrivacyOptionSheet,
+            ),
+            IconButton(
+              icon: Icon(note.starred ? Icons.star : Icons.star_border),
+              padding: EdgeInsets.all(0),
+              onPressed: () => note = note.copyWith(starred: !note.starred),
+            ),
+          ],
+        ),
+        extendBodyBehindAppBar: true,
         body: ListView(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
+            top: MediaQuery.of(context).padding.top + 56,
             bottom: 16,
           ),
           children: [
@@ -345,67 +370,37 @@ class _NotePageState extends State<NotePage> {
         bottomNavigationBar: Material(
           color: Theme.of(context).cardColor,
           elevation: 8,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom > 56
-                      ? MediaQuery.of(context).viewInsets.bottom - 56
-                      : MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: NoteToolbar(
-                  controller: contentController,
-                  rightActions: [
-                    IconButton(
-                      icon: Icon(OMIcons.colorLens),
-                      padding: EdgeInsets.all(0),
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        backgroundColor: Theme.of(context).cardColor,
-                        isScrollControlled: true,
-                        builder: (context) => NoteColorSelector(
-                          selectedColor: note.color,
-                          onColorSelect: (color) {
-                            note = note.copyWith(color: color);
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: NoteToolbar(
+              controller: contentController,
+              rightActions: [
+                IconButton(
+                  icon: Icon(OMIcons.colorLens),
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Theme.of(context).cardColor,
+                    isScrollControlled: true,
+                    builder: (context) => NoteColorSelector(
+                      selectedColor: note.color,
+                      onColorSelect: (color) {
+                        note = note.copyWith(color: color);
 
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
+                        Navigator.pop(context);
+                      },
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      padding: EdgeInsets.all(0),
-                      onPressed: showAddElementsSheet,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              SpicyBottomBar(
-                leftItems: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    padding: EdgeInsets.all(0),
-                    onPressed: () => saveAndPop(null),
-                  ),
-                ],
-                rightItems: [
-                  IconButton(
-                    icon: Icon(OMIcons.removeRedEye),
-                    padding: EdgeInsets.all(0),
-                    onPressed: showPrivacyOptionSheet,
-                  ),
-                  IconButton(
-                    icon: Icon(note.starred ? Icons.star : Icons.star_border),
-                    padding: EdgeInsets.all(0),
-                    onPressed: () =>
-                        note = note.copyWith(starred: !note.starred),
-                  ),
-                ],
-                elevation: 0,
-              ),
-            ],
+                IconButton(
+                  icon: Icon(Icons.add),
+                  padding: EdgeInsets.all(0),
+                  onPressed: showAddElementsSheet,
+                ),
+              ],
+            ),
           ),
         ),
       ),
