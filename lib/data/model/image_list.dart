@@ -7,14 +7,31 @@ part 'image_list.g.dart';
 
 @JsonSerializable()
 class ImageList {
-  List<Uri> images;
+  List<ImageData> data;
 
-  ImageList(this.images);
+  ImageList(this.data);
+
+  List<Uri> get uris {
+    return List.generate(data.length, (index) => data[index].uri);
+  }
 
   factory ImageList.fromJson(Map<String, dynamic> json) =>
       _$ImageListFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageListToJson(this);
+}
+
+@JsonSerializable()
+class ImageData {
+  Uri uri;
+  bool drawing;
+
+  ImageData(this.uri, this.drawing);
+
+  factory ImageData.fromJson(Map<String, dynamic> json) =>
+      _$ImageDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ImageDataToJson(this);
 }
 
 class ImageListConverter extends TypeConverter<ImageList, String> {

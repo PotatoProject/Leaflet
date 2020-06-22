@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
@@ -19,7 +20,6 @@ class Utils {
 
   static Future<String> showNoteMenu({
     BuildContext context,
-    Offset position,
     Note note,
     int numOfImages,
     int numOfColumns,
@@ -29,13 +29,22 @@ class Utils {
         fullscreenDialog: false,
         barrierDismissible: true,
         opaque: false,
+        barrierColor: Colors.black38,
         pageBuilder: (context, _, __) => NoteOptions(
           note: note,
-          position: position,
           numOfImages: numOfImages,
           numOfColumns: numOfColumns,
         ),
-        transitionDuration: Duration(milliseconds: 300),
+        transitionDuration: Duration(milliseconds: 150),
+        transitionsBuilder: (
+          context,
+          animation,
+          _,
+          child
+        ) => FadeScaleTransition(
+          animation: animation,
+          child: child,
+        ),
       ),
     );
   }

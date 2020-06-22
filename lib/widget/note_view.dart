@@ -33,91 +33,77 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    return Hero(
-      tag: note.id.toString(),
-      child: Card(
-        color: note.color != 0
-            ? Color(NoteColors.colorList(context)[note.color]["hex"])
-            : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_kBorderRadius),
-          side: selected
-              ? BorderSide(
-                  color: Theme.of(context).textTheme.caption.color,
-                  width: 1.5,
-                )
-              : BorderSide.none,
-        ),
-        elevation: 3,
-        margin: EdgeInsets.all(4),
-        child: InkWell(
-          onTap: onTap,
-          onLongPress: onLongPress,
-          borderRadius: BorderRadius.circular(_kBorderRadius),
-          child: ListView(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(0),
-            children: [
-              IgnorePointer(
-                child: Visibility(
-                  visible: note.images.images.isNotEmpty && !note.hideContent,
-                  child: NoteViewImages(
-                    images: note.images.images.sublist(
-                        0,
-                        note.images.images.length > numOfImages * 2
-                            ? numOfImages * 2
-                            : note.images.images.length),
-                    numOfImages: numOfImages,
-                    borderRadius: _kBorderRadius,
-                  ),
+    return Card(
+      color: note.color != 0
+          ? Color(NoteColors.colorList(context)[note.color]["hex"])
+          : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(_kBorderRadius),
+        side: selected
+            ? BorderSide(
+                color: Theme.of(context).textTheme.caption.color,
+                width: 1.5,
+              )
+            : BorderSide.none,
+      ),
+      elevation: 3,
+      margin: EdgeInsets.all(4),
+      child: InkWell(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        borderRadius: BorderRadius.circular(_kBorderRadius),
+        child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(0),
+          children: [
+            IgnorePointer(
+              child: Visibility(
+                visible: (note.images.data?.isNotEmpty ?? false) &&
+                    !note.hideContent &&
+                    !showOptions,
+                child: NoteViewImages(
+                  images: note.images.uris.sublist(
+                      0,
+                      note.images.data.length > numOfImages * 2
+                          ? numOfImages * 2
+                          : note.images.data.length),
+                  numOfImages: numOfImages,
+                  borderRadius: _kBorderRadius,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    NoteViewStatusbar(note: note),
-                    Visibility(
-                      visible: note.title != "",
-                      child: Text(
-                        note.title ?? "",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .color
-                              .withOpacity(0.7),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  NoteViewStatusbar(note: note),
+                  Visibility(
+                    visible: note.title != "",
+                    child: Text(
+                      note.title ?? "",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .color
+                            .withOpacity(0.7),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Visibility(
-                      visible: !note.hideContent,
-                      child: note.styleJson != null
-                          ? RichText(
-                              text: SpannableList.fromJson(parsedStyleJson)
-                                  .toTextSpan(
-                                note.content,
-                                defaultStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .color
-                                      .withOpacity(0.5),
-                                ),
-                              ),
-                              maxLines: 8,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : Text(
+                  ),
+                  Visibility(
+                    visible: !note.hideContent,
+                    child: note.styleJson != null
+                        ? RichText(
+                            text: SpannableList.fromJson(parsedStyleJson)
+                                .toTextSpan(
                               note.content,
-                              style: TextStyle(
+                              defaultStyle: TextStyle(
                                 fontSize: 16,
                                 color: Theme.of(context)
                                     .textTheme
@@ -125,37 +111,50 @@ class NoteView extends StatelessWidget {
                                     .color
                                     .withOpacity(0.5),
                               ),
-                              maxLines: 8,
-                              overflow: TextOverflow.ellipsis,
                             ),
+                            maxLines: 8,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : Text(
+                            note.content,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .color
+                                  .withOpacity(0.5),
+                            ),
+                            maxLines: 8,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                  ),
+                  Visibility(
+                    visible: note.list && !note.hideContent && !showOptions,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: listContentWidgets,
                     ),
-                    Visibility(
-                      visible: note.list && !note.hideContent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: listContentWidgets,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Visibility(
-                visible: showOptions,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(0),
-                  children: <Widget>[
-                    Divider(
-                      height: 1,
-                    ),
-                    ...Utils.popupItems(context, note),
-                  ],
-                ),
+            ),
+            Visibility(
+              visible: showOptions,
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.all(0),
+                children: <Widget>[
+                  Divider(
+                    height: 1,
+                  ),
+                  ...Utils.popupItems(context, note),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
