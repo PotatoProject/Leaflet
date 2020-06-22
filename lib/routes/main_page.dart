@@ -97,20 +97,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 return Opacity(
                   opacity: controller.value,
                   child: prefs.useGrid
-                    ? StaggeredGridView.countBuilder(
-                        crossAxisCount: numOfColumns,
-                        itemBuilder: (context, index) =>
-                            commonNote(snapshot.data[index]),
-                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                        itemCount: snapshot.data.length,
-                        padding: padding,
-                      )
-                    : ListView.builder(
-                        itemBuilder: (context, index) =>
-                            commonNote(snapshot.data[index]),
-                        itemCount: snapshot.data.length,
-                        padding: padding,
-                      ),
+                      ? StaggeredGridView.countBuilder(
+                          crossAxisCount: numOfColumns,
+                          itemBuilder: (context, index) =>
+                              commonNote(snapshot.data[index]),
+                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                          itemCount: snapshot.data.length,
+                          padding: padding,
+                        )
+                      : ListView.builder(
+                          itemBuilder: (context, index) =>
+                              commonNote(snapshot.data[index]),
+                          itemCount: snapshot.data.length,
+                          padding: padding,
+                        ),
                 );
               },
             );
@@ -153,28 +153,47 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ),
       floatingActionButton:
           mode == ReturnMode.NORMAL && !selecting ? fab : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  Widget get fab => FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NotePage(
-                numOfImages: numOfImages,
-              ),
+  Widget get fab {
+    Color borderColor;
+    double opacity =
+        Theme.of(context).brightness == Brightness.light ? 0.1 : 0.2;
+
+    borderColor =
+        Theme.of(context).textTheme.caption.color.withOpacity(opacity);
+
+    return FloatingActionButton(
+      onPressed: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotePage(
+              numOfImages: numOfImages,
             ),
-          );
-          appInfo.barManager.lightNavBarColor =
-              SpicyThemes.light(appInfo.mainColor).cardColor;
-          appInfo.barManager.darkNavBarColor =
-              SpicyThemes.dark(appInfo.mainColor).cardColor;
-        },
-        child: Icon(OMIcons.edit),
-        backgroundColor: Theme.of(context).accentColor,
-      );
+          ),
+        );
+        appInfo.barManager.lightNavBarColor =
+            SpicyThemes.light(appInfo.mainColor).cardColor;
+        appInfo.barManager.darkNavBarColor =
+            SpicyThemes.dark(appInfo.mainColor).cardColor;
+      },
+      child: Icon(OMIcons.edit),
+      elevation: 0,
+      disabledElevation: 0,
+      focusElevation: 0,
+      highlightElevation: 0,
+      hoverElevation: 0,
+      shape: CircleBorder(
+        side: BorderSide(
+          color: borderColor,
+          width: 1.5,
+        ),
+      ),
+    );
+  }
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {
     switch (mode) {

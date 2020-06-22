@@ -33,20 +33,31 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
+    Color borderColor;
+
+    if (selected) {
+      borderColor = Theme.of(context).textTheme.caption.color;
+    } else if (note.color == 0) {
+      double opacity =
+          Theme.of(context).brightness == Brightness.light ? 0.1 : 0.2;
+
+      borderColor =
+          Theme.of(context).textTheme.caption.color.withOpacity(opacity);
+    } else {
+      borderColor = Colors.transparent;
+    }
+    
     return Card(
       color: note.color != 0
           ? Color(NoteColors.colorList(context)[note.color]["hex"])
           : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kBorderRadius),
-        side: selected
-            ? BorderSide(
-                color: Theme.of(context).textTheme.caption.color,
-                width: 1.5,
-              )
-            : BorderSide.none,
+        side: BorderSide(
+          color: borderColor,
+          width: 1.5,
+        ),
       ),
-      elevation: 4,
       margin: EdgeInsets.all(4),
       child: InkWell(
         onTap: onTap,

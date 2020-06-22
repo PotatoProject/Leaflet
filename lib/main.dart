@@ -5,6 +5,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   db = AppDatabase(constructDb());
   setupLocator();
-  await locator<Preferences>().loadData();
+  locator<Preferences>().loadData();
   runApp(PotatoNotes());
 }
 
@@ -46,18 +47,20 @@ class PotatoNotes extends StatelessWidget {
               Loggy.generateAppLabel();
               Loggy.setLogLevel(prefs.logLevel);
 
+              Themes.provideAppInfo(appInfo);
+
               return MaterialApp(
                 title: "PotatoNotes",
-                theme: SpicyThemes.light(appInfo.mainColor),
+                theme: Themes.light,
                 darkTheme: prefs.useAmoled
-                    ? SpicyThemes.black(appInfo.mainColor)
-                    : SpicyThemes.dark(appInfo.mainColor),
+                    ? Themes.black
+                    : Themes.dark,
                 builder: (context, child) {
                   appInfo.barManager.lightNavBarColor =
-                      SpicyThemes.light(appInfo.mainColor).cardColor;
+                      Themes.light.cardColor;
                   appInfo.barManager.darkNavBarColor = prefs.useAmoled
-                      ? SpicyThemes.black(appInfo.mainColor).cardColor
-                      : SpicyThemes.dark(appInfo.mainColor).cardColor;
+                      ? Themes.black.cardColor
+                      : Themes.dark.cardColor;
                   appInfo.barManager.lightIconColor = Brightness.light;
                   appInfo.barManager.darkIconColor = Brightness.dark;
                   appInfo.barManager.updateColors();
