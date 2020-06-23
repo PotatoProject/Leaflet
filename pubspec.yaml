@@ -37,6 +37,7 @@ dependencies:
   share:
   animations:
   material_design_icons_flutter:
+  google_fonts:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

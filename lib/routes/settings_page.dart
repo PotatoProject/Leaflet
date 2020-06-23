@@ -23,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (prefs == null) prefs = locator<Preferences>();
+    if (prefs == null) prefs = Provider.of<Preferences>(context);
 
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
@@ -100,8 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (confirm) {
                         prefs.masterPass = "";
 
-                        NoteHelper helper =
-                            Provider.of<NoteHelper>(context, listen: false);
+                        NoteHelper helper = locator<NoteHelper>();
                         List<Note> notes =
                             await helper.listNotes(ReturnMode.ALL);
 

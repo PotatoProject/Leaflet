@@ -4,10 +4,10 @@ import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
-import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (helper == null) helper = Provider.of<NoteHelper>(context);
+    if (helper == null) helper = locator<NoteHelper>();
 
     return Scaffold(
       body: ListView.builder(

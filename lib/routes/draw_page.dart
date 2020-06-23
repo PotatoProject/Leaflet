@@ -58,6 +58,10 @@ class _DrawPageState extends State<DrawPage>
   }
 
   bool exitPrompt(bool _) {
+    Uri uri = filePath != null
+        ? Uri.file(filePath)
+        : null;
+
     void _internal() async {
       if (!saved) {
         bool exit = await showDialog(
@@ -82,12 +86,10 @@ class _DrawPageState extends State<DrawPage>
         );
 
         if (exit != null) {
-          widget.note.images.data.addAll({filePath: Uri.file(filePath)});
-          Navigator.pop(globalContext);
+          Navigator.pop(globalContext, uri);
         }
       } else {
-        widget.note.images.data.addAll({filePath: Uri.file(filePath)});
-        Navigator.pop(globalContext);
+        Navigator.pop(globalContext, uri);
       }
     }
 
@@ -111,20 +113,22 @@ class _DrawPageState extends State<DrawPage>
             icon: Icon(CommunityMaterialIcons.undo),
             padding: EdgeInsets.all(0),
             onPressed: objects.isNotEmpty
-                ? () {
+                ? () => setState(() {
                     objects.removeLast();
                     actionQueueIndex = objects.length - 1;
-                  }
+                    saved = false;
+                  })
                 : null,
           ),
           IconButton(
             icon: Icon(CommunityMaterialIcons.redo),
             padding: EdgeInsets.all(0),
             onPressed: actionQueueIndex < backupObjects.length - 1
-                ? () {
+                ? () => setState(() {
                     actionQueueIndex = objects.length;
                     objects.add(backupObjects[actionQueueIndex]);
-                  }
+                    saved = false;
+                  })
                 : null,
           ),
           IconButton(
@@ -159,7 +163,7 @@ class _DrawPageState extends State<DrawPage>
                     File imgFile = File(drawing);
                     await imgFile.writeAsBytes(pngBytes, flush: true);
                     Loggy.d(message: drawing);
-                    saved = true;
+                    setState(() => saved = true);
                   }
                 : null,
           ),
@@ -247,7 +251,7 @@ class _DrawPageState extends State<DrawPage>
                                     : Container(),
                               ),
                               onPressed: () {
-                                selectedColor = currentColor;
+                                setState(() => selectedColor = currentColor);
                                 controller.animateBack(0);
                               },
                             );
@@ -297,7 +301,7 @@ class _DrawPageState extends State<DrawPage>
                       await controller.animateBack(0);
                     } else {
                       await controller.animateBack(0);
-                      showReason = MenuShowReason.COLOR_PICKER;
+                      setState(() => showReason = MenuShowReason.COLOR_PICKER);
                       await controller.animateTo(1);
                     }
                   },
@@ -311,7 +315,7 @@ class _DrawPageState extends State<DrawPage>
                       await controller.animateBack(0);
                     } else {
                       await controller.animateBack(0);
-                      showReason = MenuShowReason.RADIUS_PICKER;
+                      setState(() => showReason = MenuShowReason.RADIUS_PICKER);
                       await controller.animateTo(1);
                     }
                   },
@@ -326,7 +330,7 @@ class _DrawPageState extends State<DrawPage>
 
   void _normalModePanStart(details) {
     controller.animateTo(0);
-    saved = false;
+    setState(() => saved = false);
     if (currentTool == DrawTool.MARKER) {
       objects.add(DrawObject(
           Paint()
@@ -357,7 +361,7 @@ class _DrawPageState extends State<DrawPage>
     Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
         details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
-    objects[currentIndex].points.add(point);
+    setState(() => objects[currentIndex].points.add(point));
   }
 
   void _normalModePanUpdate(details) {
@@ -366,17 +370,18 @@ class _DrawPageState extends State<DrawPage>
     Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
         details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
-    objects[currentIndex].points.add(point);
+    setState(() => objects[currentIndex].points.add(point));
   }
 
   void _eraserModePan(details) {
     controller.animateTo(0);
+    setState(() => saved = false);
     RenderBox box = context.findRenderObject();
 
     for (int i = 0; i < objects.length; i++) {
       DrawObject object = objects[i];
       Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
-          details.globalPosition.dy - MediaQuery.of(context).padding.top));
+          details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
       if (object.points.length > 1) {
         for (int j = 1; j < object.points.length - 1; j++) {
@@ -389,16 +394,20 @@ class _DrawPageState extends State<DrawPage>
 
           if (distanceAB - distanceCB >=
               distanceAC - (object.paint.strokeWidth / 2)) {
-            objects.remove(object);
-            actionQueueIndex = objects.length - 1;
+            setState(() {
+              objects.remove(object);
+              actionQueueIndex = objects.length - 1;
+            });
           }
         }
       } else {
         double distanceAC = distanceBetweenPoints(object.points[0], touchPoint);
 
         if (distanceAC < object.paint.strokeWidth / 2) {
-          objects.remove(object);
-          actionQueueIndex = objects.length - 1;
+          setState(() {
+            objects.remove(object);
+            actionQueueIndex = objects.length - 1;
+          });
         }
       }
     }

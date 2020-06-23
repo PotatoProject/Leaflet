@@ -7,8 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
-import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
@@ -17,17 +15,12 @@ class AppInfoProvider extends ChangeNotifier {
   static final StreamsChannel themeStreamChannel =
       StreamsChannel('potato_notes_themes');
 
-  AppInfoProvider() {
-    prefs = locator<Preferences>();
+  AppInfoProvider(this.context) {
     illustrations = Illustrations();
     loadData();
   }
 
-  // ignore: cancel_subscriptions
-  StreamSubscription<dynamic> accentSubscription;
-  // ignore: cancel_subscriptions
-  StreamSubscription<dynamic> themeSubscription;
-  Preferences prefs;
+  BuildContext context;
   Illustrations illustrations;
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
@@ -37,23 +30,9 @@ class AppInfoProvider extends ChangeNotifier {
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
 
-  Color _mainColor = Colors.blueAccent;
-  Brightness _systemTheme = Brightness.light;
-
-  Color get mainColor => _mainColor;
-  Brightness get systemTheme => _systemTheme;
-
-  set mainColor(Color newColor) {
-    _mainColor = newColor;
-    notifyListeners();
-  }
-
-  set systemTheme(Brightness newTheme) {
-    _systemTheme = newTheme;
-    notifyListeners();
-  }
-
   void updateIllustrations() async {
+    Brightness systemTheme = Theme.of(context).brightness;
+
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
     emptyArchiveIllustration =
         await illustrations.emptyArchiveIllustration(systemTheme);
@@ -84,25 +63,7 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   void loadData() async {
-    themeSubscription =
-        themeStreamChannel.receiveBroadcastStream().listen((data) {
-      switch (prefs.themeMode) {
-        case ThemeMode.system:
-          systemTheme = data ? Brightness.dark : Brightness.light;
-          break;
-        case ThemeMode.light:
-          systemTheme = Brightness.light;
-          break;
-        case ThemeMode.dark:
-          systemTheme = Brightness.dark;
-          break;
-      }
-    });
     _initNotifications();
-    accentSubscription =
-        accentStreamChannel.receiveBroadcastStream().listen((data) {
-      mainColor = Color(data);
-    });
     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
   }

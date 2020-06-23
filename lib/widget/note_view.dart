@@ -110,7 +110,7 @@ class NoteView extends StatelessWidget {
                             text: SpannableList.fromJson(parsedStyleJson)
                                 .toTextSpan(
                               note.content,
-                              defaultStyle: TextStyle(
+                              defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
                                 fontSize: 16,
                                 color: Theme.of(context)
                                     .textTheme

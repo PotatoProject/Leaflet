@@ -282,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   graphs:
     dependency: transitive
     description:
@@ -841,4 +848,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.8.0 <3.0.0"
-  flutter: ">=1.16.0 <2.0.0"
+  flutter: ">=1.17.0 <2.0.0"

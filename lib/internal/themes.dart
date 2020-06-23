@@ -1,12 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/app_info.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Themes {
-  static AppInfoProvider appInfo;
-
-  static void provideAppInfo(AppInfoProvider providedAppInfo) =>
-      appInfo = providedAppInfo;
+  Color mainColor = Colors.blueAccent;
+  
+  Themes(this.mainColor);
 
   static final Color _lightColor = Colors.white;
   static final Color _lightSecondaryColor = Color(0xFFF6F6F6);
@@ -15,16 +14,16 @@ class Themes {
   static final Color _blackColor = Color(0xFF0E0E0E);
   static final Color _blackSecondaryColor = Colors.black;
 
-  static ThemeData get light => ThemeData.light().copyWith(
-        accentColor: appInfo.mainColor,
-        cursorColor: appInfo.mainColor,
-        textSelectionHandleColor: appInfo.mainColor,
+  ThemeData get light => ThemeData.light().copyWith(
+        accentColor: mainColor,
+        cursorColor: mainColor,
+        textSelectionHandleColor: mainColor,
         colorScheme: ColorScheme.light(
           surface: _lightColor,
-          primary: appInfo.mainColor,
+          primary: mainColor,
           secondary: _lightColor,
           onPrimary: _lightColor,
-          onSecondary: appInfo.mainColor,
+          onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
           color: _lightSecondaryColor.withOpacity(0.9),
@@ -32,7 +31,7 @@ class Themes {
           iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         ),
-        textSelectionColor: appInfo.mainColor,
+        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: _lightColor,
           shape: RoundedRectangleBorder(
@@ -42,6 +41,7 @@ class Themes {
         cardTheme: CardTheme(
           elevation: 0,
         ),
+        textTheme: GoogleFonts.montserratTextTheme(ThemeData.light().textTheme),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _lightColor,
           shape: RoundedRectangleBorder(),
@@ -49,9 +49,9 @@ class Themes {
         scaffoldBackgroundColor: _lightSecondaryColor,
         cardColor: _lightColor,
         canvasColor: _lightColor,
-        buttonColor: appInfo.mainColor,
-        primaryColor: appInfo.mainColor,
-        backgroundColor: appInfo.mainColor,
+        buttonColor: mainColor,
+        primaryColor: mainColor,
+        backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(
@@ -63,16 +63,16 @@ class Themes {
         ),
       );
 
-  static ThemeData get dark => ThemeData.dark().copyWith(
-        accentColor: appInfo.mainColor,
-        cursorColor: appInfo.mainColor,
-        textSelectionHandleColor: appInfo.mainColor,
+  ThemeData get dark => ThemeData.dark().copyWith(
+        accentColor: mainColor,
+        cursorColor: mainColor,
+        textSelectionHandleColor: mainColor,
         colorScheme: ColorScheme.dark(
           surface: _darkColor,
-          primary: appInfo.mainColor,
+          primary: mainColor,
           secondary: _darkColor,
           onPrimary: _darkColor,
-          onSecondary: appInfo.mainColor,
+          onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
           color: _darkSecondaryColor.withOpacity(0.9),
@@ -80,7 +80,7 @@ class Themes {
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         ),
-        textSelectionColor: appInfo.mainColor,
+        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: _darkColor,
           shape: RoundedRectangleBorder(
@@ -90,6 +90,7 @@ class Themes {
         cardTheme: CardTheme(
           elevation: 0,
         ),
+        textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _darkColor,
           shape: RoundedRectangleBorder(),
@@ -97,9 +98,9 @@ class Themes {
         scaffoldBackgroundColor: _darkSecondaryColor,
         cardColor: _darkColor,
         canvasColor: _darkColor,
-        buttonColor: appInfo.mainColor,
-        primaryColor: appInfo.mainColor,
-        backgroundColor: appInfo.mainColor,
+        buttonColor: mainColor,
+        primaryColor: mainColor,
+        backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(
@@ -111,16 +112,16 @@ class Themes {
         ),
       );
 
-  static ThemeData get black => ThemeData.dark().copyWith(
-        accentColor: appInfo.mainColor,
-        cursorColor: appInfo.mainColor,
-        textSelectionHandleColor: appInfo.mainColor,
+  ThemeData get black => ThemeData.dark().copyWith(
+        accentColor: mainColor,
+        cursorColor: mainColor,
+        textSelectionHandleColor: mainColor,
         colorScheme: ColorScheme.dark(
           surface: _blackColor,
-          primary: appInfo.mainColor,
+          primary: mainColor,
           secondary: _blackColor,
           onPrimary: _blackColor,
-          onSecondary: appInfo.mainColor,
+          onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
           color: _blackSecondaryColor.withOpacity(0.7),
@@ -128,7 +129,7 @@ class Themes {
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         ),
-        textSelectionColor: appInfo.mainColor,
+        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: _blackColor,
           shape: RoundedRectangleBorder(
@@ -138,6 +139,7 @@ class Themes {
         cardTheme: CardTheme(
           elevation: 0,
         ),
+        textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _blackColor,
           shape: RoundedRectangleBorder(),
@@ -145,9 +147,9 @@ class Themes {
         scaffoldBackgroundColor: _blackSecondaryColor,
         cardColor: _blackColor,
         canvasColor: _blackColor,
-        buttonColor: appInfo.mainColor,
-        primaryColor: appInfo.mainColor,
-        backgroundColor: appInfo.mainColor,
+        buttonColor: mainColor,
+        primaryColor: mainColor,
+        backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(

@@ -28,11 +28,13 @@ class _PassChallengeState extends State<PassChallenge> {
 
   @override
   Widget build(BuildContext context) {
-    if (prefs == null) prefs = locator<Preferences>();
+    if (prefs == null) prefs = Provider.of<Preferences>(context);
     if (controller == null)
       controller = TextEditingController(
         text: widget.editMode ? prefs.masterPass ?? "" : "",
       );
+    
+    controller.addListener(() => setState(() {}));
 
     return Padding(
       padding:
@@ -68,7 +70,7 @@ class _PassChallengeState extends State<PassChallenge> {
                         ? CommunityMaterialIcons.eye_outline
                         : CommunityMaterialIcons.eye_off_outline,
                   ),
-                  onPressed: () => showPass = !showPass,
+                  onPressed: () => setState(() => showPass = !showPass),
                 ),
               ],
             ),
@@ -91,10 +93,10 @@ class _PassChallengeState extends State<PassChallenge> {
                           ? () => widget.onSave(controller.text)
                           : () {
                               if (prefs.masterPass == controller.text) {
-                                status = null;
+                                setState(() => status = null);
                                 widget.onChallengeSuccess();
                               } else
-                                status = "Incorrect master pass";
+                                setState(() => status = "Incorrect master pass");
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),

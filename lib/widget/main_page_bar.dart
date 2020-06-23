@@ -38,6 +38,7 @@ class MainPageBar extends StatelessWidget {
           title: Text("Bookmarks"),
         ),
       ],
+      selectedFontSize: 12,
       currentIndex: currentMode.index - 1,
       onTap: (index) => onReturnModeChange(ReturnMode.values[index + 1]),
       type: BottomNavigationBarType.fixed,

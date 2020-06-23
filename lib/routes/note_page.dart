@@ -122,12 +122,12 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     if (helper == null) {
-      helper = Provider.of<NoteHelper>(context);
+      helper = locator<NoteHelper>();
 
       generateId();
     }
 
-    if (prefs == null) prefs = locator<Preferences>();
+    if (prefs == null) prefs = Provider.of<Preferences>(context);
     if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
 
     return Theme(
@@ -146,10 +146,11 @@ class _NotePageState extends State<NotePage> {
               : null,
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
-          color: note.color != 0
-              ? Color(NoteColors.colorList(context)[note.color]["hex"]).withOpacity(0.9)
-              : null,
-        ),
+              color: note.color != 0
+                  ? Color(NoteColors.colorList(context)[note.color]["hex"])
+                      .withOpacity(0.9)
+                  : null,
+            ),
         toggleableActiveColor: note.color != 0
             ? Theme.of(context).textTheme.caption.color
             : Theme.of(context).accentColor,
@@ -170,7 +171,7 @@ class _NotePageState extends State<NotePage> {
             IconButton(
               icon: Icon(note.starred ? Icons.star : Icons.star_border),
               padding: EdgeInsets.all(0),
-              onPressed: () => note = note.copyWith(starred: !note.starred),
+              onPressed: () => setState(() => note = note.copyWith(starred: !note.starred)),
             ),
           ],
         ),
@@ -283,11 +284,11 @@ class _NotePageState extends State<NotePage> {
 
                     return Dismissible(
                       key: Key(currentItem.id.toString()),
-                      onDismissed: (_) {
+                      onDismissed: (_) => setState(() {
                         note.listContent.content.removeAt(index);
                         listContentControllers.removeAt(index);
                         listContentNodes.removeAt(index);
-                      },
+                      }),
                       background: Container(
                         color: Colors.red[400],
                         padding: EdgeInsets.symmetric(horizontal: 24),
@@ -301,9 +302,7 @@ class _NotePageState extends State<NotePage> {
                       child: ListTile(
                         leading: Checkbox(
                           value: currentItem.status,
-                          onChanged: (value) {
-                            note.listContent.content[index].status = value;
-                          },
+                          onChanged: (value) => setState(() => note.listContent.content[index].status = value),
                           checkColor: note.color != 0
                               ? Color(NoteColors.colorList(context)[note.color]
                                   ["hex"])
@@ -455,7 +454,7 @@ class _NotePageState extends State<NotePage> {
       ),
     );
 
-    listContentControllers.add(TextEditingController());
+    setState(() => listContentControllers.add(TextEditingController()));
 
     FocusNode node = FocusNode();
     listContentNodes.add(node);
@@ -475,7 +474,7 @@ class _NotePageState extends State<NotePage> {
             SwitchListTile(
               value: note.hideContent,
               onChanged: (value) =>
-                  note = note.copyWith(hideContent: !note.hideContent),
+                  setState(() => note = note.copyWith(hideContent: !note.hideContent)),
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.removeRedEye),
               title: Text("Hide content on main page"),
@@ -488,7 +487,7 @@ class _NotePageState extends State<NotePage> {
                           await Utils.showPassChallengeSheet(context) ?? false;
 
                       if (confirm)
-                        note = note.copyWith(lockNote: !note.lockNote);
+                        setState(() => note = note.copyWith(lockNote: !note.lockNote));
                     }
                   : null,
               activeColor: Theme.of(context).accentColor,
@@ -521,7 +520,7 @@ class _NotePageState extends State<NotePage> {
                         }
 
                         if (confirm)
-                          note = note.copyWith(usesBiometrics: value);
+                          setState(() => note = note.copyWith(usesBiometrics: value));
                       }
                     : null,
                 activeColor: Theme.of(context).accentColor,
@@ -548,7 +547,7 @@ class _NotePageState extends State<NotePage> {
                 note.list ? Icons.check_circle : Icons.check_circle_outline),
             title: Text("Toggle list"),
             onTap: () {
-              note = note.copyWith(list: !note.list);
+              setState(() => note = note.copyWith(list: !note.list));
 
               Navigator.pop(context);
             },
@@ -562,7 +561,8 @@ class _NotePageState extends State<NotePage> {
 
               if (image != null) {
                 print(image.path);
-                note.images.data[image.path] = File(image.path).uri;
+                setState(
+                    () => note.images.data[image.path] = File(image.path).uri);
                 Navigator.pop(context);
               }
             },
@@ -575,7 +575,8 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                note.images.data[image.path] = File(image.path).uri;
+                setState(
+                    () => note.images.data[image.path] = File(image.path).uri);
                 Navigator.pop(context);
               }
             },
@@ -584,9 +585,15 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(OMIcons.brush),
             title: Text("Add drawing"),
             onTap: () async {
-              Navigator.of(context).push(MaterialPageRoute(
+              Uri drawing = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => DrawPage(note: note),
               ));
+
+              if (drawing != null) {
+                setState(() =>
+                    note.images.data[drawing.path] = File(drawing.path).uri);
+                Navigator.pop(context);
+              }
             },
           ),
         ],

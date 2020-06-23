@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:provider/provider.dart';
 import 'package:spicy_components/spicy_components.dart';
@@ -40,7 +41,7 @@ class SelectionBar extends StatelessWidget {
   }
 
   List<Widget> getButtons(BuildContext context) {
-    NoteHelper helper = Provider.of<NoteHelper>(context);
+    NoteHelper helper = locator<NoteHelper>();
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL) {
