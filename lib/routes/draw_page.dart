@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,14 +12,13 @@ import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
-  final ImageData data;
+  final MapEntry<String, Uri> data;
 
   DrawPage({
     @required this.note,
@@ -33,6 +33,7 @@ class _DrawPageState extends State<DrawPage>
     with SingleTickerProviderStateMixin {
   static const List<Color> availableColors = Colors.primaries;
 
+  BuildContext globalContext;
   List<DrawObject> objects = [];
   List<DrawObject> backupObjects = [];
   int currentIndex;
@@ -42,6 +43,7 @@ class _DrawPageState extends State<DrawPage>
   DrawTool currentTool = DrawTool.PEN;
   MenuShowReason showReason = MenuShowReason.COLOR_PICKER;
   AnimationController controller;
+  bool saved = true;
 
   String filePath;
 
@@ -52,12 +54,58 @@ class _DrawPageState extends State<DrawPage>
     super.initState();
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    BackButtonInterceptor.add(exitPrompt);
+  }
+
+  bool exitPrompt(bool _) {
+    void _internal() async {
+      if (!saved) {
+        bool exit = await showDialog(
+          context: globalContext,
+          builder: (context) => AlertDialog(
+            title: Text("Are you sure?"),
+            content:
+                Text("Any unsaved change will be lost. Do you want to exit?"),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                textColor: Theme.of(context).accentColor,
+                child: Text("Cancel"),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.pop(context, true),
+                textColor: Theme.of(context).accentColor,
+                child: Text("Exit"),
+              ),
+            ],
+          ),
+        );
+
+        if (exit != null) {
+          widget.note.images.data.addAll({filePath: Uri.file(filePath)});
+          Navigator.pop(globalContext);
+        }
+      } else {
+        widget.note.images.data.addAll({filePath: Uri.file(filePath)});
+        Navigator.pop(globalContext);
+      }
+    }
+
+    _internal();
+
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
+    if(this.globalContext == null)
+      this.globalContext = context;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => exitPrompt(true)
+        ),
         actions: [
           IconButton(
             icon: Icon(CommunityMaterialIcons.undo),
@@ -82,41 +130,42 @@ class _DrawPageState extends State<DrawPage>
           IconButton(
             icon: Icon(CommunityMaterialIcons.content_save_outline),
             padding: EdgeInsets.all(0),
-            onPressed: () async {
-              ui.Image image = await (key.currentContext.findRenderObject()
-                      as RenderRepaintBoundary)
-                  .toImage();
-              ByteData byteData =
-                  await image.toByteData(format: ui.ImageByteFormat.png);
-              Uint8List pngBytes = byteData.buffer.asUint8List();
-              DateTime now = DateTime.now();
-              String timestamp = DateFormat("HH_ss-MM_dd_yyyy").format(now);
+            onPressed: !saved
+                ? () async {
+                    ui.Image image = await (key.currentContext
+                            .findRenderObject() as RenderRepaintBoundary)
+                        .toImage();
+                    ByteData byteData =
+                        await image.toByteData(format: ui.ImageByteFormat.png);
+                    Uint8List pngBytes = byteData.buffer.asUint8List();
+                    DateTime now = DateTime.now();
+                    String timestamp =
+                        DateFormat("HH_ss-MM_dd_yyyy").format(now);
 
-              String drawing;
-              if (widget.data == null) {
-                if(filePath == null) {
-                  drawing =
-                    "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
-                  filePath = drawing;
-                } else {
-                  drawing = filePath;
-                }
-              } else {
-                drawing = widget.data.uri.path;
-              }
+                    String drawing;
+                    print(filePath);
+                    if (widget.data == null) {
+                      if (filePath == null) {
+                        drawing =
+                            "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
+                        filePath = drawing;
+                      } else {
+                        drawing = filePath;
+                      }
+                    } else {
+                      drawing = widget.data.key;
+                    }
 
-              File imgFile = File(drawing);
-              await imgFile.writeAsBytes(pngBytes);
-              Loggy.d(message: drawing);
-              if (!widget.note.images.uris
-                  .any((item) => item == Uri.file(drawing))) {
-                widget.note.images.data.add(ImageData(Uri.file(drawing), true));
-              }
-              Navigator.pop(context);
-            },
+                    File imgFile = File(drawing);
+                    await imgFile.writeAsBytes(pngBytes, flush: true);
+                    Loggy.d(message: drawing);
+                    saved = true;
+                  }
+                : null,
           ),
         ],
       ),
+      extendBody: true,
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 56 - 48,
@@ -135,6 +184,7 @@ class _DrawPageState extends State<DrawPage>
               MediaQuery.of(context).size.width,
               MediaQuery.of(context).size.height - 56 - 48,
             ),
+            uri: widget.data != null ? widget.data.value : null,
             color: Colors.grey[50],
           ),
         ),
@@ -276,6 +326,7 @@ class _DrawPageState extends State<DrawPage>
 
   void _normalModePanStart(details) {
     controller.animateTo(0);
+    saved = false;
     if (currentTool == DrawTool.MARKER) {
       objects.add(DrawObject(
           Paint()

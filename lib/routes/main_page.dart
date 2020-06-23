@@ -177,13 +177,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget get fab {
-    Color borderColor;
-    double opacity =
-        Theme.of(context).brightness == Brightness.light ? 0.1 : 0.2;
-
-    borderColor =
-        Theme.of(context).textTheme.caption.color.withOpacity(opacity);
-
     return FloatingActionButton(
       onPressed: () async {
         await Navigator.push(

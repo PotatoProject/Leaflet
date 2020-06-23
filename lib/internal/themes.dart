@@ -33,9 +33,11 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         ),
         textSelectionColor: appInfo.mainColor,
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.accent,
-          hoverColor: appInfo.mainColor,
+        dialogTheme: DialogTheme(
+          backgroundColor: _lightColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         cardTheme: CardTheme(
           elevation: 0,
@@ -51,7 +53,7 @@ class Themes {
         primaryColor: appInfo.mainColor,
         backgroundColor: appInfo.mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
-        disabledColor: Colors.black.withOpacity(0.7),
+        disabledColor: Colors.black.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: SharedAxisPageTransitionsBuilder(
@@ -79,9 +81,11 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         ),
         textSelectionColor: appInfo.mainColor,
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.accent,
-          hoverColor: appInfo.mainColor,
+        dialogTheme: DialogTheme(
+          backgroundColor: _darkColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         cardTheme: CardTheme(
           elevation: 0,
@@ -97,7 +101,7 @@ class Themes {
         primaryColor: appInfo.mainColor,
         backgroundColor: appInfo.mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
-        disabledColor: Colors.white.withOpacity(0.7),
+        disabledColor: Colors.white.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: SharedAxisPageTransitionsBuilder(
@@ -125,9 +129,11 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         ),
         textSelectionColor: appInfo.mainColor,
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.accent,
-          hoverColor: appInfo.mainColor,
+        dialogTheme: DialogTheme(
+          backgroundColor: _blackColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         cardTheme: CardTheme(
           elevation: 0,
@@ -143,7 +149,7 @@ class Themes {
         primaryColor: appInfo.mainColor,
         backgroundColor: appInfo.mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
-        disabledColor: Colors.white.withOpacity(0.7),
+        disabledColor: Colors.white.withOpacity(0.4),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: SharedAxisPageTransitionsBuilder(

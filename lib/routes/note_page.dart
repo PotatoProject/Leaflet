@@ -68,7 +68,7 @@ class _NotePageState extends State<NotePage> {
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
-      images: widget.note?.images ?? ImageList([]),
+      images: widget.note?.images ?? ImageList({}),
       list: widget.note?.list ?? false,
       listContent: widget.note?.listContent ?? ListContent([]),
       reminders: widget.note?.reminders ?? ReminderList([]),
@@ -561,7 +561,8 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                note.images.data.add(ImageData(File(image.path).uri, false));
+                print(image.path);
+                note.images.data[image.path] = File(image.path).uri;
                 Navigator.pop(context);
               }
             },
@@ -574,7 +575,7 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                note.images.data.add(ImageData(File(image.path).uri, false));
+                note.images.data[image.path] = File(image.path).uri;
                 Navigator.pop(context);
               }
             },
