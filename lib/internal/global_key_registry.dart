@@ -6,7 +6,7 @@ class GlobalKeyRegistry {
   static GlobalKey get(dynamic id) {
     GlobalKey key = _registry[id];
 
-    if(key == null) {
+    if (key == null) {
       _registry[id] = GlobalKey();
     }
 

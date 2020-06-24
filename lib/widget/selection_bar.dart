@@ -55,7 +55,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL ||
-        currentMode == ReturnMode.BOOKMARKS) {
+        currentMode == ReturnMode.FAVOURITES) {
       bool anyStarred = selectionList.any((item) => item.starred);
 
       buttons.add(
@@ -155,7 +155,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     ));
 
     if (currentMode != ReturnMode.NORMAL &&
-        currentMode != ReturnMode.BOOKMARKS) {
+        currentMode != ReturnMode.FAVOURITES) {
       buttons.add(IconButton(
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),

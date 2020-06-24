@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -24,8 +23,7 @@ class Utils {
     );
   }
 
-  static List<PopupMenuItem<String>> popupItems(
-      BuildContext context) {
+  static List<PopupMenuItem<String>> popupItems(BuildContext context) {
     Widget _popupMenuItem({
       IconData icon,
       String title,

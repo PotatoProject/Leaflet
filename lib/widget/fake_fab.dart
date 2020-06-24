@@ -33,8 +33,8 @@ class FakeFab extends StatelessWidget {
           child: Theme(
             data: Theme.of(context).copyWith(
               iconTheme: Theme.of(context).iconTheme.copyWith(
-                color: Theme.of(context).accentColor,
-              ),
+                    color: Theme.of(context).accentColor,
+                  ),
             ),
             child: child,
           ),

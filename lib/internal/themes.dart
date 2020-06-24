@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Themes {
   Color mainColor = Colors.blueAccent;
-  
+
   Themes(this.mainColor);
 
   static final Color _lightColor = Colors.white;

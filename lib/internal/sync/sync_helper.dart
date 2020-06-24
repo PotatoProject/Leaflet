@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 
 class SyncHelper {

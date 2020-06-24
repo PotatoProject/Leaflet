@@ -1,7 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:provider/provider.dart';
 
 class PassChallenge extends StatefulWidget {
@@ -33,7 +32,7 @@ class _PassChallengeState extends State<PassChallenge> {
       controller = TextEditingController(
         text: widget.editMode ? prefs.masterPass ?? "" : "",
       );
-    
+
     controller.addListener(() => setState(() {}));
 
     return Padding(
@@ -96,7 +95,8 @@ class _PassChallengeState extends State<PassChallenge> {
                                 setState(() => status = null);
                                 widget.onChallengeSuccess();
                               } else
-                                setState(() => status = "Incorrect master pass");
+                                setState(
+                                    () => status = "Incorrect master pass");
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),

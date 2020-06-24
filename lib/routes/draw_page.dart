@@ -58,9 +58,7 @@ class _DrawPageState extends State<DrawPage>
   }
 
   bool exitPrompt(bool _) {
-    Uri uri = filePath != null
-        ? Uri.file(filePath)
-        : null;
+    Uri uri = filePath != null ? Uri.file(filePath) : null;
 
     void _internal() async {
       if (!saved) {
@@ -106,24 +104,21 @@ class _DrawPageState extends State<DrawPage>
 
   @override
   Widget build(BuildContext context) {
-    if(this.globalContext == null)
-      this.globalContext = context;
+    if (this.globalContext == null) this.globalContext = context;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => exitPrompt(true)
-        ),
+            icon: Icon(Icons.arrow_back), onPressed: () => exitPrompt(true)),
         actions: [
           IconButton(
             icon: Icon(CommunityMaterialIcons.undo),
             padding: EdgeInsets.all(0),
             onPressed: objects.isNotEmpty
                 ? () => setState(() {
-                    objects.removeLast();
-                    actionQueueIndex = objects.length - 1;
-                    saved = false;
-                  })
+                      objects.removeLast();
+                      actionQueueIndex = objects.length - 1;
+                      saved = false;
+                    })
                 : null,
           ),
           IconButton(
@@ -131,10 +126,10 @@ class _DrawPageState extends State<DrawPage>
             padding: EdgeInsets.all(0),
             onPressed: actionQueueIndex < backupObjects.length - 1
                 ? () => setState(() {
-                    actionQueueIndex = objects.length;
-                    objects.add(backupObjects[actionQueueIndex]);
-                    saved = false;
-                  })
+                      actionQueueIndex = objects.length;
+                      objects.add(backupObjects[actionQueueIndex]);
+                      saved = false;
+                    })
                 : null,
           ),
           IconButton(

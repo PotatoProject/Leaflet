@@ -1,4 +1,3 @@
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +6,10 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:provider/provider.dart';
-import 'package:spicy_components/spicy_components.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -74,7 +71,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: prefs.useGrid,
                   onChanged: (value) => prefs.useGrid = value,
                   title: Text("Grid view for notes"),
-                  secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
+                  secondary:
+                      Icon(CommunityMaterialIcons.view_dashboard_outline),
                   activeColor: Theme.of(context).accentColor,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),

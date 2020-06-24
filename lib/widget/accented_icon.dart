@@ -7,8 +7,7 @@ class AccentedIcon extends StatelessWidget {
   AccentedIcon(this.data);
 
   @override
-  Widget build(BuildContext context) =>
-      Icon(
+  Widget build(BuildContext context) => Icon(
         data,
         color: Theme.of(context).accentColor,
       );

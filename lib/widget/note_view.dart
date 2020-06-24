@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/note_colors.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';

@@ -43,17 +43,20 @@ class AppInfoProvider extends ChangeNotifier {
   void _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid = AndroidInitializationSettings('notes_icon');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('notes_icon');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
-    await notifications.initialize(initializationSettings, onSelectNotification: _handleNotificationTap);
+    await notifications.initialize(initializationSettings,
+        onSelectNotification: _handleNotificationTap);
   }
 
   Future<dynamic> _handleNotificationTap(String payload) async {
-    NotificationPayload nPayload = NotificationPayload.fromJson(json.decode(payload));
+    NotificationPayload nPayload =
+        NotificationPayload.fromJson(json.decode(payload));
 
-    switch(nPayload.action) {
+    switch (nPayload.action) {
       case NotificationAction.PIN:
         notifications.cancel(nPayload.id);
         break;

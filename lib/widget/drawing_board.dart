@@ -37,9 +37,7 @@ class DrawingBoard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: color,
-          image: image != null
-              ? DecorationImage(image: image)
-              : null,
+          image: image != null ? DecorationImage(image: image) : null,
         ),
         child: CustomPaint(
           size: size,

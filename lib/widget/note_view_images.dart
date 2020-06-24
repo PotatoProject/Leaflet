@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:potato_notes/widget/drawing_board.dart';
 
 class NoteViewImages extends StatefulWidget {
   final List<Uri> images;
