@@ -9,7 +9,6 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/locator.dart';
-import 'package:potato_notes/widget/note_options.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 
 class Utils {
@@ -25,74 +24,33 @@ class Utils {
     );
   }
 
-  static Future<String> showNoteMenu({
-    BuildContext context,
-    Note note,
-    int numOfImages,
-    int numOfColumns,
-  }) async {
-    return await Navigator.of(context).push(
-      PageRouteBuilder(
-        fullscreenDialog: false,
-        barrierDismissible: true,
-        opaque: false,
-        barrierColor: Colors.black38,
-        pageBuilder: (context, _, __) => NoteOptions(
-          note: note,
-          numOfImages: numOfImages,
-          numOfColumns: numOfColumns,
-        ),
-        transitionDuration: Duration(milliseconds: 150),
-        transitionsBuilder: (context, animation, _, child) =>
-            FadeScaleTransition(
-          animation: animation,
-          child: child,
-        ),
-      ),
-    );
-  }
-
   static List<PopupMenuItem<String>> popupItems(
-      BuildContext context, Note note) {
+      BuildContext context) {
     Widget _popupMenuItem({
       IconData icon,
       String title,
       String value,
-      bool disableOnHide = false,
     }) =>
         PopupMenuItem(
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: note.color != 0
-                    ? Theme.of(context).iconTheme.color.withOpacity(1)
-                    : Theme.of(context).accentColor,
-              ),
+              Icon(icon),
               SizedBox(width: 24),
               Text(title),
             ],
           ),
-          enabled: disableOnHide ? !note.hideContent : true,
           value: value,
         );
     return [
       _popupMenuItem(
-        icon: CommunityMaterialIcons.check,
-        title: "Select",
-        value: 'select',
-      ),
-      _popupMenuItem(
         icon: CommunityMaterialIcons.pin_outline,
         title: 'Pin',
         value: 'pin',
-        disableOnHide: true,
       ),
       _popupMenuItem(
         icon: CommunityMaterialIcons.share_variant,
         title: 'Share',
         value: 'share',
-        disableOnHide: true,
       ),
     ];
   }

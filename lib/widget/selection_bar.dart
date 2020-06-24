@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Note> selectionList;
@@ -154,6 +162,63 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ));
     }
 
+    if (selectionList.length == 1 && !selectionList[0].hideContent) {
+      buttons.add(
+        PopupMenuButton(
+          itemBuilder: (context) => Utils.popupItems(context),
+          onSelected: (action) async {
+            Note note = selectionList[0];
+
+            switch (action) {
+              case 'pin':
+                handlePinNotes(context, selectionList[0]);
+                break;
+              case 'share':
+                bool status = note.lockNote
+                    ? await Utils.showPassChallengeSheet(context)
+                    : true;
+                if (status ?? false) {
+                  Share.share(
+                    (note.title.isNotEmpty ? note.title + "\n\n" : "") +
+                        note.content,
+                    subject: "PotatoNotes saved note",
+                  );
+                }
+                break;
+            }
+
+            onCloseSelection();
+          },
+        ),
+      );
+    }
+
     return buttons;
+  }
+
+  void handlePinNotes(BuildContext context, Note note) {
+    final appInfo = Provider.of<AppInfoProvider>(context, listen: false);
+
+    appInfo.notifications.show(
+      note.id,
+      note.title.isEmpty ? "Pinned notification" : note.title,
+      note.content,
+      NotificationDetails(
+        AndroidNotificationDetails(
+          'pinned_notifications',
+          'Pinned notifications',
+          'User pinned notifications',
+          color: Color(0xFFFF9100),
+          ongoing: true,
+        ),
+        IOSNotificationDetails(),
+      ),
+      payload: json.encode(
+        NotificationPayload(
+          action: NotificationAction.PIN,
+          id: note.id,
+        ).toJson(),
+      ),
+    );
   }
 }

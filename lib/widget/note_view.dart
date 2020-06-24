@@ -18,7 +18,6 @@ class NoteView extends StatelessWidget {
   final Function() onLongPress;
   final int numOfImages;
   final bool selected;
-  final bool showOptions;
 
   NoteView({
     Key key,
@@ -27,7 +26,6 @@ class NoteView extends StatelessWidget {
     this.onLongPress,
     this.numOfImages = 2,
     this.selected = false,
-    this.showOptions = false,
   }) : super(key: key);
 
   @override
@@ -55,6 +53,7 @@ class NoteView extends StatelessWidget {
           width: 1.5,
         ),
       ),
+      clipBehavior: Clip.antiAlias,
       elevation: note.color != 0 ? 0 : 0,
       margin: EdgeInsets.all(4),
       child: InkWell(
@@ -67,27 +66,14 @@ class NoteView extends StatelessWidget {
             IgnorePointer(
               child: Visibility(
                 visible: (note.images.data?.isNotEmpty ?? false) &&
-                    !note.hideContent &&
-                    !showOptions,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(_kBorderRadius),
-                      topRight: Radius.circular(_kBorderRadius),
-                      bottomLeft: content.isNotEmpty
-                          ? Radius.circular(0)
-                          : Radius.circular(_kBorderRadius),
-                      bottomRight: content.isNotEmpty
-                          ? Radius.circular(0)
-                          : Radius.circular(_kBorderRadius),
-                    ),
-                  child: NoteViewImages(
-                    images: note.images.uris.sublist(
-                        0,
-                        note.images.data.length > numOfImages * 2
-                            ? numOfImages * 2
-                            : note.images.data.length),
-                    numOfImages: numOfImages,
-                  ),
+                    !note.hideContent,
+                child: NoteViewImages(
+                  images: note.images.uris.sublist(
+                      0,
+                      note.images.data.length > numOfImages * 2
+                          ? numOfImages * 2
+                          : note.images.data.length),
+                  numOfImages: numOfImages,
                 ),
               ),
             ),
@@ -111,20 +97,6 @@ class NoteView extends StatelessWidget {
                 padding: content.isEmpty && note.images.data.isEmpty
                     ? EdgeInsets.all(16)
                     : null,
-              ),
-            ),
-            Visibility(
-              visible: showOptions,
-              child: ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(0),
-                children: <Widget>[
-                  Divider(
-                    height: 1,
-                  ),
-                  ...Utils.popupItems(context, note),
-                ],
               ),
             ),
           ],
@@ -185,7 +157,7 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (note.list && !note.hideContent && !showOptions) {
+    if (note.list && !note.hideContent) {
       items.add(
         ListView.separated(
           shrinkWrap: true,

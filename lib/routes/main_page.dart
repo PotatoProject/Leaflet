@@ -211,9 +211,7 @@ class _MainPageState extends State<MainPage>
       child: FakeFab(
         onLongPress: () => Utils.showFabMenu(context, fabOptions),
         key: GlobalKeyRegistry.get("fab"),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         onTap: () => Navigator.push(
           context,
           DismissiblePageRoute(
@@ -400,65 +398,13 @@ class _MainPageState extends State<MainPage>
       onLongPress: () async {
         if (selecting) return;
 
-        String action = await Utils.showNoteMenu(
-          context: context,
-          note: note,
-          numOfImages: numOfImages,
-          numOfColumns: numOfColumns,
-        );
-
-        if (action != null) {
-          switch (action) {
-            case 'select':
-              setState(() {
-                selecting = true;
-                selectionList.add(note);
-              });
-              break;
-            case 'pin':
-              handlePinNotes(context, note);
-              break;
-            case 'share':
-              bool status = note.lockNote
-                  ? await Utils.showPassChallengeSheet(context)
-                  : true;
-              if (status ?? false) {
-                Share.share(
-                  (note.title.isNotEmpty ? note.title + "\n\n" : "") +
-                      note.content,
-                  subject: "PotatoNotes saved note",
-                );
-              }
-              break;
-          }
-        }
+        setState(() {
+          selecting = true;
+          selectionList.add(note);
+        });
       },
       selected: selectionList.any((item) => item.id == note.id),
       numOfImages: numOfImages,
-    );
-  }
-
-  void handlePinNotes(BuildContext context, Note note) {
-    appInfo.notifications.show(
-      note.id,
-      note.title.isEmpty ? "Pinned notification" : note.title,
-      note.content,
-      NotificationDetails(
-        AndroidNotificationDetails(
-          'pinned_notifications',
-          'Pinned notifications',
-          'User pinned notifications',
-          color: Color(0xFFFF9100),
-          ongoing: true,
-        ),
-        IOSNotificationDetails(),
-      ),
-      payload: json.encode(
-        NotificationPayload(
-          action: NotificationAction.PIN,
-          id: note.id,
-        ).toJson(),
-      ),
     );
   }
 }
