@@ -4,8 +4,12 @@ import 'package:potato_notes/data/database.dart';
 
 class NoteViewStatusbar extends StatelessWidget {
   final Note note;
+  final EdgeInsets padding;
 
-  NoteViewStatusbar({@required this.note});
+  NoteViewStatusbar({
+    @required this.note,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class NoteViewStatusbar extends StatelessWidget {
     return Visibility(
       visible: icons.isNotEmpty,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+        padding: padding ?? const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: IconTheme(
           data: Theme.of(context).iconTheme.copyWith(size: 16),
           child: Wrap(

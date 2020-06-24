@@ -106,7 +106,12 @@ class NoteView extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: NoteViewStatusbar(note: note),
+              child: NoteViewStatusbar(
+                note: note,
+                padding: content.isEmpty && note.images.data.isEmpty
+                    ? EdgeInsets.all(16)
+                    : null,
+              ),
             ),
             Visibility(
               visible: showOptions,
