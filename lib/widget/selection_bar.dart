@@ -54,10 +54,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     NoteHelper helper = locator<NoteHelper>();
     List<Widget> buttons = [];
 
-    if (currentMode == ReturnMode.NORMAL) {
+    if (currentMode == ReturnMode.NORMAL ||
+        currentMode == ReturnMode.BOOKMARKS) {
       bool anyStarred = selectionList.any((item) => item.starred);
 
-      buttons.addAll([
+      buttons.add(
         IconButton(
           icon: Icon(anyStarred
               ? CommunityMaterialIcons.heart
@@ -75,6 +76,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             onCloseSelection();
           },
         ),
+      );
+    }
+
+    if (currentMode == ReturnMode.NORMAL) {
+      buttons.addAll([
         IconButton(
           icon: Icon(OMIcons.colorLens),
           padding: EdgeInsets.all(0),
@@ -148,7 +154,8 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       },
     ));
 
-    if (currentMode != ReturnMode.NORMAL) {
+    if (currentMode != ReturnMode.NORMAL &&
+        currentMode != ReturnMode.BOOKMARKS) {
       buttons.add(IconButton(
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),
