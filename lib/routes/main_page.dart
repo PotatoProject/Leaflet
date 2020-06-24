@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -22,6 +24,7 @@ import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -114,8 +117,10 @@ class _MainPageState extends State<MainPage>
                 ),
                 IconButton(
                   icon: Icon(MdiIcons.cogOutline),
-                  onPressed: () => Navigator.push(context,
-                      DismissiblePageRoute(builder: (context) => SettingsPage())),
+                  onPressed: () => Navigator.push(
+                      context,
+                      DismissiblePageRoute(
+                          builder: (context) => SettingsPage())),
                 ),
               ],
             ),
@@ -200,22 +205,131 @@ class _MainPageState extends State<MainPage>
   }
 
   Widget get fab {
-    return FloatingActionButton(
-      onPressed: () => Navigator.push(
-        context,
-        DismissiblePageRoute(
-          builder: (context) => NotePage(
-            numOfImages: numOfImages,
+    return GestureDetector(
+      onLongPress: () => Utils.showFabMenu(context, fabOptions),
+      child: FloatingActionButton(
+        key: GlobalKeyRegistry.get("fab"),
+        heroTag: "fabMenu",
+        onPressed: () => Navigator.push(
+          context,
+          DismissiblePageRoute(
+            builder: (context) => NotePage(
+              numOfImages: numOfImages,
+            ),
           ),
         ),
+        child: Icon(OMIcons.edit),
+        elevation: 2,
+        disabledElevation: 0,
+        focusElevation: 2,
+        highlightElevation: 2,
+        hoverElevation: 2,
       ),
-      child: Icon(OMIcons.edit),
-      elevation: 2,
-      disabledElevation: 0,
-      focusElevation: 2,
-      highlightElevation: 2,
-      hoverElevation: 2,
     );
+  }
+
+  List<Widget> get fabOptions {
+    final helper = locator<NoteHelper>();
+    
+    return [
+      ListTile(
+        leading: AccentedIcon(OMIcons.edit),
+        title: Text(
+          "Text note",
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Navigator.of(context).push(
+            DismissiblePageRoute(
+              builder: (context) => NotePage(
+                numOfImages: numOfImages,
+              ),
+            ),
+          );
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(MdiIcons.checkboxMarkedOutline),
+        title: Text(
+          "List",
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Navigator.of(context).push(
+            DismissiblePageRoute(
+              builder: (context) => NotePage(
+                numOfImages: numOfImages,
+                note: Utils.emptyNote.copyWith(list: true),
+              ),
+            ),
+          );
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(OMIcons.image),
+        title: Text(
+          "Image from gallery",
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () async {
+          Note note = Utils.emptyNote;
+          PickedFile image =
+              await ImagePicker().getImage(source: ImageSource.gallery);
+
+          if (image != null) {
+            note.images.data[image.path] = File(image.path).uri;
+
+            Navigator.pop(context);
+            note = note.copyWith(id: await Utils.generateId());
+
+            Navigator.of(context).push(
+              DismissiblePageRoute(
+                builder: (context) => NotePage(
+                  numOfImages: numOfImages,
+                  note: note,
+                ),
+              ),
+            );
+
+            helper.saveNote(note);
+          }
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(OMIcons.cameraAlt),
+        title: Text(
+          "Image from camera",
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () async {
+          Note note = Utils.emptyNote;
+          PickedFile image =
+              await ImagePicker().getImage(source: ImageSource.camera);
+
+          if (image != null) {
+            note.images.data[image.path] = File(image.path).uri;
+
+            Navigator.pop(context);
+            note = note.copyWith(id: await Utils.generateId());
+
+            Navigator.of(context).push(
+              DismissiblePageRoute(
+                builder: (context) => NotePage(
+                  numOfImages: numOfImages,
+                  note: note,
+                ),
+              ),
+            );
+
+            helper.saveNote(note);
+          }
+        },
+      ),
+    ];
   }
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {
