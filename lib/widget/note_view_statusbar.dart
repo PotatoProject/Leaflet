@@ -45,7 +45,7 @@ class NoteViewStatusbar extends StatelessWidget {
           : CommunityMaterialIcons.lock_outline,
       CommunityMaterialIcons.alarm,
       CommunityMaterialIcons.sync_icon,
-      CommunityMaterialIcons.bookmark_outline,
+      CommunityMaterialIcons.heart_outline,
     ];
 
     List<int> iconDataIndexes = [];

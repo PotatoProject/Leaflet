@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +28,6 @@ import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
-import 'package:spicy_components/spicy_components.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
@@ -56,6 +56,8 @@ class _NotePageState extends State<NotePage> {
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
+
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -156,6 +158,7 @@ class _NotePageState extends State<NotePage> {
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -169,9 +172,24 @@ class _NotePageState extends State<NotePage> {
               onPressed: showPrivacyOptionSheet,
             ),
             IconButton(
-              icon: Icon(note.starred ? Icons.star : Icons.star_border),
+              icon: Icon(note.starred
+                  ? CommunityMaterialIcons.heart
+                  : CommunityMaterialIcons.heart_outline),
               padding: EdgeInsets.all(0),
-              onPressed: () => setState(() => note = note.copyWith(starred: !note.starred)),
+              onPressed: () {
+                setState(() => note = note.copyWith(starred: !note.starred));
+                scaffoldKey.currentState.removeCurrentSnackBar();
+                scaffoldKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      note.starred
+                          ? "Note added to favourites"
+                          : "Note remove from favourites",
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -302,7 +320,8 @@ class _NotePageState extends State<NotePage> {
                       child: ListTile(
                         leading: Checkbox(
                           value: currentItem.status,
-                          onChanged: (value) => setState(() => note.listContent.content[index].status = value),
+                          onChanged: (value) => setState(() =>
+                              note.listContent.content[index].status = value),
                           checkColor: note.color != 0
                               ? Color(NoteColors.colorList(context)[note.color]
                                   ["hex"])
@@ -386,7 +405,7 @@ class _NotePageState extends State<NotePage> {
                     builder: (context) => NoteColorSelector(
                       selectedColor: note.color,
                       onColorSelect: (color) {
-                        note = note.copyWith(color: color);
+                        setState(() => note = note.copyWith(color: color));
 
                         Navigator.pop(context);
                       },
@@ -473,8 +492,8 @@ class _NotePageState extends State<NotePage> {
           children: [
             SwitchListTile(
               value: note.hideContent,
-              onChanged: (value) =>
-                  setState(() => note = note.copyWith(hideContent: !note.hideContent)),
+              onChanged: (value) => setState(
+                  () => note = note.copyWith(hideContent: !note.hideContent)),
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.removeRedEye),
               title: Text("Hide content on main page"),
@@ -487,7 +506,8 @@ class _NotePageState extends State<NotePage> {
                           await Utils.showPassChallengeSheet(context) ?? false;
 
                       if (confirm)
-                        setState(() => note = note.copyWith(lockNote: !note.lockNote));
+                        setState(() =>
+                            note = note.copyWith(lockNote: !note.lockNote));
                     }
                   : null,
               activeColor: Theme.of(context).accentColor,
@@ -520,7 +540,8 @@ class _NotePageState extends State<NotePage> {
                         }
 
                         if (confirm)
-                          setState(() => note = note.copyWith(usesBiometrics: value));
+                          setState(() =>
+                              note = note.copyWith(usesBiometrics: value));
                       }
                     : null,
                 activeColor: Theme.of(context).accentColor,
@@ -560,7 +581,6 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                print(image.path);
                 setState(
                     () => note.images.data[image.path] = File(image.path).uri);
                 Navigator.pop(context);

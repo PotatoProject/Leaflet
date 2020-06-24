@@ -46,7 +46,6 @@ class PotatoNotes extends StatelessWidget {
             stream: accentStreamChannel.receiveBroadcastStream(),
             initialData: Colors.blueAccent.value,
             builder: (context, snapshot) {
-              print("bruh");
               Themes themes = Themes(Color(snapshot.data));
 
               return MaterialApp(

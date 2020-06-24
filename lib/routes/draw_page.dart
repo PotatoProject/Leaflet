@@ -99,6 +99,12 @@ class _DrawPageState extends State<DrawPage>
   }
 
   @override
+  void dispose() {
+    BackButtonInterceptor.remove(exitPrompt);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if(this.globalContext == null)
       this.globalContext = context;
@@ -147,7 +153,6 @@ class _DrawPageState extends State<DrawPage>
                         DateFormat("HH_ss-MM_dd_yyyy").format(now);
 
                     String drawing;
-                    print(filePath);
                     if (widget.data == null) {
                       if (filePath == null) {
                         drawing =

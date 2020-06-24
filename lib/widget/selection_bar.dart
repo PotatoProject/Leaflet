@@ -1,13 +1,12 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:provider/provider.dart';
-import 'package:spicy_components/spicy_components.dart';
 
-class SelectionBar extends StatelessWidget {
+class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Note> selectionList;
   final ReturnMode currentMode;
   final Function() onCloseSelection;
@@ -19,24 +18,27 @@ class SelectionBar extends StatelessWidget {
   });
 
   @override
+  Size get preferredSize {
+    return new Size.fromHeight(56.0);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SpicyBottomBar(
-      leftItems: [
-        IconButton(
-          icon: Icon(Icons.close),
-          padding: EdgeInsets.all(0),
-          onPressed: onCloseSelection,
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.close),
+        padding: EdgeInsets.all(0),
+        onPressed: onCloseSelection,
+      ),
+      title: Text(
+        selectionList.length.toString(),
+        style: TextStyle(
+          color: Theme.of(context).iconTheme.color,
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
         ),
-        Text(
-          selectionList.length.toString(),
-          style: TextStyle(
-            color: Theme.of(context).iconTheme.color,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-      rightItems: getButtons(context),
+      ),
+      actions: getButtons(context),
     );
   }
 
@@ -45,19 +47,21 @@ class SelectionBar extends StatelessWidget {
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL) {
-      bool anyNotStarred = selectionList.any((item) => !item.starred);
+      bool anyStarred = selectionList.any((item) => item.starred);
 
       buttons.addAll([
         IconButton(
-          icon: Icon(anyNotStarred ? Icons.star : Icons.star_border),
+          icon: Icon(anyStarred
+              ? CommunityMaterialIcons.heart
+              : CommunityMaterialIcons.heart_outline),
           padding: EdgeInsets.all(0),
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
-              if (anyNotStarred)
-                await helper.saveNote(selectionList[i].copyWith(starred: true));
-              else
+              if (anyStarred)
                 await helper
                     .saveNote(selectionList[i].copyWith(starred: false));
+              else
+                await helper.saveNote(selectionList[i].copyWith(starred: true));
             }
 
             onCloseSelection();

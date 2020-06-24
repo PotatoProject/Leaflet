@@ -32,7 +32,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
   int numOfColumns;
   int numOfImages;
   AnimationController controller;
@@ -91,22 +92,31 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("PotatoNotes"),
-        textTheme: Theme.of(context).textTheme,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SearchPage())),
-          ),
-          IconButton(
-            icon: Icon(MdiIcons.cogOutline),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingsPage())),
-          ),
-        ],
-      ),
+      appBar: selecting
+          ? SelectionBar(
+              selectionList: selectionList,
+              onCloseSelection: () => setState(() {
+                selecting = false;
+                selectionList.clear();
+              }),
+              currentMode: mode,
+            )
+          : AppBar(
+              title: Text("PotatoNotes"),
+              textTheme: Theme.of(context).textTheme,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchPage())),
+                ),
+                IconButton(
+                  icon: Icon(MdiIcons.cogOutline),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingsPage())),
+                ),
+              ],
+            ),
       body: StreamBuilder<List<Note>>(
         stream: helper.noteStream(mode),
         initialData: cachedNotesMap[mode],
@@ -121,51 +131,49 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           Widget child;
           List<Note> notes = snapshot.data;
 
-          if(snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             notes = cachedNotesMap[mode];
           } else if (snapshot.connectionState == ConnectionState.active) {
             cachedNotesMap[mode] = snapshot.data;
           }
 
           if (notes.isNotEmpty) {
-              if (prefs.useGrid) {
-                child = StaggeredGridView.countBuilder(
-                  crossAxisCount: numOfColumns,
-                  itemBuilder: (context, index) =>
-                      commonNote(notes[index]),
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                  itemCount: notes.length,
-                  padding: padding,
-                );
-              } else {
-                child = ListView.builder(
-                  itemBuilder: (context, index) =>
-                      commonNote(notes[index]),
-                  itemCount: notes.length,
-                  padding: padding,
-                );
-              }
+            if (prefs.useGrid) {
+              child = StaggeredGridView.countBuilder(
+                crossAxisCount: numOfColumns,
+                itemBuilder: (context, index) => commonNote(notes[index]),
+                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                itemCount: notes.length,
+                padding: padding,
+              );
             } else {
-              child = Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    getInfoOnCurrentMode.key,
-                    SizedBox(height: 24),
-                    Text(
-                      getInfoOnCurrentMode.value,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    )
-                  ],
-                ),
+              child = ListView.builder(
+                itemBuilder: (context, index) => commonNote(notes[index]),
+                itemCount: notes.length,
+                padding: padding,
               );
             }
+          } else {
+            child = Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  getInfoOnCurrentMode.key,
+                  SizedBox(height: 24),
+                  Text(
+                    getInfoOnCurrentMode.value,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
 
           return FadeScaleTransition(
             animation: fade,
@@ -173,23 +181,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           );
         },
       ),
-      bottomNavigationBar: selecting
-          ? SelectionBar(
-              selectionList: selectionList,
-              onCloseSelection: () => setState(() {
-                selecting = false;
-                selectionList.clear();
-              }),
-              currentMode: mode,
-            )
-          : MainPageBar(
-              currentMode: mode,
-              onReturnModeChange: (newMode) async {
-                await controller.animateBack(0);
-                setState(() => mode = newMode);
-                controller.animateTo(1);
-              },
-            ),
+      bottomNavigationBar: MainPageBar(
+        currentMode: mode,
+        enabled: !selecting,
+        onReturnModeChange: (newMode) async {
+          await controller.animateBack(0);
+          setState(() => mode = newMode);
+          controller.animateTo(1);
+        },
+      ),
       extendBodyBehindAppBar: true,
       floatingActionButton:
           mode == ReturnMode.NORMAL && !selecting ? fab : null,
