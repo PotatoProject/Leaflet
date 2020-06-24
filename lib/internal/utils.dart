@@ -113,14 +113,14 @@ class Utils {
               (fabPosition.dx + fabSize.width),
           child: Hero(
             tag: "fabMenu",
-            child: SizedBox(
-              width: 250,
-              child: Material(
-                elevation: 3,
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+            child: Material(
+              elevation: 2,
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SizedBox(
+                width: 250,
                 child: ListView(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),

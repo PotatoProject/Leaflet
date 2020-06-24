@@ -26,6 +26,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
@@ -205,12 +206,15 @@ class _MainPageState extends State<MainPage>
   }
 
   Widget get fab {
-    return GestureDetector(
-      onLongPress: () => Utils.showFabMenu(context, fabOptions),
-      child: FloatingActionButton(
+    return Hero(
+      tag: "fabMenu",
+      child: FakeFab(
+        onLongPress: () => Utils.showFabMenu(context, fabOptions),
         key: GlobalKeyRegistry.get("fab"),
-        heroTag: "fabMenu",
-        onPressed: () => Navigator.push(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28)
+        ),
+        onTap: () => Navigator.push(
           context,
           DismissiblePageRoute(
             builder: (context) => NotePage(
@@ -219,18 +223,13 @@ class _MainPageState extends State<MainPage>
           ),
         ),
         child: Icon(OMIcons.edit),
-        elevation: 2,
-        disabledElevation: 0,
-        focusElevation: 2,
-        highlightElevation: 2,
-        hoverElevation: 2,
       ),
     );
   }
 
   List<Widget> get fabOptions {
     final helper = locator<NoteHelper>();
-    
+
     return [
       ListTile(
         leading: AccentedIcon(OMIcons.edit),
