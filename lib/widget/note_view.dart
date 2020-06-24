@@ -33,6 +33,7 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
+    SpannableList spannableList = SpannableList.fromJson(parsedStyleJson);
     Color borderColor;
 
     if (selected) {
@@ -40,7 +41,9 @@ class NoteView extends StatelessWidget {
     } else {
       borderColor = Colors.transparent;
     }
-    
+
+    List<Widget> content = getItems(context, spannableList);
+
     return Card(
       color: note.color != 0
           ? Color(NoteColors.colorList(context)[note.color]["hex"])
@@ -52,102 +55,59 @@ class NoteView extends StatelessWidget {
           width: 1.5,
         ),
       ),
-      elevation: note.color != 0
-          ? 0
-          : 0,
+      elevation: note.color != 0 ? 0 : 0,
       margin: EdgeInsets.all(4),
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(_kBorderRadius),
-        child: ListView(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.all(0),
-          children: [
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
             IgnorePointer(
               child: Visibility(
                 visible: (note.images.data?.isNotEmpty ?? false) &&
                     !note.hideContent &&
                     !showOptions,
-                child: NoteViewImages(
-                  images: note.images.uris.sublist(
-                      0,
-                      note.images.data.length > numOfImages * 2
-                          ? numOfImages * 2
-                          : note.images.data.length),
-                  numOfImages: numOfImages,
-                  borderRadius: _kBorderRadius,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(_kBorderRadius),
+                      topRight: Radius.circular(_kBorderRadius),
+                      bottomLeft: content.isNotEmpty
+                          ? Radius.circular(0)
+                          : Radius.circular(_kBorderRadius),
+                      bottomRight: content.isNotEmpty
+                          ? Radius.circular(0)
+                          : Radius.circular(_kBorderRadius),
+                    ),
+                  child: NoteViewImages(
+                    images: note.images.uris.sublist(
+                        0,
+                        note.images.data.length > numOfImages * 2
+                            ? numOfImages * 2
+                            : note.images.data.length),
+                    numOfImages: numOfImages,
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Visibility(
-                    visible: note.title != "",
-                    child: Text(
-                      note.title ?? "",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context)
-                            .textTheme
-                            .caption
-                            .color
-                            .withOpacity(0.7),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Visibility(
-                    visible: !note.hideContent,
-                    child: note.styleJson != null
-                        ? RichText(
-                            text: SpannableList.fromJson(parsedStyleJson)
-                                .toTextSpan(
-                              note.content,
-                              defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
-                                fontSize: 16,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .color
-                                    .withOpacity(0.5),
-                              ),
-                            ),
-                            maxLines: 8,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        : Text(
-                            note.content,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  .color
-                                  .withOpacity(0.5),
-                            ),
-                            maxLines: 8,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                  ),
-                  Visibility(
-                    visible: note.list && !note.hideContent && !showOptions,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: listContentWidgets,
-                    ),
-                  ),
-                ],
+            Visibility(
+              visible: content.isNotEmpty,
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.all(16),
+                itemBuilder: (context, index) => content[index],
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 4);
+                },
+                itemCount: content.length,
               ),
             ),
-            NoteViewStatusbar(note: note),
+            Align(
+              alignment: Alignment.centerRight,
+              child: NoteViewStatusbar(note: note),
+            ),
             Visibility(
               visible: showOptions,
               child: ListView(
@@ -168,6 +128,74 @@ class NoteView extends StatelessWidget {
     );
   }
 
+  List<Widget> getItems(BuildContext context, SpannableList spannableList) {
+    List<Widget> items = [];
+
+    if (note.title != "") {
+      items.add(
+        Text(
+          note.title ?? "",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+
+    if (!note.hideContent && note.content != "") {
+      items.add(
+        spannableList != null
+            ? RichText(
+                text: spannableList.toTextSpan(
+                  note.content,
+                  defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                        fontSize: 16,
+                        color: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .color
+                            .withOpacity(0.5),
+                      ),
+                ),
+                maxLines: 8,
+                overflow: TextOverflow.ellipsis,
+              )
+            : Text(
+                note.content,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .color
+                      .withOpacity(0.5),
+                ),
+                maxLines: 8,
+                overflow: TextOverflow.ellipsis,
+              ),
+      );
+    }
+
+    if (note.list && !note.hideContent && !showOptions) {
+      items.add(
+        ListView.separated(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(0),
+          itemBuilder: (context, index) => listContentWidgets[index],
+          itemCount: listContentWidgets.length,
+          separatorBuilder: (context, index) => SizedBox(height: 4),
+        ),
+      );
+    }
+
+    return items;
+  }
+
   List<Widget> get listContentWidgets => List.generate(
         (note.listContent?.content?.length ?? 0) > 5
             ? 5
@@ -175,47 +203,43 @@ class NoteView extends StatelessWidget {
         (index) {
           ListItem item = note.listContent.content[index];
 
-          return Container(
-            padding: EdgeInsets.only(top: 8),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Row(
-                  children: [
-                    Icon(
-                      item.status
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank,
-                      color: item.status
-                          ? note.color != 0
-                              ? Theme.of(context).textTheme.caption.color
-                              : Theme.of(context).accentColor
-                          : null,
-                      size: 20,
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return Row(
+                children: [
+                  Icon(
+                    item.status
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: item.status
+                        ? note.color != 0
+                            ? Theme.of(context).textTheme.caption.color
+                            : Theme.of(context).accentColor
+                        : null,
+                    size: 20,
+                  ),
+                  VerticalDivider(
+                    color: Colors.transparent,
+                    width: 8,
+                  ),
+                  SizedBox(
+                    width: constraints.maxWidth - 28,
+                    child: Text(
+                      item.text,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Theme.of(context)
+                              .textTheme
+                              .caption
+                              .color
+                              .withOpacity(item.status ? 0.5 : 0.7),
+                          decoration:
+                              item.status ? TextDecoration.lineThrough : null),
                     ),
-                    VerticalDivider(
-                      color: Colors.transparent,
-                      width: 8,
-                    ),
-                    SizedBox(
-                      width: constraints.maxWidth - 28,
-                      child: Text(
-                        item.text,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .color
-                                .withOpacity(item.status ? 0.5 : 0.7),
-                            decoration: item.status
-                                ? TextDecoration.lineThrough
-                                : null),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ],
+              );
+            },
           );
         },
       );

@@ -23,6 +23,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
@@ -65,7 +66,7 @@ class _NotePageState extends State<NotePage> {
       id: widget.note?.id,
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
-      styleJson: widget.note?.styleJson,
+      styleJson: widget.note?.styleJson ?? ContentStyle([]),
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
@@ -83,9 +84,6 @@ class _NotePageState extends State<NotePage> {
     );
 
     titleController = TextEditingController(text: note.title);
-    titleController.addListener(() {
-      note = note.copyWith(title: titleController.text);
-    });
 
     String parsedStyleJson =
         utf8.decode(gzip.decode(note.styleJson?.data ?? []));
@@ -97,9 +95,12 @@ class _NotePageState extends State<NotePage> {
     );
 
     buildListContentElements();
-    BackButtonInterceptor.add(saveAndPop);
 
     super.initState();
+  }
+
+  void notifyNoteChanged() {
+    helper.saveNote(note);
   }
 
   void generateId() async {
@@ -117,7 +118,6 @@ class _NotePageState extends State<NotePage> {
   @override
   void dispose() {
     listContentNodes.forEach((node) => node.dispose());
-    BackButtonInterceptor.remove(saveAndPop);
     super.dispose();
   }
 
@@ -160,11 +160,6 @@ class _NotePageState extends State<NotePage> {
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            padding: EdgeInsets.all(0),
-            onPressed: () => saveAndPop(null),
-          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(OMIcons.removeRedEye),
@@ -178,6 +173,7 @@ class _NotePageState extends State<NotePage> {
               padding: EdgeInsets.all(0),
               onPressed: () {
                 setState(() => note = note.copyWith(starred: !note.starred));
+                notifyNoteChanged();
                 scaffoldKey.currentState.removeCurrentSnackBar();
                 scaffoldKey.currentState.showSnackBar(
                   SnackBar(
@@ -216,13 +212,16 @@ class _NotePageState extends State<NotePage> {
                           : note.images.data.length - widget.numOfImages * 2,
                   onImageTap: (index) async {
                     await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NotePageImageGallery(
-                            note: note,
-                            currentImage: index,
-                          ),
-                        ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotePageImageGallery(
+                          note: note,
+                          currentImage: index,
+                        ),
+                      ),
+                    );
+
+                    setState(() {});
                   }),
             ),
             Padding(
@@ -254,6 +253,10 @@ class _NotePageState extends State<NotePage> {
                           .color
                           .withOpacity(0.7),
                     ),
+                    onChanged: (text) {
+                      note = note.copyWith(title: text);
+                      notifyNoteChanged();
+                    },
                   ),
                   TextField(
                     controller: contentController,
@@ -280,6 +283,18 @@ class _NotePageState extends State<NotePage> {
                           .color
                           .withOpacity(0.5),
                     ),
+                    onChanged: (text) {
+                      List<int> styleJson = gzip.encode(utf8.encode(
+                          SpannableList(contentController.styleList.list)
+                              .toJson()));
+
+                      note = note.copyWith(
+                        content: text,
+                        styleJson: ContentStyle(styleJson),
+                      );
+
+                      notifyNoteChanged();
+                    },
                     maxLines: null,
                   ),
                 ],
@@ -295,7 +310,6 @@ class _NotePageState extends State<NotePage> {
                     if (needsFocus &&
                         index == note.listContent.content.length - 1) {
                       needsFocus = false;
-                      FocusScope.of(context).requestFocus(FocusNode());
                       FocusScope.of(context)
                           .requestFocus(listContentNodes.last);
                     }
@@ -306,6 +320,7 @@ class _NotePageState extends State<NotePage> {
                         note.listContent.content.removeAt(index);
                         listContentControllers.removeAt(index);
                         listContentNodes.removeAt(index);
+                        notifyNoteChanged();
                       }),
                       background: Container(
                         color: Colors.red[400],
@@ -320,8 +335,11 @@ class _NotePageState extends State<NotePage> {
                       child: ListTile(
                         leading: Checkbox(
                           value: currentItem.status,
-                          onChanged: (value) => setState(() =>
-                              note.listContent.content[index].status = value),
+                          onChanged: (value) {
+                            setState(() =>
+                                note.listContent.content[index].status = value);
+                            notifyNoteChanged();
+                          },
                           checkColor: note.color != 0
                               ? Color(NoteColors.colorList(context)[note.color]
                                   ["hex"])
@@ -335,8 +353,11 @@ class _NotePageState extends State<NotePage> {
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                               color: Theme.of(context).iconTheme.color),
-                          onChanged: (text) =>
-                              note.listContent.content[index].text = text,
+                          onChanged: (text) {
+                            setState(() =>
+                                note.listContent.content[index].text = text);
+                            notifyNoteChanged();
+                          },
                           onSubmitted: (_) {
                             if (index == note.listContent.content.length - 1) {
                               if (note.listContent.content.last.text != "")
@@ -346,7 +367,6 @@ class _NotePageState extends State<NotePage> {
                                     .requestFocus(listContentNodes[index]);
                               }
                             } else {
-                              FocusScope.of(context).requestFocus(FocusNode());
                               FocusScope.of(context)
                                   .requestFocus(listContentNodes[index + 1]);
                             }
@@ -406,6 +426,7 @@ class _NotePageState extends State<NotePage> {
                       selectedColor: note.color,
                       onColorSelect: (color) {
                         setState(() => note = note.copyWith(color: color));
+                        notifyNoteChanged();
 
                         Navigator.pop(context);
                       },
@@ -425,40 +446,6 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
-  bool saveAndPop(_) {
-    void _internal() async {
-      if (contentController.text.trim() != "") {
-        List<SpannableStyle> trimmedList;
-
-        int startIndex =
-            contentController.text.indexOf(contentController.text.trim());
-        Loggy.d(message: note);
-        int endIndex = contentController.text.trim().length + startIndex;
-        trimmedList =
-            contentController.styleList.list.sublist(startIndex, endIndex);
-
-        List<int> styleJson =
-            gzip.encode(utf8.encode(SpannableList(trimmedList).toJson()));
-
-        note = note.copyWith(
-          title: note.title.trim(),
-          styleJson: ContentStyle(styleJson),
-          content: contentController.text.trim(),
-          list: note.listContent.content.isEmpty ? false : note.list,
-        );
-
-        note.listContent.content.removeWhere((item) => item.text.trim() == "");
-
-        helper.saveNote(note);
-      }
-    }
-
-    _internal();
-    if (_ == null) Navigator.pop(context);
-
-    return false;
-  }
-
   void addListContentItem() {
     List<ListItem> sortedList = note.listContent.content;
     sortedList.sort((a, b) => a.id.compareTo(b.id));
@@ -472,6 +459,7 @@ class _NotePageState extends State<NotePage> {
         false,
       ),
     );
+    notifyNoteChanged();
 
     setState(() => listContentControllers.add(TextEditingController()));
 
@@ -492,8 +480,11 @@ class _NotePageState extends State<NotePage> {
           children: [
             SwitchListTile(
               value: note.hideContent,
-              onChanged: (value) => setState(
-                  () => note = note.copyWith(hideContent: !note.hideContent)),
+              onChanged: (value) {
+                setState(
+                    () => note = note.copyWith(hideContent: !note.hideContent));
+                notifyNoteChanged();
+              },
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.removeRedEye),
               title: Text("Hide content on main page"),
@@ -505,9 +496,11 @@ class _NotePageState extends State<NotePage> {
                       bool confirm =
                           await Utils.showPassChallengeSheet(context) ?? false;
 
-                      if (confirm)
+                      if (confirm) {
                         setState(() =>
                             note = note.copyWith(lockNote: !note.lockNote));
+                        notifyNoteChanged();
+                      }
                     }
                   : null,
               activeColor: Theme.of(context).accentColor,
@@ -539,9 +532,11 @@ class _NotePageState extends State<NotePage> {
                           confirm = false;
                         }
 
-                        if (confirm)
+                        if (confirm) {
                           setState(() =>
                               note = note.copyWith(usesBiometrics: value));
+                          notifyNoteChanged();
+                        }
                       }
                     : null,
                 activeColor: Theme.of(context).accentColor,
@@ -569,6 +564,7 @@ class _NotePageState extends State<NotePage> {
             title: Text("Toggle list"),
             onTap: () {
               setState(() => note = note.copyWith(list: !note.list));
+              notifyNoteChanged();
 
               Navigator.pop(context);
             },
@@ -583,6 +579,7 @@ class _NotePageState extends State<NotePage> {
               if (image != null) {
                 setState(
                     () => note.images.data[image.path] = File(image.path).uri);
+                notifyNoteChanged();
                 Navigator.pop(context);
               }
             },
@@ -597,6 +594,7 @@ class _NotePageState extends State<NotePage> {
               if (image != null) {
                 setState(
                     () => note.images.data[image.path] = File(image.path).uri);
+                notifyNoteChanged();
                 Navigator.pop(context);
               }
             },
@@ -612,6 +610,7 @@ class _NotePageState extends State<NotePage> {
               if (drawing != null) {
                 setState(() =>
                     note.images.data[drawing.path] = File(drawing.path).uri);
+                notifyNoteChanged();
                 Navigator.pop(context);
               }
             },

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -21,6 +22,7 @@ import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
@@ -108,12 +110,12 @@ class _MainPageState extends State<MainPage>
                 IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SearchPage())),
+                      DismissiblePageRoute(builder: (context) => SearchPage())),
                 ),
                 IconButton(
                   icon: Icon(MdiIcons.cogOutline),
                   onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingsPage())),
+                      DismissiblePageRoute(builder: (context) => SettingsPage())),
                 ),
               ],
             ),
@@ -199,16 +201,14 @@ class _MainPageState extends State<MainPage>
 
   Widget get fab {
     return FloatingActionButton(
-      onPressed: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NotePage(
-              numOfImages: numOfImages,
-            ),
+      onPressed: () => Navigator.push(
+        context,
+        DismissiblePageRoute(
+          builder: (context) => NotePage(
+            numOfImages: numOfImages,
           ),
-        );
-      },
+        ),
+      ),
       child: Icon(OMIcons.edit),
       elevation: 2,
       disabledElevation: 0,
@@ -274,7 +274,7 @@ class _MainPageState extends State<MainPage>
           if (status) {
             Navigator.push(
               context,
-              MaterialPageRoute(
+              DismissiblePageRoute(
                 builder: (context) => NotePage(
                   note: note,
                   numOfImages: numOfImages,

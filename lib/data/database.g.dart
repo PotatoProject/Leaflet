@@ -29,7 +29,7 @@ class Note extends DataClass implements Insertable<Note> {
   Note(
       {@required this.id,
       this.title,
-      @required this.content,
+      this.content,
       @required this.styleJson,
       @required this.starred,
       @required this.creationDate,
@@ -422,7 +422,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   NotesCompanion.insert({
     @required int id,
     this.title = const Value.absent(),
-    @required String content,
+    this.content = const Value.absent(),
     @required ContentStyle styleJson,
     this.starred = const Value.absent(),
     this.creationDate = const Value.absent(),
@@ -439,7 +439,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.archived = const Value.absent(),
     this.synced = const Value.absent(),
   })  : id = Value(id),
-        content = Value(content),
         styleJson = Value(styleJson),
         images = Value(images),
         listContent = Value(listContent),
@@ -626,7 +625,11 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   @override
   GeneratedTextColumn get content => _content ??= _constructContent();
   GeneratedTextColumn _constructContent() {
-    return GeneratedTextColumn('content', $tableName, false, minTextLength: 1);
+    return GeneratedTextColumn(
+      'content',
+      $tableName,
+      true,
+    );
   }
 
   final VerificationMeta _styleJsonMeta = const VerificationMeta('styleJson');
@@ -830,8 +833,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
           content.isAcceptableOrUnknown(data['content'], _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
     }
     context.handle(_styleJsonMeta, const VerificationResult.success());
     if (data.containsKey('starred')) {

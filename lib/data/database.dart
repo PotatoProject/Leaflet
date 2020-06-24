@@ -10,7 +10,7 @@ part 'database.g.dart';
 class Notes extends Table {
   IntColumn get id => integer()();
   TextColumn get title => text().nullable()();
-  TextColumn get content => text().withLength(min: 1)();
+  TextColumn get content => text().nullable()();
   TextColumn get styleJson => text().map(const ContentStyleConverter())();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
   DateTimeColumn get creationDate =>
