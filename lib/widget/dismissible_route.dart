@@ -1,17 +1,24 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class DismissiblePageRoute extends PageRoute {
+class DismissiblePageRoute<T> extends PageRoute<T> {
   DismissiblePageRoute({
     @required this.builder,
+    this.allowGestures = false,
   });
 
   final WidgetBuilder builder;
+  final bool allowGestures;
 
   @override
-  final bool maintainState = true;
+  final bool maintainState = false;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 350);
+  Duration get transitionDuration => Duration(milliseconds: 300);
+
+  @override
+  Duration get reverseTransitionDuration => Duration(milliseconds: 250);
 
   @override
   bool get opaque => false;
@@ -23,141 +30,213 @@ class DismissiblePageRoute extends PageRoute {
   String get barrierLabel => null;
 
   @override
+  bool get canPop => true;
+
+  static bool isPopGestureInProgress(PageRoute<dynamic> route) {
+    return route.navigator.userGestureInProgress;
+  }
+
+  bool get popGestureInProgress => isPopGestureInProgress(this);
+
+  bool get popGestureEnabled => _isPopGestureEnabled(this);
+
+  static bool _isPopGestureEnabled<T>(PageRoute<T> route) {
+    if (route.isFirst) return false;
+
+    if (route.willHandlePopInternally) return false;
+
+    if (!route.canPop) return false;
+
+    if (route.fullscreenDialog) return false;
+
+    if (route.animation.status != AnimationStatus.completed) return false;
+
+    if (route.secondaryAnimation.status != AnimationStatus.dismissed)
+      return false;
+
+    if (isPopGestureInProgress(route)) return false;
+
+    return true;
+  }
+
+  @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) => SlideTransition(
-        child: DismissibleRoute(
-          child: builder(context),
-          maxWidth: MediaQuery.of(context).size.width,
-        ),
-        position: animation
-            .drive(
-              CurveTween(
-                  curve: animation.status == AnimationStatus.reverse
-                      ? Curves.ease
-                      : Curves.easeOut),
-            )
-            .drive(
-              Tween<Offset>(
-                begin: Offset(1, 0),
-                end: Offset(0, 0),
-              ),
-            ),
+    final Widget child = builder(context);
+    final Widget result = Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      child: child,
+    );
+    assert(() {
+      if (child == null) {
+        throw FlutterError.fromParts(<DiagnosticsNode>[
+          ErrorSummary(
+              'The builder for route "${settings.name}" returned null.'),
+          ErrorDescription('Route builders must never return null.'),
+        ]);
+      }
+      return true;
+    }());
+    return result;
+  }
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return buildPageTransitions(
+        this, context, animation, secondaryAnimation, child,
+        allowGestures: allowGestures);
+  }
+
+  static Widget buildPageTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child, {
+    bool allowGestures = true,
+  }) {
+    return DismissiblePageTransition(
+      child: _DismissibleRoute(
+        child: child,
+        maxWidth: MediaQuery.of(context).size.width,
+        enableGesture: allowGestures && _isPopGestureEnabled(route),
+        controller: route.controller,
+        navigator: route.navigator,
       ),
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      linearTransition: isPopGestureInProgress(route),
     );
   }
 }
 
-class DismissibleRoute extends StatefulWidget {
+class DismissiblePageTransition extends StatelessWidget {
   final Widget child;
-  final double maxWidth;
+  final Animation<double> animation;
+  final Animation<double> secondaryAnimation;
+  final bool linearTransition;
 
-  DismissibleRoute({
+  DismissiblePageTransition({
     @required this.child,
-    @required this.maxWidth,
+    @required this.animation,
+    @required this.secondaryAnimation,
+    this.linearTransition = false,
   });
 
   @override
-  _DismissibleRouteState createState() {
-    return _DismissibleRouteState();
+  Widget build(BuildContext context) {
+    final TextDirection textDirection = Directionality.of(context);
+
+    Animation<Offset> fgAnimation = CurvedAnimation(
+      parent: animation,
+      curve: linearTransition ? Curves.linear : Cubic(0.0, 0.0, 0.2, 1),
+      reverseCurve: linearTransition ? Curves.linear : Cubic(0.4, 0.0, 1, 1),
+    ).drive(Tween<Offset>(
+      begin: Offset(1, 0),
+      end: Offset(0, 0),
+    ));
+
+    Animation<Offset> bgAnimation = CurvedAnimation(
+      parent: secondaryAnimation,
+      curve: linearTransition ? Curves.linear : Curves.linearToEaseOut,
+      reverseCurve:
+          linearTransition ? Curves.linear : Cubic(0.30, 0.00, 0.80, 0.15),
+    ).drive(Tween<Offset>(
+      begin: Offset(0, 0),
+      end: Offset(-0.3, 0),
+    ));
+
+    return SlideTransition(
+      position: bgAnimation,
+      textDirection: textDirection,
+      transformHitTests: false,
+      child: SlideTransition(
+        position: fgAnimation,
+        child: child,
+      ),
+    );
   }
 }
 
-class _DismissibleRouteState extends State<DismissibleRoute>
-    with SingleTickerProviderStateMixin {
-  AnimationController controller;
+class DismissiblePageTransitionsBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) =>
+      DismissiblePageRoute.buildPageTransitions(
+          route, context, animation, secondaryAnimation, child);
+}
+
+class _DismissibleRoute extends StatefulWidget {
+  final Widget child;
+  final double maxWidth;
+  final bool enableGesture;
+  final AnimationController controller;
+  final NavigatorState navigator;
+
+  _DismissibleRoute({
+    @required this.child,
+    @required this.maxWidth,
+    this.enableGesture = true,
+    @required this.controller,
+    @required this.navigator,
+  });
 
   @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      value: 1,
-      duration: Duration(milliseconds: 350),
-      reverseDuration: Duration(milliseconds: 350),
-    );
+  _DismissibleRouteState createState() => _DismissibleRouteState();
+}
 
-    //controller.animateTo(1);
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void close() async {
-    await controller.animateBack(0);
-    Navigator.pop(context);
-  }
-
-  @override
-  void didChangeDependencies() {
-    context.dependOnInheritedWidgetOfExactType();
-    super.didChangeDependencies();
-  }
+class _DismissibleRouteState extends State<_DismissibleRoute> {
+  bool gestureStartAllowed = false;
 
   @override
   Widget build(BuildContext context) {
-    Animation<Offset> offset = Tween<Offset>(
-      begin: Offset(1, 0),
-      end: Offset(0, 0),
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.linear,
-        reverseCurve: Curves.ease,
-      ),
-    );
-
     return SafeArea(
       top: false,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onHorizontalDragUpdate: (details) {
-          controller.value -= details.primaryDelta / widget.maxWidth;
-        },
-        onHorizontalDragEnd: (details) async {
-          if (details.primaryVelocity > 345) {
-            await controller.animateBack(0);
-            Navigator.pop(context);
-          } else {
-            if (controller.value < 0.5) {
-              await controller.animateBack(0);
-              Navigator.pop(context);
-            } else {
-              await controller.animateTo(1);
-            }
-          }
-        },
-        child: AnimatedBuilder(
-          animation: controller,
-          builder: (context, child) {
-            return Stack(
-              children: [
-                SizedBox.expand(
-                  child: FadeTransition(
-                    opacity:
-                        Tween<double>(begin: 0, end: 1).animate(controller),
-                    child: Container(color: Colors.black54),
-                  ),
-                ),
-                SlideTransition(
-                  position: offset,
-                  child: Material(
-                    elevation: 16,
-                    child: SizedBox(
-                      width: widget.maxWidth,
-                      height: MediaQuery.of(context).size.height,
-                      child: widget.child,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+        dragStartBehavior: DragStartBehavior.down,
+        onHorizontalDragStart: widget.enableGesture
+            ? (details) {
+                setState(() => gestureStartAllowed = true);
+                widget.navigator.didStartUserGesture();
+              }
+            : null,
+        onHorizontalDragUpdate: gestureStartAllowed
+            ? (details) {
+                widget.controller.value -=
+                    details.primaryDelta / widget.maxWidth;
+              }
+            : null,
+        onHorizontalDragEnd: gestureStartAllowed
+            ? (details) async {
+                setState(() => gestureStartAllowed = false);
+                widget.navigator.didStopUserGesture();
+                if (details.primaryVelocity > 345) {
+                  await widget.controller.animateBack(0);
+                  widget.navigator.pop();
+                } else {
+                  if (widget.controller.value < 0.5) {
+                    await widget.controller.animateBack(0);
+                    widget.navigator.pop();
+                  } else {
+                    await widget.controller.animateTo(1);
+                  }
+                }
+              }
+            : null,
+        child: IgnorePointer(
+          ignoring: false,
+          child: Material(
+            elevation: 16,
+            child: widget.child,
+          ),
         ),
       ),
     );

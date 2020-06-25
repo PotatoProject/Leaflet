@@ -21,6 +21,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
@@ -210,11 +211,12 @@ class _NotePageState extends State<NotePage> {
                   onImageTap: (index) async {
                     await Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      DismissiblePageRoute(
                         builder: (context) => NotePageImageGallery(
                           note: note,
                           currentImage: index,
                         ),
+                        allowGestures: false,
                       ),
                     );
 
@@ -600,8 +602,9 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(OMIcons.brush),
             title: Text("Add drawing"),
             onTap: () async {
-              Uri drawing = await Navigator.of(context).push(MaterialPageRoute(
+              Uri drawing = await Navigator.of(context).push(DismissiblePageRoute(
                 builder: (context) => DrawPage(note: note),
+                allowGestures: false,
               ));
 
               if (drawing != null) {

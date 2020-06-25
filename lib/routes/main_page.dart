@@ -21,7 +21,6 @@ import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -88,7 +87,7 @@ class _MainPageState extends State<MainPage>
       numOfColumns = 1;
       numOfImages = 2;
     }
-
+    
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
@@ -109,13 +108,13 @@ class _MainPageState extends State<MainPage>
                 IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () => Navigator.push(context,
-                      DismissiblePageRoute(builder: (context) => SearchPage())),
+                      MaterialPageRoute(builder: (context) => SearchPage())),
                 ),
                 IconButton(
                   icon: Icon(MdiIcons.cogOutline),
                   onPressed: () => Navigator.push(
                       context,
-                      DismissiblePageRoute(
+                      MaterialPageRoute(
                           builder: (context) => SettingsPage())),
                 ),
               ],
@@ -209,7 +208,7 @@ class _MainPageState extends State<MainPage>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         onTap: () => Navigator.push(
           context,
-          DismissiblePageRoute(
+          MaterialPageRoute(
             builder: (context) => NotePage(
               numOfImages: numOfImages,
             ),
@@ -234,7 +233,7 @@ class _MainPageState extends State<MainPage>
           Navigator.pop(context);
 
           Navigator.of(context).push(
-            DismissiblePageRoute(
+            MaterialPageRoute(
               builder: (context) => NotePage(
                 numOfImages: numOfImages,
               ),
@@ -252,7 +251,7 @@ class _MainPageState extends State<MainPage>
           Navigator.pop(context);
 
           Navigator.of(context).push(
-            DismissiblePageRoute(
+            MaterialPageRoute(
               builder: (context) => NotePage(
                 numOfImages: numOfImages,
                 note: Utils.emptyNote.copyWith(list: true),
@@ -279,7 +278,7 @@ class _MainPageState extends State<MainPage>
             note = note.copyWith(id: await Utils.generateId());
 
             Navigator.of(context).push(
-              DismissiblePageRoute(
+              MaterialPageRoute(
                 builder: (context) => NotePage(
                   numOfImages: numOfImages,
                   note: note,
@@ -309,7 +308,7 @@ class _MainPageState extends State<MainPage>
             note = note.copyWith(id: await Utils.generateId());
 
             Navigator.of(context).push(
-              DismissiblePageRoute(
+              MaterialPageRoute(
                 builder: (context) => NotePage(
                   numOfImages: numOfImages,
                   note: note,
@@ -380,7 +379,7 @@ class _MainPageState extends State<MainPage>
           if (status) {
             Navigator.push(
               context,
-              DismissiblePageRoute(
+              MaterialPageRoute(
                 builder: (context) => NotePage(
                   note: note,
                   numOfImages: numOfImages,

@@ -1,6 +1,6 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 
 class Themes {
   Color mainColor = Colors.blueAccent;
@@ -54,11 +54,10 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
-        pageTransitionsTheme: const PageTransitionsTheme(
+        pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
-            TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-              transitionType: SharedAxisTransitionType.horizontal,
-            ),
+            TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
@@ -103,11 +102,10 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
-        pageTransitionsTheme: const PageTransitionsTheme(
+        pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
-            TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-              transitionType: SharedAxisTransitionType.horizontal,
-            ),
+            TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
@@ -152,11 +150,10 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
-        pageTransitionsTheme: const PageTransitionsTheme(
+        pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
-            TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-              transitionType: SharedAxisTransitionType.horizontal,
-            ),
+            TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
