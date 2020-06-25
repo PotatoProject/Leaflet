@@ -122,7 +122,12 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (!note.hideContent && note.content != "") {
+    if ((note.title.isEmpty &&
+            note.content.isEmpty &&
+            note.listContent.content.isEmpty &&
+            !note.hideContent &&
+            note.images.data.isEmpty) ||
+        note.content.isNotEmpty) {
       items.add(
         spannableList != null
             ? RichText(
