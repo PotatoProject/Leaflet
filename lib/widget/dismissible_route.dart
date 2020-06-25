@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+bool _gestureStartAllowed = false;
+
 class DismissiblePageRoute<T> extends PageRoute<T> {
   DismissiblePageRoute({
     @required this.builder,
@@ -33,12 +35,8 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   bool get canPop => true;
 
   static bool isPopGestureInProgress(PageRoute<dynamic> route) {
-    return route.navigator.userGestureInProgress;
+    return _gestureStartAllowed;
   }
-
-  bool get popGestureInProgress => isPopGestureInProgress(this);
-
-  bool get popGestureEnabled => _isPopGestureEnabled(this);
 
   static bool _isPopGestureEnabled<T>(PageRoute<T> route) {
     if (route.isFirst) return false;
@@ -53,8 +51,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
 
     if (route.secondaryAnimation.status != AnimationStatus.dismissed)
       return false;
-
-    if (isPopGestureInProgress(route)) return false;
 
     return true;
   }
@@ -140,9 +136,8 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> bgAnimation = CurvedAnimation(
       parent: secondaryAnimation,
-      curve: linearTransition ? Curves.linear : Curves.linearToEaseOut,
-      reverseCurve:
-          linearTransition ? Curves.linear : Cubic(0.30, 0.00, 0.80, 0.15),
+      curve: Curves.linearToEaseOut,
+      reverseCurve: Cubic(0.30, 0.00, 0.80, 0.15),
     ).drive(Tween<Offset>(
       begin: Offset(0, 0),
       end: Offset(-0.3, 0),
@@ -193,7 +188,6 @@ class _DismissibleRoute extends StatefulWidget {
 }
 
 class _DismissibleRouteState extends State<_DismissibleRoute> {
-  bool gestureStartAllowed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -204,27 +198,25 @@ class _DismissibleRouteState extends State<_DismissibleRoute> {
         dragStartBehavior: DragStartBehavior.down,
         onHorizontalDragStart: widget.enableGesture
             ? (details) {
-                setState(() => gestureStartAllowed = true);
-                widget.navigator.didStartUserGesture();
+                setState(() => _gestureStartAllowed = true);
               }
             : null,
-        onHorizontalDragUpdate: gestureStartAllowed
+        onHorizontalDragUpdate: _gestureStartAllowed
             ? (details) {
                 widget.controller.value -=
                     details.primaryDelta / widget.maxWidth;
               }
             : null,
-        onHorizontalDragEnd: gestureStartAllowed
+        onHorizontalDragEnd: _gestureStartAllowed
             ? (details) async {
-                setState(() => gestureStartAllowed = false);
-                widget.navigator.didStopUserGesture();
+                setState(() => _gestureStartAllowed = false);
                 if (details.primaryVelocity > 345) {
                   await widget.controller.animateBack(0);
-                  widget.navigator.pop();
+                  Navigator.pop(context);
                 } else {
                   if (widget.controller.value < 0.5) {
                     await widget.controller.animateBack(0);
-                    widget.navigator.pop();
+                    Navigator.pop(context);
                   } else {
                     await widget.controller.animateTo(1);
                   }
