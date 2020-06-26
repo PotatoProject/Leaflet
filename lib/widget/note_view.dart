@@ -73,6 +73,11 @@ class NoteView extends StatelessWidget {
                           ? numOfImages * 2
                           : note.images.data.length),
                   numOfImages: numOfImages,
+                  showPlusImages: true,
+                  numPlusImages:
+                      note.images.data.length < numOfImages * 2
+                          ? 0
+                          : note.images.data.length - numOfImages * 2,
                 ),
               ),
             ),

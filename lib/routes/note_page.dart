@@ -413,6 +413,15 @@ class _NotePageState extends State<NotePage> {
             ),
             child: NoteToolbar(
               controller: contentController,
+              onButtonTap: () {
+                List<int> styleJson = gzip.encode(utf8.encode(
+                    SpannableList(contentController.styleList.list).toJson()));
+
+                note = note.copyWith(
+                  styleJson: ContentStyle(styleJson),
+                );
+                notifyNoteChanged();
+              },
               rightActions: [
                 IconButton(
                   icon: Icon(OMIcons.colorLens),
@@ -602,17 +611,14 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(OMIcons.brush),
             title: Text("Add drawing"),
             onTap: () async {
-              Uri drawing = await Navigator.of(context).push(DismissiblePageRoute(
+              Navigator.pop(context);
+
+              await Navigator.of(context).push(DismissiblePageRoute(
                 builder: (context) => DrawPage(note: note),
                 allowGestures: false,
               ));
 
-              if (drawing != null) {
-                setState(() =>
-                    note.images.data[drawing.path] = File(drawing.path).uri);
-                notifyNoteChanged();
-                Navigator.pop(context);
-              }
+              setState(() {});
             },
           ),
         ],

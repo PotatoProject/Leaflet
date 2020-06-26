@@ -7,6 +7,8 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/locator.dart';
+import 'package:potato_notes/routes/draw_page.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -82,16 +84,20 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           IconButton(
             icon: Icon(CommunityMaterialIcons.pencil_outline),
             padding: EdgeInsets.all(0),
-            onPressed: null,
-            /*() => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DrawPage(
-                  note: widget.note,
-                  data: MapEntry(widget.note.images.uris[currentPage].path,
-                      widget.note.images.uris[currentPage]),
+            onPressed: () {
+              Navigator.pop(context);
+              
+              Navigator.of(context).push(
+                DismissiblePageRoute(
+                  builder: (context) => DrawPage(
+                    note: widget.note,
+                    data: MapEntry(widget.note.images.uris[currentPage].path,
+                        widget.note.images.uris[currentPage]),
+                  ),
+                  allowGestures: false,
                 ),
-              ),
-            ),*/
+              );
+            },
           ),
           IconButton(
             icon: Icon(Icons.delete_outline),

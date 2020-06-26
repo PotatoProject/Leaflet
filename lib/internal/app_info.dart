@@ -30,6 +30,10 @@ class AppInfoProvider extends ChangeNotifier {
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
 
+  bool _imageCacheReloadRequested = false;
+
+  bool get imageCacheReloadRequested => _imageCacheReloadRequested;
+
   void updateIllustrations() async {
     Brightness systemTheme = Theme.of(context).brightness;
 

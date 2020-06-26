@@ -34,6 +34,7 @@ class NoteToolbar extends StatefulWidget {
   final Color toolbarBackgroundColor;
   final Color toolbarActionColor;
   final bool stayFocused;
+  final void Function() onButtonTap;
 
   NoteToolbar({
     Key key,
@@ -43,6 +44,7 @@ class NoteToolbar extends StatefulWidget {
     this.toolbarActionToggleColor,
     this.toolbarBackgroundColor,
     this.toolbarActionColor,
+    this.onButtonTap,
   }) : super(key: key);
 
   @override
@@ -166,5 +168,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
         widget.controller.composingStyle = spannableStyle..setStyle(textStyle);
       }
     }
+
+    widget.onButtonTap();
   }
 }

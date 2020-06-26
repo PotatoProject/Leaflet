@@ -11,8 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/draw_object.dart';
+import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -163,6 +165,15 @@ class _DrawPageState extends State<DrawPage>
                     File imgFile = File(drawing);
                     await imgFile.writeAsBytes(pngBytes, flush: true);
                     Loggy.d(message: drawing);
+
+                    if (!widget.note.images.data.containsKey(drawing)) {
+                      print("bruh");
+                      widget.note.images.data[drawing] = Uri.file(drawing);
+                      locator<NoteHelper>().saveNote(widget.note);
+                    }
+
+                    imageCache.clear();
+                    imageCache.clearLiveImages();
                     setState(() => saved = true);
                   }
                 : null,
@@ -172,7 +183,10 @@ class _DrawPageState extends State<DrawPage>
       extendBody: true,
       body: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 56 - 48,
+        height: MediaQuery.of(context).size.height -
+            56 -
+            48 -
+            MediaQuery.of(context).padding.top,
         child: GestureDetector(
           onPanStart: currentTool == DrawTool.ERASER
               ? _eraserModePan
@@ -186,7 +200,10 @@ class _DrawPageState extends State<DrawPage>
             objects: objects,
             size: Size(
               MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height - 56 - 48,
+              MediaQuery.of(context).size.height -
+                  56 -
+                  48 -
+                  MediaQuery.of(context).padding.top,
             ),
             uri: widget.data != null ? widget.data.value : null,
             color: Colors.grey[50],
