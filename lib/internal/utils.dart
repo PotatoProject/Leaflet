@@ -133,4 +133,20 @@ class Utils {
         archived: false,
         synced: false,
       );
+  
+  static String getNameFromMode(ReturnMode mode) {
+    switch(mode) {
+      case ReturnMode.NORMAL:
+        return "Home";
+      case ReturnMode.ARCHIVE:
+        return "Archive";
+      case ReturnMode.TRASH:
+        return "Trash";
+      case ReturnMode.FAVOURITES:
+        return "Favourites";
+      case ReturnMode.ALL:
+      default:
+        return "All";
+    }
+  }
 }

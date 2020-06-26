@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -21,8 +22,9 @@ import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
+import 'package:potato_notes/widget/drawer_list.dart';
+import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
-import 'package:potato_notes/widget/main_page_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +39,7 @@ class _MainPageState extends State<MainPage>
   int numOfColumns;
   int numOfImages;
   AnimationController controller;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   AppInfoProvider appInfo;
 
@@ -87,11 +90,12 @@ class _MainPageState extends State<MainPage>
       numOfColumns = 1;
       numOfImages = 2;
     }
-    
+
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: selecting
           ? SelectionBar(
               selectionList: selectionList,
@@ -102,7 +106,7 @@ class _MainPageState extends State<MainPage>
               currentMode: mode,
             )
           : AppBar(
-              title: Text("PotatoNotes"),
+              title: Text(Utils.getNameFromMode(mode)),
               textTheme: Theme.of(context).textTheme,
               actions: [
                 IconButton(
@@ -111,11 +115,12 @@ class _MainPageState extends State<MainPage>
                       MaterialPageRoute(builder: (context) => SearchPage())),
                 ),
                 IconButton(
-                  icon: Icon(MdiIcons.cogOutline),
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsPage())),
+                  icon: Icon(OMIcons.person),
+                  onPressed: () => scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text("Not yet..."),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -183,19 +188,56 @@ class _MainPageState extends State<MainPage>
           );
         },
       ),
-      bottomNavigationBar: MainPageBar(
-        currentMode: mode,
-        enabled: !selecting,
-        onReturnModeChange: (newMode) async {
-          await controller.animateBack(0);
-          setState(() => mode = newMode);
-          controller.animateTo(1);
-        },
-      ),
       extendBodyBehindAppBar: true,
       floatingActionButton:
           mode == ReturnMode.NORMAL && !selecting ? fab : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      drawer: Drawer(
+        elevation: 16,
+        child: DrawerList(
+          onTap: (index) async {
+            Navigator.pop(context);
+            await controller.animateBack(0);
+            setState(() => mode = ReturnMode.values[index + 1]);
+            controller.animateTo(1);
+          },
+          footer: ListTile(
+            leading: Icon(MdiIcons.cogOutline),
+            title: Text("Settings"),
+            onTap: () {
+              Navigator.pop(context);
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()));
+            },
+          ),
+          currentIndex: mode.index - 1,
+          items: [
+            DrawerListTileData(
+              icon: Icon(CommunityMaterialIcons.home_variant_outline),
+              activeIcon: Icon(CommunityMaterialIcons.home_variant),
+              title: Text(Utils.getNameFromMode(ReturnMode.NORMAL)),
+            ),
+            DrawerListTileData(
+              icon: Icon(MdiIcons.archiveOutline),
+              activeIcon: Icon(MdiIcons.archive),
+              title: Text(Utils.getNameFromMode(ReturnMode.ARCHIVE)),
+            ),
+            DrawerListTileData(
+              icon: Icon(CommunityMaterialIcons.trash_can_outline),
+              activeIcon: Icon(CommunityMaterialIcons.trash_can),
+              title: Text(Utils.getNameFromMode(ReturnMode.TRASH)),
+            ),
+            DrawerListTileData(
+              icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
+              activeIcon: Icon(CommunityMaterialIcons.heart_multiple),
+              title: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
+            ),
+          ],
+        ),
+      ),
+      drawerScrimColor: Colors.transparent,
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
     );
   }
 
