@@ -47,10 +47,9 @@ class _NotePageState extends State<NotePage> {
   AppInfoProvider appInfo;
   Preferences prefs;
 
-  bool keyboardVisible = false;
-
   TextEditingController titleController;
-  SpannableTextEditingController contentController;
+  TextEditingController contentController;
+  //SpannableTextEditingController contentController;
 
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
@@ -64,7 +63,7 @@ class _NotePageState extends State<NotePage> {
       id: widget.note?.id,
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
-      styleJson: widget.note?.styleJson ?? ContentStyle([]),
+      styleJson: ContentStyle([]),
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
@@ -82,15 +81,16 @@ class _NotePageState extends State<NotePage> {
     );
 
     titleController = TextEditingController(text: note.title);
+    contentController = TextEditingController(text: note.content);
 
-    String parsedStyleJson =
+    /*String parsedStyleJson =
         utf8.decode(gzip.decode(note.styleJson?.data ?? []));
     contentController = SpannableTextEditingController(
       text: note.content,
       styleList: note.styleJson != null
           ? SpannableList.fromJson(parsedStyleJson)
           : null,
-    );
+    );*/
 
     buildListContentElements();
 
@@ -283,13 +283,13 @@ class _NotePageState extends State<NotePage> {
                           .withOpacity(0.5),
                     ),
                     onChanged: (text) {
-                      List<int> styleJson = gzip.encode(utf8.encode(
-                          SpannableList(contentController.styleList.list)
-                              .toJson()));
+                      //List<int> styleJson = gzip.encode(utf8.encode(
+                      //    SpannableList(contentController.styleList.list)
+                      //        .toJson()));
 
                       note = note.copyWith(
                         content: text,
-                        styleJson: ContentStyle(styleJson),
+                        //styleJson: ContentStyle(styleJson),
                       );
 
                       notifyNoteChanged();
@@ -412,8 +412,8 @@ class _NotePageState extends State<NotePage> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: NoteToolbar(
-              controller: contentController,
-              onButtonTap: () {
+              //controller: contentController,
+              /*onButtonTap: () {
                 List<int> styleJson = gzip.encode(utf8.encode(
                     SpannableList(contentController.styleList.list).toJson()));
 
@@ -421,7 +421,7 @@ class _NotePageState extends State<NotePage> {
                   styleJson: ContentStyle(styleJson),
                 );
                 notifyNoteChanged();
-              },
+              },*/
               rightActions: [
                 IconButton(
                   icon: Icon(OMIcons.colorLens),

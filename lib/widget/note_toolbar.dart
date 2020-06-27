@@ -29,6 +29,7 @@ import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteToolbar extends StatefulWidget {
   final SpannableTextEditingController controller;
+  final bool showLeftActions;
   final List<Widget> rightActions;
   final Color toolbarActionToggleColor;
   final Color toolbarBackgroundColor;
@@ -39,6 +40,7 @@ class NoteToolbar extends StatefulWidget {
   NoteToolbar({
     Key key,
     this.controller,
+    this.showLeftActions = false,
     this.rightActions = const [],
     this.stayFocused = true,
     this.toolbarActionToggleColor,
@@ -58,8 +60,8 @@ class _NoteToolbarState extends State<NoteToolbar> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(() {
-      _streamController.sink.add(widget.controller.value);
+    widget.controller?.addListener(() {
+      _streamController.sink.add(widget.controller?.value);
     });
   }
 
@@ -75,9 +77,9 @@ class _NoteToolbarState extends State<NoteToolbar> {
           var selection = value.selection;
           if (selection != null && !selection.isCollapsed) {
             currentSelection = selection;
-            currentStyle = widget.controller.getSelectionStyle();
+            currentStyle = widget.controller?.getSelectionStyle();
           } else {
-            currentStyle = widget.controller.composingStyle;
+            currentStyle = widget.controller?.composingStyle;
           }
         }
         return Material(
@@ -89,9 +91,16 @@ class _NoteToolbarState extends State<NoteToolbar> {
               padding: EdgeInsets.all(8),
               child: Row(
                 children: [
-                  ..._buildActions(
-                    currentStyle ?? SpannableStyle(),
-                    currentSelection,
+                  Visibility(
+                    visible: widget.showLeftActions,
+                    child: Row(
+                      children: <Widget>[
+                        ..._buildActions(
+                          currentStyle ?? SpannableStyle(),
+                          currentSelection,
+                        ),
+                      ],
+                    ),
                   ),
                   Spacer(),
                   ...widget.rightActions,

@@ -11,7 +11,7 @@ class Notes extends Table {
   IntColumn get id => integer()();
   TextColumn get title => text().nullable()();
   TextColumn get content => text().nullable()();
-  TextColumn get styleJson => text().map(const ContentStyleConverter())();
+  TextColumn get styleJson => text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
   DateTimeColumn get creationDate =>
       dateTime().withDefault(Constant(DateTime.now()))();

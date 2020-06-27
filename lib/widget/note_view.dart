@@ -13,6 +13,8 @@ const double _kBorderRadius = 10.0;
 
 class NoteView extends StatelessWidget {
   final Note note;
+  final SpannableList providedTitleList;
+  final SpannableList providedContentList;
   final Function() onTap;
   final Function() onLongPress;
   final int numOfImages;
@@ -21,6 +23,8 @@ class NoteView extends StatelessWidget {
   NoteView({
     Key key,
     @required this.note,
+    this.providedTitleList,
+    this.providedContentList,
     this.onTap,
     this.onLongPress,
     this.numOfImages = 2,
@@ -30,7 +34,7 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    SpannableList spannableList = SpannableList.fromJson(parsedStyleJson);
+    SpannableList spannableList = providedContentList ?? SpannableList.fromJson(parsedStyleJson);
     Color borderColor;
 
     if (selected) {
@@ -114,16 +118,29 @@ class NoteView extends StatelessWidget {
 
     if (note.title != "") {
       items.add(
-        Text(
-          note.title ?? "",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        providedTitleList != null
+            ? RichText(
+                text: providedTitleList.toTextSpan(
+                  note.title,
+                  defaultStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+                  ),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
+            : Text(
+                note.title ?? "",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
       );
     }
 
