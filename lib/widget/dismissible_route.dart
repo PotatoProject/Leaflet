@@ -136,8 +136,9 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> bgAnimation = CurvedAnimation(
       parent: secondaryAnimation,
-      curve: Curves.linearToEaseOut,
-      reverseCurve: Cubic(0.30, 0.00, 0.80, 0.15),
+      curve: linearTransition ? Curves.linear : Curves.linearToEaseOut,
+      reverseCurve:
+          linearTransition ? Curves.linear : Cubic(0.30, 0.00, 0.80, 0.15),
     ).drive(Tween<Offset>(
       begin: Offset(0, 0),
       end: Offset(-0.3, 0),
@@ -188,7 +189,6 @@ class _DismissibleRoute extends StatefulWidget {
 }
 
 class _DismissibleRouteState extends State<_DismissibleRoute> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
