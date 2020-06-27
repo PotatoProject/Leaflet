@@ -68,68 +68,6 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future<List<Note>> getNotesMatchingQuery(SearchQuery query) async {
-    Expression<bool> dateModeBoolExpression($NotesTable table) {
-      Expression<bool> exp;
-
-      switch (query.dateMode) {
-        case DateFilterMode.AFTER:
-          exp = table.creationDate.isBiggerOrEqualValue(query.date);
-          break;
-        case DateFilterMode.BEFORE:
-          exp = table.creationDate.isSmallerOrEqualValue(query.date);
-          break;
-        case DateFilterMode.ONLY:
-        default:
-          exp = table.creationDate.equals(query.date);
-          break;
-      }
-
-      return exp;
-    }
-
-    SimpleSelectStatement<$NotesTable, Note> selectQuery;
-    List<Note> noteList;
-    List<Note> queryNotes = [];
-
-    if (query.color != null && query.date != null) {
-      selectQuery = select(notes)
-        ..where((table) =>
-            table.color.equals(query.color) & dateModeBoolExpression(table));
-    } else if (query.color != null) {
-      selectQuery = select(notes)
-        ..where((table) => table.color.equals(query.color));
-    } else if (query.date != null) {
-      selectQuery = select(notes)
-        ..where((table) => dateModeBoolExpression(table));
-    } else {
-      selectQuery = select(notes);
-    }
-
-    noteList = await selectQuery.get();
-
-    String textQuery =
-        query.caseSensitive ? query.input : query.input.toLowerCase();
-
-    if (textQuery.trim() != "") {
-      for (Note note in noteList) {
-        List<String> splittedTitle = query.caseSensitive
-            ? note.title.split(new RegExp("[ ]{1,}"))
-            : note.title.toLowerCase().split(new RegExp("[ ]{1,}"));
-        List<String> splittedContent = query.caseSensitive
-            ? note.content.split(new RegExp("[ ]{1,}"))
-            : note.content.toLowerCase().split(new RegExp("[ ]{1,}"));
-
-        if (splittedTitle.any((element) => element.startsWith(textQuery)) ||
-            splittedContent.any((element) => element.startsWith(textQuery))) {
-          queryNotes.add(note);
-        }
-      }
-    }
-
-    return queryNotes;
-  }
-
   Future saveNote(Note note) =>
       into(notes).insert(note, mode: InsertMode.replace);
 
