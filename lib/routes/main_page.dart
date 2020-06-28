@@ -25,6 +25,7 @@ import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/note_view.dart';
+import 'package:potato_notes/widget/notes_logo.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -221,22 +222,23 @@ class _MainPageState extends State<MainPage>
   }
 
   Widget getDrawer(bool extended, bool fixed) {
+    Color notesLogoPenColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.grey[900];
+    
     return SafeArea(
       child: DrawerList(
         items: Utils.getDestinations(mode),
         header: extended
             ? Container(
                 height: 64,
-                padding: EdgeInsets.symmetric(horizontal: 18),
+                padding: EdgeInsets.symmetric(horizontal: 22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset(
-                      "assets/notes.png",
-                      height: 36,
-                    ),
-                    SizedBox(width: 8),
+                    NotesLogo(penColor: notesLogoPenColor),
+                    SizedBox(width: 16),
                     Text(
                       "PotatoNotes",
                       style: GoogleFonts.poppins(
@@ -250,10 +252,8 @@ class _MainPageState extends State<MainPage>
               )
             : Container(
                 width: 64,
-                child: Image.asset(
-                  "assets/notes.png",
-                  height: 36,
-                ),
+                alignment: Alignment.center,
+                child: NotesLogo(penColor: notesLogoPenColor),
               ),
         footer: extended
             ? ListTile(
