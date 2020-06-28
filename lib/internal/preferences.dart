@@ -17,8 +17,10 @@ class Preferences extends ChangeNotifier {
 
   String _masterPass;
   ThemeMode _themeMode = ThemeMode.system;
+  Color _customAccent;
   bool _useAmoled = false;
   bool _useGrid = false;
+  bool _useCustomAccent = false;
   String _apiUrl;
   String _accessToken;
   String _refreshToken;
@@ -28,8 +30,10 @@ class Preferences extends ChangeNotifier {
 
   String get masterPass => _masterPass;
   ThemeMode get themeMode => _themeMode;
+  Color get customAccent => _customAccent;
   bool get useAmoled => _useAmoled;
   bool get useGrid => _useGrid;
+  bool get useCustomAccent => _useCustomAccent;
   String get apiUrl => _apiUrl;
   Future<String> get token async => await getToken();
   String get username => _username;
@@ -48,6 +52,12 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
+  set customAccent(Color value) {
+    _customAccent = value;
+    prefs.setCustomAccent(value);
+    notifyListeners();
+  }
+
   set useAmoled(bool value) {
     _useAmoled = value;
     prefs.setUseAmoled(value);
@@ -57,6 +67,12 @@ class Preferences extends ChangeNotifier {
   set useGrid(bool value) {
     _useGrid = value;
     prefs.setUseGrid(value);
+    notifyListeners();
+  }
+
+  set useCustomAccent(bool value) {
+    _useCustomAccent = value;
+    prefs.setUseCustomAccent(value);
     notifyListeners();
   }
 
@@ -102,8 +118,10 @@ class Preferences extends ChangeNotifier {
 
     masterPass = await keystore.getMasterPass();
     themeMode = await prefs.getThemeMode();
+    customAccent = await prefs.getCustomAccent();
     useAmoled = await prefs.getUseAmoled();
     useGrid = await prefs.getUseGrid();
+    useCustomAccent = await prefs.getUseCustomAccent();
     apiUrl = await prefs.getApiUrl();
     accessToken = await prefs.getAccessToken();
     refreshToken = await prefs.getRefreshToken();

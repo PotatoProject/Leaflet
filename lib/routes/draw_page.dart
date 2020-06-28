@@ -167,7 +167,6 @@ class _DrawPageState extends State<DrawPage>
                     Loggy.d(message: drawing);
 
                     if (!widget.note.images.data.containsKey(drawing)) {
-                      print("bruh");
                       widget.note.images.data[drawing] = Uri.file(drawing);
                       locator<NoteHelper>().saveNote(widget.note);
                     }

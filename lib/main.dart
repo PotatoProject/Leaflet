@@ -6,6 +6,7 @@ import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/themes.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,15 @@ class PotatoNotes extends StatelessWidget {
             stream: accentStreamChannel.receiveBroadcastStream(),
             initialData: Colors.blueAccent.value,
             builder: (context, snapshot) {
-              Themes themes = Themes(Color(snapshot.data));
+              Color accentColor;
+
+              if(prefs.useCustomAccent) {
+                accentColor = prefs.customAccent ?? Utils.defaultAccent;
+              } else {
+                accentColor = Color(snapshot.data);
+              }
+
+              Themes themes = Themes(accentColor);
 
               return MaterialApp(
                 title: "PotatoNotes",

@@ -9,6 +9,7 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +19,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  Preferences prefs;
+  ///Preferences prefs;
   bool removingMasterPass = false;
 
   @override
   Widget build(BuildContext context) {
-    if (prefs == null) prefs = Provider.of<Preferences>(context);
+    final prefs = Provider.of<Preferences>(context);
 
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
@@ -67,6 +68,43 @@ class _SettingsPageState extends State<SettingsPage> {
                   activeColor: Theme.of(context).accentColor,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
+                SwitchListTile(
+                  value: !prefs.useCustomAccent,
+                  onChanged: (value) => prefs.useCustomAccent = !value,
+                  title: Text("Follow system accent"),
+                  secondary: Icon(OMIcons.colorLens),
+                  activeColor: Theme.of(context).accentColor,
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                ),
+                ListTile(
+                  leading: Icon(OMIcons.colorize),
+                  title: Text("Pick a custom accent"),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  enabled: prefs.useCustomAccent,
+                  trailing: CircleAvatar(
+                    backgroundColor: prefs.customAccent ?? Utils.defaultAccent,
+                    radius: 16,
+                  ),
+                  onTap: () async {
+                    int result = await Utils.showNotesModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => RGBColorPicker(
+                        initialColor: Theme.of(context).accentColor,
+                      ),
+                    );
+
+                    if (result != null) {
+                      if (result == -1) {
+                        prefs.customAccent = null;
+                      } else {
+                        prefs.customAccent = Color(result);
+                      }
+                    }
+                  },
                 ),
                 SwitchListTile(
                   value: prefs.useGrid,
@@ -221,6 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
         editMode: editMode,
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: (text) async {
+          final prefs = Provider.of<Preferences>(context, listen: false);
           prefs.masterPass = text;
 
           Navigator.pop(context);

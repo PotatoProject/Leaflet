@@ -219,4 +219,6 @@ class Utils {
           label: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
         ),
       ];
+  
+  static get defaultAccent => Color(0xFFFF9100);
 }

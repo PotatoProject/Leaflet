@@ -41,6 +41,18 @@ class SharedPrefs {
     await prefs.setInt("theme_mode", newValue);
   }
 
+  Future<Color> getCustomAccent() async {
+    int colorValue = prefs.getInt("custom_accent");
+    if(colorValue != null)
+      return Color(colorValue);
+    else
+      return null;
+  }
+
+  void setCustomAccent(Color value) async {
+    await prefs.setInt("custom_accent", value?.value);
+  }
+
   Future<bool> getUseAmoled() async {
     return prefs.getBool("use_amoled") ?? false;
   }
@@ -55,6 +67,14 @@ class SharedPrefs {
 
   void setUseGrid(bool value) async {
     await prefs.setBool("use_grid", value);
+  }
+
+  Future<bool> getUseCustomAccent() async {
+    return prefs.getBool("use_custom_accent") ?? false;
+  }
+
+  void setUseCustomAccent(bool value) async {
+    await prefs.setBool("use_custom_accent", value);
   }
 
   Future<String> getApiUrl() async {
