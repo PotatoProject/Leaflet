@@ -3,10 +3,11 @@ import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {
   final Widget header;
-  final List<DrawerListTileData> items;
-  final List<DrawerListTileData> secondaryItems;
+  final List<NavigationRailDestination> items;
+  final List<NavigationRailDestination> secondaryItems;
   final Widget footer;
   final int currentIndex;
+  final bool showTitles;
   final void Function(int index) onTap;
 
   DrawerList({
@@ -15,6 +16,7 @@ class DrawerList extends StatelessWidget {
     this.secondaryItems,
     this.footer,
     this.currentIndex = 0,
+    this.showTitles = true,
     this.onTap,
   });
 
@@ -30,6 +32,7 @@ class DrawerList extends StatelessWidget {
             ),
             itemBuilder: (context, index) => drawerSections[index],
             itemCount: drawerSections.length,
+            padding: EdgeInsets.all(0),
           ),
         ),
         footer ?? Container(),
@@ -62,15 +65,17 @@ class DrawerList extends StatelessWidget {
     return list;
   }
 
-  Widget generateDrawerListTiles(List<DrawerListTileData> items) => Column(
+  Widget generateDrawerListTiles(List<NavigationRailDestination> items) =>
+      Column(
         children: List.generate(
           items.length,
           (index) => DrawerListTile(
             icon: items[index].icon,
-            activeIcon: items[index].activeIcon,
-            title: items[index].title,
+            activeIcon: items[index].selectedIcon,
+            title: items[index].label,
             onTap: () => onTap(index),
             active: currentIndex == index,
+            showTitle: showTitles,
           ),
         ),
       );

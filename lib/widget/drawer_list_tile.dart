@@ -4,6 +4,7 @@ class DrawerListTile extends StatelessWidget {
   final Widget icon;
   final Widget activeIcon;
   final Widget title;
+  final bool showTitle;
   final void Function() onTap;
   final bool active;
   final double height;
@@ -15,6 +16,7 @@ class DrawerListTile extends StatelessWidget {
     @required this.icon,
     this.activeIcon,
     @required this.title,
+    this.showTitle = true,
     this.onTap,
     this.active = false,
     this.height = 56,
@@ -40,40 +42,56 @@ class DrawerListTile extends StatelessWidget {
 
     return SizedBox(
       height: height,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            margin: activeShapePadding,
-            decoration: ShapeDecoration(
-              shape: _activeShape,
-              color:
-                  active ? _activeColor.withOpacity(0.2) : Colors.transparent,
-            ),
-          ),
-          Material(
-            type: MaterialType.transparency,
-            child: ListTile(
-              leading: Theme(
+      child: showTitle
+          ? Stack(
+              children: <Widget>[
+                Container(
+                  margin: activeShapePadding,
+                  decoration: ShapeDecoration(
+                    shape: _activeShape,
+                    color: active
+                        ? _activeColor.withOpacity(0.2)
+                        : Colors.transparent,
+                  ),
+                ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: ListTile(
+                    leading: Theme(
+                      data: Theme.of(context).copyWith(
+                        iconTheme: iconTheme.copyWith(
+                          color:
+                              active ? _activeColor : contrast.withOpacity(0.7),
+                        ),
+                      ),
+                      child: active ? (activeIcon ?? icon) : icon,
+                    ),
+                    title: DefaultTextStyle(
+                      style: textTheme.bodyText1.copyWith(
+                        color:
+                            active ? _activeColor : contrast.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      child: title,
+                    ),
+                    onTap: onTap,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                  ),
+                ),
+              ],
+            )
+          : IconButton(
+              icon: Theme(
                 data: Theme.of(context).copyWith(
                   iconTheme: iconTheme.copyWith(
                     color: active ? _activeColor : contrast.withOpacity(0.7),
+                    size: 24,
                   ),
                 ),
                 child: active ? (activeIcon ?? icon) : icon,
               ),
-              title: DefaultTextStyle(
-                style: textTheme.bodyText1.copyWith(
-                  color: active ? _activeColor : contrast.withOpacity(0.7),
-                  fontWeight: FontWeight.w500,
-                ),
-                child: title,
-              ),
-              onTap: onTap,
-              contentPadding: EdgeInsets.symmetric(horizontal: 24),
+              onPressed: onTap,
             ),
-          ),
-        ],
-      ),
     );
   }
 }

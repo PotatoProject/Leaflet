@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:animations/animations.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -24,7 +23,6 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
-import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
@@ -95,183 +93,219 @@ class _MainPageState extends State<MainPage>
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: selecting
-          ? SelectionBar(
-              selectionList: selectionList,
-              onCloseSelection: () => setState(() {
-                selecting = false;
-                selectionList.clear();
-              }),
-              currentMode: mode,
-            )
-          : AppBar(
-              title: Text(Utils.getNameFromMode(mode)),
-              textTheme: Theme.of(context).textTheme,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SearchPage())),
-                ),
-                IconButton(
-                  icon: Icon(OMIcons.person),
-                  onPressed: () => scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text("Not yet..."),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-      body: StreamBuilder<List<Note>>(
-        stream: helper.noteStream(mode),
-        initialData: cachedNotesMap[mode],
-        builder: (context, snapshot) {
-          EdgeInsets padding = EdgeInsets.fromLTRB(
-            4,
-            4 + MediaQuery.of(context).padding.top,
-            4,
-            4,
-          );
-
-          Widget child;
-          List<Note> notes = snapshot.data;
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            notes = cachedNotesMap[mode];
-          } else if (snapshot.connectionState == ConnectionState.active) {
-            cachedNotesMap[mode] = snapshot.data;
-          }
-
-          if (notes.isNotEmpty) {
-            if (prefs.useGrid) {
-              child = StaggeredGridView.countBuilder(
-                crossAxisCount: numOfColumns,
-                itemBuilder: (context, index) => commonNote(notes[index]),
-                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                itemCount: notes.length,
-                padding: padding,
-              );
-            } else {
-              child = ListView.builder(
-                itemBuilder: (context, index) => commonNote(notes[index]),
-                itemCount: notes.length,
-                padding: padding,
-              );
-            }
-          } else {
-            child = Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getInfoOnCurrentMode.key,
-                  SizedBox(height: 24),
-                  Text(
-                    getInfoOnCurrentMode.value,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
+    return Row(
+      children: <Widget>[
+        Visibility(
+          visible: MediaQuery.of(context).orientation == Orientation.landscape,
+          child: SizedBox(
+            width:
+                numOfColumns >= 4 ? MediaQuery.of(context).size.width / 5 : 64,
+            child: getDrawer(numOfColumns >= 4, true),
+          ),
+        ),
+        Expanded(
+          child: Scaffold(
+            key: scaffoldKey,
+            appBar: selecting
+                ? SelectionBar(
+                    selectionList: selectionList,
+                    onCloseSelection: () => setState(() {
+                      selecting = false;
+                      selectionList.clear();
+                    }),
+                    currentMode: mode,
                   )
-                ],
-              ),
-            );
-          }
+                : AppBar(
+                    title: Text(Utils.getNameFromMode(mode)),
+                    textTheme: Theme.of(context).textTheme,
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchPage())),
+                      ),
+                      IconButton(
+                        icon: Icon(OMIcons.person),
+                        onPressed: () => scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Not yet..."),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+            body: StreamBuilder<List<Note>>(
+              stream: helper.noteStream(mode),
+              initialData: cachedNotesMap[mode],
+              builder: (context, snapshot) {
+                EdgeInsets padding = EdgeInsets.fromLTRB(
+                  4,
+                  4 + MediaQuery.of(context).padding.top,
+                  4,
+                  4,
+                );
 
-          return FadeScaleTransition(
-            animation: fade,
-            child: child,
-          );
-        },
-      ),
-      extendBodyBehindAppBar: true,
-      floatingActionButton:
-          mode == ReturnMode.NORMAL && !selecting ? fab : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      drawer: Drawer(
-        elevation: 16,
-        child: DrawerList(
-          onTap: (index) async {
-            Navigator.pop(context);
-            await controller.animateBack(0);
-            setState(() => mode = ReturnMode.values[index + 1]);
-            controller.animateTo(1);
-          },
-          header: Container(
-            height: 64,
-            padding: EdgeInsets.symmetric(horizontal: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
+                Widget child;
+                List<Note> notes = snapshot.data;
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  notes = cachedNotesMap[mode];
+                } else if (snapshot.connectionState == ConnectionState.active) {
+                  cachedNotesMap[mode] = snapshot.data;
+                }
+
+                if (notes.isNotEmpty) {
+                  if (prefs.useGrid) {
+                    child = StaggeredGridView.countBuilder(
+                      crossAxisCount: numOfColumns,
+                      itemBuilder: (context, index) => commonNote(notes[index]),
+                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                      itemCount: notes.length,
+                      padding: padding,
+                    );
+                  } else {
+                    child = ListView.builder(
+                      itemBuilder: (context, index) => commonNote(notes[index]),
+                      itemCount: notes.length,
+                      padding: padding,
+                    );
+                  }
+                } else {
+                  child = Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        getInfoOnCurrentMode.key,
+                        SizedBox(height: 24),
+                        Text(
+                          getInfoOnCurrentMode.value,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+
+                return FadeScaleTransition(
+                  animation: fade,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: child,
+                  ),
+                );
+              },
+            ),
+            extendBodyBehindAppBar: true,
+            floatingActionButton:
+                mode == ReturnMode.NORMAL && !selecting ? fab : null,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            drawer: MediaQuery.of(context).orientation == Orientation.portrait
+                ? Drawer(
+                    child: getDrawer(true, false),
+                  )
+                : null,
+            drawerScrimColor: Colors.transparent,
+            drawerEdgeDragWidth: MediaQuery.of(context).size.width,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getDrawer(bool extended, bool fixed) {
+    return SafeArea(
+      child: DrawerList(
+        items: Utils.getDestinations(mode),
+        header: extended
+            ? Container(
+                height: 64,
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      "assets/notes.png",
+                      height: 36,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "PotatoNotes",
+                      style: GoogleFonts.poppins(
+                        color: Theme.of(context).iconTheme.color,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(
+                width: 64,
+                child: Image.asset(
                   "assets/notes.png",
                   height: 36,
                 ),
-                SizedBox(width: 8),
-                Text(
-                  "PotatoNotes",
-                  style: GoogleFonts.poppins(
-                    color: Theme.of(context).iconTheme.color,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
+              ),
+        footer: extended
+            ? ListTile(
+                leading: Icon(CustomIcons.settings_outline),
+                title: Text(
+                  "Settings",
+                  style: TextStyle(
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .color
+                        .withOpacity(0.7),
                   ),
                 ),
-              ],
-            ),
-          ),
-          footer: ListTile(
-            leading: Icon(CustomIcons.settings_outline),
-            title: Text(
-              "Settings",
-              style: TextStyle(
-                color: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .color
-                    .withOpacity(0.7),
-              ),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 24),
-            onTap: () {
-              Navigator.pop(context);
+                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                onTap: () {
+                  if (!fixed) {
+                    Navigator.pop(context);
+                  }
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()));
-            },
-          ),
-          currentIndex: mode.index - 1,
-          items: [
-            DrawerListTileData(
-              icon: Icon(CommunityMaterialIcons.home_variant_outline),
-              activeIcon: Icon(CommunityMaterialIcons.home_variant),
-              title: Text(Utils.getNameFromMode(ReturnMode.NORMAL)),
-            ),
-            DrawerListTileData(
-              icon: Icon(MdiIcons.archiveOutline),
-              activeIcon: Icon(MdiIcons.archive),
-              title: Text(Utils.getNameFromMode(ReturnMode.ARCHIVE)),
-            ),
-            DrawerListTileData(
-              icon: Icon(CommunityMaterialIcons.trash_can_outline),
-              activeIcon: Icon(CommunityMaterialIcons.trash_can),
-              title: Text(Utils.getNameFromMode(ReturnMode.TRASH)),
-            ),
-            DrawerListTileData(
-              icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
-              activeIcon: Icon(CommunityMaterialIcons.heart_multiple),
-              title: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
-            ),
-          ],
-        ),
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()));
+                },
+              )
+            : Container(
+                height: 64,
+                child: IconButton(
+                  icon: Icon(CustomIcons.settings_outline),
+                  onPressed: () {
+                    if (!fixed) {
+                      Navigator.pop(context);
+                    }
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsPage()));
+                  },
+                ),
+              ),
+        currentIndex: mode.index - 1,
+        onTap: (index) async {
+          if (!fixed) {
+            Navigator.pop(context);
+          }
+
+          await controller.animateBack(0);
+          setState(() => mode = ReturnMode.values[index + 1]);
+          controller.animateTo(1);
+        },
+        showTitles: extended,
       ),
-      drawerScrimColor: Colors.transparent,
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
     );
   }
 

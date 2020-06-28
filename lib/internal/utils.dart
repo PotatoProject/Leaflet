@@ -1,5 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/content_style.dart';
@@ -133,9 +134,9 @@ class Utils {
         archived: false,
         synced: false,
       );
-  
+
   static String getNameFromMode(ReturnMode mode) {
-    switch(mode) {
+    switch (mode) {
       case ReturnMode.NORMAL:
         return "Home";
       case ReturnMode.ARCHIVE:
@@ -149,4 +150,27 @@ class Utils {
         return "All";
     }
   }
+
+  static List<NavigationRailDestination> getDestinations(ReturnMode mode) => [
+        NavigationRailDestination(
+          icon: Icon(CommunityMaterialIcons.home_variant_outline),
+          selectedIcon: Icon(CommunityMaterialIcons.home_variant),
+          label: Text(Utils.getNameFromMode(ReturnMode.NORMAL)),
+        ),
+        NavigationRailDestination(
+          icon: Icon(MdiIcons.archiveOutline),
+          selectedIcon: Icon(MdiIcons.archive),
+          label: Text(Utils.getNameFromMode(ReturnMode.ARCHIVE)),
+        ),
+        NavigationRailDestination(
+          icon: Icon(CommunityMaterialIcons.trash_can_outline),
+          selectedIcon: Icon(CommunityMaterialIcons.trash_can),
+          label: Text(Utils.getNameFromMode(ReturnMode.TRASH)),
+        ),
+        NavigationRailDestination(
+          icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
+          selectedIcon: Icon(CommunityMaterialIcons.heart_multiple),
+          label: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
+        ),
+      ];
 }
