@@ -41,7 +41,14 @@ class DrawerList extends StatelessWidget {
     List<Widget> list = [];
 
     if (header != null) {
-      list.add(header);
+      list.add(
+        Column(
+          children: <Widget>[
+            SizedBox(height: 8),
+            header,
+          ],
+        ),
+      );
     }
 
     if (items != null) {

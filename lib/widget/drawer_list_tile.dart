@@ -52,24 +52,24 @@ class DrawerListTile extends StatelessWidget {
           ),
           Material(
             type: MaterialType.transparency,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                iconTheme: iconTheme.copyWith(
-                  color: active ? _activeColor : contrast.withOpacity(0.7),
-                ),
-              ),
-              child: ListTile(
-                leading: active ? activeIcon ?? icon : icon,
-                title: DefaultTextStyle(
-                  style: textTheme.bodyText1.copyWith(
+            child: ListTile(
+              leading: Theme(
+                data: Theme.of(context).copyWith(
+                  iconTheme: iconTheme.copyWith(
                     color: active ? _activeColor : contrast.withOpacity(0.7),
-                    fontWeight: FontWeight.w500,
                   ),
-                  child: title,
                 ),
-                onTap: onTap,
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                child: active ? (activeIcon ?? icon) : icon,
               ),
+              title: DefaultTextStyle(
+                style: textTheme.bodyText1.copyWith(
+                  color: active ? _activeColor : contrast.withOpacity(0.7),
+                  fontWeight: FontWeight.w500,
+                ),
+                child: title,
+              ),
+              onTap: onTap,
+              contentPadding: EdgeInsets.symmetric(horizontal: 24),
             ),
           ),
         ],

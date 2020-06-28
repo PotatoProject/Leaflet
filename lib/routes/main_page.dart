@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -14,6 +14,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -201,9 +202,42 @@ class _MainPageState extends State<MainPage>
             setState(() => mode = ReturnMode.values[index + 1]);
             controller.animateTo(1);
           },
+          header: Container(
+            height: 64,
+            padding: EdgeInsets.symmetric(horizontal: 18),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  "assets/notes.png",
+                  height: 36,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "PotatoNotes",
+                  style: GoogleFonts.poppins(
+                    color: Theme.of(context).iconTheme.color,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
           footer: ListTile(
-            leading: Icon(MdiIcons.cogOutline),
-            title: Text("Settings"),
+            leading: Icon(CustomIcons.settings_outline),
+            title: Text(
+              "Settings",
+              style: TextStyle(
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .color
+                    .withOpacity(0.7),
+              ),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 24),
             onTap: () {
               Navigator.pop(context);
 

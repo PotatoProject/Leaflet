@@ -57,3 +57,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family:  CustomIcons
+      fonts:
+       - asset: fonts/CustomIcons.ttf

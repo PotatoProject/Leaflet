@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
@@ -26,7 +25,6 @@ import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:provider/provider.dart';
-import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
