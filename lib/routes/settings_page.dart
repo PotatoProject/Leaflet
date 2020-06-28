@@ -84,9 +84,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                   enabled: prefs.useCustomAccent,
-                  trailing: CircleAvatar(
-                    backgroundColor: prefs.customAccent ?? Utils.defaultAccent,
-                    radius: 16,
+                  trailing: AnimatedOpacity(
+                    opacity: prefs.useCustomAccent ? 1 : 0.5,
+                    duration: Duration(milliseconds: 200),
+                    child: SizedBox(
+                      width: 60,
+                      child: Icon(
+                        Icons.brightness_1,
+                        color: prefs.customAccent ?? Utils.defaultAccent,
+                        size: 28,
+                      ),
+                    ),
                   ),
                   onTap: () async {
                     int result = await Utils.showNotesModalBottomSheet(

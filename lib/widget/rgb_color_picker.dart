@@ -36,115 +36,127 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   Widget build(BuildContext context) {
     double shortestSide = MediaQuery.of(context).size.shortestSide;
 
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            color: currentColor,
-            width: shortestSide,
-            height: shortestSide / 2,
-            child: Row(
-              children: <Widget>[
-                Container(
-                  height: shortestSide / 2,
-                  width: shortestSide / 2,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "#",
-                        style: TextStyle(
+    return Theme(
+      data: Theme.of(context).copyWith(
+        cursorColor:
+            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+        textSelectionHandleColor:
+            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+        textSelectionColor:
+            (currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white).withOpacity(0.4),
+      ),
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              color: currentColor,
+              width: shortestSide,
+              height: shortestSide / 2,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    height: shortestSide / 2,
+                    width: shortestSide / 2,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "#",
+                          style: TextStyle(
                             color: currentColor.computeLuminance() > 0.5
                                 ? Colors.black
-                                : Colors.white),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 6,
-                        child: TextField(
-                          controller: controller,
-                          textCapitalization: TextCapitalization.characters,
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp("[0-9|A-F|a-f]")),
-                            LengthLimitingTextInputFormatter(6)
-                          ],
-                          onChanged: (text) {
-                            if (text.length == 6) {
-                              Color newColor =
-                                  Color(int.parse(text, radix: 16));
-                              setState(() =>
-                                  currentColor = newColor.withAlpha(0xFF));
-                            }
-                          },
-                          decoration: InputDecoration(border: InputBorder.none),
-                          style: TextStyle(
-                              color: currentColor.computeLuminance() > 0.5
-                                  ? Colors.black
-                                  : Colors.white),
+                                : Colors.white,
+                          ),
                         ),
-                      )
-                    ],
+                        Container(
+                          width: MediaQuery.of(context).size.width / 6,
+                          child: TextField(
+                            controller: controller,
+                            textCapitalization: TextCapitalization.characters,
+                            inputFormatters: [
+                              WhitelistingTextInputFormatter(
+                                  RegExp("[0-9|A-F|a-f]")),
+                              LengthLimitingTextInputFormatter(6)
+                            ],
+                            onChanged: (text) {
+                              if (text.length == 6) {
+                                Color newColor =
+                                    Color(int.parse(text, radix: 16));
+                                setState(() =>
+                                    currentColor = newColor.withAlpha(0xFF));
+                              }
+                            },
+                            decoration:
+                                InputDecoration(border: InputBorder.none),
+                            style: TextStyle(
+                                color: currentColor.computeLuminance() > 0.5
+                                    ? Colors.black
+                                    : Colors.white),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
+                  Container(
+                    height: shortestSide / 2,
+                    width: shortestSide / 2,
+                    padding: EdgeInsets.symmetric(horizontal: 22),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ColorSlider(
+                          color: currentColor,
+                          onChange: (newColor) {
+                            setState(() => currentColor = newColor);
+                          },
+                          rgb: RGB.RED,
+                        ),
+                        ColorSlider(
+                          color: currentColor,
+                          onChange: (newColor) {
+                            setState(() => currentColor = newColor);
+                          },
+                          rgb: RGB.GREEN,
+                        ),
+                        ColorSlider(
+                          color: currentColor,
+                          onChange: (newColor) {
+                            setState(() => currentColor = newColor);
+                          },
+                          rgb: RGB.BLUE,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ButtonBar(
+              alignment: MainAxisAlignment.end,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context, -1),
+                  textColor: currentColor,
+                  child: Text("Reset"),
                 ),
-                Container(
-                  height: shortestSide / 2,
-                  width: shortestSide / 2,
-                  padding: EdgeInsets.symmetric(horizontal: 22),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ColorSlider(
-                        color: currentColor,
-                        onChange: (newColor) {
-                          setState(() => currentColor = newColor);
-                        },
-                        rgb: RGB.RED,
-                      ),
-                      ColorSlider(
-                        color: currentColor,
-                        onChange: (newColor) {
-                          setState(() => currentColor = newColor);
-                        },
-                        rgb: RGB.GREEN,
-                      ),
-                      ColorSlider(
-                        color: currentColor,
-                        onChange: (newColor) {
-                          setState(() => currentColor = newColor);
-                        },
-                        rgb: RGB.BLUE,
-                      ),
-                    ],
-                  ),
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  textColor: currentColor,
+                  child: Text("Cancel"),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.pop(context, currentColor.value),
+                  textColor: currentColor,
+                  child: Text("Confirm"),
                 ),
               ],
             ),
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.end,
-            children: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.pop(context, -1),
-                textColor: currentColor,
-                child: Text("Reset"),
-              ),
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                textColor: currentColor,
-                child: Text("Cancel"),
-              ),
-              FlatButton(
-                onPressed: () => Navigator.pop(context, currentColor.value),
-                textColor: currentColor,
-                child: Text("Confirm"),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
