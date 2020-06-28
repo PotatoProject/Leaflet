@@ -97,7 +97,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             } else
               selectedColor = selectionList[0].color;
 
-            selectedColor = await showModalBottomSheet(
+            selectedColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
                 selectedColor: selectedColor,

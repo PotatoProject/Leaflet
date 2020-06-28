@@ -60,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
           IconButton(
             icon: Icon(Icons.filter_list),
             padding: EdgeInsets.all(0),
-            onPressed: () => showModalBottomSheet(
+            onPressed: () => Utils.showNotesModalBottomSheet(
               context: context,
               isScrollControlled: true,
               builder: (context) => QueryFilters(

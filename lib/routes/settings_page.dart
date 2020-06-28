@@ -6,6 +6,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/settings_category.dart';
@@ -122,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                 ),
                 ListTile(
-                  leading: Icon(CommunityMaterialIcons.textbox_password),
+                  leading: Icon(CommunityMaterialIcons.form_textbox_password),
                   title: Text("Modify master pass"),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
@@ -187,7 +188,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<bool> showInfoSheet(BuildContext context,
       {String content, String buttonAction}) async {
-    return await showModalBottomSheet(
+    return await Utils.showNotesModalBottomSheet(
           context: context,
           isScrollControlled: true,
           builder: (context) => Column(
@@ -213,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<dynamic> showPassChallengeSheet(BuildContext context,
       [bool editMode = true]) async {
-    return await showModalBottomSheet(
+    return await Utils.showNotesModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => PassChallenge(

@@ -424,7 +424,7 @@ class _NotePageState extends State<NotePage> {
                 IconButton(
                   icon: Icon(OMIcons.colorLens),
                   padding: EdgeInsets.all(0),
-                  onPressed: () => showModalBottomSheet(
+                  onPressed: () => Utils.showNotesModalBottomSheet(
                     context: context,
                     backgroundColor: Theme.of(context).cardColor,
                     isScrollControlled: true,
@@ -476,7 +476,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void showPrivacyOptionSheet() {
-    showModalBottomSheet(
+    Utils.showNotesModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       isScrollControlled: true,
@@ -557,7 +557,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void showAddElementsSheet() {
-    showModalBottomSheet(
+    Utils.showNotesModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
       isScrollControlled: true,

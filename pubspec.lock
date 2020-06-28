@@ -161,7 +161,7 @@ packages:
       name: community_material_icon
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.5.95"
+    version: "5.3.45"
   convert:
     dependency: transitive
     description:
@@ -203,7 +203,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.1"
   fixnum:
     dependency: transitive
     description:

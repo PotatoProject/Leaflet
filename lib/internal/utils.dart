@@ -13,7 +13,7 @@ import 'package:potato_notes/widget/pass_challenge.dart';
 
 class Utils {
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
-    return await showModalBottomSheet(
+    return await showNotesModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => PassChallenge(
@@ -21,6 +21,52 @@ class Utils {
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: null,
       ),
+    );
+  }
+
+  static Future<dynamic> showNotesModalBottomSheet({
+    @required BuildContext context,
+    @required WidgetBuilder builder,
+    Color backgroundColor,
+    double elevation,
+    ShapeBorder shape,
+    Clip clipBehavior,
+    Color barrierColor,
+    bool isScrollControlled = false,
+    bool useRootNavigator = false,
+    bool isDismissible = true,
+    bool enableDrag = true,
+  }) async {
+    double width = MediaQuery.of(context).size.width;
+    double shortestSide = MediaQuery.of(context).size.shortestSide;
+    double padding = (width - shortestSide) / 2;
+
+    return await showModalBottomSheet(
+      context: context,
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.symmetric(horizontal: padding),
+          child: Material(
+            color: backgroundColor,
+            shape: shape,
+            elevation: elevation ?? 1,
+            clipBehavior: clipBehavior ?? Clip.none,
+            child: builder(context),
+          ),
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      shape: null,
+      clipBehavior: Clip.none,
+      barrierColor: barrierColor,
+      isScrollControlled: isScrollControlled,
+      useRootNavigator: useRootNavigator,
+      isDismissible: isDismissible,
+      enableDrag: enableDrag,
     );
   }
 

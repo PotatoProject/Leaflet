@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/date_selector.dart';
 
 import 'note_color_selector.dart';
@@ -47,7 +48,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                 NoteColors.colorList(context)[widget.query.color ?? 0]["hex"]),
           ),
           onTap: () async {
-            int queryColor = await showModalBottomSheet(
+            int queryColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
                 selectedColor: widget.query.color,
@@ -74,7 +75,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                   DateFilterSelector.stringFromDateMode(widget.query.dateMode))
               : null,
           onTap: () async {
-            showModalBottomSheet(
+            await Utils.showNotesModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
                 builder: (context) => DateFilterSelector(

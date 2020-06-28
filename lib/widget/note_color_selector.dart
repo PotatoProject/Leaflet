@@ -26,18 +26,6 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
           (index) => noteColorItem(
               index, shortestSide / 5, widget.selectedColor == index)),
     );
-
-    /*return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(rowsNumber, (index) {
-        return Row(
-          children: List.generate(4, (sIndex) {
-            return noteColorItem(sIndex + (4 * index), boxWidth / 4,
-                widget.selectedColor == (sIndex + (4 * index)));
-          }),
-        );
-      }),
-    );*/
   }
 
   Widget noteColorItem(int index, double size, bool selected) {
