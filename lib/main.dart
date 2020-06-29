@@ -9,7 +9,9 @@ import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/main_page.dart';
+import 'package:potato_notes/routes/note_page.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 AppDatabase db;
 
@@ -62,6 +64,16 @@ class PotatoNotes extends StatelessWidget {
                 theme: themes.light,
                 darkTheme: prefs.useAmoled ? themes.black : themes.dark,
                 builder: (context, child) {
+                  if(appInfo.quickActions == null) {
+                    appInfo.quickActions = QuickActions();
+
+                    appInfo.quickActions.setShortcutItems([
+                      const ShortcutItem(type: 'new_text', localizedTitle: 'New note', icon: 'note_shortcut'),
+                      const ShortcutItem(type: 'new_list', localizedTitle: 'New list', icon: 'list_shortcut'),
+                      const ShortcutItem(type: 'new_image', localizedTitle: 'New image', icon: 'image_shortcut'),
+                      const ShortcutItem(type: 'new_drawing', localizedTitle: 'New drawing', icon: 'drawing_shortcut'),
+                    ]);
+                  }
                   appInfo.updateIllustrations();
 
                   return child;

@@ -39,6 +39,7 @@ dependencies:
   material_design_icons_flutter:
   google_fonts:
   path_drawing:
+  quick_actions:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

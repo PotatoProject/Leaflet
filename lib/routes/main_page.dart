@@ -18,10 +18,12 @@ import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
+import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -62,6 +64,26 @@ class _MainPageState extends State<MainPage>
       reverseDuration: Duration(milliseconds: 100),
       value: 1,
     );
+
+    final localAppInfo = Provider.of<AppInfoProvider>(context, listen: false);
+    final localHelper = locator<NoteHelper>();
+
+    localAppInfo.quickActions.initialize((shortcutType) async {
+      switch (shortcutType) {
+        case 'new_text':
+          newNote();
+          break;
+        case 'new_image':
+          newImage(ImageSource.gallery, localHelper);
+          break;
+        case 'new_drawing':
+          newDrawing();
+          break;
+        case 'new_list':
+          newList();
+          break;
+      }
+    });
 
     super.initState();
   }
@@ -225,7 +247,7 @@ class _MainPageState extends State<MainPage>
     Color notesLogoPenColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.grey[900];
-    
+
     return SafeArea(
       child: DrawerList(
         items: Utils.getDestinations(mode),
@@ -316,14 +338,7 @@ class _MainPageState extends State<MainPage>
         onLongPress: () => Utils.showFabMenu(context, fabOptions),
         key: GlobalKeyRegistry.get("fab"),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NotePage(
-              numOfImages: numOfImages,
-            ),
-          ),
-        ),
+        onTap: () => newNote(),
         child: Icon(OMIcons.edit),
       ),
     );
@@ -342,13 +357,7 @@ class _MainPageState extends State<MainPage>
         onTap: () {
           Navigator.pop(context);
 
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => NotePage(
-                numOfImages: numOfImages,
-              ),
-            ),
-          );
+          newNote();
         },
       ),
       ListTile(
@@ -360,14 +369,7 @@ class _MainPageState extends State<MainPage>
         onTap: () {
           Navigator.pop(context);
 
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => NotePage(
-                numOfImages: numOfImages,
-                note: Utils.emptyNote.copyWith(list: true),
-              ),
-            ),
-          );
+          newList();
         },
       ),
       ListTile(
@@ -376,29 +378,7 @@ class _MainPageState extends State<MainPage>
           "Image from gallery",
           overflow: TextOverflow.ellipsis,
         ),
-        onTap: () async {
-          Note note = Utils.emptyNote;
-          PickedFile image =
-              await ImagePicker().getImage(source: ImageSource.gallery);
-
-          if (image != null) {
-            note.images.data[image.path] = File(image.path).uri;
-
-            Navigator.pop(context);
-            note = note.copyWith(id: await Utils.generateId());
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NotePage(
-                  numOfImages: numOfImages,
-                  note: note,
-                ),
-              ),
-            );
-
-            helper.saveNote(note);
-          }
-        },
+        onTap: () => newImage(ImageSource.gallery, helper, shouldPop: true),
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.cameraAlt),
@@ -406,31 +386,77 @@ class _MainPageState extends State<MainPage>
           "Image from camera",
           overflow: TextOverflow.ellipsis,
         ),
-        onTap: () async {
-          Note note = Utils.emptyNote;
-          PickedFile image =
-              await ImagePicker().getImage(source: ImageSource.camera);
+        onTap: () => newImage(ImageSource.camera, helper, shouldPop: true),
+      ),
+      ListTile(
+        leading: AccentedIcon(OMIcons.brush),
+        title: Text(
+          "Drawing",
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
 
-          if (image != null) {
-            note.images.data[image.path] = File(image.path).uri;
-
-            Navigator.pop(context);
-            note = note.copyWith(id: await Utils.generateId());
-
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NotePage(
-                  numOfImages: numOfImages,
-                  note: note,
-                ),
-              ),
-            );
-
-            helper.saveNote(note);
-          }
+          newDrawing();
         },
       ),
     ];
+  }
+
+  void newNote() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NotePage(
+          numOfImages: numOfImages,
+        ),
+      ),
+    );
+  }
+
+  void newImage(ImageSource source, NoteHelper localHelper,
+      {bool shouldPop = false}) async {
+    Note note = Utils.emptyNote;
+    PickedFile image = await ImagePicker().getImage(source: source);
+
+    if (image != null) {
+      note.images.data[image.path] = File(image.path).uri;
+
+      if (shouldPop) Navigator.pop(context);
+      note = note.copyWith(id: await Utils.generateId());
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => NotePage(
+            numOfImages: numOfImages,
+            note: note,
+          ),
+        ),
+      );
+
+      localHelper.saveNote(note);
+    }
+  }
+
+  void newList() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NotePage(
+          numOfImages: numOfImages,
+          openWithList: true,
+        ),
+      ),
+    );
+  }
+
+  void newDrawing() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NotePage(
+          numOfImages: numOfImages,
+          openWithDrawing: true,
+        ),
+      ),
+    );
   }
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {

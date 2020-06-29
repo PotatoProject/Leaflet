@@ -1,0 +1,16 @@
+<vector 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:width="24dp"
+    android:viewportHeight="192"
+    android:viewportWidth="192">
+
+    <path
+        android:fillColor="@color/shortcut_bg"
+        android:pathData="M96,8C47.38,8 8,47.38 8,96C8,144.62 47.38,184 96,184C144.62,184 184,144.62 184,96C184,47.38 144.62,8 96,8Z"
+        />
+    <path
+        android:fillColor="@color/ic_launcher"
+        android:pathData="M104.24,84L108,87.76L71.68,124H68V120.32L104.24,84ZM118.64,60C117.64,60 116.6,60.4 115.84,61.16L108.52,68.48L123.52,83.48L130.84,76.16C132.4,74.6 132.4,72 130.84,70.52L121.48,61.16C120.68,60.36 119.68,60 118.64,60V60ZM104.24,72.76L60,117V132H75L119.24,87.76L104.24,72.76V72.76Z"
+        />
+</vector>

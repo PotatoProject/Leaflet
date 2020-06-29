@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 class AppInfoProvider extends ChangeNotifier {
@@ -25,6 +26,7 @@ class AppInfoProvider extends ChangeNotifier {
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
   FlutterLocalNotificationsPlugin notifications;
+  QuickActions quickActions;
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
@@ -69,8 +71,14 @@ class AppInfoProvider extends ChangeNotifier {
     }
   }
 
+  void _initQuickActions() async {
+    
+  }
+
   void loadData() async {
     _initNotifications();
+    _initQuickActions();
+    
     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
   }

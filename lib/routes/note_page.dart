@@ -29,11 +29,17 @@ import 'package:provider/provider.dart';
 class NotePage extends StatefulWidget {
   final Note note;
   final int numOfImages;
+  final bool openWithList;
+  final bool openWithDrawing;
 
   NotePage({
     this.note,
     this.numOfImages = 2,
-  });
+    this.openWithList = false,
+    this.openWithDrawing = false,
+  }) : assert((openWithList && !openWithDrawing) ||
+            (!openWithList && openWithDrawing) ||
+            (!openWithList && !openWithDrawing));
 
   @override
   _NotePageState createState() => _NotePageState();
@@ -123,6 +129,11 @@ class _NotePageState extends State<NotePage> {
       helper = locator<NoteHelper>();
 
       generateId();
+
+      if (widget.openWithList) toggleList();
+
+      if (widget.openWithDrawing)
+        WidgetsBinding.instance.addPostFrameCallback((_) => addDrawing());
     }
 
     if (prefs == null) prefs = Provider.of<Preferences>(context);
@@ -322,13 +333,13 @@ class _NotePageState extends State<NotePage> {
                       background: Container(
                         color: Colors.red[400],
                         padding: EdgeInsets.symmetric(horizontal: 24),
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.centerRight,
                         child: Icon(
                           Icons.delete_outline,
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       ),
-                      direction: DismissDirection.startToEnd,
+                      direction: DismissDirection.endToStart,
                       child: ListTile(
                         leading: Checkbox(
                           value: currentItem.status,
@@ -569,10 +580,9 @@ class _NotePageState extends State<NotePage> {
                 note.list ? Icons.check_circle : Icons.check_circle_outline),
             title: Text("Toggle list"),
             onTap: () {
-              setState(() => note = note.copyWith(list: !note.list));
-              notifyNoteChanged();
-
               Navigator.pop(context);
+
+              toggleList();
             },
           ),
           ListTile(
@@ -608,20 +618,33 @@ class _NotePageState extends State<NotePage> {
           ListTile(
             leading: Icon(OMIcons.brush),
             title: Text("Add drawing"),
-            onTap: () async {
+            onTap: () {
               Navigator.pop(context);
 
-              await Navigator.of(context).push(DismissiblePageRoute(
-                builder: (context) => DrawPage(note: note),
-                allowGestures: false,
-              ));
-
-              setState(() {});
+              addDrawing();
             },
           ),
         ],
       ),
     );
+  }
+
+  void toggleList() {
+    setState(() => note = note.copyWith(list: !note.list));
+    notifyNoteChanged();
+
+    if (note.listContent.content.isEmpty) {
+      addListContentItem();
+    }
+  }
+
+  void addDrawing() async {
+    await Navigator.of(context).push(DismissiblePageRoute(
+      builder: (context) => DrawPage(note: note),
+      allowGestures: false,
+    ));
+
+    setState(() {});
   }
 
   void buildListContentElements() {
