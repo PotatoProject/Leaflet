@@ -74,7 +74,8 @@ class PotatoNotes extends StatelessWidget {
                       const ShortcutItem(type: 'new_drawing', localizedTitle: 'New drawing', icon: 'drawing_shortcut'),
                     ]);
                   }
-                  appInfo.updateIllustrations();
+                  
+                  appInfo.updateIllustrations(Theme.of(context).brightness);
 
                   return child;
                 },

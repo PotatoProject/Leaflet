@@ -31,24 +31,30 @@ class AppInfoProvider extends ChangeNotifier {
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
   Widget emptyTrashIllustration;
+  Widget noFavouritesIllustration;
+  Widget nothingFoundIllustration;
+  Widget typeToSearchIllustration;
 
   bool _imageCacheReloadRequested = false;
 
   bool get imageCacheReloadRequested => _imageCacheReloadRequested;
 
-  void updateIllustrations() async {
-    Brightness systemTheme = Theme.of(context).brightness;
-
+  void updateIllustrations(Brightness systemTheme) async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
     emptyArchiveIllustration =
         await illustrations.emptyArchiveIllustration(systemTheme);
     emptyTrashIllustration =
         await illustrations.emptyTrashIllustration(systemTheme);
+    noFavouritesIllustration =
+        await illustrations.noFavouritesIllustration(systemTheme);
+    nothingFoundIllustration =
+        await illustrations.nothingFoundIllustration(systemTheme);
+    typeToSearchIllustration =
+        await illustrations.typeToSearchIllustration(systemTheme);
   }
 
   void _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
     var initializationSettingsIOS = IOSInitializationSettings();
@@ -71,14 +77,12 @@ class AppInfoProvider extends ChangeNotifier {
     }
   }
 
-  void _initQuickActions() async {
-    
-  }
+  void _initQuickActions() async {}
 
   void loadData() async {
     _initNotifications();
     _initQuickActions();
-    
+
     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
   }

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
+import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class SearchPage extends StatefulWidget {
@@ -26,6 +31,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     if (helper == null) helper = locator<NoteHelper>();
+    final prefs = Provider.of<Preferences>(context);
+    final appInfo = Provider.of<AppInfoProvider>(context);
 
     double width = MediaQuery.of(context).size.width;
     numOfImages = 2;
@@ -71,57 +78,88 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          Note note = notes[index];
+      body: Builder(
+        builder: (context) {
+          Widget child;
 
-          SpannableList titleList = SpannableList.generate(note.title.length);
-          SpannableList contentList =
-              SpannableList.generate(note.content.length);
-          
-          Color noteColor = Color(NoteColors.colorList(context)[note.color]["hex"]);
-          Color bgColor = Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : Colors.grey[900];
-
-          int titleIndex = query.caseSensitive
-              ? note.title.indexOf(query.input)
-              : note.title.toLowerCase().indexOf(query.input.toLowerCase());
-
-          int contentIndex = query.caseSensitive
-              ? note.content.indexOf(query.input)
-              : note.content.toLowerCase().indexOf(query.input.toLowerCase());
-
-          if (titleIndex != -1) {
-            for (int i = titleIndex; i < query.input.length + titleIndex; i++) {
-              titleList.list[i] = SpannableStyle(value: 0)
-                ..setBackgroundColor(
-                    note.color != 0 ? bgColor : Theme.of(context).accentColor)
-                ..setForegroundColor(note.color != 0 ? noteColor : Theme.of(context).cardColor);
+          if(notes.isNotEmpty) {
+            if (prefs.useGrid) {
+              child = StaggeredGridView.countBuilder(
+                crossAxisCount: 2,
+                itemBuilder: (context, index) => noteView(context, notes[index]),
+                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                itemCount: notes.length,
+              );
+            } else {
+              child = ListView.builder(
+                itemBuilder: (context, index) => noteView(context, notes[index]),
+                itemCount: notes.length,
+              );
+            }
+          } else {
+            if(query.input.isEmpty) {
+              child = Illustrations.quickIllustration(
+                context,
+                appInfo.typeToSearchIllustration,
+                "Type to start your search",
+              );
+            } else {
+              child = Illustrations.quickIllustration(
+                context,
+                appInfo.nothingFoundIllustration,
+                "Nothing found...",
+              );
             }
           }
-
-          if (contentIndex != -1) {
-            for (int i = contentIndex;
-                i < query.input.length + contentIndex;
-                i++) {
-              contentList.list[i] = SpannableStyle(value: 0)
-                ..setBackgroundColor(
-                    note.color != 0 ? bgColor : Theme.of(context).accentColor)
-                ..setForegroundColor(note.color != 0 ? noteColor : Theme.of(context).cardColor);
-            }
-          }
-
-          return NoteView(
-            note: note,
-            onTap: () => openNote(note),
-            numOfImages: numOfImages,
-            providedTitleList: titleList,
-            providedContentList: contentList,
-          );
+          return child;
         },
-        itemCount: notes.length,
       ),
+    );
+  }
+
+  Widget noteView(BuildContext context, Note note) {
+    SpannableList titleList = SpannableList.generate(note.title.length);
+    SpannableList contentList = SpannableList.generate(note.content.length);
+
+    Color noteColor = Color(NoteColors.colorList(context)[note.color]["hex"]);
+    Color bgColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.grey[900];
+
+    int titleIndex = query.caseSensitive
+        ? note.title.indexOf(query.input)
+        : note.title.toLowerCase().indexOf(query.input.toLowerCase());
+
+    int contentIndex = query.caseSensitive
+        ? note.content.indexOf(query.input)
+        : note.content.toLowerCase().indexOf(query.input.toLowerCase());
+
+    if (titleIndex != -1) {
+      for (int i = titleIndex; i < query.input.length + titleIndex; i++) {
+        titleList.list[i] = SpannableStyle(value: 0)
+          ..setBackgroundColor(
+              note.color != 0 ? bgColor : Theme.of(context).accentColor)
+          ..setForegroundColor(
+              note.color != 0 ? noteColor : Theme.of(context).cardColor);
+      }
+    }
+
+    if (contentIndex != -1) {
+      for (int i = contentIndex; i < query.input.length + contentIndex; i++) {
+        contentList.list[i] = SpannableStyle(value: 0)
+          ..setBackgroundColor(
+              note.color != 0 ? bgColor : Theme.of(context).accentColor)
+          ..setForegroundColor(
+              note.color != 0 ? noteColor : Theme.of(context).cardColor);
+      }
+    }
+
+    return NoteView(
+      note: note,
+      onTap: () => openNote(note),
+      numOfImages: numOfImages,
+      providedTitleList: titleList,
+      providedContentList: contentList,
     );
   }
 

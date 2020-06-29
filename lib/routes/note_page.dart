@@ -187,7 +187,7 @@ class _NotePageState extends State<NotePage> {
                     content: Text(
                       note.starred
                           ? "Note added to favourites"
-                          : "Note remove from favourites",
+                          : "Note removed from favourites",
                     ),
                     behavior: SnackBarBehavior.floating,
                   ),

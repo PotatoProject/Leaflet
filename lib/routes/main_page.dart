@@ -15,15 +15,14 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
+import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/locator.dart';
-import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -196,24 +195,10 @@ class _MainPageState extends State<MainPage>
                     );
                   }
                 } else {
-                  child = Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        getInfoOnCurrentMode.key,
-                        SizedBox(height: 24),
-                        Text(
-                          getInfoOnCurrentMode.value,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                        )
-                      ],
-                    ),
+                  child = Illustrations.quickIllustration(
+                    context,
+                    getInfoOnCurrentMode.key,
+                    getInfoOnCurrentMode.value,
                   );
                 }
 
@@ -296,8 +281,10 @@ class _MainPageState extends State<MainPage>
                     Navigator.pop(context);
                   }
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                  );
                 },
               )
             : Container(
@@ -310,9 +297,9 @@ class _MainPageState extends State<MainPage>
                     }
 
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsPage()));
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
                   },
                 ),
               ),
@@ -461,14 +448,15 @@ class _MainPageState extends State<MainPage>
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {
     switch (mode) {
-      case ReturnMode.ALL:
-      case ReturnMode.NORMAL:
-        return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
       case ReturnMode.ARCHIVE:
         return MapEntry(
             appInfo.emptyArchiveIllustration, "The archive is empty");
       case ReturnMode.TRASH:
         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
+      case ReturnMode.FAVOURITES:
+        return MapEntry(appInfo.noFavouritesIllustration, "No favourites for now");
+      case ReturnMode.ALL:
+      case ReturnMode.NORMAL:
       default:
         return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
     }
