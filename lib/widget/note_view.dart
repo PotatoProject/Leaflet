@@ -102,7 +102,7 @@ class NoteView extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: NoteViewStatusbar(
                 note: note,
-                padding: content.isEmpty && note.images.data.isEmpty
+                padding: content.isEmpty
                     ? EdgeInsets.all(16)
                     : null,
               ),
@@ -191,7 +191,7 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (note.list && !note.hideContent) {
+    if (note.list && note.listContent.content.isNotEmpty && !note.hideContent) {
       items.add(
         ListView.separated(
           shrinkWrap: true,
