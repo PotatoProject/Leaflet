@@ -34,7 +34,8 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    SpannableList spannableList = providedContentList ?? SpannableList.fromJson(parsedStyleJson);
+    SpannableList spannableList =
+        providedContentList ?? SpannableList.fromJson(parsedStyleJson);
     Color borderColor;
 
     if (selected) {
@@ -78,10 +79,9 @@ class NoteView extends StatelessWidget {
                           : note.images.data.length),
                   numOfImages: numOfImages,
                   showPlusImages: true,
-                  numPlusImages:
-                      note.images.data.length < numOfImages * 2
-                          ? 0
-                          : note.images.data.length - numOfImages * 2,
+                  numPlusImages: note.images.data.length < numOfImages * 2
+                      ? 0
+                      : note.images.data.length - numOfImages * 2,
                 ),
               ),
             ),
@@ -125,7 +125,11 @@ class NoteView extends StatelessWidget {
                   defaultStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .color
+                        .withOpacity(0.7),
                   ),
                 ),
                 maxLines: 1,
@@ -136,7 +140,11 @@ class NoteView extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .color
+                      .withOpacity(0.7),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -149,7 +157,7 @@ class NoteView extends StatelessWidget {
             note.listContent.content.isEmpty &&
             !note.hideContent &&
             note.images.data.isEmpty) ||
-        note.content.isNotEmpty) {
+        (note.content.isNotEmpty && !note.hideContent)) {
       items.add(
         spannableList != null
             ? RichText(

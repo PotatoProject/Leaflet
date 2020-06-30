@@ -217,6 +217,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           'User pinned notifications',
           color: Utils.defaultAccent,
           ongoing: true,
+          priority: Priority.Max,
         ),
         IOSNotificationDetails(),
       ),
