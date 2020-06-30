@@ -4,16 +4,13 @@ import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/note_colors.dart';
-import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
-import 'package:provider/provider.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class SearchPage extends StatefulWidget {
@@ -22,7 +19,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  NoteHelper helper;
   List<Note> notes = [];
   int numOfImages;
 
@@ -30,10 +26,6 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (helper == null) helper = locator<NoteHelper>();
-    final prefs = Provider.of<Preferences>(context);
-    final appInfo = Provider.of<AppInfoProvider>(context);
-
     double width = MediaQuery.of(context).size.width;
     numOfImages = 2;
 

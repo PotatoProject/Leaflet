@@ -1,7 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/preferences.dart';
-import 'package:provider/provider.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
@@ -19,15 +18,18 @@ class PassChallenge extends StatefulWidget {
 }
 
 class _PassChallengeState extends State<PassChallenge> {
-  Preferences prefs;
   TextEditingController controller;
 
   bool showPass = false;
   String status;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (prefs == null) prefs = Provider.of<Preferences>(context);
     if (controller == null)
       controller = TextEditingController(
         text: widget.editMode ? prefs.masterPass ?? "" : "",

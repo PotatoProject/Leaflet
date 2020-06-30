@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/main_page.dart';
-import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 AppDatabase db;
@@ -17,8 +17,12 @@ AppDatabase db;
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   db = AppDatabase(constructDb());
-  setupLocator();
-  runApp(PotatoNotes());
+  helper = db.noteHelper;
+  runApp(
+    ProviderScope(
+      child: PotatoNotes(),
+    ),
+  );
 }
 
 class PotatoNotes extends StatelessWidget {
@@ -27,65 +31,74 @@ class PotatoNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-          value: AppInfoProvider(context),
-        ),
-        ChangeNotifierProvider.value(
-          value: Preferences(),
-        ),
-      ],
-      child: Builder(
-        builder: (context) {
-          final appInfo = Provider.of<AppInfoProvider>(context);
-          final prefs = Provider.of<Preferences>(context);
+    return Consumer((context, read) {
+      _initProviders(read);
 
-          Loggy.generateAppLabel();
-          Loggy.setLogLevel(prefs.logLevel);
+      Loggy.generateAppLabel();
+      Loggy.setLogLevel(prefs.logLevel);
 
-          return StreamBuilder(
-            stream: accentStreamChannel.receiveBroadcastStream(),
-            initialData: Colors.blueAccent.value,
-            builder: (context, snapshot) {
-              Color accentColor;
+      return StreamBuilder(
+        stream: accentStreamChannel.receiveBroadcastStream(),
+        initialData: Colors.blueAccent.value,
+        builder: (context, snapshot) {
+          Color accentColor;
 
-              if(prefs.useCustomAccent) {
-                accentColor = prefs.customAccent ?? Utils.defaultAccent;
-              } else {
-                accentColor = Color(snapshot.data);
+          if (prefs.useCustomAccent) {
+            accentColor = prefs.customAccent ?? Utils.defaultAccent;
+          } else {
+            accentColor = Color(snapshot.data);
+          }
+
+          Themes themes = Themes(accentColor);
+
+          return MaterialApp(
+            title: "PotatoNotes",
+            theme: themes.light,
+            darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+            builder: (context, child) {
+              if (appInfo.quickActions == null) {
+                appInfo.quickActions = QuickActions();
+
+                appInfo.quickActions.setShortcutItems([
+                  const ShortcutItem(
+                      type: 'new_text',
+                      localizedTitle: 'New note',
+                      icon: 'note_shortcut'),
+                  const ShortcutItem(
+                      type: 'new_list',
+                      localizedTitle: 'New list',
+                      icon: 'list_shortcut'),
+                  const ShortcutItem(
+                      type: 'new_image',
+                      localizedTitle: 'New image',
+                      icon: 'image_shortcut'),
+                  const ShortcutItem(
+                      type: 'new_drawing',
+                      localizedTitle: 'New drawing',
+                      icon: 'drawing_shortcut'),
+                ]);
               }
 
-              Themes themes = Themes(accentColor);
+              appInfo.updateIllustrations(Theme.of(context).brightness);
 
-              return MaterialApp(
-                title: "PotatoNotes",
-                theme: themes.light,
-                darkTheme: prefs.useAmoled ? themes.black : themes.dark,
-                builder: (context, child) {
-                  if(appInfo.quickActions == null) {
-                    appInfo.quickActions = QuickActions();
-
-                    appInfo.quickActions.setShortcutItems([
-                      const ShortcutItem(type: 'new_text', localizedTitle: 'New note', icon: 'note_shortcut'),
-                      const ShortcutItem(type: 'new_list', localizedTitle: 'New list', icon: 'list_shortcut'),
-                      const ShortcutItem(type: 'new_image', localizedTitle: 'New image', icon: 'image_shortcut'),
-                      const ShortcutItem(type: 'new_drawing', localizedTitle: 'New drawing', icon: 'drawing_shortcut'),
-                    ]);
-                  }
-                  
-                  appInfo.updateIllustrations(Theme.of(context).brightness);
-
-                  return child;
-                },
-                themeMode: prefs.themeMode,
-                home: MainPage(),
-                debugShowCheckedModeBanner: false,
-              );
+              return child;
             },
+            themeMode: prefs.themeMode,
+            home: MainPage(),
+            debugShowCheckedModeBanner: false,
           );
         },
-      ),
-    );
+      );
+    });
+  }
+
+  void _initProviders(Reader read) {
+    if (appInfo == null) {
+      appInfo = read(ChangeNotifierProvider((_) => AppInfoProvider()));
+    }
+
+    if (prefs == null) {
+      prefs = read(ChangeNotifierProvider((_) => Preferences()));
+    }
   }
 }

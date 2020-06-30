@@ -8,7 +8,7 @@ import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
-import 'package:potato_notes/locator.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 
 class Utils {
@@ -148,7 +148,6 @@ class Utils {
   }
 
   static Future<int> generateId() async {
-    final helper = locator<NoteHelper>();
     Note lastNote;
     List<Note> notes = await helper.listNotes(ReturnMode.ALL);
     notes.sort((a, b) => a.id.compareTo(b.id));

@@ -6,12 +6,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
@@ -51,7 +49,6 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   List<Widget> getButtons(BuildContext context) {
-    NoteHelper helper = locator<NoteHelper>();
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL ||
@@ -204,8 +201,6 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void handlePinNotes(BuildContext context, Note note) {
-    final appInfo = Provider.of<AppInfoProvider>(context, listen: false);
-
     appInfo.notifications.show(
       note.id,
       note.title.isEmpty ? "Pinned notification" : note.title,

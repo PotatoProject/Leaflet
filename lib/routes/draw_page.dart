@@ -11,10 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/draw_object.dart';
-import 'package:potato_notes/locator.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -168,7 +167,7 @@ class _DrawPageState extends State<DrawPage>
 
                     if (!widget.note.images.data.containsKey(drawing)) {
                       widget.note.images.data[drawing] = Uri.file(drawing);
-                      locator<NoteHelper>().saveNote(widget.note);
+                      helper.saveNote(widget.note);
                     }
 
                     imageCache.clear();

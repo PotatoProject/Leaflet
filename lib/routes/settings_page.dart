@@ -5,13 +5,11 @@ import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
-import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -19,13 +17,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  ///Preferences prefs;
   bool removingMasterPass = false;
 
   @override
   Widget build(BuildContext context) {
-    final prefs = Provider.of<Preferences>(context);
-
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
       child: Scaffold(
@@ -146,8 +141,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       if (confirm) {
                         prefs.masterPass = "";
-
-                        NoteHelper helper = locator<NoteHelper>();
+                        
                         List<Note> notes =
                             await helper.listNotes(ReturnMode.ALL);
 
@@ -267,7 +261,6 @@ class _SettingsPageState extends State<SettingsPage> {
         editMode: editMode,
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: (text) async {
-          final prefs = Provider.of<Preferences>(context, listen: false);
           prefs.masterPass = text;
 
           Navigator.pop(context);

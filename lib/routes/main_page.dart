@@ -12,13 +12,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
-import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
@@ -28,7 +26,6 @@ import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
-import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -41,8 +38,6 @@ class _MainPageState extends State<MainPage>
   int numOfImages;
   AnimationController controller;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  AppInfoProvider appInfo;
 
   ReturnMode mode = ReturnMode.NORMAL;
   bool selecting = false;
@@ -64,16 +59,13 @@ class _MainPageState extends State<MainPage>
       value: 1,
     );
 
-    final localAppInfo = Provider.of<AppInfoProvider>(context, listen: false);
-    final localHelper = locator<NoteHelper>();
-
-    localAppInfo.quickActions.initialize((shortcutType) async {
+    appInfo.quickActions.initialize((shortcutType) async {
       switch (shortcutType) {
         case 'new_text':
           newNote();
           break;
         case 'new_image':
-          newImage(ImageSource.gallery, localHelper);
+          newImage(ImageSource.gallery);
           break;
         case 'new_drawing':
           newDrawing();
@@ -89,10 +81,6 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
-    final helper = locator<NoteHelper>();
-    final prefs = Provider.of<Preferences>(context);
-
     double width = MediaQuery.of(context).size.width;
 
     if (width >= 1280) {
@@ -332,8 +320,6 @@ class _MainPageState extends State<MainPage>
   }
 
   List<Widget> get fabOptions {
-    final helper = locator<NoteHelper>();
-
     return [
       ListTile(
         leading: AccentedIcon(OMIcons.edit),
@@ -365,7 +351,7 @@ class _MainPageState extends State<MainPage>
           "Image from gallery",
           overflow: TextOverflow.ellipsis,
         ),
-        onTap: () => newImage(ImageSource.gallery, helper, shouldPop: true),
+        onTap: () => newImage(ImageSource.gallery, shouldPop: true),
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.cameraAlt),
@@ -373,7 +359,7 @@ class _MainPageState extends State<MainPage>
           "Image from camera",
           overflow: TextOverflow.ellipsis,
         ),
-        onTap: () => newImage(ImageSource.camera, helper, shouldPop: true),
+        onTap: () => newImage(ImageSource.camera, shouldPop: true),
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.brush),
@@ -400,8 +386,7 @@ class _MainPageState extends State<MainPage>
     );
   }
 
-  void newImage(ImageSource source, NoteHelper localHelper,
-      {bool shouldPop = false}) async {
+  void newImage(ImageSource source, {bool shouldPop = false}) async {
     Note note = Utils.emptyNote;
     PickedFile image = await ImagePicker().getImage(source: source);
 
@@ -420,7 +405,7 @@ class _MainPageState extends State<MainPage>
         ),
       );
 
-      localHelper.saveNote(note);
+      helper.saveNote(note);
     }
   }
 

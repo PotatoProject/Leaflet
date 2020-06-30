@@ -13,18 +13,15 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/note_colors.dart';
-import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
-import 'package:provider/provider.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
@@ -47,9 +44,7 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   Note note;
-  NoteHelper helper;
-  AppInfoProvider appInfo;
-  Preferences prefs;
+  bool firstTimeRunning = true;
 
   TextEditingController titleController;
   TextEditingController contentController;
@@ -105,7 +100,7 @@ class _NotePageState extends State<NotePage> {
     helper.saveNote(note);
   }
 
-  void generateId() async {
+  Future<void> generateId() async {
     Note lastNote;
     List<Note> notes = await helper.listNotes(ReturnMode.ALL);
     notes.sort((a, b) => a.id.compareTo(b.id));
@@ -125,19 +120,17 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (helper == null) {
-      helper = locator<NoteHelper>();
+    if (firstTimeRunning) {
+      firstTimeRunning = false;
 
-      generateId();
+      if(!widget.openWithList && !widget.openWithDrawing)
+        generateId();
 
       if (widget.openWithList) toggleList();
 
       if (widget.openWithDrawing)
         WidgetsBinding.instance.addPostFrameCallback((_) => addDrawing());
     }
-
-    if (prefs == null) prefs = Provider.of<Preferences>(context);
-    if (appInfo == null) appInfo = Provider.of<AppInfoProvider>(context);
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -629,7 +622,8 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
-  void toggleList() {
+  void toggleList() async {
+    await generateId();
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
@@ -639,6 +633,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addDrawing() async {
+    await generateId();
     await Navigator.of(context).push(DismissiblePageRoute(
       builder: (context) => DrawPage(note: note),
       allowGestures: false,

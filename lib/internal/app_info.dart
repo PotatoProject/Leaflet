@@ -16,12 +16,11 @@ class AppInfoProvider extends ChangeNotifier {
   static final StreamsChannel themeStreamChannel =
       StreamsChannel('potato_notes_themes');
 
-  AppInfoProvider(this.context) {
+  AppInfoProvider() {
     illustrations = Illustrations();
     loadData();
   }
 
-  BuildContext context;
   Illustrations illustrations;
   bool canCheckBiometrics;
   List<BiometricType> availableBiometrics;
