@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -42,7 +43,13 @@ class Preferences extends ChangeNotifier {
 
   set masterPass(String value) {
     _masterPass = value;
-    keystore.setMasterPass(value);
+    
+    if(kIsWeb) {
+      prefs.setMasterPass(value);
+    } else {
+      keystore.setMasterPass(value);
+    }
+
     notifyListeners();
   }
 
@@ -116,7 +123,11 @@ class Preferences extends ChangeNotifier {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
 
-    masterPass = await keystore.getMasterPass();
+    if(kIsWeb) {
+      masterPass = await prefs.getMasterPass();
+    } else {
+      masterPass = await keystore.getMasterPass();
+    }
     themeMode = await prefs.getThemeMode();
     customAccent = await prefs.getCustomAccent();
     useAmoled = await prefs.getUseAmoled();

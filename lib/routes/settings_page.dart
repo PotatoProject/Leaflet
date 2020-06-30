@@ -65,8 +65,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                 ),
                 SwitchListTile(
-                  value: !prefs.useCustomAccent,
-                  onChanged: (value) => prefs.useCustomAccent = !value,
+                  value: kIsWeb ? false : !prefs.useCustomAccent,
+                  onChanged:
+                      kIsWeb ? null : (value) => prefs.useCustomAccent = !value,
                   title: Text("Follow system accent"),
                   secondary: Icon(OMIcons.colorLens),
                   activeColor: Theme.of(context).accentColor,
@@ -78,9 +79,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text("Pick a custom accent"),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                  enabled: prefs.useCustomAccent,
+                  enabled: kIsWeb ? true : prefs.useCustomAccent,
                   trailing: AnimatedOpacity(
-                    opacity: prefs.useCustomAccent ? 1 : 0.5,
+                    opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
                     duration: Duration(milliseconds: 200),
                     child: SizedBox(
                       width: 60,
@@ -141,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       if (confirm) {
                         prefs.masterPass = "";
-                        
+
                         List<Note> notes =
                             await helper.listNotes(ReturnMode.ALL);
 

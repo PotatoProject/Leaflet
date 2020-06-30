@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,22 +60,24 @@ class _MainPageState extends State<MainPage>
       value: 1,
     );
 
-    appInfo.quickActions.initialize((shortcutType) async {
-      switch (shortcutType) {
-        case 'new_text':
-          newNote();
-          break;
-        case 'new_image':
-          newImage(ImageSource.gallery);
-          break;
-        case 'new_drawing':
-          newDrawing();
-          break;
-        case 'new_list':
-          newList();
-          break;
-      }
-    });
+    if(!kIsWeb) {
+      appInfo.quickActions.initialize((shortcutType) async {
+        switch (shortcutType) {
+          case 'new_text':
+            newNote();
+            break;
+          case 'new_image':
+            newImage(ImageSource.gallery);
+            break;
+          case 'new_drawing':
+            newDrawing();
+            break;
+          case 'new_list':
+            newList();
+            break;
+        }
+      });
+    }
 
     super.initState();
   }
@@ -236,6 +239,7 @@ class _MainPageState extends State<MainPage>
                     SizedBox(width: 16),
                     Text(
                       "PotatoNotes",
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.poppins(
                         color: Theme.of(context).iconTheme.color,
                         fontWeight: FontWeight.w500,

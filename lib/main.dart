@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,16 +37,18 @@ class PotatoNotes extends StatelessWidget {
     return Consumer((context, read) {
       _initProviders(read);
 
-      Loggy.generateAppLabel();
-      Loggy.setLogLevel(prefs.logLevel);
+      //Loggy.generateAppLabel();
+      //Loggy.setLogLevel(prefs.logLevel);
 
       return StreamBuilder(
-        stream: accentStreamChannel.receiveBroadcastStream(),
+        stream: !kIsWeb
+            ? accentStreamChannel.receiveBroadcastStream()
+            : Stream.empty(),
         initialData: Colors.blueAccent.value,
         builder: (context, snapshot) {
           Color accentColor;
 
-          if (prefs.useCustomAccent) {
+          if (prefs.useCustomAccent || kIsWeb) {
             accentColor = prefs.customAccent ?? Utils.defaultAccent;
           } else {
             accentColor = Color(snapshot.data);
@@ -56,7 +61,7 @@ class PotatoNotes extends StatelessWidget {
             theme: themes.light,
             darkTheme: prefs.useAmoled ? themes.black : themes.dark,
             builder: (context, child) {
-              if (appInfo.quickActions == null) {
+              if (appInfo.quickActions == null && !kIsWeb) {
                 appInfo.quickActions = QuickActions();
 
                 appInfo.quickActions.setShortcutItems([

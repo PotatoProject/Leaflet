@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,8 +14,6 @@ import 'package:streams_channel/streams_channel.dart';
 class AppInfoProvider extends ChangeNotifier {
   static final StreamsChannel accentStreamChannel =
       StreamsChannel('potato_notes_accents');
-  static final StreamsChannel themeStreamChannel =
-      StreamsChannel('potato_notes_themes');
 
   AppInfoProvider() {
     illustrations = Illustrations();
@@ -76,11 +75,10 @@ class AppInfoProvider extends ChangeNotifier {
     }
   }
 
-  void _initQuickActions() async {}
-
   void loadData() async {
-    _initNotifications();
-    _initQuickActions();
+    if(!kIsWeb) {
+      _initNotifications();
+    }
 
     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -123,8 +124,7 @@ class _NotePageState extends State<NotePage> {
     if (firstTimeRunning) {
       firstTimeRunning = false;
 
-      if(!widget.openWithList && !widget.openWithDrawing)
-        generateId();
+      if (!widget.openWithList && !widget.openWithDrawing) generateId();
 
       if (widget.openWithList) toggleList();
 
@@ -443,11 +443,19 @@ class _NotePageState extends State<NotePage> {
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  padding: EdgeInsets.all(0),
-                  onPressed: showAddElementsSheet,
-                ),
+                (!kIsWeb)
+                    ? IconButton(
+                        icon: Icon(Icons.add),
+                        padding: EdgeInsets.all(0),
+                        onPressed: showAddElementsSheet,
+                      )
+                    : IconButton(
+                        icon: Icon(note.list
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline),
+                        padding: EdgeInsets.all(0),
+                        onPressed: toggleList,
+                      ),
               ],
             ),
           ),
@@ -524,7 +532,7 @@ class _NotePageState extends State<NotePage> {
                   : null,
             ),
             Visibility(
-              visible: appInfo.canCheckBiometrics,
+              visible: appInfo.canCheckBiometrics ?? false,
               child: SwitchListTile(
                 value: note.usesBiometrics,
                 onChanged: note.lockNote

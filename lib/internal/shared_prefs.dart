@@ -11,6 +11,14 @@ class SharedPrefs {
     return SharedPrefs._(preferences);
   }
 
+  Future<String> getMasterPass() async {
+    return prefs.getString("master_pass") ?? "";
+  }
+
+  void setMasterPass(String value) async {
+    await prefs.setString("master_pass", value);
+  }
+
   Future<ThemeMode> getThemeMode() async {
     int value = prefs.getInt("theme_mode");
     switch (value) {

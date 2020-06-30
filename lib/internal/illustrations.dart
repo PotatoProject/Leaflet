@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Illustrations {
   Illustrations();
@@ -8,54 +7,54 @@ class Illustrations {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/no_notes_dark.svg");
+      return Image.asset("assets/no_notes_dark.png");
     else
-      return SvgPicture.asset("assets/no_notes_light.svg");
+      return Image.asset("assets/no_notes_light.png");
   }
 
   Future<Widget> emptyArchiveIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/empty_archive_dark.svg");
+      return Image.asset("assets/empty_archive_dark.png");
     else
-      return SvgPicture.asset("assets/empty_archive_light.svg");
+      return Image.asset("assets/empty_archive_light.png");
   }
 
   Future<Widget> emptyTrashIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/empty_trash_dark.svg");
+      return Image.asset("assets/empty_trash_dark.png");
     else
-      return SvgPicture.asset("assets/empty_trash_light.svg");
+      return Image.asset("assets/empty_trash_light.png");
   }
 
   Future<Widget> noFavouritesIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/no_favourites_dark.svg");
+      return Image.asset("assets/no_favourites_dark.png");
     else
-      return SvgPicture.asset("assets/no_favourites_light.svg");
+      return Image.asset("assets/no_favourites_light.png");
   }
 
   Future<Widget> nothingFoundIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/nothing_found_dark.svg");
+      return Image.asset("assets/nothing_found_dark.png");
     else
-      return SvgPicture.asset("assets/nothing_found_light.svg");
+      return Image.asset("assets/nothing_found_light.png");
   }
 
   Future<Widget> typeToSearchIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return SvgPicture.asset("assets/type_to_search_dark.svg");
+      return Image.asset("assets/type_to_search_dark.png");
     else
-      return SvgPicture.asset("assets/type_to_search_light.svg");
+      return Image.asset("assets/type_to_search_light.png");
   }
 
   static Widget quickIllustration(

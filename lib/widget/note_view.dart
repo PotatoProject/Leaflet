@@ -33,9 +33,9 @@ class NoteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
+    //String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
     SpannableList spannableList =
-        providedContentList ?? SpannableList.fromJson(parsedStyleJson);
+        providedContentList;// ?? SpannableList.fromJson(parsedStyleJson);
     Color borderColor;
 
     if (selected) {

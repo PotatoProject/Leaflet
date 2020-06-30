@@ -26,7 +26,6 @@ dependencies:
   photo_view:
   image_picker:
   back_button_interceptor:
-  flutter_svg:
   shared_preferences:
   local_auth:
   flutter_secure_storage:

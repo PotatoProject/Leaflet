@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
@@ -166,7 +168,9 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ));
     }
 
-    if (selectionList.length == 1 && !selectionList[0].hideContent) {
+    if (selectionList.length == 1 &&
+        !selectionList[0].hideContent &&
+        !kIsWeb) {
       buttons.add(
         PopupMenuButton(
           itemBuilder: (context) => Utils.popupItems(context),
