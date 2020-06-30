@@ -27,6 +27,7 @@ class FakeFab extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
+        customBorder: shape,
         child: Container(
           width: 56,
           height: 56,

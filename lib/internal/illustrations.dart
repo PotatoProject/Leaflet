@@ -7,54 +7,90 @@ class Illustrations {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/no_notes_dark.png");
+      return Image.asset(
+        "assets/no_notes_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/no_notes_light.png");
+      return Image.asset(
+        "assets/no_notes_light.png",
+        scale: 2,
+      );
   }
 
   Future<Widget> emptyArchiveIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/empty_archive_dark.png");
+      return Image.asset(
+        "assets/empty_archive_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/empty_archive_light.png");
+      return Image.asset(
+        "assets/empty_archive_light.png",
+        scale: 2,
+      );
   }
 
   Future<Widget> emptyTrashIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/empty_trash_dark.png");
+      return Image.asset(
+        "assets/empty_trash_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/empty_trash_light.png");
+      return Image.asset(
+        "assets/empty_trash_light.png",
+        scale: 2,
+      );
   }
 
   Future<Widget> noFavouritesIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/no_favourites_dark.png");
+      return Image.asset(
+        "assets/no_favourites_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/no_favourites_light.png");
+      return Image.asset(
+        "assets/no_favourites_light.png",
+        scale: 2,
+      );
   }
 
   Future<Widget> nothingFoundIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/nothing_found_dark.png");
+      return Image.asset(
+        "assets/nothing_found_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/nothing_found_light.png");
+      return Image.asset(
+        "assets/nothing_found_light.png",
+        scale: 2,
+      );
   }
 
   Future<Widget> typeToSearchIllustration(Brightness themeMode) async {
     bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
-      return Image.asset("assets/type_to_search_dark.png");
+      return Image.asset(
+        "assets/type_to_search_dark.png",
+        scale: 2,
+      );
     else
-      return Image.asset("assets/type_to_search_light.png");
+      return Image.asset(
+        "assets/type_to_search_light.png",
+        scale: 2,
+      );
   }
 
   static Widget quickIllustration(

@@ -105,14 +105,23 @@ class _MainPageState extends State<MainPage>
 
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
+    
+    double fixedDrawerSize;
+
+    if(numOfColumns == 4) {
+      fixedDrawerSize = MediaQuery.of(context).size.width / 4;
+    } else if(numOfColumns == 5) {
+      fixedDrawerSize = MediaQuery.of(context).size.width / 5;
+    } else {
+      fixedDrawerSize = 64;
+    }
 
     return Row(
       children: <Widget>[
         Visibility(
           visible: MediaQuery.of(context).orientation == Orientation.landscape,
           child: SizedBox(
-            width:
-                numOfColumns >= 4 ? MediaQuery.of(context).size.width / 5 : 64,
+            width: fixedDrawerSize,
             child: getDrawer(numOfColumns >= 4, true),
           ),
         ),
@@ -356,6 +365,7 @@ class _MainPageState extends State<MainPage>
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => newImage(ImageSource.gallery, shouldPop: true),
+        enabled: !kIsWeb,
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.cameraAlt),
@@ -364,6 +374,7 @@ class _MainPageState extends State<MainPage>
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => newImage(ImageSource.camera, shouldPop: true),
+        enabled: !kIsWeb,
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.brush),
@@ -376,6 +387,7 @@ class _MainPageState extends State<MainPage>
 
           newDrawing();
         },
+        enabled: !kIsWeb,
       ),
     ];
   }
