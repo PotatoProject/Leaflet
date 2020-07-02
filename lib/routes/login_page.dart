@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     emailNode.addListener(() => setState(() => emailSelected = !emailSelected));
     passwordNode.addListener(
-            () => setState(() => passwordSelected = !passwordSelected));
+        () => setState(() => passwordSelected = !passwordSelected));
   }
 
   @override
@@ -100,9 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? Theme.of(context).iconTheme.color
                           : Theme.of(context).disabledColor,
                       icon: Icon(Icons.remove_red_eye),
-                      tooltip: showPassword
-                          ? 'Hide text'
-                          : 'Show text',
+                      tooltip: showPassword ? 'Hide text' : 'Show text',
                       onPressed: () {
                         setState(() => showPassword = !showPassword);
                       },
@@ -120,15 +118,16 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         Expanded(
                           child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  side: BorderSide(
-                                    color: Theme.of(context).accentColor,
-                                    width: 1.5,
-                                  )),
-                              child: Text('Register'),
-                              textColor: Theme.of(context).accentColor, onPressed: () {  },
-                              ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                  width: 1.5,
+                                )),
+                            child: Text('Register'),
+                            textColor: Theme.of(context).accentColor,
+                            onPressed: () {},
+                          ),
                         ),
                         VerticalDivider(
                           color: Colors.transparent,
@@ -140,44 +139,61 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             color: Theme.of(context).accentColor,
                             textColor:
-                            Theme.of(context).scaffoldBackgroundColor,
+                                Theme.of(context).scaffoldBackgroundColor,
                             child: Text('Login'),
                             onPressed: () async {
                               if (email.isNotEmpty && password.isNotEmpty) {
-                                if(password.length < 5){
+                                if (password.length < 5) {
                                   await scaffoldKey.currentState
                                       .showSnackBar(SnackBar(
-                                    content: Text(
-                                      "Password should be longer than or equal to 5 characters",
-                                      style: Theme.of(context).textTheme.bodyText2,),
-                                    backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
-                                  )).closed;
+                                        content: Text(
+                                          "Password should be longer than or equal to 5 characters",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        ),
+                                        backgroundColor: Theme.of(context)
+                                            .dialogTheme
+                                            .backgroundColor,
+                                      ))
+                                      .closed;
                                   return;
-                                } else if(email.length < 3){
+                                } else if (email.length < 3) {
                                   await scaffoldKey.currentState
                                       .showSnackBar(SnackBar(
-                                    content: Text(
-                                      "Email or Username should be longer than or equal to 3 characters",
-                                      style: Theme.of(context).textTheme.bodyText2,),
-                                    backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
-                                  )).closed;
+                                        content: Text(
+                                          "Email or Username should be longer than or equal to 3 characters",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        ),
+                                        backgroundColor: Theme.of(context)
+                                            .dialogTheme
+                                            .backgroundColor,
+                                      ))
+                                      .closed;
                                   return;
                                 }
                                 setState(() => showLoadingOverlay = true);
-                                var response = await AccountController.login(email, password);
-                                if(response == 'Logged in'){
-                                  setState(() => showLoadingOverlay = false);
-                                  Navigator.pop(context);
-                                } else {
+                                var response = await AccountController.login(
+                                    email, password);
+                                response.fold((error) {
                                   setState(() => showLoadingOverlay = false);
                                   scaffoldKey.currentState
                                       .showSnackBar(SnackBar(
                                     content: Text(
-                                        response,
-                                    style: Theme.of(context).textTheme.bodyText2,),
-                                    backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
+                                      error.message,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                    backgroundColor: Theme.of(context)
+                                        .dialogTheme
+                                        .backgroundColor,
                                   ));
-                                }
+                                }, (success) {
+                                  setState(() => showLoadingOverlay = false);
+                                  Navigator.pop(context);
+                                });
                               }
                             },
                           ),
@@ -211,20 +227,19 @@ class _LoginPageState extends State<LoginPage> {
               visible: showLoadingOverlay,
               child: SizedBox.expand(
                   child: AnimatedOpacity(
-                    opacity: showLoadingOverlay ? 1 : 0,
-                    duration: Duration(milliseconds: 300),
-                    child: Container(
-                      color: Colors.black45,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  )),
+                opacity: showLoadingOverlay ? 1 : 0,
+                duration: Duration(milliseconds: 300),
+                child: Container(
+                  color: Colors.black45,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              )),
             ),
           ],
         ),
       ),
     );
   }
-
 }

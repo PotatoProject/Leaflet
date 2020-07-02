@@ -1,11 +1,12 @@
+import 'package:dartz/dartz.dart';
 import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 
 class SyncHelper {
-  Future<bool> accountRegister(
+  Future<Either<Failure, void>> accountRegister(
           String username, String email, String password) async =>
       await AccountController.register(username, email, password);
 
-  Future<String> accountLogin(String emailOrUser, String password) async =>
+  Future<Either<Failure, void>> accountLogin(String emailOrUser, String password) async =>
       await AccountController.login(emailOrUser, password);
 }
 
