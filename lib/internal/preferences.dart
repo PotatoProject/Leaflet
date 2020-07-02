@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/controller/account_controller.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 
 class Preferences extends ChangeNotifier {
@@ -47,6 +45,8 @@ class Preferences extends ChangeNotifier {
   int get logLevel => _logLevel;
   List<TagModel> get tags => _tags;
   int get lastUpdated => _lastUpdated;
+  String get refreshToken => _refreshToken;
+  String get accessToken => _accessToken;
 
   set masterPass(String value) {
     _masterPass = value;
@@ -174,15 +174,7 @@ class Preferences extends ChangeNotifier {
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(_accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
-      Response response = await post(
-        "$apiUrl/api/users/refresh",
-        body: "{\"token\": \"$_refreshToken\"}",
-      );
-      if (response.statusCode == 200) {
-        _accessToken = json.decode(response.body)["token"];
-      } else {
-        print(response.body);
-      }
+      AccountController.refreshToken();
     }
 
     return _accessToken;

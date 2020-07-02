@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/interface/account_interface.dart';
 
 class AccountController implements AccountInterface {
+
   AccountController();
 
-  Future<bool> register(String username, String email, String password) async {
+  static Future<bool> register(String username, String email, String password) async {
     Map<String, String> body = {
       "username": username,
       "email": email,
@@ -15,17 +18,18 @@ class AccountController implements AccountInterface {
     };
 
     Response newAccount = await post(
-      "${prefs.apiUrl}/api/users/new",
+      "${prefs.apiUrl.replaceAll('4000', '3000')}/user/register",
       body: json.encode(body),
     );
 
-    return json.decode(newAccount.body)["status"];
+    return newAccount.statusCode == 200;
   }
 
-  Future<bool> login(String emailOrUser, String password) async {
+  static Future<String> login(String emailOrUser, String password) async {
     Map<String, String> body;
 
-    if (emailOrUser.contains("@")) {
+    if (emailOrUser.contains(
+        RegExp(".*\..*@.*\..*", dotAll: true))) {
       body = {
         "email": emailOrUser,
         "password": password,
@@ -36,21 +40,55 @@ class AccountController implements AccountInterface {
         "password": password,
       };
     }
-
-    Response login = await post(
-      "${prefs.apiUrl}/api/users/login",
-      body: json.encode(body),
-    );
-    bool status = json.decode(login.body)["status"];
-    Map<String, dynamic> loginAccountInfo = json.decode(login.body)["account"];
-
+    print(json.encode(body));
+    Response login;
+    try {
+      login = await post(
+          "${prefs.apiUrl.replaceAll('4000', '3000')}/user/login",
+          body: json.encode(body),
+          headers: {
+            "Content-Type": "application/json"
+          }
+      );
+    } catch (e){
+      if(e.runtimeType == SocketException){
+        return "Could not connect to server";
+      }
+    }
+    Loggy.d(message: login.body, secure: true);
     if (login.statusCode == 200) {
-      prefs.accessToken = loginAccountInfo["access_token"];
-      prefs.refreshToken = loginAccountInfo["refresh_token"];
-      prefs.username = loginAccountInfo["username"];
-      prefs.email = loginAccountInfo["email"];
+      Map<String, dynamic> response = json.decode(login.body);
+      prefs.accessToken = response["token"];
+      prefs.refreshToken = response["refresh_token"];
+      return 'Logged in';
+    } else {
+      return login.body;
+    }
+  }
+
+  static Future<String> refreshToken() async{
+    Response refresh;
+    try {
+      refresh = await get(
+        "${prefs.apiUrl.replaceAll('4000', '3000')}/user/refresh",
+        headers: {
+          "Authorization": prefs.refreshToken
+        }
+      );
+      if (refresh.statusCode == 200) {
+        prefs.accessToken = json.decode(refresh.body);
+        Loggy.d(message: refresh.body, secure: true);
+        return 'Refreshed';
+      } else {
+        return "Could not refresh token statuscode: " + refresh.statusCode.toString();
+      }
+    } catch (e){
+      if(e.runtimeType == SocketException){
+        return "Could not connect to server";
+      } else {
+        return e;
+      }
     }
 
-    return status;
   }
 }

@@ -105,7 +105,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> generateId() async {
-    if (note.id == null) note = note.copyWith(id: locator<Uuid>().v4());
+    if (note.id == null) note = note.copyWith(id: await Utils.generateId());
   }
 
   @override

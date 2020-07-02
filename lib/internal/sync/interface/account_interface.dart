@@ -1,5 +1,9 @@
 abstract class AccountInterface {
-  Future<bool> register(String username, String email, String password);
+  static Future<bool> register(String username, String email, String password) async{
+    return false;
+  }
 
-  Future<bool> login(String emailOrUser, String password);
+  static Future<String> login(String emailOrUser, String password) async{
+    return "Uninplemented";
+  }
 }

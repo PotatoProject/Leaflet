@@ -17,6 +17,7 @@ import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
@@ -36,6 +37,7 @@ import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
+import 'login_page.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
 
 class MainPage extends StatefulWidget {
@@ -196,13 +198,10 @@ class _MainPageState extends State<MainPage>
                     getInfoOnCurrentMode.value,
                   );
                 }
-
-                return FadeScaleTransition(
-                  animation: fade,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: child,
-                  ),
+                return RefreshIndicator(
+                  child: child,
+                  onRefresh: () => sync(),
+                  displacement: MediaQuery.of(context).padding.top,
                 );
               },
             ),
@@ -687,7 +686,8 @@ class _MainPageState extends State<MainPage>
           ),
         ),
       ];
+
   Future<void> sync() async {
-    await locator<SyncRoutine>().syncNotes();
+    await SyncRoutine().syncNotes();
   }
 }

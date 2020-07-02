@@ -1,28 +1,22 @@
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
+import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller/note_controller.dart';
+import 'package:potato_notes/internal/sync/sync_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/locator.dart';
 
 class SyncRoutine {
   List<Note> addedNotes = List();
   List<Note> deletedNotes = List();
   Map<Note, Map<String, dynamic>> updatedNotes = Map();
-  Preferences preferences;
-  NoteHelper noteHelper;
-  NoteController noteController;
-
-  SyncRoutine() {
-    this.preferences = locator<Preferences>();
-    this.noteHelper = locator<NoteHelper>();
-    this.noteController = locator<NoteController>();
-  }
+  SyncRoutine();
 
   Future<bool> checkOnlineStatus() async {
     try {
-      Response pingResponse = await get(preferences.apiUrl + "/ping");
+      Response pingResponse = await get(prefs.apiUrl + "/ping");
       if (pingResponse.statusCode != 200) return false;
       if (pingResponse.body != "Pong!") return false;
       return true;
@@ -31,67 +25,87 @@ class SyncRoutine {
     }
   }
 
-  Future<void> syncNotes() async {
-    bool status = await checkOnlineStatus();
-    if (status != true) return;
-    await updateLists();
-    await Future(sendUpdates);
-    int lastUpdated = preferences.lastUpdated;
-    List<Note> notes = await noteController.list(lastUpdated);
-    if(notes != null){
-      for(Note note in notes){
-        await noteHelper.saveNote(note);
-      }
-      preferences.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+  Future<Either<Failure, void>> syncNotes() async {
+    if(prefs.accessToken == null){
+      return Left(Failure("Not logged in"));
     }
+    bool status = await checkOnlineStatus();
+    if (status != true) return Left(Failure("Could not connect to server"));
+    await updateLists();
+    var result = await Future(sendUpdates);
+    if (result.isLeft()) {
+      return result;
+    }
+    int lastUpdated = prefs.lastUpdated;
+    var listResult = await NoteController.list(lastUpdated);
+    listResult.fold((error) {
+      Loggy.e(message: error);
+      return Left(Failure("Failed to list notes: " + error.message));
+    }, (notes) async {
+      Loggy.i(message: "Got notes: " + notes.map((note) => note.id).join(", "));
+      for (Note note in notes) {
+        await helper.saveNote(note);
+      }
+      prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+      return Right(null);
+    });
+    return Left(Failure("SHOULD NOT HAPPEN"));
   }
 
-  void sendUpdates() {
-    addedNotes.forEach((note) {
-      noteController.add(note).then((result) {
-        print("Added note: " + note.id);
-        if (result == true) {
-          saveSynced(note);
-        }
+  Either<Failure, void> sendUpdates() {
+    addedNotes.forEach((note) async {
+      var result = await NoteController.add(note);
+      result.fold((error) {
+        Loggy.e(message: error);
+        return Left(Failure("Failed to add notes: " + error.message));
+      }, (result) {
+        saveSynced(note);
+        Loggy.i(message: "Added note: " + note.id);
+        Loggy.i(message: "Response from server: " + result);
       });
     });
-    updatedNotes.forEach((note, delta) {
-      noteController.update(note.id, delta).then((result) {
-        print("Updated note:" + note.id);
-        if (result == true) {
-          saveSynced(note);
-        }
+    updatedNotes.forEach((note, delta) async {
+      var result = await NoteController.update(note.id, delta);
+      result.fold((error) {
+        Loggy.e(message: error);
+        return Left(Failure("Failed to update notes: " + error.message));
+      }, (result) {
+        saveSynced(note);
+        Loggy.i(message: "Updated note:" + note.id);
+        Loggy.i(message: "Response from server: " + result);
       });
     });
-    deletedNotes.forEach((note) {
+    deletedNotes.forEach((note) async {
       var localNoteId = note.id.replaceFirst("-synced", "");
-      noteController.delete(localNoteId).then((result) {
-        print("Deleted note: " + localNoteId);
-        if (result == true) {
-          deleteSynced(note);
-        }
+      var result = await NoteController.delete(localNoteId);
+      result.fold((error) {
+        Loggy.e(message: error);
+        return Left(Failure("Failed to delete notes: " + error.message));
+      }, (result) {
+        deleteSynced(note);
+        Loggy.i(message: "Deleted note: " + localNoteId);
+        Loggy.i(message: "Response from server: " + result);
       });
     });
     addedNotes.clear();
     updatedNotes.clear();
     deletedNotes.clear();
+    return Right(null);
   }
 
-  void sendRequests() {}
-
   void saveSynced(Note note) {
-    noteHelper.saveNote(note.copyWith(synced: true));
-    var synced_note = note.copyWith(id: note.id + "-synced");
-    noteHelper.saveNote(synced_note);
+    helper.saveNote(note.copyWith(synced: true));
+    var syncedNote = note.copyWith(id: note.id + "-synced");
+    helper.saveNote(syncedNote);
   }
 
   void deleteSynced(Note note) async {
-    noteHelper.deleteNote(note);
+    helper.deleteNote(note);
   }
 
   Future<void> updateLists() async {
-    List<Note> localNotes = await noteHelper.listNotes(ReturnMode.LOCAL);
-    List<Note> syncedNotes = await noteHelper.listNotes(ReturnMode.SYNCED);
+    List<Note> localNotes = await helper.listNotes(ReturnMode.LOCAL);
+    List<Note> syncedNotes = await helper.listNotes(ReturnMode.SYNCED);
     localNotes.forEach((localNote) {
       var syncedIndex = syncedNotes.indexWhere(
           (syncedNote) => syncedNote.id == localNote.id + "-synced");

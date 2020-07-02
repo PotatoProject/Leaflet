@@ -88,8 +88,8 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future saveNote(Note note) {
-      into(notes).insert(note, mode: InsertMode.replace);
-      print("The note id is: " + note.id);
+    into(notes).insert(note, mode: InsertMode.replace);
+    print("The note id is: " + note.id);
   }
 
   Future deleteNote(Note note) {

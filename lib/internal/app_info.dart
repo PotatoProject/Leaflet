@@ -59,7 +59,7 @@ class AppInfo {
 
     switch (nPayload.action) {
       case NotificationAction.PIN:
-        notifications.cancel(nPayload.id);
+        notifications.cancel(nPayload.notificationId);
         break;
       case NotificationAction.REMINDER:
         break;

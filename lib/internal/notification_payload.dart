@@ -4,12 +4,15 @@ part 'notification_payload.g.dart';
 
 @JsonSerializable()
 class NotificationPayload {
-  int id;
+
+  String noteId;
   NotificationAction action;
+  int notificationId;
 
   NotificationPayload({
-    this.id,
+    this.noteId,
     this.action,
+    this.notificationId
   });
 
   factory NotificationPayload.fromJson(Map<String, dynamic> json) =>

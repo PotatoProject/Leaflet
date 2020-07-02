@@ -23,6 +23,7 @@ import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:recase/recase.dart';
+import 'package:uuid/uuid.dart';
 
 const int kMaxImageCount = 4;
 const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
@@ -158,16 +159,8 @@ class Utils {
     );
   }
 
-  static Future<int> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
-
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
-
-    return (lastNote?.id ?? 0) + 1;
+  static Future<String> generateId() async {
+    return Uuid().v4();
   }
 
   static Note get emptyNote => Note(

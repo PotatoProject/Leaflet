@@ -97,7 +97,7 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    return prefs.getString("api_url") ?? "https://sync.potatoproject.co";
+    return prefs.getString("api_url") ?? "http://192.168.178.89:4000";
   }
 
   void setApiUrl(String value) async {

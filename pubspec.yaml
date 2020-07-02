@@ -53,7 +53,7 @@ dependencies:
   loggy:
     git: https://github.com/HrX03/loggy
   recase:
-
+  dartz:
 
 dev_dependencies:
   flutter_test:
