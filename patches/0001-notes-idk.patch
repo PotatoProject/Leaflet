@@ -1,0 +1,2292 @@
+From d6e39988c6e6a9dffac86b086278af1487ffe5c0 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Fri, 3 Jul 2020 23:01:11 +0200
+Subject: [PATCH 1/1] notes: idk
+
+---
+ go/.gitignore                                 |   3 +
+ go/assets/icon.png                            | Bin 0 -> 25332 bytes
+ go/cmd/import-image_picker-plugin.go          |  13 +
+ go/cmd/import-path_provider-plugin.go         |  16 +
+ go/cmd/import-shared_preferences-plugin.go    |  16 +
+ go/cmd/main.go                                |  49 +++
+ go/cmd/options.go                             |   9 +
+ go/go.mod                                     |  11 +
+ go/go.sum                                     |  74 ++++
+ go/hover.yaml                                 |   9 +
+ go/packaging/linux-appimage/AppRun.tmpl       |   3 +
+ .../{{.packageName}}.desktop.tmpl             |   8 +
+ go/packaging/linux-deb/DEBIAN/control.tmpl    |   6 +
+ .../usr/bin/{{.executableName}}.tmpl          |   2 +
+ .../{{.executableName}}.desktop.tmpl          |   8 +
+ go/packaging/linux-pkg/PKGBUILD.tmpl          |  11 +
+ .../src/usr/bin/{{.executableName}}.tmpl      |   2 +
+ .../{{.executableName}}.desktop.tmpl          |   8 +
+ .../local/{{.executableName}}.desktop.tmpl    |   8 +
+ .../linux-snap/snap/snapcraft.yaml.tmpl       |  27 ++
+ go/packaging/windows-msi/upgrade-code.txt     |   3 +
+ .../windows-msi/{{.packageName}}.wxs.tmpl     |  62 +++
+ lib/data/database/mobile.dart                 |  13 +-
+ lib/internal/app_info.dart                    |  16 +-
+ lib/internal/preferences.dart                 |   5 +-
+ lib/internal/themes.dart                      |  18 +
+ lib/internal/utils.dart                       |  27 +-
+ lib/main.dart                                 |   7 +-
+ lib/routes/main_page.dart                     | 109 ++---
+ lib/routes/note_page.dart                     | 402 ++++++++++--------
+ lib/routes/note_page_image_gallery.dart       |   2 +-
+ lib/routes/search_page.dart                   |  20 +-
+ lib/routes/settings_page.dart                 |  20 +-
+ lib/widget/dismissible_route.dart             |  12 +-
+ lib/widget/drawing_board.dart                 |   2 +-
+ lib/widget/note_view.dart                     |  12 +-
+ lib/widget/note_view_images.dart              |  38 +-
+ lib/widget/selection_bar.dart                 |   3 +-
+ pubspec.lock                                  |   2 +-
+ pubspec.yaml                                  |   2 +-
+ 40 files changed, 759 insertions(+), 299 deletions(-)
+ create mode 100644 go/.gitignore
+ create mode 100644 go/assets/icon.png
+ create mode 100644 go/cmd/import-image_picker-plugin.go
+ create mode 100644 go/cmd/import-path_provider-plugin.go
+ create mode 100644 go/cmd/import-shared_preferences-plugin.go
+ create mode 100644 go/cmd/main.go
+ create mode 100644 go/cmd/options.go
+ create mode 100644 go/go.mod
+ create mode 100644 go/go.sum
+ create mode 100644 go/hover.yaml
+ create mode 100644 go/packaging/linux-appimage/AppRun.tmpl
+ create mode 100644 go/packaging/linux-appimage/{{.packageName}}.desktop.tmpl
+ create mode 100644 go/packaging/linux-deb/DEBIAN/control.tmpl
+ create mode 100644 go/packaging/linux-deb/usr/bin/{{.executableName}}.tmpl
+ create mode 100644 go/packaging/linux-deb/usr/share/applications/{{.executableName}}.desktop.tmpl
+ create mode 100644 go/packaging/linux-pkg/PKGBUILD.tmpl
+ create mode 100644 go/packaging/linux-pkg/src/usr/bin/{{.executableName}}.tmpl
+ create mode 100644 go/packaging/linux-pkg/src/usr/share/applications/{{.executableName}}.desktop.tmpl
+ create mode 100644 go/packaging/linux-snap/snap/local/{{.executableName}}.desktop.tmpl
+ create mode 100644 go/packaging/linux-snap/snap/snapcraft.yaml.tmpl
+ create mode 100755 go/packaging/windows-msi/upgrade-code.txt
+ create mode 100644 go/packaging/windows-msi/{{.packageName}}.wxs.tmpl
+
+diff --git a/go/.gitignore b/go/.gitignore
+new file mode 100644
+index 0000000..fd0e2eb
+--- /dev/null
++++ b/go/.gitignore
+@@ -0,0 +1,3 @@
++build
++.last_goflutter_check
++.last_go-flutter_check
+diff --git a/go/assets/icon.png b/go/assets/icon.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6083048cb22cd0ba06b625085a0f38c0c328fb94
+GIT binary patch
+literal 25332
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/go/cmd/import-image_picker-plugin.go b/go/cmd/import-image_picker-plugin.go
+new file mode 100644
+index 0000000..f15bd74
+--- /dev/null
++++ b/go/cmd/import-image_picker-plugin.go
+@@ -0,0 +1,13 @@
++package main
++
++// DO NOT EDIT, this file is generated by hover at compile-time for the image_picker plugin.
++
++import (
++	flutter "github.com/go-flutter-desktop/go-flutter"
++	image_picker "github.com/go-flutter-desktop/plugins/image_picker"
++)
++
++func init() {
++	// Only the init function can be tweaked by plugin maker.
++	options = append(options, flutter.AddPlugin(&image_picker.ImagePickerPlugin{}))
++}
+diff --git a/go/cmd/import-path_provider-plugin.go b/go/cmd/import-path_provider-plugin.go
+new file mode 100644
+index 0000000..fac0d40
+--- /dev/null
++++ b/go/cmd/import-path_provider-plugin.go
+@@ -0,0 +1,16 @@
++package main
++
++// DO NOT EDIT, this file is generated by hover at compile-time for the path_provider plugin.
++
++import (
++	flutter "github.com/go-flutter-desktop/go-flutter"
++	path_provider "github.com/go-flutter-desktop/plugins/path_provider"
++)
++
++func init() {
++	// Only the init function can be tweaked by plugin maker.
++	options = append(options, flutter.AddPlugin(&path_provider.PathProviderPlugin{
++		VendorName:      flutter.ProjectOrganizationName,
++		ApplicationName: flutter.ProjectName,
++	}))
++}
+diff --git a/go/cmd/import-shared_preferences-plugin.go b/go/cmd/import-shared_preferences-plugin.go
+new file mode 100644
+index 0000000..43eaddd
+--- /dev/null
++++ b/go/cmd/import-shared_preferences-plugin.go
+@@ -0,0 +1,16 @@
++package main
++
++// DO NOT EDIT, this file is generated by hover at compile-time for the shared_preferences plugin.
++
++import (
++	flutter "github.com/go-flutter-desktop/go-flutter"
++	shared_preferences "github.com/go-flutter-desktop/plugins/shared_preferences"
++)
++
++func init() {
++	// Only the init function can be tweaked by plugin maker.
++	options = append(options, flutter.AddPlugin(&shared_preferences.SharedPreferencesPlugin{
++		VendorName:      flutter.ProjectOrganizationName,
++		ApplicationName: flutter.ProjectName,
++	}))
++}
+diff --git a/go/cmd/main.go b/go/cmd/main.go
+new file mode 100644
+index 0000000..10e3b09
+--- /dev/null
++++ b/go/cmd/main.go
+@@ -0,0 +1,49 @@
++package main
++
++import (
++	"fmt"
++	"image"
++	_ "image/png"
++	"os"
++	"path/filepath"
++	"strings"
++
++	"github.com/go-flutter-desktop/go-flutter"
++	"github.com/pkg/errors"
++)
++
++// vmArguments may be set by hover at compile-time
++var vmArguments string
++
++func main() {
++	// DO NOT EDIT, add options in options.go
++	mainOptions := []flutter.Option{
++		flutter.OptionVMArguments(strings.Split(vmArguments, ";")),
++		flutter.WindowIcon(iconProvider),
++	}
++	err := flutter.Run(append(options, mainOptions...)...)
++	if err != nil {
++		fmt.Println(err)
++		os.Exit(1)
++	}
++}
++
++func iconProvider() ([]image.Image, error) {
++	execPath, err := os.Executable()
++	if err != nil {
++		return nil, errors.Wrap(err, "failed to resolve executable path")
++	}
++	execPath, err = filepath.EvalSymlinks(execPath)
++	if err != nil {
++		return nil, errors.Wrap(err, "failed to eval symlinks for executable path")
++	}
++	imgFile, err := os.Open(filepath.Join(filepath.Dir(execPath), "assets", "icon.png"))
++	if err != nil {
++		return nil, errors.Wrap(err, "failed to open assets/icon.png")
++	}
++	img, _, err := image.Decode(imgFile)
++	if err != nil {
++		return nil, errors.Wrap(err, "failed to decode image")
++	}
++	return []image.Image{img}, nil
++}
+diff --git a/go/cmd/options.go b/go/cmd/options.go
+new file mode 100644
+index 0000000..87a0bf9
+--- /dev/null
++++ b/go/cmd/options.go
+@@ -0,0 +1,9 @@
++package main
++
++import (
++	"github.com/go-flutter-desktop/go-flutter"
++)
++
++var options = []flutter.Option{
++	flutter.WindowInitialDimensions(1280, 800),
++}
+diff --git a/go/go.mod b/go/go.mod
+new file mode 100644
+index 0000000..2b30826
+--- /dev/null
++++ b/go/go.mod
+@@ -0,0 +1,11 @@
++module potato_notes/go
++
++go 1.14
++
++require (
++	github.com/go-flutter-desktop/go-flutter v0.41.1
++	github.com/go-flutter-desktop/plugins/image_picker v0.1.5
++	github.com/go-flutter-desktop/plugins/path_provider v0.4.0
++	github.com/go-flutter-desktop/plugins/shared_preferences v0.4.3
++	github.com/pkg/errors v0.9.1
++)
+diff --git a/go/go.sum b/go/go.sum
+new file mode 100644
+index 0000000..22a5ec0
+--- /dev/null
++++ b/go/go.sum
+@@ -0,0 +1,74 @@
++github.com/Xuanwo/go-locale v0.2.0 h1:1N8SGG2VNpLl6VVa8ueZm3Nm+dxvk8ffY9aviKHl4IE=
++github.com/Xuanwo/go-locale v0.2.0/go.mod h1:6qbT9M726OJgyiGZro2YwPmx63wQzlH+VvtjJWQoftw=
++github.com/adrg/xdg v0.2.1 h1:VSVdnH7cQ7V+B33qSJHTCRlNgra1607Q8PzEmnvb2Ic=
++github.com/adrg/xdg v0.2.1/go.mod h1:ZuOshBmzV4Ta+s23hdfFZnBsdzmoR3US0d7ErpqSbTQ=
++github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
++github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
++github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
++github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
++github.com/go-flutter-desktop/go-flutter v0.30.0/go.mod h1:NCryd/AqiRbYSd8pMzQldYkgH1tZIFGt2ToUghZcWGA=
++github.com/go-flutter-desktop/go-flutter v0.37.0/go.mod h1:8tjt3yZ3lTNLqgzWeH90f1uhCR9BL68LFoiy/n0aw/w=
++github.com/go-flutter-desktop/go-flutter v0.41.1 h1:wo75ueMj+QWP20c9KhycmZrxY6xdV//Whz309TX9hEQ=
++github.com/go-flutter-desktop/go-flutter v0.41.1/go.mod h1:ndc520E8nO/tbWkKL4IT/Zvjxcl5t/2sz6zpGEwKv30=
++github.com/go-flutter-desktop/plugins v0.0.0-20200616110009-f14e935f2815 h1:L+uNZ9vhmtkFqLRF0ldykThg1rn9e8REmqG2S/9pmuw=
++github.com/go-flutter-desktop/plugins/image_picker v0.1.5 h1:VQza8aA+Els+trCLqNJa7phNJDBetLWVQMyzAIqYjts=
++github.com/go-flutter-desktop/plugins/image_picker v0.1.5/go.mod h1:lOmQKrMiJNsA55VM4ww3u78ufo//ptu2om+B3Ime+6o=
++github.com/go-flutter-desktop/plugins/path_provider v0.4.0 h1:LhYqOJjwuRjf9MzmbvkejCtLqrEEeBzrsCWkVONG6uw=
++github.com/go-flutter-desktop/plugins/path_provider v0.4.0/go.mod h1:e0aUP0dqcGaw5EZpCYzlK7M/T6X0ueWYJXImrE25vb4=
++github.com/go-flutter-desktop/plugins/shared_preferences v0.4.3 h1:gFO2I08ll8frTDFrMQfscD4UqIHvFyxGk8xg2O+hPzI=
++github.com/go-flutter-desktop/plugins/shared_preferences v0.4.3/go.mod h1:NbG/ABFPBR5SNtZn3qCv4S6aQASMCbtTITraXRChpvI=
++github.com/go-gl/gl v0.0.0-20190320180904-bf2b1f2f34d7 h1:SCYMcCJ89LjRGwEa0tRluNRiMjZHalQZrVrvTbPh+qw=
++github.com/go-gl/gl v0.0.0-20190320180904-bf2b1f2f34d7/go.mod h1:482civXOzJJCPzJ4ZOX/pwvXBWSnzD4OKMdH4ClKGbk=
++github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1 h1:QbL/5oDUmRBzO9/Z7Seo6zf912W/a6Sr4Eu0G/3Jho0=
++github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
++github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
++github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200420212212-258d9bec320e h1:8ywu4ELC/6owgOZlZx75CyYS5AYwUT2L+hzPModKvag=
++github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200420212212-258d9bec320e/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
++github.com/go-ole/go-ole v1.2.4 h1:nNBDSCOigTSiarFpYE9J/KtEA1IOW4CNeqT9TQDqCxI=
++github.com/go-ole/go-ole v1.2.4/go.mod h1:XCwSNxSkXRo4vlyPy93sltvi/qJq0jqQhjqQNIwKuxM=
++github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
++github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db h1:woRePGFeVFfLKN/pOkfl+p/TAqKOfFu+7KPlMVpok/w=
++github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
++github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=
++github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
++github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
++github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
++github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
++github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
++github.com/onsi/ginkgo v1.7.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
++github.com/onsi/gomega v1.4.3/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
++github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
++github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
++github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
++github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
++github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
++github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d h1:zE9ykElWQ6/NYmHa3jpm/yHnI4xSofP+UP6SpjHcSeM=
++github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d/go.mod h1:OnSkiWE9lh6wB0YB77sQom3nweQdgAjqCqsofrRNTgc=
++github.com/smartystreets/goconvey v1.6.4 h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIKYqbNC9s=
++github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
++github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
++github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
++github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
++github.com/stretchr/testify v1.6.0 h1:jlIyCplCJFULU/01vCkhKuTyc3OorI3bJFuw6obfgho=
++github.com/stretchr/testify v1.6.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
++github.com/syndtr/goleveldb v1.0.0 h1:fBdIW9lB4Iz0n9khmH8w27SJ3QEJ7+IgjPEwGSZiFdE=
++github.com/syndtr/goleveldb v1.0.0/go.mod h1:ZVVdQEZoIme9iO1Ch2Jdy24qqXrMMOU6lpPAyBWyWuQ=
++golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
++golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
++golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
++golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
++golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
++golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
++golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
++golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
++golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
++golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
++golang.org/x/tools v0.0.0-20190328211700-ab21143f2384/go.mod h1:LCzVGOaR6xXOjkQ3onu1FJEFr0SW1gC7cKk1uF8kGRs=
++gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
++gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
++gopkg.in/fsnotify.v1 v1.4.7/go.mod h1:Tz8NjZHkW78fSQdbUxIjBTcgA1z1m8ZHf0WmKUhAMys=
++gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7/go.mod h1:dt/ZhP58zS4L8KSrWDmTeBkI65Dw0HsyUHuEVlX15mw=
++gopkg.in/yaml.v2 v2.2.1/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
++gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
++gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=
++gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+diff --git a/go/hover.yaml b/go/hover.yaml
+new file mode 100644
+index 0000000..a7444ac
+--- /dev/null
++++ b/go/hover.yaml
+@@ -0,0 +1,9 @@
++application-name: "Notes" # Uncomment to modify this value.
++executable-name: "potato_notes" # Uncomment to modify this value. Only lowercase a-z, numbers, underscores and no spaces
++package-name: "potatonotes" # Uncomment to modify this value. Only lowercase a-z, numbers and no underscores or spaces
++license: "MIT" # MANDATORY: Fill in your SPDX license name: https://spdx.org/licenses
++target: lib/main.dart
++# opengl: "none" # Uncomment this line if you have trouble with your OpenGL driver (https://github.com/go-flutter-desktop/go-flutter/issues/272)
++docker: false
++engine-version: "" # change to a engine version commit
++author: "HrX03"
+\ No newline at end of file
+diff --git a/go/packaging/linux-appimage/AppRun.tmpl b/go/packaging/linux-appimage/AppRun.tmpl
+new file mode 100644
+index 0000000..9272c3d
+--- /dev/null
++++ b/go/packaging/linux-appimage/AppRun.tmpl
+@@ -0,0 +1,3 @@
++#!/bin/sh
++cd "$(dirname "$0")"
++exec ./build/{{.executableName}}
+diff --git a/go/packaging/linux-appimage/{{.packageName}}.desktop.tmpl b/go/packaging/linux-appimage/{{.packageName}}.desktop.tmpl
+new file mode 100644
+index 0000000..e9252e3
+--- /dev/null
++++ b/go/packaging/linux-appimage/{{.packageName}}.desktop.tmpl
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Version=1.0
++Type=Application
++Terminal=false
++Categories=
++Name={{.applicationName}}
++Icon={{.iconPath}}
++Exec={{.executablePath}}
+diff --git a/go/packaging/linux-deb/DEBIAN/control.tmpl b/go/packaging/linux-deb/DEBIAN/control.tmpl
+new file mode 100644
+index 0000000..f6daa84
+--- /dev/null
++++ b/go/packaging/linux-deb/DEBIAN/control.tmpl
+@@ -0,0 +1,6 @@
++Package: {{.packageName}}
++Architecture: amd64
++Maintainer: @{{.author}}
++Priority: optional
++Version: {{.version}}
++Description: {{.description}}
+diff --git a/go/packaging/linux-deb/usr/bin/{{.executableName}}.tmpl b/go/packaging/linux-deb/usr/bin/{{.executableName}}.tmpl
+new file mode 100644
+index 0000000..0ba8e81
+--- /dev/null
++++ b/go/packaging/linux-deb/usr/bin/{{.executableName}}.tmpl
+@@ -0,0 +1,2 @@
++#!/bin/sh
++/usr/lib/{{.packageName}}/{{.executableName}}
+diff --git a/go/packaging/linux-deb/usr/share/applications/{{.executableName}}.desktop.tmpl b/go/packaging/linux-deb/usr/share/applications/{{.executableName}}.desktop.tmpl
+new file mode 100644
+index 0000000..e9252e3
+--- /dev/null
++++ b/go/packaging/linux-deb/usr/share/applications/{{.executableName}}.desktop.tmpl
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Version=1.0
++Type=Application
++Terminal=false
++Categories=
++Name={{.applicationName}}
++Icon={{.iconPath}}
++Exec={{.executablePath}}
+diff --git a/go/packaging/linux-pkg/PKGBUILD.tmpl b/go/packaging/linux-pkg/PKGBUILD.tmpl
+new file mode 100644
+index 0000000..fee7cfe
+--- /dev/null
++++ b/go/packaging/linux-pkg/PKGBUILD.tmpl
+@@ -0,0 +1,11 @@
++pkgname={{.packageName}}
++pkgver={{.version}}
++pkgrel={{.release}}
++pkgdesc="{{.description}}"
++arch=("x86_64")
++license=('{{.license}}')
++
++package() {
++    mkdir -p $pkgdir/
++    cp * $pkgdir/ -r
++}
+diff --git a/go/packaging/linux-pkg/src/usr/bin/{{.executableName}}.tmpl b/go/packaging/linux-pkg/src/usr/bin/{{.executableName}}.tmpl
+new file mode 100644
+index 0000000..0ba8e81
+--- /dev/null
++++ b/go/packaging/linux-pkg/src/usr/bin/{{.executableName}}.tmpl
+@@ -0,0 +1,2 @@
++#!/bin/sh
++/usr/lib/{{.packageName}}/{{.executableName}}
+diff --git a/go/packaging/linux-pkg/src/usr/share/applications/{{.executableName}}.desktop.tmpl b/go/packaging/linux-pkg/src/usr/share/applications/{{.executableName}}.desktop.tmpl
+new file mode 100644
+index 0000000..e9252e3
+--- /dev/null
++++ b/go/packaging/linux-pkg/src/usr/share/applications/{{.executableName}}.desktop.tmpl
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Version=1.0
++Type=Application
++Terminal=false
++Categories=
++Name={{.applicationName}}
++Icon={{.iconPath}}
++Exec={{.executablePath}}
+diff --git a/go/packaging/linux-snap/snap/local/{{.executableName}}.desktop.tmpl b/go/packaging/linux-snap/snap/local/{{.executableName}}.desktop.tmpl
+new file mode 100644
+index 0000000..e9252e3
+--- /dev/null
++++ b/go/packaging/linux-snap/snap/local/{{.executableName}}.desktop.tmpl
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Version=1.0
++Type=Application
++Terminal=false
++Categories=
++Name={{.applicationName}}
++Icon={{.iconPath}}
++Exec={{.executablePath}}
+diff --git a/go/packaging/linux-snap/snap/snapcraft.yaml.tmpl b/go/packaging/linux-snap/snap/snapcraft.yaml.tmpl
+new file mode 100644
+index 0000000..11d8083
+--- /dev/null
++++ b/go/packaging/linux-snap/snap/snapcraft.yaml.tmpl
+@@ -0,0 +1,27 @@
++name: {{.packageName}}
++base: core18
++version: '{{.version}}'
++summary: {{.description}}
++description: |
++  {{.description}}
++confinement: devmode
++grade: devel
++apps:
++  {{.packageName}}:
++    command: {{.executableName}}
++    desktop: local/{{.executableName}}.desktop
++parts:
++  desktop:
++    plugin: dump
++    source: snap
++  assets:
++    plugin: dump
++    source: build/assets
++  app:
++    plugin: dump
++    source: build
++    stage-packages:
++      - libx11-6
++      - libxrandr2
++      - libxcursor1
++      - libxinerama1
+diff --git a/go/packaging/windows-msi/upgrade-code.txt b/go/packaging/windows-msi/upgrade-code.txt
+new file mode 100755
+index 0000000..7c0869d
+--- /dev/null
++++ b/go/packaging/windows-msi/upgrade-code.txt
+@@ -0,0 +1,3 @@
++916FE9BD-3A1D-776A-34DB-705C70A8DD4B
++# This GUID is your upgrade code and ensures that you can properly update your app.
++# Don't change it.
+\ No newline at end of file
+diff --git a/go/packaging/windows-msi/{{.packageName}}.wxs.tmpl b/go/packaging/windows-msi/{{.packageName}}.wxs.tmpl
+new file mode 100644
+index 0000000..316eec9
+--- /dev/null
++++ b/go/packaging/windows-msi/{{.packageName}}.wxs.tmpl
+@@ -0,0 +1,62 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
++    <Product Id="*" UpgradeCode="{{.upgradeCode}}" Version="{{.version}}" Language="1033" Name="{{.applicationName}}" Manufacturer="{{.author}}">
++        <Package InstallerVersion="300" Compressed="yes"/>
++        <Media Id="1" Cabinet="{{.packageName}}.cab" EmbedCab="yes" />
++        <Directory Id="TARGETDIR" Name="SourceDir">
++            <Directory Id="ProgramFilesFolder">
++                <Directory Id="APPLICATIONROOTDIRECTORY" Name="{{.applicationName}}">
++                    <Directory Id="ASSETSDIRECTORY" Name="assets"/>
++                    <Directory Id="FLUTTERASSETSDIRECTORY" Name="flutter_assets">
++                        <?include directories.wxi ?>
++                    </Directory>
++                </Directory>
++            </Directory>
++            <Directory Id="ProgramMenuFolder">
++                <Directory Id="ApplicationProgramsFolder" Name="{{.applicationName}}"/>
++            </Directory>
++        </Directory>
++        <Icon Id="ShortcutIcon" SourceFile="build{{.pathSeparator}}assets{{.pathSeparator}}icon.ico"/>
++        <Property Id="ARPPRODUCTICON" Value="ShortcutIcon"/>
++        <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
++            <Component Id="{{.executableName}}.exe" Guid="*">
++                <File Id="{{.executableName}}.exe" Source="build{{.pathSeparator}}{{.executableName}}.exe" KeyPath="yes"/>
++            </Component>
++            <Component Id="flutter_engine.dll" Guid="*">
++                <File Id="flutter_engine.dll" Source="build{{.pathSeparator}}flutter_engine.dll" KeyPath="yes"/>
++            </Component>
++            <Component Id="icudtl.dat" Guid="*">
++                <File Id="icudtl.dat" Source="build{{.pathSeparator}}icudtl.dat" KeyPath="yes"/>
++            </Component>
++        </DirectoryRef>
++        <DirectoryRef Id="ASSETSDIRECTORY">
++            <Component Id="icon.png" Guid="*">
++                <File Id="icon.png" Source="build{{.pathSeparator}}assets{{.pathSeparator}}icon.png" KeyPath="yes"/>
++            </Component>
++            <Component Id="icon.ico" Guid="*">
++                <File Id="icon.ico" Source="build{{.pathSeparator}}assets{{.pathSeparator}}icon.ico" KeyPath="yes"/>
++            </Component>
++        </DirectoryRef>
++        <?include directory_refs.wxi ?>
++        <DirectoryRef Id="ApplicationProgramsFolder">
++            <Component Id="ApplicationShortcut" Guid="*">
++                <Shortcut Id="ApplicationStartMenuShortcut"
++                          Name="{{.applicationName}}"
++                          Description="{{.description}}"
++                          Target="[#{{.executableName}}.exe]"
++                          WorkingDirectory="APPLICATIONROOTDIRECTORY"
++                          Icon="ShortcutIcon"/>
++                <RemoveFolder Id="CleanUpShortCut" On="uninstall"/>
++                <RegistryValue Root="HKCU" Key="Software\{{.author}}\{{.packageName}}" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
++            </Component>
++        </DirectoryRef>
++        <Feature Id="MainApplication" Title="{{.applicationName}}" Level="1">
++            <ComponentRef Id="{{.executableName}}.exe"/>
++            <ComponentRef Id="flutter_engine.dll"/>
++            <ComponentRef Id="icudtl.dat"/>
++            <ComponentRef Id="icon.png"/>
++            <ComponentRef Id="ApplicationShortcut"/>
++            <?include component_refs.wxi ?>
++        </Feature>
++    </Product>
++</Wix>
+diff --git a/lib/data/database/mobile.dart b/lib/data/database/mobile.dart
+index ed48df5..8d9c7f7 100644
+--- a/lib/data/database/mobile.dart
++++ b/lib/data/database/mobile.dart
+@@ -3,6 +3,7 @@ import 'dart:io';
+ import 'package:moor/moor.dart';
+ import 'package:moor_ffi/moor_ffi.dart';
+ import 'package:path/path.dart' as p;
++import 'package:path_provider/path_provider.dart';
+ import 'package:sqflite/sqflite.dart';
+ 
+ QueryExecutor constructDb({bool logStatements = false}) {
+@@ -13,6 +14,14 @@ QueryExecutor constructDb({bool logStatements = false}) {
+       return VmDatabase(dbFile, logStatements: logStatements);
+     });
+     return executor;
+-  } else
+-    return null;
++  }
++  if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
++    final executor = LazyDatabase(() async {
++      final docsDir = await getApplicationDocumentsDirectory();
++      final file = File(p.join(docsDir.path, '.notes_database.db'));
++      return VmDatabase(file, logStatements: logStatements);
++    });
++    return executor;
++  }
++  return VmDatabase.memory(logStatements: logStatements);
+ }
+diff --git a/lib/internal/app_info.dart b/lib/internal/app_info.dart
+index 2519c19..ab92e31 100644
+--- a/lib/internal/app_info.dart
++++ b/lib/internal/app_info.dart
+@@ -1,5 +1,6 @@
+ import 'dart:async';
+ import 'dart:convert';
++import 'dart:io';
+ 
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter/material.dart';
+@@ -25,6 +26,8 @@ class AppInfoProvider extends ChangeNotifier {
+   List<BiometricType> availableBiometrics;
+   FlutterLocalNotificationsPlugin notifications;
+   QuickActions quickActions;
++  int numOfColumns;
++  int numOfImages;
+ 
+   Widget noNotesIllustration;
+   Widget emptyArchiveIllustration;
+@@ -76,11 +79,22 @@ class AppInfoProvider extends ChangeNotifier {
+   }
+ 
+   void loadData() async {
+-    if(!kIsWeb) {
++    if (isMobilePlatform) {
+       _initNotifications();
+     }
+ 
+     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
+     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
+   }
++
++  static bool get isMobilePlatform {
++    if (kIsWeb) return false;
++
++    if (Platform.isWindows ||
++        Platform.isFuchsia ||
++        Platform.isLinux ||
++        Platform.isMacOS) return false;
++
++    return true;
++  }
+ }
+diff --git a/lib/internal/preferences.dart b/lib/internal/preferences.dart
+index 274840c..5f803f1 100644
+--- a/lib/internal/preferences.dart
++++ b/lib/internal/preferences.dart
+@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
+ import 'package:http/http.dart';
+ import 'package:jwt_decode/jwt_decode.dart';
+ import 'package:loggy/loggy.dart';
++import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/internal/keystore.dart';
+ import 'package:potato_notes/internal/shared_prefs.dart';
+ 
+@@ -44,7 +45,7 @@ class Preferences extends ChangeNotifier {
+   set masterPass(String value) {
+     _masterPass = value;
+     
+-    if(kIsWeb) {
++    if(!AppInfoProvider.isMobilePlatform) {
+       prefs.setMasterPass(value);
+     } else {
+       keystore.setMasterPass(value);
+@@ -123,7 +124,7 @@ class Preferences extends ChangeNotifier {
+     prefs = await SharedPrefs.newInstance();
+     keystore = Keystore();
+ 
+-    if(kIsWeb) {
++    if(!AppInfoProvider.isMobilePlatform) {
+       masterPass = await prefs.getMasterPass();
+     } else {
+       masterPass = await keystore.getMasterPass();
+diff --git a/lib/internal/themes.dart b/lib/internal/themes.dart
+index 2530495..0e6f03d 100644
+--- a/lib/internal/themes.dart
++++ b/lib/internal/themes.dart
+@@ -58,6 +58,12 @@ class Themes {
+           builders: <TargetPlatform, PageTransitionsBuilder>{
+             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
++            TargetPlatform.linux:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.windows:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.macOS:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
+           },
+         ),
+       );
+@@ -106,6 +112,12 @@ class Themes {
+           builders: <TargetPlatform, PageTransitionsBuilder>{
+             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
++            TargetPlatform.linux:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.windows:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.macOS:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
+           },
+         ),
+       );
+@@ -154,6 +166,12 @@ class Themes {
+           builders: <TargetPlatform, PageTransitionsBuilder>{
+             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
+             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
++            TargetPlatform.linux:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.windows:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
++            TargetPlatform.macOS:
++                DismissiblePageTransitionsBuilder(enableGestures: false),
+           },
+         ),
+       );
+diff --git a/lib/internal/utils.dart b/lib/internal/utils.dart
+index 39567e2..3376137 100644
+--- a/lib/internal/utils.dart
++++ b/lib/internal/utils.dart
+@@ -147,6 +147,31 @@ class Utils {
+     );
+   }
+ 
++  static Future<dynamic> spawnRoute(BuildContext context, Widget route) {
++    if (appInfo.numOfColumns >= 4) {
++      return showDialog(
++        context: context,
++        builder: (context) => Padding(
++          padding: EdgeInsets.symmetric(
++            horizontal: MediaQuery.of(context).size.width / 12,
++            vertical: MediaQuery.of(context).size.height / 8,
++          ),
++          child: Material(
++            type: MaterialType.transparency,
++            borderRadius: BorderRadius.circular(12),
++            clipBehavior: Clip.antiAlias,
++            child: route,
++          ),
++        ),
++      );
++    } else {
++      return Navigator.push(
++        context,
++        MaterialPageRoute(builder: (context) => route),
++      );
++    }
++  }
++
+   static Future<int> generateId() async {
+     Note lastNote;
+     List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+@@ -218,6 +243,6 @@ class Utils {
+           label: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
+         ),
+       ];
+-  
++
+   static get defaultAccent => Color(0xFFFF9100);
+ }
+diff --git a/lib/main.dart b/lib/main.dart
+index eb8255a..876ad79 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -38,14 +38,14 @@ class PotatoNotes extends StatelessWidget {
+       //Loggy.setLogLevel(prefs.logLevel);
+ 
+       return StreamBuilder(
+-        stream: !kIsWeb
++        stream: AppInfoProvider.isMobilePlatform
+             ? accentStreamChannel.receiveBroadcastStream()
+             : Stream.empty(),
+         initialData: Colors.blueAccent.value,
+         builder: (context, snapshot) {
+           Color accentColor;
+ 
+-          if (prefs.useCustomAccent || kIsWeb) {
++          if (prefs.useCustomAccent || !AppInfoProvider.isMobilePlatform) {
+             accentColor = prefs.customAccent ?? Utils.defaultAccent;
+           } else {
+             accentColor = Color(snapshot.data);
+@@ -58,7 +58,8 @@ class PotatoNotes extends StatelessWidget {
+             theme: themes.light,
+             darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+             builder: (context, child) {
+-              if (appInfo.quickActions == null && !kIsWeb) {
++              if (appInfo.quickActions == null &&
++                  AppInfoProvider.isMobilePlatform) {
+                 appInfo.quickActions = QuickActions();
+ 
+                 appInfo.quickActions.setShortcutItems([
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index 557ecd1..6c1e3e6 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -13,6 +13,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
+ import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/internal/custom_icons.dart';
+ import 'package:potato_notes/internal/global_key_registry.dart';
+ import 'package:potato_notes/internal/illustrations.dart';
+@@ -60,7 +61,7 @@ class _MainPageState extends State<MainPage>
+       value: 1,
+     );
+ 
+-    if(!kIsWeb) {
++    if (AppInfoProvider.isMobilePlatform) {
+       appInfo.quickActions.initialize((shortcutType) async {
+         switch (shortcutType) {
+           case 'new_text':
+@@ -87,30 +88,30 @@ class _MainPageState extends State<MainPage>
+     double width = MediaQuery.of(context).size.width;
+ 
+     if (width >= 1280) {
+-      numOfColumns = 5;
+-      numOfImages = 4;
++      appInfo.numOfColumns = 5;
++      appInfo.numOfImages = 4;
+     } else if (width >= 900) {
+-      numOfColumns = 4;
+-      numOfImages = 3;
++      appInfo.numOfColumns = 4;
++      appInfo.numOfImages = 3;
+     } else if (width >= 600) {
+-      numOfColumns = 3;
+-      numOfImages = 3;
++      appInfo.numOfColumns = 3;
++      appInfo.numOfImages = 3;
+     } else if (width >= 360) {
+-      numOfColumns = 2;
+-      numOfImages = 2;
++      appInfo.numOfColumns = 2;
++      appInfo.numOfImages = 2;
+     } else {
+-      numOfColumns = 1;
+-      numOfImages = 2;
++      appInfo.numOfColumns = 1;
++      appInfo.numOfImages = 2;
+     }
+ 
+     Animation<double> fade =
+         Tween<double>(begin: 0.3, end: 1).animate(controller);
+-    
++
+     double fixedDrawerSize;
+ 
+-    if(numOfColumns == 4) {
++    if (appInfo.numOfColumns == 4) {
+       fixedDrawerSize = MediaQuery.of(context).size.width / 4;
+-    } else if(numOfColumns == 5) {
++    } else if (appInfo.numOfColumns == 5) {
+       fixedDrawerSize = MediaQuery.of(context).size.width / 5;
+     } else {
+       fixedDrawerSize = 64;
+@@ -120,9 +121,11 @@ class _MainPageState extends State<MainPage>
+       children: <Widget>[
+         Visibility(
+           visible: MediaQuery.of(context).orientation == Orientation.landscape,
+-          child: SizedBox(
+-            width: fixedDrawerSize,
+-            child: getDrawer(numOfColumns >= 4, true),
++          child: Material(
++            child: SizedBox(
++              width: fixedDrawerSize,
++              child: getDrawer(appInfo.numOfColumns >= 4, true),
++            ),
+           ),
+         ),
+         Expanded(
+@@ -143,10 +146,10 @@ class _MainPageState extends State<MainPage>
+                     actions: [
+                       IconButton(
+                         icon: Icon(Icons.search),
+-                        onPressed: () => Navigator.push(
+-                            context,
+-                            MaterialPageRoute(
+-                                builder: (context) => SearchPage())),
++                        onPressed: () => Utils.spawnRoute(
++                          context,
++                          SearchPage(),
++                        ),
+                       ),
+                       IconButton(
+                         icon: Icon(OMIcons.person),
+@@ -181,7 +184,7 @@ class _MainPageState extends State<MainPage>
+                 if (notes.isNotEmpty) {
+                   if (prefs.useGrid) {
+                     child = StaggeredGridView.countBuilder(
+-                      crossAxisCount: numOfColumns,
++                      crossAxisCount: appInfo.numOfColumns,
+                       itemBuilder: (context, index) => commonNote(notes[index]),
+                       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                       itemCount: notes.length,
+@@ -282,10 +285,7 @@ class _MainPageState extends State<MainPage>
+                     Navigator.pop(context);
+                   }
+ 
+-                  Navigator.push(
+-                    context,
+-                    MaterialPageRoute(builder: (context) => SettingsPage()),
+-                  );
++                  Utils.spawnRoute(context, SettingsPage());
+                 },
+               )
+             : Container(
+@@ -297,10 +297,7 @@ class _MainPageState extends State<MainPage>
+                       Navigator.pop(context);
+                     }
+ 
+-                    Navigator.push(
+-                      context,
+-                      MaterialPageRoute(builder: (context) => SettingsPage()),
+-                    );
++                    Utils.spawnRoute(context, SettingsPage());
+                   },
+                 ),
+               ),
+@@ -393,12 +390,9 @@ class _MainPageState extends State<MainPage>
+   }
+ 
+   void newNote() {
+-    Navigator.of(context).push(
+-      MaterialPageRoute(
+-        builder: (context) => NotePage(
+-          numOfImages: numOfImages,
+-        ),
+-      ),
++    Utils.spawnRoute(
++      context,
++      NotePage(),
+     );
+   }
+ 
+@@ -412,12 +406,10 @@ class _MainPageState extends State<MainPage>
+       if (shouldPop) Navigator.pop(context);
+       note = note.copyWith(id: await Utils.generateId());
+ 
+-      Navigator.of(context).push(
+-        MaterialPageRoute(
+-          builder: (context) => NotePage(
+-            numOfImages: numOfImages,
+-            note: note,
+-          ),
++      Utils.spawnRoute(
++        context,
++        NotePage(
++          note: note,
+         ),
+       );
+ 
+@@ -426,23 +418,19 @@ class _MainPageState extends State<MainPage>
+   }
+ 
+   void newList() {
+-    Navigator.of(context).push(
+-      MaterialPageRoute(
+-        builder: (context) => NotePage(
+-          numOfImages: numOfImages,
+-          openWithList: true,
+-        ),
++    Utils.spawnRoute(
++      context,
++      NotePage(
++        openWithList: true,
+       ),
+     );
+   }
+ 
+   void newDrawing() {
+-    Navigator.of(context).push(
+-      MaterialPageRoute(
+-        builder: (context) => NotePage(
+-          numOfImages: numOfImages,
+-          openWithDrawing: true,
+-        ),
++    Utils.spawnRoute(
++      context,
++      NotePage(
++        openWithDrawing: true,
+       ),
+     );
+   }
+@@ -455,7 +443,8 @@ class _MainPageState extends State<MainPage>
+       case ReturnMode.TRASH:
+         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
+       case ReturnMode.FAVOURITES:
+-        return MapEntry(appInfo.noFavouritesIllustration, "No favourites for now");
++        return MapEntry(
++            appInfo.noFavouritesIllustration, "No favourites for now");
+       case ReturnMode.ALL:
+       case ReturnMode.NORMAL:
+       default:
+@@ -502,13 +491,10 @@ class _MainPageState extends State<MainPage>
+           }
+ 
+           if (status) {
+-            Navigator.push(
++            Utils.spawnRoute(
+               context,
+-              MaterialPageRoute(
+-                builder: (context) => NotePage(
+-                  note: note,
+-                  numOfImages: numOfImages,
+-                ),
++              NotePage(
++                note: note,
+               ),
+             );
+           }
+@@ -523,7 +509,6 @@ class _MainPageState extends State<MainPage>
+         });
+       },
+       selected: selectionList.any((item) => item.id == note.id),
+-      numOfImages: numOfImages,
+     );
+   }
+ }
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index df617dc..a1c00de 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -26,13 +26,11 @@ import 'package:potato_notes/widget/note_view_images.dart';
+ 
+ class NotePage extends StatefulWidget {
+   final Note note;
+-  final int numOfImages;
+   final bool openWithList;
+   final bool openWithDrawing;
+ 
+   NotePage({
+     this.note,
+-    this.numOfImages = 2,
+     this.openWithList = false,
+     this.openWithDrawing = false,
+   }) : assert((openWithList && !openWithDrawing) ||
+@@ -190,26 +188,23 @@ class _NotePageState extends State<NotePage> {
+           ],
+         ),
+         extendBodyBehindAppBar: true,
+-        body: ListView(
+-          padding: EdgeInsets.only(
+-            top: MediaQuery.of(context).padding.top + 56,
+-            bottom: 16,
+-          ),
+-          children: [
++        body: Row(
++          children: <Widget>[
+             Visibility(
+-              visible: note.images.data.isNotEmpty,
+-              child: NoteViewImages(
++              visible: note.images.data.isNotEmpty && appInfo.numOfColumns >= 4,
++              child: Expanded(
++                child: NoteViewImages(
++                  onEditor: true,
+                   images: note.images.uris.sublist(
+                       0,
+-                      note.images.data.length > widget.numOfImages * 2
+-                          ? widget.numOfImages * 2
++                      note.images.data.length > 4
++                          ? 4
+                           : note.images.data.length),
+-                  numOfImages: widget.numOfImages,
+                   showPlusImages: true,
+                   numPlusImages:
+-                      note.images.data.length < widget.numOfImages * 2
++                      note.images.data.length < 4
+                           ? 0
+-                          : note.images.data.length - widget.numOfImages * 2,
++                          : note.images.data.length - 4,
+                   onImageTap: (index) async {
+                     await Navigator.push(
+                       context,
+@@ -223,182 +218,233 @@ class _NotePageState extends State<NotePage> {
+                     );
+ 
+                     setState(() {});
+-                  }),
++                  },
++                ),
++              ),
+             ),
+-            Padding(
+-              padding: EdgeInsets.symmetric(horizontal: 16),
+-              child: Column(
+-                mainAxisSize: MainAxisSize.min,
++            Expanded(
++              child: ListView(
++                padding: EdgeInsets.only(
++                  top: MediaQuery.of(context).padding.top + 56,
++                  bottom: 16,
++                ),
+                 children: [
+-                  TextFormField(
+-                    controller: titleController,
+-                    decoration: InputDecoration(
+-                      border: InputBorder.none,
+-                      hintText: "Title",
+-                      hintStyle: TextStyle(
+-                        color: Theme.of(context)
+-                            .textTheme
+-                            .caption
+-                            .color
+-                            .withOpacity(0.5),
+-                      ),
+-                    ),
+-                    textCapitalization: TextCapitalization.sentences,
+-                    scrollPadding: EdgeInsets.all(0),
+-                    style: TextStyle(
+-                      fontSize: 18,
+-                      fontWeight: FontWeight.w500,
+-                      color: Theme.of(context)
+-                          .textTheme
+-                          .caption
+-                          .color
+-                          .withOpacity(0.7),
+-                    ),
+-                    onChanged: (text) {
+-                      note = note.copyWith(title: text);
+-                      notifyNoteChanged();
+-                    },
+-                  ),
+-                  TextField(
+-                    controller: contentController,
+-                    decoration: InputDecoration(
+-                      border: InputBorder.none,
+-                      hintText: "Content",
+-                      hintStyle: TextStyle(
+-                        color: Theme.of(context)
+-                            .textTheme
+-                            .caption
+-                            .color
+-                            .withOpacity(0.3),
+-                      ),
+-                      isDense: true,
+-                    ),
+-                    textCapitalization: TextCapitalization.sentences,
+-                    keyboardType: TextInputType.multiline,
+-                    scrollPadding: EdgeInsets.all(0),
+-                    style: TextStyle(
+-                      fontSize: 16,
+-                      color: Theme.of(context)
+-                          .textTheme
+-                          .caption
+-                          .color
+-                          .withOpacity(0.5),
++                  Visibility(
++                    visible:
++                        note.images.data.isNotEmpty && appInfo.numOfColumns < 4,
++                    child: NoteViewImages(
++                      onEditor: true,
++                      images: note.images.uris.sublist(
++                          0,
++                          note.images.data.length > appInfo.numOfImages * 2
++                              ? appInfo.numOfImages * 2
++                              : note.images.data.length),
++                      showPlusImages: true,
++                      numPlusImages: note.images.data.length <
++                              appInfo.numOfImages * 2
++                          ? 0
++                          : note.images.data.length - appInfo.numOfImages * 2,
++                      onImageTap: (index) async {
++                        await Navigator.push(
++                          context,
++                          DismissiblePageRoute(
++                            builder: (context) => NotePageImageGallery(
++                              note: note,
++                              currentImage: index,
++                            ),
++                            allowGestures: false,
++                          ),
++                        );
++
++                        setState(() {});
++                      },
+                     ),
+-                    onChanged: (text) {
+-                      //List<int> styleJson = gzip.encode(utf8.encode(
+-                      //    SpannableList(contentController.styleList.list)
+-                      //        .toJson()));
+-
+-                      note = note.copyWith(
+-                        content: text,
+-                        //styleJson: ContentStyle(styleJson),
+-                      );
+-
+-                      notifyNoteChanged();
+-                    },
+-                    maxLines: null,
+                   ),
+-                ],
+-              ),
+-            ),
+-            Visibility(
+-              visible: note.list,
+-              child: Column(
+-                children: <Widget>[
+-                  ...List.generate(note.listContent.content.length, (index) {
+-                    ListItem currentItem = note.listContent.content[index];
+-
+-                    if (needsFocus &&
+-                        index == note.listContent.content.length - 1) {
+-                      needsFocus = false;
+-                      FocusScope.of(context)
+-                          .requestFocus(listContentNodes.last);
+-                    }
+-
+-                    return Dismissible(
+-                      key: Key(currentItem.id.toString()),
+-                      onDismissed: (_) => setState(() {
+-                        note.listContent.content.removeAt(index);
+-                        listContentControllers.removeAt(index);
+-                        listContentNodes.removeAt(index);
+-                        notifyNoteChanged();
+-                      }),
+-                      background: Container(
+-                        color: Colors.red[400],
+-                        padding: EdgeInsets.symmetric(horizontal: 24),
+-                        alignment: Alignment.centerRight,
+-                        child: Icon(
+-                          Icons.delete_outline,
+-                          color: Theme.of(context).scaffoldBackgroundColor,
+-                        ),
+-                      ),
+-                      direction: DismissDirection.endToStart,
+-                      child: ListTile(
+-                        leading: Checkbox(
+-                          value: currentItem.status,
+-                          onChanged: (value) {
+-                            setState(() =>
+-                                note.listContent.content[index].status = value);
++                  Padding(
++                    padding: EdgeInsets.symmetric(horizontal: 16),
++                    child: Column(
++                      mainAxisSize: MainAxisSize.min,
++                      children: [
++                        TextFormField(
++                          controller: titleController,
++                          decoration: InputDecoration(
++                            border: InputBorder.none,
++                            hintText: "Title",
++                            hintStyle: TextStyle(
++                              color: Theme.of(context)
++                                  .textTheme
++                                  .caption
++                                  .color
++                                  .withOpacity(0.5),
++                            ),
++                          ),
++                          textCapitalization: TextCapitalization.sentences,
++                          scrollPadding: EdgeInsets.all(0),
++                          style: TextStyle(
++                            fontSize: 18,
++                            fontWeight: FontWeight.w500,
++                            color: Theme.of(context)
++                                .textTheme
++                                .caption
++                                .color
++                                .withOpacity(0.7),
++                          ),
++                          onChanged: (text) {
++                            note = note.copyWith(title: text);
+                             notifyNoteChanged();
+                           },
+-                          checkColor: note.color != 0
+-                              ? Color(NoteColors.colorList(context)[note.color]
+-                                  ["hex"])
+-                              : Theme.of(context).scaffoldBackgroundColor,
+                         ),
+-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+-                        title: TextField(
+-                          controller: listContentControllers[index],
+-                          decoration:
+-                              InputDecoration.collapsed(hintText: "Input"),
++                        TextField(
++                          controller: contentController,
++                          decoration: InputDecoration(
++                            border: InputBorder.none,
++                            hintText: "Content",
++                            hintStyle: TextStyle(
++                              color: Theme.of(context)
++                                  .textTheme
++                                  .caption
++                                  .color
++                                  .withOpacity(0.3),
++                            ),
++                            isDense: true,
++                          ),
+                           textCapitalization: TextCapitalization.sentences,
++                          keyboardType: TextInputType.multiline,
++                          scrollPadding: EdgeInsets.all(0),
+                           style: TextStyle(
+-                              color: Theme.of(context).iconTheme.color),
++                            fontSize: 16,
++                            color: Theme.of(context)
++                                .textTheme
++                                .caption
++                                .color
++                                .withOpacity(0.5),
++                          ),
+                           onChanged: (text) {
+-                            setState(() =>
+-                                note.listContent.content[index].text = text);
++                            //List<int> styleJson = gzip.encode(utf8.encode(
++                            //    SpannableList(contentController.styleList.list)
++                            //        .toJson()));
++
++                            note = note.copyWith(
++                              content: text,
++                              //styleJson: ContentStyle(styleJson),
++                            );
++
+                             notifyNoteChanged();
+                           },
+-                          onSubmitted: (_) {
+-                            if (index == note.listContent.content.length - 1) {
+-                              if (note.listContent.content.last.text != "")
+-                                addListContentItem();
+-                              else {
+-                                FocusScope.of(context)
+-                                    .requestFocus(listContentNodes[index]);
+-                              }
+-                            } else {
+-                              FocusScope.of(context)
+-                                  .requestFocus(listContentNodes[index + 1]);
+-                            }
+-                          },
+-                          focusNode: listContentNodes[index],
++                          maxLines: null,
+                         ),
+-                      ),
+-                    );
+-                  }),
+-                  AnimatedOpacity(
+-                    opacity: note.listContent.content.isNotEmpty
+-                        ? note.listContent.content.last.text != "" ? 1 : 0
+-                        : 1,
+-                    duration: note.listContent.content.isNotEmpty
+-                        ? note.listContent.content.last.text != ""
+-                            ? Duration(milliseconds: 300)
+-                            : Duration(milliseconds: 0)
+-                        : Duration(milliseconds: 0),
+-                    child: ListTile(
+-                      leading: Icon(Icons.add),
+-                      title: Text(
+-                        "Add item",
+-                        style:
+-                            TextStyle(color: Theme.of(context).iconTheme.color),
+-                      ),
+-                      contentPadding: EdgeInsets.symmetric(horizontal: 28),
+-                      onTap: note.listContent.content.isNotEmpty
+-                          ? note.listContent.content.last.text != ""
+-                              ? () => addListContentItem()
+-                              : null
+-                          : () => addListContentItem(),
++                      ],
++                    ),
++                  ),
++                  Visibility(
++                    visible: note.list,
++                    child: Column(
++                      children: <Widget>[
++                        ...List.generate(note.listContent.content.length,
++                            (index) {
++                          ListItem currentItem =
++                              note.listContent.content[index];
++
++                          if (needsFocus &&
++                              index == note.listContent.content.length - 1) {
++                            needsFocus = false;
++                            FocusScope.of(context)
++                                .requestFocus(listContentNodes.last);
++                          }
++
++                          return Dismissible(
++                            key: Key(currentItem.id.toString()),
++                            onDismissed: (_) => setState(() {
++                              note.listContent.content.removeAt(index);
++                              listContentControllers.removeAt(index);
++                              listContentNodes.removeAt(index);
++                              notifyNoteChanged();
++                            }),
++                            background: Container(
++                              color: Colors.red[400],
++                              padding: EdgeInsets.symmetric(horizontal: 24),
++                              alignment: Alignment.centerRight,
++                              child: Icon(
++                                Icons.delete_outline,
++                                color:
++                                    Theme.of(context).scaffoldBackgroundColor,
++                              ),
++                            ),
++                            direction: DismissDirection.endToStart,
++                            child: ListTile(
++                              leading: Checkbox(
++                                value: currentItem.status,
++                                onChanged: (value) {
++                                  setState(() => note.listContent.content[index]
++                                      .status = value);
++                                  notifyNoteChanged();
++                                },
++                                checkColor: note.color != 0
++                                    ? Color(NoteColors.colorList(
++                                        context)[note.color]["hex"])
++                                    : Theme.of(context).scaffoldBackgroundColor,
++                              ),
++                              contentPadding:
++                                  EdgeInsets.symmetric(horizontal: 16),
++                              title: TextField(
++                                controller: listContentControllers[index],
++                                decoration: InputDecoration.collapsed(
++                                    hintText: "Input"),
++                                textCapitalization:
++                                    TextCapitalization.sentences,
++                                style: TextStyle(
++                                    color: Theme.of(context).iconTheme.color),
++                                onChanged: (text) {
++                                  setState(() => note
++                                      .listContent.content[index].text = text);
++                                  notifyNoteChanged();
++                                },
++                                onSubmitted: (_) {
++                                  if (index ==
++                                      note.listContent.content.length - 1) {
++                                    if (note.listContent.content.last.text !=
++                                        "")
++                                      addListContentItem();
++                                    else {
++                                      FocusScope.of(context).requestFocus(
++                                          listContentNodes[index]);
++                                    }
++                                  } else {
++                                    FocusScope.of(context).requestFocus(
++                                        listContentNodes[index + 1]);
++                                  }
++                                },
++                                focusNode: listContentNodes[index],
++                              ),
++                            ),
++                          );
++                        }),
++                        AnimatedOpacity(
++                          opacity: note.listContent.content.isNotEmpty
++                              ? note.listContent.content.last.text != "" ? 1 : 0
++                              : 1,
++                          duration: note.listContent.content.isNotEmpty
++                              ? note.listContent.content.last.text != ""
++                                  ? Duration(milliseconds: 300)
++                                  : Duration(milliseconds: 0)
++                              : Duration(milliseconds: 0),
++                          child: ListTile(
++                            leading: Icon(Icons.add),
++                            title: Text(
++                              "Add item",
++                              style: TextStyle(
++                                  color: Theme.of(context).iconTheme.color),
++                            ),
++                            contentPadding:
++                                EdgeInsets.symmetric(horizontal: 28),
++                            onTap: note.listContent.content.isNotEmpty
++                                ? note.listContent.content.last.text != ""
++                                    ? () => addListContentItem()
++                                    : null
++                                : () => addListContentItem(),
++                          ),
++                        ),
++                      ],
+                     ),
+                   ),
+                 ],
+diff --git a/lib/routes/note_page_image_gallery.dart b/lib/routes/note_page_image_gallery.dart
+index fb6363f..84624a5 100644
+--- a/lib/routes/note_page_image_gallery.dart
++++ b/lib/routes/note_page_image_gallery.dart
+@@ -49,7 +49,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
+           if (scheme.startsWith("http")) {
+             image = NetworkImage(widget.note.images.data[index].toString());
+           } else {
+-            image = FileImage(File(widget.note.images.uris[index].path));
++            image = FileImage(File(widget.note.images.uris[index].toFilePath()));
+           }
+ 
+           return PhotoViewGalleryPageOptions(
+diff --git a/lib/routes/search_page.dart b/lib/routes/search_page.dart
+index 8b65f86..a9fabad 100644
+--- a/lib/routes/search_page.dart
++++ b/lib/routes/search_page.dart
+@@ -20,27 +20,11 @@ class SearchPage extends StatefulWidget {
+ 
+ class _SearchPageState extends State<SearchPage> {
+   List<Note> notes = [];
+-  int numOfImages;
+ 
+   SearchQuery query = SearchQuery();
+ 
+   @override
+   Widget build(BuildContext context) {
+-    double width = MediaQuery.of(context).size.width;
+-    numOfImages = 2;
+-
+-    if (width >= 1280) {
+-      numOfImages = 4;
+-    } else if (width >= 900) {
+-      numOfImages = 3;
+-    } else if (width >= 600) {
+-      numOfImages = 3;
+-    } else if (width >= 360) {
+-      numOfImages = 2;
+-    } else {
+-      numOfImages = 2;
+-    }
+-
+     return Scaffold(
+       appBar: AppBar(
+         title: Padding(
+@@ -77,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
+           if(notes.isNotEmpty) {
+             if (prefs.useGrid) {
+               child = StaggeredGridView.countBuilder(
+-                crossAxisCount: 2,
++                crossAxisCount: appInfo.numOfColumns,
+                 itemBuilder: (context, index) => noteView(context, notes[index]),
+                 staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                 itemCount: notes.length,
+@@ -149,7 +133,6 @@ class _SearchPageState extends State<SearchPage> {
+     return NoteView(
+       note: note,
+       onTap: () => openNote(note),
+-      numOfImages: numOfImages,
+       providedTitleList: titleList,
+       providedContentList: contentList,
+     );
+@@ -190,7 +173,6 @@ class _SearchPageState extends State<SearchPage> {
+         MaterialPageRoute(
+           builder: (context) => NotePage(
+             note: note,
+-            numOfImages: numOfImages,
+           ),
+         ),
+       );
+diff --git a/lib/routes/settings_page.dart b/lib/routes/settings_page.dart
+index 5219a40..7fc28fe 100644
+--- a/lib/routes/settings_page.dart
++++ b/lib/routes/settings_page.dart
+@@ -5,6 +5,7 @@ import 'package:loggy/loggy.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/internal/providers.dart';
+ import 'package:potato_notes/internal/utils.dart';
+ import 'package:potato_notes/widget/pass_challenge.dart';
+@@ -65,9 +66,12 @@ class _SettingsPageState extends State<SettingsPage> {
+                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                 ),
+                 SwitchListTile(
+-                  value: kIsWeb ? false : !prefs.useCustomAccent,
+-                  onChanged:
+-                      kIsWeb ? null : (value) => prefs.useCustomAccent = !value,
++                  value: !AppInfoProvider.isMobilePlatform
++                      ? false
++                      : !prefs.useCustomAccent,
++                  onChanged: !AppInfoProvider.isMobilePlatform
++                      ? null
++                      : (value) => prefs.useCustomAccent = !value,
+                   title: Text("Follow system accent"),
+                   secondary: Icon(OMIcons.colorLens),
+                   activeColor: Theme.of(context).accentColor,
+@@ -79,9 +83,15 @@ class _SettingsPageState extends State<SettingsPage> {
+                   title: Text("Pick a custom accent"),
+                   contentPadding:
+                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+-                  enabled: kIsWeb ? true : prefs.useCustomAccent,
++                  enabled: !AppInfoProvider.isMobilePlatform
++                      ? true
++                      : prefs.useCustomAccent,
+                   trailing: AnimatedOpacity(
+-                    opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
++                    opacity: (!AppInfoProvider.isMobilePlatform
++                            ? true
++                            : prefs.useCustomAccent)
++                        ? 1
++                        : 0.5,
+                     duration: Duration(milliseconds: 200),
+                     child: SizedBox(
+                       width: 60,
+diff --git a/lib/widget/dismissible_route.dart b/lib/widget/dismissible_route.dart
+index 26c9c1d..7f349c5 100644
+--- a/lib/widget/dismissible_route.dart
++++ b/lib/widget/dismissible_route.dart
+@@ -157,6 +157,10 @@ class DismissiblePageTransition extends StatelessWidget {
+ }
+ 
+ class DismissiblePageTransitionsBuilder extends PageTransitionsBuilder {
++  final bool enableGestures;
++
++  DismissiblePageTransitionsBuilder({this.enableGestures});
++
+   @override
+   Widget buildTransitions<T>(
+     PageRoute<T> route,
+@@ -166,7 +170,13 @@ class DismissiblePageTransitionsBuilder extends PageTransitionsBuilder {
+     Widget child,
+   ) =>
+       DismissiblePageRoute.buildPageTransitions(
+-          route, context, animation, secondaryAnimation, child);
++        route,
++        context,
++        animation,
++        secondaryAnimation,
++        child,
++        allowGestures: enableGestures,
++      );
+ }
+ 
+ class _DismissibleRoute extends StatefulWidget {
+diff --git a/lib/widget/drawing_board.dart b/lib/widget/drawing_board.dart
+index de6c84b..20cb9b3 100644
+--- a/lib/widget/drawing_board.dart
++++ b/lib/widget/drawing_board.dart
+@@ -28,7 +28,7 @@ class DrawingBoard extends StatelessWidget {
+       if (scheme.startsWith("http")) {
+         image = NetworkImage(uri.toString());
+       } else {
+-        image = FileImage(File(uri.path));
++        image = FileImage(File(uri.toFilePath()));
+       }
+     }
+ 
+diff --git a/lib/widget/note_view.dart b/lib/widget/note_view.dart
+index 7544eb7..0a9f844 100644
+--- a/lib/widget/note_view.dart
++++ b/lib/widget/note_view.dart
+@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
+ import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/data/model/list_content.dart';
+ import 'package:potato_notes/internal/note_colors.dart';
++import 'package:potato_notes/internal/providers.dart';
+ import 'package:potato_notes/widget/note_view_images.dart';
+ import 'package:potato_notes/widget/note_view_statusbar.dart';
+ import 'package:rich_text_editor/rich_text_editor.dart';
+@@ -14,7 +15,6 @@ class NoteView extends StatelessWidget {
+   final SpannableList providedContentList;
+   final Function() onTap;
+   final Function() onLongPress;
+-  final int numOfImages;
+   final bool selected;
+ 
+   NoteView({
+@@ -24,7 +24,6 @@ class NoteView extends StatelessWidget {
+     this.providedContentList,
+     this.onTap,
+     this.onLongPress,
+-    this.numOfImages = 2,
+     this.selected = false,
+   }) : super(key: key);
+ 
+@@ -71,14 +70,13 @@ class NoteView extends StatelessWidget {
+                 child: NoteViewImages(
+                   images: note.images.uris.sublist(
+                       0,
+-                      note.images.data.length > numOfImages * 2
+-                          ? numOfImages * 2
++                      note.images.data.length > appInfo.numOfImages * 2
++                          ? appInfo.numOfImages * 2
+                           : note.images.data.length),
+-                  numOfImages: numOfImages,
+                   showPlusImages: true,
+-                  numPlusImages: note.images.data.length < numOfImages * 2
++                  numPlusImages: note.images.data.length < appInfo.numOfImages * 2
+                       ? 0
+-                      : note.images.data.length - numOfImages * 2,
++                      : note.images.data.length - appInfo.numOfImages * 2,
+                 ),
+               ),
+             ),
+diff --git a/lib/widget/note_view_images.dart b/lib/widget/note_view_images.dart
+index 0e92697..f18e4b7 100644
+--- a/lib/widget/note_view_images.dart
++++ b/lib/widget/note_view_images.dart
+@@ -2,22 +2,23 @@ import 'dart:io';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
++import 'package:potato_notes/internal/providers.dart';
+ 
+ class NoteViewImages extends StatefulWidget {
+   final List<Uri> images;
+-  final int numOfImages;
+   final double borderRadius;
+   final bool showPlusImages;
+   final int numPlusImages;
+   final Function(int) onImageTap;
++  final bool onEditor;
+ 
+   NoteViewImages({
+     @required this.images,
+-    this.numOfImages = 3,
+     this.borderRadius = 0,
+     this.showPlusImages = false,
+     this.numPlusImages = 0,
+     this.onImageTap,
++    this.onEditor = false,
+   });
+ 
+   @override
+@@ -30,21 +31,30 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+     return LayoutBuilder(
+       builder: (context, constraints) {
+         double maxWidth = constraints.maxWidth;
++        double maxHeight = constraints.maxHeight;
++        double halfMaxWidth = appInfo.numOfColumns >= 4 && widget.onEditor
++            ? maxHeight / 2
++            : maxWidth / 2; 
++        int numOfImages = appInfo.numOfColumns >= 4 && widget.onEditor
++            ? 2
++            : appInfo.numOfImages;
++        
++        print(maxHeight);
+ 
+         return ClipRRect(
+           borderRadius:
+               BorderRadius.vertical(top: Radius.circular(widget.borderRadius)),
+           child: SizedBox(
+             width: maxWidth,
+-            height: widget.images.length > widget.numOfImages
++            height: widget.images.length > numOfImages
+                 ? maxWidth
+-                : maxWidth / 2,
++                : halfMaxWidth,
+             child: StaggeredGridView.countBuilder(
+               padding: EdgeInsets.all(0),
+               crossAxisCount: 12,
+               physics: NeverScrollableScrollPhysics(),
+-              itemCount: widget.images.length >= (widget.numOfImages * 2)
+-                  ? widget.numOfImages * 2
++              itemCount: widget.images.length >= (numOfImages * 2)
++                  ? numOfImages * 2
+                   : widget.images.length,
+               itemBuilder: (context, index) {
+                 ImageProvider image;
+@@ -53,7 +63,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+                 if (scheme.startsWith("http")) {
+                   image = NetworkImage(widget.images[index].toString());
+                 } else {
+-                  image = FileImage(File(widget.images[index].path));
++                  image = FileImage(File(widget.images[index].toFilePath()));
+                 }
+ 
+                 return InkWell(
+@@ -65,6 +75,8 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+                           image: image,
+                           fit: BoxFit.cover,
+                           gaplessPlayback: false,
++                          height: halfMaxWidth,
++                          width: halfMaxWidth,
+                         ),
+                       ),
+                       SizedBox.expand(
+@@ -93,17 +105,17 @@ class _NoteViewImagesState extends State<NoteViewImages> {
+               staggeredTileBuilder: (index) {
+                 int crossAxisExtent = 1;
+ 
+-                if ((index + 1) > widget.numOfImages) {
+-                  int col2Length = widget.images.length - widget.numOfImages;
++                if ((index + 1) > numOfImages) {
++                  int col2Length = widget.images.length - numOfImages;
+                   crossAxisExtent = 12 ~/ col2Length;
+-                  return StaggeredTile.extent(crossAxisExtent, maxWidth / 2);
++                  return StaggeredTile.extent(crossAxisExtent, halfMaxWidth);
+                 } else {
+-                  int col1Length = widget.images.length > widget.numOfImages
+-                      ? widget.numOfImages
++                  int col1Length = widget.images.length > numOfImages
++                      ? numOfImages
+                       : widget.images.length;
+ 
+                   crossAxisExtent = 12 ~/ col1Length;
+-                  return StaggeredTile.extent(crossAxisExtent, maxWidth / 2);
++                  return StaggeredTile.extent(crossAxisExtent, halfMaxWidth);
+                 }
+               },
+             ),
+diff --git a/lib/widget/selection_bar.dart b/lib/widget/selection_bar.dart
+index 584e801..9987503 100644
+--- a/lib/widget/selection_bar.dart
++++ b/lib/widget/selection_bar.dart
+@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/app_info.dart';
+ import 'package:potato_notes/internal/notification_payload.dart';
+ import 'package:potato_notes/internal/providers.dart';
+ import 'package:potato_notes/internal/utils.dart';
+@@ -169,7 +170,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
+ 
+     if (selectionList.length == 1 &&
+         !selectionList[0].hideContent &&
+-        !kIsWeb) {
++        AppInfoProvider.isMobilePlatform) {
+       buttons.add(
+         PopupMenuButton(
+           itemBuilder: (context) => Utils.popupItems(context),
+diff --git a/pubspec.lock b/pubspec.lock
+index 783109a..d9b258f 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -535,7 +535,7 @@ packages:
+       name: path_provider_linux
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "0.0.1+1"
++    version: "0.0.1+2"
+   path_provider_macos:
+     dependency: transitive
+     description:
+diff --git a/pubspec.yaml b/pubspec.yaml
+index aa18c1c..cfa8c6b 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -1,6 +1,6 @@
+ name: potato_notes
+ description: Official POSP note app
+-version: 2.0.0-beta1+16
++version: 2.0.0+16
+ 
+ environment:
+   sdk: '>=2.2.2 <3.0.0'
+-- 
+2.26.2
+
