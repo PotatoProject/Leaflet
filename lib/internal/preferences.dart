@@ -7,6 +7,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/tag_model.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
@@ -28,6 +29,7 @@ class Preferences extends ChangeNotifier {
   String _username;
   String _email;
   int _logLevel = LogEntry.VERBOSE;
+  List<TagModel> _tags = [];
 
   String get masterPass => _masterPass;
   ThemeMode get themeMode => _themeMode;
@@ -40,6 +42,7 @@ class Preferences extends ChangeNotifier {
   String get username => _username;
   String get email => _email;
   int get logLevel => _logLevel;
+  List<TagModel> get tags => _tags;
 
   set masterPass(String value) {
     _masterPass = value;
@@ -119,6 +122,12 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
+  set tags(List<TagModel> value) {
+    _tags = value;
+    prefs.setTags(value);
+    notifyListeners();
+  }
+
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
@@ -139,6 +148,7 @@ class Preferences extends ChangeNotifier {
     username = await prefs.getUsername();
     email = await prefs.getEmail();
     logLevel = await prefs.getLogLevel();
+    tags = await prefs.getTags();
   }
 
   Future<String> getToken() async {

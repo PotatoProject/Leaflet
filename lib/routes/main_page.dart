@@ -16,6 +16,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -23,9 +24,12 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
+import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
+import 'package:potato_notes/widget/tag_editor.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
+import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 
 class MainPage extends StatefulWidget {
@@ -41,6 +45,7 @@ class _MainPageState extends State<MainPage>
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   ReturnMode mode = ReturnMode.NORMAL;
+  int tagIndex = 0;
   bool selecting = false;
   List<Note> selectionList = [];
 
@@ -49,6 +54,7 @@ class _MainPageState extends State<MainPage>
     ReturnMode.ARCHIVE: [],
     ReturnMode.TRASH: [],
     ReturnMode.FAVOURITES: [],
+    ReturnMode.TAG: [],
   };
 
   @override
@@ -60,7 +66,7 @@ class _MainPageState extends State<MainPage>
       value: 1,
     );
 
-    if(!kIsWeb) {
+    if (!kIsWeb) {
       appInfo.quickActions.initialize((shortcutType) async {
         switch (shortcutType) {
           case 'new_text':
@@ -105,12 +111,12 @@ class _MainPageState extends State<MainPage>
 
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
-    
+
     double fixedDrawerSize;
 
-    if(numOfColumns == 4) {
+    if (numOfColumns == 4) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 4;
-    } else if(numOfColumns == 5) {
+    } else if (numOfColumns == 5) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 5;
     } else {
       fixedDrawerSize = 64;
@@ -138,15 +144,20 @@ class _MainPageState extends State<MainPage>
                     currentMode: mode,
                   )
                 : AppBar(
-                    title: Text(Utils.getNameFromMode(mode)),
+                    title:
+                        Text(Utils.getNameFromMode(mode, tagIndex: tagIndex)),
                     textTheme: Theme.of(context).textTheme,
                     actions: [
                       IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchPage())),
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchPage(
+                              delegate: NoteSearchDelegate(),
+                            ),
+                          ),
+                        ),
                       ),
                       IconButton(
                         icon: Icon(OMIcons.person),
@@ -170,12 +181,17 @@ class _MainPageState extends State<MainPage>
                 );
 
                 Widget child;
-                List<Note> notes = snapshot.data;
+                List<Note> notes = mode == ReturnMode.TAG
+                    ? snapshot.data
+                        .where((note) =>
+                            note.tags.tagIds.contains(prefs.tags[tagIndex].id))
+                        .toList()
+                    : snapshot.data;
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   notes = cachedNotesMap[mode];
                 } else if (snapshot.connectionState == ConnectionState.active) {
-                  cachedNotesMap[mode] = snapshot.data;
+                  cachedNotesMap[mode] = notes;
                 }
 
                 if (notes.isNotEmpty) {
@@ -236,6 +252,36 @@ class _MainPageState extends State<MainPage>
     return SafeArea(
       child: DrawerList(
         items: Utils.getDestinations(mode),
+        secondaryItems: List.generate(prefs.tags.length, (index) {
+          Color color = prefs.tags[index].color != 0
+              ? Color(NoteColors.colorList[prefs.tags[index].color].color)
+              : null;
+
+          return DrawerListItem(
+            icon: Icon(MdiIcons.tagOutline),
+            selectedIcon: Icon(MdiIcons.tag),
+            label: prefs.tags[index].name,
+            color: color,
+            selectedColor: color,
+          );
+        }),
+        secondaryItemsFooter: DrawerListTile(
+          icon: Icon(Icons.add),
+          title: "New tag",
+          onTap: () {
+            Utils.showNotesModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => TagEditor(
+                onSave: (tag) {
+                  Navigator.pop(context);
+                  prefs.tags = prefs.tags..add(tag);
+                },
+              ),
+            );
+          },
+          showTitle: extended,
+        ),
         header: extended
             ? Container(
                 height: 64,
@@ -263,21 +309,10 @@ class _MainPageState extends State<MainPage>
                 alignment: Alignment.center,
                 child: NotesLogo(penColor: notesLogoPenColor),
               ),
-        footer: extended
-            ? ListTile(
-                leading: Icon(CustomIcons.settings_outline),
-                title: Text(
-                  "Settings",
-                  style: TextStyle(
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .color
-                        .withOpacity(0.7),
-                  ),
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
-                onTap: () {
+        footer: DrawerListTile(
+          icon: Icon(CustomIcons.settings_outline),
+          title: "Settings",
+          onTap: () {
                   if (!fixed) {
                     Navigator.pop(context);
                   }
@@ -287,24 +322,9 @@ class _MainPageState extends State<MainPage>
                     MaterialPageRoute(builder: (context) => SettingsPage()),
                   );
                 },
-              )
-            : Container(
-                height: 64,
-                child: IconButton(
-                  icon: Icon(CustomIcons.settings_outline),
-                  onPressed: () {
-                    if (!fixed) {
-                      Navigator.pop(context);
-                    }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
-                    );
-                  },
-                ),
-              ),
-        currentIndex: mode.index - 1,
+          showTitle: extended,
+        ),
+        currentIndex: mode == ReturnMode.TAG ? tagIndex + 4 : mode.index - 1,
         onTap: (index) async {
           if (!fixed) {
             Navigator.pop(context);
@@ -312,6 +332,18 @@ class _MainPageState extends State<MainPage>
 
           await controller.animateBack(0);
           setState(() => mode = ReturnMode.values[index + 1]);
+          controller.animateTo(1);
+        },
+        onSecondaryTap: (index) async {
+          if (!fixed) {
+            Navigator.pop(context);
+          }
+
+          await controller.animateBack(0);
+          setState(() {
+            mode = ReturnMode.TAG;
+            tagIndex = index;
+          });
           controller.animateTo(1);
         },
         showTitles: extended,
@@ -455,7 +487,10 @@ class _MainPageState extends State<MainPage>
       case ReturnMode.TRASH:
         return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
       case ReturnMode.FAVOURITES:
-        return MapEntry(appInfo.noFavouritesIllustration, "No favourites for now");
+        return MapEntry(
+            appInfo.noFavouritesIllustration, "No favourites for now");
+      case ReturnMode.TAG:
+        return MapEntry(appInfo.noNotesIllustration, "No notes with this tag");
       case ReturnMode.ALL:
       case ReturnMode.NORMAL:
       default:

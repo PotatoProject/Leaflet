@@ -20,6 +20,7 @@ class Note extends DataClass implements Insertable<Note> {
   final bool list;
   final ListContent listContent;
   final ReminderList reminders;
+  final TagList tags;
   final bool hideContent;
   final bool lockNote;
   final bool usesBiometrics;
@@ -30,7 +31,7 @@ class Note extends DataClass implements Insertable<Note> {
       {@required this.id,
       this.title,
       this.content,
-      @required this.styleJson,
+      this.styleJson,
       @required this.starred,
       @required this.creationDate,
       @required this.lastModifyDate,
@@ -39,6 +40,7 @@ class Note extends DataClass implements Insertable<Note> {
       @required this.list,
       @required this.listContent,
       @required this.reminders,
+      @required this.tags,
       @required this.hideContent,
       @required this.lockNote,
       @required this.usesBiometrics,
@@ -74,6 +76,8 @@ class Note extends DataClass implements Insertable<Note> {
           .mapFromDatabaseResponse(data['${effectivePrefix}list_content'])),
       reminders: $NotesTable.$converter3.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}reminders'])),
+      tags: $NotesTable.$converter4.mapToDart(
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}tags'])),
       hideContent: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}hide_content']),
       lockNote:
@@ -131,6 +135,10 @@ class Note extends DataClass implements Insertable<Note> {
       final converter = $NotesTable.$converter3;
       map['reminders'] = Variable<String>(converter.mapToSql(reminders));
     }
+    if (!nullToAbsent || tags != null) {
+      final converter = $NotesTable.$converter4;
+      map['tags'] = Variable<String>(converter.mapToSql(tags));
+    }
     if (!nullToAbsent || hideContent != null) {
       map['hide_content'] = Variable<bool>(hideContent);
     }
@@ -183,6 +191,7 @@ class Note extends DataClass implements Insertable<Note> {
       reminders: reminders == null && nullToAbsent
           ? const Value.absent()
           : Value(reminders),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       hideContent: hideContent == null && nullToAbsent
           ? const Value.absent()
           : Value(hideContent),
@@ -219,6 +228,7 @@ class Note extends DataClass implements Insertable<Note> {
       list: serializer.fromJson<bool>(json['list']),
       listContent: serializer.fromJson<ListContent>(json['listContent']),
       reminders: serializer.fromJson<ReminderList>(json['reminders']),
+      tags: serializer.fromJson<TagList>(json['tags']),
       hideContent: serializer.fromJson<bool>(json['hideContent']),
       lockNote: serializer.fromJson<bool>(json['lockNote']),
       usesBiometrics: serializer.fromJson<bool>(json['usesBiometrics']),
@@ -243,6 +253,7 @@ class Note extends DataClass implements Insertable<Note> {
       'list': serializer.toJson<bool>(list),
       'listContent': serializer.toJson<ListContent>(listContent),
       'reminders': serializer.toJson<ReminderList>(reminders),
+      'tags': serializer.toJson<TagList>(tags),
       'hideContent': serializer.toJson<bool>(hideContent),
       'lockNote': serializer.toJson<bool>(lockNote),
       'usesBiometrics': serializer.toJson<bool>(usesBiometrics),
@@ -265,6 +276,7 @@ class Note extends DataClass implements Insertable<Note> {
           bool list,
           ListContent listContent,
           ReminderList reminders,
+          TagList tags,
           bool hideContent,
           bool lockNote,
           bool usesBiometrics,
@@ -284,6 +296,7 @@ class Note extends DataClass implements Insertable<Note> {
         list: list ?? this.list,
         listContent: listContent ?? this.listContent,
         reminders: reminders ?? this.reminders,
+        tags: tags ?? this.tags,
         hideContent: hideContent ?? this.hideContent,
         lockNote: lockNote ?? this.lockNote,
         usesBiometrics: usesBiometrics ?? this.usesBiometrics,
@@ -306,6 +319,7 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('list: $list, ')
           ..write('listContent: $listContent, ')
           ..write('reminders: $reminders, ')
+          ..write('tags: $tags, ')
           ..write('hideContent: $hideContent, ')
           ..write('lockNote: $lockNote, ')
           ..write('usesBiometrics: $usesBiometrics, ')
@@ -342,20 +356,22 @@ class Note extends DataClass implements Insertable<Note> {
                                               $mrjc(
                                                   reminders.hashCode,
                                                   $mrjc(
-                                                      hideContent.hashCode,
+                                                      tags.hashCode,
                                                       $mrjc(
-                                                          lockNote.hashCode,
+                                                          hideContent.hashCode,
                                                           $mrjc(
-                                                              usesBiometrics
-                                                                  .hashCode,
+                                                              lockNote.hashCode,
                                                               $mrjc(
-                                                                  deleted
+                                                                  usesBiometrics
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      archived
+                                                                      deleted
                                                                           .hashCode,
-                                                                      synced
-                                                                          .hashCode))))))))))))))))));
+                                                                      $mrjc(
+                                                                          archived
+                                                                              .hashCode,
+                                                                          synced
+                                                                              .hashCode)))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -372,6 +388,7 @@ class Note extends DataClass implements Insertable<Note> {
           other.list == this.list &&
           other.listContent == this.listContent &&
           other.reminders == this.reminders &&
+          other.tags == this.tags &&
           other.hideContent == this.hideContent &&
           other.lockNote == this.lockNote &&
           other.usesBiometrics == this.usesBiometrics &&
@@ -393,6 +410,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<bool> list;
   final Value<ListContent> listContent;
   final Value<ReminderList> reminders;
+  final Value<TagList> tags;
   final Value<bool> hideContent;
   final Value<bool> lockNote;
   final Value<bool> usesBiometrics;
@@ -412,6 +430,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.list = const Value.absent(),
     this.listContent = const Value.absent(),
     this.reminders = const Value.absent(),
+    this.tags = const Value.absent(),
     this.hideContent = const Value.absent(),
     this.lockNote = const Value.absent(),
     this.usesBiometrics = const Value.absent(),
@@ -423,7 +442,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     @required int id,
     this.title = const Value.absent(),
     this.content = const Value.absent(),
-    @required ContentStyle styleJson,
+    this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
     this.creationDate = const Value.absent(),
     this.lastModifyDate = const Value.absent(),
@@ -432,6 +451,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.list = const Value.absent(),
     @required ListContent listContent,
     @required ReminderList reminders,
+    @required TagList tags,
     this.hideContent = const Value.absent(),
     this.lockNote = const Value.absent(),
     this.usesBiometrics = const Value.absent(),
@@ -439,10 +459,10 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.archived = const Value.absent(),
     this.synced = const Value.absent(),
   })  : id = Value(id),
-        styleJson = Value(styleJson),
         images = Value(images),
         listContent = Value(listContent),
-        reminders = Value(reminders);
+        reminders = Value(reminders),
+        tags = Value(tags);
   static Insertable<Note> custom({
     Expression<int> id,
     Expression<String> title,
@@ -456,6 +476,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Expression<bool> list,
     Expression<String> listContent,
     Expression<String> reminders,
+    Expression<String> tags,
     Expression<bool> hideContent,
     Expression<bool> lockNote,
     Expression<bool> usesBiometrics,
@@ -476,6 +497,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       if (list != null) 'list': list,
       if (listContent != null) 'list_content': listContent,
       if (reminders != null) 'reminders': reminders,
+      if (tags != null) 'tags': tags,
       if (hideContent != null) 'hide_content': hideContent,
       if (lockNote != null) 'lock_note': lockNote,
       if (usesBiometrics != null) 'uses_biometrics': usesBiometrics,
@@ -498,6 +520,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       Value<bool> list,
       Value<ListContent> listContent,
       Value<ReminderList> reminders,
+      Value<TagList> tags,
       Value<bool> hideContent,
       Value<bool> lockNote,
       Value<bool> usesBiometrics,
@@ -517,6 +540,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       list: list ?? this.list,
       listContent: listContent ?? this.listContent,
       reminders: reminders ?? this.reminders,
+      tags: tags ?? this.tags,
       hideContent: hideContent ?? this.hideContent,
       lockNote: lockNote ?? this.lockNote,
       usesBiometrics: usesBiometrics ?? this.usesBiometrics,
@@ -570,6 +594,10 @@ class NotesCompanion extends UpdateCompanion<Note> {
       final converter = $NotesTable.$converter3;
       map['reminders'] = Variable<String>(converter.mapToSql(reminders.value));
     }
+    if (tags.present) {
+      final converter = $NotesTable.$converter4;
+      map['tags'] = Variable<String>(converter.mapToSql(tags.value));
+    }
     if (hideContent.present) {
       map['hide_content'] = Variable<bool>(hideContent.value);
     }
@@ -589,6 +617,32 @@ class NotesCompanion extends UpdateCompanion<Note> {
       map['synced'] = Variable<bool>(synced.value);
     }
     return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotesCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('styleJson: $styleJson, ')
+          ..write('starred: $starred, ')
+          ..write('creationDate: $creationDate, ')
+          ..write('lastModifyDate: $lastModifyDate, ')
+          ..write('color: $color, ')
+          ..write('images: $images, ')
+          ..write('list: $list, ')
+          ..write('listContent: $listContent, ')
+          ..write('reminders: $reminders, ')
+          ..write('tags: $tags, ')
+          ..write('hideContent: $hideContent, ')
+          ..write('lockNote: $lockNote, ')
+          ..write('usesBiometrics: $usesBiometrics, ')
+          ..write('deleted: $deleted, ')
+          ..write('archived: $archived, ')
+          ..write('synced: $synced')
+          ..write(')'))
+        .toString();
   }
 }
 
@@ -640,7 +694,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return GeneratedTextColumn(
       'style_json',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -731,6 +785,18 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     );
   }
 
+  final VerificationMeta _tagsMeta = const VerificationMeta('tags');
+  GeneratedTextColumn _tags;
+  @override
+  GeneratedTextColumn get tags => _tags ??= _constructTags();
+  GeneratedTextColumn _constructTags() {
+    return GeneratedTextColumn(
+      'tags',
+      $tableName,
+      false,
+    );
+  }
+
   final VerificationMeta _hideContentMeta =
       const VerificationMeta('hideContent');
   GeneratedBoolColumn _hideContent;
@@ -803,6 +869,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         list,
         listContent,
         reminders,
+        tags,
         hideContent,
         lockNote,
         usesBiometrics,
@@ -862,6 +929,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     }
     context.handle(_listContentMeta, const VerificationResult.success());
     context.handle(_remindersMeta, const VerificationResult.success());
+    context.handle(_tagsMeta, const VerificationResult.success());
     if (data.containsKey('hide_content')) {
       context.handle(
           _hideContentMeta,
@@ -914,6 +982,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       const ListContentConverter();
   static TypeConverter<ReminderList, String> $converter3 =
       const ReminderListConverter();
+  static TypeConverter<TagList, String> $converter4 = const TagListConverter();
 }
 
 abstract class _$AppDatabase extends GeneratedDatabase {

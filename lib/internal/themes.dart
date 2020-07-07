@@ -38,6 +38,12 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.accent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
         cardTheme: CardTheme(
           elevation: 0,
         ),
@@ -54,6 +60,11 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
+        chipTheme: ThemeData.dark().chipTheme.copyWith(
+          backgroundColor: _lightSecondaryColor,
+          elevation: 0,
+          pressElevation: 0,
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
@@ -84,6 +95,12 @@ class Themes {
           backgroundColor: _darkColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.accent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
         cardTheme: CardTheme(
@@ -132,6 +149,12 @@ class Themes {
           backgroundColor: _blackColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.accent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
         cardTheme: CardTheme(

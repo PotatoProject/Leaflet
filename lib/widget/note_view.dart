@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
@@ -45,7 +45,7 @@ class NoteView extends StatelessWidget {
 
     return Card(
       color: note.color != 0
-          ? Color(NoteColors.colorList(context)[note.color]["hex"])
+          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
           : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_kBorderRadius),
@@ -62,6 +62,7 @@ class NoteView extends StatelessWidget {
         onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(_kBorderRadius),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             IgnorePointer(
@@ -95,13 +96,16 @@ class NoteView extends StatelessWidget {
                 itemCount: content.length,
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: NoteViewStatusbar(
-                note: note,
-                padding: content.isEmpty
-                    ? EdgeInsets.all(16)
-                    : null,
+            LayoutBuilder(
+              builder: (context, constraints) => SizedBox(
+                width: constraints.maxWidth,
+                child: NoteViewStatusbar(
+                  note: note,
+                  width: constraints.maxWidth,
+                  padding: content.isEmpty
+                      ? EdgeInsets.all(16)
+                      : null,
+                ),
               ),
             ),
           ],

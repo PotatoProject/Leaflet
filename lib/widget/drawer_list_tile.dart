@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 class DrawerListTile extends StatelessWidget {
   final Widget icon;
   final Widget activeIcon;
-  final Widget title;
+  final String title;
   final bool showTitle;
   final void Function() onTap;
   final bool active;
   final double height;
   final ShapeBorder activeShape;
   final EdgeInsets activeShapePadding;
+  final Color iconColor;
   final Color activeColor;
 
   DrawerListTile({
@@ -23,6 +24,7 @@ class DrawerListTile extends StatelessWidget {
     this.activeShape,
     this.activeShapePadding =
         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.iconColor,
     this.activeColor,
   });
 
@@ -60,8 +62,9 @@ class DrawerListTile extends StatelessWidget {
                     leading: Theme(
                       data: Theme.of(context).copyWith(
                         iconTheme: iconTheme.copyWith(
-                          color:
-                              active ? _activeColor : contrast.withOpacity(0.7),
+                          color: active
+                              ? _activeColor
+                              : iconColor ?? (contrast.withOpacity(0.7)),
                         ),
                       ),
                       child: active ? (activeIcon ?? icon) : icon,
@@ -72,7 +75,7 @@ class DrawerListTile extends StatelessWidget {
                             active ? _activeColor : contrast.withOpacity(0.7),
                         fontWeight: FontWeight.w500,
                       ),
-                      child: title,
+                      child: Text(title),
                     ),
                     onTap: onTap,
                     contentPadding: EdgeInsets.symmetric(horizontal: 24),
@@ -84,12 +87,15 @@ class DrawerListTile extends StatelessWidget {
               icon: Theme(
                 data: Theme.of(context).copyWith(
                   iconTheme: iconTheme.copyWith(
-                    color: active ? _activeColor : contrast.withOpacity(0.7),
+                    color: active
+                        ? _activeColor
+                        : iconColor ?? (contrast.withOpacity(0.7)),
                     size: 24,
                   ),
                 ),
                 child: active ? (activeIcon ?? icon) : icon,
               ),
+              tooltip: title,
               onPressed: onTap,
             ),
     );

@@ -11,6 +11,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes(ReturnMode mode) async {
     switch (mode) {
+      case ReturnMode.TAG:
       case ReturnMode.NORMAL:
         return (select(notes)
               ..where((table) => table.archived.not() & table.deleted.not()))
@@ -38,6 +39,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 
     switch (mode) {
+      case ReturnMode.TAG:
       case ReturnMode.ALL:
         selectQuery = select(notes);
         break;
@@ -75,14 +77,12 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 }
 
 class SearchQuery {
-  String input;
   bool caseSensitive;
   int color;
   DateTime date;
   DateFilterMode dateMode;
 
   SearchQuery({
-    this.input = "",
     this.caseSensitive = true,
     this.color,
     this.date,
@@ -101,4 +101,5 @@ enum ReturnMode {
   ARCHIVE,
   TRASH,
   FAVOURITES,
+  TAG,
 }

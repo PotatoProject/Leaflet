@@ -7,8 +7,10 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 
 class Utils {
@@ -172,6 +174,7 @@ class Utils {
         list: false,
         listContent: ListContent([]),
         reminders: ReminderList([]),
+        tags: TagList([]),
         hideContent: false,
         lockNote: false,
         usesBiometrics: false,
@@ -180,7 +183,7 @@ class Utils {
         synced: false,
       );
 
-  static String getNameFromMode(ReturnMode mode) {
+  static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
       case ReturnMode.NORMAL:
         return "Home";
@@ -190,32 +193,34 @@ class Utils {
         return "Trash";
       case ReturnMode.FAVOURITES:
         return "Favourites";
+      case ReturnMode.TAG:
+        return prefs.tags[tagIndex].name;
       case ReturnMode.ALL:
       default:
         return "All";
     }
   }
 
-  static List<NavigationRailDestination> getDestinations(ReturnMode mode) => [
-        NavigationRailDestination(
+  static List<DrawerListItem> getDestinations(ReturnMode mode) => [
+        DrawerListItem(
           icon: Icon(CommunityMaterialIcons.home_variant_outline),
           selectedIcon: Icon(CommunityMaterialIcons.home_variant),
-          label: Text(Utils.getNameFromMode(ReturnMode.NORMAL)),
+          label: Utils.getNameFromMode(ReturnMode.NORMAL),
         ),
-        NavigationRailDestination(
+        DrawerListItem(
           icon: Icon(MdiIcons.archiveOutline),
           selectedIcon: Icon(MdiIcons.archive),
-          label: Text(Utils.getNameFromMode(ReturnMode.ARCHIVE)),
+          label: Utils.getNameFromMode(ReturnMode.ARCHIVE),
         ),
-        NavigationRailDestination(
+        DrawerListItem(
           icon: Icon(CommunityMaterialIcons.trash_can_outline),
           selectedIcon: Icon(CommunityMaterialIcons.trash_can),
-          label: Text(Utils.getNameFromMode(ReturnMode.TRASH)),
+          label: Utils.getNameFromMode(ReturnMode.TRASH),
         ),
-        NavigationRailDestination(
+        DrawerListItem(
           icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
           selectedIcon: Icon(CommunityMaterialIcons.heart_multiple),
-          label: Text(Utils.getNameFromMode(ReturnMode.FAVOURITES)),
+          label: Utils.getNameFromMode(ReturnMode.FAVOURITES),
         ),
       ];
   

@@ -4,6 +4,7 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/tag_list.dart';
 
 part 'database.g.dart';
 
@@ -22,6 +23,7 @@ class Notes extends Table {
   BoolColumn get list => boolean().withDefault(Constant(false))();
   TextColumn get listContent => text().map(const ListContentConverter())();
   TextColumn get reminders => text().map(const ReminderListConverter())();
+  TextColumn get tags => text().map(const TagListConverter())();
   BoolColumn get hideContent => boolean().withDefault(Constant(false))();
   BoolColumn get lockNote => boolean().withDefault(Constant(false))();
   BoolColumn get usesBiometrics => boolean().withDefault(Constant(false))();

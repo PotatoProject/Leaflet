@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
-import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/date_selector.dart';
 
@@ -45,7 +45,7 @@ class _QueryFiltersState extends State<QueryFilters> {
             Icons.brightness_1,
             size: 28,
             color: Color(
-                NoteColors.colorList(context)[widget.query.color ?? 0]["hex"]),
+                NoteColors.colorList[widget.query.color ?? 0].dynamicColor(context)),
           ),
           onTap: () async {
             int queryColor = await Utils.showNotesModalBottomSheet(

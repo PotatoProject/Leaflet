@@ -5,7 +5,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/illustrations.dart';
-import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -14,11 +14,131 @@ import 'package:potato_notes/widget/query_filters.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class SearchPage extends StatefulWidget {
+  final CustomSearchDelegate delegate;
+
+  SearchPage({@required this.delegate});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState<T> extends State<SearchPage> {
+  // This node is owned, but not hosted by, the search page. Hosting is done by
+  // the text field.
+  FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.delegate._queryTextController.addListener(_onQueryChanged);
+    widget.delegate._focusNode = focusNode;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.delegate._queryTextController.removeListener(_onQueryChanged);
+    widget.delegate._focusNode = null;
+    focusNode.dispose();
+  }
+
+  void _onQueryChanged() {
+    setState(() {
+      // rebuild ourselves because query changed.
+    });
+  }
+
+  void _onSearchBodyChanged() {
+    setState(() {
+      // rebuild ourselves because search body changed.
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasMaterialLocalizations(context));
+    final ThemeData theme = Theme.of(context);
+    final String searchFieldLabel = widget.delegate.searchFieldLabel ??
+        MaterialLocalizations.of(context).searchFieldLabel;
+    Widget body = widget.delegate.buildResults(context);
+    String routeName;
+    switch (theme.platform) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        routeName = '';
+        break;
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        routeName = searchFieldLabel;
+    }
+
+    return Semantics(
+      explicitChildNodes: true,
+      scopesRoute: true,
+      namesRoute: true,
+      label: routeName,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            child: TextField(
+              controller: widget.delegate._queryTextController,
+              focusNode: focusNode,
+              decoration: InputDecoration.collapsed(
+                hintText: "Search",
+              ),
+              onChanged: (value) => _onSearchBodyChanged(),
+            ),
+          ),
+          actions: widget.delegate.buildActions(context),
+        ),
+        body: body,
+      ),
+    );
+  }
+}
+
+abstract class CustomSearchDelegate<T> {
+  CustomSearchDelegate({
+    this.searchFieldLabel,
+    this.keyboardType,
+    this.textInputAction = TextInputAction.search,
+  });
+
+  Widget buildResults(BuildContext context);
+
+  List<Widget> buildActions(BuildContext context);
+
+  String get query => _queryTextController.text;
+  set query(String value) {
+    assert(query != null);
+    _queryTextController.text = value;
+  }
+
+  void close(BuildContext context) {
+    _focusNode?.unfocus();
+    Navigator.of(context)..pop();
+  }
+
+  final String searchFieldLabel;
+
+  final TextInputType keyboardType;
+
+  final TextInputAction textInputAction;
+
+  Animation<double> get transitionAnimation => _proxyAnimation;
+
+  FocusNode _focusNode;
+
+  final TextEditingController _queryTextController = TextEditingController();
+
+  final ProxyAnimation _proxyAnimation =
+      ProxyAnimation(kAlwaysDismissedAnimation);
+}
+
+/*class _SearchPageState extends State<SearchPage> {
   List<Note> notes = [];
   int numOfImages;
 
@@ -74,22 +194,24 @@ class _SearchPageState extends State<SearchPage> {
         builder: (context) {
           Widget child;
 
-          if(notes.isNotEmpty) {
+          if (notes.isNotEmpty) {
             if (prefs.useGrid) {
               child = StaggeredGridView.countBuilder(
                 crossAxisCount: 2,
-                itemBuilder: (context, index) => noteView(context, notes[index]),
+                itemBuilder: (context, index) =>
+                    noteView(context, notes[index]),
                 staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                 itemCount: notes.length,
               );
             } else {
               child = ListView.builder(
-                itemBuilder: (context, index) => noteView(context, notes[index]),
+                itemBuilder: (context, index) =>
+                    noteView(context, notes[index]),
                 itemCount: notes.length,
               );
             }
           } else {
-            if(query.input.isEmpty) {
+            if (query.input.isEmpty) {
               child = Illustrations.quickIllustration(
                 context,
                 appInfo.typeToSearchIllustration,
@@ -113,7 +235,8 @@ class _SearchPageState extends State<SearchPage> {
     SpannableList titleList = SpannableList.generate(note.title.length);
     SpannableList contentList = SpannableList.generate(note.content.length);
 
-    Color noteColor = Color(NoteColors.colorList(context)[note.color]["hex"]);
+    Color noteColor =
+        Color(NoteColors.colorList[note.color].dynamicColor(context));
     Color bgColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.grey[900];
@@ -269,4 +392,4 @@ class _SearchPageState extends State<SearchPage> {
 
     return results;
   }
-}
+}*/

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/internal/colors.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
@@ -16,13 +16,13 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
 
   @override
   Widget build(BuildContext context) {
-    rowsNumber = (NoteColors.colorList(context).length / 4).ceil();
+    rowsNumber = (NoteColors.colorList.length / 4).ceil();
     double shortestSide = MediaQuery.of(context).size.shortestSide;
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.start,
       children: List.generate(
-          NoteColors.colorList(context).length,
+          NoteColors.colorList.length,
           (index) => noteColorItem(
               index, shortestSide / 5, widget.selectedColor == index)),
     );
@@ -38,7 +38,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
         else
           return ThemeData.dark().iconTheme.color;
       } else {
-        Color color = Color(NoteColors.colorList(context)[index]["hex"]);
+        Color color = Color(NoteColors.colorList[index].dynamicColor(context));
 
         if (color.computeLuminance() > 0.5)
           return Colors.black;
@@ -50,11 +50,11 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     return Builder(
       builder: (context) {
         return Material(
-          color: Color(NoteColors.colorList(context)[index]["hex"]),
+          color: Color(NoteColors.colorList[index].dynamicColor(context)),
           child: SizedBox.fromSize(
             size: Size.square(size),
             child: Tooltip(
-              message: NoteColors.colorList(context)[index]["label"],
+              message: NoteColors.colorList[index].label,
               child: InkWell(
                 onTap: () => widget.onColorSelect(index),
                 child: Center(

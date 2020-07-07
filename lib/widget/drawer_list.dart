@@ -3,21 +3,25 @@ import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {
   final Widget header;
-  final List<NavigationRailDestination> items;
-  final List<NavigationRailDestination> secondaryItems;
+  final List<DrawerListItem> items;
+  final List<DrawerListItem> secondaryItems;
+  final Widget secondaryItemsFooter;
   final Widget footer;
   final int currentIndex;
   final bool showTitles;
   final void Function(int index) onTap;
+  final void Function(int index) onSecondaryTap;
 
   DrawerList({
     this.header,
     @required this.items,
     this.secondaryItems,
+    this.secondaryItemsFooter,
     this.footer,
     this.currentIndex = 0,
     this.showTitles = true,
     this.onTap,
+    this.onSecondaryTap,
   });
 
   @override
@@ -55,28 +59,56 @@ class DrawerList extends StatelessWidget {
     }
 
     if (items != null) {
-      list.add(generateDrawerListTiles(items));
+      list.add(generateDrawerListTiles(items, false));
     }
 
     if (secondaryItems != null) {
-      list.add(generateDrawerListTiles(secondaryItems));
+      list.add(generateDrawerListTiles(secondaryItems, true));
     }
 
     return list;
   }
 
-  Widget generateDrawerListTiles(List<NavigationRailDestination> items) =>
+  Widget generateDrawerListTiles(List<DrawerListItem> items, bool secondary) =>
       Column(
-        children: List.generate(
-          items.length,
-          (index) => DrawerListTile(
-            icon: items[index].icon,
-            activeIcon: items[index].selectedIcon,
-            title: items[index].label,
-            onTap: () => onTap(index),
-            active: currentIndex == index,
-            showTitle: showTitles,
+        children: [
+          ...List.generate(
+            items.length,
+            (index) => DrawerListTile(
+              icon: items[index].icon,
+              activeIcon: items[index].selectedIcon,
+              title: items[index].label,
+              onTap: secondary
+                  ? () => onSecondaryTap(index)
+                  : () => onTap(index),
+              active: secondary
+                  ? currentIndex == (index + (this.items.length))
+                  : currentIndex == index,
+              showTitle: showTitles,
+              iconColor: items[index].color,
+              activeColor: items[index].selectedColor,
+            ),
           ),
-        ),
+          secondary
+              ? secondaryItemsFooter ?? Container()
+              : Container(),
+        ],
       );
+}
+
+class DrawerListItem {
+  final Widget icon;
+  final Widget selectedIcon;
+  final String label;
+  final Color color;
+  final Color selectedColor;
+
+  const DrawerListItem({
+    @required this.icon,
+    Widget selectedIcon,
+    this.label,
+    this.color,
+    this.selectedColor,
+  })  : selectedIcon = selectedIcon ?? icon,
+        assert(icon != null);
 }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -14,15 +15,18 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/internal/note_colors.dart';
+import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
+import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
@@ -72,6 +76,7 @@ class _NotePageState extends State<NotePage> {
       list: widget.note?.list ?? false,
       listContent: widget.note?.listContent ?? ListContent([]),
       reminders: widget.note?.reminders ?? ReminderList([]),
+      tags: widget.note?.tags ?? TagList([]),
       hideContent: widget.note?.hideContent ?? false,
       lockNote: widget.note?.lockNote ?? false,
       usesBiometrics: widget.note?.usesBiometrics ?? false,
@@ -135,10 +140,10 @@ class _NotePageState extends State<NotePage> {
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: note.color != 0
-            ? Color(NoteColors.colorList(context)[note.color]["hex"])
+            ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
         cardColor: note.color != 0
-            ? Color(NoteColors.colorList(context)[note.color]["hex"])
+            ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
         accentColor:
             note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
@@ -149,7 +154,8 @@ class _NotePageState extends State<NotePage> {
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
               color: note.color != 0
-                  ? Color(NoteColors.colorList(context)[note.color]["hex"])
+                  ? Color(NoteColors.colorList[note.color]
+                          .dynamicColor(context))
                       .withOpacity(0.9)
                   : null,
             ),
@@ -161,6 +167,17 @@ class _NotePageState extends State<NotePage> {
         key: scaffoldKey,
         appBar: AppBar(
           actions: <Widget>[
+            IconButton(
+              icon: Icon(MdiIcons.tagMultipleOutline),
+              padding: EdgeInsets.all(0),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SearchPage(
+                    delegate: TagSearchDelegate(note),
+                  ),
+                ),
+              ),
+            ),
             IconButton(
               icon: Icon(OMIcons.removeRedEye),
               padding: EdgeInsets.all(0),
@@ -342,8 +359,8 @@ class _NotePageState extends State<NotePage> {
                             notifyNoteChanged();
                           },
                           checkColor: note.color != 0
-                              ? Color(NoteColors.colorList(context)[note.color]
-                                  ["hex"])
+                              ? Color(NoteColors.colorList[note.color]
+                                  .dynamicColor(context))
                               : Theme.of(context).scaffoldBackgroundColor,
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
