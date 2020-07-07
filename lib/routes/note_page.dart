@@ -18,6 +18,7 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
@@ -26,6 +27,7 @@ import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class NotePage extends StatefulWidget {
@@ -168,17 +170,6 @@ class _NotePageState extends State<NotePage> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(MdiIcons.tagMultipleOutline),
-              padding: EdgeInsets.all(0),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchPage(
-                    delegate: TagSearchDelegate(note),
-                  ),
-                ),
-              ),
-            ),
-            IconButton(
               icon: Icon(OMIcons.removeRedEye),
               padding: EdgeInsets.all(0),
               onPressed: showPrivacyOptionSheet,
@@ -241,6 +232,34 @@ class _NotePageState extends State<NotePage> {
 
                     setState(() {});
                   }),
+            ),
+            Visibility(
+              visible: note.tags.tagIds.isNotEmpty,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 8,
+                ),
+                width: MediaQuery.of(context).size.width,
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: List.generate(
+                    note.tags.tagIds.length,
+                    (index) {
+                      TagModel tag = prefs.tags.firstWhere(
+                        (tag) => tag.id == note.tags.tagIds[index],
+                      );
+
+                      return TagChip(
+                        title: tag.name,
+                        color: tag.color,
+                        shrink: false,
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -442,6 +461,17 @@ class _NotePageState extends State<NotePage> {
                 notifyNoteChanged();
               },*/
               rightActions: [
+                IconButton(
+                  icon: Icon(MdiIcons.tagMultipleOutline),
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchPage(
+                        delegate: TagSearchDelegate(note),
+                      ),
+                    ),
+                  ),
+                ),
                 IconButton(
                   icon: Icon(OMIcons.colorLens),
                   padding: EdgeInsets.all(0),

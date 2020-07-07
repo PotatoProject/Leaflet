@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 
 class TagChip extends StatelessWidget {
   final String title;
   final int color;
   final bool showIcon;
+  final bool shrink;
 
   TagChip({
     @required this.title,
     this.color,
     this.showIcon = true,
+    this.shrink = true,
   });
 
   @override
@@ -33,8 +34,8 @@ class TagChip extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.symmetric(
-        vertical: 4,
-        horizontal: 6,
+        vertical: shrink ? 4 : 6,
+        horizontal: shrink ? 6 : 8,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -44,15 +45,15 @@ class TagChip extends StatelessWidget {
             child: Icon(
               Icons.brightness_1,
               color: _color,
-              size: 10,
+              size: shrink ? 10 : 16,
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+            padding: EdgeInsets.symmetric(horizontal: shrink ? 4 : 6),
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: shrink ? 12 : 14,
                 color: Theme.of(context).iconTheme.color.withOpacity(1),
                 fontWeight: FontWeight.w500,
               ),
