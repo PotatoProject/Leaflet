@@ -14,11 +14,13 @@ import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:share/share.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
   final List<Note> selectionList;
   final ReturnMode currentMode;
   final Function() onCloseSelection;
 
   SelectionBar({
+    @required this.scaffoldKey,
     @required this.selectionList,
     this.currentMode = ReturnMode.NORMAL,
     this.onCloseSelection,
@@ -53,7 +55,8 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     List<Widget> buttons = [];
 
     if (currentMode == ReturnMode.NORMAL ||
-        currentMode == ReturnMode.FAVOURITES) {
+        currentMode == ReturnMode.FAVOURITES ||
+        currentMode == ReturnMode.TAG) {
       bool anyStarred = selectionList.any((item) => item.starred);
 
       buttons.add(
@@ -77,7 +80,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
 
-    if (currentMode == ReturnMode.NORMAL) {
+    if (currentMode == ReturnMode.NORMAL || currentMode == ReturnMode.TAG) {
       buttons.addAll([
         IconButton(
           icon: Icon(OMIcons.colorLens),
@@ -126,8 +129,12 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         padding: EdgeInsets.all(0),
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
-            await helper.saveNote(
-                selectionList[i].copyWith(deleted: false, archived: true));
+            await Utils.deleteNotes(
+              scaffoldKey: scaffoldKey,
+              notes: selectionList,
+              reason: "${selectionList.length} notes archived.",
+              archive: true,
+            );
 
           onCloseSelection();
         },
@@ -144,7 +151,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           if (note.deleted) {
             helper.deleteNote(note);
           } else {
-            helper.saveNote(note.copyWith(deleted: true, archived: false));
+            await Utils.deleteNotes(
+              scaffoldKey: scaffoldKey,
+              notes: selectionList,
+              reason: "${selectionList.length} notes moved to trash.",
+            );
           }
         }
 
@@ -153,7 +164,8 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     ));
 
     if (currentMode != ReturnMode.NORMAL &&
-        currentMode != ReturnMode.FAVOURITES) {
+        currentMode != ReturnMode.FAVOURITES &&
+        currentMode != ReturnMode.TAG) {
       buttons.add(IconButton(
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),
@@ -167,9 +179,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ));
     }
 
-    if (selectionList.length == 1 &&
-        !selectionList[0].hideContent &&
-        !kIsWeb) {
+    if (selectionList.length == 1 && !selectionList[0].hideContent && !kIsWeb) {
       buttons.add(
         PopupMenuButton(
           itemBuilder: (context) => Utils.popupItems(context),

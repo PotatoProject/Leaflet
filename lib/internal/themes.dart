@@ -47,6 +47,9 @@ class Themes {
         cardTheme: CardTheme(
           elevation: 0,
         ),
+        snackBarTheme: SnackBarThemeData(
+          actionTextColor: _lightColor,
+        ),
         textTheme: GoogleFonts.montserratTextTheme(ThemeData.light().textTheme),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _lightColor,
@@ -106,6 +109,9 @@ class Themes {
         cardTheme: CardTheme(
           elevation: 0,
         ),
+        snackBarTheme: SnackBarThemeData(
+          actionTextColor: _darkColor,
+        ),
         textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _darkColor,
@@ -159,6 +165,9 @@ class Themes {
         ),
         cardTheme: CardTheme(
           elevation: 0,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          actionTextColor: _blackColor,
         ),
         textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
         bottomSheetTheme: BottomSheetThemeData(

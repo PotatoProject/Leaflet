@@ -230,4 +230,71 @@ class Utils {
       ];
 
   static get defaultAccent => Color(0xFFFF9100);
+
+  static Future<void> deleteNotes({
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required List<Note> notes,
+    @required String reason,
+    bool archive = false,
+  }) async {
+    for (Note note in notes) {
+      if (archive) {
+        await helper.saveNote(note.copyWith(deleted: false, archived: true));
+      } else {
+        await helper.saveNote(note.copyWith(deleted: true, archived: false));
+      }
+    }
+
+    List<Note> backupNotes = List.from(notes);
+
+    scaffoldKey.currentState.hideCurrentSnackBar();
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(reason),
+        action: SnackBarAction(
+          label: "Undo",
+          onPressed: () async {
+            for (Note note in backupNotes) {
+              await helper
+                  .saveNote(note.copyWith(deleted: false, archived: false));
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  static Future<void> restoreNotes({
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required List<Note> notes,
+    @required String reason,
+    bool archive = false,
+  }) async {
+    for (Note note in notes) {
+      await helper.saveNote(note.copyWith(deleted: false, archived: false));
+    }
+
+    List<Note> backupNotes = List.from(notes);
+
+    scaffoldKey.currentState.hideCurrentSnackBar();
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(reason),
+        action: SnackBarAction(
+          label: "Undo",
+          onPressed: () async {
+            for (Note note in backupNotes) {
+              if (archive) {
+                await helper
+                    .saveNote(note.copyWith(deleted: false, archived: true));
+              } else {
+                await helper
+                    .saveNote(note.copyWith(deleted: true, archived: false));
+              }
+            }
+          },
+        ),
+      ),
+    );
+  }
 }

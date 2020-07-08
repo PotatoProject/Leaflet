@@ -136,6 +136,7 @@ class _MainPageState extends State<MainPage>
             key: scaffoldKey,
             appBar: selecting
                 ? SelectionBar(
+                    scaffoldKey: scaffoldKey,
                     selectionList: selectionList,
                     onCloseSelection: () => setState(() {
                       selecting = false;
@@ -147,101 +148,7 @@ class _MainPageState extends State<MainPage>
                     title:
                         Text(Utils.getNameFromMode(mode, tagIndex: tagIndex)),
                     textTheme: Theme.of(context).textTheme,
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchPage(
-                              delegate: NoteSearchDelegate(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(OMIcons.person),
-                        onPressed: () => scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text("Not yet..."),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: mode == ReturnMode.TAG,
-                        child: IconButton(
-                          icon: Icon(MdiIcons.tagRemoveOutline),
-                          onPressed: () async {
-                            bool result = await showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Are you sure?"),
-                                    content: Text(
-                                        "This tag will be lost forever if you delete it."),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("Cancel"),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        child: Text("Delete"),
-                                      ),
-                                    ],
-                                  ),
-                                ) ??
-                                false;
-
-                            if (result) {
-                              List<Note> notes =
-                                  await helper.listNotes(ReturnMode.ALL);
-                              for (Note note in notes) {
-                                note.tags.tagIds
-                                    .remove(prefs.tags[tagIndex].id);
-                                await helper.saveNote(note);
-                              }
-                              await controller.animateBack(0);
-                              int deletedTagIndex = tagIndex;
-                              setState(() {
-                                if (prefs.tags.length == 1) {
-                                  mode = ReturnMode.NORMAL;
-                                } else if (tagIndex == 0 &&
-                                    prefs.tags.length > 2) {
-                                  tagIndex++;
-                                } else if (tagIndex != 0) {
-                                  tagIndex--;
-                                }
-                              });
-                              controller.animateTo(1);
-                              prefs.tags = prefs.tags
-                                ..removeAt(deletedTagIndex);
-                            }
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: mode == ReturnMode.TAG,
-                        child: IconButton(
-                          icon: Icon(MdiIcons.pencilOutline),
-                          onPressed: () {
-                            Utils.showNotesModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => TagEditor(
-                                tag: prefs.tags[tagIndex],
-                                onSave: (tag) {
-                                  Navigator.pop(context);
-                                  prefs.tags = prefs.tags
-                                    ..removeAt(tagIndex)
-                                    ..insert(tagIndex, tag);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                    actions: appBarButtons,
                   ),
             body: StreamBuilder<List<Note>>(
               stream: helper.noteStream(mode),
@@ -498,14 +405,35 @@ class _MainPageState extends State<MainPage>
     ];
   }
 
-  void newNote() {
-    Navigator.of(context).push(
+  void newNote() async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => NotePage(
           numOfImages: numOfImages,
         ),
       ),
     );
+
+    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    int newLength = notes.length;
+
+    if (newLength > currentLength) {
+      Note lastNote = notes.last;
+
+      if (lastNote.title.isEmpty &&
+          lastNote.content.isEmpty &&
+          lastNote.listContent.content.isEmpty &&
+          lastNote.images.data.isEmpty &&
+          lastNote.reminders.reminders.isEmpty) {
+        Utils.deleteNotes(
+          scaffoldKey: scaffoldKey,
+          notes: [lastNote],
+          reason: "Deleted empty note.",
+        );
+      }
+    }
   }
 
   void newImage(ImageSource source, {bool shouldPop = false}) async {
@@ -635,4 +563,143 @@ class _MainPageState extends State<MainPage>
       numOfImages: numOfImages,
     );
   }
+
+  List<Widget> get appBarButtons => [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchPage(
+                delegate: NoteSearchDelegate(),
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: Icon(OMIcons.person),
+          onPressed: () => scaffoldKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text("Not yet..."),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: mode == ReturnMode.ARCHIVE || mode == ReturnMode.TRASH,
+          child: Builder(
+            builder: (context) {
+              List<Note> notes;
+
+              if (mode == ReturnMode.ARCHIVE) {
+                notes = List.from(cachedNotesMap[ReturnMode.ARCHIVE]);
+              } else {
+                notes = List.from(cachedNotesMap[ReturnMode.TRASH]);
+              }
+
+              return IconButton(
+                icon: Icon(MdiIcons.backupRestore),
+                onPressed: () async {
+                  bool result = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text(
+                        "Do you want to restore every note in the ${mode == ReturnMode.ARCHIVE ? "archive" : "trash"}",
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Cancel"),
+                        ),
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text("Restore"),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (result ?? false) {
+                    await Utils.restoreNotes(
+                      scaffoldKey: scaffoldKey,
+                      notes: notes,
+                      reason: "${notes.length} notes restored.",
+                      archive: mode == ReturnMode.ARCHIVE,
+                    );
+                  }
+                },
+              );
+            },
+          ),
+        ),
+        Visibility(
+          visible: mode == ReturnMode.TAG,
+          child: IconButton(
+            icon: Icon(MdiIcons.tagRemoveOutline),
+            onPressed: () async {
+              bool result = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text(
+                          "This tag will be lost forever if you delete it."),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Cancel"),
+                        ),
+                        FlatButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text("Delete"),
+                        ),
+                      ],
+                    ),
+                  ) ??
+                  false;
+
+              if (result) {
+                List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+                for (Note note in notes) {
+                  note.tags.tagIds.remove(prefs.tags[tagIndex].id);
+                  await helper.saveNote(note);
+                }
+                await controller.animateBack(0);
+                int deletedTagIndex = tagIndex;
+                setState(() {
+                  if (prefs.tags.length == 1) {
+                    mode = ReturnMode.NORMAL;
+                  } else if (tagIndex == 0 && prefs.tags.length > 2) {
+                    tagIndex++;
+                  } else if (tagIndex != 0) {
+                    tagIndex--;
+                  }
+                });
+                controller.animateTo(1);
+                prefs.tags = prefs.tags..removeAt(deletedTagIndex);
+              }
+            },
+          ),
+        ),
+        Visibility(
+          visible: mode == ReturnMode.TAG,
+          child: IconButton(
+            icon: Icon(MdiIcons.pencilOutline),
+            onPressed: () {
+              Utils.showNotesModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => TagEditor(
+                  tag: prefs.tags[tagIndex],
+                  onSave: (tag) {
+                    Navigator.pop(context);
+                    prefs.tags = prefs.tags
+                      ..removeAt(tagIndex)
+                      ..insert(tagIndex, tag);
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ];
 }
