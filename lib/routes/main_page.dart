@@ -165,7 +165,10 @@ class _MainPageState extends State<MainPage>
                 List<Note> notes = mode == ReturnMode.TAG
                     ? snapshot.data
                         .where((note) =>
-                            note.tags.tagIds.contains(prefs.tags[tagIndex].id))
+                            note.tags.tagIds
+                                .contains(prefs.tags[tagIndex].id) &&
+                            !note.archived &&
+                            !note.deleted)
                         .toList()
                     : snapshot.data;
 
@@ -212,11 +215,13 @@ class _MainPageState extends State<MainPage>
             floatingActionButton:
                 mode == ReturnMode.NORMAL && !selecting ? fab : null,
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            drawer: MediaQuery.of(context).orientation == Orientation.portrait
-                ? Drawer(
-                    child: getDrawer(true, false),
-                  )
-                : null,
+            drawer:
+                MediaQuery.of(context).orientation == Orientation.portrait &&
+                        !selecting
+                    ? Drawer(
+                        child: getDrawer(true, false),
+                      )
+                    : null,
             drawerScrimColor: Colors.transparent,
             drawerEdgeDragWidth: MediaQuery.of(context).size.width,
           ),
@@ -312,7 +317,11 @@ class _MainPageState extends State<MainPage>
           }
 
           await controller.animateBack(0);
-          setState(() => mode = ReturnMode.values[index + 1]);
+          setState(() {
+            selecting = false;
+            selectionList.clear();
+            mode = ReturnMode.values[index + 1];
+          });
           controller.animateTo(1);
         },
         onSecondaryTap: (index) async {
@@ -322,6 +331,8 @@ class _MainPageState extends State<MainPage>
 
           await controller.animateBack(0);
           setState(() {
+            selecting = false;
+            selectionList.clear();
             mode = ReturnMode.TAG;
             tagIndex = index;
           });
