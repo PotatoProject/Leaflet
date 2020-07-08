@@ -51,12 +51,15 @@ class Utils {
         child: Container(
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.symmetric(horizontal: padding),
-          child: Material(
-            color: backgroundColor,
-            shape: shape,
-            elevation: elevation ?? 1,
-            clipBehavior: clipBehavior ?? Clip.none,
-            child: builder(context),
+          child: GestureDetector(
+            onTapDown: (_) {},
+            child: Material(
+              color: backgroundColor,
+              shape: shape,
+              elevation: elevation ?? 1,
+              clipBehavior: clipBehavior ?? Clip.none,
+              child: builder(context),
+            ),
           ),
         ),
       ),
