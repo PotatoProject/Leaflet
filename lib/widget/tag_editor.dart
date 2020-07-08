@@ -4,10 +4,12 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 
 class TagEditor extends StatefulWidget {
+  final TagModel tag;
   final String initialInput;
   final void Function(TagModel) onSave;
 
   TagEditor({
+    this.tag,
     this.initialInput = "",
     this.onSave,
   });
@@ -24,16 +26,19 @@ class _NewTagState extends State<TagEditor> {
 
   @override
   void initState() {
-    TagModel lastTag;
-    List<TagModel> tags = prefs.tags ?? [];
-    tags.sort((a, b) => a.id.compareTo(b.id));
+    if (widget.tag == null) {
+      TagModel lastTag;
+      List<TagModel> tags = prefs.tags ?? [];
+      tags.sort((a, b) => a.id.compareTo(b.id));
 
-    if (tags.isNotEmpty) {
-      lastTag = tags.last;
-    }
+      if (tags.isNotEmpty) {
+        lastTag = tags.last;
+      }
 
-    tag.id = (lastTag?.id ?? 0) + 1;
-    tag.name = widget.initialInput;
+      tag.id = (lastTag?.id ?? 0) + 1;
+      tag.name = widget.initialInput;
+    } else
+      tag = widget.tag;
 
     controller = TextEditingController();
     super.initState();
@@ -51,7 +56,7 @@ class _NewTagState extends State<TagEditor> {
           Padding(
             padding: EdgeInsets.all(24),
             child: Text(
-              "New tag",
+              "${widget.tag != null ? "Modify" : "New"} tag",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -65,6 +70,7 @@ class _NewTagState extends State<TagEditor> {
                 hintText: "Name",
               ),
               initialValue: tag.name,
+              maxLength: 30,
               onChanged: (text) => setState(() => tag.name = text),
             ),
           ),
@@ -112,8 +118,9 @@ class _NewTagState extends State<TagEditor> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FlatButton(
-                  onPressed:
-                      tag.name.isNotEmpty ? () => widget.onSave(tag) : null,
+                  onPressed: tag.name.trim().isNotEmpty
+                      ? () => widget.onSave(tag..name = tag.name.trim())
+                      : null,
                   child: Text("Save"),
                   color: Theme.of(context).accentColor,
                   disabledColor: Theme.of(context).disabledColor,

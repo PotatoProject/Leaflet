@@ -167,6 +167,80 @@ class _MainPageState extends State<MainPage>
                           ),
                         ),
                       ),
+                      Visibility(
+                        visible: mode == ReturnMode.TAG,
+                        child: IconButton(
+                          icon: Icon(MdiIcons.tagRemoveOutline),
+                          onPressed: () async {
+                            bool result = await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Are you sure?"),
+                                    content: Text(
+                                        "This tag will be lost forever if you delete it."),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Cancel"),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  ),
+                                ) ??
+                                false;
+
+                            if (result) {
+                              List<Note> notes =
+                                  await helper.listNotes(ReturnMode.ALL);
+                              for (Note note in notes) {
+                                note.tags.tagIds
+                                    .remove(prefs.tags[tagIndex].id);
+                                await helper.saveNote(note);
+                              }
+                              await controller.animateBack(0);
+                              int deletedTagIndex = tagIndex;
+                              setState(() {
+                                if (prefs.tags.length == 1) {
+                                  mode = ReturnMode.NORMAL;
+                                } else if (tagIndex == 0 &&
+                                    prefs.tags.length > 2) {
+                                  tagIndex++;
+                                } else if (tagIndex != 0) {
+                                  tagIndex--;
+                                }
+                              });
+                              controller.animateTo(1);
+                              prefs.tags = prefs.tags
+                                ..removeAt(deletedTagIndex);
+                            }
+                          },
+                        ),
+                      ),
+                      Visibility(
+                        visible: mode == ReturnMode.TAG,
+                        child: IconButton(
+                          icon: Icon(MdiIcons.pencilOutline),
+                          onPressed: () {
+                            Utils.showNotesModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => TagEditor(
+                                tag: prefs.tags[tagIndex],
+                                onSave: (tag) {
+                                  Navigator.pop(context);
+                                  prefs.tags = prefs.tags
+                                    ..removeAt(tagIndex)
+                                    ..insert(tagIndex, tag);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
             body: StreamBuilder<List<Note>>(
@@ -313,15 +387,15 @@ class _MainPageState extends State<MainPage>
           icon: Icon(CustomIcons.settings_outline),
           title: "Settings",
           onTap: () {
-                  if (!fixed) {
-                    Navigator.pop(context);
-                  }
+            if (!fixed) {
+              Navigator.pop(context);
+            }
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                },
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          },
           showTitle: extended,
         ),
         currentIndex: mode == ReturnMode.TAG ? tagIndex + 4 : mode.index - 1,

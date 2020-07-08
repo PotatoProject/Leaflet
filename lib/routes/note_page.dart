@@ -464,13 +464,17 @@ class _NotePageState extends State<NotePage> {
                 IconButton(
                   icon: Icon(MdiIcons.tagMultipleOutline),
                   padding: EdgeInsets.all(0),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(
-                        delegate: TagSearchDelegate(note),
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          delegate: TagSearchDelegate(note),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+
+                    setState(() {});
+                  },
                 ),
                 IconButton(
                   icon: Icon(OMIcons.colorLens),

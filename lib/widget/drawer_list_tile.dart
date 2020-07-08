@@ -75,7 +75,10 @@ class DrawerListTile extends StatelessWidget {
                             active ? _activeColor : contrast.withOpacity(0.7),
                         fontWeight: FontWeight.w500,
                       ),
-                      child: Text(title),
+                      child: Text(
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     onTap: onTap,
                     contentPadding: EdgeInsets.symmetric(horizontal: 24),

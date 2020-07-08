@@ -35,13 +35,18 @@ class NoteViewStatusbar extends StatelessWidget {
                 runSpacing: 4,
                 alignment: WrapAlignment.start,
                 children: List.generate(
-                  note.tags.tagIds.length > 3
-                      ? 4
-                      : note.tags.tagIds.length,
+                  note.tags.tagIds.length > 3 ? 4 : note.tags.tagIds.length,
                   (index) {
-                    if(index != 3) {
-                      TagModel tag = prefs.tags
-                          .firstWhere((tag) => tag.id == note.tags.tagIds[index]);
+                    if (index != 3) {
+                      TagModel tag;
+
+                      try {
+                        tag = prefs.tags.firstWhere(
+                            (tag) => tag.id == note.tags.tagIds[index]);
+                      } on StateError {
+                        return Container();
+                      }
+
                       return TagChip(
                         title: tag.name,
                         color: tag.color,

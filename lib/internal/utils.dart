@@ -194,7 +194,12 @@ class Utils {
       case ReturnMode.FAVOURITES:
         return "Favourites";
       case ReturnMode.TAG:
-        return prefs.tags[tagIndex].name;
+        if (prefs.tags.isNotEmpty) {
+          return prefs.tags[tagIndex].name;
+        } else {
+          return "Tag";
+        }
+        break;
       case ReturnMode.ALL:
       default:
         return "All";
@@ -223,6 +228,6 @@ class Utils {
           label: Utils.getNameFromMode(ReturnMode.FAVOURITES),
         ),
       ];
-  
+
   static get defaultAccent => Color(0xFFFF9100);
 }

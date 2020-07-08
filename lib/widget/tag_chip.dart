@@ -22,45 +22,59 @@ class TagChip extends StatelessWidget {
         ? Color(NoteColors.colorList[color ?? 0].color)
         : Theme.of(context).iconTheme.color.withOpacity(1);
 
-    return Container(
-      decoration: ShapeDecoration(
-        color: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(256),
-          side: BorderSide(
-            color: contrast,
-            width: 1.5,
-          ),
-        ),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: shrink ? 4 : 6,
-        horizontal: shrink ? 6 : 8,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Visibility(
-            visible: showIcon,
-            child: Icon(
-              Icons.brightness_1,
-              color: _color,
-              size: shrink ? 10 : 16,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: shrink ? 4 : 6),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: shrink ? 12 : 14,
-                color: Theme.of(context).iconTheme.color.withOpacity(1),
-                fontWeight: FontWeight.w500,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          decoration: ShapeDecoration(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(256),
+              side: BorderSide(
+                color: contrast,
+                width: 1.5,
               ),
             ),
           ),
-        ],
-      ),
+          constraints: BoxConstraints(
+            maxWidth: constraints.maxWidth,
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: shrink ? 4 : 6,
+            horizontal: shrink ? 6 : 8,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Visibility(
+                visible: showIcon,
+                child: Icon(
+                  Icons.brightness_1,
+                  color: _color,
+                  size: shrink ? 10 : 16,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: shrink ? 4 : 6),
+                constraints: BoxConstraints(
+                  maxWidth: constraints.maxWidth -
+                      (shrink ? 10 : 16) -
+                      (shrink ? 8 : 12) -
+                      (shrink ? 12 : 16),
+                ),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: shrink ? 12 : 14,
+                    color: Theme.of(context).iconTheme.color.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
