@@ -41,9 +41,20 @@ After that, building is simple as this:
 ```
 ~$ flutter pub get
 
-~$ flutter run           # for debug
-~$ flutter build apk     # release build (fat apk)
+~$ flutter run --flavor dev              # for debug
+~$ flutter build apk --flavor production # release build (fat apk)
 ```
+### Why do i need to specify a flavor?
+To make development and testing easier we have 3 flavors of the app:
+| Flavor   | Usecase  |
+|---|---|
+| dev   | Development  |
+| ci   | Testing PR's (only used by the buildbot)  |
+| production | Release version | 
+
+For testing please use the `dev` flavor. That way you dont overwrite the official version (which results in your notes getting wiped). 
+
+
 
 ## Contributing
 The entire app and even the [online sync api](https://github.com/broodroosterdev/potatosync-rust) is completely open source.  
