@@ -40,6 +40,9 @@ dependencies:
   path_drawing:
   quick_actions:
   image_picker_for_web:
+  package_info:
+  url_launcher:
+  cached_network_image:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

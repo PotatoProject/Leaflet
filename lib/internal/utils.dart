@@ -10,6 +10,7 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 
@@ -266,6 +267,53 @@ class Utils {
       ),
     );
   }
+
+  static List<ContributorInfo> get contributors => [
+        ContributorInfo(
+          name: "Davide Bianco",
+          role: "Lead developer and app design",
+          avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
+          socialLinks: [
+            SocialLink(SocialLinkType.GITHUB, "HrX03"),
+            SocialLink(SocialLinkType.INSTAGRAM, "b_b_biancoboi"),
+            SocialLink(SocialLinkType.TWITTER, "HrX2003"),
+          ],
+        ),
+        ContributorInfo(
+          name: "Bas Wieringa (broodrooster)",
+          role: "Sync API and App",
+          avatarUrl: "https://avatars.githubusercontent.com/u/31385368",
+          socialLinks: [
+            SocialLink(SocialLinkType.GITHUB, "broodroosterdev"),
+          ],
+        ),
+        ContributorInfo(
+          name: "Nico Franke",
+          role: "Sync API",
+          avatarUrl: "https://avatars.githubusercontent.com/u/23036430",
+          socialLinks: [
+            SocialLink(SocialLinkType.GITHUB, "ZerNico"),
+            SocialLink(SocialLinkType.INSTAGRAM, "z3rnico"),
+            SocialLink(SocialLinkType.TWITTER, "Z3rNico"),
+          ],
+        ),
+        ContributorInfo(
+          name: "SphericalKat",
+          role: "Old sync API",
+          avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
+          socialLinks: [
+            SocialLink(SocialLinkType.GITHUB, "ATechnoHazard"),
+          ],
+        ),
+        ContributorInfo(
+          name: "Rohit K.Parida",
+          role: "Illustrations and note colors",
+          avatarUrl: "https://avatars.githubusercontent.com/u/18437518",
+          socialLinks: [
+            SocialLink(SocialLinkType.TWITTER, "paridadesigns"),
+          ],
+        ),
+      ];
 
   static Future<void> restoreNotes({
     GlobalKey<ScaffoldState> scaffoldKey,

@@ -26,7 +26,12 @@ main() async {
   );
 }
 
-class PotatoNotes extends StatelessWidget {
+class PotatoNotes extends StatefulWidget {
+  @override
+  _PotatoNotesState createState() => _PotatoNotesState();
+}
+
+class _PotatoNotesState extends State<PotatoNotes> {
   static final EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
 
@@ -103,5 +108,7 @@ class PotatoNotes extends StatelessWidget {
     if (prefs == null) {
       prefs = read(ChangeNotifierProvider((_) => Preferences()));
     }
+
+    prefs.addListener(() => setState(() {}));
   }
 }

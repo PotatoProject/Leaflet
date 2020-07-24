@@ -2,11 +2,13 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
@@ -174,6 +176,22 @@ class _SettingsPageState extends State<SettingsPage> {
                         await showPassChallengeSheet(context, false) ?? false;
                     if (confirm) showPassChallengeSheet(context);
                   },
+                ),
+              ],
+            ),
+            SettingsCategory(
+              header: "Info",
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(MdiIcons.informationOutline),
+                  title: Text("About PotatoNotes"),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => AboutPage(),
+                    ),
+                  ),
                 ),
               ],
             ),

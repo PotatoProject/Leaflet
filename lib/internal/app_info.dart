@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:package_info/package_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -25,6 +26,7 @@ class AppInfoProvider extends ChangeNotifier {
   List<BiometricType> availableBiometrics;
   FlutterLocalNotificationsPlugin notifications;
   QuickActions quickActions;
+  PackageInfo packageInfo;
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
@@ -32,10 +34,6 @@ class AppInfoProvider extends ChangeNotifier {
   Widget noFavouritesIllustration;
   Widget nothingFoundIllustration;
   Widget typeToSearchIllustration;
-
-  bool _imageCacheReloadRequested = false;
-
-  bool get imageCacheReloadRequested => _imageCacheReloadRequested;
 
   void updateIllustrations(Brightness systemTheme) async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
@@ -76,11 +74,12 @@ class AppInfoProvider extends ChangeNotifier {
   }
 
   void loadData() async {
-    if(!kIsWeb) {
+    if (!kIsWeb) {
       _initNotifications();
     }
 
     canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
     availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
+    packageInfo = await PackageInfo.fromPlatform();
   }
 }
