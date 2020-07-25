@@ -88,6 +88,14 @@ class SharedPrefs {
     await prefs.setBool("use_custom_accent", value);
   }
 
+  Future<bool> getWelcomePageSeenV2() async {
+    return prefs.getBool("welcome_page_seen_v2") ?? false;
+  }
+
+  void setWelcomePageSeenV2(bool value) async {
+    await prefs.setBool("welcome_page_seen_v2", value);
+  }
+
   Future<String> getApiUrl() async {
     return prefs.getString("api_url") ?? "https://sync.potatoproject.co";
   }
@@ -139,8 +147,7 @@ class SharedPrefs {
   Future<List<TagModel>> getTags() async {
     List<String> encodedList = prefs.getStringList("tags");
 
-    if(encodedList == null)
-      return [];
+    if (encodedList == null) return [];
 
     return List.generate(
       encodedList.length,

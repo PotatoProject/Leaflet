@@ -18,10 +18,12 @@ import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/routes/setup/setup_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
@@ -84,6 +86,27 @@ class _MainPageState extends State<MainPage>
         }
       });
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bool welcomePageSeenV2;
+      // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
+      final sharedPrefs = await SharedPrefs.newInstance();
+
+      welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeenV2();
+      if (!welcomePageSeenV2) {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SetupPage(),
+              );
+            },
+          ),
+        );
+      }
+    });
 
     super.initState();
   }

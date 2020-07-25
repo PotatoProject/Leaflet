@@ -14,6 +14,12 @@ import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 
 class SettingsPage extends StatefulWidget {
+  final bool trimmed;
+
+  SettingsPage({
+    this.trimmed = false,
+  });
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -23,162 +29,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.trimmed) return commonSettings;
+
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Settings"),
+          textTheme: Theme.of(context).textTheme,
+        ),
         extendBodyBehindAppBar: true,
         body: ListView(
           children: [
-            SettingsCategory(
-              header: "Personalization",
-              children: [
-                ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                  leading: Icon(CommunityMaterialIcons.theme_light_dark),
-                  title: Text("Theme mode"),
-                  trailing: DropdownButton(
-                    items: [
-                      DropdownMenuItem(
-                        child: Text("System"),
-                        value: ThemeMode.system,
-                      ),
-                      DropdownMenuItem(
-                        child: Text("Light"),
-                        value: ThemeMode.light,
-                      ),
-                      DropdownMenuItem(
-                        child: Text("Dark"),
-                        value: ThemeMode.dark,
-                      ),
-                    ],
-                    onChanged: (value) => prefs.themeMode = value,
-                    value: prefs.themeMode,
-                  ),
-                ),
-                SwitchListTile(
-                  value: prefs.useAmoled,
-                  onChanged: (value) => prefs.useAmoled = value,
-                  title: Text("Use AMOLED theme"),
-                  secondary: Icon(CommunityMaterialIcons.brightness_6),
-                  activeColor: Theme.of(context).accentColor,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                ),
-                SwitchListTile(
-                  value: kIsWeb ? false : !prefs.useCustomAccent,
-                  onChanged:
-                      kIsWeb ? null : (value) => prefs.useCustomAccent = !value,
-                  title: Text("Follow system accent"),
-                  secondary: Icon(OMIcons.colorLens),
-                  activeColor: Theme.of(context).accentColor,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                ),
-                ListTile(
-                  leading: Icon(OMIcons.colorize),
-                  title: Text("Pick a custom accent"),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                  enabled: kIsWeb ? true : prefs.useCustomAccent,
-                  trailing: AnimatedOpacity(
-                    opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
-                    duration: Duration(milliseconds: 200),
-                    child: SizedBox(
-                      width: 60,
-                      child: Icon(
-                        Icons.brightness_1,
-                        color: prefs.customAccent ?? Utils.defaultAccent,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                  onTap: () async {
-                    int result = await Utils.showNotesModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => RGBColorPicker(
-                        initialColor: Theme.of(context).accentColor,
-                      ),
-                    );
-
-                    if (result != null) {
-                      if (result == -1) {
-                        prefs.customAccent = null;
-                      } else {
-                        prefs.customAccent = Color(result);
-                      }
-                    }
-                  },
-                ),
-                SwitchListTile(
-                  value: prefs.useGrid,
-                  onChanged: (value) => prefs.useGrid = value,
-                  title: Text("Grid view for notes"),
-                  secondary:
-                      Icon(CommunityMaterialIcons.view_dashboard_outline),
-                  activeColor: Theme.of(context).accentColor,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                ),
-              ],
-            ),
-            SettingsCategory(
-              header: "Privacy",
-              children: [
-                SwitchListTile(
-                  value: prefs.masterPass != "",
-                  onChanged: (value) async {
-                    if (prefs.masterPass == "") {
-                      bool status = await showInfoSheet(
-                        context,
-                        content:
-                            "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.",
-                        buttonAction: "Go on",
-                      );
-                      if (status) showPassChallengeSheet(context);
-                    } else {
-                      bool confirm =
-                          await showPassChallengeSheet(context, false) ?? false;
-
-                      if (confirm) {
-                        prefs.masterPass = "";
-
-                        List<Note> notes =
-                            await helper.listNotes(ReturnMode.ALL);
-
-                        setState(() => removingMasterPass = true);
-                        for (int i = 0; i < notes.length; i++) {
-                          await helper
-                              .saveNote(notes[i].copyWith(lockNote: false));
-                        }
-                        setState(() => removingMasterPass = false);
-                      }
-                    }
-                  },
-                  secondary: Icon(OMIcons.vpnKey),
-                  title: Text("Use master pass"),
-                  activeColor: Theme.of(context).accentColor,
-                  subtitle:
-                      removingMasterPass ? LinearProgressIndicator() : null,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                ),
-                ListTile(
-                  leading: Icon(CommunityMaterialIcons.form_textbox_password),
-                  title: Text("Modify master pass"),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                  enabled: prefs.masterPass != "",
-                  onTap: () async {
-                    bool confirm =
-                        await showPassChallengeSheet(context, false) ?? false;
-                    if (confirm) showPassChallengeSheet(context);
-                  },
-                ),
-              ],
-            ),
+            commonSettings,
             SettingsCategory(
               header: "Info",
               children: <Widget>[
@@ -242,6 +105,151 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget get commonSettings {
+    return Column(
+      children: <Widget>[
+        SettingsCategory(
+          header: "Personalization",
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+              leading: Icon(CommunityMaterialIcons.theme_light_dark),
+              title: Text("Theme mode"),
+              trailing: DropdownButton(
+                items: [
+                  DropdownMenuItem(
+                    child: Text("System"),
+                    value: ThemeMode.system,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Light"),
+                    value: ThemeMode.light,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Dark"),
+                    value: ThemeMode.dark,
+                  ),
+                ],
+                onChanged: (value) => prefs.themeMode = value,
+                value: prefs.themeMode,
+              ),
+            ),
+            SwitchListTile(
+              value: prefs.useAmoled,
+              onChanged: (value) => prefs.useAmoled = value,
+              title: Text("Use AMOLED theme"),
+              secondary: Icon(CommunityMaterialIcons.brightness_6),
+              activeColor: Theme.of(context).accentColor,
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            ),
+            SwitchListTile(
+              value: kIsWeb ? false : !prefs.useCustomAccent,
+              onChanged:
+                  kIsWeb ? null : (value) => prefs.useCustomAccent = !value,
+              title: Text("Follow system accent"),
+              secondary: Icon(OMIcons.colorLens),
+              activeColor: Theme.of(context).accentColor,
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            ),
+            ListTile(
+              leading: Icon(OMIcons.colorize),
+              title: Text("Pick a custom accent"),
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+              enabled: kIsWeb ? true : prefs.useCustomAccent,
+              trailing: AnimatedOpacity(
+                opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
+                duration: Duration(milliseconds: 200),
+                child: SizedBox(
+                  width: 60,
+                  child: Icon(
+                    Icons.brightness_1,
+                    color: prefs.customAccent ?? Utils.defaultAccent,
+                    size: 28,
+                  ),
+                ),
+              ),
+              onTap: () async {
+                int result = await Utils.showNotesModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => RGBColorPicker(
+                    initialColor: Theme.of(context).accentColor,
+                  ),
+                );
+
+                if (result != null) {
+                  if (result == -1) {
+                    prefs.customAccent = null;
+                  } else {
+                    prefs.customAccent = Color(result);
+                  }
+                }
+              },
+            ),
+            SwitchListTile(
+              value: prefs.useGrid,
+              onChanged: (value) => prefs.useGrid = value,
+              title: Text("Grid view for notes"),
+              secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
+              activeColor: Theme.of(context).accentColor,
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            ),
+          ],
+        ),
+        SettingsCategory(
+          header: "Privacy",
+          children: [
+            SwitchListTile(
+              value: prefs.masterPass != "",
+              onChanged: (value) async {
+                if (prefs.masterPass == "") {
+                  bool status = await showInfoSheet(
+                    context,
+                    content:
+                        "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.",
+                    buttonAction: "Go on",
+                  );
+                  if (status) showPassChallengeSheet(context);
+                } else {
+                  bool confirm =
+                      await showPassChallengeSheet(context, false) ?? false;
+
+                  if (confirm) {
+                    prefs.masterPass = "";
+
+                    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+
+                    setState(() => removingMasterPass = true);
+                    for (int i = 0; i < notes.length; i++) {
+                      await helper.saveNote(notes[i].copyWith(lockNote: false));
+                    }
+                    setState(() => removingMasterPass = false);
+                  }
+                }
+              },
+              secondary: Icon(OMIcons.vpnKey),
+              title: Text("Use master pass"),
+              activeColor: Theme.of(context).accentColor,
+              subtitle: removingMasterPass ? LinearProgressIndicator() : null,
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            ),
+            ListTile(
+              leading: Icon(CommunityMaterialIcons.form_textbox_password),
+              title: Text("Modify master pass"),
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+              enabled: prefs.masterPass != "",
+              onTap: () async {
+                bool confirm =
+                    await showPassChallengeSheet(context, false) ?? false;
+                if (confirm) showPassChallengeSheet(context);
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 

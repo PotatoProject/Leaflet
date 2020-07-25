@@ -23,6 +23,7 @@ class Preferences extends ChangeNotifier {
   bool _useAmoled = false;
   bool _useGrid = false;
   bool _useCustomAccent = false;
+  bool _welcomePageSeenV2 = false;
   String _apiUrl;
   String _accessToken;
   String _refreshToken;
@@ -37,6 +38,7 @@ class Preferences extends ChangeNotifier {
   bool get useAmoled => _useAmoled;
   bool get useGrid => _useGrid;
   bool get useCustomAccent => _useCustomAccent;
+  bool get welcomePageSeenV2 => _welcomePageSeenV2;
   String get apiUrl => _apiUrl;
   Future<String> get token async => await getToken();
   String get username => _username;
@@ -46,8 +48,8 @@ class Preferences extends ChangeNotifier {
 
   set masterPass(String value) {
     _masterPass = value;
-    
-    if(kIsWeb) {
+
+    if (kIsWeb) {
       prefs.setMasterPass(value);
     } else {
       keystore.setMasterPass(value);
@@ -83,6 +85,12 @@ class Preferences extends ChangeNotifier {
   set useCustomAccent(bool value) {
     _useCustomAccent = value;
     prefs.setUseCustomAccent(value);
+    notifyListeners();
+  }
+
+  set welcomePageSeenV2(bool value) {
+    _welcomePageSeenV2 = value;
+    prefs.setWelcomePageSeenV2(value);
     notifyListeners();
   }
 
@@ -132,7 +140,7 @@ class Preferences extends ChangeNotifier {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
 
-    if(kIsWeb) {
+    if (kIsWeb) {
       masterPass = await prefs.getMasterPass();
     } else {
       masterPass = await keystore.getMasterPass();
@@ -142,6 +150,7 @@ class Preferences extends ChangeNotifier {
     useAmoled = await prefs.getUseAmoled();
     useGrid = await prefs.getUseGrid();
     useCustomAccent = await prefs.getUseCustomAccent();
+    welcomePageSeenV2 = await prefs.getWelcomePageSeenV2();
     apiUrl = await prefs.getApiUrl();
     accessToken = await prefs.getAccessToken();
     refreshToken = await prefs.getRefreshToken();

@@ -127,8 +127,8 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> fgAnimation = CurvedAnimation(
       parent: animation,
-      curve: linearTransition ? Curves.linear : Cubic(0.0, 0.0, 0.2, 1),
-      reverseCurve: linearTransition ? Curves.linear : Cubic(0.4, 0.0, 1, 1),
+      curve: linearTransition ? Curves.linear : Curves.easeOut,
+      reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
     ).drive(Tween<Offset>(
       begin: Offset(1, 0),
       end: Offset(0, 0),
@@ -136,9 +136,8 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> bgAnimation = CurvedAnimation(
       parent: secondaryAnimation,
-      curve: linearTransition ? Curves.linear : Curves.linearToEaseOut,
-      reverseCurve:
-          linearTransition ? Curves.linear : Cubic(0.30, 0.00, 0.80, 0.15),
+      curve: linearTransition ? Curves.linear : Curves.easeOut,
+      reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
     ).drive(Tween<Offset>(
       begin: Offset(0, 0),
       end: Offset(-0.3, 0),
