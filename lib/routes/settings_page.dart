@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
@@ -63,6 +64,60 @@ class _SettingsPageState extends State<SettingsPage> {
               child: SettingsCategory(
                 header: "Debug",
                 children: [
+                  SwitchListTile(
+                    secondary: Icon(MdiIcons.humanGreeting),
+                    title: Text("Show setup screen on next startup"),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                    value: !prefs.welcomePageSeenV2,
+                    activeColor: Theme.of(context).accentColor,
+                    onChanged: (value) async {
+                      prefs.welcomePageSeenV2 = !value;
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(CommunityMaterialIcons.database_remove),
+                    title: Text("Flush database"),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                    onTap: () async {
+                      List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+
+                      notes.forEach(
+                          (element) async => await helper.deleteNote(element));
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(CommunityMaterialIcons.database_import),
+                    title: Text("Migrate database"),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                    onTap: () async {
+                      bool canMigrate = await MigrationTask.migrationAvailable;
+
+                      if (canMigrate) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => StatefulBuilder(
+                            builder: (context, setState) {
+                              return AlertDialog(
+                                title: Text("Migrating..."),
+                                content: StreamBuilder<double>(
+                                  stream: MigrationTask.migrate(),
+                                  initialData: 0.0,
+                                  builder: (context, snapshot) {
+                                    return LinearProgressIndicator(
+                                      value: snapshot.data,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
                   ListTile(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),

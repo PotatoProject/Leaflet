@@ -43,6 +43,7 @@ dependencies:
   package_info:
   url_launcher:
   cached_network_image:
+  path:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

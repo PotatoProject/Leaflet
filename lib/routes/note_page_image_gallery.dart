@@ -45,9 +45,10 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         builder: (context, index) {
           ImageProvider image;
           String scheme = widget.note.images.uris[index].scheme;
+          print(widget.note.images.uris[index].toString());
 
           if (scheme.startsWith("http")) {
-            image = NetworkImage(widget.note.images.data[index].toString());
+            image = NetworkImage(widget.note.images.uris[index].toString());
           } else {
             image = FileImage(File(widget.note.images.uris[index].path));
           }
@@ -83,7 +84,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             onPressed: () {
               Navigator.pop(context);
-              
+
               Navigator.of(context).push(
                 DismissiblePageRoute(
                   builder: (context) => DrawPage(
