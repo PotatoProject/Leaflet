@@ -93,6 +93,8 @@ class MigrationTask {
 
       yield index / notesAmount;
     }
+
+    db.close();
   }
 }
 

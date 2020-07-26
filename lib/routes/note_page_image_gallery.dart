@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -48,7 +49,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           print(widget.note.images.uris[index].toString());
 
           if (scheme.startsWith("http")) {
-            image = NetworkImage(widget.note.images.uris[index].toString());
+            image = CachedNetworkImageProvider(
+                widget.note.images.uris[index].toString());
           } else {
             image = FileImage(File(widget.note.images.uris[index].path));
           }

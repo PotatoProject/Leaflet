@@ -51,9 +51,9 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
+    final Widget list = ListView(
+      shrinkWrap: true,
+      children: <Widget>[
         _DateFilterSelectorHeader(selectedDate),
         CalendarDatePicker(
           initialDate: selectedDate,
@@ -86,46 +86,66 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
             onChanged: (mode) => setState(() => selectedMode = mode),
           ),
         ),
-        Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 8,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatButton(
-                  child: Text("Cancel"),
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Spacer(),
-                FlatButton(
-                  child: Text("Reset"),
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: () {
-                    widget.onReset();
-                    Navigator.pop(context);
-                  },
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                FlatButton(
-                  child: Text("Confirm"),
-                  textColor: Theme.of(context).cardColor,
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    widget.onConfirm(selectedDate, selectedMode);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            )),
       ],
     );
+    final Widget base = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        MediaQuery.of(context).orientation == Orientation.landscape
+            ? Expanded(child: list)
+            : list,
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 8,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FlatButton(
+                child: Text("Cancel"),
+                textColor: Theme.of(context).accentColor,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Spacer(),
+              FlatButton(
+                child: Text("Reset"),
+                textColor: Theme.of(context).accentColor,
+                onPressed: () {
+                  widget.onReset();
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              FlatButton(
+                child: Text("Confirm"),
+                textColor: Theme.of(context).cardColor,
+                color: Theme.of(context).accentColor,
+                onPressed: () {
+                  widget.onConfirm(selectedDate, selectedMode);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.shortestSide,
+        ),
+        child: base,
+      );
+    } else {
+      return base;
+    }
   }
 }
 

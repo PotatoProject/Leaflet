@@ -97,7 +97,7 @@ class _SetupPagetate extends State<SetupPage> {
                   onPressed: pageIndex != (pages.length - 1)
                       ? nextPage
                       : () {
-                          prefs.welcomePageSeenV2 = true;
+                          prefs.welcomePageSeen = true;
                           Navigator.pop(context);
                         },
                   text: Text(

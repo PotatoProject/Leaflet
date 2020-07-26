@@ -88,11 +88,11 @@ class SharedPrefs {
     await prefs.setBool("use_custom_accent", value);
   }
 
-  Future<bool> getWelcomePageSeenV2() async {
+  Future<bool> getWelcomePageSeen() async {
     return prefs.getBool("welcome_page_seen_v2") ?? false;
   }
 
-  void setWelcomePageSeenV2(bool value) async {
+  void setWelcomePageSeen(bool value) async {
     await prefs.setBool("welcome_page_seen_v2", value);
   }
 

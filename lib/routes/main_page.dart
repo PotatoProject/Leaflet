@@ -92,7 +92,7 @@ class _MainPageState extends State<MainPage>
       // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
       final sharedPrefs = await SharedPrefs.newInstance();
 
-      welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeenV2();
+      welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
       if (!welcomePageSeenV2) {
         Navigator.push(
           context,

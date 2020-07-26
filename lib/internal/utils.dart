@@ -11,6 +11,7 @@ import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 
@@ -40,29 +41,14 @@ class Utils {
     bool isDismissible = true,
     bool enableDrag = true,
   }) async {
-    double width = MediaQuery.of(context).size.width;
-    double shortestSide = MediaQuery.of(context).size.shortestSide;
-    double padding = (width - shortestSide) / 2;
-
     return await showModalBottomSheet(
       context: context,
-      builder: (context) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => Navigator.pop(context),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.symmetric(horizontal: padding),
-          child: GestureDetector(
-            onTapDown: (_) {},
-            child: Material(
-              color: backgroundColor,
-              shape: shape,
-              elevation: elevation ?? 1,
-              clipBehavior: clipBehavior ?? Clip.none,
-              child: builder(context),
-            ),
-          ),
-        ),
+      builder: (context) => BottomSheetBase(
+        child: builder(context),
+        backgroundColor: backgroundColor,
+        elevation: elevation,
+        shape: shape,
+        clipBehavior: clipBehavior,
       ),
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -251,8 +237,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey.currentState.hideCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(
+    scaffoldKey?.currentState?.hideCurrentSnackBar();
+    scaffoldKey?.currentState?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -327,8 +313,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey.currentState.hideCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(
+    scaffoldKey?.currentState?.hideCurrentSnackBar();
+    scaffoldKey?.currentState?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(

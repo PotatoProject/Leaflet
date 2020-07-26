@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -51,7 +52,8 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                 String scheme = widget.images[index].scheme;
 
                 if (scheme.startsWith("http")) {
-                  image = NetworkImage(widget.images[index].toString());
+                  image = CachedNetworkImageProvider(
+                      widget.images[index].toString());
                 } else {
                   image = FileImage(File(widget.images[index].path));
                 }

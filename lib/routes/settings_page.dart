@@ -69,10 +69,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text("Show setup screen on next startup"),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                    value: !prefs.welcomePageSeenV2,
+                    value: !prefs.welcomePageSeen,
                     activeColor: Theme.of(context).accentColor,
                     onChanged: (value) async {
-                      prefs.welcomePageSeenV2 = !value;
+                      prefs.welcomePageSeen = !value;
                     },
                   ),
                   ListTile(

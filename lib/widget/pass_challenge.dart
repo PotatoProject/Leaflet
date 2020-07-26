@@ -25,17 +25,18 @@ class _PassChallengeState extends State<PassChallenge> {
 
   @override
   void initState() {
+    controller = TextEditingController(
+      text: widget.editMode ? prefs.masterPass ?? "" : "",
+    );
+
+    controller.addListener(() => setState(() {}));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (controller == null)
-      controller = TextEditingController(
-        text: widget.editMode ? prefs.masterPass ?? "" : "",
-      );
-
-    controller.addListener(() => setState(() {}));
+    final bool numericPass =
+        !widget.editMode ? int.tryParse(prefs.masterPass) != null : false;
 
     return Padding(
       padding:
@@ -56,16 +57,16 @@ class _PassChallengeState extends State<PassChallenge> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.visiblePassword,
-                    controller: controller,
-                    obscureText: !showPass,
-                  ),
-                ),
-                IconButton(
+            child: TextFormField(
+              keyboardType: numericPass
+                  ? TextInputType.numberWithOptions(
+                      signed: false, decimal: false)
+                  : TextInputType.visiblePassword,
+              controller: controller,
+              obscureText: !showPass,
+              onChanged: (_) => setState(() => status = null),
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
                   icon: Icon(
                     showPass
                         ? CommunityMaterialIcons.eye_outline
@@ -73,7 +74,8 @@ class _PassChallengeState extends State<PassChallenge> {
                   ),
                   onPressed: () => setState(() => showPass = !showPass),
                 ),
-              ],
+                errorText: status,
+              ),
             ),
           ),
           Padding(
@@ -81,12 +83,6 @@ class _PassChallengeState extends State<PassChallenge> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  status ?? "",
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
                 Spacer(),
                 FlatButton(
                   onPressed: controller.text.length >= 4

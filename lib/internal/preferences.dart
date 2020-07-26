@@ -23,7 +23,7 @@ class Preferences extends ChangeNotifier {
   bool _useAmoled = false;
   bool _useGrid = false;
   bool _useCustomAccent = false;
-  bool _welcomePageSeenV2 = false;
+  bool _welcomePageSeen = false;
   String _apiUrl;
   String _accessToken;
   String _refreshToken;
@@ -38,7 +38,7 @@ class Preferences extends ChangeNotifier {
   bool get useAmoled => _useAmoled;
   bool get useGrid => _useGrid;
   bool get useCustomAccent => _useCustomAccent;
-  bool get welcomePageSeenV2 => _welcomePageSeenV2;
+  bool get welcomePageSeen => _welcomePageSeen;
   String get apiUrl => _apiUrl;
   Future<String> get token async => await getToken();
   String get username => _username;
@@ -88,9 +88,9 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
-  set welcomePageSeenV2(bool value) {
-    _welcomePageSeenV2 = value;
-    prefs.setWelcomePageSeenV2(value);
+  set welcomePageSeen(bool value) {
+    _welcomePageSeen = value;
+    prefs.setWelcomePageSeen(value);
     notifyListeners();
   }
 
@@ -150,7 +150,7 @@ class Preferences extends ChangeNotifier {
     useAmoled = await prefs.getUseAmoled();
     useGrid = await prefs.getUseGrid();
     useCustomAccent = await prefs.getUseCustomAccent();
-    welcomePageSeenV2 = await prefs.getWelcomePageSeenV2();
+    welcomePageSeen = await prefs.getWelcomePageSeen();
     apiUrl = await prefs.getApiUrl();
     accessToken = await prefs.getAccessToken();
     refreshToken = await prefs.getRefreshToken();
