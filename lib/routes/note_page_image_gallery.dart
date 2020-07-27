@@ -10,7 +10,6 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -111,7 +110,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
               widget.note.images.data
                   .remove(widget.note.images.uris[currentPage].path);
 
-              helper.saveNote(widget.note);
+              helper.saveNote(widget.note
+                  .copyWith(synced: false, lastModifyDate: DateTime.now()));
 
               Navigator.pop(context);
             },

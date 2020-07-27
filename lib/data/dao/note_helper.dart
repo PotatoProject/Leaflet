@@ -87,13 +87,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future saveNote(Note note) {
-    into(notes).insert(note, mode: InsertMode.replace);
+  Future<void> saveNote(Note note) async {
+    await into(notes).insert(note, mode: InsertMode.replace);
     print("The note id is: " + note.id);
   }
 
-  Future deleteNote(Note note) {
-    delete(notes).delete(note);
+  Future<void> deleteNote(Note note) async {
+    await delete(notes).delete(note);
     print("The note id to delete: " + note.id);
   }
 }

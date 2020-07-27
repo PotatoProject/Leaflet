@@ -101,7 +101,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    helper.saveNote(note);
+    helper.saveNote(note.copyWith(synced: false, lastModifyDate: DateTime.now()));
   }
 
   Future<void> generateId() async {

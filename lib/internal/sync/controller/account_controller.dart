@@ -19,19 +19,23 @@ class AccountController implements AccountInterface {
       "password": password,
     };
 
-    Response newAccount = await post(
-      "${prefs.apiUrl.replaceAll('4000', '3000')}/user/register",
+    Response registerResponse = await post(
+      "${prefs.apiUrl}/login/user/register",
       body: json.encode(body),
     );
+    Loggy.v(
+        message:
+        "(register) Server responded with (${registerResponse.statusCode}): ${registerResponse.body}",
+        secure: true);
 
-    switch (newAccount.statusCode) {
+    switch (registerResponse.statusCode) {
       case 200:
         {
           return Right(null);
         }
       case 400:
         {
-          return Left(Failure(json.decode(newAccount.body)["message"]));
+          return Left(Failure(json.decode(registerResponse.body)["message"]));
         }
       default:
         {
@@ -55,49 +59,58 @@ class AccountController implements AccountInterface {
         "password": password,
       };
     }
-    print(json.encode(body));
-    Response login;
+
     try {
-      login = await post(
-          "${prefs.apiUrl.replaceAll('4000', '3000')}/user/login",
+      Response loginResponse = await post("${prefs.apiUrl}/login/user/login",
           body: json.encode(body),
           headers: {"Content-Type": "application/json"});
+      Loggy.v(
+          message:
+              "(login) Server responded with (${loginResponse.statusCode}): ${loginResponse.body}",
+          secure: true);
+      switch (loginResponse.statusCode) {
+        case 200:
+          {
+            Map<String, dynamic> response = json.decode(loginResponse.body);
+            prefs.accessToken = response["token"];
+            prefs.refreshToken = response["refresh_token"];
+            return Right(null);
+          }
+        case 400:
+          {
+            if (loginResponse.body.startsWith("[")) {
+              return Left(
+                  Failure(json.decode(loginResponse.body)[0]["constraints"]["length"]));
+            } else {
+              return Left(Failure(loginResponse.body));
+            }
+          }
+      }
     } catch (e) {
       if (e.runtimeType == SocketException) {
         return Left(Failure("Could not connect to server"));
+      } else {
+        return Left(Failure(e));
       }
-    }
-    Loggy.d(message: login.body, secure: true);
-    switch (login.statusCode) {
-      case 200:
-        {
-          Map<String, dynamic> response = json.decode(login.body);
-          prefs.accessToken = response["token"];
-          prefs.refreshToken = response["refresh_token"];
-          return Right(null);
-        }
-      case 400:
-        {
-          if(login.body.startsWith("[")){
-            return Left(Failure(json.decode(login.body)[0]["constraints"]["length"]));
-          } else {
-            return Left(Failure(login.body));
-          }
-        }
     }
   }
 
   static Future<Either<Failure, void>> refreshToken() async {
     Response refresh;
     try {
-      refresh = await get(
-          "${prefs.apiUrl.replaceAll('4000', '3000')}/user/refresh",
-          headers: {"Authorization": prefs.refreshToken});
+      var url = "${prefs.apiUrl}/login/user/refresh";
+      Loggy.v(message: "Going to send GET to " + url);
+      refresh = await get(url,
+          headers: {"Authorization": "Bearer " + prefs.refreshToken});
+      Loggy.v(
+          message:
+              "(refreshToken) Server responded with (${refresh.statusCode}): ${refresh.body}",
+          secure: true);
       switch (refresh.statusCode) {
         case 200:
           {
-            prefs.accessToken = json.decode(refresh.body);
-            Loggy.d(message: refresh.body, secure: true);
+            prefs.accessToken = json.decode(refresh.body)["token"];
+            Loggy.d(message: "accessToken: " + prefs.accessToken, secure: true);
             return Right(null);
           }
         case 400:
@@ -109,7 +122,7 @@ class AccountController implements AccountInterface {
       if (e.runtimeType == SocketException) {
         return Left(Failure("Could not connect to server"));
       } else {
-        return e;
+        return Left(Failure(e.toString()));
       }
     }
   }

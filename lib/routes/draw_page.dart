@@ -167,7 +167,8 @@ class _DrawPageState extends State<DrawPage>
 
                     if (!widget.note.images.data.containsKey(drawing)) {
                       widget.note.images.data[drawing] = Uri.file(drawing);
-                      helper.saveNote(widget.note);
+                      await helper.saveNote(widget.note.copyWith(
+                          synced: false, lastModifyDate: DateTime.now()));
                     }
 
                     imageCache.clear();

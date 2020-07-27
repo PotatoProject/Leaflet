@@ -173,10 +173,9 @@ class Preferences extends ChangeNotifier {
     if (_accessToken == null ||
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(_accessToken)["exp"] * 1000)
-            .isBefore(DateTime.now())) {
-      AccountController.refreshToken();
+            .isBefore(DateTime.now().add(Duration(minutes: 2)))) {
+      await AccountController.refreshToken();
     }
-
     return _accessToken;
   }
 }

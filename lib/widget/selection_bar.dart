@@ -238,10 +238,10 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       payload: json.encode(
         NotificationPayload(
-          action: NotificationAction.PIN,
-          noteId: note.id,
-          notificationId: note.creationDate.millisecondsSinceEpoch
-        ).toJson(),
+                action: NotificationAction.PIN,
+                noteId: note.id,
+                notificationId: note.creationDate.millisecondsSinceEpoch)
+            .toJson(),
       ),
     );
   }
