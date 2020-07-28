@@ -44,6 +44,7 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollController scrollController = ScrollController();
 
   ReturnMode mode = ReturnMode.NORMAL;
   int tagIndex = 0;
@@ -181,6 +182,7 @@ class _MainPageState extends State<MainPage>
                     itemBuilder: (context, index) => commonNote(notes[index]),
                     staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                     itemCount: notes.length,
+                    controller: scrollController,
                     padding: padding,
                   );
                 } else {
@@ -336,6 +338,7 @@ class _MainPageState extends State<MainPage>
     return Hero(
       tag: "fabMenu",
       child: FakeFab(
+        controller: scrollController,
         onLongPress: () => Utils.showFabMenu(context, fabOptions),
         key: GlobalKeyRegistry.get("fab"),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
