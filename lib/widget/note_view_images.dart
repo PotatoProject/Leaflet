@@ -11,6 +11,7 @@ class NoteViewImages extends StatefulWidget {
   final bool showPlusImages;
   final int numPlusImages;
   final Function(int) onImageTap;
+  final bool useSmallFont;
 
   NoteViewImages({
     @required this.images,
@@ -18,6 +19,7 @@ class NoteViewImages extends StatefulWidget {
     this.showPlusImages = false,
     this.numPlusImages = 0,
     this.onImageTap,
+    this.useSmallFont = true,
   });
 
   @override
@@ -62,38 +64,43 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   image = FileImage(File(widget.images[index].path));
                 }
 
-                return InkWell(
-                  onTap: () => widget.onImageTap(index),
-                  child: Stack(
-                    children: [
-                      SizedBox.expand(
-                        child: Image(
-                          image: image,
-                          fit: BoxFit.cover,
-                          gaplessPlayback: false,
-                        ),
+                return Stack(
+                  children: [
+                    SizedBox.expand(
+                      child: Image(
+                        image: image,
+                        fit: BoxFit.cover,
+                        gaplessPlayback: false,
                       ),
-                      SizedBox.expand(
-                        child: Visibility(
-                          visible: (index == widget.images.length - 1 &&
-                                  widget.numPlusImages > 0) &&
-                              widget.showPlusImages,
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Colors.black.withOpacity(0.4),
-                            child: Text(
-                              "+" + widget.numPlusImages.toString(),
-                              style: TextStyle(
-                                fontSize: 36.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    ),
+                    SizedBox.expand(
+                      child: Visibility(
+                        visible: (index == widget.images.length - 1 &&
+                                widget.numPlusImages > 0) &&
+                            widget.showPlusImages,
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.black.withOpacity(0.4),
+                          child: Text(
+                            "+" + widget.numPlusImages.toString(),
+                            style: TextStyle(
+                              fontSize: widget.useSmallFont ? 24.0 : 36.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox.expand(
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          onTap: () => widget.onImageTap(index),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
               staggeredTileBuilder: (index) {

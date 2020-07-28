@@ -137,6 +137,33 @@ class _NotePageState extends State<NotePage> {
         WidgetsBinding.instance.addPostFrameCallback((_) => addDrawing());
     }
 
+    final Widget imagesWidget = NoteViewImages(
+      images: note.images.uris.sublist(
+          0,
+          note.images.data.length > Utils.kMaxImageCount
+              ? Utils.kMaxImageCount
+              : note.images.data.length),
+      showPlusImages: true,
+      numPlusImages: note.images.data.length < Utils.kMaxImageCount
+          ? 0
+          : note.images.data.length - Utils.kMaxImageCount,
+      useSmallFont: false,
+      onImageTap: (index) async {
+        await Navigator.push(
+          context,
+          DismissiblePageRoute(
+            builder: (context) => NotePageImageGallery(
+              note: note,
+              currentImage: index,
+            ),
+            allowGestures: false,
+          ),
+        );
+
+        setState(() {});
+      },
+    );
+
     bool smallLandscapeUi =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
@@ -214,33 +241,7 @@ class _NotePageState extends State<NotePage> {
                     visible: note.images.data.isNotEmpty &&
                         MediaQuery.of(context).orientation ==
                             Orientation.portrait,
-                    child: NoteViewImages(
-                      images: note.images.uris.sublist(
-                        0,
-                        note.images.data.length > Utils.kMaxImageCount
-                            ? Utils.kMaxImageCount
-                            : note.images.data.length,
-                      ),
-                      showPlusImages: true,
-                      numPlusImages:
-                          note.images.data.length < Utils.kMaxImageCount
-                              ? 0
-                              : note.images.data.length - Utils.kMaxImageCount,
-                      onImageTap: (index) async {
-                        await Navigator.push(
-                          context,
-                          DismissiblePageRoute(
-                            builder: (context) => NotePageImageGallery(
-                              note: note,
-                              currentImage: index,
-                            ),
-                            allowGestures: false,
-                          ),
-                        );
-
-                        setState(() {});
-                      },
-                    ),
+                    child: imagesWidget,
                   ),
                   Visibility(
                     visible: note.tags.tagIds.isNotEmpty,
@@ -481,31 +482,7 @@ class _NotePageState extends State<NotePage> {
                 ),
                 width: MediaQuery.of(context).size.height -
                     (MediaQuery.of(context).padding.top + 56),
-                child: NoteViewImages(
-                  images: note.images.uris.sublist(
-                      0,
-                      note.images.data.length > Utils.kMaxImageCount
-                          ? Utils.kMaxImageCount
-                          : note.images.data.length),
-                  showPlusImages: true,
-                  numPlusImages: note.images.data.length < Utils.kMaxImageCount
-                      ? 0
-                      : note.images.data.length - Utils.kMaxImageCount,
-                  onImageTap: (index) async {
-                    await Navigator.push(
-                      context,
-                      DismissiblePageRoute(
-                        builder: (context) => NotePageImageGallery(
-                          note: note,
-                          currentImage: index,
-                        ),
-                        allowGestures: false,
-                      ),
-                    );
-
-                    setState(() {});
-                  },
-                ),
+                child: imagesWidget,
               ),
             ),
           ],
@@ -522,14 +499,14 @@ class _NotePageState extends State<NotePage> {
                   child: NoteToolbar(
                     //controller: contentController,
                     /*onButtonTap: () {
-                          List<int> styleJson = gzip.encode(utf8.encode(
-                              SpannableList(contentController.styleList.list).toJson()));
+                        List<int> styleJson = gzip.encode(utf8.encode(
+                            SpannableList(contentController.styleList.list).toJson()));
 
-                          note = note.copyWith(
-                            styleJson: ContentStyle(styleJson),
-                          );
-                          notifyNoteChanged();
-                        },*/
+                        note = note.copyWith(
+                          styleJson: ContentStyle(styleJson),
+                        );
+                        notifyNoteChanged();
+                      },*/
                     rightActions: getToolbarButtons(),
                   ),
                 ),
