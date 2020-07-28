@@ -661,7 +661,7 @@ class _NotePageState extends State<NotePage> {
                   : null,
             ),
             Visibility(
-              visible: appInfo.canCheckBiometrics ?? false,
+              visible: deviceInfo.canCheckBiometrics ?? false,
               child: SwitchListTile(
                 value: note.usesBiometrics,
                 onChanged: note.lockNote

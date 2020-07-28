@@ -8,6 +8,7 @@ import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
@@ -52,14 +53,15 @@ class _PotatoNotesState extends State<PotatoNotes> {
         initialData: Colors.blueAccent.value,
         builder: (context, snapshot) {
           Color accentColor;
+          bool canUseSystemAccent = true;
 
           if (kIsWeb ||
               (snapshot.data == -1 && Platform.isAndroid) ||
               !Platform.isAndroid) {
-            appInfo.canUseSystemAccent = false;
+            canUseSystemAccent = false;
           }
 
-          if (prefs.useCustomAccent || !appInfo.canUseSystemAccent) {
+          if (prefs.useCustomAccent || !canUseSystemAccent) {
             accentColor = prefs.customAccent ?? Utils.defaultAccent;
           } else {
             accentColor = Color(snapshot.data);
@@ -97,6 +99,11 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
               appInfo.updateIllustrations(Theme.of(context).brightness);
 
+              deviceInfo.updateDeviceInfo(
+                MediaQuery.of(context),
+                canUseSystemAccent,
+              );
+
               return child;
             },
             themeMode: prefs.themeMode,
@@ -110,7 +117,10 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
   void _initProviders(Reader read) {
     if (appInfo == null) {
-      appInfo = read(Provider((_) => AppInfoProvider()));
+      appInfo = read(Provider((_) => AppInfo()));
+    }
+    if (deviceInfo == null) {
+      deviceInfo = read(Provider((_) => DeviceInfo()));
     }
 
     if (prefs == null) {

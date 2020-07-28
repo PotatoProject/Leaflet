@@ -23,7 +23,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
             NoteColors.colorList.length,
             (index) => noteColorItem(
               index,
-              constraints.maxWidth / (appInfo.uiSizeFactor + 3),
+              constraints.maxWidth / (deviceInfo.uiSizeFactor + 3),
               widget.selectedColor == index,
             ),
           ),

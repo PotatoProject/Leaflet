@@ -5,26 +5,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:package_info/package_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
 
-class AppInfoProvider {
-  AppInfoProvider() {
+class AppInfo {
+  AppInfo() {
     illustrations = Illustrations();
     loadData();
   }
 
   Illustrations illustrations;
-  bool canCheckBiometrics;
-  List<BiometricType> availableBiometrics;
   FlutterLocalNotificationsPlugin notifications;
   QuickActions quickActions;
   PackageInfo packageInfo;
-  bool canUseSystemAccent = true;
-  int uiSizeFactor = 2;
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;
@@ -76,8 +71,6 @@ class AppInfoProvider {
       _initNotifications();
     }
 
-    canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
-    availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
     packageInfo = await PackageInfo.fromPlatform();
   }
 }

@@ -14,6 +14,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/colors.dart';
@@ -111,28 +112,14 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
-    if (width >= 1280) {
-      appInfo.uiSizeFactor = 5;
-    } else if (width >= 900) {
-      appInfo.uiSizeFactor = 4;
-    } else if (width >= 600) {
-      appInfo.uiSizeFactor = 3;
-    } else if (width >= 360) {
-      appInfo.uiSizeFactor = 2;
-    } else {
-      appInfo.uiSizeFactor = 1;
-    }
-
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
     double fixedDrawerSize;
 
-    if (appInfo.uiSizeFactor == 4) {
+    if (deviceInfo.uiType == UiType.LARGE_TABLET) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 4;
-    } else if (appInfo.uiSizeFactor == 5) {
+    } else if (deviceInfo.uiType == UiType.DESKTOP) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 5;
     } else {
       fixedDrawerSize = 64;
@@ -144,7 +131,7 @@ class _MainPageState extends State<MainPage>
           visible: MediaQuery.of(context).orientation == Orientation.landscape,
           child: SizedBox(
             width: fixedDrawerSize,
-            child: getDrawer(appInfo.uiSizeFactor >= 4, true),
+            child: getDrawer(deviceInfo.uiSizeFactor >= 4, true),
           ),
         ),
         Expanded(
@@ -197,7 +184,7 @@ class _MainPageState extends State<MainPage>
                 if (notes.isNotEmpty) {
                   if (prefs.useGrid) {
                     child = StaggeredGridView.countBuilder(
-                      crossAxisCount: appInfo.uiSizeFactor,
+                      crossAxisCount: deviceInfo.uiSizeFactor,
                       itemBuilder: (context, index) => commonNote(notes[index]),
                       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                       itemCount: notes.length,
