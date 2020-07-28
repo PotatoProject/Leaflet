@@ -201,9 +201,11 @@ class _SettingsPageState extends State<SettingsPage> {
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
             SwitchListTile(
-              value: kIsWeb ? false : !prefs.useCustomAccent,
-              onChanged:
-                  kIsWeb ? null : (value) => prefs.useCustomAccent = !value,
+              value:
+                  !appInfo.canUseSystemAccent ? false : !prefs.useCustomAccent,
+              onChanged: !appInfo.canUseSystemAccent
+                  ? null
+                  : (value) => prefs.useCustomAccent = !value,
               title: Text("Follow system accent"),
               secondary: Icon(OMIcons.colorLens),
               activeColor: Theme.of(context).accentColor,

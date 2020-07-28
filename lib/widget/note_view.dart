@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
@@ -14,7 +15,6 @@ class NoteView extends StatelessWidget {
   final SpannableList providedContentList;
   final Function() onTap;
   final Function() onLongPress;
-  final int numOfImages;
   final bool selected;
 
   NoteView({
@@ -24,7 +24,6 @@ class NoteView extends StatelessWidget {
     this.providedContentList,
     this.onTap,
     this.onLongPress,
-    this.numOfImages = 2,
     this.selected = false,
   }) : super(key: key);
 
@@ -32,7 +31,7 @@ class NoteView extends StatelessWidget {
   Widget build(BuildContext context) {
     //String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
     SpannableList spannableList =
-        providedContentList;// ?? SpannableList.fromJson(parsedStyleJson);
+        providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
     Color borderColor;
 
     if (selected) {
@@ -72,14 +71,13 @@ class NoteView extends StatelessWidget {
                 child: NoteViewImages(
                   images: note.images.uris.sublist(
                       0,
-                      note.images.data.length > numOfImages * 2
-                          ? numOfImages * 2
+                      note.images.data.length > Utils.kMaxImageCount
+                          ? Utils.kMaxImageCount
                           : note.images.data.length),
-                  numOfImages: numOfImages,
                   showPlusImages: true,
-                  numPlusImages: note.images.data.length < numOfImages * 2
+                  numPlusImages: note.images.data.length < Utils.kMaxImageCount
                       ? 0
-                      : note.images.data.length - numOfImages * 2,
+                      : note.images.data.length - Utils.kMaxImageCount,
                 ),
               ),
             ),
@@ -102,9 +100,7 @@ class NoteView extends StatelessWidget {
                 child: NoteViewStatusbar(
                   note: note,
                   width: constraints.maxWidth,
-                  padding: content.isEmpty
-                      ? EdgeInsets.all(16)
-                      : null,
+                  padding: content.isEmpty ? EdgeInsets.all(16) : null,
                 ),
               ),
             ),

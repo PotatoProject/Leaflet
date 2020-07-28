@@ -41,8 +41,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
-  int numOfColumns;
-  int numOfImages;
   AnimationController controller;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -116,20 +114,15 @@ class _MainPageState extends State<MainPage>
     double width = MediaQuery.of(context).size.width;
 
     if (width >= 1280) {
-      numOfColumns = 5;
-      numOfImages = 4;
+      appInfo.uiSizeFactor = 5;
     } else if (width >= 900) {
-      numOfColumns = 4;
-      numOfImages = 3;
+      appInfo.uiSizeFactor = 4;
     } else if (width >= 600) {
-      numOfColumns = 3;
-      numOfImages = 3;
+      appInfo.uiSizeFactor = 3;
     } else if (width >= 360) {
-      numOfColumns = 2;
-      numOfImages = 2;
+      appInfo.uiSizeFactor = 2;
     } else {
-      numOfColumns = 1;
-      numOfImages = 2;
+      appInfo.uiSizeFactor = 1;
     }
 
     Animation<double> fade =
@@ -137,9 +130,9 @@ class _MainPageState extends State<MainPage>
 
     double fixedDrawerSize;
 
-    if (numOfColumns == 4) {
+    if (appInfo.uiSizeFactor == 4) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 4;
-    } else if (numOfColumns == 5) {
+    } else if (appInfo.uiSizeFactor == 5) {
       fixedDrawerSize = MediaQuery.of(context).size.width / 5;
     } else {
       fixedDrawerSize = 64;
@@ -151,7 +144,7 @@ class _MainPageState extends State<MainPage>
           visible: MediaQuery.of(context).orientation == Orientation.landscape,
           child: SizedBox(
             width: fixedDrawerSize,
-            child: getDrawer(numOfColumns >= 4, true),
+            child: getDrawer(appInfo.uiSizeFactor >= 4, true),
           ),
         ),
         Expanded(
@@ -204,7 +197,7 @@ class _MainPageState extends State<MainPage>
                 if (notes.isNotEmpty) {
                   if (prefs.useGrid) {
                     child = StaggeredGridView.countBuilder(
-                      crossAxisCount: numOfColumns,
+                      crossAxisCount: appInfo.uiSizeFactor,
                       itemBuilder: (context, index) => commonNote(notes[index]),
                       staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                       itemCount: notes.length,
@@ -444,9 +437,7 @@ class _MainPageState extends State<MainPage>
 
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NotePage(
-          numOfImages: numOfImages,
-        ),
+        builder: (context) => NotePage(),
       ),
     );
 
@@ -483,7 +474,6 @@ class _MainPageState extends State<MainPage>
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => NotePage(
-            numOfImages: numOfImages,
             note: note,
           ),
         ),
@@ -497,7 +487,6 @@ class _MainPageState extends State<MainPage>
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => NotePage(
-          numOfImages: numOfImages,
           openWithList: true,
         ),
       ),
@@ -508,7 +497,6 @@ class _MainPageState extends State<MainPage>
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => NotePage(
-          numOfImages: numOfImages,
           openWithDrawing: true,
         ),
       ),
@@ -578,7 +566,6 @@ class _MainPageState extends State<MainPage>
               MaterialPageRoute(
                 builder: (context) => NotePage(
                   note: note,
-                  numOfImages: numOfImages,
                 ),
               ),
             );
@@ -594,7 +581,6 @@ class _MainPageState extends State<MainPage>
         });
       },
       selected: selectionList.any((item) => item.id == note.id),
-      numOfImages: numOfImages,
     );
   }
 

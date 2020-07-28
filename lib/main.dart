@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,13 +53,19 @@ class _PotatoNotesState extends State<PotatoNotes> {
         builder: (context, snapshot) {
           Color accentColor;
 
-          if (prefs.useCustomAccent || kIsWeb) {
+          if (kIsWeb ||
+              (snapshot.data == -1 && Platform.isAndroid) ||
+              !Platform.isAndroid) {
+            appInfo.canUseSystemAccent = false;
+          }
+
+          if (prefs.useCustomAccent || !appInfo.canUseSystemAccent) {
             accentColor = prefs.customAccent ?? Utils.defaultAccent;
           } else {
             accentColor = Color(snapshot.data);
           }
 
-          Themes themes = Themes(accentColor);
+          Themes themes = Themes(accentColor.withOpacity(1));
 
           return MaterialApp(
             title: "PotatoNotes",
@@ -102,7 +110,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
   void _initProviders(Reader read) {
     if (appInfo == null) {
-      appInfo = read(ChangeNotifierProvider((_) => AppInfoProvider()));
+      appInfo = read(Provider((_) => AppInfoProvider()));
     }
 
     if (prefs == null) {

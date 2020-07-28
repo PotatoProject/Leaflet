@@ -46,7 +46,6 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         builder: (context, index) {
           ImageProvider image;
           String scheme = widget.note.images.uris[index].scheme;
-          print(widget.note.images.uris[index].toString());
 
           if (scheme.startsWith("http")) {
             image = CachedNetworkImageProvider(

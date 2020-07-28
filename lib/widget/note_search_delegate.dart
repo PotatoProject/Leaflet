@@ -64,13 +64,15 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           if (prefs.useGrid) {
             child = StaggeredGridView.countBuilder(
               crossAxisCount: 2,
-              itemBuilder: (context, index) => noteView(context, snapshot.data[index]),
+              itemBuilder: (context, index) =>
+                  noteView(context, snapshot.data[index]),
               staggeredTileBuilder: (index) => StaggeredTile.fit(1),
               itemCount: snapshot.data.length,
             );
           } else {
             child = ListView.builder(
-              itemBuilder: (context, index) => noteView(context, snapshot.data[index]),
+              itemBuilder: (context, index) =>
+                  noteView(context, snapshot.data[index]),
               itemCount: snapshot.data.length,
             );
           }
@@ -123,9 +125,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     if (contentIndex != -1) {
-      for (int i = contentIndex;
-          i < query.length + contentIndex;
-          i++) {
+      for (int i = contentIndex; i < query.length + contentIndex; i++) {
         contentList.list[i] = SpannableStyle(value: 0)
           ..setBackgroundColor(
               note.color != 0 ? bgColor : Theme.of(context).accentColor)
@@ -137,7 +137,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     return NoteView(
       note: note,
       onTap: () => openNote(context, note),
-      numOfImages: numOfImages,
       providedTitleList: titleList,
       providedContentList: contentList,
     );
@@ -170,7 +169,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         MaterialPageRoute(
           builder: (context) => NotePage(
             note: note,
-            numOfImages: numOfImages,
           ),
         ),
       );
@@ -214,9 +212,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     bool _getTextBool(String text) {
-      String sanitizedQuery = searchQuery.caseSensitive
-          ? query
-          : query.toLowerCase();
+      String sanitizedQuery =
+          searchQuery.caseSensitive ? query : query.toLowerCase();
 
       String sanitizedText =
           searchQuery.caseSensitive ? text : text.toLowerCase();

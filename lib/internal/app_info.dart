@@ -10,12 +10,8 @@ import 'package:package_info/package_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
-import 'package:streams_channel/streams_channel.dart';
 
-class AppInfoProvider extends ChangeNotifier {
-  static final StreamsChannel accentStreamChannel =
-      StreamsChannel('potato_notes_accents');
-
+class AppInfoProvider {
   AppInfoProvider() {
     illustrations = Illustrations();
     loadData();
@@ -27,6 +23,8 @@ class AppInfoProvider extends ChangeNotifier {
   FlutterLocalNotificationsPlugin notifications;
   QuickActions quickActions;
   PackageInfo packageInfo;
+  bool canUseSystemAccent = true;
+  int uiSizeFactor = 2;
 
   Widget noNotesIllustration;
   Widget emptyArchiveIllustration;

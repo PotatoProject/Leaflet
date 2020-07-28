@@ -19,7 +19,8 @@ class BottomSheetBase extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double shortestSide = MediaQuery.of(context).size.shortestSide;
-    double padding = (width - shortestSide) / 2;
+    int roundedShortestSide = (shortestSide / 10).round() * 10;
+    double padding = (width - roundedShortestSide) / 2;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

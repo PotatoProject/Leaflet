@@ -31,6 +31,7 @@ class NoteToolbar extends StatefulWidget {
   final SpannableTextEditingController controller;
   final bool showLeftActions;
   final List<Widget> rightActions;
+  final Axis axis;
   final Color toolbarActionToggleColor;
   final Color toolbarBackgroundColor;
   final Color toolbarActionColor;
@@ -42,6 +43,7 @@ class NoteToolbar extends StatefulWidget {
     this.controller,
     this.showLeftActions = false,
     this.rightActions = const [],
+    this.axis = Axis.horizontal,
     this.stayFocused = true,
     this.toolbarActionToggleColor,
     this.toolbarBackgroundColor,
@@ -67,6 +69,11 @@ class _NoteToolbarState extends State<NoteToolbar> {
 
   @override
   Widget build(BuildContext context) {
+    double width =
+        widget.axis == Axis.horizontal ? MediaQuery.of(context).size.width : 48;
+    double height =
+        widget.axis == Axis.vertical ? MediaQuery.of(context).size.height : 48;
+
     return StreamBuilder<TextEditingValue>(
       stream: _streamController.stream,
       builder: (context, snapshot) {
@@ -85,27 +92,51 @@ class _NoteToolbarState extends State<NoteToolbar> {
         return Material(
           color: Theme.of(context).cardColor,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 48,
+            width: width,
+            height: height,
             child: Padding(
               padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Visibility(
-                    visible: widget.showLeftActions,
-                    child: Row(
-                      children: <Widget>[
-                        ..._buildActions(
-                          currentStyle ?? SpannableStyle(),
-                          currentSelection,
+              child: () {
+                switch (widget.axis) {
+                  case Axis.vertical:
+                    return Column(
+                      children: [
+                        Visibility(
+                          visible: widget.showLeftActions,
+                          child: Column(
+                            children: <Widget>[
+                              ..._buildActions(
+                                currentStyle ?? SpannableStyle(),
+                                currentSelection,
+                              ),
+                            ],
+                          ),
                         ),
+                        Spacer(),
+                        ...widget.rightActions,
                       ],
-                    ),
-                  ),
-                  Spacer(),
-                  ...widget.rightActions,
-                ],
-              ),
+                    );
+                  case Axis.horizontal:
+                  default:
+                    return Row(
+                      children: [
+                        Visibility(
+                          visible: widget.showLeftActions,
+                          child: Row(
+                            children: <Widget>[
+                              ..._buildActions(
+                                currentStyle ?? SpannableStyle(),
+                                currentSelection,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        ...widget.rightActions,
+                      ],
+                    );
+                }
+              }(),
             ),
           ),
         );

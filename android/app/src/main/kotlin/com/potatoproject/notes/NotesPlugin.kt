@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Handler
 import app.loup.streams_channel.StreamsChannel
 import app.loup.streams_channel.StreamsChannel.StreamHandlerFactory
@@ -88,15 +89,26 @@ class NotesPlugin : FlutterPlugin {
         fun getColorRes(resName: String): Int {
             var resId: Int = 0
             var res: Resources? = null
+            var colorInt: Int? = null
+
+            if(android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.M) {
+                return -1;
+            }
 
             try {
                 res = mContext.getPackageManager().getResourcesForApplication("android")
                 resId = res.getIdentifier(resName, "color", "android")
             } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace();
+                return -1
             }
 
-            return res?.getColor(resId) ?: 0
+            try {
+                colorInt = res?.getColor(resId) ?: 0
+            } catch (e: Resources.NotFoundException) {
+                colorInt = -1
+            }
+
+            return colorInt ?: 0
         }
 
         fun isCurrentThemeDark(): Boolean {

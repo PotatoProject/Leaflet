@@ -334,4 +334,6 @@ class Utils {
       ),
     );
   }
+
+  static const int kMaxImageCount = 4;
 }

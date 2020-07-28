@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
@@ -12,19 +13,22 @@ class NoteColorSelector extends StatefulWidget {
 }
 
 class _NoteColorSelectorState extends State<NoteColorSelector> {
-  int rowsNumber = 0;
-
   @override
   Widget build(BuildContext context) {
-    rowsNumber = (NoteColors.colorList.length / 4).ceil();
-    double shortestSide = MediaQuery.of(context).size.shortestSide;
-
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.start,
-      children: List.generate(
-          NoteColors.colorList.length,
-          (index) => noteColorItem(
-              index, shortestSide / 5, widget.selectedColor == index)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Wrap(
+          crossAxisAlignment: WrapCrossAlignment.start,
+          children: List.generate(
+            NoteColors.colorList.length,
+            (index) => noteColorItem(
+              index,
+              constraints.maxWidth / (appInfo.uiSizeFactor + 3),
+              widget.selectedColor == index,
+            ),
+          ),
+        );
+      },
     );
   }
 
