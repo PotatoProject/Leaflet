@@ -299,6 +299,15 @@ class Utils {
             SocialLink(SocialLinkType.TWITTER, "paridadesigns"),
           ],
         ),
+        ContributorInfo(
+          name: "RshBfn",
+          role: "App icon and main accent",
+          avatarUrl:
+              "https://pbs.twimg.com/profile_images/1282395593646604288/Rkxny-Fi.jpg",
+          socialLinks: [
+            SocialLink(SocialLinkType.TWITTER, "RshBfn"),
+          ],
+        ),
       ];
 
   static Future<void> restoreNotes({
