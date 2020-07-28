@@ -140,24 +140,23 @@ class _NotePageState extends State<NotePage> {
     final Widget imagesWidget = NoteViewImages(
       images: note.images.uris.sublist(
           0,
-          note.images.data.length > Utils.kMaxImageCount
-              ? Utils.kMaxImageCount
+          note.images.data.length > kMaxImageCount
+              ? kMaxImageCount
               : note.images.data.length),
       showPlusImages: true,
-      numPlusImages: note.images.data.length < Utils.kMaxImageCount
+      numPlusImages: note.images.data.length < kMaxImageCount
           ? 0
-          : note.images.data.length - Utils.kMaxImageCount,
+          : note.images.data.length - kMaxImageCount,
       useSmallFont: false,
       onImageTap: (index) async {
-        await Navigator.push(
+        await Utils.showSecondaryRoute(
           context,
-          DismissiblePageRoute(
-            builder: (context) => NotePageImageGallery(
-              note: note,
-              currentImage: index,
-            ),
-            allowGestures: false,
+          NotePageImageGallery(
+            note: note,
+            currentImage: index,
           ),
+          sidePadding: kTertiaryRoutePadding,
+          allowGestures: false,
         );
 
         setState(() {});
@@ -524,12 +523,12 @@ class _NotePageState extends State<NotePage> {
           icon: Icon(MdiIcons.tagMultipleOutline),
           padding: EdgeInsets.all(0),
           onPressed: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SearchPage(
-                  delegate: TagSearchDelegate(note),
-                ),
+            await Utils.showSecondaryRoute(
+              context,
+              SearchPage(
+                delegate: TagSearchDelegate(note),
               ),
+              sidePadding: kTertiaryRoutePadding,
             );
 
             setState(() {});
@@ -748,10 +747,12 @@ class _NotePageState extends State<NotePage> {
 
   void addDrawing() async {
     await generateId();
-    await Navigator.of(context).push(DismissiblePageRoute(
-      builder: (context) => DrawPage(note: note),
+    await Utils.showSecondaryRoute(
+      context,
+      DrawPage(note: note),
+      sidePadding: kTertiaryRoutePadding,
       allowGestures: false,
-    ));
+    );
 
     setState(() {});
   }

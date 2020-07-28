@@ -55,10 +55,13 @@ class _PotatoNotesState extends State<PotatoNotes> {
           Color accentColor;
           bool canUseSystemAccent = true;
 
-          if (kIsWeb ||
-              (snapshot.data == -1 && Platform.isAndroid) ||
-              !Platform.isAndroid) {
+          if (kIsWeb) {
             canUseSystemAccent = false;
+          } else {
+            if ((snapshot.data == -1 && Platform.isAndroid) ||
+                !Platform.isAndroid) {
+              canUseSystemAccent = false;
+            }
           }
 
           if (prefs.useCustomAccent || !canUseSystemAccent) {

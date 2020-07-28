@@ -51,10 +51,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text("About PotatoNotes"),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => AboutPage(),
-                    ),
+                  onTap: () => Utils.showSecondaryRoute(
+                    context,
+                    AboutPage(),
+                    sidePadding: kTertiaryRoutePadding,
                   ),
                 ),
               ],

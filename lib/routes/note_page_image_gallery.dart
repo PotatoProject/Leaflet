@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
@@ -83,20 +85,24 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           IconButton(
             icon: Icon(CommunityMaterialIcons.pencil_outline),
             padding: EdgeInsets.all(0),
-            onPressed: () {
-              Navigator.pop(context);
+            onPressed: !kIsWeb
+                ? () {
+                    Navigator.pop(context);
 
-              Navigator.of(context).push(
-                DismissiblePageRoute(
-                  builder: (context) => DrawPage(
-                    note: widget.note,
-                    data: MapEntry(widget.note.images.uris[currentPage].path,
-                        widget.note.images.uris[currentPage]),
-                  ),
-                  allowGestures: false,
-                ),
-              );
-            },
+                    Utils.showSecondaryRoute(
+                      context,
+                      DrawPage(
+                        note: widget.note,
+                        data: MapEntry(
+                          widget.note.images.uris[currentPage].path,
+                          widget.note.images.uris[currentPage],
+                        ),
+                      ),
+                      sidePadding: kTertiaryRoutePadding,
+                      allowGestures: false,
+                    );
+                  }
+                : null,
           ),
           IconButton(
             icon: Icon(Icons.delete_outline),

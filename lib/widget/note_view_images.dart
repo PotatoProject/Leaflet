@@ -42,7 +42,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
           child: SizedBox(
             width: maxWidth,
             height: constraints.maxHeight == double.infinity
-                ? widget.images.length > (Utils.kMaxImageCount / 2)
+                ? widget.images.length > (kMaxImageCount / 2)
                     ? maxWidth
                     : maxWidth / 2
                 : maxHeight,
@@ -50,8 +50,8 @@ class _NoteViewImagesState extends State<NoteViewImages> {
               padding: EdgeInsets.all(0),
               crossAxisCount: 12,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: widget.images.length >= (Utils.kMaxImageCount)
-                  ? Utils.kMaxImageCount
+              itemCount: widget.images.length >= (kMaxImageCount)
+                  ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
                 ImageProvider image;
@@ -105,14 +105,12 @@ class _NoteViewImagesState extends State<NoteViewImages> {
               },
               staggeredTileBuilder: (index) {
                 int crossAxisExtent = 1;
-                int col1Length =
-                    widget.images.length > (Utils.kMaxImageCount / 2)
-                        ? Utils.kMaxImageCount ~/ 2
-                        : widget.images.length;
-                int col2Length =
-                    widget.images.length - (Utils.kMaxImageCount ~/ 2);
+                int col1Length = widget.images.length > (kMaxImageCount / 2)
+                    ? kMaxImageCount ~/ 2
+                    : widget.images.length;
+                int col2Length = widget.images.length - (kMaxImageCount ~/ 2);
 
-                if ((index + 1) > (Utils.kMaxImageCount / 2)) {
+                if ((index + 1) > (kMaxImageCount / 2)) {
                   crossAxisExtent = 12 ~/ col2Length;
                   return StaggeredTile.extent(
                     crossAxisExtent,

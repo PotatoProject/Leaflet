@@ -103,10 +103,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (context) => NoteColorSelector(
                 selectedColor: selectedColor,
                 onColorSelect: (color) {
-                  if (selectedColor == color)
-                    Navigator.pop(context, null);
-                  else
-                    Navigator.pop(context, color);
+                  Navigator.pop(context, color);
                 },
               ),
             );

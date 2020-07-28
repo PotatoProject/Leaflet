@@ -93,16 +93,10 @@ class _MainPageState extends State<MainPage>
 
       welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
       if (!welcomePageSeenV2) {
-        Navigator.push(
+        Utils.showSecondaryRoute(
           context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return FadeTransition(
-                opacity: animation,
-                child: SetupPage(),
-              );
-            },
-          ),
+          SetupPage(),
+          allowGestures: false,
         );
       }
     });
@@ -182,21 +176,13 @@ class _MainPageState extends State<MainPage>
                 }
 
                 if (notes.isNotEmpty) {
-                  if (prefs.useGrid) {
-                    child = StaggeredGridView.countBuilder(
-                      crossAxisCount: deviceInfo.uiSizeFactor,
-                      itemBuilder: (context, index) => commonNote(notes[index]),
-                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                      itemCount: notes.length,
-                      padding: padding,
-                    );
-                  } else {
-                    child = ListView.builder(
-                      itemBuilder: (context, index) => commonNote(notes[index]),
-                      itemCount: notes.length,
-                      padding: padding,
-                    );
-                  }
+                  child = StaggeredGridView.countBuilder(
+                    crossAxisCount: prefs.useGrid ? deviceInfo.uiSizeFactor : 1,
+                    itemBuilder: (context, index) => commonNote(notes[index]),
+                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                    itemCount: notes.length,
+                    padding: padding,
+                  );
                 } else {
                   child = Illustrations.quickIllustration(
                     context,
@@ -306,9 +292,9 @@ class _MainPageState extends State<MainPage>
               Navigator.pop(context);
             }
 
-            Navigator.push(
+            Utils.showSecondaryRoute(
               context,
-              MaterialPageRoute(builder: (context) => SettingsPage()),
+              SettingsPage(),
             );
           },
           showTitle: extended,
@@ -422,10 +408,9 @@ class _MainPageState extends State<MainPage>
   void newNote() async {
     int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
 
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NotePage(),
-      ),
+    await Utils.showSecondaryRoute(
+      context,
+      NotePage(),
     );
 
     List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
@@ -458,11 +443,10 @@ class _MainPageState extends State<MainPage>
       if (shouldPop) Navigator.pop(context);
       note = note.copyWith(id: await Utils.generateId());
 
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => NotePage(
-            note: note,
-          ),
+      Utils.showSecondaryRoute(
+        context,
+        NotePage(
+          note: note,
         ),
       );
 
@@ -471,21 +455,19 @@ class _MainPageState extends State<MainPage>
   }
 
   void newList() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NotePage(
-          openWithList: true,
-        ),
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithList: true,
       ),
     );
   }
 
   void newDrawing() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => NotePage(
-          openWithDrawing: true,
-        ),
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithDrawing: true,
       ),
     );
   }
@@ -548,12 +530,10 @@ class _MainPageState extends State<MainPage>
           }
 
           if (status) {
-            Navigator.push(
+            Utils.showSecondaryRoute(
               context,
-              MaterialPageRoute(
-                builder: (context) => NotePage(
-                  note: note,
-                ),
+              NotePage(
+                note: note,
               ),
             );
           }
@@ -574,12 +554,10 @@ class _MainPageState extends State<MainPage>
   List<Widget> get appBarButtons => [
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: () => Navigator.push(
+          onPressed: () => Utils.showSecondaryRoute(
             context,
-            MaterialPageRoute(
-              builder: (context) => SearchPage(
-                delegate: NoteSearchDelegate(),
-              ),
+            SearchPage(
+              delegate: NoteSearchDelegate(),
             ),
           ),
         ),

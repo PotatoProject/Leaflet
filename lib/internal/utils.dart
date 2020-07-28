@@ -8,12 +8,24 @@ import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+
+const int kMaxImageCount = 4;
+const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
+  horizontal: 180,
+  vertical: 64,
+);
+const EdgeInsets kTertiaryRoutePadding = const EdgeInsets.symmetric(
+  horizontal: 240,
+  vertical: 96,
+);
 
 class Utils {
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -344,5 +356,30 @@ class Utils {
     );
   }
 
-  static const int kMaxImageCount = 4;
+  static Future<dynamic> showSecondaryRoute(
+    BuildContext context,
+    Widget route, {
+    EdgeInsets sidePadding = kSecondaryRoutePadding,
+    bool allowGestures = true,
+  }) async {
+    bool shouldUseDialog = deviceInfo.uiType == UiType.LARGE_TABLET ||
+        deviceInfo.uiType == UiType.DESKTOP;
+
+    if (shouldUseDialog) {
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          insetPadding: sidePadding,
+          child: route,
+        ),
+      );
+    } else {
+      return Navigator.of(context).push(
+        DismissiblePageRoute(
+          builder: (context) => route,
+          allowGestures: allowGestures,
+        ),
+      );
+    }
+  }
 }

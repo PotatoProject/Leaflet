@@ -16,7 +16,6 @@ import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
   SearchQuery searchQuery = SearchQuery();
-  int numOfImages;
 
   NoteSearchDelegate();
 
@@ -39,21 +38,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    numOfImages = 2;
-
-    if (width >= 1280) {
-      numOfImages = 4;
-    } else if (width >= 900) {
-      numOfImages = 3;
-    } else if (width >= 600) {
-      numOfImages = 3;
-    } else if (width >= 360) {
-      numOfImages = 2;
-    } else {
-      numOfImages = 2;
-    }
-
     return FutureBuilder(
       future: getNotesForQuery(),
       initialData: [],
@@ -63,7 +47,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         if (snapshot.data.isNotEmpty) {
           if (prefs.useGrid) {
             child = StaggeredGridView.countBuilder(
-              crossAxisCount: 2,
+              crossAxisCount: deviceInfo.uiSizeFactor,
               itemBuilder: (context, index) =>
                   noteView(context, snapshot.data[index]),
               staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -164,13 +148,12 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     if (status) {
-      Navigator.push(
+      Utils.showSecondaryRoute(
         context,
-        MaterialPageRoute(
-          builder: (context) => NotePage(
-            note: note,
-          ),
+        NotePage(
+          note: note,
         ),
+        sidePadding: kTertiaryRoutePadding,
       );
     }
   }

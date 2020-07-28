@@ -71,13 +71,13 @@ class NoteView extends StatelessWidget {
                 child: NoteViewImages(
                   images: note.images.uris.sublist(
                       0,
-                      note.images.data.length > Utils.kMaxImageCount
-                          ? Utils.kMaxImageCount
+                      note.images.data.length > kMaxImageCount
+                          ? kMaxImageCount
                           : note.images.data.length),
                   showPlusImages: true,
-                  numPlusImages: note.images.data.length < Utils.kMaxImageCount
+                  numPlusImages: note.images.data.length < kMaxImageCount
                       ? 0
-                      : note.images.data.length - Utils.kMaxImageCount,
+                      : note.images.data.length - kMaxImageCount,
                 ),
               ),
             ),
