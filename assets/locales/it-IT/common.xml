@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="cancel">Annulla</string>
+  <string name="reset">Reimposta</string>
+  <string name="confirm">Conferma</string>
+  <string name="undo">Annulla</string>
+  <string name="exit">Esci</string>
+  <string name="biometrics_prompt">Conferma biometria</string>
+  <string name="modify_master_pass">Modifica password principale</string>
+  <string name="conferm_master_pass">Conferma password principale</string>
+  <string name="case_sensitive">Differenzia maiuscole/minuscole</string>
+  <string name="color_filter">Colore</string>
+  <string name="date_filter">Data</string>
+  <string name="date_filter_mode">Modalità filtro</string>
+  <string name="date_filter_mode.after">Dopo la data</string>
+  <string name="date_filter_mode.exact">Data esatta</string>
+  <string name="date_filter_mode.before">Prima della data</string>
+  <string name="color.none">Nessuno</string>
+  <string name="color.red">Rosso</string>
+  <string name="color.orange">Arancione</string>
+  <string name="color.yellow">Giallo</string>
+  <string name="color.green">Verde</string>
+  <string name="color.cyan">Ciano</string>
+  <string name="color.light_blue">Blu chiaro</string>
+  <string name="color.blue">Blu</string>
+  <string name="color.purple">Viola</string>
+  <string name="color.pink">Rosa</string>
+</resources>

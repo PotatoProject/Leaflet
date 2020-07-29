@@ -1,5 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 
 class PassChallenge extends StatefulWidget {
@@ -48,7 +49,9 @@ class _PassChallengeState extends State<PassChallenge> {
           Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              (widget.editMode ? "Modify " : "Confirm ") + "master pass",
+              widget.editMode
+                  ? LocaleStrings.common.modifyMasterPass
+                  : LocaleStrings.common.confermMasterPass,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,

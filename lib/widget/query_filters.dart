@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/date_selector.dart';
 
@@ -29,7 +30,7 @@ class _QueryFiltersState extends State<QueryFilters> {
       children: [
         SwitchListTile(
           secondary: Icon(Icons.format_size),
-          title: Text("Case sensitive"),
+          title: Text(LocaleStrings.common.caseSensitive),
           value: widget.query.caseSensitive,
           activeColor: Theme.of(context).accentColor,
           onChanged: (value) {
@@ -40,12 +41,12 @@ class _QueryFiltersState extends State<QueryFilters> {
         ),
         ListTile(
           leading: Icon(OMIcons.colorLens),
-          title: Text("Color filter"),
+          title: Text(LocaleStrings.common.colorFilter),
           trailing: Icon(
             Icons.brightness_1,
             size: 28,
-            color: Color(
-                NoteColors.colorList[widget.query.color ?? 0].dynamicColor(context)),
+            color: Color(NoteColors.colorList[widget.query.color ?? 0]
+                .dynamicColor(context)),
           ),
           onTap: () async {
             int queryColor = await Utils.showNotesModalBottomSheet(
@@ -68,7 +69,7 @@ class _QueryFiltersState extends State<QueryFilters> {
         ),
         ListTile(
           leading: Icon(OMIcons.dateRange),
-          title: Text("Date filter"),
+          title: Text(LocaleStrings.common.dateFilter),
           subtitle: widget.query.date != null
               ? Text(DateFormat("EEEE d MMM yyyy").format(widget.query.date) +
                   " - " +

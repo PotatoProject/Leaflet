@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -129,7 +130,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             await Utils.deleteNotes(
               scaffoldKey: scaffoldKey,
               notes: selectionList,
-              reason: "${selectionList.length} notes archived.",
+              reason: plural("main_page.notes_archived", selectionList.length),
               archive: true,
             );
 
@@ -151,7 +152,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             await Utils.deleteNotes(
               scaffoldKey: scaffoldKey,
               notes: selectionList,
-              reason: "${selectionList.length} notes moved to trash.",
+              reason: plural("main_page.notes_deleted", selectionList.length),
             );
           }
         }

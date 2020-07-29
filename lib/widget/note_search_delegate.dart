@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -6,6 +7,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/illustrations.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -129,13 +131,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   void openNote(BuildContext context, Note note) async {
     bool status = false;
     if (note.lockNote && note.usesBiometrics) {
-      bool bioAuth = await LocalAuthentication().authenticateWithBiometrics(
-        localizedReason: "",
-        androidAuthStrings: AndroidAuthMessages(
-          signInTitle: "Scan fingerprint to open note",
-          fingerprintHint: "",
-        ),
-      );
+      bool bioAuth = await Utils.showBiometricPrompt();
 
       if (bioAuth)
         status = bioAuth;

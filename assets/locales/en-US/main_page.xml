@@ -1,0 +1,10 @@
+<resources>
+  <plurals name="notes_deleted">
+    <item quantity="one">%s note moved to trash.</item>
+    <item quantity="other">%s notes moved to trash.</item>
+  </plurals>
+  <plurals name="notes_archived">
+    <item quantity="one">Archived %s note.</item>
+    <item quantity="other">Archived %s notes.</item>
+  </plurals>
+</resources>

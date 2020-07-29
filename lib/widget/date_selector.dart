@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 
 class DateFilterSelector extends StatefulWidget {
   final DateTime date;
@@ -19,22 +20,18 @@ class DateFilterSelector extends StatefulWidget {
   _DateFilterSelectorState createState() => _DateFilterSelectorState();
 
   static String stringFromDateMode(DateFilterMode mode) {
-    String string = "";
-
     switch (mode) {
       case DateFilterMode.AFTER:
-        string = "After date";
+        return LocaleStrings.common.dateFilterModeAfter;
         break;
       case DateFilterMode.BEFORE:
-        string = "Before date";
+        return LocaleStrings.common.dateFilterModeBefore;
         break;
       case DateFilterMode.ONLY:
       default:
-        string = "Exact date";
+        return LocaleStrings.common.dateFilterModeExact;
         break;
     }
-
-    return string;
   }
 }
 
@@ -62,23 +59,26 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
           onDateChanged: (date) => setState(() => selectedDate = date),
         ),
         ListTile(
-          title: Text("Filter mode"),
+          title: Text(LocaleStrings.common.dateFilterMode),
           contentPadding: EdgeInsets.symmetric(horizontal: 24),
           trailing: DropdownButton(
             items: [
               DropdownMenuItem(
-                child: Text(DateFilterSelector.stringFromDateMode(
-                    DateFilterMode.AFTER)),
+                child: Text(
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.AFTER),
+                ),
                 value: DateFilterMode.AFTER,
               ),
               DropdownMenuItem(
-                child: Text(DateFilterSelector.stringFromDateMode(
-                    DateFilterMode.BEFORE)),
+                child: Text(
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.BEFORE),
+                ),
                 value: DateFilterMode.BEFORE,
               ),
               DropdownMenuItem(
                 child: Text(
-                    DateFilterSelector.stringFromDateMode(DateFilterMode.ONLY)),
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.ONLY),
+                ),
                 value: DateFilterMode.ONLY,
               ),
             ],
@@ -103,7 +103,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FlatButton(
-                child: Text("Cancel"),
+                child: Text(LocaleStrings.common.cancel),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.pop(context);
@@ -111,7 +111,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
               ),
               Spacer(),
               FlatButton(
-                child: Text("Reset"),
+                child: Text(LocaleStrings.common.reset),
                 textColor: Theme.of(context).accentColor,
                 onPressed: () {
                   widget.onReset();
@@ -122,7 +122,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                 width: 8,
               ),
               FlatButton(
-                child: Text("Confirm"),
+                child: Text(LocaleStrings.common.confirm),
                 textColor: Theme.of(context).cardColor,
                 color: Theme.of(context).accentColor,
                 onPressed: () {

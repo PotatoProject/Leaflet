@@ -1,4 +1,5 @@
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
@@ -254,6 +255,27 @@ class _SettingsPageState extends State<SettingsPage> {
               secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
               activeColor: Theme.of(context).accentColor,
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+              leading: Icon(Icons.translate),
+              title: Text("Locale"),
+              trailing: DropdownButton(
+                items: List.generate(
+                  context.supportedLocales.length,
+                  (index) {
+                    print(context.supportedLocales.length);
+                    Locale locale = context.supportedLocales[index];
+
+                    return DropdownMenuItem(
+                      child: Text(localeToString(locale)),
+                      value: locale,
+                    );
+                  },
+                ),
+                onChanged: (value) => context.locale = value,
+                value: context.locale,
+              ),
             ),
           ],
         ),

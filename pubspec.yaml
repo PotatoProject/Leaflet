@@ -44,6 +44,8 @@ dependencies:
   url_launcher:
   cached_network_image:
   path:
+  easy_localization:
+  xml:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -61,7 +63,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    - assets/images/
+    - assets/locales/en-US/
+    - assets/locales/it-IT/
   fonts:
     - family:  CustomIcons
       fonts:

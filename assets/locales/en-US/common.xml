@@ -1,0 +1,27 @@
+<resources>
+  <string name="cancel">Cancel</string>
+  <string name="reset">Reset</string>
+  <string name="confirm">Confirm</string>
+  <string name="undo">Undo</string>
+  <string name="exit">Exit</string>
+  <string name="biometrics_prompt">Confirm biometrics</string>
+  <string name="modify_master_pass">Modify master pass</string>
+  <string name="conferm_master_pass">Confirm master pass</string>
+  <string name="case_sensitive">Case sensitive</string>
+  <string name="color_filter">Color filter</string>
+  <string name="date_filter">Date filter</string>
+  <string name="date_filter_mode">Filter mode</string>
+  <string name="date_filter_mode.after">After date</string>
+  <string name="date_filter_mode.exact">Exact date</string>
+  <string name="date_filter_mode.before">Before date</string>
+  <string name="color.none">None</string>
+  <string name="color.red">Red</string>
+  <string name="color.orange">Orange</string>
+  <string name="color.yellow">Yellow</string>
+  <string name="color.green">Green</string>
+  <string name="color.cyan">Cyan</string>
+  <string name="color.light_blue">Light blue</string>
+  <string name="color.blue">Blue</string>
+  <string name="color.purple">Purple</string>
+  <string name="color.pink">Pink</string>
+</resources>

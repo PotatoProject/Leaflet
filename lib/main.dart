@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,7 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/xml_asset_loader.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -24,7 +26,17 @@ main() async {
   helper = db.noteHelper;
   runApp(
     ProviderScope(
-      child: PotatoNotes(),
+      child: EasyLocalization(
+        child: PotatoNotes(),
+        supportedLocales: [
+          Locale("en", "US"),
+          Locale("it", "IT"),
+        ],
+        fallbackLocale: Locale("en", "US"),
+        assetLoader: XmlAssetLoader(["common", "main_page"]),
+        path: "assets/locales",
+        preloaderColor: Colors.transparent,
+      ),
     ),
   );
 }
@@ -76,6 +88,9 @@ class _PotatoNotesState extends State<PotatoNotes> {
             title: "PotatoNotes",
             theme: themes.light,
             darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+            locale: context.locale,
             builder: (context, child) {
               if (appInfo.quickActions == null && !kIsWeb) {
                 appInfo.quickActions = QuickActions();
@@ -118,7 +133,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
     });
   }
 
-  void _initProviders(Reader read) {
+  void _initProviders(Reader read) async {
     if (appInfo == null) {
       appInfo = read(Provider((_) => AppInfo()));
     }
@@ -128,8 +143,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
     if (prefs == null) {
       prefs = read(ChangeNotifierProvider((_) => Preferences()));
+      prefs.addListener(() => setState(() {}));
     }
-
-    prefs.addListener(() => setState(() {}));
   }
 }

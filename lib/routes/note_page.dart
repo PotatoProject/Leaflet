@@ -645,12 +645,7 @@ class _NotePageState extends State<NotePage> {
                         bool confirm;
 
                         try {
-                          confirm = await LocalAuthentication()
-                              .authenticateWithBiometrics(
-                            localizedReason: "",
-                            androidAuthStrings: AndroidAuthMessages(
-                                fingerprintHint: "Confirm fingerprint"),
-                          );
+                          confirm = await Utils.showBiometricPrompt();
                         } on PlatformException {
                           confirm = false;
                         }

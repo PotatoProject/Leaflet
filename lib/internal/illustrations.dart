@@ -8,12 +8,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/no_notes_dark.png",
+        "assets/images/no_notes_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/no_notes_light.png",
+        "assets/images/no_notes_light.png",
         scale: 2,
       );
   }
@@ -23,12 +23,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/empty_archive_dark.png",
+        "assets/images/empty_archive_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/empty_archive_light.png",
+        "assets/images/empty_archive_light.png",
         scale: 2,
       );
   }
@@ -38,12 +38,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/empty_trash_dark.png",
+        "assets/images/empty_trash_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/empty_trash_light.png",
+        "assets/images/empty_trash_light.png",
         scale: 2,
       );
   }
@@ -53,12 +53,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/no_favourites_dark.png",
+        "assets/images/no_favourites_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/no_favourites_light.png",
+        "assets/images/no_favourites_light.png",
         scale: 2,
       );
   }
@@ -68,12 +68,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/nothing_found_dark.png",
+        "assets/images/nothing_found_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/nothing_found_light.png",
+        "assets/images/nothing_found_light.png",
         scale: 2,
       );
   }
@@ -83,12 +83,12 @@ class Illustrations {
 
     if (isDark)
       return Image.asset(
-        "assets/type_to_search_dark.png",
+        "assets/images/type_to_search_dark.png",
         scale: 2,
       );
     else
       return Image.asset(
-        "assets/type_to_search_light.png",
+        "assets/images/type_to_search_light.png",
         scale: 2,
       );
   }

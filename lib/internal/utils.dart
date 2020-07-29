@@ -1,5 +1,7 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -16,6 +18,8 @@ import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+
+import 'locale_strings.dart';
 
 const int kMaxImageCount = 4;
 const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
@@ -36,6 +40,18 @@ class Utils {
         editMode: false,
         onChallengeSuccess: () => Navigator.pop(context, true),
         onSave: null,
+      ),
+    );
+  }
+
+  static Future<bool> showBiometricPrompt() async {
+    return await LocalAuthentication().authenticateWithBiometrics(
+      localizedReason: "",
+      stickyAuth: true,
+      androidAuthStrings: AndroidAuthMessages(
+        signInTitle: LocaleStrings.common.biometricsPrompt,
+        fingerprintHint: "",
+        cancelButton: LocaleStrings.common.cancel,
       ),
     );
   }
@@ -254,11 +270,45 @@ class Utils {
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
-          label: "Undo",
+          label: LocaleStrings.common.undo,
           onPressed: () async {
             for (Note note in backupNotes) {
               await helper
                   .saveNote(note.copyWith(deleted: false, archived: false));
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  static Future<void> restoreNotes({
+    GlobalKey<ScaffoldState> scaffoldKey,
+    @required List<Note> notes,
+    @required String reason,
+    bool archive = false,
+  }) async {
+    for (Note note in notes) {
+      await helper.saveNote(note.copyWith(deleted: false, archived: false));
+    }
+
+    List<Note> backupNotes = List.from(notes);
+
+    scaffoldKey?.currentState?.hideCurrentSnackBar();
+    scaffoldKey?.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(reason),
+        action: SnackBarAction(
+          label: LocaleStrings.common.undo,
+          onPressed: () async {
+            for (Note note in backupNotes) {
+              if (archive) {
+                await helper
+                    .saveNote(note.copyWith(deleted: false, archived: true));
+              } else {
+                await helper
+                    .saveNote(note.copyWith(deleted: true, archived: false));
+              }
             }
           },
         ),
@@ -321,40 +371,6 @@ class Utils {
           ],
         ),
       ];
-
-  static Future<void> restoreNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
-    @required List<Note> notes,
-    @required String reason,
-    bool archive = false,
-  }) async {
-    for (Note note in notes) {
-      await helper.saveNote(note.copyWith(deleted: false, archived: false));
-    }
-
-    List<Note> backupNotes = List.from(notes);
-
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
-      SnackBar(
-        content: Text(reason),
-        action: SnackBarAction(
-          label: "Undo",
-          onPressed: () async {
-            for (Note note in backupNotes) {
-              if (archive) {
-                await helper
-                    .saveNote(note.copyWith(deleted: false, archived: true));
-              } else {
-                await helper
-                    .saveNote(note.copyWith(deleted: true, archived: false));
-              }
-            }
-          },
-        ),
-      ),
-    );
-  }
 
   static Future<dynamic> showSecondaryRoute(
     BuildContext context,

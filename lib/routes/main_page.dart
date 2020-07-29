@@ -513,14 +513,7 @@ class _MainPageState extends State<MainPage>
         } else {
           bool status = false;
           if (note.lockNote && note.usesBiometrics) {
-            bool bioAuth =
-                await LocalAuthentication().authenticateWithBiometrics(
-              localizedReason: "",
-              androidAuthStrings: AndroidAuthMessages(
-                signInTitle: "Scan fingerprint to open note",
-                fingerprintHint: "",
-              ),
-            );
+            bool bioAuth = await Utils.showBiometricPrompt();
 
             if (bioAuth)
               status = bioAuth;

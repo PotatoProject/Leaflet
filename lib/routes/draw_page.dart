@@ -13,6 +13,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/draw_object.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:spicy_components/spicy_components.dart';
@@ -73,12 +74,12 @@ class _DrawPageState extends State<DrawPage>
               FlatButton(
                 onPressed: () => Navigator.pop(context),
                 textColor: Theme.of(context).accentColor,
-                child: Text("Cancel"),
+                child: Text(LocaleStrings.common.cancel),
               ),
               FlatButton(
                 onPressed: () => Navigator.pop(context, true),
                 textColor: Theme.of(context).accentColor,
-                child: Text("Exit"),
+                child: Text(LocaleStrings.common.exit),
               ),
             ],
           ),
