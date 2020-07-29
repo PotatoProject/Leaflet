@@ -576,17 +576,10 @@ class _MainPageState extends State<MainPage>
           visible: mode == ReturnMode.ARCHIVE || mode == ReturnMode.TRASH,
           child: Builder(
             builder: (context) {
-              List<Note> notes;
-
-              if (mode == ReturnMode.ARCHIVE) {
-                notes = List.from(cachedNotesMap[ReturnMode.ARCHIVE]);
-              } else {
-                notes = List.from(cachedNotesMap[ReturnMode.TRASH]);
-              }
-
               return IconButton(
                 icon: Icon(MdiIcons.backupRestore),
                 onPressed: () async {
+                  List<Note> notes = await helper.listNotes(mode);
                   bool result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
