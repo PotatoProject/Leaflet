@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -32,6 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(Platform.localeName);
+
     if (widget.trimmed) return commonSettings;
 
     return WillPopScope(

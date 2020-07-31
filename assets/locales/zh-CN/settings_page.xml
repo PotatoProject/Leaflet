@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">设置</string>
+    <string name="personalization.title">个性化</string>
+    <string name="personalization.theme_mode">主题模式</string>
+    <string name="personalization.theme_mode.system">系统</string>
+    <string name="personalization.theme_mode.light">浅色</string>
+    <string name="personalization.theme_mode.dark">深色</string>
+    <string name="personalization.use_amoled">使用暗色主题</string>
+    <string name="personalization.use_custom_accent">跟随系统选择</string>
+    <string name="personalization.custom_accent">选择一个自定义爱好</string>
+    <string name="personalization.use_grid">便签的网格视图</string>
+    <string name="personalization.locale">应用区域设置</string>
+    <string name="privacy.title">隐私</string>
+    <string name="privacy.use_master_pass">使用主密码</string>
+    <string name="privacy.use_master_pass.disclaimer">警告：如果你忘记了密码，你将不能重置密码，你必须重置这个软件，这将会丢失所有的笔记。请务必记牢密码！</string>
+    <string name="privacy.modify_master_pass">修改主密码</string>
+    <string name="info.title">信息</string>
+    <string name="info.about_app">关于PotatoNotes</string>
+    <string name="debug.title">调试</string>
+    <string name="debug.show_setup_screen">下次启动时显示设置</string>
+    <string name="debug.clear_database">清空数据库</string>
+    <string name="debug.migrate_database">迁移数据库</string>
+    <string name="debug.log_level">日志等级</string>
+</resources>

@@ -70,6 +70,7 @@ flutter:
     - assets/locales/ro-RO/
     - assets/locales/ru-RU/
     - assets/locales/tr-TR/
+    - assets/locales/zh-CN/
   fonts:
     - family:  CustomIcons
       fonts:

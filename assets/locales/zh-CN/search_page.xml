@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textbox_hint">搜索</string>
+    <string name="tag_create_hint">创建标签“%s”</string>
+    <string name="note.type_to_search">输入以开始搜索</string>
+    <string name="note.nothing_found">什么都没找到</string>
+</resources>

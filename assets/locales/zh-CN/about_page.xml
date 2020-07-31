@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">关于</string>
+    <string name="pwa_version">PWA版本</string>
+    <string name="links">网址</string>
+    <string name="contributors">贡献者</string>
+    <string name="contributors.hrx">主要开发者和应用设计者</string>
+    <string name="contributors.bas">同步 API 和应用</string>
+    <string name="contributors.nico">同步API</string>
+    <string name="contributors.kat">旧的同步 API</string>
+    <string name="contributors.rohit">说明和便签颜色</string>
+    <string name="contributors.rshbfn">应用图标和主音效</string>
+</resources>

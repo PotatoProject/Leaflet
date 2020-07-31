@@ -37,6 +37,7 @@ main() async {
           Locale("ro", "RO"),
           Locale("ru", "RU"),
           Locale("tr", "TR"),
+          Locale("zh", "CN"),
         ],
         fallbackLocale: Locale("en", "US"),
         assetLoader: AndroidXmlAssetLoader(

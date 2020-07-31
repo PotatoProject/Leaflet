@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_hint">标题</string>
+    <string name="content_hint">内容</string>
+    <string name="list_item_hint">输入</string>
+    <string name="add_entry_hint">添加</string>
+    <string name="toolbar.tags">管理标签</string>
+    <string name="toolbar.color">更改颜色</string>
+    <string name="toolbar.add_item">新增项目</string>
+    <string name="privacy.title">隐私选项</string>
+    <string name="privacy.hide_content">在主页面隐藏便签内容</string>
+    <string name="privacy.lock_note">锁定便签</string>
+    <string name="privacy.lock_note.missing_pass">您必须设置一个主密码</string>
+    <string name="privacy.use_biometrics">使用生物识别解锁</string>
+    <string name="toggle_list">切换列表</string>
+    <string name="image_gallery">图库中的图像</string>
+    <string name="image_camera">拍照</string>
+    <string name="drawing">添加一张图片</string>
+    <string name="added_favourites">笔记已添加到收藏夹</string>
+    <string name="removed_favourites">便签已从存档中删除</string>
+</resources>
