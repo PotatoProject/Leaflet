@@ -37,8 +37,11 @@ main() async {
           [
             "common",
             "about_page",
+            "draw_page",
             "main_page",
+            "note_page",
             "search_page",
+            "settings_page",
           ],
         ),
         path: "assets/locales",

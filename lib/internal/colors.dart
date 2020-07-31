@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 
 class NoteColors {
-  static List<ColorInfo> get colorList {
-    return [
-      NoteColors.none,
-      NoteColors.red,
-      NoteColors.orange,
-      NoteColors.yellow,
-      NoteColors.green,
-      NoteColors.cyan,
-      NoteColors.lightBlue,
-      NoteColors.blue,
-      NoteColors.purple,
-      NoteColors.pink,
-    ];
-  }
+  static List<ColorInfo> get colorList => [
+        NoteColors.none,
+        NoteColors.red,
+        NoteColors.orange,
+        NoteColors.yellow,
+        NoteColors.green,
+        NoteColors.cyan,
+        NoteColors.lightBlue,
+        NoteColors.blue,
+        NoteColors.purple,
+        NoteColors.pink,
+      ];
 
   static ColorInfo get none => ColorInfo(
         label: LocaleStrings.common.colorNone,

@@ -7,7 +7,11 @@
     <string name="save">Salva</string>
     <string name="delete">Elimina</string>
     <string name="undo">Annulla</string>
+    <string name="redo">Ripeti</string>
+    <string name="edit">Modifica</string>
+    <string name="go_on">Prosegui</string>
     <string name="exit">Esci</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s di %s</string>
     <string name="new_note">Nuovo appunto</string>
     <string name="new_list">Nuovo elenco</string>
     <string name="new_image">Nuova immagine</string>

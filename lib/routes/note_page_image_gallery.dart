@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
@@ -67,15 +68,11 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
       ),
       appBar: AppBar(
         textTheme: Theme.of(context).textTheme,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          padding: EdgeInsets.all(0),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: Text(
-          (currentPage + 1).toString() +
-              " of " +
-              widget.note.images.data.length.toString(),
+          LocaleStrings.common.xOfY(
+            (currentPage + 1),
+            widget.note.images.data.length,
+          ),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -84,6 +81,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           IconButton(
             icon: Icon(CommunityMaterialIcons.pencil_outline),
             padding: EdgeInsets.all(0),
+            tooltip: LocaleStrings.common.edit,
             onPressed: !kIsWeb
                 ? () async {
                     await Utils.showSecondaryRoute(
@@ -106,6 +104,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           IconButton(
             icon: Icon(Icons.delete_outline),
             padding: EdgeInsets.all(0),
+            tooltip: LocaleStrings.common.delete,
             onPressed: () {
               widget.note.images.data
                   .remove(widget.note.images.uris[currentPage].path);

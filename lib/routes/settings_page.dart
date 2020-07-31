@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -37,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
       onWillPop: () async => !removingMasterPass,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Settings"),
+          title: Text(LocaleStrings.settingsPage.title),
           textTheme: Theme.of(context).textTheme,
         ),
         extendBodyBehindAppBar: true,
@@ -45,11 +46,11 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             commonSettings,
             SettingsCategory(
-              header: "Info",
+              header: LocaleStrings.settingsPage.infoTitle,
               children: <Widget>[
                 ListTile(
                   leading: Icon(MdiIcons.informationOutline),
-                  title: Text("About PotatoNotes"),
+                  title: Text(LocaleStrings.settingsPage.infoAboutApp),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                   onTap: () => Utils.showSecondaryRoute(
@@ -63,11 +64,12 @@ class _SettingsPageState extends State<SettingsPage> {
             Visibility(
               visible: kDebugMode,
               child: SettingsCategory(
-                header: "Debug",
+                header: LocaleStrings.settingsPage.debugTitle,
                 children: [
                   SwitchListTile(
                     secondary: Icon(MdiIcons.humanGreeting),
-                    title: Text("Show setup screen on next startup"),
+                    title:
+                        Text(LocaleStrings.settingsPage.debugShowSetupScreen),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     value: !prefs.welcomePageSeen,
@@ -78,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     leading: Icon(CommunityMaterialIcons.database_remove),
-                    title: Text("Flush database"),
+                    title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     onTap: () async {
@@ -90,7 +92,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   ListTile(
                     leading: Icon(CommunityMaterialIcons.database_import),
-                    title: Text("Migrate database"),
+                    title:
+                        Text(LocaleStrings.settingsPage.debugMigrateDatabase),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     onTap: () async {
@@ -123,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     leading: Icon(CommunityMaterialIcons.text),
-                    title: Text("Log level"),
+                    title: Text(LocaleStrings.settingsPage.debugLogLevel),
                     trailing: DropdownButton(
                       items: [
                         DropdownMenuItem(
@@ -168,24 +171,27 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       children: <Widget>[
         SettingsCategory(
-          header: "Personalization",
+          header: LocaleStrings.settingsPage.personalizationTitle,
           children: [
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               leading: Icon(CommunityMaterialIcons.theme_light_dark),
-              title: Text("Theme mode"),
+              title: Text(LocaleStrings.settingsPage.personalizationThemeMode),
               trailing: DropdownButton(
                 items: [
                   DropdownMenuItem(
-                    child: Text("System"),
+                    child: Text(LocaleStrings
+                        .settingsPage.personalizationThemeModeSystem),
                     value: ThemeMode.system,
                   ),
                   DropdownMenuItem(
-                    child: Text("Light"),
+                    child: Text(LocaleStrings
+                        .settingsPage.personalizationThemeModeLight),
                     value: ThemeMode.light,
                   ),
                   DropdownMenuItem(
-                    child: Text("Dark"),
+                    child: Text(LocaleStrings
+                        .settingsPage.personalizationThemeModeDark),
                     value: ThemeMode.dark,
                   ),
                 ],
@@ -196,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SwitchListTile(
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
-              title: Text("Use AMOLED theme"),
+              title: Text(LocaleStrings.settingsPage.personalizationUseAmoled),
               secondary: Icon(CommunityMaterialIcons.brightness_6),
               activeColor: Theme.of(context).accentColor,
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
@@ -208,14 +214,16 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: !deviceInfo.canUseSystemAccent
                   ? null
                   : (value) => prefs.useCustomAccent = !value,
-              title: Text("Follow system accent"),
+              title: Text(
+                  LocaleStrings.settingsPage.personalizationUseCustomAccent),
               secondary: Icon(OMIcons.colorLens),
               activeColor: Theme.of(context).accentColor,
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
             ListTile(
               leading: Icon(OMIcons.colorize),
-              title: Text("Pick a custom accent"),
+              title:
+                  Text(LocaleStrings.settingsPage.personalizationCustomAccent),
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               enabled: kIsWeb ? true : prefs.useCustomAccent,
               trailing: AnimatedOpacity(
@@ -251,7 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SwitchListTile(
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
-              title: Text("Grid view for notes"),
+              title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
               secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
               activeColor: Theme.of(context).accentColor,
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
@@ -259,7 +267,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               leading: Icon(Icons.translate),
-              title: Text("Locale"),
+              title: Text(LocaleStrings.settingsPage.personalizationLocale),
               trailing: DropdownButton(
                 items: List.generate(
                   context.supportedLocales.length,
@@ -279,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         SettingsCategory(
-          header: "Privacy",
+          header: LocaleStrings.settingsPage.privacyTitle,
           children: [
             SwitchListTile(
               value: prefs.masterPass != "",
@@ -287,9 +295,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (prefs.masterPass == "") {
                   bool status = await showInfoSheet(
                     context,
-                    content:
-                        "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.",
-                    buttonAction: "Go on",
+                    content: LocaleStrings
+                        .settingsPage.privacyUseMasterPassDisclaimer,
+                    buttonAction: LocaleStrings.common.goOn,
                   );
                   if (status) showPassChallengeSheet(context);
                 } else {
@@ -310,14 +318,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
               secondary: Icon(OMIcons.vpnKey),
-              title: Text("Use master pass"),
+              title: Text(LocaleStrings.settingsPage.privacyUseMasterPass),
               activeColor: Theme.of(context).accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
             ListTile(
               leading: Icon(CommunityMaterialIcons.form_textbox_password),
-              title: Text("Modify master pass"),
+              title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
               contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               enabled: prefs.masterPass != "",
               onTap: () async {

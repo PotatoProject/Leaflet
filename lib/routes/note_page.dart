@@ -15,6 +15,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -197,13 +198,19 @@ class _NotePageState extends State<NotePage> {
             IconButton(
               icon: Icon(OMIcons.removeRedEye),
               padding: EdgeInsets.all(0),
+              tooltip: LocaleStrings.notePage.privacyTitle,
               onPressed: showPrivacyOptionSheet,
             ),
             IconButton(
-              icon: Icon(note.starred
-                  ? CommunityMaterialIcons.heart
-                  : CommunityMaterialIcons.heart_outline),
+              icon: Icon(
+                note.starred
+                    ? CommunityMaterialIcons.heart
+                    : CommunityMaterialIcons.heart_outline,
+              ),
               padding: EdgeInsets.all(0),
+              tooltip: note.starred
+                  ? LocaleStrings.mainPage.selectionBarRmFav
+                  : LocaleStrings.mainPage.selectionBarAddFav,
               onPressed: () {
                 setState(() => note = note.copyWith(starred: !note.starred));
                 notifyNoteChanged();
@@ -212,8 +219,8 @@ class _NotePageState extends State<NotePage> {
                   SnackBar(
                     content: Text(
                       note.starred
-                          ? "Note added to favourites"
-                          : "Note removed from favourites",
+                          ? LocaleStrings.notePage.addedFavourites
+                          : LocaleStrings.notePage.removedFavourites,
                     ),
                     behavior: SnackBarBehavior.floating,
                   ),
@@ -276,7 +283,7 @@ class _NotePageState extends State<NotePage> {
                           controller: titleController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Title",
+                            hintText: LocaleStrings.notePage.titleHint,
                             hintStyle: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
@@ -305,7 +312,7 @@ class _NotePageState extends State<NotePage> {
                           controller: contentController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Content",
+                            hintText: LocaleStrings.notePage.contentHint,
                             hintStyle: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
@@ -396,7 +403,8 @@ class _NotePageState extends State<NotePage> {
                               title: TextField(
                                 controller: listContentControllers[index],
                                 decoration: InputDecoration.collapsed(
-                                    hintText: "Input"),
+                                  hintText: LocaleStrings.notePage.listItemHint,
+                                ),
                                 textCapitalization:
                                     TextCapitalization.sentences,
                                 style: TextStyle(
@@ -450,7 +458,7 @@ class _NotePageState extends State<NotePage> {
                           child: ListTile(
                             leading: Icon(Icons.add),
                             title: Text(
-                              "Add item",
+                              LocaleStrings.notePage.addEntryHint,
                               style: TextStyle(
                                   color: Theme.of(context).iconTheme.color),
                             ),
@@ -519,6 +527,7 @@ class _NotePageState extends State<NotePage> {
         IconButton(
           icon: Icon(MdiIcons.tagMultipleOutline),
           padding: EdgeInsets.all(0),
+          tooltip: LocaleStrings.notePage.toolbarTags,
           onPressed: () async {
             await Utils.showSecondaryRoute(
               context,
@@ -534,6 +543,7 @@ class _NotePageState extends State<NotePage> {
         IconButton(
           icon: Icon(OMIcons.colorLens),
           padding: EdgeInsets.all(0),
+          tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showNotesModalBottomSheet(
             context: context,
             backgroundColor: Theme.of(context).cardColor,
@@ -553,13 +563,15 @@ class _NotePageState extends State<NotePage> {
             ? IconButton(
                 icon: Icon(Icons.add),
                 padding: EdgeInsets.all(0),
+                tooltip: LocaleStrings.notePage.toolbarAddItem,
                 onPressed: showAddElementsSheet,
               )
             : IconButton(
-                icon: Icon(note.list
-                    ? Icons.check_circle
-                    : Icons.check_circle_outline),
+                icon: Icon(
+                  note.list ? Icons.check_circle : Icons.check_circle_outline,
+                ),
                 padding: EdgeInsets.all(0),
+                tooltip: LocaleStrings.notePage.toggleList,
                 onPressed: toggleList,
               ),
       ];
@@ -607,7 +619,7 @@ class _NotePageState extends State<NotePage> {
               },
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.removeRedEye),
-              title: Text("Hide content on main page"),
+              title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
             SwitchListTile(
               value: note.lockNote,
@@ -625,10 +637,10 @@ class _NotePageState extends State<NotePage> {
                   : null,
               activeColor: Theme.of(context).accentColor,
               secondary: Icon(OMIcons.lock),
-              title: Text("Lock note"),
+              title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
                   ? Text(
-                      "You must set a master pass from settings",
+                      LocaleStrings.notePage.privacyLockNoteMissingPass,
                       style: TextStyle(color: Colors.red),
                     )
                   : null,
@@ -656,7 +668,7 @@ class _NotePageState extends State<NotePage> {
                     : null,
                 activeColor: Theme.of(context).accentColor,
                 secondary: Icon(OMIcons.fingerprint),
-                title: Text("Use biometrics to unlock"),
+                title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),
             ),
           ],
@@ -676,7 +688,7 @@ class _NotePageState extends State<NotePage> {
           ListTile(
             leading: Icon(
                 note.list ? Icons.check_circle : Icons.check_circle_outline),
-            title: Text("Toggle list"),
+            title: Text(LocaleStrings.notePage.toggleList),
             onTap: () {
               Navigator.pop(context);
 
@@ -685,7 +697,7 @@ class _NotePageState extends State<NotePage> {
           ),
           ListTile(
             leading: Icon(OMIcons.photo),
-            title: Text("Image from gallery"),
+            title: Text(LocaleStrings.notePage.imageGallery),
             onTap: () async {
               PickedFile image =
                   await ImagePicker().getImage(source: ImageSource.gallery);
@@ -700,7 +712,7 @@ class _NotePageState extends State<NotePage> {
           ),
           ListTile(
             leading: Icon(OMIcons.camera),
-            title: Text("Take a photo"),
+            title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
               PickedFile image =
                   await ImagePicker().getImage(source: ImageSource.camera);
@@ -715,7 +727,7 @@ class _NotePageState extends State<NotePage> {
           ),
           ListTile(
             leading: Icon(OMIcons.brush),
-            title: Text("Add drawing"),
+            title: Text(LocaleStrings.notePage.drawing),
             onTap: () {
               Navigator.pop(context);
 

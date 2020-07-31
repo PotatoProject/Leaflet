@@ -13,6 +13,7 @@ import 'package:loggy/loggy.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -34,7 +35,7 @@ class DrawPage extends StatefulWidget {
 
 class _DrawPageState extends State<DrawPage>
     with SingleTickerProviderStateMixin {
-  static const List<Color> availableColors = Colors.primaries;
+  static List<ColorInfo> availableColors = NoteColors.colorList;
 
   BuildContext globalContext;
   List<DrawObject> objects = [];
@@ -110,12 +111,14 @@ class _DrawPageState extends State<DrawPage>
     if (this.globalContext == null) this.globalContext = context;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back), onPressed: () => exitPrompt(true)),
+        leading: BackButton(
+          onPressed: () => exitPrompt(true),
+        ),
         actions: [
           IconButton(
             icon: Icon(CommunityMaterialIcons.undo),
             padding: EdgeInsets.all(0),
+            tooltip: LocaleStrings.common.undo,
             onPressed: objects.isNotEmpty
                 ? () => setState(() {
                       objects.removeLast();
@@ -127,6 +130,7 @@ class _DrawPageState extends State<DrawPage>
           IconButton(
             icon: Icon(CommunityMaterialIcons.redo),
             padding: EdgeInsets.all(0),
+            tooltip: LocaleStrings.common.redo,
             onPressed: actionQueueIndex < backupObjects.length - 1
                 ? () => setState(() {
                       actionQueueIndex = objects.length;
@@ -138,6 +142,7 @@ class _DrawPageState extends State<DrawPage>
           IconButton(
             icon: Icon(CommunityMaterialIcons.content_save_outline),
             padding: EdgeInsets.all(0),
+            tooltip: LocaleStrings.common.save,
             onPressed: !saved
                 ? () async {
                     ui.Image image = await (key.currentContext
@@ -245,11 +250,15 @@ class _DrawPageState extends State<DrawPage>
                         )
                       : ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: availableColors.length + 1,
+                          itemCount: availableColors.length,
                           itemBuilder: (context, index) {
                             Color currentColor = index == 0
                                 ? Colors.black
-                                : availableColors[index - 1];
+                                : Color(availableColors[index].color);
+
+                            String tooltip = index == 0
+                                ? LocaleStrings.drawPage.colorBlack
+                                : availableColors[index].label;
 
                             return IconButton(
                               icon: Container(
@@ -266,6 +275,7 @@ class _DrawPageState extends State<DrawPage>
                                       )
                                     : Container(),
                               ),
+                              tooltip: tooltip,
                               onPressed: () {
                                 setState(() => selectedColor = currentColor);
                                 controller.animateBack(0);
@@ -286,6 +296,7 @@ class _DrawPageState extends State<DrawPage>
                       ? Theme.of(context).accentColor
                       : null,
                   padding: EdgeInsets.all(0),
+                  tooltip: LocaleStrings.drawPage.toolsBrush,
                   onPressed: () => setState(() => currentTool = DrawTool.PEN),
                 ),
                 IconButton(
@@ -294,6 +305,7 @@ class _DrawPageState extends State<DrawPage>
                       ? Theme.of(context).accentColor
                       : null,
                   padding: EdgeInsets.all(0),
+                  tooltip: LocaleStrings.drawPage.toolsEraser,
                   onPressed: () =>
                       setState(() => currentTool = DrawTool.ERASER),
                 ),
@@ -303,6 +315,7 @@ class _DrawPageState extends State<DrawPage>
                       ? Theme.of(context).accentColor
                       : null,
                   padding: EdgeInsets.all(0),
+                  tooltip: LocaleStrings.drawPage.toolsMarker,
                   onPressed: () =>
                       setState(() => currentTool = DrawTool.MARKER),
                 ),
@@ -311,6 +324,7 @@ class _DrawPageState extends State<DrawPage>
                 IconButton(
                   icon: Icon(OMIcons.colorLens),
                   padding: EdgeInsets.all(0),
+                  tooltip: LocaleStrings.drawPage.toolsColorPicker,
                   onPressed: () async {
                     if (showReason == MenuShowReason.COLOR_PICKER &&
                         controller.value > 0) {
@@ -325,6 +339,7 @@ class _DrawPageState extends State<DrawPage>
                 IconButton(
                   icon: Icon(CommunityMaterialIcons.radius_outline),
                   padding: EdgeInsets.all(0),
+                  tooltip: LocaleStrings.drawPage.toolsRadiusPicker,
                   onPressed: () async {
                     if (showReason == MenuShowReason.RADIUS_PICKER &&
                         controller.value > 0) {

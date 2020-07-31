@@ -5,9 +5,13 @@ class LocaleStrings {
   LocaleStrings._();
 
   static _CommonLocaleStrings get common => _CommonLocaleStrings();
-  static _MainPageLocaleStrings get mainPage => _MainPageLocaleStrings();
-  static _SearchPageLocaleStrings get searchPage => _SearchPageLocaleStrings();
   static _AboutPageLocaleStrings get aboutPage => _AboutPageLocaleStrings();
+  static _DrawPageLocaleStrings get drawPage => _DrawPageLocaleStrings();
+  static _MainPageLocaleStrings get mainPage => _MainPageLocaleStrings();
+  static _NotePageLocaleStrings get notePage => _NotePageLocaleStrings();
+  static _SearchPageLocaleStrings get searchPage => _SearchPageLocaleStrings();
+  static _SettingsPageLocaleStrings get settingsPage =>
+      _SettingsPageLocaleStrings();
 }
 
 class _CommonLocaleStrings {
@@ -18,6 +22,9 @@ class _CommonLocaleStrings {
   final save = "common.save".tr();
   final delete = "common.delete".tr();
   final undo = "common.undo".tr();
+  final redo = "common.redo".tr();
+  final edit = "common.edit".tr();
+  final goOn = "common.go_on".tr();
   final exit = "common.exit".tr();
   final newNote = "common.new_note".tr();
   final newList = "common.new_list".tr();
@@ -50,6 +57,33 @@ class _CommonLocaleStrings {
   final tagNew = "common.tag.new".tr();
   final tagModify = "common.tag.modify".tr();
   final tagTextboxHint = "common.tag.textbox_hint".tr();
+
+  String xOfY(int currentPage, int maxPages) => "common.x_of_y".tr(
+        args: [currentPage.toString(), maxPages.toString()],
+      );
+}
+
+class _AboutPageLocaleStrings {
+  final title = "about_page.title".tr();
+  final pwaVersion = "about_page.pwa_version".tr();
+  final links = "about_page.links".tr();
+  final contributors = "about_page.contributors".tr();
+  final contributorsHrX = "about_page.contributors.hrx".tr();
+  final contributorsBas = "about_page.contributors.bas".tr();
+  final contributorsNico = "about_page.contributors.nico".tr();
+  final contributorsKat = "about_page.contributors.kat".tr();
+  final contributorsRohit = "about_page.contributors.rohit".tr();
+  final contributorsRshBfn = "about_page.contributors.rshbfn".tr();
+}
+
+class _DrawPageLocaleStrings {
+  final colorBlack = "draw_page.color_black".tr();
+  final exitPrompt = "draw_page.exit_prompt".tr();
+  final toolsBrush = "draw_page.tools.brush".tr();
+  final toolsEraser = "draw_page.tools.eraser".tr();
+  final toolsMarker = "draw_page.tools.marker".tr();
+  final toolsColorPicker = "draw_page.tools.color_picker".tr();
+  final toolsRadiusPicker = "draw_page.tools.radius_picker".tr();
 }
 
 class _MainPageLocaleStrings {
@@ -85,6 +119,28 @@ class _MainPageLocaleStrings {
   String notesRestored(num value) => "main_page.notes_restored".plural(value);
 }
 
+class _NotePageLocaleStrings {
+  final titleHint = "note_page.title_hint".tr();
+  final contentHint = "note_page.content_hint".tr();
+  final listItemHint = "note_page.list_item_hint".tr();
+  final addEntryHint = "note_page.add_entry_hint".tr();
+  final toolbarTags = "note_page.toolbar.tags".tr();
+  final toolbarColor = "note_page.toolbar.color".tr();
+  final toolbarAddItem = "note_page.toolbar.add_item".tr();
+  final privacyTitle = "note_page.privacy.title".tr();
+  final privacyHideContent = "note_page.privacy.hide_content".tr();
+  final privacyLockNote = "note_page.privacy.lock_note".tr();
+  final privacyLockNoteMissingPass =
+      "note_page.privacy.lock_note.missing_pass".tr();
+  final privacyUseBiometrics = "note_page.privacy.use_biometrics".tr();
+  final toggleList = "note_page.toggle_list".tr();
+  final imageGallery = "note_page.image_gallery".tr();
+  final imageCamera = "note_page.image_camera".tr();
+  final drawing = "note_page.drawing".tr();
+  final addedFavourites = "note_page.added_favourites".tr();
+  final removedFavourites = "note_page.removed_favourites".tr();
+}
+
 class _SearchPageLocaleStrings {
   final textboxHint = "search_page.textbox_hint".tr();
   final noteTypeToSearch = "search_page.note.type_to_search".tr();
@@ -94,15 +150,36 @@ class _SearchPageLocaleStrings {
       "search_page.tag_create_hint".tr(args: [tag]);
 }
 
-class _AboutPageLocaleStrings {
-  final title = "about_page.title".tr();
-  final pwaVersion = "about_page.pwa_version".tr();
-  final links = "about_page.links".tr();
-  final contributors = "about_page.contributors".tr();
-  final contributorsHrX = "about_page.contributors.hrx".tr();
-  final contributorsBas = "about_page.contributors.bas".tr();
-  final contributorsNico = "about_page.contributors.nico".tr();
-  final contributorsKat = "about_page.contributors.kat".tr();
-  final contributorsRohit = "about_page.contributors.rohit".tr();
-  final contributorsRshBfn = "about_page.contributors.rshbfn".tr();
+class _SettingsPageLocaleStrings {
+  final title = "settings_page.title".tr();
+  final personalizationTitle = "settings_page.personalization.title".tr();
+  final personalizationThemeMode =
+      "settings_page.personalization.theme_mode".tr();
+  final personalizationThemeModeSystem =
+      "settings_page.personalization.theme_mode.system".tr();
+  final personalizationThemeModeLight =
+      "settings_page.personalization.theme_mode.light".tr();
+  final personalizationThemeModeDark =
+      "settings_page.personalization.theme_mode.dark".tr();
+  final personalizationUseAmoled =
+      "settings_page.personalization.use_amoled".tr();
+  final personalizationUseCustomAccent =
+      "settings_page.personalization.use_custom_accent".tr();
+  final personalizationCustomAccent =
+      "settings_page.personalization.custom_accent".tr();
+  final personalizationUseGrid = "settings_page.personalization.use_grid".tr();
+  final personalizationLocale = "settings_page.personalization.locale".tr();
+  final privacyTitle = "settings_page.privacy.title".tr();
+  final privacyUseMasterPass = "settings_page.privacy.use_master_pass".tr();
+  final privacyUseMasterPassDisclaimer =
+      "settings_page.privacy.use_master_pass.disclaimer".tr();
+  final privacyModifyMasterPass =
+      "settings_page.privacy.modify_master_pass".tr();
+  final infoTitle = "settings_page.info.title".tr();
+  final infoAboutApp = "settings_page.info.about_app".tr();
+  final debugTitle = "settings_page.debug.title".tr();
+  final debugShowSetupScreen = "settings_page.debug.show_setup_screen".tr();
+  final debugClearDatabase = "settings_page.debug.clear_database".tr();
+  final debugMigrateDatabase = "settings_page.debug.migrate_database".tr();
+  final debugLogLevel = "settings_page.debug.log_level".tr();
 }

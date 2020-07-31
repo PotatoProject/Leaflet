@@ -6,7 +6,11 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="edit">Edit</string>
+    <string name="go_on">Go on</string>
     <string name="exit">Exit</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s of %s</string>
     <string name="new_note">New note</string>
     <string name="new_list">New list</string>
     <string name="new_image">New image</string>
