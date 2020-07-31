@@ -10,11 +10,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/no_notes_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/no_notes_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -25,11 +27,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/empty_archive_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/empty_archive_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -40,11 +44,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/empty_trash_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/empty_trash_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -55,11 +61,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/no_favourites_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/no_favourites_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -70,11 +78,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/nothing_found_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/nothing_found_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -85,11 +95,13 @@ class Illustrations {
       return Image.asset(
         "assets/images/type_to_search_dark.png",
         scale: 2,
+        gaplessPlayback: true,
       );
     else
       return Image.asset(
         "assets/images/type_to_search_light.png",
         scale: 2,
+        gaplessPlayback: true,
       );
   }
 
@@ -115,6 +127,7 @@ class Illustrations {
               fontWeight: FontWeight.w500,
               color: Theme.of(context).iconTheme.color,
             ),
+            textAlign: TextAlign.center,
           )
         ],
       ),
