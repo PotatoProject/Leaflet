@@ -31,6 +31,7 @@ main() async {
         supportedLocales: [
           Locale("en", "US"),
           Locale("it", "IT"),
+          Locale("nl", "NL"),
         ],
         fallbackLocale: Locale("en", "US"),
         assetLoader: AndroidXmlAssetLoader(

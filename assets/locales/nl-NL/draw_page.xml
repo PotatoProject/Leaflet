@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_black">Zwart</string>
+    <string name="exit_prompt">Niet-opgeslagen wijzigingen zullen verloren gaan. Weet u zeker dat u wilt afsluiten?</string>
+    <string name="tools.brush">Kwast</string>
+    <string name="tools.eraser">Gum</string>
+    <string name="tools.marker">Markeerstift</string>
+    <string name="tools.color_picker">Kleur</string>
+    <string name="tools.radius_picker">Straal</string>
+</resources>

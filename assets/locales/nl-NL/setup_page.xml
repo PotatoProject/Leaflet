@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button.get_started">Aan de slag</string>
+    <string name="button.finish">Voltooi</string>
+    <string name="button.next">Volgende</string>
+    <string name="button.back">Terug</string>
+    <string name="basic_customization.title">Basis personalisatie</string>
+    <string name="welcome.catchphrase">Je nieuwe favoriete app voor notities</string>
+    <string name="finish.title">Klaar!</string>
+    <string name="finish.last_words">Nu ben je klaar om maximaal van PotatoNotes te genieten. \nAls je verdere aanpassingen wilt doen ga dan naar in de instellingen in het zijmenu, als je jouw PotatoSync-account wilt beheren, klik je op jouw avatar in de bovenste balk.</string>
+</resources>

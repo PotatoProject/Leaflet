@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_hint">Titel</string>
+    <string name="content_hint">Inhoud</string>
+    <string name="list_item_hint">Inhoud</string>
+    <string name="add_entry_hint">Voeg item toe</string>
+    <string name="toolbar.tags">Labels beheren</string>
+    <string name="toolbar.color">Kleur wijzigen</string>
+    <string name="toolbar.add_item">Item toevoegen</string>
+    <string name="privacy.title">Privacy opties</string>
+    <string name="privacy.hide_content">Verberg inhoud op hoofdpagina</string>
+    <string name="privacy.lock_note">Notitie vergrendelen</string>
+    <string name="privacy.lock_note.missing_pass">Je moet een hoofdwachtwoord instellen vanuit instellingen</string>
+    <string name="privacy.use_biometrics">Biometrie gebruiken om te ontgrendelen</string>
+    <string name="toggle_list">Checklist</string>
+    <string name="image_gallery">Afbeelding uit galerij</string>
+    <string name="image_camera">Maak een foto</string>
+    <string name="drawing">Voeg tekening toe</string>
+    <string name="added_favourites">Notitie toegevoegd aan favorieten</string>
+    <string name="removed_favourites">Notitie verwijderd uit favorieten</string>
+</resources>

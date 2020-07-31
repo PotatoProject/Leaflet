@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Instellingen</string>
+    <string name="search">Zoeken</string>
+    <string name="account">Account</string>
+    <string name="restore_prompt.archive">Wilt u alle notities in het archief terugzetten?</string>
+    <string name="restore_prompt.trash">Wilt u alle notities in de prullenbak herstellen?</string>
+    <string name="tag_delete_prompt">Dit label zal voor altijd verloren gaan als u het verwijdert</string>
+    <string name="deleted_empty_note">Lege notitie verwijderd</string>
+    <string name="empty_state.home">Er zijn nog geen notities toegevoegd</string>
+    <string name="empty_state.archive">Het archief is leeg</string>
+    <string name="empty_state.trash">De prullenbak is leeg</string>
+    <string name="empty_state.favourites">Nog geen favorieten</string>
+    <string name="empty_state.tag">Geen notities met dit label</string>
+    <string name="title.home">Home</string>
+    <string name="title.archive">Archief</string>
+    <string name="title.trash">Prullenbak</string>
+    <string name="title.favourites">Favorieten</string>
+    <string name="title.tag">Label</string>
+    <string name="title.all">Alles</string>
+    <string name="selection_bar.close">Sluiten</string>
+    <string name="selection_bar.add_favourites">Voeg toe aan favorieten</string>
+    <string name="selection_bar.remove_favourites">Verwijder uit favorieten</string>
+    <string name="selection_bar.change_color">Kleur wijzigen</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiveren</string>
+    <string name="selection_bar.delete">Naar prullenbak verplaatsen</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Vastzetten</string>
+    <string name="selection_bar.share">Deel</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s notitie verplaatst naar de prullenbak</item>
+        <item quantity="other">%s notities verplaatst naar de prullenbak</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">%s notitie gearchiveerd</item>
+        <item quantity="other">%s notities gearchiveerd</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">%s notitie hersteld</item>
+        <item quantity="other">%s notities hersteld</item>
+    </plurals>
+</resources>

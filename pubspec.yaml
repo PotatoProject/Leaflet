@@ -64,6 +64,7 @@ flutter:
     - assets/images/
     - assets/locales/en-US/
     - assets/locales/it-IT/
+    - assets/locales/nl-NL/
   fonts:
     - family:  CustomIcons
       fonts:

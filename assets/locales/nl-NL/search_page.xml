@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textbox_hint">Zoeken</string>
+    <string name="tag_create_hint">Maak label \"%s\"</string>
+    <string name="note.type_to_search">Typ om te beginnen met zoeken</string>
+    <string name="note.nothing_found">Niets gevonden...</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Instellingen</string>
+    <string name="personalization.title">Personalisatie</string>
+    <string name="personalization.theme_mode">Thema modus</string>
+    <string name="personalization.theme_mode.system">Systeem</string>
+    <string name="personalization.theme_mode.light">Licht</string>
+    <string name="personalization.theme_mode.dark">Donker</string>
+    <string name="personalization.use_amoled">Gebruik zwart thema</string>
+    <string name="personalization.use_custom_accent">Volg systeemaccent</string>
+    <string name="personalization.custom_accent">Kies een aangepast accent</string>
+    <string name="personalization.use_grid">Rasterweergave voor notities</string>
+    <string name="personalization.locale">App lokalisatie</string>
+    <string name="privacy.title">Privacy</string>
+    <string name="privacy.use_master_pass">Gebruik hoofdwachtwoord</string>
+    <string name="privacy.use_master_pass.disclaimer">Waarschuwing: als u ooit het hoofdwacthwoord vergeet kunt u deze niet opnieuw instellen, je moet de app verwijderen, zodat alle notities worden gewist, en opnieuw installeren. Schrijf het alstublieft ergens op.</string>
+    <string name="privacy.modify_master_pass">Wijzig hoofdwachtwoord</string>
+    <string name="info.title">Informatie</string>
+    <string name="info.about_app">Over PotatoNotes</string>
+    <string name="debug.title">Foutopsporing</string>
+    <string name="debug.show_setup_screen">Configuratiescherm bij volgende start weergeven</string>
+    <string name="debug.clear_database">Database wissen</string>
+    <string name="debug.migrate_database">Database migreren</string>
+    <string name="debug.log_level">Log niveau</string>
+</resources>
