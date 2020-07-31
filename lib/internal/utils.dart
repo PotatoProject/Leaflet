@@ -376,6 +376,8 @@ class Utils {
     BuildContext context,
     Widget route, {
     EdgeInsets sidePadding = kSecondaryRoutePadding,
+    RouteTransitionsBuilder transitionsBuilder,
+    bool barrierDismissible = true,
     bool allowGestures = true,
   }) async {
     bool shouldUseDialog = deviceInfo.uiType == UiType.LARGE_TABLET ||
@@ -384,18 +386,43 @@ class Utils {
     if (shouldUseDialog) {
       showDialog(
         context: context,
+        barrierDismissible: barrierDismissible,
         builder: (context) => Dialog(
           insetPadding: sidePadding,
           child: route,
         ),
       );
     } else {
-      return Navigator.of(context).push(
-        DismissiblePageRoute(
-          builder: (context) => route,
-          allowGestures: allowGestures,
-        ),
-      );
+      if (transitionsBuilder != null) {
+        print("yes");
+        return Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return transitionsBuilder(
+                context,
+                animation,
+                secondaryAnimation,
+                route,
+              );
+            },
+          ),
+        );
+      } else {
+        if (allowGestures) {
+          return Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => route,
+            ),
+          );
+        } else {
+          return Navigator.of(context).push(
+            DismissiblePageRoute(
+              builder: (context) => route,
+              allowGestures: false,
+            ),
+          );
+        }
+      }
     }
   }
 }

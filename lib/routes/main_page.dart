@@ -87,16 +87,23 @@ class _MainPageState extends State<MainPage>
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      bool welcomePageSeenV2;
       // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
       final sharedPrefs = await SharedPrefs.newInstance();
 
-      welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
+      bool welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
       if (!welcomePageSeenV2) {
+        print("bruh");
         Utils.showSecondaryRoute(
           context,
           SetupPage(),
           allowGestures: false,
+          barrierDismissible: false,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
         );
       }
     });
