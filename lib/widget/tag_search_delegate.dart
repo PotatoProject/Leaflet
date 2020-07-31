@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -60,7 +61,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             visible: query.isNotEmpty,
             child: ListTile(
               leading: Icon(Icons.add),
-              title: Text('Create tag "$query"'),
+              title: Text(LocaleStrings.searchPage.tagCreateHint(query)),
               onTap: () => Utils.showNotesModalBottomSheet(
                 context: context,
                 isScrollControlled: true,

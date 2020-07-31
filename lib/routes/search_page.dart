@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 
 class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
@@ -74,7 +75,7 @@ class _SearchPageState<T> extends State<SearchPage> {
               controller: widget.delegate._queryTextController,
               focusNode: focusNode,
               decoration: InputDecoration.collapsed(
-                hintText: "Search",
+                hintText: LocaleStrings.searchPage.textboxHint,
               ),
               onChanged: (value) => _onSearchBodyChanged(),
             ),

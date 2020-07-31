@@ -42,8 +42,10 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
             currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
         textSelectionHandleColor:
             currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        textSelectionColor:
-            (currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white).withOpacity(0.4),
+        textSelectionColor: (currentColor.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white)
+            .withOpacity(0.4),
       ),
       child: Padding(
         padding:
@@ -198,19 +200,22 @@ class ColorSlider extends StatelessWidget {
           child: SliderTheme(
             data: SliderThemeData(),
             child: Slider(
-                activeColor: widgetColor,
-                inactiveColor: widgetColor.withOpacity(0.4),
-                max: 255,
-                min: 0,
-                value: (rgb == RGB.RED
-                        ? color.red
-                        : rgb == RGB.GREEN ? color.green : color.blue)
-                    .toDouble(),
-                onChanged: (value) => onChange(rgb == RGB.RED
+              activeColor: widgetColor,
+              inactiveColor: widgetColor.withOpacity(0.4),
+              max: 255,
+              min: 0,
+              value: (rgb == RGB.RED
+                      ? color.red
+                      : rgb == RGB.GREEN ? color.green : color.blue)
+                  .toDouble(),
+              onChanged: (value) => onChange(
+                rgb == RGB.RED
                     ? color.withRed(value.toInt())
                     : rgb == RGB.GREEN
                         ? color.withGreen(value.toInt())
-                        : color.withBlue(value.toInt()))),
+                        : color.withBlue(value.toInt()),
+              ),
+            ),
           ),
         ),
       ],

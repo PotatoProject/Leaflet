@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -67,7 +68,7 @@ class _DrawPageState extends State<DrawPage>
         bool exit = await showDialog(
           context: globalContext,
           builder: (context) => AlertDialog(
-            title: Text("Are you sure?"),
+            title: Text(LocaleStrings.common.areYouSure),
             content:
                 Text("Any unsaved change will be lost. Do you want to exit?"),
             actions: [
@@ -146,30 +147,29 @@ class _DrawPageState extends State<DrawPage>
                         await image.toByteData(format: ui.ImageByteFormat.png);
                     Uint8List pngBytes = byteData.buffer.asUint8List();
                     DateTime now = DateTime.now();
-                    String timestamp =
-                        DateFormat("HH_ss-MM_dd_yyyy").format(now);
+                    String timestamp = DateFormat(
+                      "HH_mm_ss-MM_dd_yyyy",
+                      context.locale.toLanguageTag(),
+                    ).format(now);
 
-                    String drawing;
-                    if (widget.data == null) {
-                      if (filePath == null) {
-                        drawing =
-                            "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
-                        filePath = drawing;
-                      } else {
-                        drawing = filePath;
-                      }
+                    String drawing =
+                        "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
+                    if (filePath == null) {
+                      filePath = drawing;
                     } else {
-                      drawing = widget.data.key;
+                      drawing = filePath;
                     }
 
                     File imgFile = File(drawing);
                     await imgFile.writeAsBytes(pngBytes, flush: true);
                     Loggy.d(message: drawing);
 
-                    if (!widget.note.images.data.containsKey(drawing)) {
-                      widget.note.images.data[drawing] = Uri.file(drawing);
-                      helper.saveNote(widget.note);
+                    if ((widget.data?.key ?? null) != null) {
+                      widget.note.images.data.remove(widget.data.key);
                     }
+
+                    widget.note.images.data[drawing] = Uri.file(drawing);
+                    helper.saveNote(widget.note);
 
                     imageCache.clear();
                     imageCache.clearLiveImages();

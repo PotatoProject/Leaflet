@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 
@@ -56,7 +57,9 @@ class _NewTagState extends State<TagEditor> {
           Padding(
             padding: EdgeInsets.all(24),
             child: Text(
-              "${widget.tag != null ? "Modify" : "New"} tag",
+              widget.tag != null
+                  ? LocaleStrings.common.tagModify
+                  : LocaleStrings.common.tagNew,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -67,7 +70,7 @@ class _NewTagState extends State<TagEditor> {
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: TextFormField(
               decoration: InputDecoration(
-                hintText: "Name",
+                hintText: LocaleStrings.common.tagTextboxHint,
               ),
               initialValue: tag.name,
               maxLength: 30,
@@ -105,6 +108,7 @@ class _NewTagState extends State<TagEditor> {
                           )
                         : Container(),
                   ),
+                  tooltip: NoteColors.colorList[index].label,
                   onPressed: () {
                     setState(() => tag.color = index);
                   },
@@ -121,7 +125,7 @@ class _NewTagState extends State<TagEditor> {
                   onPressed: tag.name.trim().isNotEmpty
                       ? () => widget.onSave(tag..name = tag.name.trim())
                       : null,
-                  child: Text("Save"),
+                  child: Text(LocaleStrings.common.save),
                   color: Theme.of(context).accentColor,
                   disabledColor: Theme.of(context).disabledColor,
                   textColor: Theme.of(context).cardColor,

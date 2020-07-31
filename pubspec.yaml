@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  moor_ffi: "0.7.0"
+  moor_ffi: "0.5.0"
   moor:
   json_serializable:
   sqflite:
@@ -44,8 +44,8 @@ dependencies:
   url_launcher:
   cached_network_image:
   path:
-  easy_localization:
-  xml:
+  easy_localization: ^2.3.2
+  xml: ^4.2.0
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -55,8 +55,6 @@ dependencies:
     git: https://github.com/HrX03/loggy
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   moor_generator:
   build_runner:
 

@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -18,6 +16,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -162,11 +161,13 @@ class _MainPageState extends State<MainPage>
                 Widget child;
                 List<Note> notes = mode == ReturnMode.TAG
                     ? snapshot.data
-                        .where((note) =>
-                            note.tags.tagIds
-                                .contains(prefs.tags[tagIndex].id) &&
-                            !note.archived &&
-                            !note.deleted)
+                        .where(
+                          (note) =>
+                              note.tags.tagIds
+                                  .contains(prefs.tags[tagIndex].id) &&
+                              !note.archived &&
+                              !note.deleted,
+                        )
                         .toList()
                     : snapshot.data;
 
@@ -177,14 +178,23 @@ class _MainPageState extends State<MainPage>
                 }
 
                 if (notes.isNotEmpty) {
-                  child = StaggeredGridView.countBuilder(
-                    crossAxisCount: prefs.useGrid ? deviceInfo.uiSizeFactor : 1,
-                    itemBuilder: (context, index) => commonNote(notes[index]),
-                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                    itemCount: notes.length,
-                    controller: scrollController,
-                    padding: padding,
-                  );
+                  if (prefs.useGrid) {
+                    child = StaggeredGridView.countBuilder(
+                      crossAxisCount: deviceInfo.uiSizeFactor,
+                      itemBuilder: (context, index) => commonNote(notes[index]),
+                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                      itemCount: notes.length,
+                      controller: scrollController,
+                      padding: padding,
+                    );
+                  } else {
+                    child = ListView.builder(
+                      itemBuilder: (context, index) => commonNote(notes[index]),
+                      itemCount: notes.length,
+                      controller: scrollController,
+                      padding: padding,
+                    );
+                  }
                 } else {
                   child = Illustrations.quickIllustration(
                     context,
@@ -244,7 +254,7 @@ class _MainPageState extends State<MainPage>
         }),
         secondaryItemsFooter: DrawerListTile(
           icon: Icon(Icons.add),
-          title: "New tag",
+          title: LocaleStrings.common.tagNew,
           onTap: () {
             Utils.showNotesModalBottomSheet(
               context: context,
@@ -288,7 +298,7 @@ class _MainPageState extends State<MainPage>
               ),
         footer: DrawerListTile(
           icon: Icon(CustomIcons.settings_outline),
-          title: "Settings",
+          title: LocaleStrings.mainPage.settings,
           onTap: () {
             if (!fixed) {
               Navigator.pop(context);
@@ -353,7 +363,7 @@ class _MainPageState extends State<MainPage>
       ListTile(
         leading: AccentedIcon(OMIcons.edit),
         title: Text(
-          "Text note",
+          LocaleStrings.common.newNote,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
@@ -365,7 +375,7 @@ class _MainPageState extends State<MainPage>
       ListTile(
         leading: AccentedIcon(MdiIcons.checkboxMarkedOutline),
         title: Text(
-          "List",
+          LocaleStrings.common.newList,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
@@ -377,25 +387,16 @@ class _MainPageState extends State<MainPage>
       ListTile(
         leading: AccentedIcon(OMIcons.image),
         title: Text(
-          "Image from gallery",
+          LocaleStrings.common.newImage,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => newImage(ImageSource.gallery, shouldPop: true),
         enabled: !kIsWeb,
       ),
       ListTile(
-        leading: AccentedIcon(OMIcons.cameraAlt),
-        title: Text(
-          "Image from camera",
-          overflow: TextOverflow.ellipsis,
-        ),
-        onTap: () => newImage(ImageSource.camera, shouldPop: true),
-        enabled: !kIsWeb,
-      ),
-      ListTile(
         leading: AccentedIcon(OMIcons.brush),
         title: Text(
-          "Drawing",
+          LocaleStrings.common.newDrawing,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
@@ -430,7 +431,7 @@ class _MainPageState extends State<MainPage>
         Utils.deleteNotes(
           scaffoldKey: scaffoldKey,
           notes: [lastNote],
-          reason: "Deleted empty note.",
+          reason: LocaleStrings.mainPage.deletedEmptyNote,
         );
       }
     }
@@ -479,18 +480,31 @@ class _MainPageState extends State<MainPage>
     switch (mode) {
       case ReturnMode.ARCHIVE:
         return MapEntry(
-            appInfo.emptyArchiveIllustration, "The archive is empty");
+          appInfo.emptyArchiveIllustration,
+          LocaleStrings.mainPage.emptyStateArchive,
+        );
       case ReturnMode.TRASH:
-        return MapEntry(appInfo.emptyTrashIllustration, "The trash is empty");
+        return MapEntry(
+          appInfo.emptyTrashIllustration,
+          LocaleStrings.mainPage.emptyStateTrash,
+        );
       case ReturnMode.FAVOURITES:
         return MapEntry(
-            appInfo.noFavouritesIllustration, "No favourites for now");
+          appInfo.noFavouritesIllustration,
+          LocaleStrings.mainPage.emptyStateFavourites,
+        );
       case ReturnMode.TAG:
-        return MapEntry(appInfo.noNotesIllustration, "No notes with this tag");
+        return MapEntry(
+          appInfo.noNotesIllustration,
+          LocaleStrings.mainPage.emptyStateTag,
+        );
       case ReturnMode.ALL:
       case ReturnMode.NORMAL:
       default:
-        return MapEntry(appInfo.noNotesIllustration, "No notes were added yet");
+        return MapEntry(
+          appInfo.noNotesIllustration,
+          LocaleStrings.mainPage.emptyStateHome,
+        );
     }
   }
 
@@ -550,6 +564,7 @@ class _MainPageState extends State<MainPage>
   List<Widget> get appBarButtons => [
         IconButton(
           icon: Icon(Icons.search),
+          tooltip: LocaleStrings.mainPage.search,
           onPressed: () => Utils.showSecondaryRoute(
             context,
             SearchPage(
@@ -559,6 +574,7 @@ class _MainPageState extends State<MainPage>
         ),
         IconButton(
           icon: Icon(OMIcons.person),
+          tooltip: LocaleStrings.mainPage.account,
           onPressed: () => scaffoldKey.currentState.showSnackBar(
             SnackBar(
               content: Text("Not yet..."),
@@ -576,18 +592,20 @@ class _MainPageState extends State<MainPage>
                   bool result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text("Are you sure?"),
+                      title: Text(LocaleStrings.common.areYouSure),
                       content: Text(
-                        "Do you want to restore every note in the ${mode == ReturnMode.ARCHIVE ? "archive" : "trash"}",
+                        mode == ReturnMode.ARCHIVE
+                            ? LocaleStrings.mainPage.restorePromptArchive
+                            : LocaleStrings.mainPage.restorePromptTrash,
                       ),
                       actions: <Widget>[
                         FlatButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text("Cancel"),
+                          child: Text(LocaleStrings.common.cancel),
                         ),
                         FlatButton(
                           onPressed: () => Navigator.pop(context, true),
-                          child: Text("Restore"),
+                          child: Text(LocaleStrings.common.restore),
                         ),
                       ],
                     ),
@@ -597,7 +615,8 @@ class _MainPageState extends State<MainPage>
                     await Utils.restoreNotes(
                       scaffoldKey: scaffoldKey,
                       notes: notes,
-                      reason: "${notes.length} notes restored.",
+                      reason: LocaleStrings.mainPage
+                          .notesRestored(selectionList.length),
                       archive: mode == ReturnMode.ARCHIVE,
                     );
                   }
@@ -614,17 +633,16 @@ class _MainPageState extends State<MainPage>
               bool result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text("Are you sure?"),
-                      content: Text(
-                          "This tag will be lost forever if you delete it."),
+                      title: Text(LocaleStrings.common.areYouSure),
+                      content: Text(LocaleStrings.mainPage.tagDeletePrompt),
                       actions: <Widget>[
                         FlatButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text("Cancel"),
+                          child: Text(LocaleStrings.common.cancel),
                         ),
                         FlatButton(
                           onPressed: () => Navigator.pop(context, true),
-                          child: Text("Delete"),
+                          child: Text(LocaleStrings.common.delete),
                         ),
                       ],
                     ),

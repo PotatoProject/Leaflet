@@ -10,7 +10,6 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -86,10 +85,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             icon: Icon(CommunityMaterialIcons.pencil_outline),
             padding: EdgeInsets.all(0),
             onPressed: !kIsWeb
-                ? () {
-                    Navigator.pop(context);
-
-                    Utils.showSecondaryRoute(
+                ? () async {
+                    await Utils.showSecondaryRoute(
                       context,
                       DrawPage(
                         note: widget.note,
@@ -101,6 +98,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
                       sidePadding: kTertiaryRoutePadding,
                       allowGestures: false,
                     );
+
+                    setState(() {});
                   }
                 : null,
           ),

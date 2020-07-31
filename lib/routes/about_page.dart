@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
@@ -13,7 +14,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("About"),
+        title: Text(LocaleStrings.aboutPage.title),
         textTheme: Theme.of(context).textTheme,
       ),
       extendBodyBehindAppBar: true,
@@ -51,7 +52,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     Text(
                       kIsWeb
-                          ? "PWA Version"
+                          ? LocaleStrings.aboutPage.pwaVersion
                           : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
                       style: TextStyle(
                         fontSize: 16,
@@ -62,7 +63,7 @@ class AboutPage extends StatelessWidget {
               ),
               Divider(height: 1),
               SettingsCategory(
-                header: "Contributors",
+                header: LocaleStrings.aboutPage.contributors,
                 children: List.generate(
                   Utils.contributors.length,
                   (index) =>
@@ -101,7 +102,7 @@ class AboutPage extends StatelessWidget {
               vertical: 16,
             ),
             child: Text(
-              "Links",
+              LocaleStrings.aboutPage.links,
               style: TextStyle(
                 fontSize: 18,
               ),

@@ -14,7 +14,7 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/internal/xml_asset_loader.dart';
+import 'package:potato_notes/internal/android_xml_asset_loader.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -33,7 +33,14 @@ main() async {
           Locale("it", "IT"),
         ],
         fallbackLocale: Locale("en", "US"),
-        assetLoader: XmlAssetLoader(["common", "main_page"]),
+        assetLoader: AndroidXmlAssetLoader(
+          [
+            "common",
+            "about_page",
+            "main_page",
+            "search_page",
+          ],
+        ),
         path: "assets/locales",
         preloaderColor: Colors.transparent,
       ),
@@ -97,21 +104,25 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
                 appInfo.quickActions.setShortcutItems([
                   const ShortcutItem(
-                      type: 'new_text',
-                      localizedTitle: 'New note',
-                      icon: 'note_shortcut'),
+                    type: 'new_text',
+                    localizedTitle: 'New note',
+                    icon: 'note_shortcut',
+                  ),
                   const ShortcutItem(
-                      type: 'new_list',
-                      localizedTitle: 'New list',
-                      icon: 'list_shortcut'),
+                    type: 'new_list',
+                    localizedTitle: 'New list',
+                    icon: 'list_shortcut',
+                  ),
                   const ShortcutItem(
-                      type: 'new_image',
-                      localizedTitle: 'New image',
-                      icon: 'image_shortcut'),
+                    type: 'new_image',
+                    localizedTitle: 'New image',
+                    icon: 'image_shortcut',
+                  ),
                   const ShortcutItem(
-                      type: 'new_drawing',
-                      localizedTitle: 'New drawing',
-                      icon: 'drawing_shortcut'),
+                    type: 'new_drawing',
+                    localizedTitle: 'New drawing',
+                    icon: 'drawing_shortcut',
+                  ),
                 ]);
               }
 

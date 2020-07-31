@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -166,7 +167,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
           vertical: 32,
         ),
         child: Text(
-          DateFormat("EEE, MMM d").format(date),
+          DateFormat("EEE, MMM d", context.locale.toLanguageTag()).format(date),
           style: Theme.of(context).textTheme.headline5.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
               ),

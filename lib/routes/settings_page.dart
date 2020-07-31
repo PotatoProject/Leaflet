@@ -264,7 +264,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 items: List.generate(
                   context.supportedLocales.length,
                   (index) {
-                    print(context.supportedLocales.length);
                     Locale locale = context.supportedLocales[index];
 
                     return DropdownMenuItem(

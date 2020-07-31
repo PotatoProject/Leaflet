@@ -4,10 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:xml/xml.dart';
 
-class XmlAssetLoader extends AssetLoader {
+class AndroidXmlAssetLoader extends AssetLoader {
   final List<String> routeFiles;
 
-  const XmlAssetLoader(this.routeFiles);
+  const AndroidXmlAssetLoader(this.routeFiles);
 
   String getLocalePath(String basePath, String routeFile, Locale locale) {
     return '$basePath/${localeToString(locale, separator: "-")}/$routeFile.xml';
@@ -32,7 +32,7 @@ class XmlAssetLoader extends AssetLoader {
           if (name == null) continue;
 
           if (element.name.toString() == "string") {
-            returnMap["$routeFile.$name"] = element.text.replaceAll("%s", "{}");
+            returnMap["$routeFile.$name"] = replacer(element.text);
           } else if (element.name.toString() == "plurals") {
             for (XmlNode plural in element.children) {
               if (plural is XmlElement) {
@@ -42,7 +42,7 @@ class XmlAssetLoader extends AssetLoader {
                 if (pluralAttribute == null) continue;
 
                 returnMap["$routeFile.$name.$pluralAttribute"] =
-                    pluralElement.text.replaceAll("%s", "{}");
+                    replacer(pluralElement.text);
               }
             }
           }
@@ -51,5 +51,12 @@ class XmlAssetLoader extends AssetLoader {
     }
 
     return returnMap;
+  }
+
+  String replacer(String base) {
+    return base
+        .replaceAll("%s", "{}")
+        .replaceAll("\\\"", "\"")
+        .replaceAll("\\\'", "\'");
   }
 }

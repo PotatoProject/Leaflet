@@ -109,12 +109,12 @@ class Utils {
     return [
       _popupMenuItem(
         icon: CommunityMaterialIcons.pin_outline,
-        title: 'Pin',
+        title: LocaleStrings.mainPage.selectionBarPin,
         value: 'pin',
       ),
       _popupMenuItem(
         icon: CommunityMaterialIcons.share_variant,
-        title: 'Share',
+        title: LocaleStrings.mainPage.selectionBarShare,
         value: 'share',
       ),
     ];
@@ -204,23 +204,23 @@ class Utils {
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
       case ReturnMode.NORMAL:
-        return "Home";
+        return LocaleStrings.mainPage.titleHome;
       case ReturnMode.ARCHIVE:
-        return "Archive";
+        return LocaleStrings.mainPage.titleArchive;
       case ReturnMode.TRASH:
-        return "Trash";
+        return LocaleStrings.mainPage.titleTrash;
       case ReturnMode.FAVOURITES:
-        return "Favourites";
+        return LocaleStrings.mainPage.titleFavourites;
       case ReturnMode.TAG:
         if (prefs.tags.isNotEmpty) {
           return prefs.tags[tagIndex].name;
         } else {
-          return "Tag";
+          return LocaleStrings.mainPage.titleTag;
         }
         break;
       case ReturnMode.ALL:
       default:
-        return "All";
+        return LocaleStrings.mainPage.titleAll;
     }
   }
 
@@ -319,7 +319,7 @@ class Utils {
   static List<ContributorInfo> get contributors => [
         ContributorInfo(
           name: "Davide Bianco",
-          role: "Lead developer and app design",
+          role: LocaleStrings.aboutPage.contributorsHrX,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "HrX03"),
@@ -329,7 +329,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Bas Wieringa (broodrooster)",
-          role: "Sync API and App",
+          role: LocaleStrings.aboutPage.contributorsBas,
           avatarUrl: "https://avatars.githubusercontent.com/u/31385368",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "broodroosterdev"),
@@ -337,7 +337,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Nico Franke",
-          role: "Sync API",
+          role: LocaleStrings.aboutPage.contributorsNico,
           avatarUrl: "https://avatars.githubusercontent.com/u/23036430",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "ZerNico"),
@@ -347,7 +347,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "SphericalKat",
-          role: "Old sync API",
+          role: LocaleStrings.aboutPage.contributorsKat,
           avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "ATechnoHazard"),
@@ -355,7 +355,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Rohit K.Parida",
-          role: "Illustrations and note colors",
+          role: LocaleStrings.aboutPage.contributorsRohit,
           avatarUrl: "https://avatars.githubusercontent.com/u/18437518",
           socialLinks: [
             SocialLink(SocialLinkType.TWITTER, "paridadesigns"),
@@ -363,7 +363,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "RshBfn",
-          role: "App icon and main accent",
+          role: LocaleStrings.aboutPage.contributorsRshBfn,
           avatarUrl:
               "https://pbs.twimg.com/profile_images/1282395593646604288/Rkxny-Fi.jpg",
           socialLinks: [

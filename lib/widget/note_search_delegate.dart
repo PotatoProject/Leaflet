@@ -1,8 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
@@ -67,13 +64,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
             child = Illustrations.quickIllustration(
               context,
               appInfo.typeToSearchIllustration,
-              "Type to start your search",
+              LocaleStrings.searchPage.noteTypeToSearch,
             );
           } else {
             child = Illustrations.quickIllustration(
               context,
               appInfo.nothingFoundIllustration,
-              "Nothing found...",
+              LocaleStrings.searchPage.noteNothingFound,
             );
           }
         }

@@ -50,8 +50,8 @@ class _PassChallengeState extends State<PassChallenge> {
             padding: EdgeInsets.all(16),
             child: Text(
               widget.editMode
-                  ? LocaleStrings.common.modifyMasterPass
-                  : LocaleStrings.common.confermMasterPass,
+                  ? LocaleStrings.common.masterPassConfirm
+                  : LocaleStrings.common.masterPassModify,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,

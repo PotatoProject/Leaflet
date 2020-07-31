@@ -1,0 +1,12 @@
+<resources>
+    <string name="title">About</string>
+    <string name="pwa_version">PWA version</string>
+    <string name="links">Links</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributors.hrx">Lead developer and app design</string>
+    <string name="contributors.bas">Sync API and app</string>
+    <string name="contributors.nico">Sync API</string>
+    <string name="contributors.kat">Old sync API</string>
+    <string name="contributors.rohit">Illustrations and note colors</string>
+    <string name="contributors.rshbfn">App icon and main accent</string>
+</resources>

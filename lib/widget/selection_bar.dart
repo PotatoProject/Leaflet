@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -29,7 +29,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return new Size.fromHeight(56.0);
+    return Size.fromHeight(56.0);
   }
 
   @override
@@ -39,6 +39,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.close),
         padding: EdgeInsets.all(0),
         onPressed: onCloseSelection,
+        tooltip: LocaleStrings.mainPage.selectionBarClose,
       ),
       title: Text(
         selectionList.length.toString(),
@@ -62,9 +63,14 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
       buttons.add(
         IconButton(
-          icon: Icon(anyStarred
-              ? CommunityMaterialIcons.heart
-              : CommunityMaterialIcons.heart_outline),
+          icon: Icon(
+            anyStarred
+                ? CommunityMaterialIcons.heart
+                : CommunityMaterialIcons.heart_outline,
+          ),
+          tooltip: anyStarred
+              ? LocaleStrings.mainPage.selectionBarRmFav
+              : LocaleStrings.mainPage.selectionBarAddFav,
           padding: EdgeInsets.all(0),
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
@@ -86,6 +92,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(OMIcons.colorLens),
           padding: EdgeInsets.all(0),
+          tooltip: LocaleStrings.mainPage.selectionBarChangeColor,
           onPressed: () async {
             int selectedColor;
 
@@ -125,12 +132,14 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       buttons.add(IconButton(
         icon: Icon(OMIcons.archive),
         padding: EdgeInsets.all(0),
+        tooltip: LocaleStrings.mainPage.selectionBarArchive,
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
             await Utils.deleteNotes(
               scaffoldKey: scaffoldKey,
               notes: selectionList,
-              reason: plural("main_page.notes_archived", selectionList.length),
+              reason:
+                  LocaleStrings.mainPage.notesArchived(selectionList.length),
               archive: true,
             );
 
@@ -142,6 +151,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     buttons.add(IconButton(
       icon: Icon(Icons.delete_outline),
       padding: EdgeInsets.all(0),
+      tooltip: LocaleStrings.mainPage.selectionBarDelete,
       onPressed: () async {
         for (int i = 0; i < selectionList.length; i++) {
           Note note = selectionList[i];
@@ -152,7 +162,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             await Utils.deleteNotes(
               scaffoldKey: scaffoldKey,
               notes: selectionList,
-              reason: plural("main_page.notes_deleted", selectionList.length),
+              reason: LocaleStrings.mainPage.notesDeleted(selectionList.length),
             );
           }
         }
@@ -167,11 +177,12 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       buttons.add(IconButton(
         icon: Icon(Icons.settings_backup_restore),
         padding: EdgeInsets.all(0),
+        tooltip: LocaleStrings.common.restore,
         onPressed: () async {
           await Utils.restoreNotes(
             scaffoldKey: scaffoldKey,
             notes: selectionList,
-            reason: "${selectionList.length} notes restored.",
+            reason: LocaleStrings.mainPage.notesRestored(selectionList.length),
             archive: currentMode == ReturnMode.ARCHIVE,
           );
 
@@ -199,7 +210,6 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                   Share.share(
                     (note.title.isNotEmpty ? note.title + "\n\n" : "") +
                         note.content,
-                    subject: "PotatoNotes saved note",
                   );
                 }
                 break;
@@ -217,13 +227,15 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   void handlePinNotes(BuildContext context, Note note) {
     appInfo.notifications.show(
       note.id,
-      note.title.isEmpty ? "Pinned notification" : note.title,
+      note.title.isEmpty
+          ? LocaleStrings.common.notificationDefaultTitle
+          : note.title,
       note.content,
       NotificationDetails(
         AndroidNotificationDetails(
           'pinned_notifications',
-          'Pinned notifications',
-          'User pinned notifications',
+          LocaleStrings.common.notificationDetailsTitle,
+          LocaleStrings.common.notificationDetailsDesc,
           color: Utils.defaultAccent,
           ongoing: true,
           priority: Priority.Max,
