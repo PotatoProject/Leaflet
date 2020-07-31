@@ -21,11 +21,17 @@ class TagSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<TagModel> filteredTags = prefs.tags
-        .where(
-          (tag) => tag.name.toLowerCase().contains(query.toLowerCase()),
-        )
-        .toList();
+    List<TagModel> filteredTags;
+
+    if (query.isEmpty) {
+      filteredTags = prefs.tags;
+    } else {
+      filteredTags = prefs.tags
+          .where(
+            (tag) => tag.name.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList();
+    }
 
     return StatefulBuilder(
       builder: (context, setState) => ListView(
