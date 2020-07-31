@@ -30,8 +30,13 @@ main() async {
         child: PotatoNotes(),
         supportedLocales: [
           Locale("en", "US"),
+          Locale("es", "ES"),
+          Locale("fr", "FR"),
           Locale("it", "IT"),
           Locale("nl", "NL"),
+          Locale("ro", "RO"),
+          Locale("ru", "RU"),
+          Locale("tr", "TR"),
         ],
         fallbackLocale: Locale("en", "US"),
         assetLoader: AndroidXmlAssetLoader(

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Ajustes</string>
+    <string name="personalization.title">Personalización</string>
+    <string name="personalization.theme_mode">Modo de tema</string>
+    <string name="personalization.theme_mode.system">Sistema</string>
+    <string name="personalization.theme_mode.light">Claro</string>
+    <string name="personalization.theme_mode.dark">Oscuro</string>
+    <string name="personalization.use_amoled">Usar tema negro</string>
+    <string name="personalization.use_custom_accent">Seguir colores del sistema</string>
+    <string name="personalization.custom_accent">Elegir un color personalizado</string>
+    <string name="personalization.use_grid">Vista de cuadrícula para notas</string>
+    <string name="personalization.locale">Idioma de aplicación</string>
+    <string name="privacy.title">Privacidad</string>
+    <string name="privacy.use_master_pass">Usar contraseña maestra</string>
+    <string name="privacy.use_master_pass.disclaimer">Advertencia: si olvidas la contraseña, no podrás restablecerla: tendrás que desinstalar la aplicación, borrando todas las notas, y reinstalarla. Apúntala en algún sitio.</string>
+    <string name="privacy.modify_master_pass">Modificar contraseña maestra</string>
+    <string name="info.title">Información</string>
+    <string name="info.about_app">Acerca de PotatoNotes</string>
+    <string name="debug.title">Depuración</string>
+    <string name="debug.show_setup_screen">Mostrar la pantalla de configuración en el próximo inicio</string>
+    <string name="debug.clear_database">Limpiar base de datos</string>
+    <string name="debug.migrate_database">Migrar base de dato</string>
+    <string name="debug.log_level">Nivel de log</string>
+</resources>

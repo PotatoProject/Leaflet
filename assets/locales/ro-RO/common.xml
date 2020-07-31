@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Anulează</string>
+    <string name="reset">Resetează</string>
+    <string name="restore">Restaurează</string>
+    <string name="confirm">Confirmă</string>
+    <string name="save">Salvează</string>
+    <string name="delete">Șterge</string>
+    <string name="undo">Revenire</string>
+    <string name="redo">Refacere</string>
+    <string name="edit">Editare</string>
+    <string name="go_on">Continuă</string>
+    <string name="exit">Iesire</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s din %s</string>
+    <string name="new_note">Notă nouă</string>
+    <string name="new_list">Listă nouă</string>
+    <string name="new_image">Imagine Noua</string>
+    <string name="new_drawing">Schiță nouă</string>
+    <string name="biometrics_prompt">Confirmă datele biometrice</string>
+    <string name="master_pass.modify">Modifică parola principală</string>
+    <string name="master_pass.confirm">Confirmă parola principală</string>
+    <string name="are_you_sure">Sunteți sigur?</string>
+    <string name="case_sensitive">Sensibil la majuscule</string>
+    <string name="color_filter">Filtru de culoare</string>
+    <string name="date_filter">Filtru de date</string>
+    <string name="date_filter_mode">Mod filtru</string>
+    <string name="date_filter_mode.after">După data</string>
+    <string name="date_filter_mode.exact">Data exactă</string>
+    <string name="date_filter_mode.before">Înainte de data</string>
+    <string name="color.none">Nimic</string>
+    <string name="color.red">Roșu</string>
+    <string name="color.orange">Portocaliu</string>
+    <string name="color.yellow">Galben</string>
+    <string name="color.green">Verde</string>
+    <string name="color.cyan">Turcoaz</string>
+    <string name="color.light_blue">Albastru deschis</string>
+    <string name="color.blue">Albastru</string>
+    <string name="color.purple">Mov</string>
+    <string name="color.pink">Roz</string>
+    <string name="notification.default_title">Notificare fixată</string>
+    <string name="notification.details_title">Notificări fixate</string>
+    <string name="notification.details_desc">Notificări fixate de utilizator</string>
+    <string name="tag.new">Etichetă nouă</string>
+    <string name="tag.modify">Modifică eticheta</string>
+    <string name="tag.textbox_hint">Nume</string>
+</resources>

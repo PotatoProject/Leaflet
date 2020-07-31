@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Hakkında</string>
+    <string name="pwa_version">PWA sürümü</string>
+    <string name="links">Linkler</string>
+    <string name="contributors">Katkıda Bulunanlar</string>
+    <string name="contributors.hrx">Baş geliştirici ve uygulama tasarımı</string>
+    <string name="contributors.bas">Senkronizasyon API\'si ve uygulaması</string>
+    <string name="contributors.nico">Senkronizasyon API\'si</string>
+    <string name="contributors.kat">Eski senkronizasyon API\'si</string>
+    <string name="contributors.rohit">Çizimler ve not renkleri</string>
+    <string name="contributors.rshbfn">Uygulama simgesi ve ana vurgu</string>
+</resources>

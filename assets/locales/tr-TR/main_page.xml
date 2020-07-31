@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Ayarlar</string>
+    <string name="search">Ara</string>
+    <string name="account">Hesap</string>
+    <string name="restore_prompt.archive">Arşivdeki her bir notu geri yüklemek istiyor musun?</string>
+    <string name="restore_prompt.trash">Çöpteki her bir notu geri yüklemek istiyor musun?</string>
+    <string name="tag_delete_prompt">Silersen bu etiket sonsuza kadar kaybolacak</string>
+    <string name="deleted_empty_note">Boş not silindi</string>
+    <string name="empty_state.home">Henüz hiçbir not eklenmedi</string>
+    <string name="empty_state.archive">Arşiv boş</string>
+    <string name="empty_state.trash">Çöp kutusu boş</string>
+    <string name="empty_state.favourites">Şimdilik favori yok</string>
+    <string name="empty_state.tag">Bu etiketle not yok</string>
+    <string name="title.home">Ana Sayfa</string>
+    <string name="title.archive">Arşiv</string>
+    <string name="title.trash">Çöp Kutusu</string>
+    <string name="title.favourites">Favoriler</string>
+    <string name="title.tag">Etiket</string>
+    <string name="title.all">Tümü</string>
+    <string name="selection_bar.close">Kapat</string>
+    <string name="selection_bar.add_favourites">Favorilere ekle</string>
+    <string name="selection_bar.remove_favourites">Favorilerden kaldır</string>
+    <string name="selection_bar.change_color">Rengi değiştir</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Arşiv</string>
+    <string name="selection_bar.delete">Çöp kutusuna taşı</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Sabitle</string>
+    <string name="selection_bar.share">Paylaş</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s not çöpe taşındı</item>
+        <item quantity="other">%s not çöpe taşındı</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">%s not arşivlendi</item>
+        <item quantity="other">%s not arşivlendi</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">%s not geri yüklendi</item>
+        <item quantity="other">%s not geri yüklendi</item>
+    </plurals>
+</resources>

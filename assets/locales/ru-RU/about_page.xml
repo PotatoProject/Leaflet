@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">О программе</string>
+    <string name="pwa_version">Версия PWA</string>
+    <string name="links">Ссылки</string>
+    <string name="contributors">Авторы</string>
+    <string name="contributors.hrx">Ведущий разработчик и дизайн приложения</string>
+    <string name="contributors.bas">API синхронизации и приложение</string>
+    <string name="contributors.nico">API синхронизации</string>
+    <string name="contributors.kat">Старое API синхронизации</string>
+    <string name="contributors.rohit">Иллюстрации и цвета заметок</string>
+    <string name="contributors.rshbfn">Значок приложения и основной акцент</string>
+</resources>

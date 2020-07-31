@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button.get_started">Начать</string>
+    <string name="button.finish">Готово</string>
+    <string name="button.next">Вперед</string>
+    <string name="button.back">Назад</string>
+    <string name="basic_customization.title">Основные настройки</string>
+    <string name="welcome.catchphrase">Ваше новое любимое приложение для заметок</string>
+    <string name="finish.title">Всё готово!</string>
+    <string name="finish.last_words">Теперь вы готовы наслаждаться PotatoNotes в полном объеме. \nЕсли вы хотите настроить больше, откройте настройки в боковой панели, иначе, если вы хотите управлять своей учетной записью PotatoSync, нажмите на аватар на верхней панели.</string>
+</resources>

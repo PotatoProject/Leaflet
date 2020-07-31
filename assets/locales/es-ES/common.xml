@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Cancelar</string>
+    <string name="reset">Reiniciar</string>
+    <string name="restore">Restaurar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Borrar</string>
+    <string name="undo">Deshacer</string>
+    <string name="redo">Rehacer</string>
+    <string name="edit">Editar</string>
+    <string name="go_on">Continuar</string>
+    <string name="exit">Salir</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s de %s</string>
+    <string name="new_note">Nueva nota</string>
+    <string name="new_list">Nueva lista</string>
+    <string name="new_image">Nueva imagen</string>
+    <string name="new_drawing">Nuevo dibujo</string>
+    <string name="biometrics_prompt">Confirmar reconocimiento biométrico</string>
+    <string name="master_pass.modify">Modificar contraseña maestra</string>
+    <string name="master_pass.confirm">Confirmar contraseña maestra</string>
+    <string name="are_you_sure">¿Estás seguro/a?</string>
+    <string name="case_sensitive">Distinguir mayúsculas y minúsculas</string>
+    <string name="color_filter">Filtro de color</string>
+    <string name="date_filter">Filtro de fecha</string>
+    <string name="date_filter_mode">Modo de filtro</string>
+    <string name="date_filter_mode.after">Después de la fecha</string>
+    <string name="date_filter_mode.exact">Fecha exacta</string>
+    <string name="date_filter_mode.before">Antes de la fecha</string>
+    <string name="color.none">Nada</string>
+    <string name="color.red">Rojo</string>
+    <string name="color.orange">Naranja</string>
+    <string name="color.yellow">Amarillo</string>
+    <string name="color.green">Verde</string>
+    <string name="color.cyan">Cian</string>
+    <string name="color.light_blue">Azul claro</string>
+    <string name="color.blue">Azul</string>
+    <string name="color.purple">Morado</string>
+    <string name="color.pink">Rosa</string>
+    <string name="notification.default_title">Notificación fijada</string>
+    <string name="notification.details_title">Notificaciones fijadas</string>
+    <string name="notification.details_desc">Notificaciones fijadas del usuario</string>
+    <string name="tag.new">Nueva etiqueta</string>
+    <string name="tag.modify">Modificar etiqueta</string>
+    <string name="tag.textbox_hint">Nombre</string>
+</resources>

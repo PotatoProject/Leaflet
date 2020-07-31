@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Ayarlar</string>
+    <string name="personalization.title">Kişiselleştirme</string>
+    <string name="personalization.theme_mode">Tema modu</string>
+    <string name="personalization.theme_mode.system">Sistem</string>
+    <string name="personalization.theme_mode.light">Açık</string>
+    <string name="personalization.theme_mode.dark">Koyu</string>
+    <string name="personalization.use_amoled">Siyah temayı kullan</string>
+    <string name="personalization.use_custom_accent">Sistem vurgu rengini kullan</string>
+    <string name="personalization.custom_accent">Özel vurgu rengi seç</string>
+    <string name="personalization.use_grid">Notlar için ızgara görünümü</string>
+    <string name="personalization.locale">Uygulama dili</string>
+    <string name="privacy.title">Gizlilik</string>
+    <string name="privacy.use_master_pass">Ana parola kullan</string>
+    <string name="privacy.use_master_pass.disclaimer">Uyarı: Eğer parolayı unutursan sıfırlayamazsın, uygulamayı kaldırman, dolayısıyla tüm notları silinmiş olarak bulman, ve geri yüklemen gerekecek. Lütfen onu bir yerlere yaz.</string>
+    <string name="privacy.modify_master_pass">Ana parolayı düzenle</string>
+    <string name="info.title">Bilgi</string>
+    <string name="info.about_app">PotatoNotes hakkında</string>
+    <string name="debug.title">Hata ayıklama</string>
+    <string name="debug.show_setup_screen">Bir sonraki açılışta kurulum ekranını göster</string>
+    <string name="debug.clear_database">Veritabanını Temizle</string>
+    <string name="debug.migrate_database">Veritabanını transfer et</string>
+    <string name="debug.log_level">Kayıt düzeyi</string>
+</resources>

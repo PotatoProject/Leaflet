@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Annuler</string>
+    <string name="reset">Réinitialiser</string>
+    <string name="restore">Restaurer</string>
+    <string name="confirm">Confirmer</string>
+    <string name="save">Sauvegarder</string>
+    <string name="delete">Supprimer</string>
+    <string name="undo">Retour</string>
+    <string name="redo">Rétablir</string>
+    <string name="edit">Éditer</string>
+    <string name="go_on">Continuer</string>
+    <string name="exit">Quitter</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s sur %s</string>
+    <string name="new_note">Nouvelle note</string>
+    <string name="new_list">Nouvelle liste</string>
+    <string name="new_image">Nouvelle image</string>
+    <string name="new_drawing">Nouveau dessin</string>
+    <string name="biometrics_prompt">Confirmer les données biométriques</string>
+    <string name="master_pass.modify">Modifier le mot de passe</string>
+    <string name="master_pass.confirm">Confirmer le mot de passe</string>
+    <string name="are_you_sure">Étes-vous sûr ?</string>
+    <string name="case_sensitive">Sensible aux majuscules et minuscules</string>
+    <string name="color_filter">Filtre de couleur</string>
+    <string name="date_filter">Filtrer par date</string>
+    <string name="date_filter_mode">Mode du filtre</string>
+    <string name="date_filter_mode.after">Après la date</string>
+    <string name="date_filter_mode.exact">Date exacte</string>
+    <string name="date_filter_mode.before">Date précedente</string>
+    <string name="color.none">Aucun</string>
+    <string name="color.red">Rouge</string>
+    <string name="color.orange">Orange</string>
+    <string name="color.yellow">Jaune</string>
+    <string name="color.green">Vert</string>
+    <string name="color.cyan">Cyan</string>
+    <string name="color.light_blue">Bleu clair</string>
+    <string name="color.blue">Bleu</string>
+    <string name="color.purple">Violet</string>
+    <string name="color.pink">Rose</string>
+    <string name="notification.default_title">Notification épinglée</string>
+    <string name="notification.details_title">Notifications épinglées</string>
+    <string name="notification.details_desc">Notifications épinglées par l\'utilisateur</string>
+    <string name="tag.new">Nouveau tag</string>
+    <string name="tag.modify">Modifier un tag</string>
+    <string name="tag.textbox_hint">Nom</string>
+</resources>

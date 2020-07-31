@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textbox_hint">Ara</string>
+    <string name="tag_create_hint">\"%s\" isimli etiket oluşturuldu</string>
+    <string name="note.type_to_search">Aramaya başlamak için yazın</string>
+    <string name="note.nothing_found">Hiçbir şey bulunamadı...</string>
+</resources>

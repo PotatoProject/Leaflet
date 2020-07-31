@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="search">Поиск</string>
+    <string name="account">Профиль</string>
+    <string name="restore_prompt.archive">Вы хотите восстановить все заметки в архиве?</string>
+    <string name="restore_prompt.trash">Вы хотите восстановить все записи в корзине?</string>
+    <string name="tag_delete_prompt">Этот тег будет потерян навсегда при его удалении</string>
+    <string name="deleted_empty_note">Пустая заметка удалена</string>
+    <string name="empty_state.home">Пока нет заметок</string>
+    <string name="empty_state.archive">Архив пуст</string>
+    <string name="empty_state.trash">Корзина пуста</string>
+    <string name="empty_state.favourites">Сейчас нет избранного</string>
+    <string name="empty_state.tag">Нет заметок с этим тегом</string>
+    <string name="title.home">Главная</string>
+    <string name="title.archive">Архив</string>
+    <string name="title.trash">Корзина</string>
+    <string name="title.favourites">Избранное</string>
+    <string name="title.tag">Тег</string>
+    <string name="title.all">Все</string>
+    <string name="selection_bar.close">Закрыть</string>
+    <string name="selection_bar.add_favourites">Добавить в избранное</string>
+    <string name="selection_bar.remove_favourites">Удалить из избранного</string>
+    <string name="selection_bar.change_color">Изменить цвет</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Архивировать</string>
+    <string name="selection_bar.delete">Переместить в корзину</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Закрепить</string>
+    <string name="selection_bar.share">Поделиться</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s заметка перемещена в корзину</item>
+        <item quantity="few">%s заметки перемещены в корзину</item>
+        <item quantity="many">%s заметок перемещены в корзину</item>
+        <item quantity="other">%s заметок перемещены в корзину</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">Архивирована %s заметка</item>
+        <item quantity="few">Архивированы %s заметки</item>
+        <item quantity="many">Архивированы %s заметок</item>
+        <item quantity="other">Архивированы %s заметок</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">Восстановлена %s заметка</item>
+        <item quantity="few">Восстановлены %s заметки</item>
+        <item quantity="many">Восстановлено %s заметок</item>
+        <item quantity="other">Восстановлено %s заметок</item>
+    </plurals>
+</resources>

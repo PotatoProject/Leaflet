@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Paramètres</string>
+    <string name="search">Recherche</string>
+    <string name="account">Compte</string>
+    <string name="restore_prompt.archive">Voulez-vous restaurer chaque note dans les archives ?</string>
+    <string name="restore_prompt.trash">Voulez-vous restaurer chaque note de la corbeille ?</string>
+    <string name="tag_delete_prompt">Ce tag sera définitivement perdu si vous le supprimez</string>
+    <string name="deleted_empty_note">Note vide supprimée</string>
+    <string name="empty_state.home">Aucune note n\'a été ajoutée</string>
+    <string name="empty_state.archive">Les archives sont vides</string>
+    <string name="empty_state.trash">La corbeille est vide</string>
+    <string name="empty_state.favourites">Aucun favori</string>
+    <string name="empty_state.tag">Il n\'y a pas de notes avec ce tag</string>
+    <string name="title.home">Accueil</string>
+    <string name="title.archive">Archive</string>
+    <string name="title.trash">Corbeille</string>
+    <string name="title.favourites">Favoris</string>
+    <string name="title.tag">Tag</string>
+    <string name="title.all">Tout</string>
+    <string name="selection_bar.close">Fermer</string>
+    <string name="selection_bar.add_favourites">Ajouter à vos favoris</string>
+    <string name="selection_bar.remove_favourites">Retirer des favoris</string>
+    <string name="selection_bar.change_color">Changer la couleur</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archives</string>
+    <string name="selection_bar.delete">Déplacer vers la corbeille</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Épingler</string>
+    <string name="selection_bar.share">Partager</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s note a été déplaçée vers la corbeille</item>
+        <item quantity="other">%s notes ont été déplaçées vers la corbeille</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">%s note à été archivée</item>
+        <item quantity="other">%s ont été archivées</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">%s note a été restaurée</item>
+        <item quantity="other">%s notes ont été restaurées</item>
+    </plurals>
+</resources>

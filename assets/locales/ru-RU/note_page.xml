@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_hint">Заголовок</string>
+    <string name="content_hint">Содержимое</string>
+    <string name="list_item_hint">Ввод</string>
+    <string name="add_entry_hint">Добавить запись</string>
+    <string name="toolbar.tags">Управление тегами</string>
+    <string name="toolbar.color">Изменить цвет</string>
+    <string name="toolbar.add_item">Добавить пункт</string>
+    <string name="privacy.title">Параметры конфиденциальности</string>
+    <string name="privacy.hide_content">Скрыть содержимое на главной странице</string>
+    <string name="privacy.lock_note">Зафиксировать заметку</string>
+    <string name="privacy.lock_note.missing_pass">Вы должны установить мастер-пароль из настроек</string>
+    <string name="privacy.use_biometrics">Использовать биометрические данные для разблокировки</string>
+    <string name="toggle_list">Включить пункты</string>
+    <string name="image_gallery">Изображение из галереи</string>
+    <string name="image_camera">Сделать фото</string>
+    <string name="drawing">Добавить рисунок</string>
+    <string name="added_favourites">Заметка добавлена в избранное</string>
+    <string name="removed_favourites">Заметка удалена из избранного</string>
+</resources>

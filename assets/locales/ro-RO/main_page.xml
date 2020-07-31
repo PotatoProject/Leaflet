@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Setări</string>
+    <string name="search">Căutare</string>
+    <string name="account">Cont</string>
+    <string name="restore_prompt.archive">Vrei să restaurezi fiecare notă din arhivă?</string>
+    <string name="restore_prompt.trash">Vrei să restaurezi fiecare notă în coşul de gunoi?</string>
+    <string name="tag_delete_prompt">Această etichetă va fi pierdută pentru totdeauna dacă o ștergeți</string>
+    <string name="deleted_empty_note">Notă goală ştearsă</string>
+    <string name="empty_state.home">Încă nu au fost adăugate note</string>
+    <string name="empty_state.archive">Arhiva este goală</string>
+    <string name="empty_state.trash">Gunoiul este gol</string>
+    <string name="empty_state.favourites">Nu sunt favorite deocamdată</string>
+    <string name="empty_state.tag">Nu există note cu această etichetă</string>
+    <string name="title.home">Acasă</string>
+    <string name="title.archive">Arhivă</string>
+    <string name="title.trash">Gunoi</string>
+    <string name="title.favourites">Favorite</string>
+    <string name="title.tag">Etichetă</string>
+    <string name="title.all">Toate</string>
+    <string name="selection_bar.close">Închide</string>
+    <string name="selection_bar.add_favourites">Adaugă la favorite</string>
+    <string name="selection_bar.remove_favourites">Elimină de la favorite</string>
+    <string name="selection_bar.change_color">Schimbă culoarea</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Arhivează</string>
+    <string name="selection_bar.delete">Mută la gunoi</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Fixează</string>
+    <string name="selection_bar.share">Distribuie</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s notă mutată la gunoi</item>
+        <item quantity="few">%s note mutate la gunoi</item>
+        <item quantity="other">%s note mutate la gunoi</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">Notă arhivată %s</item>
+        <item quantity="few">Note arhivate %s</item>
+        <item quantity="other">Note arhivate %s</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">Restaurat %s notă</item>
+        <item quantity="few">Restaurat %s note</item>
+        <item quantity="other">Restaurat %s note</item>
+    </plurals>
+</resources>

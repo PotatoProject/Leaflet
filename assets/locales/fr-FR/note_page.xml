@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_hint">Titre</string>
+    <string name="content_hint">Contenu</string>
+    <string name="list_item_hint">Entrée</string>
+    <string name="add_entry_hint">Ajouter une entrée</string>
+    <string name="toolbar.tags">Gérer les tags</string>
+    <string name="toolbar.color">Changer de couleur</string>
+    <string name="toolbar.add_item">Ajouter objet</string>
+    <string name="privacy.title">Options de confidentialité</string>
+    <string name="privacy.hide_content">Masquer les contenus sur la page d\'accueil</string>
+    <string name="privacy.lock_note">Verrouiller la note</string>
+    <string name="privacy.lock_note.missing_pass">Vous devez définir un mot de passe dans les paralètres</string>
+    <string name="privacy.use_biometrics">Utilisez les données biométriques pour déverrouiller</string>
+    <string name="toggle_list">Afficher/masquer la liste</string>
+    <string name="image_gallery">Image de la galerie</string>
+    <string name="image_camera">Prendre une photo</string>
+    <string name="drawing">Ajouter un dessin</string>
+    <string name="added_favourites">Note ajoutée aux favoris</string>
+    <string name="removed_favourites">Note retirée des favoris</string>
+</resources>

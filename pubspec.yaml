@@ -63,8 +63,13 @@ flutter:
   assets:
     - assets/images/
     - assets/locales/en-US/
+    - assets/locales/es-ES/
+    - assets/locales/fr-FR/
     - assets/locales/it-IT/
     - assets/locales/nl-NL/
+    - assets/locales/ro-RO/
+    - assets/locales/ru-RU/
+    - assets/locales/tr-TR/
   fonts:
     - family:  CustomIcons
       fonts:

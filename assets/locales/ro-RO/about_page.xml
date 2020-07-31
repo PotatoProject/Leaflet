@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Despre</string>
+    <string name="pwa_version">Versiune PWA</string>
+    <string name="links">Link-uri</string>
+    <string name="contributors">Contribuitori</string>
+    <string name="contributors.hrx">Dezvoltator principal și designer aplicație</string>
+    <string name="contributors.bas">Sincronizare API și aplicație</string>
+    <string name="contributors.nico">Sincronizare API</string>
+    <string name="contributors.kat">Sincronizare veche API</string>
+    <string name="contributors.rohit">Ilustraţii şi culori pentru note</string>
+    <string name="contributors.rshbfn">Pictograma aplicației și accent principal</string>
+</resources>
