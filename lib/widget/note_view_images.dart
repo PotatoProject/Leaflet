@@ -70,7 +70,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                       child: Image(
                         image: image,
                         fit: BoxFit.cover,
-                        gaplessPlayback: false,
+                        gaplessPlayback: true,
                       ),
                     ),
                     SizedBox.expand(

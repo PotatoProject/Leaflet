@@ -42,6 +42,7 @@ main() async {
             "note_page",
             "search_page",
             "settings_page",
+            "setup_page",
           ],
         ),
         path: "assets/locales",

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button.get_started">Iniziamo</string>
+    <string name="button.finish">Termina</string>
+    <string name="button.next">Prossimo</string>
+    <string name="button.back">Precedente</string>
+    <string name="basic_customization.title">Personalizzazione di base</string>
+    <string name="welcome.catchphrase">La tua nuova app per gli appunti preferita</string>
+    <string name="finish.title">Tutto pronto!</string>
+    <string name="finish.last_words">Ora sei pronto a goderti PotatoNotes al massimo. \nSe si desidera personalizzare altro dirigiti alla pagina delle impostazioni nel riquadro laterale, invece se vuoi gestire il tuo account PotatoSync fai clic sul tuo avatar nella barra in alto.</string>
+</resources>

@@ -57,6 +57,7 @@ class AndroidXmlAssetLoader extends AssetLoader {
     return base
         .replaceAll("%s", "{}")
         .replaceAll("\\\"", "\"")
-        .replaceAll("\\\'", "\'");
+        .replaceAll("\\\'", "\'")
+        .replaceAll("\\n", "\n");
   }
 }

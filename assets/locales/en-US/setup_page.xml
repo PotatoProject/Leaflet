@@ -1,0 +1,10 @@
+<resources>
+    <string name="button.get_started">Get started</string>
+    <string name="button.finish">Finish</string>
+    <string name="button.next">Next</string>
+    <string name="button.back">Back</string>
+    <string name="basic_customization.title">Basic customization</string>
+    <string name="welcome.catchphrase">Your new favourite notes app</string>
+    <string name="finish.title">All set!</string>
+    <string name="finish.last_words">Now you're ready to enjoy PotatoNotes to its fullest. \nIf you want to customize more head over to the settings page in the side drawer, instead if you want to manage your PotatoSync account instead click your avatar on the top bar.</string>
+</resources>

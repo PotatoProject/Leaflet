@@ -92,7 +92,6 @@ class _MainPageState extends State<MainPage>
 
       bool welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
       if (!welcomePageSeenV2) {
-        print("bruh");
         Utils.showSecondaryRoute(
           context,
           SetupPage(),

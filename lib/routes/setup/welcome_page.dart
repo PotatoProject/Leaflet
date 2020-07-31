@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 
 const double _logoHeight = 106;
@@ -33,7 +34,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Your new favourite notes app",
+                    LocaleStrings.setupPage.welcomeCatchphrase,
                     style: TextStyle(
                       fontSize: 16,
                     ),

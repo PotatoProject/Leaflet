@@ -12,6 +12,7 @@ class LocaleStrings {
   static _SearchPageLocaleStrings get searchPage => _SearchPageLocaleStrings();
   static _SettingsPageLocaleStrings get settingsPage =>
       _SettingsPageLocaleStrings();
+  static _SetupPageLocaleStrings get setupPage => _SetupPageLocaleStrings();
 }
 
 class _CommonLocaleStrings {
@@ -182,4 +183,15 @@ class _SettingsPageLocaleStrings {
   final debugClearDatabase = "settings_page.debug.clear_database".tr();
   final debugMigrateDatabase = "settings_page.debug.migrate_database".tr();
   final debugLogLevel = "settings_page.debug.log_level".tr();
+}
+
+class _SetupPageLocaleStrings {
+  final buttonGetStarted = "setup_page.button.get_started".tr();
+  final buttonFinish = "setup_page.button.finish".tr();
+  final buttonNext = "setup_page.button.next".tr();
+  final buttonBack = "setup_page.button.back".tr();
+  final basicCustomizationTitle = "setup_page.basic_customization.title".tr();
+  final welcomeCatchphrase = "setup_page.welcome.catchphrase".tr();
+  final finishTitle = "setup_page.finish.title".tr();
+  final finishLastWords = "setup_page.finish.last_words".tr();
 }

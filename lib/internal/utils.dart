@@ -394,7 +394,6 @@ class Utils {
       );
     } else {
       if (transitionsBuilder != null) {
-        print("yes");
         return Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
