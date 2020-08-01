@@ -739,7 +739,7 @@ class _NotePageState extends State<NotePage> {
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
-    if (note.listContent.content.isEmpty) {
+    if (note.listContent.content.isEmpty && note.list) {
       addListContentItem();
     }
   }
