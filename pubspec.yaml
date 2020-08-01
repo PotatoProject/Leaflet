@@ -78,4 +78,20 @@ flutter:
   fonts:
     - family:  CustomIcons
       fonts:
-       - asset: fonts/CustomIcons.ttf
+        - asset: fonts/CustomIcons.ttf
+    - family: Manrope
+      fonts:
+        - asset: fonts/Manrope-ExtraLight.otf
+          weight: 100
+        - asset: fonts/Manrope-Light.otf
+          weight: 200
+        - asset: fonts/Manrope-Regular.otf
+          weight: 300
+        - asset: fonts/Manrope-Medium.otf
+          weight: 400
+        - asset: fonts/Manrope-SemiBold.otf
+          weight: 500
+        - asset: fonts/Manrope-Bold.otf
+          weight: 600
+        - asset: fonts/Manrope-ExtraBold.otf
+          weight: 700

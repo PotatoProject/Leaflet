@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
 class Themes {
@@ -50,7 +49,7 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: _lightColor,
         ),
-        textTheme: GoogleFonts.montserratTextTheme(ThemeData.light().textTheme),
+        textTheme: ThemeData.light().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _lightColor,
           shape: RoundedRectangleBorder(),
@@ -112,7 +111,7 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: _darkColor,
         ),
-        textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
+        textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _darkColor,
           shape: RoundedRectangleBorder(),
@@ -169,7 +168,7 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: _blackColor,
         ),
-        textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
+        textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: _blackColor,
           shape: RoundedRectangleBorder(),
