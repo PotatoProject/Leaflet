@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Скасувати</string>
+    <string name="reset">Скинути</string>
+    <string name="restore">Відновити</string>
+    <string name="confirm">Підтвердити</string>
+    <string name="save">Зберегти</string>
+    <string name="delete">Видалити</string>
+    <string name="undo">Відмінити</string>
+    <string name="redo">Повторити</string>
+    <string name="edit">Редагувати</string>
+    <string name="go_on">Продовжити</string>
+    <string name="exit">Вихід</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s із %s</string>
+    <string name="new_note">Нова нотатка</string>
+    <string name="new_list">Новий список</string>
+    <string name="new_image">Нове зображення</string>
+    <string name="new_drawing">Новий малюнок</string>
+    <string name="biometrics_prompt">Підтвердити біометрію</string>
+    <string name="master_pass.modify">Змінити майстер-пароль</string>
+    <string name="master_pass.confirm">Підтвердити майстер-пароль</string>
+    <string name="are_you_sure">Ви впевнені?</string>
+    <string name="case_sensitive">З урахуванням регістру</string>
+    <string name="color_filter">Колірний фільтр</string>
+    <string name="date_filter">По даті</string>
+    <string name="date_filter_mode">Режим фільтру</string>
+    <string name="date_filter_mode.after">Після дати</string>
+    <string name="date_filter_mode.exact">Точна дата</string>
+    <string name="date_filter_mode.before">До дати</string>
+    <string name="color.none">Ніякий</string>
+    <string name="color.red">Червоний</string>
+    <string name="color.orange">Помаранчевий</string>
+    <string name="color.yellow">Жовтий</string>
+    <string name="color.green">Зелений</string>
+    <string name="color.cyan">Блакитний</string>
+    <string name="color.light_blue">Cвітло-блакитний</string>
+    <string name="color.blue">Синій</string>
+    <string name="color.purple">Фіолетовий</string>
+    <string name="color.pink">Розовий</string>
+    <string name="notification.default_title">Закріплене сповіщення</string>
+    <string name="notification.details_title">Закріплені сповіщення</string>
+    <string name="notification.details_desc">Сповіщення закріплені користувачем</string>
+    <string name="tag.new">Новий тег</string>
+    <string name="tag.modify">Змінити тег</string>
+    <string name="tag.textbox_hint">Назва</string>
+</resources>

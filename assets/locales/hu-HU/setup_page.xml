@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button.get_started">Vágjunk bele!</string>
+    <string name="button.finish">Befejezés</string>
+    <string name="button.next">Következő</string>
+    <string name="button.back">Vissza</string>
+    <string name="basic_customization.title">Kezdő testreszabás</string>
+    <string name="welcome.catchphrase">Az új kedvenc alkalmazásod a feljegyzésekhez</string>
+    <string name="finish.title">Készen állunk!</string>
+    <string name="finish.last_words">Most már készen álsz hogy használd a PotatoNotes -t.
+Ha méginkább tesztre szeretnéd szabni az alkalmazást a beállításokban megteheted , ha szeretnéd létrehozhatsz egy PotatoSync fiókot az avatárodra kattintással.</string>
+</resources>

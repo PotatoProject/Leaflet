@@ -66,11 +66,14 @@ flutter:
     - assets/locales/en-US/
     - assets/locales/es-ES/
     - assets/locales/fr-FR/
+    - assets/locales/hu-HU/
     - assets/locales/it-IT/
     - assets/locales/nl-NL/
+    - assets/locales/pt-BR/
     - assets/locales/ro-RO/
     - assets/locales/ru-RU/
     - assets/locales/tr-TR/
+    - assets/locales/uk-UK/
     - assets/locales/zh-CN/
   fonts:
     - family:  CustomIcons

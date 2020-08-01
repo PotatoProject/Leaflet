@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Sobre</string>
+    <string name="pwa_version">Versão do PWA</string>
+    <string name="links">Links</string>
+    <string name="contributors">Colaboradores</string>
+    <string name="contributors.hrx">Desenvolvedor chefe e designer do aplicativo</string>
+    <string name="contributors.bas">Sincronizar API e app</string>
+    <string name="contributors.nico">Sincronizar API</string>
+    <string name="contributors.kat">API de sincronização antiga</string>
+    <string name="contributors.rohit">Ilustrações e cores de notas</string>
+    <string name="contributors.rshbfn">Ícone do aplicativo e cor de destaque</string>
+</resources>

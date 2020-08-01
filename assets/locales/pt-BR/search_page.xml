@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textbox_hint">Pesquisar</string>
+    <string name="tag_create_hint">Criar etiqueta \"%s\"</string>
+    <string name="note.type_to_search">Digite para iniciar a pesquisa</string>
+    <string name="note.nothing_found">Nada encontrado...</string>
+</resources>

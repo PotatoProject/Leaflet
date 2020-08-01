@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="textbox_hint">Keresés</string>
+    <string name="tag_create_hint">Címke \"%s\" létrehozása</string>
+    <string name="note.type_to_search">Kezdj el gépelni a kereséshez</string>
+    <string name="note.nothing_found">Nincs találat.</string>
+</resources>
