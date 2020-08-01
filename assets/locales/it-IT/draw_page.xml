@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="color_black">Nero</string>
-    <string name="exit_prompt">Qualsiasi modifica non salvata andrà persa. Vuoi uscire?</string>
+    <string name="exit_prompt">Le modifiche non salvate andranno perse. Vuoi uscire?</string>
     <string name="tools.brush">Pennello</string>
     <string name="tools.eraser">Gomma</string>
     <string name="tools.marker">Evidenziatore</string>

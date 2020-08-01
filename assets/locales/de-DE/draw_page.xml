@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_black">Schwarz</string>
+    <string name="exit_prompt">Alle nicht gespeicherten Änderungen gehen verloren. Wollen Sie fortfahren?</string>
+    <string name="tools.brush">Pinsel</string>
+    <string name="tools.eraser">Radierer</string>
+    <string name="tools.marker">Filzstift</string>
+    <string name="tools.color_picker">Farbe</string>
+    <string name="tools.radius_picker">Radius</string>
+</resources>

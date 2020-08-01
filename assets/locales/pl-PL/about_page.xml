@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">O aplikacji</string>
+    <string name="pwa_version">Wersja PWA</string>
+    <string name="links">Łącza</string>
+    <string name="contributors">Współpracownicy</string>
+    <string name="contributors.hrx">Główny programista i projektowanie aplikacji</string>
+    <string name="contributors.bas">Synchronizuj API i aplikację</string>
+    <string name="contributors.nico">Synchronizuj API</string>
+    <string name="contributors.kat">Stara synchronizacja API</string>
+    <string name="contributors.rohit">Ilustracje i kolory notatek</string>
+    <string name="contributors.rshbfn">Ikona aplikacji i główny akcent</string>
+</resources>

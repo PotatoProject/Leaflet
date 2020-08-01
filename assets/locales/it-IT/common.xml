@@ -20,7 +20,7 @@
     <string name="master_pass.modify">Modifica pass principale</string>
     <string name="master_pass.confirm">Conferma pass principale</string>
     <string name="are_you_sure">Sei sicuro?</string>
-    <string name="case_sensitive">Differenzia maiuscole/minuscole</string>
+    <string name="case_sensitive">Sensibile alle maiuscole</string>
     <string name="color_filter">Colore</string>
     <string name="date_filter">Data</string>
     <string name="date_filter_mode">Modalità filtro</string>
@@ -37,9 +37,9 @@
     <string name="color.blue">Blu</string>
     <string name="color.purple">Viola</string>
     <string name="color.pink">Rosa</string>
-    <string name="notification.default_title">Notifica fissata</string>
-    <string name="notification.details_title">Notifiche fissate</string>
-    <string name="notification.details_desc">Notifiche fissate dall\'utente</string>
+    <string name="notification.default_title">Appunto fissato</string>
+    <string name="notification.details_title">Appunti fissati</string>
+    <string name="notification.details_desc">Appunti fissati dall\'utente</string>
     <string name="tag.new">Nuova etichetta</string>
     <string name="tag.modify">Modifica etichetta</string>
     <string name="tag.textbox_hint">Nome</string>

@@ -5,7 +5,7 @@
     <string name="list_item_hint">Elemento</string>
     <string name="add_entry_hint">Aggiungi voce</string>
     <string name="toolbar.tags">Gestisci etichette</string>
-    <string name="toolbar.color">Cambia Colore</string>
+    <string name="toolbar.color">Cambia colore</string>
     <string name="toolbar.add_item">Aggiungi oggetto</string>
     <string name="privacy.title">Opzioni privacy</string>
     <string name="privacy.hide_content">Nascondi contenuto nella pagina principale</string>

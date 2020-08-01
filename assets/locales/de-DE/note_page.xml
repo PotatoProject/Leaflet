@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_hint">Titel</string>
+    <string name="content_hint">Inhalt</string>
+    <string name="list_item_hint">Eingabe</string>
+    <string name="add_entry_hint">Eintrag hinzufügen</string>
+    <string name="toolbar.tags">Etiketten verwalten</string>
+    <string name="toolbar.color">Farbe ändern</string>
+    <string name="toolbar.add_item">Element hinzufügen</string>
+    <string name="privacy.title">Privatsphäre-Einstellungen</string>
+    <string name="privacy.hide_content">Inhalte auf Hauptseite verbergen</string>
+    <string name="privacy.lock_note">Notiz schützen</string>
+    <string name="privacy.lock_note.missing_pass">Sie müssen einen Master-Pass in den Einstellungen festlegen</string>
+    <string name="privacy.use_biometrics">Benutze Biometrie zum Entsperren</string>
+    <string name="toggle_list">Checkliste anzeigen</string>
+    <string name="image_gallery">Bild aus Galerie</string>
+    <string name="image_camera">Foto aufnehmen</string>
+    <string name="drawing">Zeichnung hinzufügen</string>
+    <string name="added_favourites">Notiz zu Favoriten hinzugefügt</string>
+    <string name="removed_favourites">Notiz aus Favoriten entfernt</string>
+</resources>

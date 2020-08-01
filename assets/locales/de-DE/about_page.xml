@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Über</string>
+    <string name="pwa_version">PWA-Version</string>
+    <string name="links">Links</string>
+    <string name="contributors">Mitwirkende</string>
+    <string name="contributors.hrx">Lead Entwickler und App Design</string>
+    <string name="contributors.bas">Sync API und Anwendung</string>
+    <string name="contributors.nico">Sync API</string>
+    <string name="contributors.kat">Alte Sync API</string>
+    <string name="contributors.rohit">Abbildungen und Notiz-Farben</string>
+    <string name="contributors.rshbfn">Icon und Haupt Akzent</string>
+</resources>

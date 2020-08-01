@@ -29,12 +29,14 @@ main() async {
       child: EasyLocalization(
         child: PotatoNotes(),
         supportedLocales: [
+          Locale("de", "DE"),
           Locale("en", "US"),
           Locale("es", "ES"),
           Locale("fr", "FR"),
           Locale("hu", "HU"),
           Locale("it", "IT"),
           Locale("nl", "NL"),
+          Locale("pl", "PL"),
           Locale("pt", "BR"),
           Locale("ro", "RO"),
           Locale("ru", "RU"),

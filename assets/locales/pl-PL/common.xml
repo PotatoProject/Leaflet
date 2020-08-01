@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel">Anuluj</string>
+    <string name="reset">Przywróć domyślne</string>
+    <string name="restore">Przywróć</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="save">Zapisz</string>
+    <string name="delete">Usuń</string>
+    <string name="undo">Cofnij</string>
+    <string name="redo">Powtórz</string>
+    <string name="edit">Edytuj</string>
+    <string name="go_on">Kontynuuj</string>
+    <string name="exit">Zakończ</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s z %s</string>
+    <string name="new_note">Nowa notatka</string>
+    <string name="new_list">Nowa lista</string>
+    <string name="new_image">Nowy obraz</string>
+    <string name="new_drawing">Nowy rysunek</string>
+    <string name="biometrics_prompt">Potwierdź dane biometryczne</string>
+    <string name="master_pass.modify">Modyfikuj hasło główne</string>
+    <string name="master_pass.confirm">Potwierdź hasło główne</string>
+    <string name="are_you_sure">Na pewno?</string>
+    <string name="case_sensitive">Wielkość liter ma znaczenie</string>
+    <string name="color_filter">Filtr kolorów</string>
+    <string name="date_filter">Filtr daty</string>
+    <string name="date_filter_mode">Tryb filtrowania</string>
+    <string name="date_filter_mode.after">Po dacie</string>
+    <string name="date_filter_mode.exact">Dokładna data</string>
+    <string name="date_filter_mode.before">Przed datą</string>
+    <string name="color.none">Brak</string>
+    <string name="color.red">Czerwony</string>
+    <string name="color.orange">Pomarańczowy</string>
+    <string name="color.yellow">Żółty</string>
+    <string name="color.green">Zielony</string>
+    <string name="color.cyan">Błękitny</string>
+    <string name="color.light_blue">Jasnoniebieski</string>
+    <string name="color.blue">Niebieski</string>
+    <string name="color.purple">Fioletowy</string>
+    <string name="color.pink">Różowy</string>
+    <string name="notification.default_title">Przypięte powiadomienie</string>
+    <string name="notification.details_title">Przypięte powiadomienia</string>
+    <string name="notification.details_desc">Przypięte powiadomienia przez użytkownika</string>
+    <string name="tag.new">Nowa etykieta</string>
+    <string name="tag.modify">Modyfikuj etykietę</string>
+    <string name="tag.textbox_hint">Nazwa</string>
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Ustawienia</string>
+    <string name="search">Szukaj</string>
+    <string name="account">Konto</string>
+    <string name="restore_prompt.archive">Czy chcesz przywrócić każdą notatkę w archiwum?</string>
+    <string name="restore_prompt.trash">Czy chcesz przywrócić każdą notatkę w koszu?</string>
+    <string name="tag_delete_prompt">Ta etykieta zostanie utracona na zawsze po jej usunięciu</string>
+    <string name="deleted_empty_note">Usunięto pustą notatkę</string>
+    <string name="empty_state.home">Nie dodano jeszcze żadnych notatek</string>
+    <string name="empty_state.archive">Archiwum jest puste</string>
+    <string name="empty_state.trash">Kosz jest pusty</string>
+    <string name="empty_state.favourites">Brak ulubionych na razie</string>
+    <string name="empty_state.tag">Brak notatek z tą etykietą</string>
+    <string name="title.home">Strona główna</string>
+    <string name="title.archive">Archiwum</string>
+    <string name="title.trash">Kosz</string>
+    <string name="title.favourites">Ulubione</string>
+    <string name="title.tag">Etykieta</string>
+    <string name="title.all">Wszystko</string>
+    <string name="selection_bar.close">Zamknij</string>
+    <string name="selection_bar.add_favourites">Dodaj do ulubionych</string>
+    <string name="selection_bar.remove_favourites">Usuń z ulubionych</string>
+    <string name="selection_bar.change_color">Zmień kolor</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiwum</string>
+    <string name="selection_bar.delete">Przenieś do kosza</string>
+    <string name="selection_bar.pin" comment="Pin to notifications shade">Przypnij</string>
+    <string name="selection_bar.share">Udostępnij</string>
+    <plurals name="notes_deleted">
+        <item quantity="one">%s notatka została przeniesiona do kosza</item>
+        <item quantity="few">%s notatek zostało przeniesionych do kosza</item>
+        <item quantity="many">%s notatek zostało przeniesionych do kosza</item>
+        <item quantity="other">%s notatek zostało przeniesionych do kosza</item>
+    </plurals>
+    <plurals name="notes_archived">
+        <item quantity="one">Zarchiwizowano %s notatkę</item>
+        <item quantity="few">Zarchiwizowano %s notatek</item>
+        <item quantity="many">Zarchiwizowano %s notatek</item>
+        <item quantity="other">Zarchiwizowano %s notatek</item>
+    </plurals>
+    <plurals name="notes_restored">
+        <item quantity="one">Przywrócono %s notatkę</item>
+        <item quantity="few">Przywrócono %s notatek</item>
+        <item quantity="many">Przywrócono %s notatek</item>
+        <item quantity="other">Przywrócono %s notatek</item>
+    </plurals>
+</resources>
