@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
@@ -34,8 +33,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(Platform.localeName);
-
     if (widget.trimmed) return commonSettings;
 
     return WillPopScope(
@@ -279,7 +276,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     Locale locale = context.supportedLocales[index];
 
                     return DropdownMenuItem(
-                      child: Text(localeToString(locale)),
+                      child: Text(
+                        firstLetterToUppercase(
+                          LocaleNamesLocalizationsDelegate
+                              .nativeLocaleNames[locale.languageCode],
+                        ),
+                      ),
                       value: locale,
                     );
                   },
@@ -385,5 +387,12 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       ),
     );
+  }
+
+  String firstLetterToUppercase(String origin) {
+    String firstLetter = origin.substring(0, 1);
+    String restOfTheString = origin.substring(1);
+
+    return firstLetter.toUpperCase() + restOfTheString;
   }
 }

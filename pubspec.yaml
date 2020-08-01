@@ -46,6 +46,7 @@ dependencies:
   path:
   easy_localization: ^2.3.2
   xml: ^4.2.0
+  flutter_localized_locales:
   
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
