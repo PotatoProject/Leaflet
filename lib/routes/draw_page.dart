@@ -70,8 +70,7 @@ class _DrawPageState extends State<DrawPage>
           context: globalContext,
           builder: (context) => AlertDialog(
             title: Text(LocaleStrings.common.areYouSure),
-            content:
-                Text("Any unsaved change will be lost. Do you want to exit?"),
+            content: Text(LocaleStrings.drawPage.exitPrompt),
             actions: [
               FlatButton(
                 onPressed: () => Navigator.pop(context),

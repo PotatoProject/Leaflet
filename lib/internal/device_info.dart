@@ -5,6 +5,7 @@ class DeviceInfo {
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics;
   bool _canUseSystemAccent = true;
+  bool _isLandscape = false;
   int _uiSizeFactor = 2;
   UiType _uiType;
 
@@ -15,6 +16,7 @@ class DeviceInfo {
   bool get canCheckBiometrics => _canCheckBiometrics;
   List<BiometricType> get availableBiometrics => _availableBiometrics;
   bool get canUseSystemAccent => _canUseSystemAccent;
+  bool get isLandscape => _isLandscape;
   int get uiSizeFactor => _uiSizeFactor;
   UiType get uiType => _uiType;
 
@@ -25,6 +27,7 @@ class DeviceInfo {
 
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
     _canUseSystemAccent = canUseSystemAccent;
+    _isLandscape = mq.orientation == Orientation.landscape;
     double width = mq.size.width;
 
     if (width >= 1280) {

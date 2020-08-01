@@ -128,7 +128,7 @@ class _MainPageState extends State<MainPage>
     return Row(
       children: <Widget>[
         Visibility(
-          visible: MediaQuery.of(context).orientation == Orientation.landscape,
+          visible: deviceInfo.isLandscape,
           child: SizedBox(
             width: fixedDrawerSize,
             child: getDrawer(deviceInfo.uiSizeFactor >= 4, true),
@@ -222,13 +222,11 @@ class _MainPageState extends State<MainPage>
             floatingActionButton:
                 mode == ReturnMode.NORMAL && !selecting ? fab : null,
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            drawer:
-                MediaQuery.of(context).orientation == Orientation.portrait &&
-                        !selecting
-                    ? Drawer(
-                        child: getDrawer(true, false),
-                      )
-                    : null,
+            drawer: !deviceInfo.isLandscape && !selecting
+                ? Drawer(
+                    child: getDrawer(true, false),
+                  )
+                : null,
             drawerScrimColor: Colors.transparent,
             drawerEdgeDragWidth: MediaQuery.of(context).size.width,
           ),

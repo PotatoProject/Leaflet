@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class NoteViewImages extends StatefulWidget {
@@ -121,9 +122,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   return StaggeredTile.extent(
                     crossAxisExtent,
                     col1Length == 1 ||
-                            (MediaQuery.of(context).orientation ==
-                                    Orientation.landscape &&
-                                col2Length <= 0)
+                            (deviceInfo.isLandscape && col2Length <= 0)
                         ? maxHeight
                         : maxHeight / 2,
                   );

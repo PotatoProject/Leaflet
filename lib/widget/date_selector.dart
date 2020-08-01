@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 class DateFilterSelector extends StatefulWidget {
   final DateTime date;
@@ -92,9 +93,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
     final Widget base = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        MediaQuery.of(context).orientation == Orientation.landscape
-            ? Expanded(child: list)
-            : list,
+        deviceInfo.isLandscape ? Expanded(child: list) : list,
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 24,
@@ -137,7 +136,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
       ],
     );
 
-    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+    if (deviceInfo.isLandscape) {
       return ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.shortestSide,

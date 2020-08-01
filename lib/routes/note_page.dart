@@ -161,9 +161,6 @@ class _NotePageState extends State<NotePage> {
       },
     );
 
-    bool smallLandscapeUi =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: note.color != 0
@@ -194,7 +191,7 @@ class _NotePageState extends State<NotePage> {
         key: scaffoldKey,
         appBar: AppBar(
           actions: <Widget>[
-            ...getToolbarButtons(!smallLandscapeUi),
+            ...getToolbarButtons(!deviceInfo.isLandscape),
             IconButton(
               icon: Icon(OMIcons.removeRedEye),
               padding: EdgeInsets.all(0),
@@ -241,9 +238,8 @@ class _NotePageState extends State<NotePage> {
                 ),
                 children: [
                   Visibility(
-                    visible: note.images.data.isNotEmpty &&
-                        MediaQuery.of(context).orientation ==
-                            Orientation.portrait,
+                    visible:
+                        note.images.data.isNotEmpty && !deviceInfo.isLandscape,
                     child: imagesWidget,
                   ),
                   Visibility(
@@ -478,8 +474,7 @@ class _NotePageState extends State<NotePage> {
               ),
             ),
             Visibility(
-              visible: note.images.data.isNotEmpty &&
-                  MediaQuery.of(context).orientation == Orientation.landscape,
+              visible: note.images.data.isNotEmpty && deviceInfo.isLandscape,
               child: Container(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 56,
@@ -491,7 +486,7 @@ class _NotePageState extends State<NotePage> {
             ),
           ],
         ),
-        bottomNavigationBar: smallLandscapeUi
+        bottomNavigationBar: deviceInfo.isLandscape
             ? null
             : Material(
                 color: Theme.of(context).cardColor,
