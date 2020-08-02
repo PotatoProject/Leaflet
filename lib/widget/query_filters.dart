@@ -45,24 +45,26 @@ class _QueryFiltersState extends State<QueryFilters> {
           trailing: Icon(
             Icons.brightness_1,
             size: 28,
-            color: Color(NoteColors.colorList[widget.query.color ?? 0]
-                .dynamicColor(context)),
+            color: Color(
+                NoteColors.colorList[widget.query.color].dynamicColor(context)),
           ),
           onTap: () async {
             int queryColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
-                selectedColor: widget.query.color,
+                selectedColor: widget.query.color ?? 0,
                 onColorSelect: (color) {
                   if (color == 0)
-                    Navigator.pop(context, null);
+                    Navigator.pop(context, -1);
                   else
                     Navigator.pop(context, color);
                 },
               ),
             );
 
-            setState(() => widget.query.color = queryColor);
+            if (queryColor != null) {
+              setState(() => widget.query.color = queryColor);
+            }
             if (widget.filterChangedCallback != null)
               widget.filterChangedCallback();
           },

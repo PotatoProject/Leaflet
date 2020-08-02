@@ -70,7 +70,8 @@ class _NewTagState extends State<TagEditor> {
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: TextFormField(
               decoration: InputDecoration(
-                hintText: LocaleStrings.common.tagTextboxHint,
+                labelText: LocaleStrings.common.tagTextboxHint,
+                border: UnderlineInputBorder(),
               ),
               initialValue: tag.name,
               maxLength: 30,

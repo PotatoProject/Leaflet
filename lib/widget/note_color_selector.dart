@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/providers.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
@@ -23,7 +22,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
             NoteColors.colorList.length,
             (index) => noteColorItem(
               index,
-              constraints.maxWidth / (deviceInfo.uiSizeFactor + 3),
+              constraints.maxWidth / 5,
               widget.selectedColor == index,
             ),
           ),

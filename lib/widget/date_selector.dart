@@ -53,7 +53,10 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
     final Widget list = ListView(
       shrinkWrap: true,
       children: <Widget>[
-        _DateFilterSelectorHeader(selectedDate),
+        _DateFilterSelectorHeader(
+          selectedDate,
+          onReset: widget.onReset,
+        ),
         CalendarDatePicker(
           initialDate: selectedDate,
           firstDate: DateTime(2020),
@@ -96,7 +99,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
         deviceInfo.isLandscape ? Expanded(child: list) : list,
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: 24,
+            horizontal: 16,
             vertical: 8,
           ),
           child: Row(
@@ -110,14 +113,6 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                 },
               ),
               Spacer(),
-              FlatButton(
-                child: Text(LocaleStrings.common.reset),
-                textColor: Theme.of(context).accentColor,
-                onPressed: () {
-                  widget.onReset();
-                  Navigator.pop(context);
-                },
-              ),
               SizedBox(
                 width: 8,
               ),
@@ -151,8 +146,9 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
 
 class _DateFilterSelectorHeader extends StatelessWidget {
   final DateTime date;
+  final VoidCallback onReset;
 
-  _DateFilterSelectorHeader(this.date);
+  _DateFilterSelectorHeader(this.date, {this.onReset});
 
   @override
   Widget build(BuildContext context) {
@@ -165,11 +161,26 @@ class _DateFilterSelectorHeader extends StatelessWidget {
           horizontal: 24,
           vertical: 32,
         ),
-        child: Text(
-          DateFormat("EEE, MMM d", context.locale.toLanguageTag()).format(date),
-          style: Theme.of(context).textTheme.headline5.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+        child: Row(
+          children: <Widget>[
+            Text(
+              DateFormat("EEE, MMM d", context.locale.toLanguageTag())
+                  .format(date),
+              style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
+            Spacer(),
+            FlatButton(
+              child: Text(LocaleStrings.common.reset),
+              textColor: Theme.of(context).accentColor,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              onPressed: () {
+                onReset?.call();
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
     );

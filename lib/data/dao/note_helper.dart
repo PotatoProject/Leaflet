@@ -78,16 +78,25 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
 class SearchQuery {
   bool caseSensitive;
-  int color;
+  int _color;
   DateTime date;
   DateFilterMode dateMode;
 
+  int get color => _color ?? 0;
+  set color(int value) {
+    if (value == -1) {
+      _color = 0;
+    } else {
+      _color = value;
+    }
+  }
+
   SearchQuery({
     this.caseSensitive = true,
-    this.color,
+    int color,
     this.date,
     this.dateMode = DateFilterMode.ONLY,
-  });
+  }) : _color = color;
 }
 
 enum DateFilterMode {
@@ -95,6 +104,7 @@ enum DateFilterMode {
   BEFORE,
   ONLY,
 }
+
 enum ReturnMode {
   ALL,
   NORMAL,
