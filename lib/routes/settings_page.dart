@@ -16,6 +16,7 @@ import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
+import 'package:potato_notes/widget/settings_tile.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -49,11 +50,9 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsCategory(
               header: LocaleStrings.settingsPage.infoTitle,
               children: <Widget>[
-                ListTile(
-                  leading: Icon(MdiIcons.informationOutline),
+                SettingsTile(
+                  icon: Icon(MdiIcons.informationOutline),
                   title: Text(LocaleStrings.settingsPage.infoAboutApp),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                   onTap: () => Utils.showSecondaryRoute(
                     context,
                     AboutPage(),
@@ -67,23 +66,20 @@ class _SettingsPageState extends State<SettingsPage> {
               child: SettingsCategory(
                 header: LocaleStrings.settingsPage.debugTitle,
                 children: [
-                  SwitchListTile(
-                    secondary: Icon(MdiIcons.humanGreeting),
-                    title:
-                        Text(LocaleStrings.settingsPage.debugShowSetupScreen),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                  SettingsTile.withSwitch(
+                    icon: Icon(MdiIcons.humanGreeting),
+                    title: Text(
+                      LocaleStrings.settingsPage.debugShowSetupScreen,
+                    ),
                     value: !prefs.welcomePageSeen,
                     activeColor: Theme.of(context).accentColor,
                     onChanged: (value) async {
                       prefs.welcomePageSeen = !value;
                     },
                   ),
-                  ListTile(
-                    leading: Icon(CommunityMaterialIcons.database_remove),
+                  SettingsTile(
+                    icon: Icon(CommunityMaterialIcons.database_remove),
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     onTap: () async {
                       List<Note> notes = await helper.listNotes(ReturnMode.ALL);
 
@@ -91,12 +87,10 @@ class _SettingsPageState extends State<SettingsPage> {
                           (element) async => await helper.deleteNote(element));
                     },
                   ),
-                  ListTile(
-                    leading: Icon(CommunityMaterialIcons.database_import),
+                  SettingsTile(
+                    icon: Icon(CommunityMaterialIcons.database_import),
                     title:
                         Text(LocaleStrings.settingsPage.debugMigrateDatabase),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                     onTap: () async {
                       bool canMigrate = await MigrationTask.migrationAvailable;
 
@@ -123,41 +117,31 @@ class _SettingsPageState extends State<SettingsPage> {
                       }
                     },
                   ),
-                  ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                    leading: Icon(CommunityMaterialIcons.text),
+                  SettingsTile(
+                    icon: Icon(CommunityMaterialIcons.text),
                     title: Text(LocaleStrings.settingsPage.debugLogLevel),
-                    trailing: DropdownButton(
-                      items: [
-                        DropdownMenuItem(
-                          child: Text("Verbose"),
-                          value: LogEntry.VERBOSE,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Debug"),
-                          value: LogEntry.DEBUG,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Info"),
-                          value: LogEntry.INFO,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Warn"),
-                          value: LogEntry.WARN,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("Error"),
-                          value: LogEntry.ERROR,
-                        ),
-                        DropdownMenuItem(
-                          child: Text("WTF"),
-                          value: LogEntry.WTF,
-                        ),
-                      ],
-                      onChanged: (value) => prefs.logLevel = value,
-                      value: prefs.logLevel,
-                    ),
+                    onTap: () {
+                      showDropdownSheet(
+                        context: context,
+                        itemBuilder: (context, index) {
+                          bool selected =
+                              prefs.logLevel == logEntryValues[index];
+
+                          return dropDownTile(
+                            selected: selected,
+                            title: Text(
+                              getLogEntryName(logEntryValues[index]),
+                            ),
+                            onTap: () {
+                              prefs.logLevel = logEntryValues[index];
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        itemCount: logEntryValues.length,
+                      );
+                    },
+                    subtitle: Text(getLogEntryName(prefs.logLevel)),
                   ),
                 ],
               ),
@@ -169,46 +153,49 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget get commonSettings {
+    String currentLocaleName = firstLetterToUppercase(
+      LocaleNamesLocalizationsDelegate
+          .nativeLocaleNames[context.locale.languageCode],
+    );
+
     return Column(
       children: <Widget>[
         SettingsCategory(
           header: LocaleStrings.settingsPage.personalizationTitle,
           children: [
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-              leading: Icon(CommunityMaterialIcons.theme_light_dark),
+            SettingsTile(
+              icon: Icon(OMIcons.brightnessMedium),
               title: Text(LocaleStrings.settingsPage.personalizationThemeMode),
-              trailing: DropdownButton(
-                items: [
-                  DropdownMenuItem(
-                    child: Text(LocaleStrings
-                        .settingsPage.personalizationThemeModeSystem),
-                    value: ThemeMode.system,
-                  ),
-                  DropdownMenuItem(
-                    child: Text(LocaleStrings
-                        .settingsPage.personalizationThemeModeLight),
-                    value: ThemeMode.light,
-                  ),
-                  DropdownMenuItem(
-                    child: Text(LocaleStrings
-                        .settingsPage.personalizationThemeModeDark),
-                    value: ThemeMode.dark,
-                  ),
-                ],
-                onChanged: (value) => prefs.themeMode = value,
-                value: prefs.themeMode,
-              ),
+              onTap: () {
+                showDropdownSheet(
+                  context: context,
+                  itemBuilder: (context, index) {
+                    bool selected = prefs.themeMode == ThemeMode.values[index];
+
+                    return dropDownTile(
+                      selected: selected,
+                      title: Text(
+                        getThemeModeName(ThemeMode.values[index]),
+                      ),
+                      onTap: () {
+                        prefs.themeMode = ThemeMode.values[index];
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                  itemCount: ThemeMode.values.length,
+                );
+              },
+              subtitle: Text(getThemeModeName(prefs.themeMode)),
             ),
-            SwitchListTile(
+            SettingsTile.withSwitch(
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseAmoled),
-              secondary: Icon(CommunityMaterialIcons.brightness_6),
+              icon: Icon(OMIcons.brightness2),
               activeColor: Theme.of(context).accentColor,
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
-            SwitchListTile(
+            SettingsTile.withSwitch(
               value: !deviceInfo.canUseSystemAccent
                   ? false
                   : !prefs.useCustomAccent,
@@ -216,16 +203,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   ? null
                   : (value) => prefs.useCustomAccent = !value,
               title: Text(
-                  LocaleStrings.settingsPage.personalizationUseCustomAccent),
-              secondary: Icon(OMIcons.colorLens),
+                LocaleStrings.settingsPage.personalizationUseCustomAccent,
+              ),
+              icon: Icon(OMIcons.colorLens),
               activeColor: Theme.of(context).accentColor,
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
-            ListTile(
-              leading: Icon(OMIcons.colorize),
-              title:
-                  Text(LocaleStrings.settingsPage.personalizationCustomAccent),
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+            SettingsTile(
+              title: Text(
+                LocaleStrings.settingsPage.personalizationCustomAccent,
+              ),
+              icon: Icon(OMIcons.colorize),
               enabled: kIsWeb ? true : prefs.useCustomAccent,
               trailing: AnimatedOpacity(
                 opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
@@ -257,45 +244,52 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
             ),
-            SwitchListTile(
+            SettingsTile.withSwitch(
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
-              secondary: Icon(CommunityMaterialIcons.view_dashboard_outline),
+              icon: Icon(CommunityMaterialIcons.view_dashboard_outline),
               activeColor: Theme.of(context).accentColor,
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-              leading: Icon(Icons.translate),
+            SettingsTile(
+              icon: Icon(Icons.translate),
               title: Text(LocaleStrings.settingsPage.personalizationLocale),
-              trailing: DropdownButton(
-                items: List.generate(
-                  context.supportedLocales.length,
-                  (index) {
+              onTap: () {
+                showDropdownSheet(
+                  context: context,
+                  scrollable: true,
+                  itemBuilder: (context, index) {
                     Locale locale = context.supportedLocales[index];
+                    String localizedName = firstLetterToUppercase(
+                      LocaleNames.of(context).nameOf(locale.languageCode),
+                    );
+                    String nativeName = firstLetterToUppercase(
+                      LocaleNamesLocalizationsDelegate
+                          .nativeLocaleNames[locale.languageCode],
+                    );
+                    bool selected = context.locale == locale;
 
-                    return DropdownMenuItem(
-                      child: Text(
-                        firstLetterToUppercase(
-                          LocaleNamesLocalizationsDelegate
-                              .nativeLocaleNames[locale.languageCode],
-                        ),
-                      ),
-                      value: locale,
+                    return dropDownTile(
+                      title: Text(localizedName),
+                      subtitle: Text(nativeName),
+                      selected: selected,
+                      onTap: () {
+                        context.locale = locale;
+                        Navigator.pop(context);
+                      },
                     );
                   },
-                ),
-                onChanged: (value) => context.locale = value,
-                value: context.locale,
-              ),
+                  itemCount: context.supportedLocales.length,
+                );
+              },
+              subtitle: Text(currentLocaleName),
             ),
           ],
         ),
         SettingsCategory(
           header: LocaleStrings.settingsPage.privacyTitle,
           children: [
-            SwitchListTile(
+            SettingsTile.withSwitch(
               value: prefs.masterPass != "",
               onChanged: (value) async {
                 if (prefs.masterPass == "") {
@@ -323,16 +317,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
-              secondary: Icon(OMIcons.vpnKey),
+              icon: Icon(OMIcons.vpnKey),
               title: Text(LocaleStrings.settingsPage.privacyUseMasterPass),
               activeColor: Theme.of(context).accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
             ),
-            ListTile(
-              leading: Icon(CommunityMaterialIcons.form_textbox_password),
+            SettingsTile(
+              icon: Icon(CommunityMaterialIcons.form_textbox_password),
               title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
-              contentPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
               enabled: prefs.masterPass != "",
               onTap: () async {
                 bool confirm =
@@ -361,7 +353,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 leading: Icon(CommunityMaterialIcons.arrow_right),
                 title: Text(buttonAction),
-                contentPadding: EdgeInsets.symmetric(horizontal: 32),
                 onTap: () {
                   Navigator.pop(context, true);
                 },
@@ -370,6 +361,63 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ) ??
         false;
+  }
+
+  Future<dynamic> showDropdownSheet({
+    @required BuildContext context,
+    @required IndexedWidgetBuilder itemBuilder,
+    int itemCount,
+    bool scrollable = false,
+  }) async {
+    final list = ListView.builder(
+      shrinkWrap: true,
+      physics: scrollable ? null : NeverScrollableScrollPhysics(),
+      itemBuilder: itemBuilder,
+      itemCount: itemCount,
+    );
+
+    return await Utils.showNotesModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.shortestSide,
+        ),
+        child: scrollable
+            ? Scrollbar(
+                child: list,
+              )
+            : list,
+      ),
+    );
+  }
+
+  Widget dropDownTile({
+    @required Widget title,
+    Widget subtitle,
+    @required bool selected,
+    VoidCallback onTap,
+  }) {
+    return ListTile(
+      selected: selected,
+      contentPadding: EdgeInsets.symmetric(horizontal: 24),
+      title: title,
+      subtitle: subtitle,
+      trailing: selected ? Icon(Icons.check) : null,
+      onTap: onTap,
+    );
+  }
+
+  String getThemeModeName(ThemeMode themeMode) {
+    switch (themeMode) {
+      case ThemeMode.light:
+        return LocaleStrings.settingsPage.personalizationThemeModeLight;
+      case ThemeMode.dark:
+        return LocaleStrings.settingsPage.personalizationThemeModeDark;
+      case ThemeMode.system:
+      default:
+        return LocaleStrings.settingsPage.personalizationThemeModeSystem;
+    }
   }
 
   Future<dynamic> showPassChallengeSheet(BuildContext context,
@@ -394,5 +442,32 @@ class _SettingsPageState extends State<SettingsPage> {
     String restOfTheString = origin.substring(1);
 
     return firstLetter.toUpperCase() + restOfTheString;
+  }
+
+  List<int> get logEntryValues => [
+        LogEntry.VERBOSE,
+        LogEntry.DEBUG,
+        LogEntry.INFO,
+        LogEntry.WARN,
+        LogEntry.ERROR,
+        LogEntry.WTF,
+      ];
+
+  String getLogEntryName(int entry) {
+    switch (entry) {
+      case LogEntry.DEBUG:
+        return "Debug";
+      case LogEntry.INFO:
+        return "Info";
+      case LogEntry.WARN:
+        return "Warn";
+      case LogEntry.ERROR:
+        return "Error";
+      case LogEntry.WTF:
+        return "WTF";
+      case LogEntry.VERBOSE:
+      default:
+        return "Verbose";
+    }
   }
 }

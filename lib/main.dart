@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
@@ -112,7 +113,10 @@ class _PotatoNotesState extends State<PotatoNotes> {
             theme: themes.light,
             darkTheme: prefs.useAmoled ? themes.black : themes.dark,
             supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
+            localizationsDelegates: [
+              ...context.localizationDelegates,
+              LocaleNamesLocalizationsDelegate(),
+            ],
             locale: context.locale,
             builder: (context, child) {
               if (appInfo.quickActions == null && !kIsWeb) {
