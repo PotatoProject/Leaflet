@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/account_controller.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 
 class Preferences extends ChangeNotifier {
@@ -40,7 +38,8 @@ class Preferences extends ChangeNotifier {
   bool get useCustomAccent => _useCustomAccent;
   bool get welcomePageSeen => _welcomePageSeen;
   String get apiUrl => _apiUrl;
-  Future<String> get token async => await getToken();
+  String get accessToken => _accessToken;
+  String get refreshToken => _refreshToken;
   String get username => _username;
   String get email => _email;
   int get logLevel => _logLevel;
@@ -161,21 +160,19 @@ class Preferences extends ChangeNotifier {
   }
 
   Future<String> getToken() async {
+    bool status = true;
     if (_accessToken == null ||
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(_accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
-      Response response = await post(
-        "$apiUrl/api/users/refresh",
-        body: "{\"token\": \"$_refreshToken\"}",
-      );
-      if (response.statusCode == 200) {
-        _accessToken = json.decode(response.body)["token"];
-      } else {
-        print(response.body);
-      }
+      final response = await AccountController.refreshToken();
+      status = response.status;
     }
 
-    return _accessToken;
+    if (status) {
+      return _accessToken;
+    } else {
+      throw "Error while refreshing token";
+    }
   }
 }
