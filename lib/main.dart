@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
+import 'package:potato_notes/internal/android_xml_asset_loader.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
@@ -16,7 +17,6 @@ import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/internal/android_xml_asset_loader.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -80,7 +80,6 @@ class _PotatoNotesState extends State<PotatoNotes> {
   Widget build(BuildContext context) {
     return Consumer((context, read) {
       _initProviders(read);
-
       Loggy.generateAppLabel();
       Loggy.setLogLevel(prefs.logLevel);
 

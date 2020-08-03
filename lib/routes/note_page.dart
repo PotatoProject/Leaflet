@@ -101,19 +101,11 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    helper.saveNote(note);
+    helper.saveNote(Utils.markNoteChanged(note));
   }
 
-  Future<void> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
-
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
-
-    if (note.id == null) note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
+  void generateId() {
+    if (note.id == null) note = note.copyWith(id: Utils.generateId());
   }
 
   @override
@@ -735,7 +727,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void toggleList() async {
-    await generateId();
+    generateId();
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
@@ -745,7 +737,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addDrawing() async {
-    await generateId();
+    generateId();
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),

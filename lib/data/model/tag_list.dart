@@ -7,7 +7,7 @@ part 'tag_list.g.dart';
 
 @JsonSerializable()
 class TagList {
-  List<int> tagIds;
+  List<String> tagIds;
 
   TagList(this.tagIds);
 

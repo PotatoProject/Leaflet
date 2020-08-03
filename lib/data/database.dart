@@ -9,10 +9,11 @@ import 'package:potato_notes/data/model/tag_list.dart';
 part 'database.g.dart';
 
 class Notes extends Table {
-  IntColumn get id => integer()();
+  TextColumn get id => text()();
   TextColumn get title => text().nullable()();
   TextColumn get content => text().nullable()();
-  TextColumn get styleJson => text().map(const ContentStyleConverter()).nullable()();
+  TextColumn get styleJson =>
+      text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
   DateTimeColumn get creationDate =>
       dateTime().withDefault(Constant(DateTime.now()))();

@@ -226,7 +226,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
   void handlePinNotes(BuildContext context, Note note) {
     appInfo.notifications.show(
-      note.id,
+      note.creationDate.millisecondsSinceEpoch,
       note.title.isEmpty
           ? LocaleStrings.common.notificationDefaultTitle
           : note.title,
@@ -244,9 +244,10 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       payload: json.encode(
         NotificationPayload(
-          action: NotificationAction.PIN,
-          id: note.id,
-        ).toJson(),
+                action: NotificationAction.PIN,
+                id: note.creationDate.millisecondsSinceEpoch,
+                noteId: note.id)
+            .toJson(),
       ),
     );
   }

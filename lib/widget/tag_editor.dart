@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
-import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/tag_model.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class TagEditor extends StatefulWidget {
   final TagModel tag;
@@ -28,15 +28,7 @@ class _NewTagState extends State<TagEditor> {
   @override
   void initState() {
     if (widget.tag == null) {
-      TagModel lastTag;
-      List<TagModel> tags = prefs.tags ?? [];
-      tags.sort((a, b) => a.id.compareTo(b.id));
-
-      if (tags.isNotEmpty) {
-        lastTag = tags.last;
-      }
-
-      tag.id = (lastTag?.id ?? 0) + 1;
+      tag.id = Utils.generateId();
       tag.name = widget.initialInput;
     } else
       tag = widget.tag;

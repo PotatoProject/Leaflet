@@ -4,7 +4,7 @@ part 'tag_model.g.dart';
 
 @JsonSerializable()
 class TagModel {
-  int id;
+  String id;
   String name;
   int color = 0;
 

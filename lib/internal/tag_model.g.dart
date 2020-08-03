@@ -8,7 +8,7 @@ part of 'tag_model.dart';
 
 TagModel _$TagModelFromJson(Map<String, dynamic> json) {
   return TagModel(
-    id: json['id'] as int,
+    id: json['id'] as String,
     name: json['name'] as String,
     color: json['color'] as int,
   );

@@ -11,14 +11,16 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/account_controller.dart';
+import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -28,11 +30,11 @@ import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
-import 'package:potato_notes/widget/tag_editor.dart';
+import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
-import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
+import 'package:potato_notes/widget/tag_editor.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -192,6 +194,7 @@ class _MainPageState extends State<MainPage>
                       itemCount: notes.length,
                       controller: scrollController,
                       padding: padding,
+                      physics: const AlwaysScrollableScrollPhysics(),
                     );
                   } else {
                     child = ListView.builder(
@@ -199,6 +202,7 @@ class _MainPageState extends State<MainPage>
                       itemCount: notes.length,
                       controller: scrollController,
                       padding: padding,
+                      physics: const AlwaysScrollableScrollPhysics(),
                     );
                   }
                 } else {
@@ -209,12 +213,16 @@ class _MainPageState extends State<MainPage>
                   );
                 }
 
-                return FadeScaleTransition(
-                  animation: fade,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: child,
+                return RefreshIndicator(
+                  child: FadeScaleTransition(
+                    animation: fade,
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: child,
+                    ),
                   ),
+                  onRefresh: () => sync(),
+                  displacement: MediaQuery.of(context).padding.top,
                 );
               },
             ),
@@ -579,11 +587,8 @@ class _MainPageState extends State<MainPage>
         IconButton(
           icon: Icon(OMIcons.person),
           tooltip: LocaleStrings.mainPage.account,
-          onPressed: () => scaffoldKey.currentState.showSnackBar(
-            SnackBar(
-              content: Text("Not yet..."),
-            ),
-          ),
+          onPressed: () =>
+              {AccountController.login("broodrooster", "broodrooster")},
         ),
         Visibility(
           visible: mode == ReturnMode.ARCHIVE || mode == ReturnMode.TRASH,
@@ -698,4 +703,8 @@ class _MainPageState extends State<MainPage>
           ),
         ),
       ];
+
+  Future<void> sync() async {
+    await SyncRoutine().syncNotes();
+  }
 }

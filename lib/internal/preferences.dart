@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/internal/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
-import 'package:potato_notes/internal/account_controller.dart';
 import 'package:potato_notes/internal/tag_model.dart';
 
 class Preferences extends ChangeNotifier {
@@ -29,6 +29,7 @@ class Preferences extends ChangeNotifier {
   String _email;
   int _logLevel = LogEntry.VERBOSE;
   List<TagModel> _tags = [];
+  int _lastUpdated;
 
   String get masterPass => _masterPass;
   ThemeMode get themeMode => _themeMode;
@@ -44,6 +45,7 @@ class Preferences extends ChangeNotifier {
   String get email => _email;
   int get logLevel => _logLevel;
   List<TagModel> get tags => _tags;
+  int get lastUpdated => _lastUpdated;
 
   set masterPass(String value) {
     _masterPass = value;
@@ -135,6 +137,12 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
+  set lastUpdated(int value) {
+    _lastUpdated = value;
+    prefs.setLastUpdated(value);
+    notifyListeners();
+  }
+
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
@@ -157,6 +165,7 @@ class Preferences extends ChangeNotifier {
     email = await prefs.getEmail();
     logLevel = await prefs.getLogLevel();
     tags = await prefs.getTags();
+    lastUpdated = await prefs.getLastUpdated();
   }
 
   Future<String> getToken() async {
@@ -174,5 +183,9 @@ class Preferences extends ChangeNotifier {
     } else {
       throw "Error while refreshing token";
     }
+  }
+
+  void triggerRefresh() {
+    notifyListeners();
   }
 }

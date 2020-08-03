@@ -14,24 +14,45 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
       case ReturnMode.TAG:
       case ReturnMode.NORMAL:
         return (select(notes)
-              ..where((table) => table.archived.not() & table.deleted.not()))
+              ..where((table) =>
+                  table.archived.not() &
+                  table.deleted.not() &
+                  table.id.contains("-synced").not()))
             .get();
       case ReturnMode.ARCHIVE:
         return (select(notes)
-              ..where((table) => table.archived & table.deleted.not()))
+              ..where((table) =>
+                  table.archived &
+                  table.deleted.not() &
+                  table.id.contains("-synced").not()))
             .get();
       case ReturnMode.TRASH:
         return (select(notes)
-              ..where((table) => table.archived.not() & table.deleted))
+              ..where((table) =>
+                  table.archived.not() &
+                  table.deleted &
+                  table.id.contains("-synced").not()))
+            .get();
+      case ReturnMode.SYNCED:
+        return (select(notes)..where((table) => table.id.contains("-synced")))
+            .get();
+      case ReturnMode.LOCAL:
+        return (select(notes)
+              ..where((table) => table.id.contains("-synced").not()))
             .get();
       case ReturnMode.FAVOURITES:
         return (select(notes)
               ..where((table) =>
-                  table.starred & table.archived.not() & table.deleted.not()))
+                  table.starred &
+                  table.archived.not() &
+                  table.deleted.not() &
+                  table.id.contains("-synced").not()))
             .get();
       case ReturnMode.ALL:
       default:
-        return select(notes).get();
+        return (select(notes)
+              ..where((table) => table.id.contains("-synced").not()))
+            .get();
     }
   }
 
@@ -41,24 +62,45 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     switch (mode) {
       case ReturnMode.TAG:
       case ReturnMode.ALL:
-        selectQuery = select(notes);
+        selectQuery = select(notes)
+          ..where((table) => table.id.contains("-synced").not());
         break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)
-          ..where((table) => table.archived.not() & table.deleted.not());
+          ..where((table) =>
+              table.archived.not() &
+              table.deleted.not() &
+              table.id.contains("-synced").not());
         break;
       case ReturnMode.ARCHIVE:
         selectQuery = select(notes)
-          ..where((table) => table.archived & table.deleted.not());
+          ..where((table) =>
+              table.archived &
+              table.deleted.not() &
+              table.id.contains("-synced").not());
         break;
       case ReturnMode.FAVOURITES:
         selectQuery = select(notes)
           ..where((table) =>
-              table.starred & table.archived.not() & table.deleted.not());
+              table.starred &
+              table.archived.not() &
+              table.deleted.not() &
+              table.id.contains("-synced").not());
         break;
       case ReturnMode.TRASH:
         selectQuery = select(notes)
-          ..where((table) => table.archived.not() & table.deleted);
+          ..where((table) =>
+              table.archived.not() &
+              table.deleted &
+              table.id.contains("-synced").not());
+        break;
+      case ReturnMode.SYNCED:
+        selectQuery = select(notes)
+          ..where((table) => table.id.contains("-synced"));
+        break;
+      case ReturnMode.LOCAL:
+        selectQuery = select(notes)
+          ..where((table) => table.id.contains("-synced").not());
         break;
     }
 
@@ -70,10 +112,15 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future saveNote(Note note) =>
-      into(notes).insert(note, mode: InsertMode.replace);
+  Future saveNote(Note note) {
+    print("The note id is: " + note.id);
+    return into(notes).insert(note, mode: InsertMode.replace);
+  }
 
-  Future deleteNote(Note note) => delete(notes).delete(note);
+  Future deleteNote(Note note) {
+    print("The note id to delete: " + note.id);
+    return delete(notes).delete(note);
+  }
 }
 
 class SearchQuery {
@@ -83,6 +130,7 @@ class SearchQuery {
   DateFilterMode dateMode;
 
   int get color => _color ?? 0;
+
   set color(int value) {
     if (value == -1) {
       _color = 0;
@@ -105,11 +153,4 @@ enum DateFilterMode {
   ONLY,
 }
 
-enum ReturnMode {
-  ALL,
-  NORMAL,
-  ARCHIVE,
-  TRASH,
-  FAVOURITES,
-  TAG,
-}
+enum ReturnMode { ALL, NORMAL, ARCHIVE, TRASH, FAVOURITES, TAG, SYNCED, LOCAL }

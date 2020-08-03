@@ -19,6 +19,8 @@ class SharedPrefs {
   }
 
   void setMasterPass(String value) async {
+    //TODO Only remove comment chars after master_pass is hashed before saving
+    //addChangedKey("master_pass");
     await prefs.setString("master_pass", value);
   }
 
@@ -37,6 +39,7 @@ class SharedPrefs {
   }
 
   void setThemeMode(ThemeMode value) async {
+    addChangedKey("theme_mode");
     int newValue;
     switch (value) {
       case ThemeMode.system:
@@ -61,6 +64,7 @@ class SharedPrefs {
   }
 
   void setCustomAccent(Color value) async {
+    addChangedKey("custom_accent");
     await prefs.setInt("custom_accent", value?.value);
   }
 
@@ -69,6 +73,7 @@ class SharedPrefs {
   }
 
   void setUseAmoled(bool value) async {
+    addChangedKey("use_amoled");
     await prefs.setBool("use_amoled", value);
   }
 
@@ -77,6 +82,7 @@ class SharedPrefs {
   }
 
   void setUseGrid(bool value) async {
+    addChangedKey("use_grid");
     await prefs.setBool("use_grid", value);
   }
 
@@ -85,6 +91,7 @@ class SharedPrefs {
   }
 
   void setUseCustomAccent(bool value) async {
+    addChangedKey("use_custom_accent");
     await prefs.setBool("use_custom_accent", value);
   }
 
@@ -97,7 +104,7 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    return prefs.getString("api_url") ?? "https://sync.potatoproject.co";
+    return prefs.getString("api_url") ?? "http://192.168.178.89/api/v2";
   }
 
   void setApiUrl(String value) async {
@@ -167,5 +174,29 @@ class SharedPrefs {
         ),
       ),
     );
+  }
+
+  Future<int> getLastUpdated() async {
+    return prefs.getInt("last_updated") ?? 0;
+  }
+
+  void setLastUpdated(int value) async {
+    await prefs.setInt("last_updated", value);
+  }
+
+  void addChangedKey(String key) async {
+    var changedKeys = prefs.getStringList("updated_keys") ?? new List<String>();
+    if (!changedKeys.contains(key)) {
+      changedKeys.add(key);
+    }
+    await prefs.setStringList("updated_keys", changedKeys);
+  }
+
+  void clearChangedKeys() async {
+    await prefs.setStringList("updated_keys", null);
+  }
+
+  List<String> getChangedKeys() {
+    return prefs.getStringList("updated_keys") ?? new List<String>();
   }
 }

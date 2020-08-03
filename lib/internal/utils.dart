@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -18,6 +20,8 @@ import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+import 'package:recase/recase.dart';
+import 'package:uuid/uuid.dart';
 
 import 'locale_strings.dart';
 
@@ -170,16 +174,8 @@ class Utils {
     );
   }
 
-  static Future<int> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
-
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
-
-    return (lastNote?.id ?? 0) + 1;
+  static String generateId() {
+    return Uuid().v4();
   }
 
   static Note get emptyNote => Note(
@@ -252,6 +248,11 @@ class Utils {
 
   static get defaultAccent => Color(0xFFFF9100);
 
+  // Marks the note as changed for the sync systems
+  static Note markNoteChanged(Note note) {
+    return note.copyWith(synced: false, lastModifyDate: DateTime.now());
+  }
+
   static Future<void> deleteNotes({
     GlobalKey<ScaffoldState> scaffoldKey,
     @required List<Note> notes,
@@ -260,9 +261,11 @@ class Utils {
   }) async {
     for (Note note in notes) {
       if (archive) {
-        await helper.saveNote(note.copyWith(deleted: false, archived: true));
+        await helper.saveNote(
+            markNoteChanged(note).copyWith(deleted: false, archived: true));
       } else {
-        await helper.saveNote(note.copyWith(deleted: true, archived: false));
+        await helper.saveNote(
+            markNoteChanged(note).copyWith(deleted: true, archived: false));
       }
     }
 
@@ -292,7 +295,8 @@ class Utils {
     bool archive = false,
   }) async {
     for (Note note in notes) {
-      await helper.saveNote(note.copyWith(deleted: false, archived: false));
+      await helper.saveNote(
+          markNoteChanged(note).copyWith(deleted: false, archived: false));
     }
 
     List<Note> backupNotes = List.from(notes);
@@ -426,5 +430,106 @@ class Utils {
         }
       }
     }
+  }
+
+  static Map<String, dynamic> toSyncMap(Note note) {
+    var originalMap = note.toJson();
+    Map<String, dynamic> newMap = Map();
+    originalMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).snakeCase;
+      switch (key) {
+        case "styleJson":
+          {
+            var style = value as ContentStyle;
+            newValue = json.encode(style.data);
+            break;
+          }
+        case "images":
+          {
+            var images = value as ImageList;
+            var imageMap =
+                images.data.map((id, uri) => MapEntry(id, uri.toString()));
+            newValue = json.encode(imageMap);
+            break;
+          }
+        case "listContent":
+          {
+            var listContent = value as ListContent;
+            newValue = json.encode(listContent.content);
+            break;
+          }
+        case "reminders":
+          {
+            var reminders = value as ReminderList;
+            newValue = json.encode(reminders.reminders);
+            break;
+          }
+        case "tags":
+          {
+            var tags = value as TagList;
+            newValue = json.encode(tags.tagIds);
+            break;
+          }
+      }
+      if (key == "id") {
+        newKey = "note_id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return newMap;
+  }
+
+  static Note fromSyncMap(Map<String, dynamic> syncMap) {
+    Map<String, dynamic> newMap = Map();
+    syncMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).camelCase;
+      switch (key) {
+        case "style_json":
+          {
+            var map = json.decode(value);
+            List<int> data = List<int>.from(map.map((i) => i as int)).toList();
+            newValue = new ContentStyle(data);
+            break;
+          }
+        case "images":
+          {
+            Map map = json.decode(value);
+            Map<String, Uri> images =
+                map.map((text, uri) => MapEntry(text, Uri.parse(text)));
+            newValue = new ImageList(images);
+            break;
+          }
+        case "list_content":
+          {
+            var map = json.decode(value);
+            List<ListItem> content =
+                List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
+                    .toList();
+            newValue = new ListContent(content);
+            break;
+          }
+        case "reminders":
+          {
+            var map = json.decode(value);
+            List<DateTime> reminders =
+                List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
+            newValue = new ReminderList(reminders);
+            break;
+          }
+        case "tags":
+          {
+            var map = json.decode(value);
+            List<String> tagIds = List<String>.from(map).toList();
+            newValue = new TagList(tagIds);
+          }
+      }
+      if (key == "note_id") {
+        newKey = "id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return Note.fromJson(newMap);
   }
 }
