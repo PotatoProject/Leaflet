@@ -74,6 +74,7 @@ flutter:
     - assets/locales/pt-BR/
     - assets/locales/ro-RO/
     - assets/locales/ru-RU/
+    - assets/locales/sr-SR/
     - assets/locales/tr-TR/
     - assets/locales/uk-UK/
     - assets/locales/zh-CN/

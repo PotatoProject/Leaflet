@@ -42,6 +42,7 @@ main() async {
           Locale("pt", "BR"),
           Locale("ro", "RO"),
           Locale("ru", "RU"),
+          Locale("sr", "SR"),
           Locale("tr", "TR"),
           Locale("uk", "UK"),
           Locale("zh", "CN"),

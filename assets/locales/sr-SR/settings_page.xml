@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Подешавања</string>
+    <string name="personalization.title">Прилагођавање</string>
+    <string name="personalization.theme_mode">Мод теме</string>
+    <string name="personalization.theme_mode.system">Систем</string>
+    <string name="personalization.theme_mode.light">Светла</string>
+    <string name="personalization.theme_mode.dark">Тамна</string>
+    <string name="personalization.use_amoled">Користи црну тему</string>
+    <string name="personalization.use_custom_accent">Прати системску тему</string>
+    <string name="personalization.custom_accent">Одабери своју тему</string>
+    <string name="personalization.use_grid">Мрежна листа белешки</string>
+    <string name="personalization.locale">Локални језик апликације</string>
+    <string name="privacy.title">Приватност</string>
+    <string name="privacy.use_master_pass">Користи матичну шифру</string>
+    <string name="privacy.use_master_pass.disclaimer">Упозорење: Уколико заборавите шифру, није могуће ресетовати је. Мораћете да деинсталирате апликацију, што ће обрисати све ваше белешке. Молимо вас запишите шифру негде.</string>
+    <string name="privacy.modify_master_pass">Измени матичну шифру</string>
+    <string name="info.title">Инфо</string>
+    <string name="info.about_app">О апликацији PotatoNotes</string>
+    <string name="debug.title">Отклањање грешака</string>
+    <string name="debug.show_setup_screen">Прикажи екран за поставке при следећем укључивању</string>
+    <string name="debug.clear_database">Очисти базу података</string>
+    <string name="debug.migrate_database">Миграција базе података</string>
+    <string name="debug.log_level">Ниво бележења</string>
+</resources>
