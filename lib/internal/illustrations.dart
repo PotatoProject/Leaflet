@@ -107,12 +107,7 @@ class Illustrations {
 
   static Widget quickIllustration(
       BuildContext context, Widget illustration, String text) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-        child: Center(
+    return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -135,8 +130,6 @@ class Illustrations {
                 textAlign: TextAlign.center,
               )
             ],
-          ),
-        ),
       ),
     );
   }

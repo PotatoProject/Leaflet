@@ -206,10 +206,17 @@ class _MainPageState extends State<MainPage>
                     );
                   }
                 } else {
-                  child = Illustrations.quickIllustration(
-                    context,
-                    getInfoOnCurrentMode.key,
-                    getInfoOnCurrentMode.value,
+                  child = SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height),
+                      child: Illustrations.quickIllustration(
+                        context,
+                        getInfoOnCurrentMode.key,
+                        getInfoOnCurrentMode.value,
+                      ),
+                    ),
                   );
                 }
 
