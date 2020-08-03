@@ -11,6 +11,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
@@ -123,24 +124,24 @@ class _PotatoNotesState extends State<PotatoNotes> {
                 appInfo.quickActions = QuickActions();
 
                 appInfo.quickActions.setShortcutItems([
-                  const ShortcutItem(
+                  ShortcutItem(
                     type: 'new_text',
-                    localizedTitle: 'New note',
+                    localizedTitle: LocaleStrings.common.newNote,
                     icon: 'note_shortcut',
                   ),
-                  const ShortcutItem(
+                  ShortcutItem(
                     type: 'new_list',
-                    localizedTitle: 'New list',
+                    localizedTitle: LocaleStrings.common.newList,
                     icon: 'list_shortcut',
                   ),
-                  const ShortcutItem(
+                  ShortcutItem(
                     type: 'new_image',
-                    localizedTitle: 'New image',
+                    localizedTitle: LocaleStrings.common.newImage,
                     icon: 'image_shortcut',
                   ),
-                  const ShortcutItem(
+                  ShortcutItem(
                     type: 'new_drawing',
-                    localizedTitle: 'New drawing',
+                    localizedTitle: LocaleStrings.common.newDrawing,
                     icon: 'drawing_shortcut',
                   ),
                 ]);
