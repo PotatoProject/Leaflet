@@ -1,54 +1,87 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 
-class DrawingBoard extends StatelessWidget {
+class DrawingBoard extends StatefulWidget {
   final Key repaintKey;
   final List<DrawObject> objects;
   final Color color;
   final Uri uri;
-  final Size size;
 
   DrawingBoard({
     this.repaintKey,
     @required this.objects,
     this.color,
     this.uri,
-    @required this.size,
   });
+
+  @override
+  _DrawingBoardState createState() => _DrawingBoardState();
+}
+
+class _DrawingBoardState extends State<DrawingBoard> {
+  Offset offset = Offset.zero;
+
+  @override
+  void initState() {
+    /*widget.controller?.addListener(() {
+      offset = Offset(
+        offset.dx + widget.controller.delta.dx,
+        offset.dy + widget.controller.delta.dy,
+      );
+      setState(() {});
+    });*/
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     ImageProvider image;
 
-    if (uri != null) {
-      String scheme = uri.scheme;
+    if (widget.uri != null) {
+      String scheme = widget.uri.scheme;
 
       if (scheme.startsWith("http")) {
-        image = NetworkImage(uri.toString());
+        image = CachedNetworkImageProvider(widget.uri.toString());
       } else {
-        image = FileImage(File(uri.path));
+        image = FileImage(File(widget.uri.path));
       }
     }
 
+    Completer<ui.Image> completer = Completer<ui.Image>();
+
+    image?.resolve(ImageConfiguration())?.addListener(
+      ImageStreamListener(
+        (image, synchronousCall) {
+          completer.complete(image.image);
+        },
+      ),
+    );
+
     return RepaintBoundary(
-      key: repaintKey,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          image: image != null
-              ? DecorationImage(
-                  image: image,
-                  fit: BoxFit.contain,
-                )
-              : null,
-        ),
-        child: CustomPaint(
-          size: size,
-          foregroundPainter: DrawPainter(objects),
-          isComplex: true,
-        ),
+      key: widget.repaintKey,
+      child: FutureBuilder<ui.Image>(
+        future: completer.future,
+        builder: (context, snapshot) {
+          return CustomPaint(
+            size: snapshot.data != null
+                ? Size(
+                    snapshot.data.width.toDouble(),
+                    snapshot.data.height.toDouble(),
+                  )
+                : Size.zero,
+            painter: DrawPainter(
+              widget.objects,
+              snapshot.data,
+              offset,
+            ),
+            isComplex: true,
+          );
+        },
       ),
     );
   }
@@ -56,11 +89,28 @@ class DrawingBoard extends StatelessWidget {
 
 class DrawPainter extends CustomPainter {
   List<DrawObject> objects;
+  ui.Image image;
+  Offset offset;
 
-  DrawPainter(this.objects);
+  DrawPainter(this.objects, this.image, this.offset);
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
+
+    if (image != null) {
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTWH(0, 0, size.width, size.height),
+        image: image,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        filterQuality: FilterQuality.none,
+      );
+    }
+
     for (int i = 0; i < objects.length; i++) {
       DrawObject object = objects[i];
 

@@ -6,12 +6,15 @@ import 'dart:ui' as ui;
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
+import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/draw_object.dart';
@@ -48,6 +51,7 @@ class _DrawPageState extends State<DrawPage>
   MenuShowReason showReason = MenuShowReason.COLOR_PICKER;
   AnimationController controller;
   bool saved = true;
+  Matrix4 matrix = Matrix4.identity();
 
   String filePath;
 
@@ -202,13 +206,6 @@ class _DrawPageState extends State<DrawPage>
           child: DrawingBoard(
             repaintKey: key,
             objects: objects,
-            size: Size(
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height -
-                  56 -
-                  48 -
-                  MediaQuery.of(context).padding.top,
-            ),
             uri: widget.data != null ? widget.data.value : null,
             color: Colors.grey[50],
           ),
@@ -387,19 +384,19 @@ class _DrawPageState extends State<DrawPage>
     currentIndex = objects.length - 1;
     actionQueueIndex = currentIndex;
 
-    RenderBox box = context.findRenderObject();
-
-    Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
-        details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
+    Offset point = Offset(
+      details.localPosition.dx,
+      details.localPosition.dy,
+    );
 
     setState(() => objects[currentIndex].points.add(point));
   }
 
   void _normalModePanUpdate(details) {
-    RenderBox box = context.findRenderObject();
-
-    Offset point = box.globalToLocal(Offset(details.globalPosition.dx,
-        details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
+    Offset point = Offset(
+      details.localPosition.dx,
+      details.localPosition.dy,
+    );
 
     setState(() => objects[currentIndex].points.add(point));
   }
@@ -407,12 +404,15 @@ class _DrawPageState extends State<DrawPage>
   void _eraserModePan(details) {
     controller.animateTo(0);
     setState(() => saved = false);
-    RenderBox box = context.findRenderObject();
 
     for (int i = 0; i < objects.length; i++) {
       DrawObject object = objects[i];
-      Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
-          details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
+      Offset touchPoint = Offset(
+        details.localPosition.dx,
+        details.localPosition.dy,
+      );
+      //Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
+      //    details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
       if (object.points.length > 1) {
         for (int j = 1; j < object.points.length - 1; j++) {
