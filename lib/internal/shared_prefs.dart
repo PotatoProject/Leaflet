@@ -104,7 +104,7 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    return prefs.getString("api_url") ?? "http://192.168.178.89/api/v2";
+    return prefs.getString("api_url") ?? "http://stats.corbellum.nl/api/v2";
   }
 
   void setApiUrl(String value) async {

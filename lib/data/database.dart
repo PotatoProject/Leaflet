@@ -33,7 +33,7 @@ class Notes extends Table {
   BoolColumn get synced => boolean().withDefault(Constant(false))();
 
   @override
-  Set<Column> get primaryKey => {id, synced};
+  Set<Column> get primaryKey => {id};
 }
 
 @UseMoor(tables: [Notes], daos: [NoteHelper])

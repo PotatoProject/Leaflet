@@ -473,7 +473,7 @@ class _MainPageState extends State<MainPage>
         ),
       );
 
-      helper.saveNote(note);
+      helper.saveNote(Utils.markNoteChanged(note));
     }
   }
 
@@ -669,7 +669,7 @@ class _MainPageState extends State<MainPage>
                 List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
                   note.tags.tagIds.remove(prefs.tags[tagIndex].id);
-                  await helper.saveNote(note);
+                  await helper.saveNote(Utils.markNoteChanged(note));
                 }
                 await controller.animateBack(0);
                 int deletedTagIndex = tagIndex;

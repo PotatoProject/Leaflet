@@ -18,6 +18,7 @@ import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:spicy_components/spicy_components.dart';
 
@@ -175,7 +176,7 @@ class _DrawPageState extends State<DrawPage>
                     }
 
                     widget.note.images.data[drawing] = Uri.file(drawing);
-                    helper.saveNote(widget.note);
+                    helper.saveNote(Utils.markNoteChanged(widget.note));
 
                     imageCache.clear();
                     imageCache.clearLiveImages();

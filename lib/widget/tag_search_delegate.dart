@@ -59,7 +59,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   }
                 });
 
-                helper.saveNote(note);
+                helper.saveNote(Utils.markNoteChanged(note));
               },
             ),
           ),

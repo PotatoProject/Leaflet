@@ -109,7 +109,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
               widget.note.images.data
                   .remove(widget.note.images.uris[currentPage].path);
 
-              helper.saveNote(widget.note);
+              helper.saveNote(Utils.markNoteChanged(widget.note));
 
               Navigator.pop(context);
             },

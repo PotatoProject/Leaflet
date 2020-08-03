@@ -127,7 +127,7 @@ class SyncRoutine {
 
   Future<bool> sendNoteUpdates() async {
     // Send the post requests to add new notes
-    addedNotes.forEach((note) async {
+    for (Note note in addedNotes) {
       try {
         await NoteController.add(note);
         await saveSynced(note);
@@ -136,7 +136,7 @@ class SyncRoutine {
         Loggy.e(message: e.toString());
         throw ("Failed to add notes: " + e.toString());
       }
-    });
+    }
     // Get list of notes which should be deleted on the client since they are deleted on the remote server
     try {
       var deletedIdList = await NoteController.listDeleted(
