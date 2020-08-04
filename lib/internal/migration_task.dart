@@ -65,7 +65,7 @@ class MigrationTask {
       }
 
       Note note = Note(
-        id: await Utils.generateId(),
+        id: Utils.generateId(),
         title: v1Note.title ?? "",
         content: v1Note.content ?? "",
         starred: v1Note.isStarred == 1,

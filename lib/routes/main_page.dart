@@ -11,7 +11,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/account_controller.dart';
+import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -464,7 +464,7 @@ class _MainPageState extends State<MainPage>
       note.images.data[image.path] = File(image.path).uri;
 
       if (shouldPop) Navigator.pop(context);
-      note = note.copyWith(id: await Utils.generateId());
+      note = note.copyWith(id: Utils.generateId());
 
       Utils.showSecondaryRoute(
         context,

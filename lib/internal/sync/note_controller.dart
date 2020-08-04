@@ -11,7 +11,6 @@ import 'package:potato_notes/internal/utils.dart';
 class NoteController {
   static const NOTES_PREFIX = "/notes";
 
-  @override
   static Future<String> add(Note note) async {
     try {
       String token = await prefs.getToken();
@@ -32,7 +31,6 @@ class NoteController {
     }
   }
 
-  @override
   static Future<String> delete(String id) async {
     try {
       String token = await prefs.getToken();
@@ -52,7 +50,6 @@ class NoteController {
     }
   }
 
-  @override
   static Future<String> deleteAll() async {
     try {
       String token = await prefs.getToken();
@@ -72,7 +69,6 @@ class NoteController {
     }
   }
 
-  @override
   static Future<List<Note>> list(int lastUpdated) async {
     List<Note> notes = List();
     try {
@@ -100,7 +96,6 @@ class NoteController {
     }
   }
 
-  @override
   static Future<String> update(
       String id, Map<String, dynamic> noteDelta) async {
     try {
@@ -123,7 +118,6 @@ class NoteController {
     }
   }
 
-  @override
   static Future<List<String>> listDeleted(List<String> localIdList) async {
     try {
       String idListJson = jsonEncode(localIdList);
@@ -151,17 +145,11 @@ class NoteController {
   static String handleResponse(Response response) {
     switch (response.statusCode) {
       case 401:
-        {
-          throw ("Token is not valid");
-        }
+        throw ("Token is not valid");
       case 200:
-        {
-          return response.body;
-        }
+        return response.body;
       default:
-        {
-          throw (response.body);
-        }
+        throw (response.body);
     }
   }
 }
