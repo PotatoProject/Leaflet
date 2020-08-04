@@ -281,7 +281,7 @@ class _MainPageState extends State<MainPage>
               builder: (context) => TagEditor(
                 onSave: (tag) {
                   Navigator.pop(context);
-                  prefs.tags = prefs.tags..add(tag);
+                  tagHelper.saveTag(tag);
                 },
               ),
             );
@@ -683,7 +683,7 @@ class _MainPageState extends State<MainPage>
                   }
                 });
                 controller.animateTo(1);
-                prefs.tags = prefs.tags..removeAt(deletedTagIndex);
+                tagHelper.deleteTag(prefs.tags[deletedTagIndex]);
               }
             },
           ),
@@ -700,9 +700,7 @@ class _MainPageState extends State<MainPage>
                   tag: prefs.tags[tagIndex],
                   onSave: (tag) {
                     Navigator.pop(context);
-                    prefs.tags = prefs.tags
-                      ..removeAt(tagIndex)
-                      ..insert(tagIndex, tag);
+                    tagHelper.saveTag(tag);
                   },
                 ),
               );

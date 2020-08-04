@@ -1,5 +1,6 @@
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -36,7 +37,16 @@ class Notes extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@UseMoor(tables: [Notes], daos: [NoteHelper])
+class Tags extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  IntColumn get color => integer().withDefault(Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@UseMoor(tables: [Notes, Tags], daos: [NoteHelper, TagHelper])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 

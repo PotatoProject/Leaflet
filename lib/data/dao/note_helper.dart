@@ -1,3 +1,4 @@
+import 'package:loggy/loggy.dart';
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
 
@@ -112,13 +113,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         .watch();
   }
 
-  Future saveNote(Note note) {
-    print("The note id is: " + note.id);
+  Future<void> saveNote(Note note) {
+    Loggy.d(message: "The note id is: " + note.id);
     return into(notes).insert(note, mode: InsertMode.replace);
   }
 
-  Future deleteNote(Note note) {
-    print("The note id to delete: " + note.id);
+  Future<void> deleteNote(Note note) {
+    Loggy.d(message: "The note id to delete: " + note.id);
     return delete(notes).delete(note);
   }
 }

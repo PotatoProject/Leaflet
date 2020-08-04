@@ -4,7 +4,6 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
@@ -21,7 +20,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<TagModel> filteredTags;
+    List<Tag> filteredTags;
 
     if (query.isEmpty) {
       filteredTags = prefs.tags;
@@ -75,7 +74,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   initialInput: query,
                   onSave: (tag) {
                     Navigator.pop(context);
-                    prefs.tags = prefs.tags..add(tag);
+                    tagHelper.saveTag(tag);
                   },
                 ),
               ),

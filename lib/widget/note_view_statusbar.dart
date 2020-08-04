@@ -2,7 +2,6 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 
 class NoteViewStatusbar extends StatelessWidget {
@@ -38,7 +37,7 @@ class NoteViewStatusbar extends StatelessWidget {
                   note.tags.tagIds.length > 3 ? 4 : note.tags.tagIds.length,
                   (index) {
                     if (index != 3) {
-                      TagModel tag;
+                      Tag tag;
 
                       try {
                         tag = prefs.tags.firstWhere(

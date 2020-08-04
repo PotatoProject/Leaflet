@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -149,31 +146,6 @@ class SharedPrefs {
 
   void setLogLevel(int value) async {
     await prefs.setInt("log_level", value);
-  }
-
-  Future<List<TagModel>> getTags() async {
-    List<String> encodedList = prefs.getStringList("tags");
-
-    if (encodedList == null) return [];
-
-    return List.generate(
-      encodedList.length,
-      (index) => TagModel.fromJson(
-        json.decode(encodedList[index]),
-      ),
-    );
-  }
-
-  void setTags(List<TagModel> value) async {
-    await prefs.setStringList(
-      "tags",
-      List.generate(
-        value.length,
-        (index) => json.encode(
-          value[index].toJson(),
-        ),
-      ),
-    );
   }
 
   Future<int> getLastUpdated() async {

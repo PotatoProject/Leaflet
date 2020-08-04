@@ -26,6 +26,7 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   db = AppDatabase(constructDb());
   helper = db.noteHelper;
+  tagHelper = db.tagHelper;
   runApp(
     ProviderScope(
       child: EasyLocalization(

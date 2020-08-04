@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
@@ -28,7 +29,7 @@ class Preferences extends ChangeNotifier {
   String _username;
   String _email;
   int _logLevel = LogEntry.VERBOSE;
-  List<TagModel> _tags = [];
+  List<Tag> _tags = [];
   int _lastUpdated;
 
   String get masterPass => _masterPass;
@@ -44,7 +45,7 @@ class Preferences extends ChangeNotifier {
   String get username => _username;
   String get email => _email;
   int get logLevel => _logLevel;
-  List<TagModel> get tags => _tags;
+  List<Tag> get tags => _tags;
   int get lastUpdated => _lastUpdated;
 
   set masterPass(String value) {
@@ -131,12 +132,6 @@ class Preferences extends ChangeNotifier {
     notifyListeners();
   }
 
-  set tags(List<TagModel> value) {
-    _tags = value;
-    prefs.setTags(value);
-    notifyListeners();
-  }
-
   set lastUpdated(int value) {
     _lastUpdated = value;
     prefs.setLastUpdated(value);
@@ -164,8 +159,12 @@ class Preferences extends ChangeNotifier {
     username = await prefs.getUsername();
     email = await prefs.getEmail();
     logLevel = await prefs.getLogLevel();
-    tags = await prefs.getTags();
     lastUpdated = await prefs.getLastUpdated();
+
+    tagHelper.watchTags().listen((newTags) {
+      this._tags = newTags;
+      notifyListeners();
+    });
   }
 
   Future<String> getToken() async {
