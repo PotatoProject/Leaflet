@@ -22,6 +22,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/routes/login_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
@@ -594,8 +595,20 @@ class _MainPageState extends State<MainPage>
         IconButton(
           icon: Icon(OMIcons.person),
           tooltip: LocaleStrings.mainPage.account,
-          onPressed: () =>
-              {AccountController.login("broodrooster", "broodrooster")},
+          onPressed: () async {
+            bool loggedIn = await SyncRoutine.checkLoginStatus();
+
+            if (loggedIn) {
+              await AccountController.logout();
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ),
+              );
+            }
+          },
         ),
         Visibility(
           visible: mode == ReturnMode.ARCHIVE || mode == ReturnMode.TRASH,

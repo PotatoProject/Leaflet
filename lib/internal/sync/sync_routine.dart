@@ -19,12 +19,18 @@ class SyncRoutine {
     "use_grid",
     "use_custom_accent"
   };
-  List<Note> localNotes = List();
-  List<Note> addedNotes = List();
-  List<Note> deletedNotes = List();
-  Map<Note, Map<String, dynamic>> updatedNotes = Map();
+  static final _instance = SyncRoutine._();
 
-  SyncRoutine();
+  List<Note> localNotes = [];
+  List<Note> addedNotes = [];
+  List<Note> deletedNotes = [];
+  Map<Note, Map<String, dynamic>> updatedNotes = {};
+
+  factory SyncRoutine() {
+    return _instance;
+  }
+
+  SyncRoutine._();
 
   static Future<bool> checkOnlineStatus() async {
     try {
@@ -47,6 +53,11 @@ class SyncRoutine {
   }
 
   static Future<bool> checkLoginStatus() async {
+    if (prefs.accessToken == null) {
+      Loggy.d(message: "Tried syncing without accesstoken");
+      return false;
+    }
+
     try {
       var url = prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
@@ -72,10 +83,6 @@ class SyncRoutine {
 
   Future<bool> syncNotes() async {
     // Check if the app is able to access the remote server
-    if (prefs.accessToken == null) {
-      Loggy.e(message: "Tried syncing without accesstoken");
-      throw ("Not logged in");
-    }
     bool status = await checkOnlineStatus();
     if (status != true) throw ("Could not connect to server");
     bool secureStatus = await checkLoginStatus();

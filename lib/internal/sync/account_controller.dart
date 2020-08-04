@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 
 class AccountController {
   AccountController._();
@@ -22,6 +23,7 @@ class AccountController {
       Response registerResponse = await post(
         "${prefs.apiUrl}/login/user/register",
         body: json.encode(body),
+        headers: {"Content-Type": "application/json"},
       );
       Loggy.v(
           message:
@@ -34,15 +36,24 @@ class AccountController {
         case 400:
           return AuthResponse(
             status: false,
-            message: json.decode(registerResponse.body)["message"],
+            message: json.decode(registerResponse.body).toString(),
           );
         default:
-          throw ("Unexpected response from auth server");
+          return AuthResponse(
+            status: false,
+            message: registerResponse.body,
+          );
       }
     } on SocketException {
-      throw ("Could not connect to auth server");
+      return AuthResponse(
+        status: false,
+        message: "Could not connect to auth server",
+      );
     } catch (e) {
-      rethrow;
+      return AuthResponse(
+        status: false,
+        message: e.toString(),
+      );
     }
   }
 
@@ -64,9 +75,11 @@ class AccountController {
     }
 
     try {
-      Response loginResponse = await post("${prefs.apiUrl}/login/user/login",
-          body: json.encode(body),
-          headers: {"Content-Type": "application/json"});
+      Response loginResponse = await post(
+        "${prefs.apiUrl}/login/user/login",
+        body: json.encode(body),
+        headers: {"Content-Type": "application/json"},
+      );
       Loggy.v(
           message:
               "(login) Server responded with (${loginResponse.statusCode}): ${loginResponse.body}",
@@ -76,6 +89,7 @@ class AccountController {
           Map<String, dynamic> response = json.decode(loginResponse.body);
           prefs.accessToken = response["token"];
           prefs.refreshToken = response["refresh_token"];
+          await getUserInfo();
           return AuthResponse(status: true);
         case 400:
           if (loginResponse.body.startsWith("[")) {
@@ -99,6 +113,49 @@ class AccountController {
     } catch (e) {
       rethrow;
     }
+  }
+
+  static Future<AuthResponse> getUserInfo() async {
+    bool loggedIn = await SyncRoutine.checkLoginStatus();
+
+    if (loggedIn) {
+      String token = await prefs.getToken();
+
+      try {
+        Response profileRequest = await get(
+            "${prefs.apiUrl}/login/user/profile",
+            headers: {"Authorization": "Bearer " + token});
+        switch (profileRequest.statusCode) {
+          case 200:
+            Map<String, dynamic> response = json.decode(profileRequest.body);
+            prefs.username = response["username"];
+            prefs.email = response["email"];
+            return AuthResponse(status: true);
+          case 400:
+            return AuthResponse(
+              status: false,
+              message: profileRequest.body,
+            );
+          default:
+            throw ("Unexpected response from auth server");
+        }
+      } on SocketException {
+        throw ("Could not connect to server");
+      } catch (e) {
+        rethrow;
+      }
+    } else {
+      return AuthResponse(status: false, message: "Not logged in.");
+    }
+  }
+
+  static Future<void> logout() async {
+    prefs.accessToken = null;
+    prefs.refreshToken = null;
+    prefs.username = null;
+    prefs.email = null;
+
+    await helper.deleteAllNotes();
   }
 
   // When the api the app uses returns a 401 (Unauthorized) this likely means the token is expired and needs to be refreshed
