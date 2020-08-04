@@ -532,4 +532,6 @@ class Utils {
     });
     return Note.fromJson(newMap);
   }
+
+  static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
 }

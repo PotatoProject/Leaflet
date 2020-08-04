@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -101,7 +102,8 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    return prefs.getString("api_url") ?? "http://stats.corbellum.nl/api/v2";
+    // http://stats.corbellum.nl/api/v2
+    return prefs.getString("api_url") ?? Utils.defaultApiUrl;
   }
 
   void setApiUrl(String value) async {

@@ -26,7 +26,7 @@ class SyncRoutine {
 
   SyncRoutine();
 
-  Future<bool> checkOnlineStatus() async {
+  static Future<bool> checkOnlineStatus() async {
     try {
       var url = prefs.apiUrl + "/notes/ping";
       Loggy.d(message: "Going to send GET to " + url);
@@ -46,7 +46,7 @@ class SyncRoutine {
     }
   }
 
-  Future<bool> checkLoginStatus() async {
+  static Future<bool> checkLoginStatus() async {
     try {
       var url = prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
@@ -176,7 +176,7 @@ class SyncRoutine {
     return true;
   }
 
-  Future<void> sendSettingUpdates() async {
+  static Future<void> sendSettingUpdates() async {
     Map<String, String> changedSettings;
     try {
       changedSettings = await SettingController.getChanged(prefs.lastUpdated);
@@ -240,13 +240,13 @@ class SyncRoutine {
     prefs.triggerRefresh();
   }
 
-  Future<void> saveSynced(Note note) async {
+  static Future<void> saveSynced(Note note) async {
     await helper.saveNote(note.copyWith(synced: true));
     var syncedNote = note.copyWith(id: note.id + "-synced");
     await helper.saveNote(syncedNote);
   }
 
-  Future<void> deleteSynced(Note note) async {
+  static Future<void> deleteSynced(Note note) async {
     helper.deleteNote(note);
   }
 

@@ -122,6 +122,14 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     Loggy.d(message: "The note id to delete: " + note.id);
     return delete(notes).delete(note);
   }
+
+  Future<void> deleteAllNotes() async {
+    List<Note> notes = await listNotes(ReturnMode.ALL);
+
+    notes.forEach((note) async {
+      await deleteNote(note);
+    });
+  }
 }
 
 class SearchQuery {

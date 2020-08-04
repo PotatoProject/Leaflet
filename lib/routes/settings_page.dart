@@ -17,6 +17,7 @@ import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
+import 'package:potato_notes/widget/sync_url_editor.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -81,10 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     icon: Icon(CommunityMaterialIcons.database_remove),
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     onTap: () async {
-                      List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-
-                      notes.forEach(
-                          (element) async => await helper.deleteNote(element));
+                      await helper.deleteAllNotes();
                     },
                   ),
                   SettingsTile(
@@ -284,6 +282,24 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               subtitle: Text(currentLocaleName),
             ),
+            SettingsTile(
+              icon: Icon(Icons.autorenew),
+              title: Text("Change sync API url"),
+              onTap: () async {
+                bool status = await showInfoSheet(
+                  context,
+                  content:
+                      "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
+                  buttonAction: LocaleStrings.common.goOn,
+                );
+                if (status)
+                  Utils.showNotesModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SyncUrlEditor(),
+                  );
+              },
+            )
           ],
         ),
         SettingsCategory(
@@ -311,7 +327,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                     setState(() => removingMasterPass = true);
                     for (int i = 0; i < notes.length; i++) {
-                      await helper.saveNote(Utils.markNoteChanged(notes[i]).copyWith(lockNote: false));
+                      await helper.saveNote(Utils.markNoteChanged(notes[i])
+                          .copyWith(lockNote: false));
                     }
                     setState(() => removingMasterPass = false);
                   }
