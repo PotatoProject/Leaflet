@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -46,6 +49,14 @@ class DeviceInfo {
       _uiSizeFactor = 1;
       _uiType = UiType.PHONE;
     }
+  }
+
+  static bool get isDesktopOrWeb {
+    if (kIsWeb) return true;
+
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) return true;
+
+    return false;
   }
 }
 

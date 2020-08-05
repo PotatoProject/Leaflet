@@ -8,6 +8,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -211,9 +212,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 LocaleStrings.settingsPage.personalizationCustomAccent,
               ),
               icon: Icon(OMIcons.colorize),
-              enabled: kIsWeb ? true : prefs.useCustomAccent,
+              enabled: DeviceInfo.isDesktopOrWeb ? true : prefs.useCustomAccent,
               trailing: AnimatedOpacity(
-                opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
+                opacity:
+                    (DeviceInfo.isDesktopOrWeb ? true : prefs.useCustomAccent)
+                        ? 1
+                        : 0.5,
                 duration: Duration(milliseconds: 200),
                 child: SizedBox(
                   width: 60,

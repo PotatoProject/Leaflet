@@ -14,6 +14,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -544,7 +545,7 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
         ),
-        (!kIsWeb)
+        (!DeviceInfo.isDesktopOrWeb)
             ? IconButton(
                 icon: Icon(Icons.add),
                 padding: EdgeInsets.all(0),

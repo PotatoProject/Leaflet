@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -75,10 +76,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
               if (anyStarred)
-                await helper
-                    .saveNote(Utils.markNoteChanged(selectionList[i]).copyWith(starred: false));
+                await helper.saveNote(Utils.markNoteChanged(selectionList[i])
+                    .copyWith(starred: false));
               else
-                await helper.saveNote(Utils.markNoteChanged(selectionList[i]).copyWith(starred: true));
+                await helper.saveNote(Utils.markNoteChanged(selectionList[i])
+                    .copyWith(starred: true));
             }
 
             onCloseSelection();
@@ -191,7 +193,9 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ));
     }
 
-    if (selectionList.length == 1 && !selectionList[0].hideContent && !kIsWeb) {
+    if (selectionList.length == 1 &&
+        !selectionList[0].hideContent &&
+        !DeviceInfo.isDesktopOrWeb) {
       buttons.add(
         PopupMenuButton(
           itemBuilder: (context) => Utils.popupItems(context),

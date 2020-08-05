@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:package_info/package_info.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -67,7 +67,7 @@ class AppInfo {
   }
 
   void loadData() async {
-    if (!kIsWeb) {
+    if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();
     }
 

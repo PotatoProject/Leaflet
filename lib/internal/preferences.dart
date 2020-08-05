@@ -4,10 +4,11 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/keystore.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/keystore.dart';
+import 'package:potato_notes/internal/shared_prefs.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
@@ -52,7 +53,7 @@ class Preferences extends ChangeNotifier {
   set masterPass(String value) {
     _masterPass = value;
 
-    if (kIsWeb) {
+    if (DeviceInfo.isDesktopOrWeb) {
       prefs.setMasterPass(value);
     } else {
       keystore.setMasterPass(value);
@@ -143,7 +144,7 @@ class Preferences extends ChangeNotifier {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
 
-    if (kIsWeb) {
+    if (DeviceInfo.isDesktopOrWeb) {
       masterPass = await prefs.getMasterPass();
     } else {
       masterPass = await keystore.getMasterPass();

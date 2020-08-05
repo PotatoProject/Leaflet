@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -82,7 +83,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             icon: Icon(CommunityMaterialIcons.pencil_outline),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
-            onPressed: !kIsWeb
+            onPressed: !DeviceInfo.isDesktopOrWeb
                 ? () async {
                     await Utils.showSecondaryRoute(
                       context,

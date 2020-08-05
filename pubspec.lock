@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0+1"
+  characters:
+    dependency: transitive
+    description:
+      name: characters
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0-nullsafety"
   charcode:
     dependency: transitive
     description:
@@ -154,7 +161,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.12"
+    version: "1.15.0-nullsafety"
   community_material_icon:
     dependency: "direct main"
     description:
@@ -425,11 +432,9 @@ packages:
   loggy:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: c9a5bc905ee42940f02b6e09fb422e8fa5a01432
-      url: "https://github.com/HrX03/loggy"
-    source: git
+      path: "/home/hrx/FlutterApps/logger"
+      relative: false
+    source: path
     version: "0.0.1+1"
   matcher:
     dependency: transitive
@@ -451,7 +456,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.8"
+    version: "1.3.0-nullsafety"
   mime:
     dependency: transitive
     description:
@@ -521,7 +526,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.4"
+    version: "1.7.0"
   path_drawing:
     dependency: "direct main"
     description:
@@ -859,7 +864,7 @@ packages:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.6"
+    version: "1.3.0-nullsafety"
   url_launcher:
     dependency: "direct main"
     description:
@@ -908,7 +913,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.8"
+    version: "2.1.0-nullsafety"
   watcher:
     dependency: transitive
     description:
@@ -945,5 +950,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.8.1 <3.0.0"
+  dart: ">=2.9.0-18.0 <2.9.0"
   flutter: ">=1.17.0 <2.0.0"

@@ -25,7 +25,7 @@ dependencies:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:
-  back_button_interceptor:
+  back_button_interceptor: "4.2.4"
   shared_preferences:
   local_auth:
   flutter_secure_storage:
@@ -55,7 +55,7 @@ dependencies:
   spicy_components:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
-    git: https://github.com/HrX03/loggy
+    path: /home/hrx/FlutterApps/logger
 
 dev_dependencies:
   moor_generator:

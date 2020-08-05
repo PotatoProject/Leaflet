@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,7 +69,7 @@ class _MainPageState extends State<MainPage>
       value: 1,
     );
 
-    if (!kIsWeb) {
+    if (!DeviceInfo.isDesktopOrWeb) {
       appInfo.quickActions.initialize((shortcutType) async {
         switch (shortcutType) {
           case 'new_text':
@@ -411,7 +410,7 @@ class _MainPageState extends State<MainPage>
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => newImage(ImageSource.gallery, shouldPop: true),
-        enabled: !kIsWeb,
+        enabled: !DeviceInfo.isDesktopOrWeb,
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.brush),
@@ -424,7 +423,7 @@ class _MainPageState extends State<MainPage>
 
           newDrawing();
         },
-        enabled: !kIsWeb,
+        enabled: !DeviceInfo.isDesktopOrWeb,
       ),
     ];
   }
