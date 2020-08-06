@@ -74,7 +74,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   initialInput: query,
                   onSave: (tag) {
                     Navigator.pop(context);
-                    tagHelper.saveTag(tag);
+                    tagHelper.saveTag(Utils.markTagChanged(tag));
                   },
                 ),
               ),

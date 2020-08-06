@@ -9,8 +9,32 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
 
   TagHelper(this.db) : super(db);
 
-  Future<List<Tag>> listTags() => select(tags).get();
-  Stream<List<Tag>> watchTags() => select(tags).watch();
+  Future<List<Tag>> listTags(TagReturnMode returnMode) {
+    switch (returnMode) {
+      case TagReturnMode.SYNCED:
+        return (select(tags)..where((table) => table.id.contains("-synced")))
+            .get();
+      default:
+        return (select(tags)
+              ..where((table) => table.id.contains("-synced").not()))
+            .get();
+    }
+  }
+
+  Stream<List<Tag>> watchTags(TagReturnMode returnMode) {
+    SimpleSelectStatement<$TagsTable, Tag> selectQuery;
+    switch (returnMode) {
+      case TagReturnMode.SYNCED:
+        selectQuery = select(tags)
+          ..where((table) => table.id.contains("-synced"));
+        break;
+      default:
+        selectQuery = select(tags)
+          ..where((table) => table.id.contains("-synced").not());
+        break;
+    }
+    return (selectQuery).watch();
+  }
 
   Future<void> saveTag(Tag tag) {
     return into(tags).insert(tag, mode: InsertMode.replace);
@@ -18,3 +42,5 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
 
   Future<void> deleteTag(Tag tag) => delete(tags).delete(tag);
 }
+
+enum TagReturnMode { LOCAL, SYNCED }

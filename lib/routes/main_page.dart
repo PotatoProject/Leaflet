@@ -11,7 +11,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -20,6 +19,7 @@ import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/login_page.dart';
@@ -282,7 +282,7 @@ class _MainPageState extends State<MainPage>
               builder: (context) => TagEditor(
                 onSave: (tag) {
                   Navigator.pop(context);
-                  tagHelper.saveTag(tag);
+                  tagHelper.saveTag(Utils.markTagChanged(tag));
                 },
               ),
             );
@@ -713,7 +713,7 @@ class _MainPageState extends State<MainPage>
                   tag: prefs.tags[tagIndex],
                   onSave: (tag) {
                     Navigator.pop(context);
-                    tagHelper.saveTag(tag);
+                    tagHelper.saveTag(Utils.markTagChanged(tag));
                   },
                 ),
               );

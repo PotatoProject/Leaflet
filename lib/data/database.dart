@@ -41,7 +41,7 @@ class Tags extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   IntColumn get color => integer().withDefault(Constant(0))();
-
+	DateTimeColumn get lastModifyDate => dateTime().withDefault(Constant(DateTime.now()))();	
   @override
   Set<Column> get primaryKey => {id};
 }

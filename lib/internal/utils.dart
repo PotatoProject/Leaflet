@@ -252,6 +252,10 @@ class Utils {
   static Note markNoteChanged(Note note) {
     return note.copyWith(synced: false, lastModifyDate: DateTime.now());
   }
+	
+	static Tag markTagChanged(Tag tag) {
+		return tag.copyWith(lastModifyDate: DateTime.now());
+	}
 
   static Future<void> deleteNotes({
     GlobalKey<ScaffoldState> scaffoldKey,

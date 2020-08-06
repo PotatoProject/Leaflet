@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/account_controller.dart';
 
 class Preferences extends ChangeNotifier {
   SharedPrefs prefs;
@@ -161,7 +162,7 @@ class Preferences extends ChangeNotifier {
     logLevel = await prefs.getLogLevel();
     lastUpdated = await prefs.getLastUpdated();
 
-    tagHelper.watchTags().listen((newTags) {
+    tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       this._tags = newTags;
       notifyListeners();
     });
