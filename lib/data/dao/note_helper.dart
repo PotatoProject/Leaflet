@@ -12,7 +12,8 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes(ReturnMode mode) async {
     switch (mode) {
-      case ReturnMode.TAG:
+      case ReturnMode.ALL:
+        return select(notes).get();
       case ReturnMode.NORMAL:
         return (select(notes)
               ..where((table) =>
@@ -37,6 +38,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
       case ReturnMode.SYNCED:
         return (select(notes)..where((table) => table.id.contains("-synced")))
             .get();
+      case ReturnMode.TAG:
       case ReturnMode.LOCAL:
         return (select(notes)
               ..where((table) => table.id.contains("-synced").not()))
@@ -49,7 +51,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
                   table.deleted.not() &
                   table.id.contains("-synced").not()))
             .get();
-      case ReturnMode.ALL:
+
       default:
         return select(notes).get();
     }
@@ -59,7 +61,6 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 
     switch (mode) {
-      case ReturnMode.TAG:
       case ReturnMode.ALL:
         selectQuery = select(notes);
         break;
@@ -96,6 +97,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         selectQuery = select(notes)
           ..where((table) => table.id.contains("-synced"));
         break;
+      case ReturnMode.TAG:
       case ReturnMode.LOCAL:
         selectQuery = select(notes)
           ..where((table) => table.id.contains("-synced").not());
