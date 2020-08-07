@@ -1,3 +1,4 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
@@ -14,6 +15,19 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   bool obscurePass = true;
   bool register = false;
+  bool showLoadingOverlay = false;
+
+  @override
+  void initState() {
+    BackButtonInterceptor.add((_) => showLoadingOverlay, name: "antiPop");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.removeByName("antiPop");
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,25 +106,41 @@ class _LoginPageState extends State<LoginPage> {
                 }
                 return RaisedButton(
                   child: Text(register ? "Register" : "Login"),
+                  disabledColor: Theme.of(context).disabledColor,
+                  disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
                   onPressed: enabledCondition
                       ? () async {
+                          AuthResponse response;
+
+                          setState(() => showLoadingOverlay = true);
+
                           if (register) {
-                            print(
-                              usernameController.text +
-                                  ", " +
-                                  emailController.text +
-                                  ", " +
-                                  passwordController.text,
-                            );
-                            await AccountController.register(
+                            response = await AccountController.register(
                               usernameController.text,
                               emailController.text,
                               passwordController.text,
                             );
                           } else {
-                            await AccountController.login(
+                            response = await AccountController.login(
                               emailOrUserController.text,
                               passwordController.text,
+                            );
+                          }
+
+                          setState(() => showLoadingOverlay = false);
+
+                          if (response.status && !register) {
+                            Navigator.pop(context);
+                          } else {
+                            Scaffold.of(context).removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  register
+                                      ? response.message ?? "Registered!"
+                                      : response.message,
+                                ),
+                              ),
                             );
                           }
                         }
@@ -122,69 +152,86 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     ];
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(register ? "Register" : "Login"),
-        textTheme: Theme.of(context).textTheme,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: items,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text(register ? "Register" : "Login"),
+            textTheme: Theme.of(context).textTheme,
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 49,
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Material(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Divider(height: 1),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
-                  child: FlatButton(
-                    child: RichText(
-                      text: TextSpan(
-                        style: Theme.of(context).textTheme.bodyText2,
-                        children: [
-                          TextSpan(
-                            text: register
-                                ? "Already have an account?"
-                                : "Don't have an account yet? ",
+          body: Center(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: items,
+              ),
+            ),
+          ),
+          bottomNavigationBar: Container(
+            height: 49,
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Material(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Divider(height: 1),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: FlatButton(
+                        child: RichText(
+                          text: TextSpan(
+                            style: Theme.of(context).textTheme.bodyText2,
+                            children: [
+                              TextSpan(
+                                text: register
+                                    ? "Already have an account?"
+                                    : "Don't have an account yet? ",
+                              ),
+                              TextSpan(
+                                text: register ? "Login." : "Register.",
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: register ? "Login." : "Register.",
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                        ],
+                        ),
+                        onPressed: () {
+                          emailOrUserController.clear();
+                          emailController.clear();
+                          usernameController.clear();
+                          passwordController.clear();
+                          setState(() => register = !register);
+                        },
                       ),
                     ),
-                    onPressed: () {
-                      emailOrUserController.clear();
-                      emailController.clear();
-                      usernameController.clear();
-                      passwordController.clear();
-                      setState(() => register = !register);
-                    },
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        Visibility(
+          visible: showLoadingOverlay,
+          child: SizedBox.expand(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.black54,
+              ),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

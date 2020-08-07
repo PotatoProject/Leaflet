@@ -18,7 +18,6 @@ import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/login_page.dart';
@@ -27,6 +26,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/routes/setup/setup_page.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
+import 'package:potato_notes/widget/account_info.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
@@ -598,13 +598,15 @@ class _MainPageState extends State<MainPage>
             bool loggedIn = await SyncRoutine.checkLoginStatus();
 
             if (loggedIn) {
-              await AccountController.logout();
+              Utils.showNotesModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => AccountInfo(),
+              );
             } else {
-              Navigator.push(
+              Utils.showSecondaryRoute(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
+                LoginPage(),
               );
             }
           },

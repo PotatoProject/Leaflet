@@ -425,9 +425,11 @@ packages:
   loggy:
     dependency: "direct main"
     description:
-      path: "/home/hrx/FlutterApps/logger"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: c9a5bc905ee42940f02b6e09fb422e8fa5a01432
+      url: "https://github.com/HrX03/loggy"
+    source: git
     version: "0.0.1+1"
   matcher:
     dependency: transitive

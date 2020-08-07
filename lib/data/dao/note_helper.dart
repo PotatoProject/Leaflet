@@ -51,9 +51,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
             .get();
       case ReturnMode.ALL:
       default:
-        return (select(notes)
-              ..where((table) => table.id.contains("-synced").not()))
-            .get();
+        return select(notes).get();
     }
   }
 
@@ -63,8 +61,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     switch (mode) {
       case ReturnMode.TAG:
       case ReturnMode.ALL:
-        selectQuery = select(notes)
-          ..where((table) => table.id.contains("-synced").not());
+        selectQuery = select(notes);
         break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)

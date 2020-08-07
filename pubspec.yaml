@@ -54,7 +54,7 @@ dependencies:
   spicy_components:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
-    path: /home/hrx/FlutterApps/logger
+    git: https://github.com/HrX03/loggy
 
 dev_dependencies:
   moor_generator:
