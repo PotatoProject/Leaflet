@@ -83,7 +83,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                                 textCapitalization:
                                     TextCapitalization.characters,
                                 inputFormatters: [
-                                  WhitelistingTextInputFormatter(
+                                  FilteringTextInputFormatter.allow(
                                       RegExp("[0-9|A-F|a-f]")),
                                   LengthLimitingTextInputFormatter(6)
                                 ],

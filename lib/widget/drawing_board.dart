@@ -24,23 +24,10 @@ class DrawingBoard extends StatefulWidget {
 }
 
 class _DrawingBoardState extends State<DrawingBoard> {
-  Offset offset = Offset.zero;
-
-  @override
-  void initState() {
-    /*widget.controller?.addListener(() {
-      offset = Offset(
-        offset.dx + widget.controller.delta.dx,
-        offset.dy + widget.controller.delta.dy,
-      );
-      setState(() {});
-    });*/
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     ImageProvider image;
+    Completer<ui.Image> completer = Completer<ui.Image>();
 
     if (widget.uri != null) {
       String scheme = widget.uri.scheme;
@@ -50,56 +37,87 @@ class _DrawingBoardState extends State<DrawingBoard> {
       } else {
         image = FileImage(File(widget.uri.path));
       }
+
+      image?.resolve(ImageConfiguration())?.addListener(
+        ImageStreamListener(
+          (image, synchronousCall) {
+            completer.complete(image.image);
+          },
+        ),
+      );
     }
-
-    Completer<ui.Image> completer = Completer<ui.Image>();
-
-    image?.resolve(ImageConfiguration())?.addListener(
-      ImageStreamListener(
-        (image, synchronousCall) {
-          completer.complete(image.image);
-        },
-      ),
-    );
 
     return RepaintBoundary(
       key: widget.repaintKey,
-      child: FutureBuilder<ui.Image>(
-        future: completer.future,
-        builder: (context, snapshot) {
-          return CustomPaint(
-            size: snapshot.data != null
-                ? Size(
-                    snapshot.data.width.toDouble(),
-                    snapshot.data.height.toDouble(),
-                  )
-                : Size.zero,
-            painter: DrawPainter(
-              widget.objects,
-              snapshot.data,
-              offset,
-            ),
-            isComplex: true,
-          );
-        },
+      child: image != null
+          ? FutureBuilder<ui.Image>(
+              future: completer.future,
+              builder: (context, snapshot) {
+                return getCommonChild(snapshot.data);
+              },
+            )
+          : getCommonChild(null),
+    );
+  }
+
+  Widget getCommonChild(ui.Image image) {
+    return ClipRect(
+      child: CustomPaint(
+        willChange: true,
+        painter: BackgroundPainter(
+          image,
+        ),
+        foregroundPainter: DrawPainter(
+          widget.objects,
+        ),
+        isComplex: true,
       ),
     );
   }
 }
 
+class CommonClipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(ui.Size size) {
+    return Rect.fromLTWH(0, 0, size.width, size.height);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => false;
+}
+
 class DrawPainter extends CustomPainter {
   List<DrawObject> objects;
-  ui.Image image;
-  Offset offset;
 
-  DrawPainter(this.objects, this.image, this.offset);
+  DrawPainter(this.objects);
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    objects.forEach((object) {
+      if (object.points.length > 1) {
+        Path path = Path();
 
-    canvas.drawColor(Colors.white, BlendMode.srcOver);
+        path.addPolygon(object.points, false);
 
+        canvas.drawPath(path, object.paint..style = PaintingStyle.stroke);
+      } else {
+        canvas.drawCircle(object.points.last, object.paint.strokeWidth / 2,
+            object.paint..style = PaintingStyle.fill);
+      }
+    });
+  }
+
+  @override
+  bool shouldRepaint(DrawPainter oldDelegate) => true;
+}
+
+class BackgroundPainter extends CustomPainter {
+  ui.Image image;
+
+  BackgroundPainter(this.image);
+
+  @override
+  void paint(Canvas canvas, Size size) {
     if (image != null) {
       paintImage(
         canvas: canvas,
@@ -109,30 +127,12 @@ class DrawPainter extends CustomPainter {
         alignment: Alignment.center,
         filterQuality: FilterQuality.none,
       );
-    }
-
-    for (int i = 0; i < objects.length; i++) {
-      DrawObject object = objects[i];
-
-      if (object.points.length > 1) {
-        Path path = Path();
-
-        List<Offset> offsets = [];
-
-        object.points.forEach((item) {
-          offsets.add(item);
-        });
-
-        path.addPolygon(offsets, false);
-
-        canvas.drawPath(path, object.paint..style = PaintingStyle.stroke);
-      } else {
-        canvas.drawCircle(object.points.last, object.paint.strokeWidth / 2,
-            object.paint..style = PaintingStyle.fill);
-      }
+    } else {
+      canvas.drawColor(Colors.white, BlendMode.srcOver);
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(BackgroundPainter oldDelegate) =>
+      oldDelegate.image != this.image;
 }

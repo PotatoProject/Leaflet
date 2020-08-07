@@ -565,8 +565,7 @@ diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
 index 4e48eee..b1d6b74 100644
 --- a/lib/routes/main_page.dart
 +++ b/lib/routes/main_page.dart
-@@ -2,6 +2,8 @@ import 'package:community_material_icon/community_material_icon.dart';
- import 'package:flutter/material.dart';
+@@ -2,6 +2,8 @@  import 'package:flutter/material.dart';
  import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
  import 'package:outline_material_icons/outline_material_icons.dart';
 +import 'package:potato_notes/data/dao/account_helper.dart';

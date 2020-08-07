@@ -19,50 +19,69 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/main_page.dart';
 import 'package:quick_actions/quick_actions.dart';
 
-AppDatabase db;
+AppDatabase _db;
+
+void _initProviders(Reader read) async {
+  if (appInfo == null) {
+    appInfo = read(Provider((_) => AppInfo()));
+  }
+  if (deviceInfo == null) {
+    deviceInfo = read(Provider((_) => DeviceInfo()));
+  }
+
+  if (prefs == null) {
+    prefs = read(ChangeNotifierProvider((_) => Preferences()));
+  }
+}
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  db = AppDatabase(constructDb());
-  helper = db.noteHelper;
-  tagHelper = db.tagHelper;
+  _db = AppDatabase(constructDb());
+  helper = _db.noteHelper;
+  tagHelper = _db.tagHelper;
   runApp(
-    ProviderScope(
-      child: EasyLocalization(
-        child: PotatoNotes(),
-        supportedLocales: [
-          Locale("de", "DE"),
-          Locale("en", "US"),
-          Locale("es", "ES"),
-          Locale("fr", "FR"),
-          Locale("hu", "HU"),
-          Locale("it", "IT"),
-          Locale("nl", "NL"),
-          Locale("pl", "PL"),
-          Locale("pt", "BR"),
-          Locale("ro", "RO"),
-          Locale("ru", "RU"),
-          Locale("sr", "SR"),
-          Locale("tr", "TR"),
-          Locale("uk", "UK"),
-          Locale("zh", "CN"),
-        ],
-        fallbackLocale: Locale("en", "US"),
-        assetLoader: AndroidXmlAssetLoader(
-          [
-            "common",
-            "about_page",
-            "draw_page",
-            "main_page",
-            "note_page",
-            "search_page",
-            "settings_page",
-            "setup_page",
-          ],
-        ),
-        path: "assets/locales",
-        preloaderColor: Colors.transparent,
+    EasyLocalization(
+      child: ProviderScope(
+        child: Consumer((context, read) {
+          _initProviders(read);
+          Loggy.generateAppLabel();
+          Loggy.setLogLevel(prefs.logLevel);
+
+          return PotatoNotes();
+        }),
       ),
+      supportedLocales: [
+        Locale("de", "DE"),
+        Locale("en", "US"),
+        Locale("es", "ES"),
+        Locale("fr", "FR"),
+        Locale("hu", "HU"),
+        Locale("it", "IT"),
+        Locale("nl", "NL"),
+        Locale("pl", "PL"),
+        Locale("pt", "BR"),
+        Locale("ro", "RO"),
+        Locale("ru", "RU"),
+        Locale("sr", "SR"),
+        Locale("tr", "TR"),
+        Locale("uk", "UK"),
+        Locale("zh", "CN"),
+      ],
+      fallbackLocale: Locale("en", "US"),
+      assetLoader: AndroidXmlAssetLoader(
+        [
+          "common",
+          "about_page",
+          "draw_page",
+          "main_page",
+          "note_page",
+          "search_page",
+          "settings_page",
+          "setup_page",
+        ],
+      ),
+      path: "assets/locales",
+      preloaderColor: Colors.transparent,
     ),
   );
 }
@@ -77,105 +96,93 @@ class _PotatoNotesState extends State<PotatoNotes> {
       EventChannel('potato_notes_accents');
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer((context, read) {
-      _initProviders(read);
-      Loggy.generateAppLabel();
-      Loggy.setLogLevel(prefs.logLevel);
-
-      return StreamBuilder(
-        stream: !DeviceInfo.isDesktopOrWeb
-            ? accentStreamChannel.receiveBroadcastStream()
-            : Stream.empty(),
-        initialData: Colors.blueAccent.value,
-        builder: (context, snapshot) {
-          Color accentColor;
-          bool canUseSystemAccent = true;
-
-          if (DeviceInfo.isDesktopOrWeb) {
-            canUseSystemAccent = false;
-          } else {
-            if ((snapshot.data == -1 && Platform.isAndroid) ||
-                !Platform.isAndroid) {
-              canUseSystemAccent = false;
-            }
-          }
-
-          if (prefs.useCustomAccent || !canUseSystemAccent) {
-            accentColor = prefs.customAccent ?? Utils.defaultAccent;
-          } else {
-            accentColor = Color(snapshot.data);
-          }
-
-          Themes themes = Themes(accentColor.withOpacity(1));
-
-          return MaterialApp(
-            title: "PotatoNotes",
-            theme: themes.light,
-            darkTheme: prefs.useAmoled ? themes.black : themes.dark,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: [
-              ...context.localizationDelegates,
-              LocaleNamesLocalizationsDelegate(),
-            ],
-            locale: context.locale,
-            builder: (context, child) {
-              if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
-                appInfo.quickActions = QuickActions();
-
-                appInfo.quickActions.setShortcutItems([
-                  ShortcutItem(
-                    type: 'new_text',
-                    localizedTitle: LocaleStrings.common.newNote,
-                    icon: 'note_shortcut',
-                  ),
-                  ShortcutItem(
-                    type: 'new_list',
-                    localizedTitle: LocaleStrings.common.newList,
-                    icon: 'list_shortcut',
-                  ),
-                  ShortcutItem(
-                    type: 'new_image',
-                    localizedTitle: LocaleStrings.common.newImage,
-                    icon: 'image_shortcut',
-                  ),
-                  ShortcutItem(
-                    type: 'new_drawing',
-                    localizedTitle: LocaleStrings.common.newDrawing,
-                    icon: 'drawing_shortcut',
-                  ),
-                ]);
-              }
-
-              appInfo.updateIllustrations(Theme.of(context).brightness);
-
-              deviceInfo.updateDeviceInfo(
-                MediaQuery.of(context),
-                canUseSystemAccent,
-              );
-
-              return child;
-            },
-            themeMode: prefs.themeMode,
-            home: MainPage(),
-            debugShowCheckedModeBanner: false,
-          );
-        },
-      );
-    });
+  void initState() {
+    prefs.addListener(() => setState(() {}));
+    super.initState();
   }
 
-  void _initProviders(Reader read) async {
-    if (appInfo == null) {
-      appInfo = read(Provider((_) => AppInfo()));
-    }
-    if (deviceInfo == null) {
-      deviceInfo = read(Provider((_) => DeviceInfo()));
-    }
+  @override
+  Widget build(BuildContext context) {
+    print("rebuilding");
 
-    if (prefs == null) {
-      prefs = read(ChangeNotifierProvider((_) => Preferences()));
-      prefs.addListener(() => setState(() {}));
-    }
+    return StreamBuilder(
+      stream: !DeviceInfo.isDesktopOrWeb
+          ? accentStreamChannel.receiveBroadcastStream()
+          : Stream.empty(),
+      initialData: Colors.blueAccent.value,
+      builder: (context, snapshot) {
+        Color accentColor;
+        bool canUseSystemAccent = true;
+
+        if (DeviceInfo.isDesktopOrWeb) {
+          canUseSystemAccent = false;
+        } else {
+          if ((snapshot.data == -1 && Platform.isAndroid) ||
+              !Platform.isAndroid) {
+            canUseSystemAccent = false;
+          }
+        }
+
+        if (prefs.useCustomAccent || !canUseSystemAccent) {
+          accentColor = prefs.customAccent ?? Utils.defaultAccent;
+        } else {
+          accentColor = Color(snapshot.data);
+        }
+
+        Themes themes = Themes(accentColor.withOpacity(1));
+
+        return MaterialApp(
+          title: "PotatoNotes",
+          theme: themes.light,
+          darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: [
+            ...context.localizationDelegates,
+            LocaleNamesLocalizationsDelegate(),
+          ],
+          locale: context.locale,
+          builder: (context, child) {
+            if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
+              appInfo.quickActions = QuickActions();
+
+              appInfo.quickActions.setShortcutItems([
+                ShortcutItem(
+                  type: 'new_text',
+                  localizedTitle: LocaleStrings.common.newNote,
+                  icon: 'note_shortcut',
+                ),
+                ShortcutItem(
+                  type: 'new_list',
+                  localizedTitle: LocaleStrings.common.newList,
+                  icon: 'list_shortcut',
+                ),
+                ShortcutItem(
+                  type: 'new_image',
+                  localizedTitle: LocaleStrings.common.newImage,
+                  icon: 'image_shortcut',
+                ),
+                ShortcutItem(
+                  type: 'new_drawing',
+                  localizedTitle: LocaleStrings.common.newDrawing,
+                  icon: 'drawing_shortcut',
+                ),
+              ]);
+            }
+
+            appInfo.updateIllustrations(Theme.of(context).brightness);
+
+            deviceInfo.updateDeviceInfo(
+              MediaQuery.of(context),
+              canUseSystemAccent,
+            );
+
+            return child;
+          },
+          themeMode: prefs.themeMode,
+          home: MainPage(),
+          debugShowCheckedModeBanner: false,
+        );
+      },
+    );
   }
 }

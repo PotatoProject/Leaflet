@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -115,12 +114,12 @@ class Utils {
         );
     return [
       _popupMenuItem(
-        icon: CommunityMaterialIcons.pin_outline,
+        icon: MdiIcons.pinOutline,
         title: LocaleStrings.mainPage.selectionBarPin,
         value: 'pin',
       ),
       _popupMenuItem(
-        icon: CommunityMaterialIcons.share_variant,
+        icon: MdiIcons.shareVariant,
         title: LocaleStrings.mainPage.selectionBarShare,
         value: 'share',
       ),
@@ -225,8 +224,8 @@ class Utils {
 
   static List<DrawerListItem> getDestinations(ReturnMode mode) => [
         DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.home_variant_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.home_variant),
+          icon: Icon(MdiIcons.homeVariantOutline),
+          selectedIcon: Icon(MdiIcons.homeVariant),
           label: Utils.getNameFromMode(ReturnMode.NORMAL),
         ),
         DrawerListItem(
@@ -235,13 +234,13 @@ class Utils {
           label: Utils.getNameFromMode(ReturnMode.ARCHIVE),
         ),
         DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.trash_can_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.trash_can),
+          icon: Icon(MdiIcons.trashCanOutline),
+          selectedIcon: Icon(MdiIcons.trashCan),
           label: Utils.getNameFromMode(ReturnMode.TRASH),
         ),
         DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.heart_multiple),
+          icon: Icon(MdiIcons.heartMultipleOutline),
+          selectedIcon: Icon(MdiIcons.heartMultiple),
           label: Utils.getNameFromMode(ReturnMode.FAVOURITES),
         ),
       ];

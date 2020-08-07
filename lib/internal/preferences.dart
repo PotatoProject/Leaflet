@@ -144,24 +144,26 @@ class Preferences extends ChangeNotifier {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
 
+    _themeMode = await prefs.getThemeMode();
+    _useCustomAccent = await prefs.getUseCustomAccent();
+    _customAccent = await prefs.getCustomAccent();
+    _useAmoled = await prefs.getUseAmoled();
+    _useGrid = await prefs.getUseGrid();
+
     if (DeviceInfo.isDesktopOrWeb) {
-      masterPass = await prefs.getMasterPass();
+      _masterPass = await prefs.getMasterPass();
     } else {
-      masterPass = await keystore.getMasterPass();
+      _masterPass = await keystore.getMasterPass();
     }
-    themeMode = await prefs.getThemeMode();
-    customAccent = await prefs.getCustomAccent();
-    useAmoled = await prefs.getUseAmoled();
-    useGrid = await prefs.getUseGrid();
-    useCustomAccent = await prefs.getUseCustomAccent();
-    welcomePageSeen = await prefs.getWelcomePageSeen();
-    apiUrl = await prefs.getApiUrl();
-    accessToken = await prefs.getAccessToken();
-    refreshToken = await prefs.getRefreshToken();
-    username = await prefs.getUsername();
-    email = await prefs.getEmail();
-    logLevel = await prefs.getLogLevel();
-    lastUpdated = await prefs.getLastUpdated();
+
+    _welcomePageSeen = await prefs.getWelcomePageSeen();
+    _apiUrl = await prefs.getApiUrl();
+    _accessToken = await prefs.getAccessToken();
+    _refreshToken = await prefs.getRefreshToken();
+    _username = await prefs.getUsername();
+    _email = await prefs.getEmail();
+    _logLevel = await prefs.getLogLevel();
+    _lastUpdated = await prefs.getLastUpdated();
 
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       this._tags = newTags;

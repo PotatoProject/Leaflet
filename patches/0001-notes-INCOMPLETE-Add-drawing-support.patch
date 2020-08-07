@@ -187,8 +187,7 @@ index 0000000..02fea2b
 +import 'dart:math';
 +import 'dart:ui';
 +
-+import 'package:community_material_icon/community_material_icon.dart';
-+import 'package:flutter/material.dart';
+++import 'package:flutter/material.dart';
 +import 'package:potato_notes/data/database.dart';
 +import 'package:potato_notes/data/model/draw_object.dart';
 +import 'package:potato_notes/data/model/image_list.dart';
@@ -396,8 +395,7 @@ index b55e7a3..8486203 100644
  import 'dart:convert';
  import 'dart:io';
  
-+import 'package:community_material_icon/community_material_icon.dart';
- import 'package:flutter/material.dart';
++ import 'package:flutter/material.dart';
  import 'package:image_picker/image_picker.dart';
 +import 'package:outline_material_icons/outline_material_icons.dart';
  import 'package:potato_notes/data/dao/note_helper.dart';
@@ -493,8 +491,7 @@ index 4148544..33d9e5e 100644
 @@ -1,9 +1,11 @@
  import 'dart:io';
  
-+import 'package:community_material_icon/community_material_icon.dart';
- import 'package:flutter/material.dart';
++ import 'package:flutter/material.dart';
  import 'package:photo_view/photo_view.dart';
  import 'package:photo_view/photo_view_gallery.dart';
  import 'package:potato_notes/data/database.dart';

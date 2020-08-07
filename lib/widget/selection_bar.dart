@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -65,9 +65,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       buttons.add(
         IconButton(
           icon: Icon(
-            anyStarred
-                ? CommunityMaterialIcons.heart
-                : CommunityMaterialIcons.heart_outline,
+            anyStarred ? MdiIcons.heart : MdiIcons.heartOutline,
           ),
           tooltip: anyStarred
               ? LocaleStrings.mainPage.selectionBarRmFav

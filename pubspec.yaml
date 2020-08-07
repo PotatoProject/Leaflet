@@ -21,7 +21,6 @@ dependencies:
   flutter_riverpod:
   streams_channel:
   outline_material_icons:
-  community_material_icon:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:

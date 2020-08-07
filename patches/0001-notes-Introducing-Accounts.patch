@@ -1109,8 +1109,7 @@ index 0cf3270..4e48eee 100644
 --- a/lib/routes/main_page.dart
 +++ b/lib/routes/main_page.dart
 @@ -1,7 +1,9 @@
-+import 'package:community_material_icon/community_material_icon.dart';
- import 'package:flutter/material.dart';
++ import 'package:flutter/material.dart';
  import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
  import 'package:outline_material_icons/outline_material_icons.dart';
  import 'package:potato_notes/data/database.dart';

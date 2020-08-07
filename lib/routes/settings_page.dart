@@ -1,4 +1,3 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -80,14 +79,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.database_remove),
+                    icon: Icon(MdiIcons.databaseRemove),
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.database_import),
+                    icon: Icon(MdiIcons.databaseImport),
                     title:
                         Text(LocaleStrings.settingsPage.debugMigrateDatabase),
                     onTap: () async {
@@ -117,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.text),
+                    icon: Icon(MdiIcons.text),
                     title: Text(LocaleStrings.settingsPage.debugLogLevel),
                     onTap: () {
                       showDropdownSheet(
@@ -250,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
-              icon: Icon(CommunityMaterialIcons.view_dashboard_outline),
+              icon: Icon(MdiIcons.viewDashboardOutline),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile(
@@ -344,7 +343,7 @@ class _SettingsPageState extends State<SettingsPage> {
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
             ),
             SettingsTile(
-              icon: Icon(CommunityMaterialIcons.form_textbox_password),
+              icon: Icon(MdiIcons.formTextboxPassword),
               title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
@@ -372,7 +371,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text(content),
               ),
               ListTile(
-                leading: Icon(CommunityMaterialIcons.arrow_right),
+                leading: Icon(MdiIcons.arrowRight),
                 title: Text(buttonAction),
                 onTap: () {
                   Navigator.pop(context, true);

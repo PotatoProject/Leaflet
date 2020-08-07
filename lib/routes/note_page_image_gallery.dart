@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
@@ -80,7 +80,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         ),
         actions: [
           IconButton(
-            icon: Icon(CommunityMaterialIcons.pencil_outline),
+            icon: Icon(MdiIcons.pencilOutline),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
             onPressed: !DeviceInfo.isDesktopOrWeb

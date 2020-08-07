@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
@@ -20,6 +20,7 @@ import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
+import 'package:potato_notes/widget/drawing_gesture_detector.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class DrawPage extends StatefulWidget {
@@ -118,7 +119,7 @@ class _DrawPageState extends State<DrawPage>
         ),
         actions: [
           IconButton(
-            icon: Icon(CommunityMaterialIcons.undo),
+            icon: Icon(MdiIcons.undo),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.undo,
             onPressed: objects.isNotEmpty
@@ -130,7 +131,7 @@ class _DrawPageState extends State<DrawPage>
                 : null,
           ),
           IconButton(
-            icon: Icon(CommunityMaterialIcons.redo),
+            icon: Icon(MdiIcons.redo),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.redo,
             onPressed: actionQueueIndex < backupObjects.length - 1
@@ -142,7 +143,7 @@ class _DrawPageState extends State<DrawPage>
                 : null,
           ),
           IconButton(
-            icon: Icon(CommunityMaterialIcons.content_save_outline),
+            icon: Icon(MdiIcons.contentSaveOutline),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.save,
             onPressed: !saved
@@ -178,8 +179,6 @@ class _DrawPageState extends State<DrawPage>
                     widget.note.images.data[drawing] = Uri.file(drawing);
                     helper.saveNote(Utils.markNoteChanged(widget.note));
 
-                    imageCache.clear();
-                    imageCache.clearLiveImages();
                     setState(() => saved = true);
                   }
                 : null,
@@ -194,14 +193,11 @@ class _DrawPageState extends State<DrawPage>
             56 -
             48 -
             MediaQuery.of(context).padding.top,
-        child: GestureDetector(
-          onPanStart: currentTool == DrawTool.ERASER
-              ? _eraserModePan
-              : _normalModePanStart,
-          onPanUpdate: currentTool == DrawTool.ERASER
+        child: DrawingGestureDetector(
+          onUpdate: currentTool == DrawTool.ERASER
               ? _eraserModePan
               : _normalModePanUpdate,
-          onPanEnd: currentTool == DrawTool.ERASER ? null : _normalModePanEnd,
+          onEnd: currentTool == DrawTool.ERASER ? null : _normalModePanEnd,
           child: DrawingBoard(
             repaintKey: key,
             objects: objects,
@@ -287,7 +283,7 @@ class _DrawPageState extends State<DrawPage>
               elevation: 0,
               leftItems: <Widget>[
                 IconButton(
-                  icon: Icon(CommunityMaterialIcons.brush),
+                  icon: Icon(MdiIcons.brush),
                   color: currentTool == DrawTool.PEN
                       ? Theme.of(context).accentColor
                       : null,
@@ -296,7 +292,7 @@ class _DrawPageState extends State<DrawPage>
                   onPressed: () => setState(() => currentTool = DrawTool.PEN),
                 ),
                 IconButton(
-                  icon: Icon(CommunityMaterialIcons.eraser_variant),
+                  icon: Icon(MdiIcons.eraserVariant),
                   color: currentTool == DrawTool.ERASER
                       ? Theme.of(context).accentColor
                       : null,
@@ -306,7 +302,7 @@ class _DrawPageState extends State<DrawPage>
                       setState(() => currentTool = DrawTool.ERASER),
                 ),
                 IconButton(
-                  icon: Icon(CommunityMaterialIcons.marker),
+                  icon: Icon(MdiIcons.marker),
                   color: currentTool == DrawTool.MARKER
                       ? Theme.of(context).accentColor
                       : null,
@@ -333,7 +329,7 @@ class _DrawPageState extends State<DrawPage>
                   },
                 ),
                 IconButton(
-                  icon: Icon(CommunityMaterialIcons.radius_outline),
+                  icon: Icon(MdiIcons.radiusOutline),
                   padding: EdgeInsets.all(0),
                   tooltip: LocaleStrings.drawPage.toolsRadiusPicker,
                   onPressed: () async {
@@ -385,16 +381,21 @@ class _DrawPageState extends State<DrawPage>
 
     Offset point = Offset(
       details.localPosition.dx,
-      details.localPosition.dy,
+      details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
     );
 
     setState(() => objects[currentIndex].points.add(point));
   }
 
   void _normalModePanUpdate(details) {
+    if (currentIndex == null) {
+      _normalModePanStart(details);
+      return;
+    }
+
     Offset point = Offset(
       details.localPosition.dx,
-      details.localPosition.dy,
+      details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
     );
 
     setState(() => objects[currentIndex].points.add(point));
@@ -408,7 +409,7 @@ class _DrawPageState extends State<DrawPage>
       DrawObject object = objects[i];
       Offset touchPoint = Offset(
         details.localPosition.dx,
-        details.localPosition.dy,
+        details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
       );
       //Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
       //    details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));

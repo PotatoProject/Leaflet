@@ -1,5 +1,5 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
@@ -93,13 +93,11 @@ class NoteViewStatusbar extends StatelessWidget {
 
   List<Widget> getIcons(BuildContext context) {
     List<IconData> iconData = [
-      CommunityMaterialIcons.eye_off_outline,
-      note.usesBiometrics
-          ? CommunityMaterialIcons.fingerprint
-          : CommunityMaterialIcons.lock_outline,
-      CommunityMaterialIcons.alarm,
-      CommunityMaterialIcons.sync_icon,
-      CommunityMaterialIcons.heart_outline,
+      MdiIcons.eyeOffOutline,
+      note.usesBiometrics ? MdiIcons.fingerprint : MdiIcons.lockOutline,
+      MdiIcons.alarm,
+      MdiIcons.syncIcon,
+      MdiIcons.heartOutline,
     ];
 
     List<int> iconDataIndexes = [];
