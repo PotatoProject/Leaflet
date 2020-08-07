@@ -154,6 +154,7 @@ class AccountController {
     prefs.refreshToken = null;
     prefs.username = null;
     prefs.email = null;
+    prefs.lastUpdated = 0;
 
     await helper.deleteAllNotes();
   }
