@@ -156,6 +156,7 @@ class AccountController {
     prefs.email = null;
     prefs.lastUpdated = 0;
 
+    await tagHelper.deleteAllTags();
     await helper.deleteAllNotes();
   }
 
