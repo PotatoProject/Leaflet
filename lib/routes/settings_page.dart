@@ -8,6 +8,7 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -58,6 +59,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     context,
                     AboutPage(),
                     sidePadding: kTertiaryRoutePadding,
+                  ),
+                ),
+                SettingsTile(
+                  icon: Icon(MdiIcons.update),
+                  title: Text("Check for app updates"),
+                  onTap: () => InAppUpdater.checkForUpdate(
+                    context,
+                    showNoUpdatesAvailable: true,
                   ),
                 ),
               ],

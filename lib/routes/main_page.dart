@@ -15,6 +15,7 @@ import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/illustrations.dart';
+import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
@@ -41,8 +42,7 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController controller;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController scrollController = ScrollController();
@@ -88,6 +88,8 @@ class _MainPageState extends State<MainPage>
       });
     }
 
+    InAppUpdater.checkForUpdate(context);
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
       final sharedPrefs = await SharedPrefs.newInstance();
@@ -114,6 +116,12 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
+    EdgeInsets padding = EdgeInsets.fromLTRB(
+      4,
+      4 + MediaQuery.of(context).padding.top + 56,
+      4,
+      4,
+    );
     Animation<double> fade =
         Tween<double>(begin: 0.3, end: 1).animate(controller);
 
@@ -159,13 +167,6 @@ class _MainPageState extends State<MainPage>
               stream: helper.noteStream(mode),
               initialData: cachedNotesMap[mode],
               builder: (context, snapshot) {
-                EdgeInsets padding = EdgeInsets.fromLTRB(
-                  4,
-                  4 + MediaQuery.of(context).padding.top,
-                  4,
-                  4,
-                );
-
                 Widget child;
                 List<Note> notes = mode == ReturnMode.TAG
                     ? snapshot.data
@@ -228,8 +229,8 @@ class _MainPageState extends State<MainPage>
                       child: child,
                     ),
                   ),
-                  onRefresh: () => sync(),
-                  displacement: MediaQuery.of(context).padding.top,
+                  onRefresh: sync,
+                  displacement: MediaQuery.of(context).padding.top + 40,
                 );
               },
             ),

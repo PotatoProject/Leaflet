@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loggy/loggy.dart';
@@ -36,6 +38,9 @@ void _initProviders(Reader read) async {
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(
+    debug: kDebugMode,
+  );
   _db = AppDatabase(constructDb());
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
@@ -87,6 +92,8 @@ main() async {
 }
 
 class PotatoNotes extends StatefulWidget {
+  PotatoNotes({Key key}) : super(key: key);
+
   @override
   _PotatoNotesState createState() => _PotatoNotesState();
 }

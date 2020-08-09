@@ -25,6 +25,8 @@ import 'package:uuid/uuid.dart';
 import 'locale_strings.dart';
 
 const int kMaxImageCount = 4;
+const double kCardBorderRadius = 10;
+const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
   horizontal: 180,
   vertical: 64,
@@ -251,10 +253,10 @@ class Utils {
   static Note markNoteChanged(Note note) {
     return note.copyWith(synced: false, lastModifyDate: DateTime.now());
   }
-	
-	static Tag markTagChanged(Tag tag) {
-		return tag.copyWith(lastModifyDate: DateTime.now());
-	}
+
+  static Tag markTagChanged(Tag tag) {
+    return tag.copyWith(lastModifyDate: DateTime.now());
+  }
 
   static Future<void> deleteNotes({
     GlobalKey<ScaffoldState> scaffoldKey,

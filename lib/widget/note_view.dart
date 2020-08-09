@@ -7,8 +7,6 @@ import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
-const double _kBorderRadius = 10.0;
-
 class NoteView extends StatelessWidget {
   final Note note;
   final SpannableList providedTitleList;
@@ -47,19 +45,19 @@ class NoteView extends StatelessWidget {
           ? Color(NoteColors.colorList[note.color].dynamicColor(context))
           : null,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_kBorderRadius),
+        borderRadius: BorderRadius.circular(kCardBorderRadius),
         side: BorderSide(
           color: borderColor,
           width: 1.5,
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      elevation: note.color != 0 ? 0 : 0,
-      margin: EdgeInsets.all(4),
+      elevation: 0,
+      margin: kCardPadding,
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
-        borderRadius: BorderRadius.circular(_kBorderRadius),
+        borderRadius: BorderRadius.circular(kCardBorderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
