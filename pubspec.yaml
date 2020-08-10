@@ -3,11 +3,11 @@ description: Official POSP note app
 version: 2.0.0-beta1+16
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: ">=2.6.0 <3.0.0"
   # The example interacts with build scripts on the Flutter side that are not
   # yet stable, so it requires a very recent version of Flutter.
   # This version will increase regularly as the build scripts change.
-  flutter: '>=1.5.9-pre.270'
+  flutter: ">=1.5.9-pre.270"
 
 dependencies:
   flutter:
@@ -51,6 +51,8 @@ dependencies:
   in_app_update:
   yaml:
   flutter_downloader:
+  cryptography:
+  encrypt:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -83,7 +85,7 @@ flutter:
     - assets/locales/uk-UK/
     - assets/locales/zh-CN/
   fonts:
-    - family:  CustomIcons
+    - family: CustomIcons
       fonts:
         - asset: fonts/CustomIcons.ttf
     - family: Manrope
