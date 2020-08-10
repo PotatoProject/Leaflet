@@ -146,20 +146,14 @@ class SyncRoutine {
     }
 
     // Get a list of notes which have been updated since the client updated
-    try {
-      var notes = await NoteController.list(lastUpdated);
-      Loggy.i(
-          message:
-              "Got these notes: " + notes.map((note) => note.id).join(","));
-      for (Note note in notes) {
-        Loggy.i(message: "Saving note:" + note.id);
-        await saveSyncedNote(note);
-      }
-      prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
-    } catch (e) {
-      Loggy.e(message: e);
-      throw ("Failed to list notes: " + e);
+    var notes = await NoteController.list(lastUpdated);
+    Loggy.i(
+        message: "Got these notes: " + notes.map((note) => note.id).join(","));
+    for (Note note in notes) {
+      Loggy.i(message: "Saving note:" + note.id);
+      await saveSyncedNote(note);
     }
+    prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
     return true;
   }
 
@@ -354,7 +348,8 @@ class SyncRoutine {
   Future<void> updateLists() async {
     localNotes = await helper.listNotes(ReturnMode.LOCAL);
     List<Note> syncedNotes = await helper.listNotes(ReturnMode.SYNCED);
-    localNotes.forEach((localNote) {
+
+    for (Note localNote in localNotes) {
       var syncedIndex = syncedNotes.indexWhere(
           (syncedNote) => syncedNote.id == localNote.id + "-synced");
       if (syncedIndex == -1) {
@@ -362,11 +357,11 @@ class SyncRoutine {
       } else {
         var syncedNote = syncedNotes.elementAt(syncedIndex);
         if (!localNote.synced) {
-          updatedNotes.putIfAbsent(
-              localNote, () => getNoteDelta(localNote, syncedNote));
+          updatedNotes[localNote] = await getNoteDelta(localNote, syncedNote);
         }
       }
-    });
+    }
+
     if (syncedNotes.length > 0) {
       syncedNotes.forEach((syncedNote) {
         var localIndex = localNotes.indexWhere(
@@ -404,9 +399,12 @@ class SyncRoutine {
     }
   }
 
-  Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
-    Map<String, dynamic> localMap = Utils.toSyncMap(localNote);
-    Map<String, dynamic> syncedMap = Utils.toSyncMap(syncedNote);
+  Future<Map<String, dynamic>> getNoteDelta(
+    Note localNote,
+    Note syncedNote,
+  ) async {
+    Map<String, dynamic> localMap = await Utils.toSyncMap(localNote);
+    Map<String, dynamic> syncedMap = await Utils.toSyncMap(syncedNote);
     Map<String, dynamic> noteDelta = Map();
     localMap.forEach((key, localValue) {
       if (localValue != syncedMap[key] &&

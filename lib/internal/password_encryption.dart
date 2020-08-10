@@ -5,14 +5,14 @@ import 'package:cryptography/cryptography.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:potato_notes/internal/providers.dart';
 
-/// PasswordEncryption
-/// @author Akshit Garg <garg.akshit@gmail.com>
 class PasswordEncryption {
-  static Future<String> encryptText(String plainText) async {
+  static Future<String> encryptText(String data) async {
+    // not gonna encrypt if we got no pass
+    if (prefs.masterPass.isEmpty || data.isEmpty) return json.encode(data);
     final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
     final iv = IV.fromSecureRandom(16);
-    final encrypted = encrypter.encrypt(plainText, iv: iv);
+    final encrypted = encrypter.encrypt(data.toString(), iv: iv);
 
     return '${encrypted.base64}|${iv.base64}';
   }
@@ -35,7 +35,10 @@ class PasswordEncryption {
     return Uint8List.fromList([...encrypted.bytes, ...iv.bytes]);
   }
 
-  static Future<String> decryptText(String cipherText) async {
+  static Future<dynamic> decryptText(String cipherText) async {
+    // no way of decrypting, returning
+    if (prefs.masterPass == "") return cipherText;
+
     final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
 
@@ -48,8 +51,15 @@ class PasswordEncryption {
       );
 
       return decrypted;
-    } catch (e) {
-      throw Exception('There was an error decrypting the inputs');
+    } on RangeError {
+      // either input is not encrypted or bad key
+      return cipherText;
+    } on FormatException {
+      try {
+        return json.decode(cipherText);
+      } on FormatException {
+        return cipherText;
+      }
     }
   }
 

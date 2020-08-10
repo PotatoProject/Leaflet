@@ -24,8 +24,6 @@ class TagController {
       return NoteController.handleResponse(addResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -43,8 +41,6 @@ class TagController {
       return NoteController.handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -69,8 +65,6 @@ class TagController {
       return tags.map((tag) => tag as Tag).toList();
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -89,8 +83,6 @@ class TagController {
       return NoteController.handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -111,8 +103,6 @@ class TagController {
       return response.map((id) => id.toString()).toList();
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 

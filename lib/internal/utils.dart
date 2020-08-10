@@ -15,6 +15,7 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
+import 'package:potato_notes/internal/password_encryption.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
@@ -449,22 +450,26 @@ class Utils {
     }
   }
 
-  static Map<String, dynamic> toSyncMap(Note note) {
-    var originalMap = note.toJson();
-    Map<String, dynamic> newMap = Map();
-    originalMap.forEach((key, value) {
-      var newValue = value;
-      var newKey = ReCase(key).snakeCase;
+  static Future<Map<String, dynamic>> toSyncMap(Note note) async {
+    Map<String, dynamic> originalMap = note.toJson();
+    Map<String, dynamic> newMap = {};
+
+    for (int i = 0; i < originalMap.length; i++) {
+      String key = originalMap.keys.toList()[i];
+      dynamic value = originalMap.values.toList()[i];
+      dynamic newValue;
+      String newKey = ReCase(key).snakeCase;
+
       switch (key) {
         case "styleJson":
           {
-            var style = value as ContentStyle;
+            ContentStyle style = value;
             newValue = json.encode(style.data);
             break;
           }
         case "images":
           {
-            var images = value as ImageList;
+            ImageList images = value;
             var imageMap =
                 images.data.map((id, uri) => MapEntry(id, uri.toString()));
             newValue = json.encode(imageMap);
@@ -472,42 +477,61 @@ class Utils {
           }
         case "listContent":
           {
-            var listContent = value as ListContent;
+            ListContent listContent = value;
             newValue = json.encode(listContent.content);
             break;
           }
         case "reminders":
           {
-            var reminders = value as ReminderList;
+            ReminderList reminders = value;
             newValue = json.encode(reminders.reminders);
             break;
           }
         case "tags":
           {
-            var tags = value as TagList;
+            TagList tags = value;
             newValue = json.encode(tags.tagIds);
+            break;
+          }
+        default:
+          {
+            newValue = value;
             break;
           }
       }
       if (key == "id") {
         newKey = "note_id";
       }
-      newMap.putIfAbsent(newKey, () => newValue);
-    });
+      newMap[newKey] = newValue is String &&
+              !(key == "id" || key == "lastModifyDate" || key == "creationDate")
+          ? await PasswordEncryption.encryptText(newValue)
+          : newValue;
+    }
+
     return newMap;
   }
 
-  static Note fromSyncMap(Map<String, dynamic> syncMap) {
-    Map<String, dynamic> newMap = Map();
-    syncMap.forEach((key, value) {
-      var newValue = value;
-      var newKey = ReCase(key).camelCase;
+  static Future<Note> fromSyncMap(Map<String, dynamic> syncMap) async {
+    Map<String, dynamic> newMap = {};
+
+    for (int i = 0; i < syncMap.length; i++) {
+      String key = syncMap.keys.toList()[i];
+      dynamic baseValue = syncMap.values.toList()[i];
+      dynamic value = baseValue is String &&
+              !(key == "id" ||
+                  key == "last_modify_date" ||
+                  key == "creation_date")
+          ? await PasswordEncryption.decryptText(baseValue)
+          : baseValue;
+      dynamic newValue = value;
+      String newKey = ReCase(key).camelCase;
+
       switch (key) {
         case "style_json":
           {
-            var map = json.decode(value);
+            List map = json.decode(value);
             List<int> data = List<int>.from(map.map((i) => i as int)).toList();
-            newValue = new ContentStyle(data);
+            newValue = ContentStyle(data);
             break;
           }
         case "images":
@@ -515,38 +539,39 @@ class Utils {
             Map map = json.decode(value);
             Map<String, Uri> images =
                 map.map((text, uri) => MapEntry(text, Uri.parse(text)));
-            newValue = new ImageList(images);
+            newValue = ImageList(images);
             break;
           }
         case "list_content":
           {
-            var map = json.decode(value);
+            List map = json.decode(value);
             List<ListItem> content =
                 List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
                     .toList();
-            newValue = new ListContent(content);
+            newValue = ListContent(content);
             break;
           }
         case "reminders":
           {
-            var map = json.decode(value);
+            List map = json.decode(value);
             List<DateTime> reminders =
                 List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
-            newValue = new ReminderList(reminders);
+            newValue = ReminderList(reminders);
             break;
           }
         case "tags":
           {
-            var map = json.decode(value);
+            List map = json.decode(value);
             List<String> tagIds = List<String>.from(map).toList();
-            newValue = new TagList(tagIds);
+            newValue = TagList(tagIds);
           }
       }
       if (key == "note_id") {
         newKey = "id";
       }
       newMap.putIfAbsent(newKey, () => newValue);
-    });
+    }
+
     return Note.fromJson(newMap);
   }
 

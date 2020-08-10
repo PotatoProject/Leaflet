@@ -110,8 +110,6 @@ class AccountController {
       }
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      rethrow;
     }
   }
 
@@ -141,8 +139,6 @@ class AccountController {
         }
       } on SocketException {
         throw ("Could not connect to server");
-      } catch (e) {
-        rethrow;
       }
     } else {
       return AuthResponse(status: false, message: "Not logged in.");
@@ -197,8 +193,6 @@ class AccountController {
       }
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      rethrow;
     }
   }
 }

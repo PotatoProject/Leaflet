@@ -12,7 +12,6 @@ import 'package:potato_notes/internal/utils.dart';
 class WebDrawingExporter {
   static Future<String> export(
       Uri uri, List<DrawObject> objects, Size size) async {
-    print(size);
     ImageProvider image;
     Completer<ui.Image> completer = Completer<ui.Image>();
 
@@ -94,7 +93,6 @@ class WebDrawingExporter {
   }
 
   static _colorToRgbaString(Color color) {
-    print('rgba(${color.red},${color.green},${color.blue},${color.opacity})');
     return 'rgba(${color.red},${color.green},${color.blue},${color.opacity})';
   }
 

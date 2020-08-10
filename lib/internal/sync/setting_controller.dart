@@ -25,8 +25,6 @@ class SettingController {
       return NoteController.handleResponse(getResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -44,8 +42,6 @@ class SettingController {
       return NoteController.handleResponse(setResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 

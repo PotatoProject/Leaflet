@@ -12,6 +12,7 @@ import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
@@ -92,6 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
+                      await NoteController.deleteAll();
                     },
                   ),
                   SettingsTile(

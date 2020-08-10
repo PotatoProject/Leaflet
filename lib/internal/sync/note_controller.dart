@@ -14,7 +14,7 @@ class NoteController {
   static Future<String> add(Note note) async {
     try {
       String token = await prefs.getToken();
-      String noteJson = json.encode(Utils.toSyncMap(note));
+      String noteJson = json.encode(await Utils.toSyncMap(note));
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note";
       Loggy.v(message: "Going to send POST to " + url);
       Response addResult = await http.post(url,
@@ -26,8 +26,6 @@ class NoteController {
       return handleResponse(addResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -45,8 +43,6 @@ class NoteController {
       return handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -64,8 +60,6 @@ class NoteController {
       return handleResponse(deleteResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -85,14 +79,12 @@ class NoteController {
       final data = jsonDecode(body);
       for (Map i in data["notes"]) {
         print(i);
-        var note = Utils.fromSyncMap(i);
+        Note note = await Utils.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
       return notes;
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -113,8 +105,6 @@ class NoteController {
       return handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
@@ -137,8 +127,6 @@ class NoteController {
       return idList;
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 
