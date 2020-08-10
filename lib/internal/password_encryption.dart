@@ -3,15 +3,13 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 /// PasswordEncryption
 /// @author Akshit Garg <garg.akshit@gmail.com>
 class PasswordEncryption {
-  static Future<String> encryptText(
-    String plainText,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<String> encryptText(String plainText) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
     final iv = IV.fromSecureRandom(16);
     final encrypted = encrypter.encrypt(plainText, iv: iv);
@@ -19,11 +17,8 @@ class PasswordEncryption {
     return '${encrypted.base64}|${iv.base64}';
   }
 
-  static Future<Uint8List> encryptTextToBinary(
-    String plainText,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<Uint8List> encryptTextToBinary(String plainText) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
     final iv = IV.fromSecureRandom(16);
     final encrypted = encrypter.encrypt(plainText, iv: iv);
@@ -31,11 +26,8 @@ class PasswordEncryption {
     return Uint8List.fromList([...encrypted.bytes, ...iv.bytes]);
   }
 
-  static Future<Uint8List> encryptBinary(
-    Uint8List data,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<Uint8List> encryptBinary(Uint8List data) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
     final iv = IV.fromSecureRandom(16);
     final encrypted = encrypter.encrypt(base64.encode(data), iv: iv);
@@ -43,11 +35,8 @@ class PasswordEncryption {
     return Uint8List.fromList([...encrypted.bytes, ...iv.bytes]);
   }
 
-  static Future<String> decryptText(
-    String cipherText,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<String> decryptText(String cipherText) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
 
     try {
@@ -64,11 +53,8 @@ class PasswordEncryption {
     }
   }
 
-  static Future<String> decryptBinaryToText(
-    Uint8List data,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<String> decryptBinaryToText(Uint8List data) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
 
     try {
@@ -83,11 +69,8 @@ class PasswordEncryption {
     }
   }
 
-  static Future<Uint8List> decryptBinary(
-    Uint8List data,
-    String password,
-  ) async {
-    final key = Key(await deriveKey(password));
+  static Future<Uint8List> decryptBinary(Uint8List data) async {
+    final key = Key(await deriveKey(prefs.masterPass));
     final encrypter = Encrypter(AES(key));
 
     try {
