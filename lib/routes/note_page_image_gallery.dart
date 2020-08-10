@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -47,15 +44,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           color: Colors.transparent,
         ),
         builder: (context, index) {
-          ImageProvider image;
-          String scheme = widget.note.images.uris[index].scheme;
-
-          if (scheme.startsWith("http")) {
-            image = CachedNetworkImageProvider(
-                widget.note.images.uris[index].toString());
-          } else {
-            image = FileImage(File(widget.note.images.uris[index].path));
-          }
+          ImageProvider image =
+              Utils.uriToImageProvider(widget.note.images.uris[index]);
 
           return PhotoViewGalleryPageOptions(
             imageProvider: image,

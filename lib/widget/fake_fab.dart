@@ -77,20 +77,23 @@ class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
         elevation: widget.elevation,
         clipBehavior: Clip.antiAlias,
         shape: widget.shape,
-        child: InkWell(
-          onTap: widget.onTap,
-          onLongPress: widget.onLongPress,
-          customBorder: widget.shape,
-          child: Container(
-            width: 56,
-            height: 56,
-            child: Theme(
-              data: theme.copyWith(
-                iconTheme: theme.iconTheme.copyWith(
-                  color: theme.accentColor,
+        child: GestureDetector(
+          onSecondaryTap: widget.onLongPress,
+          child: InkWell(
+            onTap: widget.onTap,
+            onLongPress: widget.onLongPress,
+            customBorder: widget.shape,
+            child: Container(
+              width: 56,
+              height: 56,
+              child: Theme(
+                data: theme.copyWith(
+                  iconTheme: theme.iconTheme.copyWith(
+                    color: theme.accentColor,
+                  ),
                 ),
+                child: widget.child,
               ),
-              child: widget.child,
             ),
           ),
         ),

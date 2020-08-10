@@ -15,12 +15,14 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_gesture_detector.dart';
+import 'package:potato_notes/widget/web_drawing_exporter.dart/shared.dart';
 import 'package:spicy_components/spicy_components.dart';
 
 class DrawPage extends StatefulWidget {
@@ -148,35 +150,46 @@ class _DrawPageState extends State<DrawPage>
             tooltip: LocaleStrings.common.save,
             onPressed: !saved
                 ? () async {
-                    ui.Image image = await (key.currentContext
-                            .findRenderObject() as RenderRepaintBoundary)
-                        .toImage();
-                    ByteData byteData =
-                        await image.toByteData(format: ui.ImageByteFormat.png);
-                    Uint8List pngBytes = byteData.buffer.asUint8List();
-                    DateTime now = DateTime.now();
-                    String timestamp = DateFormat(
-                      "HH_mm_ss-MM_dd_yyyy",
-                      context.locale.toLanguageTag(),
-                    ).format(now);
+                    String drawing;
+                    final box = key.currentContext.findRenderObject()
+                        as RenderRepaintBoundary;
 
-                    String drawing =
-                        "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
-                    if (filePath == null) {
-                      filePath = drawing;
+                    if (DeviceInfo.isDesktopOrWeb) {
+                      drawing = await WebDrawingExporter.export(
+                        widget.data != null ? widget.data.value : null,
+                        objects,
+                        box.size,
+                      );
                     } else {
-                      drawing = filePath;
+                      ui.Image image = await box.toImage();
+                      ByteData byteData = await image.toByteData(
+                          format: ui.ImageByteFormat.png);
+                      Uint8List pngBytes = byteData.buffer.asUint8List();
+                      DateTime now = DateTime.now();
+                      String timestamp = DateFormat(
+                        "HH_mm_ss-MM_dd_yyyy",
+                        context.locale.toLanguageTag(),
+                      ).format(now);
+
+                      drawing =
+                          "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
+                      if (filePath == null) {
+                        filePath = drawing;
+                      } else {
+                        drawing = filePath;
+                      }
+
+                      File imgFile = File(drawing);
+                      await imgFile.writeAsBytes(pngBytes, flush: true);
                     }
 
-                    File imgFile = File(drawing);
-                    await imgFile.writeAsBytes(pngBytes, flush: true);
                     Loggy.d(message: drawing);
 
                     if ((widget.data?.key ?? null) != null) {
                       widget.note.images.data.remove(widget.data.key);
                     }
 
-                    widget.note.images.data[drawing] = Uri.file(drawing);
+                    widget.note.images.data[drawing] = Uri.parse(drawing);
                     helper.saveNote(Utils.markNoteChanged(widget.note));
 
                     setState(() => saved = true);
@@ -379,9 +392,12 @@ class _DrawPageState extends State<DrawPage>
     currentIndex = objects.length - 1;
     actionQueueIndex = currentIndex;
 
+    RenderBox box = context.findRenderObject() as RenderBox;
+    Offset localOffset = box.globalToLocal(details.globalPosition);
+
     Offset point = Offset(
-      details.localPosition.dx,
-      details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
+      localOffset.dx,
+      localOffset.dy - 56 - MediaQuery.of(context).padding.top,
     );
 
     setState(() => objects[currentIndex].points.add(point));
@@ -392,10 +408,12 @@ class _DrawPageState extends State<DrawPage>
       _normalModePanStart(details);
       return;
     }
+    RenderBox box = context.findRenderObject() as RenderBox;
+    Offset localOffset = box.globalToLocal(details.globalPosition);
 
     Offset point = Offset(
-      details.localPosition.dx,
-      details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
+      localOffset.dx,
+      localOffset.dy - 56 - MediaQuery.of(context).padding.top,
     );
 
     setState(() => objects[currentIndex].points.add(point));
@@ -407,19 +425,22 @@ class _DrawPageState extends State<DrawPage>
 
     for (int i = 0; i < objects.length; i++) {
       DrawObject object = objects[i];
-      Offset touchPoint = Offset(
-        details.localPosition.dx,
-        details.localPosition.dy - 56 - MediaQuery.of(context).padding.top,
+      RenderBox box = context.findRenderObject() as RenderBox;
+      Offset localOffset = box.globalToLocal(details.globalPosition);
+
+      Offset point = Offset(
+        localOffset.dx,
+        localOffset.dy - 56 - MediaQuery.of(context).padding.top,
       );
+
       //Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
       //    details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
 
       if (object.points.length > 1) {
         for (int j = 1; j < object.points.length - 1; j++) {
-          double distanceAC =
-              distanceBetweenPoints(object.points[j], touchPoint);
+          double distanceAC = distanceBetweenPoints(object.points[j], point);
           double distanceCB =
-              distanceBetweenPoints(touchPoint, object.points[j + 1]);
+              distanceBetweenPoints(point, object.points[j + 1]);
           double distanceAB =
               distanceBetweenPoints(object.points[j], object.points[j + 1]);
 
@@ -432,7 +453,7 @@ class _DrawPageState extends State<DrawPage>
           }
         }
       } else {
-        double distanceAC = distanceBetweenPoints(object.points[0], touchPoint);
+        double distanceAC = distanceBetweenPoints(object.points[0], point);
 
         if (distanceAC < object.paint.strokeWidth / 2) {
           setState(() {

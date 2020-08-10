@@ -38,9 +38,11 @@ void _initProviders(Reader read) async {
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(
-    debug: kDebugMode,
-  );
+  if (!DeviceInfo.isDesktopOrWeb) {
+    await FlutterDownloader.initialize(
+      debug: kDebugMode,
+    );
+  }
   _db = AppDatabase(constructDb());
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
@@ -110,8 +112,6 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuilding");
-
     return StreamBuilder(
       stream: !DeviceInfo.isDesktopOrWeb
           ? accentStreamChannel.receiveBroadcastStream()

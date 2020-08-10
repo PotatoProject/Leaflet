@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
@@ -23,7 +24,6 @@ class InAppUpdater {
   );
 
   static BuildType _getBuildType(String buildTypeFromEnv) {
-    print(buildTypeFromEnv);
     switch (buildTypeFromEnv.toLowerCase()) {
       case 'fdroid':
         return BuildType.FDROID;
@@ -60,6 +60,7 @@ class InAppUpdater {
 
   static void checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
+    if (DeviceInfo.isDesktopOrWeb) return;
     final updateInfo = await InAppUpdater._internalCheckForUpdate();
     if (updateInfo.updateAvailable) {
       InAppUpdater.update(
@@ -198,7 +199,6 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
     _port.listen((dynamic data) {
       status = data[1];
       progress = data[2];
-      print("${widget.taskId} $status $progress");
       setState(() {});
     });
 

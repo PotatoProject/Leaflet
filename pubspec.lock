@@ -236,7 +236,7 @@ packages:
       name: flutter_downloader
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.4"
+    version: "1.5.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -486,7 +486,7 @@ packages:
       name: moor_ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0"
+    version: "0.8.0"
   moor_generator:
     dependency: "direct dev"
     description:
@@ -797,6 +797,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   sqlparser:
     dependency: transitive
     description:

@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -55,15 +52,8 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
-                ImageProvider image;
-                String scheme = widget.images[index].scheme;
-
-                if (scheme.startsWith("http")) {
-                  image = CachedNetworkImageProvider(
-                      widget.images[index].toString());
-                } else {
-                  image = FileImage(File(widget.images[index].path));
-                }
+                ImageProvider image =
+                    Utils.uriToImageProvider(widget.images[index]);
 
                 return Stack(
                   children: [

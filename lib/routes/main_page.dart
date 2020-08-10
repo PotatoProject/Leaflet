@@ -139,9 +139,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       children: <Widget>[
         Visibility(
           visible: deviceInfo.isLandscape,
-          child: SizedBox(
-            width: fixedDrawerSize,
-            child: getDrawer(deviceInfo.uiSizeFactor >= 4, true),
+          child: Material(
+            child: SizedBox(
+              width: fixedDrawerSize,
+              child: getDrawer(deviceInfo.uiSizeFactor >= 4, true),
+            ),
           ),
         ),
         Expanded(
@@ -178,7 +180,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               !note.deleted,
                         )
                         .toList()
-                    : snapshot.data;
+                    : snapshot.data ?? [];
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   notes = cachedNotesMap[mode];

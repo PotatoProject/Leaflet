@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -434,6 +436,16 @@ class Utils {
           );
         }
       }
+    }
+  }
+
+  static ImageProvider uriToImageProvider(Uri uri) {
+    if (uri.data != null) {
+      return MemoryImage(uri.data.contentAsBytes());
+    } else if (uri.scheme.startsWith("http") || uri.scheme.startsWith("blob")) {
+      return CachedNetworkImageProvider(uri.toString());
+    } else {
+      return FileImage(File(uri.path));
     }
   }
 

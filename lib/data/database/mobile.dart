@@ -13,6 +13,14 @@ QueryExecutor constructDb({bool logStatements = false}) {
       return VmDatabase(dbFile, logStatements: logStatements);
     });
     return executor;
-  } else
-    return null;
+  }
+  if (Platform.isMacOS || Platform.isLinux) {
+    final file = File('notes.sqlite');
+    return VmDatabase(file, logStatements: logStatements);
+  }
+  // if (Platform.isWindows) {
+  //   final file = File('db.sqlite');
+  //   return Database(VMDatabase(file, logStatements: logStatements));
+  // }
+  return VmDatabase.memory(logStatements: logStatements);
 }

@@ -29,7 +29,6 @@ class _NewTagState extends State<TagEditor> {
   @override
   void initState() {
     if (widget.tag == null) {
-      print("bruh");
       tag = tag.copyWith(id: Utils.generateId());
       tag = tag.copyWith(name: widget.initialInput);
     } else

@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  moor_ffi: "0.5.0"
+  moor_ffi:
   moor:
   json_serializable:
   sqflite:

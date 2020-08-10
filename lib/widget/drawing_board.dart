@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:moor/moor.dart';
 import 'package:potato_notes/internal/draw_object.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class DrawingBoard extends StatefulWidget {
   final Key repaintKey;
@@ -30,13 +30,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
     Completer<ui.Image> completer = Completer<ui.Image>();
 
     if (widget.uri != null) {
-      String scheme = widget.uri.scheme;
-
-      if (scheme.startsWith("http")) {
-        image = CachedNetworkImageProvider(widget.uri.toString());
-      } else {
-        image = FileImage(File(widget.uri.path));
-      }
+      image = Utils.uriToImageProvider(widget.uri);
 
       image?.resolve(ImageConfiguration())?.addListener(
         ImageStreamListener(

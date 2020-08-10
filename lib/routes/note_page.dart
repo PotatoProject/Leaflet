@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +11,6 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -542,21 +539,12 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
         ),
-        (!DeviceInfo.isDesktopOrWeb)
-            ? IconButton(
-                icon: Icon(Icons.add),
-                padding: EdgeInsets.all(0),
-                tooltip: LocaleStrings.notePage.toolbarAddItem,
-                onPressed: showAddElementsSheet,
-              )
-            : IconButton(
-                icon: Icon(
-                  note.list ? Icons.check_circle : Icons.check_circle_outline,
-                ),
-                padding: EdgeInsets.all(0),
-                tooltip: LocaleStrings.notePage.toggleList,
-                onPressed: toggleList,
-              ),
+        IconButton(
+          icon: Icon(Icons.add),
+          padding: EdgeInsets.all(0),
+          tooltip: LocaleStrings.notePage.toolbarAddItem,
+          onPressed: showAddElementsSheet,
+        )
       ];
     }
   }
@@ -687,7 +675,7 @@ class _NotePageState extends State<NotePage> {
 
               if (image != null) {
                 setState(
-                    () => note.images.data[image.path] = File(image.path).uri);
+                    () => note.images.data[image.path] = Uri.parse(image.path));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }
@@ -702,7 +690,7 @@ class _NotePageState extends State<NotePage> {
 
               if (image != null) {
                 setState(
-                    () => note.images.data[image.path] = File(image.path).uri);
+                    () => note.images.data[image.path] = Uri.parse(image.path));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }
