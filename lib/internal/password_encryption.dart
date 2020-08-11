@@ -104,4 +104,29 @@ class PasswordEncryption {
 
     return await output.extract();
   }
+
+  static Future<bool> isPasswordValid(
+    String password,
+    String plainText,
+    String hash,
+  ) async {
+    final key = Key(await deriveKey(password));
+    final encrypter = Encrypter(AES(key));
+    final iv = IV.fromSecureRandom(16);
+    final encrypted = encrypter.encrypt(plainText, iv: iv);
+
+    final encryptedString = await getSha512('${encrypted.base64}|${iv.base64}');
+    return hash == encryptedString;
+  }
+
+  static Future<String> getSha512(String input) async {
+    return utf8.decode(
+      (await sha512.hash(
+        utf8.encode(
+          input,
+        ),
+      ))
+          .bytes,
+    );
+  }
 }
