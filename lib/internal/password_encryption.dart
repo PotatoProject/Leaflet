@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:cryptography/cryptography.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -120,13 +121,6 @@ class PasswordEncryption {
   }
 
   static Future<String> getSha512(String input) async {
-    return utf8.decode(
-      (await sha512.hash(
-        utf8.encode(
-          input,
-        ),
-      ))
-          .bytes,
-    );
+    return crypto.sha512.convert(utf8.encode(input)).toString();
   }
 }

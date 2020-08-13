@@ -53,6 +53,7 @@ dependencies:
   flutter_downloader:
   cryptography:
   encrypt:
+  crypto:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
