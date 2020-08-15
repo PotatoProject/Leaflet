@@ -1,0 +1,512 @@
+From a1ab02d2286cac9e3565656089eed2e8225aadb5 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Sat, 15 Aug 2020 15:24:37 +0200
+Subject: [PATCH 1/1] notes: INCOMPLETE master pass validation prompt
+
+---
+ android/local.properties              |   4 +-
+ lib/internal/password_encryption.dart |   4 +-
+ lib/internal/preferences.dart         |  15 +++++
+ lib/internal/sync/sync_routine.dart   |  27 +++++++-
+ lib/internal/utils.dart               |  27 ++++++--
+ lib/routes/main_page.dart             |   6 +-
+ lib/routes/settings_page.dart         |  19 +-----
+ lib/widget/pass_challenge.dart        |  90 +++++++++++++++++++-------
+ notes.sqlite                          | Bin 0 -> 20480 bytes
+ pubspec.lock                          |  14 ++--
+ 10 files changed, 148 insertions(+), 58 deletions(-)
+ create mode 100644 notes.sqlite
+
+diff --git a/android/local.properties b/android/local.properties
+index 87ea658..846e5ae 100644
+--- a/android/local.properties
++++ b/android/local.properties
+@@ -1,5 +1,5 @@
+-sdk.dir=C:\\Users\\akshi\\AppData\\Local\\Android\\sdk
+-flutter.sdk=C:\\bin\\flutter
++sdk.dir=/home/hrx/Android/Sdk
++flutter.sdk=/home/hrx/flutter
+ flutter.buildMode=debug
+ flutter.versionName=2.0.0-beta1
+ flutter.versionCode=16
+\ No newline at end of file
+diff --git a/lib/internal/password_encryption.dart b/lib/internal/password_encryption.dart
+index c426a3a..9b008d2 100644
+--- a/lib/internal/password_encryption.dart
++++ b/lib/internal/password_encryption.dart
+@@ -9,7 +9,7 @@ import 'package:potato_notes/internal/providers.dart';
+ class PasswordEncryption {
+   static Future<String> encryptText(String data) async {
+     // not gonna encrypt if we got no pass
+-    if (prefs.masterPass.isEmpty || data.isEmpty) return json.encode(data);
++    if (prefs.masterPass.isEmpty || data.isEmpty) return data;
+     final key = Key(await deriveKey(prefs.masterPass));
+     final encrypter = Encrypter(AES(key));
+     final iv = IV.fromSecureRandom(16);
+@@ -111,6 +111,8 @@ class PasswordEncryption {
+     String plainText,
+     String hash,
+   ) async {
++    if (plainText == "null" || hash == "null") return true;
++
+     final key = Key(await deriveKey(password));
+     final encrypter = Encrypter(AES(key));
+     final iv = IV.fromSecureRandom(16);
+diff --git a/lib/internal/preferences.dart b/lib/internal/preferences.dart
+index 01c0799..b1bc6be 100644
+--- a/lib/internal/preferences.dart
++++ b/lib/internal/preferences.dart
+@@ -9,6 +9,7 @@ import 'package:potato_notes/internal/providers.dart';
+ import 'package:potato_notes/internal/sync/account_controller.dart';
+ import 'package:potato_notes/internal/keystore.dart';
+ import 'package:potato_notes/internal/shared_prefs.dart';
++import 'package:potato_notes/internal/sync/setting_controller.dart';
+ 
+ class Preferences extends ChangeNotifier {
+   SharedPrefs prefs;
+@@ -35,6 +36,10 @@ class Preferences extends ChangeNotifier {
+   int _lastUpdated;
+ 
+   String get masterPass => _masterPass;
++  Future<String> get masterPassValidator async =>
++      await SettingController.get("master_pass_validator");
++  Future<String> get masterPassValidatorHash async =>
++      await SettingController.get("master_pass_validator_hash");
+   ThemeMode get themeMode => _themeMode;
+   Color get customAccent => _customAccent;
+   bool get useAmoled => _useAmoled;
+@@ -62,6 +67,16 @@ class Preferences extends ChangeNotifier {
+     notifyListeners();
+   }
+ 
++  void setMasterPassValidator(String value) async {
++    await SettingController.set("master_pass_validator", value);
++    notifyListeners();
++  }
++
++  void setMasterPassValidatorHash(String value) async {
++    await SettingController.set("master_pass_validator_hash", value);
++    notifyListeners();
++  }
++
+   set themeMode(ThemeMode value) {
+     _themeMode = value;
+     prefs.setThemeMode(value);
+diff --git a/lib/internal/sync/sync_routine.dart b/lib/internal/sync/sync_routine.dart
+index 336bbed..58eaf86 100644
+--- a/lib/internal/sync/sync_routine.dart
++++ b/lib/internal/sync/sync_routine.dart
+@@ -1,17 +1,20 @@
+ import 'dart:convert';
+ import 'dart:core';
+ 
++import 'package:flutter/cupertino.dart';
+ import 'package:http/http.dart';
+ import 'package:loggy/loggy.dart';
+ import 'package:potato_notes/data/dao/note_helper.dart';
+ import 'package:potato_notes/data/dao/tag_helper.dart';
+ import 'package:potato_notes/data/database.dart';
++import 'package:potato_notes/internal/password_encryption.dart';
+ import 'package:potato_notes/internal/providers.dart';
+ import 'package:potato_notes/internal/sync/account_controller.dart';
+ import 'package:potato_notes/internal/sync/note_controller.dart';
+ import 'package:potato_notes/internal/sync/setting_controller.dart';
+ import 'package:potato_notes/internal/sync/tag_controller.dart';
+ import 'package:potato_notes/internal/utils.dart';
++import 'package:potato_notes/widget/pass_challenge.dart';
+ 
+ class SyncRoutine {
+   static const Set<String> settingsToSync = {
+@@ -87,7 +90,7 @@ class SyncRoutine {
+     }
+   }
+ 
+-  Future<bool> syncNotes() async {
++  Future<bool> syncNotes(BuildContext context) async {
+     // Check if the app is able to access the remote server
+     bool status = await checkOnlineStatus();
+     if (status != true) throw ("Could not connect to server");
+@@ -102,6 +105,28 @@ class SyncRoutine {
+     // Recieve and send changes from API
+     await sendSettingUpdates();
+ 
++    String validator = await prefs.masterPassValidator;
++    String hash = await prefs.masterPassValidatorHash;
++    print(
++      "validator: $validator ${validator.runtimeType}, hash: $hash ${hash.runtimeType}",
++    );
++    if (validator != "null" && hash != "null") {
++      bool status = await PasswordEncryption.isPasswordValid(
++        prefs.masterPass,
++        validator,
++        hash,
++      );
++
++      if (!status) {
++        await Utils.showPassChallengeSheet(
++          context,
++          challengeMode: ChallengeMode.CONFIRM_SYNC,
++        );
++      }
++    } else {
++      await Utils.removeMasterPass(context, sync: false);
++    }
++
+     // Fill the list of added, deleted and updated notes to create a local cache
+     await updateLists();
+ 
+diff --git a/lib/internal/utils.dart b/lib/internal/utils.dart
+index 25cd5b6..de2695e 100644
+--- a/lib/internal/utils.dart
++++ b/lib/internal/utils.dart
+@@ -17,6 +17,7 @@ import 'package:potato_notes/internal/device_info.dart';
+ import 'package:potato_notes/internal/global_key_registry.dart';
+ import 'package:potato_notes/internal/password_encryption.dart';
+ import 'package:potato_notes/internal/providers.dart';
++import 'package:potato_notes/internal/sync/sync_routine.dart';
+ import 'package:potato_notes/routes/about_page.dart';
+ import 'package:potato_notes/widget/bottom_sheet_base.dart';
+ import 'package:potato_notes/widget/dismissible_route.dart';
+@@ -40,14 +41,15 @@ const EdgeInsets kTertiaryRoutePadding = const EdgeInsets.symmetric(
+ );
+ 
+ class Utils {
+-  static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
++  static Future<dynamic> showPassChallengeSheet(
++    BuildContext context, {
++    ChallengeMode challengeMode = ChallengeMode.CONFIRM,
++  }) async {
+     return await showNotesModalBottomSheet(
+       context: context,
+       isScrollControlled: true,
+       builder: (context) => PassChallenge(
+-        editMode: false,
+-        onChallengeSuccess: () => Navigator.pop(context, true),
+-        onSave: null,
++        challengeMode: challengeMode,
+       ),
+     );
+   }
+@@ -575,5 +577,22 @@ class Utils {
+     return Note.fromJson(newMap);
+   }
+ 
++  static Future<void> removeMasterPass(BuildContext context,
++      {bool sync = true}) async {
++    prefs.masterPass = "";
++    prefs.setMasterPassValidator("null");
++    prefs.setMasterPassValidatorHash("null");
++
++    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
++
++    for (int i = 0; i < notes.length; i++) {
++      await helper
++          .saveNote(Utils.markNoteChanged(notes[i]).copyWith(lockNote: false));
++    }
++    if (sync) {
++      SyncRoutine().syncNotes(context);
++    }
++  }
++
+   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
+ }
+diff --git a/lib/routes/main_page.dart b/lib/routes/main_page.dart
+index 96da199..07f22e3 100644
+--- a/lib/routes/main_page.dart
++++ b/lib/routes/main_page.dart
+@@ -231,7 +231,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+                       child: child,
+                     ),
+                   ),
+-                  onRefresh: sync,
++                  onRefresh: () async => sync(context),
+                   displacement: MediaQuery.of(context).padding.top + 40,
+                 );
+               },
+@@ -726,7 +726,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+         ),
+       ];
+ 
+-  Future<void> sync() async {
+-    await SyncRoutine().syncNotes();
++  Future<void> sync(BuildContext context) async {
++    await SyncRoutine().syncNotes(context);
+   }
+ }
+diff --git a/lib/routes/settings_page.dart b/lib/routes/settings_page.dart
+index 1576197..7d51070 100644
+--- a/lib/routes/settings_page.dart
++++ b/lib/routes/settings_page.dart
+@@ -5,8 +5,6 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+ import 'package:loggy/loggy.dart';
+ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+ import 'package:outline_material_icons/outline_material_icons.dart';
+-import 'package:potato_notes/data/dao/note_helper.dart';
+-import 'package:potato_notes/data/database.dart';
+ import 'package:potato_notes/internal/device_info.dart';
+ import 'package:potato_notes/internal/in_app_update.dart';
+ import 'package:potato_notes/internal/locale_strings.dart';
+@@ -335,15 +333,8 @@ class _SettingsPageState extends State<SettingsPage> {
+                       await showPassChallengeSheet(context, false) ?? false;
+ 
+                   if (confirm) {
+-                    prefs.masterPass = "";
+-
+-                    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+-
+                     setState(() => removingMasterPass = true);
+-                    for (int i = 0; i < notes.length; i++) {
+-                      await helper.saveNote(Utils.markNoteChanged(notes[i])
+-                          .copyWith(lockNote: false));
+-                    }
++                    await Utils.removeMasterPass(context);
+                     setState(() => removingMasterPass = false);
+                   }
+                 }
+@@ -457,13 +448,7 @@ class _SettingsPageState extends State<SettingsPage> {
+       context: context,
+       isScrollControlled: true,
+       builder: (context) => PassChallenge(
+-        editMode: editMode,
+-        onChallengeSuccess: () => Navigator.pop(context, true),
+-        onSave: (text) async {
+-          prefs.masterPass = text;
+-
+-          Navigator.pop(context);
+-        },
++        challengeMode: editMode ? ChallengeMode.EDIT : ChallengeMode.CONFIRM,
+       ),
+     );
+   }
+diff --git a/lib/widget/pass_challenge.dart b/lib/widget/pass_challenge.dart
+index da2eb2e..28d9998 100644
+--- a/lib/widget/pass_challenge.dart
++++ b/lib/widget/pass_challenge.dart
+@@ -1,17 +1,15 @@
+ import 'package:flutter/material.dart';
+ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
++import 'package:potato_notes/internal/crypto_random_string.dart';
+ import 'package:potato_notes/internal/locale_strings.dart';
++import 'package:potato_notes/internal/password_encryption.dart';
+ import 'package:potato_notes/internal/providers.dart';
+ 
+ class PassChallenge extends StatefulWidget {
+-  final bool editMode;
+-  final Function(String) onSave;
+-  final Function() onChallengeSuccess;
++  final ChallengeMode challengeMode;
+ 
+   PassChallenge({
+-    this.editMode = false,
+-    this.onSave,
+-    this.onChallengeSuccess,
++    this.challengeMode = ChallengeMode.CONFIRM,
+   });
+ 
+   @override
+@@ -27,7 +25,9 @@ class _PassChallengeState extends State<PassChallenge> {
+   @override
+   void initState() {
+     controller = TextEditingController(
+-      text: widget.editMode ? prefs.masterPass ?? "" : "",
++      text: widget.challengeMode == ChallengeMode.EDIT
++          ? prefs.masterPass ?? ""
++          : "",
+     );
+ 
+     controller.addListener(() => setState(() {}));
+@@ -36,8 +36,9 @@ class _PassChallengeState extends State<PassChallenge> {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    final bool numericPass =
+-        !widget.editMode ? int.tryParse(prefs.masterPass) != null : false;
++    final bool numericPass = widget.challengeMode == ChallengeMode.CONFIRM
++        ? int.tryParse(prefs.masterPass) != null
++        : false;
+ 
+     return Padding(
+       padding:
+@@ -49,7 +50,7 @@ class _PassChallengeState extends State<PassChallenge> {
+           Padding(
+             padding: EdgeInsets.all(16),
+             child: Text(
+-              widget.editMode
++              widget.challengeMode == ChallengeMode.EDIT
+                   ? LocaleStrings.common.masterPassModify
+                   : LocaleStrings.common.masterPassConfirm,
+               style: TextStyle(
+@@ -85,19 +86,12 @@ class _PassChallengeState extends State<PassChallenge> {
+               children: [
+                 Spacer(),
+                 FlatButton(
+-                  onPressed: controller.text.length >= 4
+-                      ? widget.editMode
+-                          ? () => widget.onSave(controller.text)
+-                          : () {
+-                              if (prefs.masterPass == controller.text) {
+-                                setState(() => status = null);
+-                                widget.onChallengeSuccess();
+-                              } else
+-                                setState(
+-                                    () => status = "Incorrect master pass");
+-                            }
+-                      : null,
+-                  child: Text(widget.editMode ? "Save" : "Confirm"),
++                  onPressed: controller.text.length >= 4 ? onConfirm : null,
++                  child: Text(
++                    widget.challengeMode == ChallengeMode.EDIT
++                        ? "Save"
++                        : "Confirm",
++                  ),
+                   color: Theme.of(context).accentColor,
+                   disabledColor: Theme.of(context).disabledColor,
+                   textColor: Theme.of(context).cardColor,
+@@ -110,4 +104,54 @@ class _PassChallengeState extends State<PassChallenge> {
+       ),
+     );
+   }
++
++  void onConfirm() async {
++    switch (widget.challengeMode) {
++      case ChallengeMode.EDIT:
++        prefs.masterPass = controller.text;
++        String randomString = generateSecureRandomString();
++        String encryptedText =
++            await PasswordEncryption.encryptText(randomString);
++        String hash = await PasswordEncryption.getSha512(encryptedText);
++
++        prefs.setMasterPassValidator(randomString);
++        prefs.setMasterPassValidatorHash(hash);
++
++        Navigator.pop(context);
++        break;
++      case ChallengeMode.CONFIRM:
++        if (prefs.masterPass == controller.text) {
++          setState(() => status = null);
++          Navigator.pop(context, true);
++        } else {
++          setState(
++            () => status = "Incorrect master pass",
++          );
++        }
++        break;
++      case ChallengeMode.CONFIRM_SYNC:
++        bool success = await PasswordEncryption.isPasswordValid(
++          controller.text,
++          await prefs.masterPassValidator,
++          await prefs.masterPassValidatorHash,
++        );
++
++        if (success) {
++          prefs.masterPass = controller.text;
++
++          setState(() => status = null);
++          Navigator.pop(context, true);
++        } else {
++          setState(
++            () => status = "Couldn't validate master pass",
++          );
++        }
++    }
++  }
++}
++
++enum ChallengeMode {
++  CONFIRM,
++  EDIT,
++  CONFIRM_SYNC,
+ }
+diff --git a/notes.sqlite b/notes.sqlite
+new file mode 100644
+index 0000000000000000000000000000000000000000..15baadea34304b6df579d14a0b2b1a2ce17bfc6d
+GIT binary patch
+literal 20480
+zcmeI&?@!Y}7zgl{4OoOxV<e0C<}zNeC7W4c?uUfLIjayR$lOebAx+obpt`lOJq%>w
+z1-{{(Z~T*tFHL;Mzv4@;4I9O6u^L|>`8K<)cRY98^XYYAH(u@3Oh!rDcDfoPE5dC-
+z6otox2!gP{%Oo%TV}hSV`xX8w@-h{uk2+lt9#p@?r5{3cW?PsoN#AC+XQferXoCO*
+zAOHafKmY;|fWUt!aJm+mPR!4XANQEn>QJWbyIzS_>q@1ekVfT6O(9+jNtp(DU8z^s
+zD|NE9-5^`dS}j8?txHEV>vqR>$i`Mfd9GZBlc&nFO0(7=xeV!OE>pX<VYZJ|L*swZ
+zj}4X|mWz2gw_GY@$jkc1i%NZ$Y%06ngwpAy=u~2LUKC8rphxce4*zVRYKP4B>#8?#
+zRra1I&+drRi9|yD6!8<aY(`!GY2r$%e$$v-naMhVWc~bg+hWvWmjr&R%Z@u#ee2rR
+z&<`}np~m=RbELYiR5wYAUj{$Yv`C6`$?0^4=nmDGX<L5)_IJ#`zkFs_+o$ejc7p}c
+zF<llSJwGg%o7bQYX%2>UXxF=>&ZuAMFVEqnd0-lJFyh$NH2}X7er0C1{!aDQMVPb(
+zvB41zUFxbW)9zB{n7SKcoL_qcM>8nDPeZMteq^w>=I96Jhfv)Ip~3#{v89LVeGwS!
+zJ9PJ^C#Di>iE($Ye=n-C{}SQvtugQYHO`AD*@9%xef8=%AOHafKmY;|fB*y_009U<
+z00P%oKwQ1XlM77kbS{3kdGG#WEE<h1#?slPn1ARig?wIa6|=3p(az?}<zlw9Tr{%9
+zQgK;t6|_=LE*tHA{&0=9_vj`0CZCpk^k(lwEqp%W<*eV-J2~kkFLr+XfL?O2+jCLp
+zJ3JeP>sM~^$%)drAe~F!1M|cw1Rwwb2tWV=5P$##AOHafKmY>&RA49MXz7q~LXHQf
+zB26*Orb68N{-6KTKMn{$00Izz00bZa0SG_<0uX=z1a7c^_x(RU|KH#XjMN|i0SG_<
+S0uX=z1Rwwb2tWV=T;L}Kkf6f=
+
+literal 0
+HcmV?d00001
+
+diff --git a/pubspec.lock b/pubspec.lock
+index 009f524..dc8bdbd 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -126,7 +126,7 @@ packages:
+       name: characters
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.1.0-nullsafety.2"
++    version: "1.1.0-nullsafety"
+   charcode:
+     dependency: transitive
+     description:
+@@ -168,7 +168,7 @@ packages:
+       name: collection
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.15.0-nullsafety.2"
++    version: "1.15.0-nullsafety"
+   convert:
+     dependency: transitive
+     description:
+@@ -486,7 +486,7 @@ packages:
+       name: meta
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.3.0-nullsafety.2"
++    version: "1.3.0-nullsafety"
+   mime:
+     dependency: transitive
+     description:
+@@ -556,7 +556,7 @@ packages:
+       name: path
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.8.0-nullsafety"
++    version: "1.7.0"
+   path_drawing:
+     dependency: "direct main"
+     description:
+@@ -908,7 +908,7 @@ packages:
+       name: typed_data
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.3.0-nullsafety.2"
++    version: "1.3.0-nullsafety"
+   url_launcher:
+     dependency: "direct main"
+     description:
+@@ -957,7 +957,7 @@ packages:
+       name: vector_math
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "2.1.0-nullsafety.2"
++    version: "2.1.0-nullsafety"
+   watcher:
+     dependency: transitive
+     description:
+@@ -994,5 +994,5 @@ packages:
+     source: hosted
+     version: "2.2.1"
+ sdks:
+-  dart: ">=2.10.0-0.0.dev <2.10.0"
++  dart: ">=2.9.0-18.0 <2.9.0"
+   flutter: ">=1.17.0 <2.0.0"
+-- 
+2.27.0
+
