@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +24,7 @@ import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
+import 'package:potato_notes/widget/url_card.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
@@ -51,6 +54,8 @@ class _NotePageState extends State<NotePage> {
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
+  Timer linkParseDelayTimer;
+  List<String> noteLinks = [];
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -91,6 +96,7 @@ class _NotePageState extends State<NotePage> {
     );*/
 
     buildListContentElements();
+    noteLinks = Utils.parseLinks(contentController.text);
 
     super.initState();
   }
@@ -315,6 +321,14 @@ class _NotePageState extends State<NotePage> {
                                 .withOpacity(0.5),
                           ),
                           onChanged: (text) {
+                            linkParseDelayTimer?.cancel();
+                            linkParseDelayTimer = Timer(
+                              Duration(seconds: 2),
+                              () async {
+                                noteLinks = Utils.parseLinks(text);
+                                setState(() {});
+                              },
+                            );
                             //List<int> styleJson = gzip.encode(utf8.encode(
                             //    SpannableList(contentController.styleList.list)
                             //        .toJson()));
@@ -329,6 +343,15 @@ class _NotePageState extends State<NotePage> {
                           maxLines: null,
                         ),
                       ],
+                    ),
+                  ),
+                  Column(
+                    children: List.generate(
+                      noteLinks.length,
+                      (index) => UrlCard(
+                        key: ValueKey(noteLinks[index]),
+                        url: noteLinks[index],
+                      ),
                     ),
                   ),
                   Visibility(

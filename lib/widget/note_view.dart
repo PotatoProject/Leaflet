@@ -3,9 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
+import 'package:potato_notes/widget/url_card.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteView extends StatelessWidget {
@@ -200,6 +202,19 @@ class NoteView extends StatelessWidget {
       );
     }
 
+    List<String> links = Utils.parseLinks(note.content);
+    items.add(
+      Column(
+        children: List.generate(
+          links.length,
+          (index) => UrlCard(
+            url: links[index],
+            shrink: true,
+          ),
+        ),
+      ),
+    );
+
     return items;
   }
 
@@ -214,23 +229,29 @@ class NoteView extends StatelessWidget {
             builder: (context, constraints) {
               return Row(
                 children: [
-                  Icon(
-                    item.status
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: item.status
-                        ? note.color != 0
-                            ? Theme.of(context).textTheme.caption.color
-                            : Theme.of(context).accentColor
-                        : null,
-                    size: 20,
+                  Checkbox(
+                    value: item.status,
+                    onChanged: (value) {
+                      helper.saveNote(note.copyWith(
+                          listContent: note.listContent
+                            ..content[index].status = value));
+                    },
+                    checkColor: note.color != 0
+                        ? Color(NoteColors.colorList[note.color]
+                            .dynamicColor(context))
+                        : Theme.of(context).scaffoldBackgroundColor,
+                    activeColor: note.color != 0
+                        ? Theme.of(context).textTheme.caption.color
+                        : Theme.of(context).accentColor,
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   VerticalDivider(
                     color: Colors.transparent,
                     width: 8,
                   ),
                   SizedBox(
-                    width: constraints.maxWidth - 28,
+                    width: constraints.maxWidth - 40,
                     child: Text(
                       item.text,
                       overflow: TextOverflow.ellipsis,

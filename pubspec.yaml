@@ -51,6 +51,8 @@ dependencies:
   in_app_update:
   yaml:
   flutter_downloader:
+  linkify:
+  flutter_cache_manager:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -58,6 +60,9 @@ dependencies:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
+  # TODO: Use pub version whenever the PR gets merged
+  metadata_fetch:
+    git: https://github.com/HrX03/metadata_fetch
 
 dev_dependencies:
   moor_generator:

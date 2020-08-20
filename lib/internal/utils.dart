@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:linkify/linkify.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -548,6 +549,19 @@ class Utils {
       newMap.putIfAbsent(newKey, () => newValue);
     });
     return Note.fromJson(newMap);
+  }
+
+  static List<String> parseLinks(String text) {
+    List<LinkifyElement> elements = linkify(text);
+    List<String> returnList = [];
+
+    for (LinkifyElement element in elements) {
+      if (element is UrlElement) {
+        returnList.add(element.url);
+      }
+    }
+
+    return returnList;
   }
 
   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
