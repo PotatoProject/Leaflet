@@ -5,8 +5,10 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/imageService.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -64,6 +66,10 @@ class MigrationTask {
         );
       }
 
+      SavedImage savedImage;
+      if (v1Note.imagePath != null) {
+        savedImage = await ImageService.loadLocalFile(File(v1Note.imagePath));
+      }
       Note note = Note(
         id: Utils.generateId(),
         title: v1Note.title ?? "",
@@ -73,9 +79,7 @@ class MigrationTask {
         lastModifyDate: DateTime.now(),
         color: v1Note.color,
         images: ImageList(
-          v1Note.imagePath != null
-              ? {v1Note.imagePath: Uri.parse(v1Note.imagePath)}
-              : {},
+          savedImage != null ? [savedImage] : List(),
         ),
         list: v1Note.isList == 1,
         listContent: ListContent(listItems),

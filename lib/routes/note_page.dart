@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,10 +11,12 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/imageService.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
@@ -65,7 +69,7 @@ class _NotePageState extends State<NotePage> {
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
-      images: widget.note?.images ?? ImageList({}),
+      images: widget.note?.images ?? ImageList(List()),
       list: widget.note?.list ?? false,
       listContent: widget.note?.listContent ?? ListContent([]),
       reminders: widget.note?.reminders ?? ReminderList([]),
@@ -123,11 +127,7 @@ class _NotePageState extends State<NotePage> {
     }
 
     final Widget imagesWidget = NoteViewImages(
-      images: note.images.uris.sublist(
-          0,
-          note.images.data.length > kMaxImageCount
-              ? kMaxImageCount
-              : note.images.data.length),
+      images: note.images.data,
       showPlusImages: true,
       numPlusImages: note.images.data.length < kMaxImageCount
           ? 0
@@ -674,8 +674,9 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                setState(
-                    () => note.images.data[image.path] = Uri.parse(image.path));
+                SavedImage savedImage =
+                    await ImageService.loadLocalFile(File(image.path));
+                setState(() => note.images.data.add(savedImage));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }
@@ -689,8 +690,9 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                setState(
-                    () => note.images.data[image.path] = Uri.parse(image.path));
+                SavedImage savedImage =
+                    await ImageService.loadLocalFile(File(image.path));
+                setState(() => note.images.data.add(savedImage));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }

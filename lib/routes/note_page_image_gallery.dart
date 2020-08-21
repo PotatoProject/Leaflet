@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 
@@ -44,8 +46,26 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           color: Colors.transparent,
         ),
         builder: (context, index) {
-          ImageProvider image =
-              Utils.uriToImageProvider(widget.note.images.uris[index]);
+          ImageProvider image;
+          String scheme = widget.note.images.uris[index].scheme;
+
+          /*
+          if (scheme.startsWith("http")) {
+            image = CachedNetworkImageProvider(
+                () => widget.note.images.data[index].getPath(),
+                cacheKey: widget.note.images.data[index].hash);
+          } else {
+            image = FileImage(File(widget.note.images.data[index].getPath()));
+          }*/
+          image = CachedNetworkImageProvider(() async {
+            try {
+              String url = await ImageController.getDownloadUrlFromSync(
+                  widget.note.images.data[index].hash);
+              return url;
+            } catch (e) {
+              return "";
+            }
+          }, cacheKey: widget.note.images.data[index].hash);
 
           return PhotoViewGalleryPageOptions(
             imageProvider: image,
@@ -79,10 +99,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
                       context,
                       DrawPage(
                         note: widget.note,
-                        data: MapEntry(
-                          widget.note.images.uris[currentPage].path,
-                          widget.note.images.uris[currentPage],
-                        ),
+                        savedImage: widget.note.images.data[currentPage],
                       ),
                       sidePadding: kTertiaryRoutePadding,
                       allowGestures: false,
@@ -97,8 +114,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
-              widget.note.images.data
-                  .remove(widget.note.images.uris[currentPage].path);
+              widget.note.images.data.removeWhere((savedImage) =>
+                  widget.note.images.data[currentPage].id == savedImage.id);
 
               helper.saveNote(Utils.markNoteChanged(widget.note));
 

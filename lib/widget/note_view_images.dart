@@ -1,10 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:octo_image/octo_image.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class NoteViewImages extends StatefulWidget {
-  final List<Uri> images;
+  final List<SavedImage> images;
   final double borderRadius;
   final bool showPlusImages;
   final int numPlusImages;
@@ -52,18 +56,55 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
-                ImageProvider image =
-                    Utils.uriToImageProvider(widget.images[index]);
+                //ImageProvider image;
+                /*String scheme = widget.images[index].uri.scheme;
 
+                if (scheme.startsWith("http")) {
+                  image = CachedNetworkImageProvider(
+                      widget.images[index].toString());
+                } else {*/
+                /*if (widget.images[index].uri != null) {
+
+                }*/
+                /*if (!ImageService.imageCached(widget.images[index])) {
+                  imageService
+                      .downloadImage(widget.images[index])
+                      .then((path) => {
+                            if (path != "") {setState(() => {})}
+                          });
+                }*/
+
+                /*
+                Image(
+                  image: image
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
+                );*/
+
+                final Widget image = OctoImage(
+                  image: CachedNetworkImageProvider(
+                    () async {
+                      try {
+                        String url =
+                            await ImageController.getDownloadUrlFromSync(
+                                widget.images[index].hash);
+                        return url;
+                      } catch (e) {
+                        return "";
+                      }
+                    },
+                    cacheKey: widget.images[index].hash,
+                  ),
+                  placeholderBuilder:
+                      OctoPlaceholder.blurHash(widget.images[index].blurHash),
+                  fit: BoxFit.cover,
+                  gaplessPlayback: false,
+                  fadeInDuration: const Duration(milliseconds: 1000),
+                  fadeOutDuration: const Duration(milliseconds: 500),
+                );
                 return Stack(
                   children: [
-                    SizedBox.expand(
-                      child: Image(
-                        image: image,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      ),
-                    ),
+                    SizedBox.expand(child: image),
                     SizedBox.expand(
                       child: Visibility(
                         visible: (index == widget.images.length - 1 &&

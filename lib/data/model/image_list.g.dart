@@ -8,12 +8,13 @@ part of 'image_list.dart';
 
 ImageList _$ImageListFromJson(Map<String, dynamic> json) {
   return ImageList(
-    (json['data'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e == null ? null : Uri.parse(e as String)),
-    ),
+    (json['data'] as List)
+        ?.map((e) =>
+            e == null ? null : SavedImage.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$ImageListToJson(ImageList instance) => <String, dynamic>{
-      'data': instance.data?.map((k, e) => MapEntry(k, e?.toString())),
+      'data': instance.data,
     };

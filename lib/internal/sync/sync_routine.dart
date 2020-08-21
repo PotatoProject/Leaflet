@@ -6,8 +6,10 @@ import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/sync/image/imageService.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/sync/setting_controller.dart';
 import 'package:potato_notes/internal/sync/tag_controller.dart';
@@ -105,6 +107,21 @@ class SyncRoutine {
     // Fill the list of added, deleted and updated notes to create a local cache
     await updateLists();
 
+    List<Note> changedNotes = updatedNotes.keys.toList();
+    changedNotes.addAll(addedNotes);
+    await ImageService.handleUploads(changedNotes);
+
+    addedNotes.clear();
+    updatedNotes.clear();
+    deletedNotes.clear();
+    localNotes.clear();
+    addedTags.clear();
+    updatedTags.clear();
+    deletedTags.clear();
+    localTags.clear();
+
+    await updateLists();
+
     // Send all of the note-related requests to the remote server
     try {
       await sendNoteUpdates();
@@ -153,12 +170,17 @@ class SyncRoutine {
               "Got these notes: " + notes.map((note) => note.id).join(","));
       for (Note note in notes) {
         Loggy.i(message: "Saving note:" + note.id);
+
+        //TODO Add a way of disabling this when adding data saving setting
+        /*for (SavedImage savedImage in note.images.data) {
+          await ImageService.downloadImage(savedImage);
+        }*/
         await saveSyncedNote(note);
       }
       prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
     } catch (e) {
       Loggy.e(message: e);
-      throw ("Failed to list notes: " + e);
+      throw ("Failed to list notes: " + e.toString());
     }
     return true;
   }

@@ -68,11 +68,7 @@ class NoteView extends StatelessWidget {
                 visible: (note.images.data?.isNotEmpty ?? false) &&
                     !note.hideContent,
                 child: NoteViewImages(
-                  images: note.images.uris.sublist(
-                      0,
-                      note.images.data.length > kMaxImageCount
-                          ? kMaxImageCount
-                          : note.images.data.length),
+                  images: note.images.data,
                   showPlusImages: true,
                   numPlusImages: note.images.data.length < kMaxImageCount
                       ? 0

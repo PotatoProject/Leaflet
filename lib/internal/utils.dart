@@ -12,6 +12,7 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
@@ -190,7 +191,7 @@ class Utils {
         creationDate: DateTime.now(),
         lastModifyDate: DateTime.now(),
         color: 0,
-        images: ImageList({}),
+        images: ImageList(List()),
         list: false,
         listContent: ListContent([]),
         reminders: ReminderList([]),
@@ -443,7 +444,7 @@ class Utils {
     if (uri.data != null) {
       return MemoryImage(uri.data.contentAsBytes());
     } else if (uri.scheme.startsWith("http") || uri.scheme.startsWith("blob")) {
-      return CachedNetworkImageProvider(uri.toString());
+      return CachedNetworkImageProvider(() => uri.toString());
     } else {
       return FileImage(File(uri.path));
     }
@@ -465,9 +466,7 @@ class Utils {
         case "images":
           {
             var images = value as ImageList;
-            var imageMap =
-                images.data.map((id, uri) => MapEntry(id, uri.toString()));
-            newValue = json.encode(imageMap);
+            newValue = json.encode(images.data);
             break;
           }
         case "listContent":
@@ -512,9 +511,9 @@ class Utils {
           }
         case "images":
           {
-            Map map = json.decode(value);
-            Map<String, Uri> images =
-                map.map((text, uri) => MapEntry(text, Uri.parse(text)));
+            List<dynamic> list = json.decode(value);
+            List<SavedImage> images =
+                list.map((i) => SavedImage.fromJson(i)).toList();
             newValue = new ImageList(images);
             break;
           }

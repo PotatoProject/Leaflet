@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moor/moor.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 
 part 'image_list.g.dart';
 
 @JsonSerializable()
 class ImageList {
-  Map<String, Uri> data;
+  List<SavedImage> data;
 
   ImageList(this.data);
 
   List<Uri> get uris {
-    return List.generate(data.length, (index) => data.values.toList()[index]);
+    return List.generate(data.length, (index) => data[index].uri);
   }
 
   factory ImageList.fromJson(Map<String, dynamic> json) =>

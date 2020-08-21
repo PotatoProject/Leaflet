@@ -3,7 +3,7 @@ description: Official POSP note app
 version: 2.0.0-beta1+16
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: '>=2.9.0 <3.0.0'
   # The example interacts with build scripts on the Flutter side that are not
   # yet stable, so it requires a very recent version of Flutter.
   # This version will increase regularly as the build scripts change.
@@ -42,6 +42,7 @@ dependencies:
   package_info:
   url_launcher:
   cached_network_image:
+    git: https://github.com/broodroosterdev/flutter_cached_network_image.git
   path:
   easy_localization: ^2.3.2
   xml: ^4.2.0
@@ -51,6 +52,11 @@ dependencies:
   in_app_update:
   yaml:
   flutter_downloader:
+  dio:
+  image:
+  blurhash_dart:
+  flutter_blurhash:
+  octo_image:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

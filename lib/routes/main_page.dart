@@ -10,6 +10,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -19,6 +20,8 @@ import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/image/imageService.dart';
+import 'package:potato_notes/internal/sync/image_controller.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/login_page.dart';
@@ -464,7 +467,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     PickedFile image = await ImagePicker().getImage(source: source);
 
     if (image != null) {
-      note.images.data[image.path] = File(image.path).uri;
+      SavedImage savedImage =
+          await ImageService.loadLocalFile(File(image.path));
+      note.images.data.add(savedImage);
 
       if (shouldPop) Navigator.pop(context);
       note = note.copyWith(id: Utils.generateId());

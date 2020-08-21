@@ -14,11 +14,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/imageService.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_gesture_detector.dart';
@@ -27,11 +29,11 @@ import 'package:spicy_components/spicy_components.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
-  final MapEntry<String, Uri> data;
+  final SavedImage savedImage;
 
   DrawPage({
     @required this.note,
-    this.data,
+    this.savedImage,
   });
 
   @override
@@ -181,15 +183,17 @@ class _DrawPageState extends State<DrawPage>
 
                       File imgFile = File(drawing);
                       await imgFile.writeAsBytes(pngBytes, flush: true);
+                      Loggy.d(message: drawing);
+
+                      SavedImage savedImage =
+                          await ImageService.loadLocalFile(imgFile);
+                      if (widget.savedImage != null) {
+                        widget.note.images.data.removeWhere((savedImage) =>
+                            savedImage.id == widget.savedImage.id);
+                        savedImage.id = widget.savedImage.id;
+                      }
+                      widget.note.images.data.add(savedImage);
                     }
-
-                    Loggy.d(message: drawing);
-
-                    if ((widget.data?.key ?? null) != null) {
-                      widget.note.images.data.remove(widget.data.key);
-                    }
-
-                    widget.note.images.data[drawing] = Uri.parse(drawing);
                     helper.saveNote(Utils.markNoteChanged(widget.note));
 
                     setState(() => saved = true);
@@ -214,7 +218,7 @@ class _DrawPageState extends State<DrawPage>
           child: DrawingBoard(
             repaintKey: key,
             objects: objects,
-            uri: widget.data != null ? widget.data.value : null,
+            uri: widget.savedImage != null ? widget.savedImage.uri : null,
             color: Colors.grey[50],
           ),
         ),

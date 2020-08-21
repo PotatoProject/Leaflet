@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
@@ -16,6 +18,7 @@ class AppInfo {
     loadData();
   }
 
+  Directory tempDirectory;
   Illustrations illustrations;
   FlutterLocalNotificationsPlugin notifications;
   QuickActions quickActions;
@@ -72,5 +75,6 @@ class AppInfo {
     }
 
     packageInfo = await PackageInfo.fromPlatform();
+    tempDirectory = await getTemporaryDirectory();
   }
 }
