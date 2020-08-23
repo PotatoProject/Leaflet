@@ -17,6 +17,7 @@ import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
+import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:recase/recase.dart';
 import 'package:uuid/uuid.dart';
@@ -97,31 +98,16 @@ class Utils {
     );
   }
 
-  static List<PopupMenuItem<String>> popupItems(BuildContext context) {
-    Widget _popupMenuItem({
-      IconData icon,
-      String title,
-      String value,
-    }) =>
-        PopupMenuItem(
-          child: Row(
-            children: [
-              Icon(icon),
-              SizedBox(width: 24),
-              Text(title),
-            ],
-          ),
-          value: value,
-        );
+  static List<ListTilePopupMenuItem<String>> popupItems(BuildContext context) {
     return [
-      _popupMenuItem(
-        icon: MdiIcons.pinOutline,
-        title: LocaleStrings.mainPage.selectionBarPin,
+      ListTilePopupMenuItem(
+        leading: Icon(MdiIcons.pinOutline),
+        title: Text(LocaleStrings.mainPage.selectionBarPin),
         value: 'pin',
       ),
-      _popupMenuItem(
-        icon: MdiIcons.shareVariant,
-        title: LocaleStrings.mainPage.selectionBarShare,
+      ListTilePopupMenuItem(
+        leading: Icon(MdiIcons.shareVariant),
+        title: Text(LocaleStrings.mainPage.selectionBarShare),
         value: 'share',
       ),
     ];
@@ -144,7 +130,7 @@ class Utils {
           child: Hero(
             tag: "fabMenu",
             child: Material(
-              elevation: 2,
+              elevation: 6,
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),

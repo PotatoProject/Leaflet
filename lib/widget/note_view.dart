@@ -4,11 +4,12 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
-class NoteView extends StatelessWidget {
+class NoteView extends StatefulWidget {
   final Note note;
   final SpannableList providedTitleList;
   final SpannableList providedContentList;
@@ -27,18 +28,39 @@ class NoteView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _NoteViewState createState() => _NoteViewState();
+}
+
+class _NoteViewState extends State<NoteView> {
+  bool _hovered = false;
+  bool _focused = false;
+  bool _highlighted = false;
+  double _elevation;
+
+  @override
   Widget build(BuildContext context) {
     //String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    SpannableList spannableList =
-        providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
+    SpannableList spannableList = widget
+        .providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
+    Color backgroundColor = widget.note.color != 0
+        ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
+        : Theme.of(context).cardColor;
     Color borderColor;
 
-    if (selected) {
-      if (note.color != 0) {
-        borderColor = Theme.of(context).iconTheme.color;
-      } else {
-        borderColor = Theme.of(context).accentColor;
-      }
+    if (widget.selected) {
+      _elevation = 10;
+    } else if (_highlighted) {
+      _elevation = 8;
+    } else if (_hovered) {
+      _elevation = 6;
+    } else if (_focused) {
+      _elevation = 4;
+    } else {
+      _elevation = 2;
+    }
+
+    if (widget.selected) {
+      borderColor = Theme.of(context).iconTheme.color;
     } else {
       borderColor = Colors.transparent;
     }
@@ -46,9 +68,7 @@ class NoteView extends StatelessWidget {
     List<Widget> content = getItems(context, spannableList);
 
     return Card(
-      color: note.color != 0
-          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-          : Theme.of(context).cardColor,
+      color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(kCardBorderRadius),
         side: BorderSide(
@@ -57,12 +77,21 @@ class NoteView extends StatelessWidget {
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      elevation: selected ? 6 : 2,
+      elevation: _elevation,
       shadowColor: Colors.black.withOpacity(0.5),
       margin: kCardPadding,
       child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
+        onTap: widget.onTap,
+        onLongPress: widget.onLongPress,
+        onHover: (value) => setState(() {
+          _hovered = value;
+        }),
+        onFocusChange: (value) => setState(() {
+          _focused = value;
+        }),
+        onHighlightChanged: (value) => setState(() {
+          _highlighted = value;
+        }),
         borderRadius: BorderRadius.circular(kCardBorderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,14 +99,14 @@ class NoteView extends StatelessWidget {
           children: <Widget>[
             IgnorePointer(
               child: Visibility(
-                visible:
-                    (note.images?.isNotEmpty ?? false) && !note.hideContent,
+                visible: (widget.note.images?.isNotEmpty ?? false) &&
+                    !widget.note.hideContent,
                 child: NoteViewImages(
-                  images: note.images,
+                  images: widget.note.images,
                   showPlusImages: true,
-                  numPlusImages: note.images.length < kMaxImageCount
+                  numPlusImages: widget.note.images.length < kMaxImageCount
                       ? 0
-                      : note.images.length - kMaxImageCount,
+                      : widget.note.images.length - kMaxImageCount,
                 ),
               ),
             ),
@@ -98,7 +127,7 @@ class NoteView extends StatelessWidget {
               builder: (context, constraints) => SizedBox(
                 width: constraints.maxWidth,
                 child: NoteViewStatusbar(
-                  note: note,
+                  note: widget.note,
                   width: constraints.maxWidth,
                   padding: content.isEmpty ? EdgeInsets.all(16) : null,
                 ),
@@ -113,12 +142,12 @@ class NoteView extends StatelessWidget {
   List<Widget> getItems(BuildContext context, SpannableList spannableList) {
     List<Widget> items = [];
 
-    if (note.title != "") {
+    if (widget.note.title != "") {
       items.add(
-        providedTitleList != null
+        widget.providedTitleList != null
             ? RichText(
-                text: providedTitleList.toTextSpan(
-                  note.title,
+                text: widget.providedTitleList.toTextSpan(
+                  widget.note.title,
                   defaultStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -133,7 +162,7 @@ class NoteView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             : Text(
-                note.title ?? "",
+                widget.note.title ?? "",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -149,17 +178,17 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if ((note.title.isEmpty &&
-            note.content.isEmpty &&
-            note.listContent.isEmpty &&
-            !note.hideContent &&
-            note.images.isEmpty) ||
-        (note.content.isNotEmpty && !note.hideContent)) {
+    if ((widget.note.title.isEmpty &&
+            widget.note.content.isEmpty &&
+            widget.note.listContent.isEmpty &&
+            !widget.note.hideContent &&
+            widget.note.images.isEmpty) ||
+        (widget.note.content.isNotEmpty && !widget.note.hideContent)) {
       items.add(
         spannableList != null
             ? RichText(
                 text: spannableList.toTextSpan(
-                  note.content,
+                  widget.note.content,
                   defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
                         fontSize: 16,
                         color: Theme.of(context)
@@ -173,7 +202,7 @@ class NoteView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             : Text(
-                note.content,
+                widget.note.content,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context)
@@ -188,7 +217,9 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (note.list && note.listContent.isNotEmpty && !note.hideContent) {
+    if (widget.note.list &&
+        widget.note.listContent.isNotEmpty &&
+        !widget.note.hideContent) {
       items.add(
         ListView.separated(
           shrinkWrap: true,
@@ -205,11 +236,11 @@ class NoteView extends StatelessWidget {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-        (note.listContent?.length ?? 0) > 5
+        (widget.note.listContent?.length ?? 0) > 5
             ? 5
-            : (note.listContent?.length ?? 0),
+            : (widget.note.listContent?.length ?? 0),
         (index) {
-          ListItem item = note.listContent[index];
+          ListItem item = widget.note.listContent[index];
 
           return LayoutBuilder(
             builder: (context, constraints) {
@@ -220,7 +251,7 @@ class NoteView extends StatelessWidget {
                         ? Icons.check_box
                         : Icons.check_box_outline_blank,
                     color: item.status
-                        ? note.color != 0
+                        ? widget.note.color != 0
                             ? Theme.of(context).textTheme.caption.color
                             : Theme.of(context).accentColor
                         : null,

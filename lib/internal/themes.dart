@@ -63,15 +63,16 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
-        chipTheme: ThemeData.dark().chipTheme.copyWith(
-              backgroundColor: _lightSecondaryColor,
-              elevation: 0,
-              pressElevation: 0,
-            ),
+        platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
@@ -125,10 +126,16 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
+        platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
@@ -183,6 +190,7 @@ class Themes {
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
         platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),

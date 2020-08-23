@@ -414,7 +414,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () => newImage(ImageSource.gallery, shouldPop: true),
-        enabled: !DeviceInfo.isDesktopOrWeb,
       ),
       ListTile(
         leading: AccentedIcon(OMIcons.brush),
@@ -427,7 +426,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
           newDrawing();
         },
-        enabled: !DeviceInfo.isDesktopOrWeb,
       ),
     ];
   }

@@ -160,10 +160,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     bool _getColorBool(int noteColor) {
+      if (searchQuery.color == null) return false;
       return noteColor == searchQuery.color;
     }
 
     bool _getDateBool(DateTime noteDate) {
+      if (searchQuery.date == null) return false;
+
       DateTime sanitizedNoteDate = DateTime(
         noteDate.year,
         noteDate.month,
@@ -198,25 +201,27 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     for (Note note in notes) {
+      print(note.content.contains(query));
+      bool titleMatch = _getTextBool(note.title);
+      bool contentMatch = _getTextBool(note.content);
+      bool dateMatch = _getDateBool(note.creationDate);
+      bool colorMatch = _getColorBool(note.color);
+
       if (searchQuery.color != null && searchQuery.date != null) {
-        if (_getColorBool(note.color) &&
-            _getDateBool(note.creationDate) &&
-            (_getTextBool(note.title) || _getTextBool(note.content))) {
+        if (colorMatch && dateMatch && (titleMatch || contentMatch)) {
           results.add(note);
         }
       } else {
         if (searchQuery.color != null) {
-          if (_getColorBool(note.color) &&
-              (_getTextBool(note.title) || _getTextBool(note.content))) {
+          if (colorMatch && (titleMatch || contentMatch)) {
             results.add(note);
           }
         } else if (searchQuery.date != null) {
-          if (_getDateBool(note.creationDate) &&
-              (_getTextBool(note.title) || _getTextBool(note.content))) {
+          if (dateMatch && (titleMatch || contentMatch)) {
             results.add(note);
           }
         } else {
-          if (_getTextBool(note.title) || _getTextBool(note.content)) {
+          if (titleMatch || contentMatch) {
             results.add(note);
           }
         }

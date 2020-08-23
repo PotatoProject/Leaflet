@@ -5,7 +5,6 @@ class FakeFab extends StatefulWidget {
   final Key key;
   final ScrollController controller;
   final Widget child;
-  final double elevation;
   final ShapeBorder shape;
   final void Function() onTap;
   final void Function() onLongPress;
@@ -14,7 +13,6 @@ class FakeFab extends StatefulWidget {
     this.key,
     @required this.controller,
     this.child,
-    this.elevation = 2,
     this.shape,
     this.onTap,
     this.onLongPress,
@@ -26,6 +24,10 @@ class FakeFab extends StatefulWidget {
 
 class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
   AnimationController controller;
+  bool _hovered = false;
+  bool _focused = false;
+  bool _highlighted = false;
+  double _elevation;
 
   @override
   void initState() {
@@ -70,11 +72,21 @@ class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
     );
     ThemeData theme = Theme.of(context);
 
+    if (_highlighted) {
+      _elevation = 12;
+    } else if (_hovered) {
+      _elevation = 10;
+    } else if (_focused) {
+      _elevation = 8;
+    } else {
+      _elevation = 6;
+    }
+
     return SlideTransition(
       position: pos,
       child: Material(
         color: Theme.of(context).colorScheme.surface,
-        elevation: widget.elevation,
+        elevation: _elevation,
         clipBehavior: Clip.antiAlias,
         shape: widget.shape,
         child: GestureDetector(
@@ -82,6 +94,15 @@ class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
           child: InkWell(
             onTap: widget.onTap,
             onLongPress: widget.onLongPress,
+            onHover: (value) => setState(() {
+              _hovered = value;
+            }),
+            onFocusChange: (value) => setState(() {
+              _focused = value;
+            }),
+            onHighlightChanged: (value) => setState(() {
+              _highlighted = value;
+            }),
             customBorder: widget.shape,
             child: Container(
               width: 56,

@@ -158,7 +158,7 @@ class _DrawPageState extends State<DrawPage>
 
                     if (DeviceInfo.isDesktopOrWeb) {
                       drawing = await WebDrawingExporter.export(
-                        widget.savedImage.uri,
+                        widget.savedImage?.uri,
                         objects,
                         box.size,
                       );
