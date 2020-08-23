@@ -103,7 +103,7 @@ class ImageController {
 
   static Future<void> uploadImageToSync(String hash, File file) async {
     String url = await getUploadUrlFromSync(hash);
-    dio.Response uploadResult = await dio.Dio().put(
+    await dio.Dio().put(
       url,
       data: file.openRead(),
       options: dio.Options(contentType: 'image/jpg', headers: {

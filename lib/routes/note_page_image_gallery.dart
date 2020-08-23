@@ -47,16 +47,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         ),
         builder: (context, index) {
           ImageProvider image;
-          String scheme = widget.note.images.uris[index].scheme;
 
-          /*
-          if (scheme.startsWith("http")) {
-            image = CachedNetworkImageProvider(
-                () => widget.note.images.data[index].getPath(),
-                cacheKey: widget.note.images.data[index].hash);
-          } else {
-            image = FileImage(File(widget.note.images.data[index].getPath()));
-          }*/
           image = CachedNetworkImageProvider(() async {
             try {
               String url = await ImageController.getDownloadUrlFromSync(

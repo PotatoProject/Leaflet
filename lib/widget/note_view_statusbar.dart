@@ -96,7 +96,7 @@ class NoteViewStatusbar extends StatelessWidget {
       MdiIcons.eyeOffOutline,
       note.usesBiometrics ? MdiIcons.fingerprint : MdiIcons.lockOutline,
       MdiIcons.alarm,
-      MdiIcons.syncIcon,
+      MdiIcons.cloudOutline,
       MdiIcons.heartOutline,
     ];
 

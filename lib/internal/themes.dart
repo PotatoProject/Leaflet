@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
@@ -181,10 +182,15 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
+        platform: defaultTargetPlatform,
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );

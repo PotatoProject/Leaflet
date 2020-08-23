@@ -16,7 +16,7 @@ import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/imageService.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';

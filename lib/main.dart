@@ -16,7 +16,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/imageService.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/main_page.dart';

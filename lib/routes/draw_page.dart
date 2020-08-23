@@ -20,7 +20,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/imageService.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_gesture_detector.dart';
@@ -158,14 +158,15 @@ class _DrawPageState extends State<DrawPage>
 
                     if (DeviceInfo.isDesktopOrWeb) {
                       drawing = await WebDrawingExporter.export(
-                        widget.data != null ? widget.data.value : null,
+                        widget.savedImage.uri,
                         objects,
                         box.size,
                       );
                     } else {
                       ui.Image image = await box.toImage();
                       ByteData byteData = await image.toByteData(
-                          format: ui.ImageByteFormat.png);
+                        format: ui.ImageByteFormat.png,
+                      );
                       Uint8List pngBytes = byteData.buffer.asUint8List();
                       DateTime now = DateTime.now();
                       String timestamp = DateFormat(

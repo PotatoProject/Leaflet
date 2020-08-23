@@ -37,6 +37,9 @@ class _LoginPageState extends State<LoginPage> {
           border: OutlineInputBorder(),
           labelText: register ? "Email" : "Email or username",
         ),
+        autofillHints: [
+          AutofillHints.email,
+        ],
         controller: register ? emailController : emailOrUserController,
         onChanged: (_) => setState(() {}),
       ),
