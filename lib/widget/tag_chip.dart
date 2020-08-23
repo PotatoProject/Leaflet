@@ -16,7 +16,7 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.1);
+    Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
 
     Color _color = color != 0
         ? Color(NoteColors.colorList[color ?? 0].color)
@@ -27,11 +27,10 @@ class TagChip extends StatelessWidget {
         return Container(
           decoration: ShapeDecoration(
             color: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(256),
+            shape: StadiumBorder(
               side: BorderSide(
                 color: contrast,
-                width: 1.5,
+                width: 2,
               ),
             ),
           ),

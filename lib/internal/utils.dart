@@ -28,7 +28,7 @@ import 'package:uuid/uuid.dart';
 import 'locale_strings.dart';
 
 const int kMaxImageCount = 4;
-const double kCardBorderRadius = 10;
+const double kCardBorderRadius = 6;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
   horizontal: 180,

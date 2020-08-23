@@ -375,7 +375,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         controller: scrollController,
         onLongPress: () => Utils.showFabMenu(context, fabOptions),
         key: GlobalKeyRegistry.get("fab"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: StadiumBorder(),
         onTap: () => newNote(),
         child: Icon(OMIcons.edit),
       ),

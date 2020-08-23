@@ -34,7 +34,11 @@ class NoteView extends StatelessWidget {
     Color borderColor;
 
     if (selected) {
-      borderColor = Theme.of(context).textTheme.caption.color;
+      if (note.color != 0) {
+        borderColor = Theme.of(context).iconTheme.color;
+      } else {
+        borderColor = Theme.of(context).accentColor;
+      }
     } else {
       borderColor = Colors.transparent;
     }
@@ -44,16 +48,17 @@ class NoteView extends StatelessWidget {
     return Card(
       color: note.color != 0
           ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-          : null,
+          : Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(kCardBorderRadius),
         side: BorderSide(
           color: borderColor,
-          width: 1.5,
+          width: 2,
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      elevation: 0,
+      elevation: selected ? 6 : 2,
+      shadowColor: Colors.black.withOpacity(0.5),
       margin: kCardPadding,
       child: InkWell(
         onTap: onTap,
