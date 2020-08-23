@@ -20,12 +20,12 @@ class NoteViewStatusbar extends StatelessWidget {
     List<Widget> icons = getIcons(context);
 
     return Visibility(
-      visible: icons.isNotEmpty || note.tags.tagIds.isNotEmpty,
+      visible: icons.isNotEmpty || note.tags.isNotEmpty,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Visibility(
-            visible: note.tags.tagIds.isNotEmpty,
+            visible: note.tags.isNotEmpty,
             child: Container(
               width: width,
               padding: padding ?? const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -34,14 +34,14 @@ class NoteViewStatusbar extends StatelessWidget {
                 runSpacing: 4,
                 alignment: WrapAlignment.start,
                 children: List.generate(
-                  note.tags.tagIds.length > 3 ? 4 : note.tags.tagIds.length,
+                  note.tags.length > 3 ? 4 : note.tags.length,
                   (index) {
                     if (index != 3) {
                       Tag tag;
 
                       try {
-                        tag = prefs.tags.firstWhere(
-                            (tag) => tag.id == note.tags.tagIds[index]);
+                        tag = prefs.tags
+                            .firstWhere((tag) => tag.id == note.tags[index]);
                       } on StateError {
                         return Container();
                       }
@@ -52,7 +52,7 @@ class NoteViewStatusbar extends StatelessWidget {
                       );
                     } else {
                       return TagChip(
-                        title: "+${note.tags.tagIds.length - 3}",
+                        title: "+${note.tags.length - 3}",
                         showIcon: false,
                       );
                     }
@@ -107,7 +107,7 @@ class NoteViewStatusbar extends StatelessWidget {
 
     if (note.lockNote) iconDataIndexes.add(1);
 
-    if (note.reminders.reminders.isNotEmpty) iconDataIndexes.add(2);
+    if (note.reminders.isNotEmpty) iconDataIndexes.add(2);
 
     if (note.synced) iconDataIndexes.add(3);
 

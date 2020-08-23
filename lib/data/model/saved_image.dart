@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -30,6 +32,9 @@ class SavedImage {
   String getPath() {
     return appInfo.tempDirectory.path + "/$hash.jpg";
   }
+
+  @override
+  String toString() => json.encode(toJson());
 }
 
 enum StorageLocation { LOCAL, IMGUR, SYNC }

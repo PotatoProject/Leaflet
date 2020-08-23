@@ -5,6 +5,7 @@ import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 
 part 'database.g.dart';
@@ -41,7 +42,8 @@ class Tags extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   IntColumn get color => integer().withDefault(Constant(0))();
-	DateTimeColumn get lastModifyDate => dateTime().withDefault(Constant(DateTime.now()))();	
+  DateTimeColumn get lastModifyDate =>
+      dateTime().withDefault(Constant(DateTime.now()))();
   @override
   Set<Column> get primaryKey => {id};
 }

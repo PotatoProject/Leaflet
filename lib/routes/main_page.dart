@@ -176,8 +176,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     ? snapshot.data
                         .where(
                           (note) =>
-                              note.tags.tagIds
-                                  .contains(prefs.tags[tagIndex].id) &&
+                              note.tags.contains(prefs.tags[tagIndex].id) &&
                               !note.archived &&
                               !note.deleted,
                         )
@@ -449,9 +448,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
       if (lastNote.title.isEmpty &&
           lastNote.content.isEmpty &&
-          lastNote.listContent.content.isEmpty &&
-          lastNote.images.data.isEmpty &&
-          lastNote.reminders.reminders.isEmpty) {
+          lastNote.listContent.isEmpty &&
+          lastNote.images.isEmpty &&
+          lastNote.reminders.isEmpty) {
         Utils.deleteNotes(
           scaffoldKey: scaffoldKey,
           notes: [lastNote],
@@ -468,7 +467,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     if (image != null) {
       SavedImage savedImage =
           await ImageService.loadLocalFile(File(image.path));
-      note.images.data.add(savedImage);
+      note.images.add(savedImage);
 
       if (shouldPop) Navigator.pop(context);
       note = note.copyWith(id: Utils.generateId());
@@ -689,7 +688,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               if (result) {
                 List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
-                  note.tags.tagIds.remove(prefs.tags[tagIndex].id);
+                  note.tags.remove(prefs.tags[tagIndex].id);
                   await helper.saveNote(Utils.markNoteChanged(note));
                 }
                 await controller.animateBack(0);

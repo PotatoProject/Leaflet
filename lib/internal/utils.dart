@@ -8,12 +8,8 @@ import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/content_style.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -186,16 +182,16 @@ class Utils {
         id: null,
         title: "",
         content: "",
-        styleJson: ContentStyle([]),
+        styleJson: [],
         starred: false,
         creationDate: DateTime.now(),
         lastModifyDate: DateTime.now(),
         color: 0,
-        images: ImageList(List()),
+        images: [],
         list: false,
-        listContent: ListContent([]),
-        reminders: ReminderList([]),
-        tags: TagList([]),
+        listContent: [],
+        reminders: [],
+        tags: [],
         hideContent: false,
         lockNote: false,
         usesBiometrics: false,
@@ -459,32 +455,32 @@ class Utils {
       switch (key) {
         case "styleJson":
           {
-            var style = value as ContentStyle;
-            newValue = json.encode(style.data);
+            var style = value as List<int>;
+            newValue = json.encode(style);
             break;
           }
         case "images":
           {
-            var images = value as ImageList;
-            newValue = json.encode(images.data);
+            var images = value as List<SavedImage>;
+            newValue = json.encode(images);
             break;
           }
         case "listContent":
           {
-            var listContent = value as ListContent;
-            newValue = json.encode(listContent.content);
+            var listContent = value as List<ListItem>;
+            newValue = json.encode(listContent);
             break;
           }
         case "reminders":
           {
-            var reminders = value as ReminderList;
-            newValue = json.encode(reminders.reminders);
+            var reminders = value as List<DateTime>;
+            newValue = json.encode(reminders);
             break;
           }
         case "tags":
           {
-            var tags = value as TagList;
-            newValue = json.encode(tags.tagIds);
+            var tags = value as List<String>;
+            newValue = json.encode(tags);
             break;
           }
       }
@@ -506,7 +502,7 @@ class Utils {
           {
             var map = json.decode(value);
             List<int> data = List<int>.from(map.map((i) => i as int)).toList();
-            newValue = new ContentStyle(data);
+            newValue = data;
             break;
           }
         case "images":
@@ -514,7 +510,7 @@ class Utils {
             List<dynamic> list = json.decode(value);
             List<SavedImage> images =
                 list.map((i) => SavedImage.fromJson(i)).toList();
-            newValue = new ImageList(images);
+            newValue = images;
             break;
           }
         case "list_content":
@@ -523,7 +519,7 @@ class Utils {
             List<ListItem> content =
                 List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
                     .toList();
-            newValue = new ListContent(content);
+            newValue = content;
             break;
           }
         case "reminders":
@@ -531,14 +527,14 @@ class Utils {
             var map = json.decode(value);
             List<DateTime> reminders =
                 List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
-            newValue = new ReminderList(reminders);
+            newValue = reminders;
             break;
           }
         case "tags":
           {
             var map = json.decode(value);
             List<String> tagIds = List<String>.from(map).toList();
-            newValue = new TagList(tagIds);
+            newValue = tagIds;
           }
       }
       if (key == "note_id") {

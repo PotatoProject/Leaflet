@@ -46,15 +46,15 @@ class TagSearchDelegate extends CustomSearchDelegate {
                     : Theme.of(context).accentColor,
               ),
               title: Text(filteredTags[index].name),
-              value: note.tags.tagIds.contains(filteredTags[index].id),
+              value: note.tags.contains(filteredTags[index].id),
               checkColor: Theme.of(context).scaffoldBackgroundColor,
               activeColor: Theme.of(context).accentColor,
               onChanged: (value) {
                 setState(() {
                   if (value) {
-                    note.tags.tagIds.add(filteredTags[index].id);
+                    note.tags.add(filteredTags[index].id);
                   } else {
-                    note.tags.tagIds.remove(filteredTags[index].id);
+                    note.tags.remove(filteredTags[index].id);
                   }
                 });
 

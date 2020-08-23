@@ -70,14 +70,14 @@ class NoteView extends StatelessWidget {
           children: <Widget>[
             IgnorePointer(
               child: Visibility(
-                visible: (note.images.data?.isNotEmpty ?? false) &&
-                    !note.hideContent,
+                visible:
+                    (note.images?.isNotEmpty ?? false) && !note.hideContent,
                 child: NoteViewImages(
-                  images: note.images.data,
+                  images: note.images,
                   showPlusImages: true,
-                  numPlusImages: note.images.data.length < kMaxImageCount
+                  numPlusImages: note.images.length < kMaxImageCount
                       ? 0
-                      : note.images.data.length - kMaxImageCount,
+                      : note.images.length - kMaxImageCount,
                 ),
               ),
             ),
@@ -151,9 +151,9 @@ class NoteView extends StatelessWidget {
 
     if ((note.title.isEmpty &&
             note.content.isEmpty &&
-            note.listContent.content.isEmpty &&
+            note.listContent.isEmpty &&
             !note.hideContent &&
-            note.images.data.isEmpty) ||
+            note.images.isEmpty) ||
         (note.content.isNotEmpty && !note.hideContent)) {
       items.add(
         spannableList != null
@@ -188,7 +188,7 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (note.list && note.listContent.content.isNotEmpty && !note.hideContent) {
+    if (note.list && note.listContent.isNotEmpty && !note.hideContent) {
       items.add(
         ListView.separated(
           shrinkWrap: true,
@@ -205,11 +205,11 @@ class NoteView extends StatelessWidget {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-        (note.listContent?.content?.length ?? 0) > 5
+        (note.listContent?.length ?? 0) > 5
             ? 5
-            : (note.listContent?.content?.length ?? 0),
+            : (note.listContent?.length ?? 0),
         (index) {
-          ListItem item = note.listContent.content[index];
+          ListItem item = note.listContent[index];
 
           return LayoutBuilder(
             builder: (context, constraints) {

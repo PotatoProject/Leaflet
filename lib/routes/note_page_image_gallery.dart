@@ -41,7 +41,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: PhotoViewGallery.builder(
-        itemCount: widget.note.images.data.length,
+        itemCount: widget.note.images.length,
         backgroundDecoration: BoxDecoration(
           color: Colors.transparent,
         ),
@@ -51,12 +51,12 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           image = CachedNetworkImageProvider(() async {
             try {
               String url = await ImageController.getDownloadUrlFromSync(
-                  widget.note.images.data[index].hash);
+                  widget.note.images[index].hash);
               return url;
             } catch (e) {
               return "";
             }
-          }, cacheKey: widget.note.images.data[index].hash);
+          }, cacheKey: widget.note.images[index].hash);
 
           return PhotoViewGalleryPageOptions(
             imageProvider: image,
@@ -73,7 +73,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         title: Text(
           LocaleStrings.common.xOfY(
             (currentPage + 1),
-            widget.note.images.data.length,
+            widget.note.images.length,
           ),
           style: TextStyle(
             fontSize: 18,
@@ -90,7 +90,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
                       context,
                       DrawPage(
                         note: widget.note,
-                        savedImage: widget.note.images.data[currentPage],
+                        savedImage: widget.note.images[currentPage],
                       ),
                       sidePadding: kTertiaryRoutePadding,
                       allowGestures: false,
@@ -105,8 +105,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
-              widget.note.images.data.removeWhere((savedImage) =>
-                  widget.note.images.data[currentPage].id == savedImage.id);
+              widget.note.images.removeWhere((savedImage) =>
+                  widget.note.images[currentPage].id == savedImage.id);
 
               helper.saveNote(Utils.markNoteChanged(widget.note));
 

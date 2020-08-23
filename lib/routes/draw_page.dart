@@ -189,11 +189,11 @@ class _DrawPageState extends State<DrawPage>
                       SavedImage savedImage =
                           await ImageService.loadLocalFile(imgFile);
                       if (widget.savedImage != null) {
-                        widget.note.images.data.removeWhere((savedImage) =>
+                        widget.note.images.removeWhere((savedImage) =>
                             savedImage.id == widget.savedImage.id);
                         savedImage.id = widget.savedImage.id;
                       }
-                      widget.note.images.data.add(savedImage);
+                      widget.note.images.add(savedImage);
                     }
                     helper.saveNote(Utils.markNoteChanged(widget.note));
 

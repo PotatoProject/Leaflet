@@ -2,11 +2,8 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -78,13 +75,11 @@ class MigrationTask {
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
         lastModifyDate: DateTime.now(),
         color: v1Note.color,
-        images: ImageList(
-          savedImage != null ? [savedImage] : List(),
-        ),
+        images: savedImage != null ? [savedImage] : List(),
         list: v1Note.isList == 1,
-        listContent: ListContent(listItems),
-        reminders: ReminderList([]),
-        tags: TagList([]),
+        listContent: listItems,
+        reminders: [],
+        tags: [],
         hideContent: v1Note.hideContent == 1,
         lockNote: false,
         usesBiometrics: false,

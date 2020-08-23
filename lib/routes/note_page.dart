@@ -7,12 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/content_style.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -64,16 +60,16 @@ class _NotePageState extends State<NotePage> {
       id: widget.note?.id,
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
-      styleJson: ContentStyle([]),
+      styleJson: [],
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
-      images: widget.note?.images ?? ImageList(List()),
+      images: widget.note?.images ?? [],
       list: widget.note?.list ?? false,
-      listContent: widget.note?.listContent ?? ListContent([]),
-      reminders: widget.note?.reminders ?? ReminderList([]),
-      tags: widget.note?.tags ?? TagList([]),
+      listContent: widget.note?.listContent ?? [],
+      reminders: widget.note?.reminders ?? [],
+      tags: widget.note?.tags ?? [],
       hideContent: widget.note?.hideContent ?? false,
       lockNote: widget.note?.lockNote ?? false,
       usesBiometrics: widget.note?.usesBiometrics ?? false,
@@ -127,11 +123,11 @@ class _NotePageState extends State<NotePage> {
     }
 
     final Widget imagesWidget = NoteViewImages(
-      images: note.images.data,
+      images: note.images,
       showPlusImages: true,
-      numPlusImages: note.images.data.length < kMaxImageCount
+      numPlusImages: note.images.length < kMaxImageCount
           ? 0
-          : note.images.data.length - kMaxImageCount,
+          : note.images.length - kMaxImageCount,
       useSmallFont: false,
       onImageTap: (index) async {
         await Utils.showSecondaryRoute(
@@ -223,12 +219,11 @@ class _NotePageState extends State<NotePage> {
                 ),
                 children: [
                   Visibility(
-                    visible:
-                        note.images.data.isNotEmpty && !deviceInfo.isLandscape,
+                    visible: note.images.isNotEmpty && !deviceInfo.isLandscape,
                     child: imagesWidget,
                   ),
                   Visibility(
-                    visible: note.tags.tagIds.isNotEmpty,
+                    visible: note.tags.isNotEmpty,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8,
@@ -239,10 +234,10 @@ class _NotePageState extends State<NotePage> {
                         spacing: 8,
                         runSpacing: 8,
                         children: List.generate(
-                          note.tags.tagIds.length,
+                          note.tags.length,
                           (index) {
                             Tag tag = prefs.tags.firstWhere(
-                              (tag) => tag.id == note.tags.tagIds[index],
+                              (tag) => tag.id == note.tags[index],
                             );
 
                             return TagChip(
@@ -335,13 +330,11 @@ class _NotePageState extends State<NotePage> {
                     visible: note.list,
                     child: Column(
                       children: <Widget>[
-                        ...List.generate(note.listContent.content.length,
-                            (index) {
-                          ListItem currentItem =
-                              note.listContent.content[index];
+                        ...List.generate(note.listContent.length, (index) {
+                          ListItem currentItem = note.listContent[index];
 
                           if (needsFocus &&
-                              index == note.listContent.content.length - 1) {
+                              index == note.listContent.length - 1) {
                             needsFocus = false;
                             FocusScope.of(context)
                                 .requestFocus(listContentNodes.last);
@@ -350,7 +343,7 @@ class _NotePageState extends State<NotePage> {
                           return Dismissible(
                             key: Key(currentItem.id.toString()),
                             onDismissed: (_) => setState(() {
-                              note.listContent.content.removeAt(index);
+                              note.listContent.removeAt(index);
                               listContentControllers.removeAt(index);
                               listContentNodes.removeAt(index);
                               notifyNoteChanged();
@@ -370,8 +363,8 @@ class _NotePageState extends State<NotePage> {
                               leading: Checkbox(
                                 value: currentItem.status,
                                 onChanged: (value) {
-                                  setState(() => note.listContent.content[index]
-                                      .status = value);
+                                  setState(() =>
+                                      note.listContent[index].status = value);
                                   notifyNoteChanged();
                                 },
                                 checkColor: note.color != 0
@@ -393,25 +386,22 @@ class _NotePageState extends State<NotePage> {
                                       .iconTheme
                                       .color
                                       .withOpacity(
-                                        note.listContent.content[index].status
+                                        note.listContent[index].status
                                             ? 0.3
                                             : 0.7,
                                       ),
-                                  decoration:
-                                      note.listContent.content[index].status
-                                          ? TextDecoration.lineThrough
-                                          : null,
+                                  decoration: note.listContent[index].status
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                 ),
                                 onChanged: (text) {
-                                  setState(() => note
-                                      .listContent.content[index].text = text);
+                                  setState(() =>
+                                      note.listContent[index].text = text);
                                   notifyNoteChanged();
                                 },
                                 onSubmitted: (_) {
-                                  if (index ==
-                                      note.listContent.content.length - 1) {
-                                    if (note.listContent.content.last.text !=
-                                        "")
+                                  if (index == note.listContent.length - 1) {
+                                    if (note.listContent.last.text != "")
                                       addListContentItem();
                                     else {
                                       FocusScope.of(context).requestFocus(
@@ -428,11 +418,11 @@ class _NotePageState extends State<NotePage> {
                           );
                         }),
                         AnimatedOpacity(
-                          opacity: note.listContent.content.isNotEmpty
-                              ? note.listContent.content.last.text != "" ? 1 : 0
+                          opacity: note.listContent.isNotEmpty
+                              ? note.listContent.last.text != "" ? 1 : 0
                               : 1,
-                          duration: note.listContent.content.isNotEmpty
-                              ? note.listContent.content.last.text != ""
+                          duration: note.listContent.isNotEmpty
+                              ? note.listContent.last.text != ""
                                   ? Duration(milliseconds: 300)
                                   : Duration(milliseconds: 0)
                               : Duration(milliseconds: 0),
@@ -445,8 +435,8 @@ class _NotePageState extends State<NotePage> {
                             ),
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 28),
-                            onTap: note.listContent.content.isNotEmpty
-                                ? note.listContent.content.last.text != ""
+                            onTap: note.listContent.isNotEmpty
+                                ? note.listContent.last.text != ""
                                     ? () => addListContentItem()
                                     : null
                                 : () => addListContentItem(),
@@ -459,7 +449,7 @@ class _NotePageState extends State<NotePage> {
               ),
             ),
             Visibility(
-              visible: note.images.data.isNotEmpty && deviceInfo.isLandscape,
+              visible: note.images.isNotEmpty && deviceInfo.isLandscape,
               child: Container(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 56,
@@ -550,12 +540,12 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addListContentItem() {
-    List<ListItem> sortedList = note.listContent.content;
+    List<ListItem> sortedList = note.listContent;
     sortedList.sort((a, b) => a.id.compareTo(b.id));
 
     int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
 
-    note.listContent.content.add(
+    note.listContent.add(
       ListItem(
         id,
         "",
@@ -676,7 +666,7 @@ class _NotePageState extends State<NotePage> {
               if (image != null) {
                 SavedImage savedImage =
                     await ImageService.loadLocalFile(File(image.path));
-                setState(() => note.images.data.add(savedImage));
+                setState(() => note.images.add(savedImage));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }
@@ -692,7 +682,7 @@ class _NotePageState extends State<NotePage> {
               if (image != null) {
                 SavedImage savedImage =
                     await ImageService.loadLocalFile(File(image.path));
-                setState(() => note.images.data.add(savedImage));
+                setState(() => note.images.add(savedImage));
                 notifyNoteChanged();
                 Navigator.pop(context);
               }
@@ -717,7 +707,7 @@ class _NotePageState extends State<NotePage> {
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
-    if (note.listContent.content.isEmpty && note.list) {
+    if (note.listContent.isEmpty && note.list) {
       addListContentItem();
     }
   }
@@ -737,9 +727,9 @@ class _NotePageState extends State<NotePage> {
   void buildListContentElements() {
     listContentControllers.clear();
     listContentNodes.clear();
-    for (int i = 0; i < note.listContent.content.length; i++) {
+    for (int i = 0; i < note.listContent.length; i++) {
       listContentControllers
-          .add(TextEditingController(text: note.listContent.content[i].text));
+          .add(TextEditingController(text: note.listContent[i].text));
 
       FocusNode node = FocusNode();
       listContentNodes.add(node);

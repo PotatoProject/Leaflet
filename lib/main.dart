@@ -48,7 +48,7 @@ main() async {
       debug: kDebugMode,
     );
   }
-  _db = AppDatabase(constructDb());
+  _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
   runApp(

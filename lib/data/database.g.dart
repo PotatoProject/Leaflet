@@ -11,16 +11,16 @@ class Note extends DataClass implements Insertable<Note> {
   final String id;
   final String title;
   final String content;
-  final ContentStyle styleJson;
+  final List<int> styleJson;
   final bool starred;
   final DateTime creationDate;
   final DateTime lastModifyDate;
   final int color;
-  final ImageList images;
+  final List<SavedImage> images;
   final bool list;
-  final ListContent listContent;
-  final ReminderList reminders;
-  final TagList tags;
+  final List<ListItem> listContent;
+  final List<DateTime> reminders;
+  final List<String> tags;
   final bool hideContent;
   final bool lockNote;
   final bool usesBiometrics;
@@ -219,16 +219,16 @@ class Note extends DataClass implements Insertable<Note> {
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
-      styleJson: serializer.fromJson<ContentStyle>(json['styleJson']),
+      styleJson: serializer.fromJson<List<int>>(json['styleJson']),
       starred: serializer.fromJson<bool>(json['starred']),
       creationDate: serializer.fromJson<DateTime>(json['creationDate']),
       lastModifyDate: serializer.fromJson<DateTime>(json['lastModifyDate']),
       color: serializer.fromJson<int>(json['color']),
-      images: serializer.fromJson<ImageList>(json['images']),
+      images: serializer.fromJson<List<SavedImage>>(json['images']),
       list: serializer.fromJson<bool>(json['list']),
-      listContent: serializer.fromJson<ListContent>(json['listContent']),
-      reminders: serializer.fromJson<ReminderList>(json['reminders']),
-      tags: serializer.fromJson<TagList>(json['tags']),
+      listContent: serializer.fromJson<List<ListItem>>(json['listContent']),
+      reminders: serializer.fromJson<List<DateTime>>(json['reminders']),
+      tags: serializer.fromJson<List<String>>(json['tags']),
       hideContent: serializer.fromJson<bool>(json['hideContent']),
       lockNote: serializer.fromJson<bool>(json['lockNote']),
       usesBiometrics: serializer.fromJson<bool>(json['usesBiometrics']),
@@ -244,16 +244,16 @@ class Note extends DataClass implements Insertable<Note> {
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
-      'styleJson': serializer.toJson<ContentStyle>(styleJson),
+      'styleJson': serializer.toJson<List<int>>(styleJson),
       'starred': serializer.toJson<bool>(starred),
       'creationDate': serializer.toJson<DateTime>(creationDate),
       'lastModifyDate': serializer.toJson<DateTime>(lastModifyDate),
       'color': serializer.toJson<int>(color),
-      'images': serializer.toJson<ImageList>(images),
+      'images': serializer.toJson<List<SavedImage>>(images),
       'list': serializer.toJson<bool>(list),
-      'listContent': serializer.toJson<ListContent>(listContent),
-      'reminders': serializer.toJson<ReminderList>(reminders),
-      'tags': serializer.toJson<TagList>(tags),
+      'listContent': serializer.toJson<List<ListItem>>(listContent),
+      'reminders': serializer.toJson<List<DateTime>>(reminders),
+      'tags': serializer.toJson<List<String>>(tags),
       'hideContent': serializer.toJson<bool>(hideContent),
       'lockNote': serializer.toJson<bool>(lockNote),
       'usesBiometrics': serializer.toJson<bool>(usesBiometrics),
@@ -267,16 +267,16 @@ class Note extends DataClass implements Insertable<Note> {
           {String id,
           String title,
           String content,
-          ContentStyle styleJson,
+          List<int> styleJson,
           bool starred,
           DateTime creationDate,
           DateTime lastModifyDate,
           int color,
-          ImageList images,
+          List<SavedImage> images,
           bool list,
-          ListContent listContent,
-          ReminderList reminders,
-          TagList tags,
+          List<ListItem> listContent,
+          List<DateTime> reminders,
+          List<String> tags,
           bool hideContent,
           bool lockNote,
           bool usesBiometrics,
@@ -401,16 +401,16 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> id;
   final Value<String> title;
   final Value<String> content;
-  final Value<ContentStyle> styleJson;
+  final Value<List<int>> styleJson;
   final Value<bool> starred;
   final Value<DateTime> creationDate;
   final Value<DateTime> lastModifyDate;
   final Value<int> color;
-  final Value<ImageList> images;
+  final Value<List<SavedImage>> images;
   final Value<bool> list;
-  final Value<ListContent> listContent;
-  final Value<ReminderList> reminders;
-  final Value<TagList> tags;
+  final Value<List<ListItem>> listContent;
+  final Value<List<DateTime>> reminders;
+  final Value<List<String>> tags;
   final Value<bool> hideContent;
   final Value<bool> lockNote;
   final Value<bool> usesBiometrics;
@@ -447,11 +447,11 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.creationDate = const Value.absent(),
     this.lastModifyDate = const Value.absent(),
     this.color = const Value.absent(),
-    @required ImageList images,
+    @required List<SavedImage> images,
     this.list = const Value.absent(),
-    @required ListContent listContent,
-    @required ReminderList reminders,
-    @required TagList tags,
+    @required List<ListItem> listContent,
+    @required List<DateTime> reminders,
+    @required List<String> tags,
     this.hideContent = const Value.absent(),
     this.lockNote = const Value.absent(),
     this.usesBiometrics = const Value.absent(),
@@ -511,16 +511,16 @@ class NotesCompanion extends UpdateCompanion<Note> {
       {Value<String> id,
       Value<String> title,
       Value<String> content,
-      Value<ContentStyle> styleJson,
+      Value<List<int>> styleJson,
       Value<bool> starred,
       Value<DateTime> creationDate,
       Value<DateTime> lastModifyDate,
       Value<int> color,
-      Value<ImageList> images,
+      Value<List<SavedImage>> images,
       Value<bool> list,
-      Value<ListContent> listContent,
-      Value<ReminderList> reminders,
-      Value<TagList> tags,
+      Value<List<ListItem>> listContent,
+      Value<List<DateTime>> reminders,
+      Value<List<String>> tags,
       Value<bool> hideContent,
       Value<bool> lockNote,
       Value<bool> usesBiometrics,
@@ -974,15 +974,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return $NotesTable(_db, alias);
   }
 
-  static TypeConverter<ContentStyle, String> $converter0 =
+  static TypeConverter<List<int>, String> $converter0 =
       const ContentStyleConverter();
-  static TypeConverter<ImageList, String> $converter1 =
+  static TypeConverter<List<SavedImage>, String> $converter1 =
       const ImageListConverter();
-  static TypeConverter<ListContent, String> $converter2 =
+  static TypeConverter<List<ListItem>, String> $converter2 =
       const ListContentConverter();
-  static TypeConverter<ReminderList, String> $converter3 =
+  static TypeConverter<List<DateTime>, String> $converter3 =
       const ReminderListConverter();
-  static TypeConverter<TagList, String> $converter4 = const TagListConverter();
+  static TypeConverter<List<String>, String> $converter4 =
+      const TagListConverter();
 }
 
 class Tag extends DataClass implements Insertable<Tag> {

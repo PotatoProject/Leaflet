@@ -32,12 +32,10 @@ class ImageService {
   static Future<bool> handleUploads(List<Note> changedNotes) async {
     List<Note> imageChanged = changedNotes
         .where((note) =>
-            note.images.data
-                .indexWhere((savedImage) => !savedImage.encrypted) !=
-            -1)
+            note.images.indexWhere((savedImage) => !savedImage.encrypted) != -1)
         .toList();
     for (Note note in imageChanged) {
-      for (SavedImage savedImage in note.images.data) {
+      for (SavedImage savedImage in note.images) {
         if (savedImage.uploaded) continue;
         await uploadImage(savedImage);
         savedImage.uploaded = true;
