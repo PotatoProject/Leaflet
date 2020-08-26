@@ -31,8 +31,8 @@ class BottomSheetBase extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(
           top: topPadding,
-          left: padding,
-          right: padding,
+          left: padding.isNegative ? 0 : padding,
+          right: padding.isNegative ? 0 : padding,
         ),
         child: GestureDetector(
           onTapDown: (_) {},

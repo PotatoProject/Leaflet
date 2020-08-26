@@ -57,6 +57,7 @@ dependencies:
   blurhash_dart:
   flutter_blurhash:
   octo_image:
+  nested:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

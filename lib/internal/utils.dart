@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -13,7 +14,9 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
@@ -529,6 +532,79 @@ class Utils {
       newMap.putIfAbsent(newKey, () => newValue);
     });
     return Note.fromJson(newMap);
+  }
+
+  static void newNote(
+    BuildContext context, {
+    GlobalKey<ScaffoldState> scaffoldKey,
+  }) async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+
+    await Utils.showSecondaryRoute(
+      context,
+      NotePage(),
+    );
+
+    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    int newLength = notes.length;
+
+    if (newLength > currentLength) {
+      Note lastNote = notes.last;
+
+      if (lastNote.title.isEmpty &&
+          lastNote.content.isEmpty &&
+          lastNote.listContent.isEmpty &&
+          lastNote.images.isEmpty &&
+          lastNote.reminders.isEmpty) {
+        Utils.deleteNotes(
+          scaffoldKey: scaffoldKey,
+          notes: [lastNote],
+          reason: LocaleStrings.mainPage.deletedEmptyNote,
+        );
+      }
+    }
+  }
+
+  static void newImage(BuildContext context, ImageSource source,
+      {bool shouldPop = false}) async {
+    Note note = Utils.emptyNote;
+    PickedFile image = await ImagePicker().getImage(source: source);
+
+    if (image != null) {
+      SavedImage savedImage =
+          await ImageService.loadLocalFile(File(image.path));
+      note.images.add(savedImage);
+
+      if (shouldPop) Navigator.pop(context);
+      note = note.copyWith(id: Utils.generateId());
+
+      Utils.showSecondaryRoute(
+        context,
+        NotePage(
+          note: note,
+        ),
+      );
+
+      helper.saveNote(Utils.markNoteChanged(note));
+    }
+  }
+
+  static void newList(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithList: true,
+      ),
+    );
+  }
+
+  static void newDrawing(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithDrawing: true,
+      ),
+    );
   }
 
   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";

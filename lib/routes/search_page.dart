@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/widget/dependent_scaffold.dart';
 
 class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
@@ -67,7 +68,7 @@ class _SearchPageState<T> extends State<SearchPage> {
       scopesRoute: true,
       namesRoute: true,
       label: routeName,
-      child: Scaffold(
+      child: DependentScaffold(
         appBar: AppBar(
           title: Padding(
             padding: EdgeInsets.symmetric(horizontal: 0),
@@ -77,6 +78,7 @@ class _SearchPageState<T> extends State<SearchPage> {
               decoration: InputDecoration.collapsed(
                 hintText: LocaleStrings.searchPage.textboxHint,
               ),
+              autofocus: true,
               onChanged: (value) => _onSearchBodyChanged(),
             ),
           ),

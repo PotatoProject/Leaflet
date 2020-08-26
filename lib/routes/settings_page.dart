@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
@@ -92,6 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
+                      await NoteController.deleteAll();
                     },
                   ),
                   SettingsTile(

@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 
 class FakeFab extends StatefulWidget {
   final Key key;
-  final ScrollController controller;
+  final Object heroTag;
   final Widget child;
   final ShapeBorder shape;
   final void Function() onTap;
@@ -11,7 +11,7 @@ class FakeFab extends StatefulWidget {
 
   FakeFab({
     this.key,
-    @required this.controller,
+    this.heroTag = "defaultTag",
     this.child,
     this.shape,
     this.onTap,
@@ -22,54 +22,14 @@ class FakeFab extends StatefulWidget {
   _FakeFabState createState() => _FakeFabState();
 }
 
-class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
-  AnimationController controller;
+class _FakeFabState extends State<FakeFab> {
   bool _hovered = false;
   bool _focused = false;
   bool _highlighted = false;
   double _elevation;
 
   @override
-  void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-
-    widget.controller.addListener(updatePosition);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(updatePosition);
-    super.dispose();
-  }
-
-  void updatePosition() {
-    ScrollPosition position = widget.controller.position;
-
-    if (!controller.isAnimating) {
-      if (position.userScrollDirection == ScrollDirection.reverse) {
-        controller.forward();
-      } else if (position.userScrollDirection == ScrollDirection.forward) {
-        controller.reverse();
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    Animation<Offset> pos = CurvedAnimation(
-      parent: controller,
-      curve: Curves.fastOutSlowIn,
-    ).drive(
-      Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(0, 2),
-      ),
-    );
     ThemeData theme = Theme.of(context);
 
     if (_highlighted) {
@@ -82,10 +42,10 @@ class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
       _elevation = 6;
     }
 
-    return SlideTransition(
-      position: pos,
+    return Hero(
+      tag: widget.heroTag,
       child: Material(
-        color: Theme.of(context).colorScheme.surface,
+        color: theme.accentColor,
         elevation: _elevation,
         clipBehavior: Clip.antiAlias,
         shape: widget.shape,
@@ -110,7 +70,7 @@ class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
               child: Theme(
                 data: theme.copyWith(
                   iconTheme: theme.iconTheme.copyWith(
-                    color: theme.accentColor,
+                    color: theme.scaffoldBackgroundColor,
                   ),
                 ),
                 child: widget.child,

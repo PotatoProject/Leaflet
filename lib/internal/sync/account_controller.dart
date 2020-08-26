@@ -106,6 +106,7 @@ class AccountController {
           }
           break;
         default:
+          Loggy.d(message: loginResponse.body);
           throw ("Unexpected response from auth server");
       }
     } on SocketException {

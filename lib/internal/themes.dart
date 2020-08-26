@@ -8,7 +8,7 @@ class Themes {
   Themes(this.mainColor);
 
   static final Color _lightColor = Colors.white;
-  static final Color _lightSecondaryColor = Color(0xFFF6F6F6);
+  static final Color _lightSecondaryColor = Color(0xFFFAFAFA);
   static final Color _darkColor = Color(0xFF212121);
   static final Color _darkSecondaryColor = Color(0xFF161616);
   static final Color _blackColor = Color(0xFF0E0E0E);

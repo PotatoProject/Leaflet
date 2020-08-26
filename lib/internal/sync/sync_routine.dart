@@ -84,7 +84,7 @@ class SyncRoutine {
       }
       return true;
     } catch (e) {
-      throw ("Error when securely pinging server: " + e);
+      throw ("Error when securely pinging server: " + e.toString());
     }
   }
 
@@ -162,25 +162,19 @@ class SyncRoutine {
     }
 
     // Get a list of notes which have been updated since the client updated
-    try {
-      var notes = await NoteController.list(lastUpdated);
-      Loggy.i(
-          message:
-              "Got these notes: " + notes.map((note) => note.id).join(","));
-      for (Note note in notes) {
-        Loggy.i(message: "Saving note:" + note.id);
+    var notes = await NoteController.list(lastUpdated);
+    Loggy.i(
+        message: "Got these notes: " + notes.map((note) => note.id).join(","));
+    for (Note note in notes) {
+      Loggy.i(message: "Saving note:" + note.id);
 
-        //TODO Add a way of disabling this when adding data saving setting
-        /*for (SavedImage savedImage in note.images.data) {
+      //TODO Add a way of disabling this when adding data saving setting
+      /*for (SavedImage savedImage in note.images.data) {
           await ImageService.downloadImage(savedImage);
         }*/
-        await saveSyncedNote(note);
-      }
-      prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
-    } catch (e) {
-      Loggy.e(message: e);
-      throw ("Failed to list notes: " + e.toString());
+      await saveSyncedNote(note);
     }
+    prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
     return true;
   }
 

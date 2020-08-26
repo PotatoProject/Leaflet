@@ -91,8 +91,6 @@ class NoteController {
       return notes;
     } on SocketException {
       throw ("Could not connect to server");
-    } catch (e) {
-      throw (e);
     }
   }
 

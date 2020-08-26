@@ -43,6 +43,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       builder: (context, snapshot) {
         Widget child;
 
+        print(snapshot.data);
+
         if (snapshot.data.isNotEmpty) {
           if (prefs.useGrid) {
             child = StaggeredGridView.countBuilder(
@@ -201,26 +203,31 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     for (Note note in notes) {
-      print(note.content.contains(query));
       bool titleMatch = _getTextBool(note.title);
       bool contentMatch = _getTextBool(note.content);
       bool dateMatch = _getDateBool(note.creationDate);
       bool colorMatch = _getColorBool(note.color);
+      print(titleMatch || contentMatch);
 
       if (searchQuery.color != null && searchQuery.date != null) {
+        print("a");
         if (colorMatch && dateMatch && (titleMatch || contentMatch)) {
           results.add(note);
         }
       } else {
-        if (searchQuery.color != null) {
+        print("b");
+        if (searchQuery.color != 0) {
+          print("a");
           if (colorMatch && (titleMatch || contentMatch)) {
             results.add(note);
           }
         } else if (searchQuery.date != null) {
+          print("b");
           if (dateMatch && (titleMatch || contentMatch)) {
             results.add(note);
           }
         } else {
+          print("c");
           if (titleMatch || contentMatch) {
             results.add(note);
           }
