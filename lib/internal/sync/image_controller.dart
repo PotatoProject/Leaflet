@@ -87,7 +87,7 @@ class ImageController {
 
   static Future<String> getDownloadUrlFromSync(String hash) async {
     String token = await prefs.getToken();
-    var url = "http://192.168.178.89:8000/get/$hash.jpg";
+    var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
     dio.Response getResult = await dio.Dio().get(url,
         options: dio.Options(headers: {"Authorization": "Bearer $token"}));
@@ -103,7 +103,7 @@ class ImageController {
 
   static Future<void> uploadImageToSync(String hash, File file) async {
     String url = await getUploadUrlFromSync(hash);
-    await dio.Dio().put(
+    dio.Response uploadResponse = await dio.Dio().put(
       url,
       data: file.openRead(),
       options: dio.Options(contentType: 'image/jpg', headers: {
@@ -114,12 +114,13 @@ class ImageController {
         print("upload $progressPercent %");
       },
     );
+    print(uploadResponse.data.toString());
     return;
   }
 
   static Future<String> getUploadUrlFromSync(String hash) async {
     String token = await prefs.getToken();
-    var url = "http://192.168.178.89:8000/put/$hash.jpg";
+    var url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
     dio.Response getResult = await dio.Dio().get(url,
         options: dio.Options(headers: {"Authorization": "Bearer $token"}));
