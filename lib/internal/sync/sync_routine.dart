@@ -398,7 +398,7 @@ class SyncRoutine {
       });
     }
 
-    List<Tag> localTags = await tagHelper.listTags(TagReturnMode.LOCAL);
+    localTags = await tagHelper.listTags(TagReturnMode.LOCAL);
     List<Tag> syncedTags = await tagHelper.listTags(TagReturnMode.SYNCED);
     localTags.forEach((localTag) {
       var syncedIndex = syncedTags
