@@ -24,20 +24,20 @@ import 'package:quick_actions/quick_actions.dart';
 
 AppDatabase _db;
 
-void _initProviders(Reader read) async {
+void _initProviders(Function watch) async {
   if (appInfo == null) {
-    appInfo = read(Provider((_) => AppInfo()));
+    appInfo = watch(Provider((_) => AppInfo()));
   }
   if (deviceInfo == null) {
-    deviceInfo = read(Provider((_) => DeviceInfo()));
+    deviceInfo = watch(Provider((_) => DeviceInfo()));
   }
 
   if (prefs == null) {
-    prefs = read(ChangeNotifierProvider((_) => Preferences()));
+    prefs = watch(ChangeNotifierProvider((_) => Preferences()));
   }
 
   if (imageService == null) {
-    imageService = read(Provider((_) => ImageService()));
+    imageService = watch(Provider((_) => ImageService()));
   }
 }
 
@@ -54,8 +54,8 @@ main() async {
   runApp(
     EasyLocalization(
       child: ProviderScope(
-        child: Consumer((context, read) {
-          _initProviders(read);
+        child: Consumer(builder: (context, watch, child) {
+          _initProviders(watch);
           Loggy.generateAppLabel();
           Loggy.setLogLevel(prefs.logLevel);
 

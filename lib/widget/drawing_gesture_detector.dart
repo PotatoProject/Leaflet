@@ -73,7 +73,7 @@ class MonoDragGestureDetector
     extends MultiDragGestureRecognizer<_MonoDragPointerState> {
   final List<PointerDownEvent> events = [];
 
-  MonoDragGestureDetector() : super();
+  MonoDragGestureDetector() : super(debugOwner: false);
 
   @override
   createNewPointerState(PointerDownEvent event) {
