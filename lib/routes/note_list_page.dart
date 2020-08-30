@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -13,7 +12,6 @@ import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
-import 'package:potato_notes/widget/accented_icon.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
@@ -68,6 +66,7 @@ class _NoteListPageState extends State<NoteListPage> {
           )
         : DefaultAppBar(
             extraActions: appBarButtons,
+            title: Utils.getNameFromMode(widget.noteKind),
           )) as PreferredSizeWidget;
 
     return DependentScaffold(
@@ -110,17 +109,20 @@ class _NoteListPageState extends State<NoteListPage> {
               );
             }
           } else {
-            child = SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-                child: Illustrations.quickIllustration(
-                  context,
-                  getInfoOnCurrentMode.key,
-                  getInfoOnCurrentMode.value,
-                ),
-              ),
+            child = LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: constraints.maxHeight,
+                    child: Illustrations.quickIllustration(
+                      context,
+                      getInfoOnCurrentMode.key,
+                      getInfoOnCurrentMode.value,
+                    ),
+                  ),
+                );
+              },
             );
           }
 
@@ -139,62 +141,10 @@ class _NoteListPageState extends State<NoteListPage> {
   Widget get fab {
     return FakeFab(
       heroTag: "fabMenu",
-      onLongPress: () => Utils.showFabMenu(context, fabOptions),
-      key: GlobalKeyRegistry.get("fab"),
       shape: StadiumBorder(),
       onTap: () => Utils.newNote(context, scaffoldKey: scaffoldKey),
       child: Icon(OMIcons.edit),
     );
-  }
-
-  List<Widget> get fabOptions {
-    return [
-      ListTile(
-        leading: AccentedIcon(OMIcons.edit),
-        title: Text(
-          LocaleStrings.common.newNote,
-          overflow: TextOverflow.ellipsis,
-        ),
-        onTap: () {
-          Navigator.pop(context);
-
-          Utils.newNote(context, scaffoldKey: scaffoldKey);
-        },
-      ),
-      ListTile(
-        leading: AccentedIcon(MdiIcons.checkboxMarkedOutline),
-        title: Text(
-          LocaleStrings.common.newList,
-          overflow: TextOverflow.ellipsis,
-        ),
-        onTap: () {
-          Navigator.pop(context);
-
-          Utils.newList(context);
-        },
-      ),
-      ListTile(
-        leading: AccentedIcon(OMIcons.image),
-        title: Text(
-          LocaleStrings.common.newImage,
-          overflow: TextOverflow.ellipsis,
-        ),
-        onTap: () =>
-            Utils.newImage(context, ImageSource.gallery, shouldPop: true),
-      ),
-      ListTile(
-        leading: AccentedIcon(OMIcons.brush),
-        title: Text(
-          LocaleStrings.common.newDrawing,
-          overflow: TextOverflow.ellipsis,
-        ),
-        onTap: () {
-          Navigator.pop(context);
-
-          Utils.newDrawing(context);
-        },
-      ),
-    ];
   }
 
   MapEntry<Widget, String> get getInfoOnCurrentMode {

@@ -533,13 +533,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.1"
-  nested:
-    dependency: "direct main"
-    description:
-      name: nested
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -872,7 +865,7 @@ packages:
     source: hosted
     version: "1.9.5"
   state_notifier:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: state_notifier
       url: "https://pub.dartlang.org"

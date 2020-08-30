@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/widget/default_app_bar.dart';
 
 class DependentScaffold extends StatelessWidget {
   const DependentScaffold({
     Key key,
-    this.appBar,
+    this.appBar = const DefaultAppBar(),
     this.body,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -56,8 +57,6 @@ class DependentScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = BasePage.of(context);
 
-    print(state);
-
     if (state != null) {
       BasePage.of(context).setFAB(floatingActionButton);
       BasePage.of(context).setAppBar(appBar);
@@ -66,12 +65,17 @@ class DependentScaffold extends StatelessWidget {
     return Scaffold(
       appBar: state == null ? appBar : null,
       floatingActionButton: state == null ? floatingActionButton : null,
-      body: body,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 1080),
+          child: body,
+        ),
+      ),
       persistentFooterButtons: persistentFooterButtons,
       drawer: drawer,
       endDrawer: endDrawer,
       drawerScrimColor: drawerScrimColor,
-      backgroundColor: backgroundColor,
+      backgroundColor: state != null ? Colors.transparent : backgroundColor,
       bottomNavigationBar: bottomNavigationBar,
       bottomSheet: bottomSheet,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,

@@ -24,7 +24,7 @@ import 'package:quick_actions/quick_actions.dart';
 
 AppDatabase _db;
 
-void _initProviders(Reader read) async {
+void _initProviders(ScopedReader read) async {
   appInfo ??= read(ChangeNotifierProvider((_) => AppInfo()));
   deviceInfo ??= read(Provider((_) => DeviceInfo()));
   prefs ??= read(ChangeNotifierProvider((_) => Preferences()));
@@ -44,8 +44,8 @@ main() async {
   runApp(
     EasyLocalization(
       child: ProviderScope(
-        child: Consumer(builder: (context, watch, child) {
-          _initProviders(watch);
+        child: Consumer(builder: (context, read, _) {
+          _initProviders(read);
           Loggy.generateAppLabel();
           Loggy.setLogLevel(prefs.logLevel);
 

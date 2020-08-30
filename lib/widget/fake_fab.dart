@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/accented_icon.dart';
 
 class FakeFab extends StatefulWidget {
   final Key key;
@@ -7,7 +13,6 @@ class FakeFab extends StatefulWidget {
   final Widget child;
   final ShapeBorder shape;
   final void Function() onTap;
-  final void Function() onLongPress;
 
   FakeFab({
     this.key,
@@ -15,7 +20,6 @@ class FakeFab extends StatefulWidget {
     this.child,
     this.shape,
     this.onTap,
-    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -50,10 +54,10 @@ class _FakeFabState extends State<FakeFab> {
         clipBehavior: Clip.antiAlias,
         shape: widget.shape,
         child: GestureDetector(
-          onSecondaryTap: widget.onLongPress,
+          onSecondaryTap: onLongPress,
           child: InkWell(
             onTap: widget.onTap,
-            onLongPress: widget.onLongPress,
+            onLongPress: onLongPress,
             onHover: (value) => setState(() {
               _hovered = value;
             }),
@@ -80,5 +84,70 @@ class _FakeFabState extends State<FakeFab> {
         ),
       ),
     );
+  }
+
+  void onLongPress() {
+    Utils.showFabMenu(
+      context,
+      context.findRenderObject(),
+      fabOptions,
+    );
+  }
+
+  List<Widget> get fabOptions {
+    return [
+      ListTile(
+        tileColor: Theme.of(context).accentColor,
+        leading: Icon(
+          OMIcons.edit,
+          color: Theme.of(context).cardColor,
+        ),
+        title: Text(
+          LocaleStrings.common.newNote,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newNote(context);
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(MdiIcons.checkboxMarkedOutline),
+        title: Text(
+          LocaleStrings.common.newList,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newList(context);
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(OMIcons.image),
+        title: Text(
+          LocaleStrings.common.newImage,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () =>
+            Utils.newImage(context, ImageSource.gallery, shouldPop: true),
+      ),
+      ListTile(
+        leading: AccentedIcon(OMIcons.brush),
+        title: Text(
+          LocaleStrings.common.newDrawing,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newDrawing(context);
+        },
+      ),
+    ];
   }
 }

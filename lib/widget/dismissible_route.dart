@@ -130,7 +130,7 @@ class DismissiblePageTransition extends StatelessWidget {
       curve: linearTransition ? Curves.linear : Curves.easeOut,
       reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
     ).drive(Tween<Offset>(
-      begin: Offset(1, 0),
+      begin: Offset(textDirection == TextDirection.rtl ? -1 : 1, 0),
       end: Offset(0, 0),
     ));
 
@@ -190,6 +190,8 @@ class _DismissibleRoute extends StatefulWidget {
 class _DismissibleRouteState extends State<_DismissibleRoute> {
   @override
   Widget build(BuildContext context) {
+    final TextDirection textDirection = Directionality.of(context);
+
     return SafeArea(
       top: false,
       child: GestureDetector(
@@ -202,8 +204,10 @@ class _DismissibleRouteState extends State<_DismissibleRoute> {
             : null,
         onHorizontalDragUpdate: _gestureStartAllowed
             ? (details) {
-                widget.controller.value -=
-                    details.primaryDelta / widget.maxWidth;
+                widget.controller.value -= (textDirection == TextDirection.rtl
+                        ? -details.primaryDelta
+                        : details.primaryDelta) /
+                    widget.maxWidth;
               }
             : null,
         onHorizontalDragEnd: _gestureStartAllowed
@@ -222,12 +226,9 @@ class _DismissibleRouteState extends State<_DismissibleRoute> {
                 }
               }
             : null,
-        child: IgnorePointer(
-          ignoring: false,
-          child: Material(
-            elevation: 16,
-            child: widget.child,
-          ),
+        child: Material(
+          elevation: 16,
+          child: widget.child,
         ),
       ),
     );

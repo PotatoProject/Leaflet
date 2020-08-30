@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
-class DeviceInfo {
+class DeviceInfo with ChangeNotifier {
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics;
   bool _canUseSystemAccent = true;
@@ -49,6 +49,8 @@ class DeviceInfo {
       _uiSizeFactor = 1;
       _uiType = UiType.PHONE;
     }
+
+    notifyListeners();
   }
 
   static bool get isDesktopOrWeb {

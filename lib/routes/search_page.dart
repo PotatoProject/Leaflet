@@ -45,47 +45,24 @@ class _SearchPageState<T> extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasMaterialLocalizations(context));
-    final ThemeData theme = Theme.of(context);
-    final String searchFieldLabel = widget.delegate.searchFieldLabel ??
-        MaterialLocalizations.of(context).searchFieldLabel;
     Widget body = widget.delegate.buildResults(context);
-    String routeName;
-    switch (theme.platform) {
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-        routeName = '';
-        break;
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        routeName = searchFieldLabel;
-    }
 
-    return Semantics(
-      explicitChildNodes: true,
-      scopesRoute: true,
-      namesRoute: true,
-      label: routeName,
-      child: DependentScaffold(
-        appBar: AppBar(
-          title: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            child: TextField(
-              controller: widget.delegate._queryTextController,
-              focusNode: focusNode,
-              decoration: InputDecoration.collapsed(
-                hintText: LocaleStrings.searchPage.textboxHint,
-              ),
-              autofocus: true,
-              onChanged: (value) => _onSearchBodyChanged(),
+    return DependentScaffold(
+      appBar: AppBar(
+        title: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          child: TextField(
+            controller: widget.delegate._queryTextController,
+            focusNode: focusNode,
+            decoration: InputDecoration.collapsed(
+              hintText: LocaleStrings.searchPage.textboxHint,
             ),
+            onChanged: (value) => _onSearchBodyChanged(),
           ),
-          actions: widget.delegate.buildActions(context),
         ),
-        body: body,
+        actions: widget.delegate.buildActions(context),
       ),
+      body: body,
     );
   }
 }

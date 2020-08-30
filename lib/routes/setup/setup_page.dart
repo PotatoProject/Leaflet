@@ -37,6 +37,7 @@ class _SetupPagetate extends State<SetupPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextDirection textDirection = Directionality.of(context);
     String buttonText;
 
     if (pageIndex == 0) {
@@ -50,7 +51,9 @@ class _SetupPagetate extends State<SetupPage> {
       child: Scaffold(
         body: GestureDetector(
           onHorizontalDragEnd: (details) {
-            double sign = details.primaryVelocity.sign;
+            double sign = textDirection == TextDirection.rtl
+                ? -details.primaryVelocity.sign
+                : details.primaryVelocity.sign;
 
             if (details.primaryVelocity.abs() > 320) {
               if (sign == 1) {
@@ -65,7 +68,7 @@ class _SetupPagetate extends State<SetupPage> {
             }
           },
           child: PageTransitionSwitcher(
-            reverse: reverse,
+            reverse: textDirection == TextDirection.rtl ? !reverse : reverse,
             transitionBuilder: (
               child,
               primaryAnimation,

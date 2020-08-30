@@ -31,7 +31,7 @@ class SettingsTile extends StatelessWidget {
     this.enabled = true,
   })  : this.trailing = Switch(
           value: value,
-          onChanged: onChanged,
+          onChanged: enabled ? onChanged : null,
           activeColor: activeColor,
         ),
         this.onTap = (() => onChanged(!value)),

@@ -12,7 +12,6 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/routes/about_page.dart';
@@ -116,47 +115,73 @@ class Utils {
     ];
   }
 
-  static void showFabMenu(BuildContext context, List<Widget> items) {
-    RenderBox fabBox =
-        GlobalKeyRegistry.get("fab").currentContext.findRenderObject();
-
+  static void showFabMenu(
+      BuildContext context, RenderBox fabBox, List<Widget> items) {
     Size fabSize = fabBox.size;
     Offset fabPosition = fabBox.localToGlobal(Offset(0, 0));
+    Size screenSize = MediaQuery.of(context).size;
 
-    Widget child = Stack(
-      children: <Widget>[
-        Positioned(
-          bottom: MediaQuery.of(context).size.height -
-              (fabPosition.dy + fabSize.height),
-          right: MediaQuery.of(context).size.width -
-              (fabPosition.dx + fabSize.width),
-          child: Hero(
-            tag: "fabMenu",
-            child: Material(
-              elevation: 6,
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SizedBox(
-                width: 250,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(0),
-                  reverse: true,
-                  children: items,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    bool isOnTop = fabPosition.dy < screenSize.height / 2;
+    bool isOnLeft = fabPosition.dx < screenSize.width / 2;
+
+    double top = isOnTop ? fabPosition.dy : null;
+    double left = isOnLeft ? fabPosition.dx : null;
+    double right =
+        !isOnTop ? screenSize.width - (fabPosition.dx + fabSize.width) : null;
+    double bottom = !isOnLeft
+        ? screenSize.height - (fabPosition.dy + fabSize.height)
+        : null;
 
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, anim, secAnim) => child,
+        pageBuilder: (context, anim, secAnim) {
+          return Stack(
+            children: <Widget>[
+              GestureDetector(
+                onTapDown: (details) => Navigator.pop(context),
+                child: SizedBox.expand(
+                  child: AnimatedBuilder(
+                    animation: anim,
+                    builder: (context, _) => DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: ColorTween(
+                          begin: Colors.transparent,
+                          end: Colors.black38,
+                        ).animate(anim).value,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: top,
+                left: left,
+                right: right,
+                bottom: bottom,
+                child: Hero(
+                  tag: "fabMenu",
+                  child: Material(
+                    elevation: 6,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kCardBorderRadius),
+                    ),
+                    child: SizedBox(
+                      width: 250,
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.all(0),
+                        reverse: true,
+                        children: isOnTop ? items.reversed.toList() : items,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
         opaque: false,
         barrierDismissible: true,
       ),

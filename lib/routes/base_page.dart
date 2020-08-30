@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
+import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/more_page.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/routes/setup/setup_page.dart';
 import 'package:potato_notes/widget/base_page_navigation_bar.dart';
 import 'package:potato_notes/widget/note_search_delegate.dart';
@@ -39,7 +41,11 @@ class _BasePageState extends State<BasePage> {
       key: ValueKey(ReturnMode.ARCHIVE),
       noteKind: ReturnMode.ARCHIVE,
     ),
-    MorePage(),
+    NoteListPage(
+      key: ValueKey(ReturnMode.TRASH),
+      noteKind: ReturnMode.TRASH,
+    ),
+    SettingsPage(),
   ];
 
   int _currentPage = 0;
@@ -103,54 +109,78 @@ class _BasePageState extends State<BasePage> {
         );
       }
     });
+    deviceInfo.addListener(() => setState(() {}));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar,
-      extendBodyBehindAppBar: true,
-      body: BasePageInheritedWidget(
-        state: this,
-        child: PageTransitionSwitcher(
-          child: _pages.get(_currentPage),
-          transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
-            return SharedAxisTransition(
-              animation: primaryAnimation,
-              secondaryAnimation: secondaryAnimation,
-              fillColor: Colors.transparent,
-              transitionType: SharedAxisTransitionType.scaled,
-              child: child,
-            );
-          },
-        ),
-      ),
-      bottomNavigationBar: BasePageNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.noteMultipleOutline),
-            title: Text("Notes"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            title: Text("Search"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.archiveOutline),
-            title: Text("Archive"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz),
-            title: Text("More"),
+    bool showNavigationRail =
+        deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
+    return BasePageInheritedWidget(
+      state: this,
+      child: Row(
+        children: [
+          showNavigationRail ? getNavbar(true) : Container(),
+          showNavigationRail
+              ? VerticalDivider(
+                  width: 1,
+                  color: Theme.of(context).iconTheme.color.withOpacity(0.1),
+                )
+              : Container(),
+          Expanded(
+            child: Scaffold(
+              appBar: _appBar,
+              extendBodyBehindAppBar: true,
+              body: PageTransitionSwitcher(
+                child: _pages.get(_currentPage),
+                transitionBuilder:
+                    (child, primaryAnimation, secondaryAnimation) {
+                  return FadeThroughTransition(
+                    animation: primaryAnimation,
+                    secondaryAnimation: secondaryAnimation,
+                    fillColor: Colors.transparent,
+                    child: child,
+                  );
+                },
+              ),
+              bottomNavigationBar: !showNavigationRail ? getNavbar() : null,
+              floatingActionButton: _floatingActionButton,
+            ),
           ),
         ],
-        index: _currentPage,
-        enabled: _bottomBarEnabled,
-        onPageChanged: setCurrentPage,
       ),
-      floatingActionButton: _floatingActionButton,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget getNavbar([bool vertical = false]) {
+    return BasePageNavigationBar(
+      axis: vertical ? Axis.vertical : Axis.horizontal,
+      items: [
+        AdaptiveNavigationDestination(
+          icon: Icon(CustomIcons.notes),
+          label: Text("Notes"),
+        ),
+        AdaptiveNavigationDestination(
+          icon: Icon(Icons.search_outlined),
+          label: Text(LocaleStrings.mainPage.search),
+        ),
+        AdaptiveNavigationDestination(
+          icon: Icon(MdiIcons.archiveOutline),
+          label: Text(LocaleStrings.mainPage.titleArchive),
+        ),
+        AdaptiveNavigationDestination(
+          icon: Icon(Icons.delete_outlined),
+          label: Text(LocaleStrings.mainPage.titleTrash),
+        ),
+        AdaptiveNavigationDestination(
+          icon: Icon(CustomIcons.settings_outline),
+          label: Text(LocaleStrings.mainPage.settings),
+        ),
+      ],
+      index: _currentPage,
+      enabled: _bottomBarEnabled,
+      onPageChanged: setCurrentPage,
     );
   }
 }
