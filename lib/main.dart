@@ -4,30 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/android_xml_asset_loader.dart';
-import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
-import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:quick_actions/quick_actions.dart';
-
-AppDatabase _db;
-
-void _initProviders(ScopedReader read) async {
-  appInfo ??= read(ChangeNotifierProvider((_) => AppInfo()));
-  deviceInfo ??= read(Provider((_) => DeviceInfo()));
-  prefs ??= read(ChangeNotifierProvider((_) => Preferences()));
-  imageService ??= read(Provider((_) => ImageService()));
-}
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,20 +24,13 @@ main() async {
       debug: kDebugMode,
     );
   }
-  _db = AppDatabase(constructDb(logStatements: kDebugMode));
+  AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
+  Loggy.generateAppLabel();
   runApp(
     EasyLocalization(
-      child: ProviderScope(
-        child: Consumer(builder: (context, read, _) {
-          _initProviders(read);
-          Loggy.generateAppLabel();
-          Loggy.setLogLevel(prefs.logLevel);
-
-          return PotatoNotes();
-        }),
-      ),
+      child: PotatoNotes(),
       supportedLocales: [
         Locale("de", "DE"),
         Locale("en", "US"),
@@ -86,36 +67,21 @@ main() async {
   );
 }
 
-class PotatoNotes extends StatefulWidget {
-  PotatoNotes({Key key}) : super(key: key);
-
+class PotatoNotes extends StatelessWidget with ObserverWidgetMixin {
   @override
-  _PotatoNotesState createState() => _PotatoNotesState();
-}
-
-class _PotatoNotesState extends State<PotatoNotes> {
-  static final EventChannel accentStreamChannel =
-      EventChannel('potato_notes_accents');
-
-  @override
-  void initState() {
-    prefs.addListener(() => setState(() {}));
-    super.initState();
-  }
+  String getName() => this.toStringShort();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: DeviceInfo.isAndroid
-          ? accentStreamChannel.receiveBroadcastStream()
-          : Stream.empty(),
-      initialData: Colors.blueAccent.value,
-      builder: (context, snapshot) {
+    return Observer(
+      builder: (context) {
+        Loggy.setLogLevel(prefs.logLevel);
+
         Color accentColor;
         bool canUseSystemAccent = true;
 
         if (DeviceInfo.isAndroid) {
-          if (snapshot.data == -1) {
+          if (appInfo.accentData == -1) {
             canUseSystemAccent = false;
           } else {
             canUseSystemAccent = true;
@@ -127,7 +93,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
         if (prefs.useCustomAccent || !canUseSystemAccent) {
           accentColor = prefs.customAccent ?? Utils.defaultAccent;
         } else {
-          accentColor = Color(snapshot.data);
+          accentColor = Color(appInfo.accentData);
         }
 
         Themes themes = Themes(accentColor.withOpacity(1));

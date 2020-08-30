@@ -16,13 +16,11 @@ import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:share/share.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
   final List<Note> selectionList;
   final ReturnMode currentMode;
   final Function() onCloseSelection;
 
   SelectionBar({
-    @required this.scaffoldKey,
     @required this.selectionList,
     this.currentMode = ReturnMode.NORMAL,
     this.onCloseSelection,
@@ -136,7 +134,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
             await Utils.deleteNotes(
-              scaffoldKey: scaffoldKey,
+              context: context,
               notes: selectionList,
               reason:
                   LocaleStrings.mainPage.notesArchived(selectionList.length),
@@ -160,7 +158,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             helper.deleteNote(note);
           } else {
             await Utils.deleteNotes(
-              scaffoldKey: scaffoldKey,
+              context: context,
               notes: selectionList,
               reason: LocaleStrings.mainPage.notesDeleted(selectionList.length),
             );
@@ -180,7 +178,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         tooltip: LocaleStrings.common.restore,
         onPressed: () async {
           await Utils.restoreNotes(
-            scaffoldKey: scaffoldKey,
+            context: context,
             notes: selectionList,
             reason: LocaleStrings.mainPage.notesRestored(selectionList.length),
             archive: currentMode == ReturnMode.ARCHIVE,

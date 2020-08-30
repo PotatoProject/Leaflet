@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -29,6 +30,7 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _pages = [
     NoteListPage(
       key: ValueKey(ReturnMode.NORMAL),
@@ -65,6 +67,10 @@ class _BasePageState extends State<BasePage> {
   void setAppBar(Widget appBar) => WidgetsBinding.instance.addPostFrameCallback(
         (_) => setState(() => _appBar = appBar),
       );
+  void hideCurrentSnackBar() => _scaffoldKey.currentState.hideCurrentSnackBar();
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+          SnackBar snackBar) =>
+      _scaffoldKey.currentState.showSnackBar(snackBar);
 
   @override
   void initState() {
@@ -109,47 +115,52 @@ class _BasePageState extends State<BasePage> {
         );
       }
     });
-    deviceInfo.addListener(() => setState(() {}));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool showNavigationRail =
-        deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
-    return BasePageInheritedWidget(
-      state: this,
-      child: Row(
-        children: [
-          showNavigationRail ? getNavbar(true) : Container(),
-          showNavigationRail
-              ? VerticalDivider(
-                  width: 1,
-                  color: Theme.of(context).iconTheme.color.withOpacity(0.1),
-                )
-              : Container(),
-          Expanded(
-            child: Scaffold(
-              appBar: _appBar,
-              extendBodyBehindAppBar: true,
-              body: PageTransitionSwitcher(
-                child: _pages.get(_currentPage),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    fillColor: Colors.transparent,
-                    child: child,
-                  );
-                },
+    return Observer(
+      builder: (context) {
+        bool showNavigationRail =
+            deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
+
+        return BasePageInheritedWidget(
+          state: this,
+          child: Row(
+            children: [
+              showNavigationRail ? getNavbar(true) : Container(),
+              showNavigationRail
+                  ? VerticalDivider(
+                      width: 1,
+                      color: Theme.of(context).iconTheme.color.withOpacity(0.1),
+                    )
+                  : Container(),
+              Expanded(
+                child: Scaffold(
+                  key: _scaffoldKey,
+                  appBar: _appBar,
+                  extendBodyBehindAppBar: true,
+                  body: PageTransitionSwitcher(
+                    child: _pages.get(_currentPage),
+                    transitionBuilder:
+                        (child, primaryAnimation, secondaryAnimation) {
+                      return FadeThroughTransition(
+                        animation: primaryAnimation,
+                        secondaryAnimation: secondaryAnimation,
+                        fillColor: Colors.transparent,
+                        child: child,
+                      );
+                    },
+                  ),
+                  bottomNavigationBar: !showNavigationRail ? getNavbar() : null,
+                  floatingActionButton: _floatingActionButton,
+                ),
               ),
-              bottomNavigationBar: !showNavigationRail ? getNavbar() : null,
-              floatingActionButton: _floatingActionButton,
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

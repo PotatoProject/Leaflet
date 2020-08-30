@@ -3,56 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mobx/mobx.dart';
 
-class DeviceInfo with ChangeNotifier {
-  bool _canCheckBiometrics;
-  List<BiometricType> _availableBiometrics;
-  bool _canUseSystemAccent = true;
-  bool _isLandscape = false;
-  int _uiSizeFactor = 2;
-  UiType _uiType;
+part 'device_info.g.dart';
 
-  DeviceInfo() {
-    _loadInitialData();
-  }
-
-  bool get canCheckBiometrics => _canCheckBiometrics;
-  List<BiometricType> get availableBiometrics => _availableBiometrics;
-  bool get canUseSystemAccent => _canUseSystemAccent;
-  bool get isLandscape => _isLandscape;
-  int get uiSizeFactor => _uiSizeFactor;
-  UiType get uiType => _uiType;
-
-  void _loadInitialData() async {
-    _canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
-    _availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
-  }
-
-  void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
-    _canUseSystemAccent = canUseSystemAccent;
-    _isLandscape = mq.orientation == Orientation.landscape;
-    double width = mq.size.width;
-
-    if (width >= 1280) {
-      _uiSizeFactor = 5;
-      _uiType = UiType.DESKTOP;
-    } else if (width >= 900) {
-      _uiSizeFactor = 4;
-      _uiType = UiType.LARGE_TABLET;
-    } else if (width >= 600) {
-      _uiSizeFactor = 3;
-      _uiType = UiType.TABLET;
-    } else if (width >= 360) {
-      _uiSizeFactor = 2;
-      _uiType = UiType.PHONE;
-    } else {
-      _uiSizeFactor = 1;
-      _uiType = UiType.PHONE;
-    }
-
-    notifyListeners();
-  }
-
+class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
   static bool get isDesktopOrWeb {
     if (kIsWeb) return true;
 
@@ -67,6 +22,74 @@ class DeviceInfo with ChangeNotifier {
     if (Platform.isAndroid) return true;
 
     return false;
+  }
+}
+
+abstract class _DeviceInfoBase with Store {
+  @observable
+  @protected
+  bool canCheckBiometricsValue;
+
+  @observable
+  @protected
+  List<BiometricType> availableBiometricsValue;
+
+  @observable
+  @protected
+  bool canUseSystemAccentValue = true;
+
+  @observable
+  @protected
+  bool isLandscapeValue = false;
+
+  @observable
+  @protected
+  int uiSizeFactorValue = 2;
+
+  @observable
+  @protected
+  UiType uiTypeValue;
+
+  _DeviceInfoBase() {
+    _loadInitialData();
+  }
+
+  bool get canCheckBiometrics => canCheckBiometricsValue;
+  List<BiometricType> get availableBiometrics => availableBiometricsValue;
+  bool get canUseSystemAccent => canUseSystemAccentValue;
+  bool get isLandscape => isLandscapeValue;
+  int get uiSizeFactor => uiSizeFactorValue;
+  UiType get uiType => uiTypeValue;
+
+  @action
+  Future<void> _loadInitialData() async {
+    canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
+    availableBiometricsValue =
+        await LocalAuthentication().getAvailableBiometrics();
+  }
+
+  @action
+  void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
+    canUseSystemAccentValue = canUseSystemAccent;
+    isLandscapeValue = mq.orientation == Orientation.landscape;
+    double width = mq.size.width;
+
+    if (width >= 1280) {
+      uiSizeFactorValue = 5;
+      uiTypeValue = UiType.DESKTOP;
+    } else if (width >= 900) {
+      uiSizeFactorValue = 4;
+      uiTypeValue = UiType.LARGE_TABLET;
+    } else if (width >= 600) {
+      uiSizeFactorValue = 3;
+      uiTypeValue = UiType.TABLET;
+    } else if (width >= 360) {
+      uiSizeFactorValue = 2;
+      uiTypeValue = UiType.PHONE;
+    } else {
+      uiSizeFactorValue = 1;
+      uiTypeValue = UiType.PHONE;
+    }
   }
 }
 

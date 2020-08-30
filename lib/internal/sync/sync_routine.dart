@@ -213,7 +213,6 @@ class SyncRoutine {
         Loggy.i(message: "Updated note:" + note.id);
       } catch (e) {
         Loggy.e(message: e);
-        throw ("Failed to update notes: " + e);
       }
     });
     deletedNotes.forEach((note) async {
@@ -342,8 +341,6 @@ class SyncRoutine {
       }
     }
     prefs.prefs.clearChangedKeys();
-
-    prefs.triggerRefresh();
   }
 
   static Future<void> saveSyncedNote(Note note) async {

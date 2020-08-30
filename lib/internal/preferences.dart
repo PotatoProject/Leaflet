@@ -1,194 +1,220 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
+import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
-import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 
-class Preferences extends ChangeNotifier {
+part 'preferences.g.dart';
+
+class Preferences = _PreferencesBase with _$Preferences;
+
+abstract class _PreferencesBase with Store {
   SharedPrefs prefs;
   Keystore keystore;
 
-  Preferences() {
+  _PreferencesBase() {
     loadData();
   }
 
-  String _masterPass;
-  ThemeMode _themeMode = ThemeMode.system;
-  Color _customAccent;
-  bool _useAmoled = false;
-  bool _useGrid = false;
-  bool _useCustomAccent = false;
-  bool _welcomePageSeen = false;
-  String _apiUrl;
-  String _accessToken;
-  String _refreshToken;
-  String _username;
-  String _email;
-  int _logLevel = LogEntry.VERBOSE;
-  List<Tag> _tags = [];
-  int _lastUpdated;
+  @observable
+  @protected
+  String masterPassValue;
 
-  String get masterPass => _masterPass;
-  ThemeMode get themeMode => _themeMode;
-  Color get customAccent => _customAccent;
-  bool get useAmoled => _useAmoled;
-  bool get useGrid => _useGrid;
-  bool get useCustomAccent => _useCustomAccent;
-  bool get welcomePageSeen => _welcomePageSeen;
-  String get apiUrl => _apiUrl;
-  String get accessToken => _accessToken;
-  String get refreshToken => _refreshToken;
-  String get username => _username;
-  String get email => _email;
-  int get logLevel => _logLevel;
-  List<Tag> get tags => _tags;
-  int get lastUpdated => _lastUpdated;
+  @observable
+  @protected
+  ThemeMode themeModeValue = ThemeMode.system;
+
+  @observable
+  @protected
+  Color customAccentValue;
+
+  @observable
+  @protected
+  bool useAmoledValue = false;
+
+  @observable
+  @protected
+  bool useGridValue = false;
+
+  @observable
+  @protected
+  bool useCustomAccentValue = false;
+
+  @observable
+  @protected
+  bool welcomePageSeenValue = false;
+
+  @observable
+  @protected
+  String apiUrlValue;
+
+  @observable
+  @protected
+  String accessTokenValue;
+
+  @observable
+  @protected
+  String refreshTokenValue;
+
+  @observable
+  @protected
+  String usernameValue;
+
+  @observable
+  @protected
+  String emailValue;
+
+  @observable
+  @protected
+  int logLevelValue = LogEntry.VERBOSE;
+
+  @observable
+  @protected
+  List<dynamic> tags = [];
+
+  @observable
+  @protected
+  int lastUpdatedValue;
+
+  String get masterPass => masterPassValue;
+  ThemeMode get themeMode => themeModeValue;
+  Color get customAccent => customAccentValue;
+  bool get useAmoled => useAmoledValue;
+  bool get useGrid => useGridValue;
+  bool get useCustomAccent => useCustomAccentValue;
+  bool get welcomePageSeen => welcomePageSeenValue;
+  String get apiUrl => apiUrlValue;
+  String get accessToken => accessTokenValue;
+  String get refreshToken => refreshTokenValue;
+  String get username => usernameValue;
+  String get email => emailValue;
+  int get logLevel => logLevelValue;
+  int get lastUpdated => lastUpdatedValue;
 
   set masterPass(String value) {
-    _masterPass = value;
+    masterPassValue = value;
 
     if (DeviceInfo.isDesktopOrWeb) {
       prefs.setMasterPass(value);
     } else {
       keystore.setMasterPass(value);
     }
-
-    notifyListeners();
   }
 
   set themeMode(ThemeMode value) {
-    _themeMode = value;
+    themeModeValue = value;
     prefs.setThemeMode(value);
-    notifyListeners();
   }
 
   set customAccent(Color value) {
-    _customAccent = value;
+    customAccentValue = value;
     prefs.setCustomAccent(value);
-    notifyListeners();
   }
 
   set useAmoled(bool value) {
-    _useAmoled = value;
+    useAmoledValue = value;
     prefs.setUseAmoled(value);
-    notifyListeners();
   }
 
   set useGrid(bool value) {
-    _useGrid = value;
+    useGridValue = value;
     prefs.setUseGrid(value);
-    notifyListeners();
   }
 
   set useCustomAccent(bool value) {
-    _useCustomAccent = value;
+    useCustomAccentValue = value;
     prefs.setUseCustomAccent(value);
-    notifyListeners();
   }
 
   set welcomePageSeen(bool value) {
-    _welcomePageSeen = value;
+    welcomePageSeenValue = value;
     prefs.setWelcomePageSeen(value);
-    notifyListeners();
   }
 
   set apiUrl(String value) {
-    _apiUrl = value;
+    apiUrlValue = value;
     prefs.setApiUrl(value);
-    notifyListeners();
   }
 
   set accessToken(String value) {
-    _accessToken = value;
+    accessTokenValue = value;
     prefs.setAccessToken(value);
-    notifyListeners();
   }
 
   set refreshToken(String value) {
-    _refreshToken = value;
+    refreshTokenValue = value;
     prefs.setRefreshToken(value);
-    notifyListeners();
   }
 
   set username(String value) {
-    _username = value;
+    usernameValue = value;
     prefs.setUsername(value);
-    notifyListeners();
   }
 
   set email(String value) {
-    _email = value;
+    emailValue = value;
     prefs.setEmail(value);
-    notifyListeners();
   }
 
   set logLevel(int value) {
-    _logLevel = value;
+    logLevelValue = value;
     prefs.setLogLevel(value);
-    notifyListeners();
   }
 
   set lastUpdated(int value) {
-    _lastUpdated = value;
+    lastUpdatedValue = value;
     prefs.setLastUpdated(value);
-    notifyListeners();
   }
 
   void loadData() async {
     prefs = await SharedPrefs.newInstance();
     keystore = Keystore();
 
-    _themeMode = await prefs.getThemeMode();
-    _useCustomAccent = await prefs.getUseCustomAccent();
-    _customAccent = await prefs.getCustomAccent();
-    _useAmoled = await prefs.getUseAmoled();
-    _useGrid = await prefs.getUseGrid();
+    themeModeValue = await prefs.getThemeMode();
+    useCustomAccentValue = await prefs.getUseCustomAccent();
+    customAccentValue = await prefs.getCustomAccent();
+    useAmoledValue = await prefs.getUseAmoled();
+    useGridValue = await prefs.getUseGrid();
 
     if (DeviceInfo.isDesktopOrWeb) {
-      _masterPass = await prefs.getMasterPass();
+      masterPassValue = await prefs.getMasterPass();
     } else {
-      _masterPass = await keystore.getMasterPass();
+      masterPassValue = await keystore.getMasterPass();
     }
 
-    _welcomePageSeen = await prefs.getWelcomePageSeen();
-    _apiUrl = await prefs.getApiUrl();
-    _accessToken = await prefs.getAccessToken();
-    _refreshToken = await prefs.getRefreshToken();
-    _username = await prefs.getUsername();
-    _email = await prefs.getEmail();
-    _logLevel = await prefs.getLogLevel();
-    _lastUpdated = await prefs.getLastUpdated();
+    welcomePageSeenValue = await prefs.getWelcomePageSeen();
+    apiUrlValue = await prefs.getApiUrl();
+    accessTokenValue = await prefs.getAccessToken();
+    refreshTokenValue = await prefs.getRefreshToken();
+    usernameValue = await prefs.getUsername();
+    emailValue = await prefs.getEmail();
+    logLevelValue = await prefs.getLogLevel();
+    lastUpdatedValue = await prefs.getLastUpdated();
 
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
-      this._tags = newTags;
-      notifyListeners();
+      tags = newTags;
     });
   }
 
   Future<String> getToken() async {
     bool status = true;
-    if (_accessToken == null ||
+    if (accessToken == null ||
         DateTime.fromMillisecondsSinceEpoch(
-                Jwt.parseJwt(_accessToken)["exp"] * 1000)
+                Jwt.parseJwt(accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
       final response = await AccountController.refreshToken();
       status = response.status;
     }
 
     if (status) {
-      return _accessToken;
+      return accessToken;
     } else {
       throw "Error while refreshing token";
     }
-  }
-
-  void triggerRefresh() {
-    notifyListeners();
   }
 }

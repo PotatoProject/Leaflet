@@ -15,6 +15,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
@@ -269,7 +270,7 @@ class Utils {
   }
 
   static Future<void> deleteNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
@@ -286,8 +287,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -304,7 +305,7 @@ class Utils {
   }
 
   static Future<void> restoreNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
@@ -316,8 +317,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -556,10 +557,7 @@ class Utils {
     return Note.fromJson(newMap);
   }
 
-  static void newNote(
-    BuildContext context, {
-    GlobalKey<ScaffoldState> scaffoldKey,
-  }) async {
+  static void newNote(BuildContext context) async {
     int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
 
     await Utils.showSecondaryRoute(
@@ -579,7 +577,7 @@ class Utils {
           lastNote.images.isEmpty &&
           lastNote.reminders.isEmpty) {
         Utils.deleteNotes(
-          scaffoldKey: scaffoldKey,
+          context: context,
           notes: [lastNote],
           reason: LocaleStrings.mainPage.deletedEmptyNote,
         );

@@ -444,8 +444,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.content = const Value.absent(),
     this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
-    this.creationDate = const Value.absent(),
-    this.lastModifyDate = const Value.absent(),
+    @required DateTime creationDate,
+    @required DateTime lastModifyDate,
     this.color = const Value.absent(),
     @required List<SavedImage> images,
     this.list = const Value.absent(),
@@ -459,6 +459,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.archived = const Value.absent(),
     this.synced = const Value.absent(),
   })  : id = Value(id),
+        creationDate = Value(creationDate),
+        lastModifyDate = Value(lastModifyDate),
         images = Value(images),
         listContent = Value(listContent),
         reminders = Value(reminders),
@@ -714,8 +716,11 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedDateTimeColumn get creationDate =>
       _creationDate ??= _constructCreationDate();
   GeneratedDateTimeColumn _constructCreationDate() {
-    return GeneratedDateTimeColumn('creation_date', $tableName, false,
-        defaultValue: Constant(DateTime.now()));
+    return GeneratedDateTimeColumn(
+      'creation_date',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _lastModifyDateMeta =
@@ -725,8 +730,11 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedDateTimeColumn get lastModifyDate =>
       _lastModifyDate ??= _constructLastModifyDate();
   GeneratedDateTimeColumn _constructLastModifyDate() {
-    return GeneratedDateTimeColumn('last_modify_date', $tableName, false,
-        defaultValue: Constant(DateTime.now()));
+    return GeneratedDateTimeColumn(
+      'last_modify_date',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _colorMeta = const VerificationMeta('color');
@@ -911,12 +919,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
           _creationDateMeta,
           creationDate.isAcceptableOrUnknown(
               data['creation_date'], _creationDateMeta));
+    } else if (isInserting) {
+      context.missing(_creationDateMeta);
     }
     if (data.containsKey('last_modify_date')) {
       context.handle(
           _lastModifyDateMeta,
           lastModifyDate.isAcceptableOrUnknown(
               data['last_modify_date'], _lastModifyDateMeta));
+    } else if (isInserting) {
+      context.missing(_lastModifyDateMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
@@ -1107,9 +1119,10 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     @required String id,
     @required String name,
     this.color = const Value.absent(),
-    this.lastModifyDate = const Value.absent(),
+    @required DateTime lastModifyDate,
   })  : id = Value(id),
-        name = Value(name);
+        name = Value(name),
+        lastModifyDate = Value(lastModifyDate);
   static Insertable<Tag> custom({
     Expression<String> id,
     Expression<String> name,
@@ -1211,8 +1224,11 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   GeneratedDateTimeColumn get lastModifyDate =>
       _lastModifyDate ??= _constructLastModifyDate();
   GeneratedDateTimeColumn _constructLastModifyDate() {
-    return GeneratedDateTimeColumn('last_modify_date', $tableName, false,
-        defaultValue: Constant(DateTime.now()));
+    return GeneratedDateTimeColumn(
+      'last_modify_date',
+      $tableName,
+      false,
+    );
   }
 
   @override
@@ -1248,6 +1264,8 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
           _lastModifyDateMeta,
           lastModifyDate.isAcceptableOrUnknown(
               data['last_modify_date'], _lastModifyDateMeta));
+    } else if (isInserting) {
+      context.missing(_lastModifyDateMeta);
     }
     return context;
   }

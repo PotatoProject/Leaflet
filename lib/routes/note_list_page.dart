@@ -34,7 +34,6 @@ class NoteListPage extends StatefulWidget {
 }
 
 class _NoteListPageState extends State<NoteListPage> {
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController scrollController = ScrollController();
   bool _selecting = false;
   List<Note> selectionList = [];
@@ -56,7 +55,6 @@ class _NoteListPageState extends State<NoteListPage> {
 
     PreferredSizeWidget appBar = (selecting
         ? SelectionBar(
-            scaffoldKey: scaffoldKey,
             selectionList: selectionList,
             onCloseSelection: () => setState(() {
               selecting = false;
@@ -70,7 +68,6 @@ class _NoteListPageState extends State<NoteListPage> {
           )) as PreferredSizeWidget;
 
     return DependentScaffold(
-      key: scaffoldKey,
       appBar: appBar,
       body: StreamBuilder<List<Note>>(
         stream: helper.noteStream(widget.noteKind),
@@ -142,7 +139,7 @@ class _NoteListPageState extends State<NoteListPage> {
     return FakeFab(
       heroTag: "fabMenu",
       shape: StadiumBorder(),
-      onTap: () => Utils.newNote(context, scaffoldKey: scaffoldKey),
+      onTap: () => Utils.newNote(context),
       child: Icon(OMIcons.edit),
     );
   }
@@ -266,7 +263,7 @@ class _NoteListPageState extends State<NoteListPage> {
 
                   if (result ?? false) {
                     await Utils.restoreNotes(
-                      scaffoldKey: scaffoldKey,
+                      context: context,
                       notes: notes,
                       reason: LocaleStrings.mainPage
                           .notesRestored(selectionList.length),
