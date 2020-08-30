@@ -4,7 +4,6 @@ class BottomSheetBase extends StatelessWidget {
   final Widget child;
   final Color backgroundColor;
   final double elevation;
-  final double topPadding;
   final ShapeBorder shape;
   final Clip clipBehavior;
 
@@ -12,7 +11,6 @@ class BottomSheetBase extends StatelessWidget {
     @required this.child,
     this.backgroundColor,
     this.elevation = 0,
-    this.topPadding = 0,
     this.shape = const RoundedRectangleBorder(),
     this.clipBehavior = Clip.none,
   });
@@ -27,21 +25,22 @@ class BottomSheetBase extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => Navigator.pop(context),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.only(
-          top: topPadding,
-          left: padding.isNegative ? 0 : padding,
-          right: padding.isNegative ? 0 : padding,
-        ),
-        child: GestureDetector(
-          onTapDown: (_) {},
-          child: Material(
-            color: backgroundColor,
-            shape: shape,
-            elevation: elevation ?? 1,
-            clipBehavior: clipBehavior ?? Clip.none,
-            child: child,
+      child: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(
+            left: padding.isNegative ? 0 : padding,
+            right: padding.isNegative ? 0 : padding,
+          ),
+          child: GestureDetector(
+            onTapDown: (_) {},
+            child: Material(
+              color: backgroundColor,
+              shape: shape,
+              elevation: elevation ?? 1,
+              clipBehavior: clipBehavior ?? Clip.none,
+              child: child,
+            ),
           ),
         ),
       ),

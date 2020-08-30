@@ -76,8 +76,6 @@ class Utils {
     bool isDismissible = true,
     bool enableDrag = true,
   }) async {
-    double topPadding = MediaQuery.of(context).padding.top;
-
     return await showModalBottomSheet(
       context: context,
       builder: (context) => BottomSheetBase(
@@ -86,7 +84,6 @@ class Utils {
         elevation: elevation,
         shape: shape,
         clipBehavior: clipBehavior,
-        topPadding: topPadding,
       ),
       backgroundColor: Colors.transparent,
       elevation: 0,
