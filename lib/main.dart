@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +106,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: !DeviceInfo.isDesktopOrWeb
+      stream: DeviceInfo.isAndroid
           ? accentStreamChannel.receiveBroadcastStream()
           : Stream.empty(),
       initialData: Colors.blueAccent.value,
@@ -116,13 +114,14 @@ class _PotatoNotesState extends State<PotatoNotes> {
         Color accentColor;
         bool canUseSystemAccent = true;
 
-        if (DeviceInfo.isDesktopOrWeb) {
-          canUseSystemAccent = false;
-        } else {
-          if ((snapshot.data == -1 && Platform.isAndroid) ||
-              !Platform.isAndroid) {
+        if (DeviceInfo.isAndroid) {
+          if (snapshot.data == -1) {
             canUseSystemAccent = false;
+          } else {
+            canUseSystemAccent = true;
           }
+        } else {
+          canUseSystemAccent = false;
         }
 
         if (prefs.useCustomAccent || !canUseSystemAccent) {

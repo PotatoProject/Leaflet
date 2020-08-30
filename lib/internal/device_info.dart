@@ -60,6 +60,14 @@ class DeviceInfo with ChangeNotifier {
 
     return false;
   }
+
+  static bool get isAndroid {
+    if (kIsWeb) return false;
+
+    if (Platform.isAndroid) return true;
+
+    return false;
+  }
 }
 
 enum UiType {
