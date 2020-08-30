@@ -31,7 +31,7 @@ void _initProviders(ScopedReader read) async {
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!DeviceInfo.isDesktopOrWeb) {
+  if (DeviceInfo.isAndroid) {
     await FlutterDownloader.initialize(
       debug: kDebugMode,
     );
