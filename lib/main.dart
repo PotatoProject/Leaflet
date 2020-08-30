@@ -177,6 +177,12 @@ class _PotatoNotesState extends State<PotatoNotes> {
               canUseSystemAccent,
             );
 
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+              ),
+            );
+
             return child;
           },
           themeMode: prefs.themeMode,

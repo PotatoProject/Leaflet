@@ -30,6 +30,7 @@ class Themes {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
+          brightness: Brightness.light,
         ),
         textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
@@ -93,6 +94,7 @@ class Themes {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          brightness: Brightness.dark,
         ),
         textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
@@ -156,6 +158,7 @@ class Themes {
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          brightness: Brightness.dark,
         ),
         textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
