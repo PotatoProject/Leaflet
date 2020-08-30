@@ -15,8 +15,6 @@ import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
-import 'package:potato_notes/routes/note_list_page.dart';
-import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -45,19 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return WillPopScope(
       onWillPop: () async => !removingMasterPass,
       child: DependentScaffold(
-        appBar: DefaultAppBar(
-          extraActions: [
-            IconButton(
-              icon: Icon(Icons.delete_outline_rounded),
-              onPressed: () => Utils.showSecondaryRoute(
-                context,
-                NoteListPage(
-                  noteKind: ReturnMode.TRASH,
-                ),
-              ),
-            ),
-          ],
-        ),
         body: ListView(
           children: [
             commonSettings,

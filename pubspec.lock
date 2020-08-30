@@ -480,7 +480,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f7e9cd86eacc89a1bc17781a5b72fa85d437e974
+      resolved-ref: "0e51e167bcab9cc62fca773b3fabdbcbfc267c25"
       url: "https://github.com/HrX03/loggy"
     source: git
     version: "0.0.1+1"
@@ -519,13 +519,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.1"
-  moor_ffi:
-    dependency: "direct main"
-    description:
-      name: moor_ffi
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.0"
   moor_generator:
     dependency: "direct dev"
     description:
@@ -844,7 +837,7 @@ packages:
     source: hosted
     version: "0.1.4"
   sqlite3_flutter_libs:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
       url: "https://pub.dartlang.org"

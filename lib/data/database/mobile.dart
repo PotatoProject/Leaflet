@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:moor/moor.dart';
-import 'package:moor_ffi/moor_ffi.dart';
+import 'package:moor/ffi.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:sqflite/sqflite.dart';
 
 QueryExecutor constructDb({bool logStatements = false}) {
@@ -15,8 +16,12 @@ QueryExecutor constructDb({bool logStatements = false}) {
     return executor;
   }
   if (Platform.isMacOS || Platform.isLinux) {
-    final file = File('notes.sqlite');
-    return VmDatabase(file, logStatements: logStatements);
+    final executor = LazyDatabase(() async {
+      final dataDir = await pathProvider.getApplicationDocumentsDirectory();
+      final dbFile = File(p.join(dataDir.path, '.notes.sqlite'));
+      return VmDatabase(dbFile, logStatements: logStatements);
+    });
+    return executor;
   }
   // if (Platform.isWindows) {
   //   final file = File('db.sqlite');
