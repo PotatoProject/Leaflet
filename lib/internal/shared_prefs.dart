@@ -4,13 +4,17 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
+  static SharedPrefs _instance;
   SharedPreferences prefs;
 
   SharedPrefs._(this.prefs);
-  static Future<SharedPrefs> newInstance() async {
+
+  static Future<void> init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return SharedPrefs._(preferences);
+    _instance = SharedPrefs._(preferences);
   }
+
+  static SharedPrefs get instance => _instance;
 
   Future<String> getMasterPass() async {
     return prefs.getString("master_pass") ?? "";

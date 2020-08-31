@@ -45,7 +45,9 @@ class _NotePageState extends State<NotePage> {
   bool firstTimeRunning = true;
 
   TextEditingController titleController;
+  FocusNode titleFocusNode = FocusNode();
   TextEditingController contentController;
+  FocusNode contentFocusNode = FocusNode();
   //SpannableTextEditingController contentController;
 
   List<TextEditingController> listContentControllers = [];
@@ -89,6 +91,18 @@ class _NotePageState extends State<NotePage> {
           ? SpannableList.fromJson(parsedStyleJson)
           : null,
     );*/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!widget.openWithList && !widget.openWithDrawing) {
+        if (note.id == null) {
+          FocusScope.of(context).requestFocus(titleFocusNode);
+        }
+        generateId();
+      } else {
+        if (widget.openWithList) toggleList();
+
+        if (widget.openWithDrawing) addDrawing();
+      }
+    });
 
     buildListContentElements();
 
@@ -113,13 +127,6 @@ class _NotePageState extends State<NotePage> {
   Widget build(BuildContext context) {
     if (firstTimeRunning) {
       firstTimeRunning = false;
-
-      if (!widget.openWithList && !widget.openWithDrawing) generateId();
-
-      if (widget.openWithList) toggleList();
-
-      if (widget.openWithDrawing)
-        WidgetsBinding.instance.addPostFrameCallback((_) => addDrawing());
     }
 
     final Widget imagesWidget = NoteViewImages(
@@ -257,6 +264,7 @@ class _NotePageState extends State<NotePage> {
                       children: [
                         TextFormField(
                           controller: titleController,
+                          focusNode: titleFocusNode,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: LocaleStrings.notePage.titleHint,
@@ -283,9 +291,12 @@ class _NotePageState extends State<NotePage> {
                             note = note.copyWith(title: text);
                             notifyNoteChanged();
                           },
+                          onFieldSubmitted: (value) => FocusScope.of(context)
+                              .requestFocus(contentFocusNode),
                         ),
                         TextField(
                           controller: contentController,
+                          focusNode: contentFocusNode,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: LocaleStrings.notePage.contentHint,
@@ -401,9 +412,9 @@ class _NotePageState extends State<NotePage> {
                                 },
                                 onSubmitted: (_) {
                                   if (index == note.listContent.length - 1) {
-                                    if (note.listContent.last.text != "")
+                                    if (note.listContent.last.text != "") {
                                       addListContentItem();
-                                    else {
+                                    } else {
                                       FocusScope.of(context).requestFocus(
                                           listContentNodes[index]);
                                     }

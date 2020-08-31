@@ -211,18 +211,18 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$tagsAtom = Atom(name: '_PreferencesBase.tags');
+  final _$tagsValueAtom = Atom(name: '_PreferencesBase.tagsValue');
 
   @override
-  List<dynamic> get tags {
-    _$tagsAtom.reportRead();
-    return super.tags;
+  List<dynamic> get tagsValue {
+    _$tagsValueAtom.reportRead();
+    return super.tagsValue;
   }
 
   @override
-  set tags(List<dynamic> value) {
-    _$tagsAtom.reportWrite(value, super.tags, () {
-      super.tags = value;
+  set tagsValue(List<dynamic> value) {
+    _$tagsValueAtom.reportWrite(value, super.tagsValue, () {
+      super.tagsValue = value;
     });
   }
 
@@ -258,7 +258,7 @@ refreshTokenValue: ${refreshTokenValue},
 usernameValue: ${usernameValue},
 emailValue: ${emailValue},
 logLevelValue: ${logLevelValue},
-tags: ${tags},
+tagsValue: ${tagsValue},
 lastUpdatedValue: ${lastUpdatedValue}
     ''';
   }

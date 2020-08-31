@@ -48,15 +48,18 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         builder: (context, index) {
           ImageProvider image;
 
-          image = CachedNetworkImageProvider(() async {
-            try {
-              String url = await ImageController.getDownloadUrlFromSync(
-                  widget.note.images[index].hash);
-              return url;
-            } catch (e) {
-              return "";
-            }
-          }, cacheKey: widget.note.images[index].hash);
+          image = CachedNetworkImageProvider(
+            () async {
+              try {
+                String url = await ImageController.getDownloadUrlFromSync(
+                    widget.note.images[index].hash);
+                return url;
+              } catch (e) {
+                return "";
+              }
+            },
+            cacheKey: widget.note.images[index].hash,
+          );
 
           return PhotoViewGalleryPageOptions(
             imageProvider: image,

@@ -14,8 +14,8 @@ part 'preferences.g.dart';
 class Preferences = _PreferencesBase with _$Preferences;
 
 abstract class _PreferencesBase with Store {
-  SharedPrefs prefs;
-  Keystore keystore;
+  final SharedPrefs prefs = SharedPrefs.instance;
+  final Keystore keystore = Keystore();
 
   _PreferencesBase() {
     loadData();
@@ -75,7 +75,7 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  List<dynamic> tags = [];
+  List<dynamic> tagsValue = [];
 
   @observable
   @protected
@@ -94,6 +94,7 @@ abstract class _PreferencesBase with Store {
   String get username => usernameValue;
   String get email => emailValue;
   int get logLevel => logLevelValue;
+  List<dynamic> get tags => tagsValue;
   int get lastUpdated => lastUpdatedValue;
 
   set masterPass(String value) {
@@ -172,9 +173,7 @@ abstract class _PreferencesBase with Store {
   }
 
   void loadData() async {
-    prefs = await SharedPrefs.newInstance();
-    keystore = Keystore();
-
+    welcomePageSeenValue = await prefs.getWelcomePageSeen();
     themeModeValue = await prefs.getThemeMode();
     useCustomAccentValue = await prefs.getUseCustomAccent();
     customAccentValue = await prefs.getCustomAccent();
@@ -187,7 +186,6 @@ abstract class _PreferencesBase with Store {
       masterPassValue = await keystore.getMasterPass();
     }
 
-    welcomePageSeenValue = await prefs.getWelcomePageSeen();
     apiUrlValue = await prefs.getApiUrl();
     accessTokenValue = await prefs.getAccessToken();
     refreshTokenValue = await prefs.getRefreshToken();
@@ -197,7 +195,7 @@ abstract class _PreferencesBase with Store {
     lastUpdatedValue = await prefs.getLastUpdated();
 
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
-      tags = newTags;
+      tagsValue = newTags;
     });
   }
 

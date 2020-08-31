@@ -12,6 +12,7 @@ import 'package:potato_notes/internal/android_xml_asset_loader.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
@@ -19,6 +20,7 @@ import 'package:quick_actions/quick_actions.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefs.init();
   if (DeviceInfo.isAndroid) {
     await FlutterDownloader.initialize(
       debug: kDebugMode,
@@ -28,6 +30,20 @@ main() async {
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
   Loggy.generateAppLabel();
+
+  final sharedPrefs = SharedPrefs.instance;
+  final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+  final isDarkSystemTheme = data.platformBrightness == Brightness.dark;
+  final themeMode = await sharedPrefs.getThemeMode();
+  final useAmoled = await sharedPrefs.getUseAmoled();
+
+  Color color = Themes.lightSecondaryColor;
+
+  if (themeMode == ThemeMode.system && isDarkSystemTheme ||
+      themeMode == ThemeMode.dark) {
+    color = useAmoled ? Themes.blackSecondaryColor : Themes.darkSecondaryColor;
+  }
+
   runApp(
     EasyLocalization(
       child: PotatoNotes(),
@@ -49,28 +65,23 @@ main() async {
         Locale("zh", "CN"),
       ],
       fallbackLocale: Locale("en", "US"),
-      assetLoader: AndroidXmlAssetLoader(
-        [
-          "common",
-          "about_page",
-          "draw_page",
-          "main_page",
-          "note_page",
-          "search_page",
-          "settings_page",
-          "setup_page",
-        ],
-      ),
+      assetLoader: AndroidXmlAssetLoader([
+        "common",
+        "about_page",
+        "draw_page",
+        "main_page",
+        "note_page",
+        "search_page",
+        "settings_page",
+        "setup_page",
+      ]),
       path: "assets/locales",
-      preloaderColor: Colors.transparent,
+      preloaderColor: color,
     ),
   );
 }
 
-class PotatoNotes extends StatelessWidget with ObserverWidgetMixin {
-  @override
-  String getName() => this.toStringShort();
-
+class PotatoNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(

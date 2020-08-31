@@ -9,7 +9,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -96,11 +95,7 @@ class _BasePageState extends State<BasePage> {
     InAppUpdater.checkForUpdate(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
-      final sharedPrefs = await SharedPrefs.newInstance();
-
-      bool welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
-      if (!welcomePageSeenV2) {
+      if (!prefs.welcomePageSeen) {
         Utils.showSecondaryRoute(
           context,
           SetupPage(),
