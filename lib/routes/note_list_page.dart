@@ -303,7 +303,7 @@ class _NoteListPageState extends State<NoteListPage> {
                 List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
                   note.tags.remove(prefs.tags[widget.tagIndex].id);
-                  await helper.saveNote(Utils.markNoteChanged(note));
+                  await helper.saveNote(note.markChanged());
                 }
                 tagHelper.deleteTag(prefs.tags[widget.tagIndex]);
                 Navigator.pop(context);
@@ -323,7 +323,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   tag: prefs.tags[widget.tagIndex],
                   onSave: (tag) {
                     Navigator.pop(context);
-                    tagHelper.saveTag(Utils.markTagChanged(tag));
+                    tagHelper.saveTag(tag.markChanged());
                   },
                 ),
               );

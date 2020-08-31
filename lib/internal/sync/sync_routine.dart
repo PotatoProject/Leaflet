@@ -417,8 +417,8 @@ class SyncRoutine {
   }
 
   Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
-    Map<String, dynamic> localMap = Utils.toSyncMap(localNote);
-    Map<String, dynamic> syncedMap = Utils.toSyncMap(syncedNote);
+    Map<String, dynamic> localMap = localNote.toSyncMap();
+    Map<String, dynamic> syncedMap = syncedNote.toSyncMap();
     Map<String, dynamic> noteDelta = Map();
     localMap.forEach((key, localValue) {
       if (localValue != syncedMap[key] &&

@@ -345,8 +345,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     for (int i = 0; i < notes.length; i++) {
                       final note = notes[i];
                       if (note.lockNote) {
-                        await helper.saveNote(Utils.markNoteChanged(note)
-                            .copyWith(lockNote: false));
+                        await helper.saveNote(
+                          note.markChanged().copyWith(lockNote: false),
+                        );
                       }
                     }
                     setState(() => removingMasterPass = false);

@@ -72,11 +72,13 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
               if (anyStarred)
-                await helper.saveNote(Utils.markNoteChanged(selectionList[i])
-                    .copyWith(starred: false));
+                await helper.saveNote(
+                  selectionList[i].markChanged().copyWith(starred: false),
+                );
               else
-                await helper.saveNote(Utils.markNoteChanged(selectionList[i])
-                    .copyWith(starred: true));
+                await helper.saveNote(
+                  selectionList[i].markChanged().copyWith(starred: true),
+                );
             }
 
             onCloseSelection();

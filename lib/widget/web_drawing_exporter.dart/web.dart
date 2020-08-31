@@ -58,7 +58,7 @@ class WebDrawingExporter {
     canvas.globalCompositeOperation = "destination-over";
 
     if (uri != null) {
-      image = Utils.uriToImageProvider(uri);
+      image = uri.toImageProvider();
 
       image?.resolve(ImageConfiguration())?.addListener(
         ImageStreamListener(

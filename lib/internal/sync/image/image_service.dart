@@ -40,7 +40,7 @@ class ImageService {
         await uploadImage(savedImage);
         savedImage.uploaded = true;
       }
-      helper.saveNote(Utils.markNoteChanged(note));
+      helper.saveNote(note.markChanged());
     }
     return true;
     //uploadImage(uri, savedImage);

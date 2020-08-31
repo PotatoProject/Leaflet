@@ -96,7 +96,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    helper.saveNote(Utils.markNoteChanged(note));
+    helper.saveNote(note.markChanged());
   }
 
   void generateId() {

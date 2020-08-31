@@ -108,7 +108,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
               widget.note.images.removeWhere((savedImage) =>
                   widget.note.images[currentPage].id == savedImage.id);
 
-              helper.saveNote(Utils.markNoteChanged(widget.note));
+              helper.saveNote(widget.note.markChanged());
 
               Navigator.pop(context);
             },
