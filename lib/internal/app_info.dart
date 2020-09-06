@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mobx/mobx.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -12,8 +13,15 @@ import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
 
-class AppInfo extends ChangeNotifier {
-  AppInfo() {
+part 'app_info.g.dart';
+
+class AppInfo = _AppInfoBase with _$AppInfo;
+
+abstract class _AppInfoBase with Store {
+  static final EventChannel accentStreamChannel =
+      EventChannel('potato_notes_accents');
+
+  _AppInfoBase() {
     illustrations = Illustrations();
     loadData();
   }
@@ -30,6 +38,12 @@ class AppInfo extends ChangeNotifier {
   Widget noFavouritesIllustration;
   Widget nothingFoundIllustration;
   Widget typeToSearchIllustration;
+
+  @observable
+  @protected
+  int accentDataValue = Colors.blue.value;
+
+  int get accentData => accentDataValue;
 
   void updateIllustrations(Brightness systemTheme) async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
@@ -76,5 +90,16 @@ class AppInfo extends ChangeNotifier {
 
     packageInfo = await PackageInfo.fromPlatform();
     tempDirectory = await getTemporaryDirectory();
+
+    if (DeviceInfo.isAndroid) {
+      accentStreamChannel.receiveBroadcastStream().listen(updateAccent);
+    } else {
+      accentDataValue = -1;
+    }
+  }
+
+  @action
+  void updateAccent(dynamic event) {
+    accentDataValue = event as int;
   }
 }

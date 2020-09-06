@@ -15,6 +15,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
@@ -189,28 +190,6 @@ class Utils {
     return Uuid().v4();
   }
 
-  static Note get emptyNote => Note(
-        id: null,
-        title: "",
-        content: "",
-        styleJson: [],
-        starred: false,
-        creationDate: DateTime.now(),
-        lastModifyDate: DateTime.now(),
-        color: 0,
-        images: [],
-        list: false,
-        listContent: [],
-        reminders: [],
-        tags: [],
-        hideContent: false,
-        lockNote: false,
-        usesBiometrics: false,
-        deleted: false,
-        archived: false,
-        synced: false,
-      );
-
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
       case ReturnMode.NORMAL:
@@ -259,17 +238,8 @@ class Utils {
 
   static get defaultAccent => Color(0xFFFF9100);
 
-  // Marks the note as changed for the sync systems
-  static Note markNoteChanged(Note note) {
-    return note.copyWith(synced: false, lastModifyDate: DateTime.now());
-  }
-
-  static Tag markTagChanged(Tag tag) {
-    return tag.copyWith(lastModifyDate: DateTime.now());
-  }
-
   static Future<void> deleteNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
@@ -277,17 +247,17 @@ class Utils {
     for (Note note in notes) {
       if (archive) {
         await helper.saveNote(
-            markNoteChanged(note).copyWith(deleted: false, archived: true));
+            note.markChanged().copyWith(deleted: false, archived: true));
       } else {
         await helper.saveNote(
-            markNoteChanged(note).copyWith(deleted: true, archived: false));
+            note.markChanged().copyWith(deleted: true, archived: false));
       }
     }
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -304,20 +274,20 @@ class Utils {
   }
 
   static Future<void> restoreNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
   }) async {
     for (Note note in notes) {
       await helper.saveNote(
-          markNoteChanged(note).copyWith(deleted: false, archived: false));
+          note.markChanged().copyWith(deleted: false, archived: false));
     }
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.showSnackBar(
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -447,61 +417,101 @@ class Utils {
     }
   }
 
-  static ImageProvider uriToImageProvider(Uri uri) {
-    if (uri.data != null) {
-      return MemoryImage(uri.data.contentAsBytes());
-    } else if (uri.scheme.startsWith("http") || uri.scheme.startsWith("blob")) {
-      return CachedNetworkImageProvider(() => uri.toString());
-    } else {
-      return FileImage(File(uri.path));
+  static void newNote(BuildContext context) async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+
+    await Utils.showSecondaryRoute(
+      context,
+      NotePage(),
+    );
+
+    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    int newLength = notes.length;
+
+    if (newLength > currentLength) {
+      Note lastNote = notes.last;
+
+      if (lastNote.title.isEmpty &&
+          lastNote.content.isEmpty &&
+          lastNote.listContent.isEmpty &&
+          lastNote.images.isEmpty &&
+          lastNote.reminders.isEmpty) {
+        Utils.deleteNotes(
+          context: context,
+          notes: [lastNote],
+          reason: LocaleStrings.mainPage.deletedEmptyNote,
+        );
+      }
     }
   }
 
-  static Map<String, dynamic> toSyncMap(Note note) {
-    var originalMap = note.toJson();
-    Map<String, dynamic> newMap = Map();
-    originalMap.forEach((key, value) {
-      var newValue = value;
-      var newKey = ReCase(key).snakeCase;
-      switch (key) {
-        case "styleJson":
-          {
-            var style = value as List<int>;
-            newValue = json.encode(style);
-            break;
-          }
-        case "images":
-          {
-            var images = value as List<SavedImage>;
-            newValue = json.encode(images);
-            break;
-          }
-        case "listContent":
-          {
-            var listContent = value as List<ListItem>;
-            newValue = json.encode(listContent);
-            break;
-          }
-        case "reminders":
-          {
-            var reminders = value as List<DateTime>;
-            newValue = json.encode(reminders);
-            break;
-          }
-        case "tags":
-          {
-            var tags = value as List<String>;
-            newValue = json.encode(tags);
-            break;
-          }
-      }
-      if (key == "id") {
-        newKey = "note_id";
-      }
-      newMap.putIfAbsent(newKey, () => newValue);
-    });
-    return newMap;
+  static void newImage(BuildContext context, ImageSource source,
+      {bool shouldPop = false}) async {
+    Note note = NoteX.emptyNote;
+    PickedFile image = await ImagePicker().getImage(source: source);
+
+    if (image != null) {
+      SavedImage savedImage =
+          await ImageService.loadLocalFile(File(image.path));
+      note.images.add(savedImage);
+
+      if (shouldPop) Navigator.pop(context);
+      note = note.copyWith(id: Utils.generateId());
+
+      Utils.showSecondaryRoute(
+        context,
+        NotePage(
+          note: note,
+        ),
+      );
+
+      helper.saveNote(note.markChanged());
+    }
   }
+
+  static void newList(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithList: true,
+      ),
+    );
+  }
+
+  static void newDrawing(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithDrawing: true,
+      ),
+    );
+  }
+
+  static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
+}
+
+extension NoteX on Note {
+  static Note get emptyNote => Note(
+        id: null,
+        title: "",
+        content: "",
+        styleJson: [],
+        starred: false,
+        creationDate: DateTime.now(),
+        lastModifyDate: DateTime.now(),
+        color: 0,
+        images: [],
+        list: false,
+        listContent: [],
+        reminders: [],
+        tags: [],
+        hideContent: false,
+        lockNote: false,
+        usesBiometrics: false,
+        deleted: false,
+        archived: false,
+        synced: false,
+      );
 
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
     Map<String, dynamic> newMap = Map();
@@ -556,78 +566,73 @@ class Utils {
     return Note.fromJson(newMap);
   }
 
-  static void newNote(
-    BuildContext context, {
-    GlobalKey<ScaffoldState> scaffoldKey,
-  }) async {
-    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
-
-    await Utils.showSecondaryRoute(
-      context,
-      NotePage(),
-    );
-
-    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
-    int newLength = notes.length;
-
-    if (newLength > currentLength) {
-      Note lastNote = notes.last;
-
-      if (lastNote.title.isEmpty &&
-          lastNote.content.isEmpty &&
-          lastNote.listContent.isEmpty &&
-          lastNote.images.isEmpty &&
-          lastNote.reminders.isEmpty) {
-        Utils.deleteNotes(
-          scaffoldKey: scaffoldKey,
-          notes: [lastNote],
-          reason: LocaleStrings.mainPage.deletedEmptyNote,
-        );
+  Map<String, dynamic> toSyncMap() {
+    var originalMap = this.toJson();
+    Map<String, dynamic> newMap = Map();
+    originalMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).snakeCase;
+      switch (key) {
+        case "styleJson":
+          {
+            var style = value as List<int>;
+            newValue = json.encode(style);
+            break;
+          }
+        case "images":
+          {
+            var images = value as List<SavedImage>;
+            newValue = json.encode(images);
+            break;
+          }
+        case "listContent":
+          {
+            var listContent = value as List<ListItem>;
+            newValue = json.encode(listContent);
+            break;
+          }
+        case "reminders":
+          {
+            var reminders = value as List<DateTime>;
+            newValue = json.encode(reminders);
+            break;
+          }
+        case "tags":
+          {
+            var tags = value as List<String>;
+            newValue = json.encode(tags);
+            break;
+          }
       }
-    }
+      if (key == "id") {
+        newKey = "note_id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return newMap;
   }
 
-  static void newImage(BuildContext context, ImageSource source,
-      {bool shouldPop = false}) async {
-    Note note = Utils.emptyNote;
-    PickedFile image = await ImagePicker().getImage(source: source);
+  Note markChanged() {
+    return copyWith(synced: false, lastModifyDate: DateTime.now());
+  }
+}
 
-    if (image != null) {
-      SavedImage savedImage =
-          await ImageService.loadLocalFile(File(image.path));
-      note.images.add(savedImage);
+extension TagX on Tag {
+  Tag markChanged() {
+    return copyWith(lastModifyDate: DateTime.now());
+  }
+}
 
-      if (shouldPop) Navigator.pop(context);
-      note = note.copyWith(id: Utils.generateId());
-
-      Utils.showSecondaryRoute(
-        context,
-        NotePage(
-          note: note,
-        ),
+extension UriX on Uri {
+  ImageProvider toImageProvider() {
+    if (data != null) {
+      return MemoryImage(data.contentAsBytes());
+    } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
+      return CachedNetworkImageProvider(
+        () => toString(),
       );
-
-      helper.saveNote(Utils.markNoteChanged(note));
+    } else {
+      return FileImage(File(path));
     }
   }
-
-  static void newList(BuildContext context) {
-    Utils.showSecondaryRoute(
-      context,
-      NotePage(
-        openWithList: true,
-      ),
-    );
-  }
-
-  static void newDrawing(BuildContext context) {
-    Utils.showSecondaryRoute(
-      context,
-      NotePage(
-        openWithDrawing: true,
-      ),
-    );
-  }
-
-  static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
 }

@@ -58,7 +58,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   }
                 });
 
-                helper.saveNote(Utils.markNoteChanged(note));
+                helper.saveNote(note.markChanged());
               },
             ),
           ),
@@ -74,7 +74,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   initialInput: query,
                   onSave: (tag) {
                     Navigator.pop(context);
-                    tagHelper.saveTag(Utils.markTagChanged(tag));
+                    tagHelper.saveTag(tag.markChanged());
                   },
                 ),
               ),

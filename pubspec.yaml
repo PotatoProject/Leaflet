@@ -18,7 +18,6 @@ dependencies:
   json_serializable:
   sqflite:
   path_provider:
-  flutter_riverpod:
   streams_channel:
   outline_material_icons:
   flutter_staggered_grid_view:
@@ -57,7 +56,9 @@ dependencies:
   blurhash_dart:
   flutter_blurhash:
   octo_image:
-  state_notifier:
+  mobx:
+  flutter_mobx:
+  mobx_codegen:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor

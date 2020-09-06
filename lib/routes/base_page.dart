@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -8,7 +9,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -29,6 +29,7 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _pages = [
     NoteListPage(
       key: ValueKey(ReturnMode.NORMAL),
@@ -65,6 +66,10 @@ class _BasePageState extends State<BasePage> {
   void setAppBar(Widget appBar) => WidgetsBinding.instance.addPostFrameCallback(
         (_) => setState(() => _appBar = appBar),
       );
+  void hideCurrentSnackBar() => _scaffoldKey.currentState.hideCurrentSnackBar();
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+          SnackBar snackBar) =>
+      _scaffoldKey.currentState.showSnackBar(snackBar);
 
   @override
   void initState() {
@@ -90,11 +95,7 @@ class _BasePageState extends State<BasePage> {
     InAppUpdater.checkForUpdate(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // unfortunately we gotta init sharedPrefs here manually cuz normal preferences aren't ready at this point
-      final sharedPrefs = await SharedPrefs.newInstance();
-
-      bool welcomePageSeenV2 = await sharedPrefs.getWelcomePageSeen();
-      if (!welcomePageSeenV2) {
+      if (!prefs.welcomePageSeen) {
         Utils.showSecondaryRoute(
           context,
           SetupPage(),
@@ -109,47 +110,52 @@ class _BasePageState extends State<BasePage> {
         );
       }
     });
-    deviceInfo.addListener(() => setState(() {}));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool showNavigationRail =
-        deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
-    return BasePageInheritedWidget(
-      state: this,
-      child: Row(
-        children: [
-          showNavigationRail ? getNavbar(true) : Container(),
-          showNavigationRail
-              ? VerticalDivider(
-                  width: 1,
-                  color: Theme.of(context).iconTheme.color.withOpacity(0.1),
-                )
-              : Container(),
-          Expanded(
-            child: Scaffold(
-              appBar: _appBar,
-              extendBodyBehindAppBar: true,
-              body: PageTransitionSwitcher(
-                child: _pages.get(_currentPage),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    fillColor: Colors.transparent,
-                    child: child,
-                  );
-                },
+    return Observer(
+      builder: (context) {
+        bool showNavigationRail =
+            deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
+
+        return BasePageInheritedWidget(
+          state: this,
+          child: Row(
+            children: [
+              showNavigationRail ? getNavbar(true) : Container(),
+              showNavigationRail
+                  ? VerticalDivider(
+                      width: 1,
+                      color: Theme.of(context).iconTheme.color.withOpacity(0.1),
+                    )
+                  : Container(),
+              Expanded(
+                child: Scaffold(
+                  key: _scaffoldKey,
+                  appBar: _appBar,
+                  extendBodyBehindAppBar: true,
+                  body: PageTransitionSwitcher(
+                    child: _pages.get(_currentPage),
+                    transitionBuilder:
+                        (child, primaryAnimation, secondaryAnimation) {
+                      return FadeThroughTransition(
+                        animation: primaryAnimation,
+                        secondaryAnimation: secondaryAnimation,
+                        fillColor: Colors.transparent,
+                        child: child,
+                      );
+                    },
+                  ),
+                  bottomNavigationBar: !showNavigationRail ? getNavbar() : null,
+                  floatingActionButton: _floatingActionButton,
+                ),
               ),
-              bottomNavigationBar: !showNavigationRail ? getNavbar() : null,
-              floatingActionButton: _floatingActionButton,
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -159,23 +165,23 @@ class _BasePageState extends State<BasePage> {
       items: [
         AdaptiveNavigationDestination(
           icon: Icon(CustomIcons.notes),
-          label: Text("Notes"),
+          label: "Notes",
         ),
         AdaptiveNavigationDestination(
           icon: Icon(Icons.search_outlined),
-          label: Text(LocaleStrings.mainPage.search),
+          label: LocaleStrings.mainPage.search,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(MdiIcons.archiveOutline),
-          label: Text(LocaleStrings.mainPage.titleArchive),
+          label: LocaleStrings.mainPage.titleArchive,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(Icons.delete_outlined),
-          label: Text(LocaleStrings.mainPage.titleTrash),
+          label: LocaleStrings.mainPage.titleTrash,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(CustomIcons.settings_outline),
-          label: Text(LocaleStrings.mainPage.settings),
+          label: LocaleStrings.mainPage.settings,
         ),
       ],
       index: _currentPage,

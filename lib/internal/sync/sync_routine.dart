@@ -213,7 +213,6 @@ class SyncRoutine {
         Loggy.i(message: "Updated note:" + note.id);
       } catch (e) {
         Loggy.e(message: e);
-        throw ("Failed to update notes: " + e);
       }
     });
     deletedNotes.forEach((note) async {
@@ -342,8 +341,6 @@ class SyncRoutine {
       }
     }
     prefs.prefs.clearChangedKeys();
-
-    prefs.triggerRefresh();
   }
 
   static Future<void> saveSyncedNote(Note note) async {
@@ -420,8 +417,8 @@ class SyncRoutine {
   }
 
   Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
-    Map<String, dynamic> localMap = Utils.toSyncMap(localNote);
-    Map<String, dynamic> syncedMap = Utils.toSyncMap(syncedNote);
+    Map<String, dynamic> localMap = localNote.toSyncMap();
+    Map<String, dynamic> syncedMap = syncedNote.toSyncMap();
     Map<String, dynamic> noteDelta = Map();
     localMap.forEach((key, localValue) {
       if (localValue != syncedMap[key] &&

@@ -34,7 +34,6 @@ class NoteListPage extends StatefulWidget {
 }
 
 class _NoteListPageState extends State<NoteListPage> {
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController scrollController = ScrollController();
   bool _selecting = false;
   List<Note> selectionList = [];
@@ -56,7 +55,6 @@ class _NoteListPageState extends State<NoteListPage> {
 
     PreferredSizeWidget appBar = (selecting
         ? SelectionBar(
-            scaffoldKey: scaffoldKey,
             selectionList: selectionList,
             onCloseSelection: () => setState(() {
               selecting = false;
@@ -70,7 +68,6 @@ class _NoteListPageState extends State<NoteListPage> {
           )) as PreferredSizeWidget;
 
     return DependentScaffold(
-      key: scaffoldKey,
       appBar: appBar,
       body: StreamBuilder<List<Note>>(
         stream: helper.noteStream(widget.noteKind),
@@ -142,7 +139,7 @@ class _NoteListPageState extends State<NoteListPage> {
     return FakeFab(
       heroTag: "fabMenu",
       shape: StadiumBorder(),
-      onTap: () => Utils.newNote(context, scaffoldKey: scaffoldKey),
+      onTap: () => Utils.newNote(context),
       child: Icon(OMIcons.edit),
     );
   }
@@ -266,7 +263,7 @@ class _NoteListPageState extends State<NoteListPage> {
 
                   if (result ?? false) {
                     await Utils.restoreNotes(
-                      scaffoldKey: scaffoldKey,
+                      context: context,
                       notes: notes,
                       reason: LocaleStrings.mainPage
                           .notesRestored(selectionList.length),
@@ -306,7 +303,7 @@ class _NoteListPageState extends State<NoteListPage> {
                 List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
                   note.tags.remove(prefs.tags[widget.tagIndex].id);
-                  await helper.saveNote(Utils.markNoteChanged(note));
+                  await helper.saveNote(note.markChanged());
                 }
                 tagHelper.deleteTag(prefs.tags[widget.tagIndex]);
                 Navigator.pop(context);
@@ -326,7 +323,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   tag: prefs.tags[widget.tagIndex],
                   onSave: (tag) {
                     Navigator.pop(context);
-                    tagHelper.saveTag(Utils.markTagChanged(tag));
+                    tagHelper.saveTag(tag.markChanged());
                   },
                 ),
               );

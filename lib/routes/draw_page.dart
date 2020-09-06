@@ -195,7 +195,7 @@ class _DrawPageState extends State<DrawPage>
                       }
                       widget.note.images.add(savedImage);
                     }
-                    helper.saveNote(Utils.markNoteChanged(widget.note));
+                    helper.saveNote(widget.note.markChanged());
 
                     setState(() => saved = true);
                   }

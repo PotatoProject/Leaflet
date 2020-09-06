@@ -7,11 +7,11 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 
-AppInfo appInfo;
+final AppInfo appInfo = AppInfo();
 
-DeviceInfo deviceInfo;
+final DeviceInfo deviceInfo = DeviceInfo();
 
-Preferences prefs;
+final Preferences prefs = Preferences();
 
 NoteHelper helper;
 

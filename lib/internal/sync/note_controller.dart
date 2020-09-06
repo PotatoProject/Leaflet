@@ -14,7 +14,7 @@ class NoteController {
   static Future<String> add(Note note) async {
     try {
       String token = await prefs.getToken();
-      String noteJson = json.encode(Utils.toSyncMap(note));
+      String noteJson = json.encode(note.toSyncMap());
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note";
       Loggy.v(message: "Going to send POST to " + url);
       Response addResult = await http.post(url,
@@ -85,7 +85,7 @@ class NoteController {
       final data = jsonDecode(body);
       for (Map i in data["notes"]) {
         print(i);
-        var note = Utils.fromSyncMap(i);
+        var note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
       return notes;
