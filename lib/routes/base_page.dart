@@ -165,23 +165,23 @@ class _BasePageState extends State<BasePage> {
       items: [
         AdaptiveNavigationDestination(
           icon: Icon(CustomIcons.notes),
-          label: Text("Notes"),
+          label: "Notes",
         ),
         AdaptiveNavigationDestination(
           icon: Icon(Icons.search_outlined),
-          label: Text(LocaleStrings.mainPage.search),
+          label: LocaleStrings.mainPage.search,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(MdiIcons.archiveOutline),
-          label: Text(LocaleStrings.mainPage.titleArchive),
+          label: LocaleStrings.mainPage.titleArchive,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(Icons.delete_outlined),
-          label: Text(LocaleStrings.mainPage.titleTrash),
+          label: LocaleStrings.mainPage.titleTrash,
         ),
         AdaptiveNavigationDestination(
           icon: Icon(CustomIcons.settings_outline),
-          label: Text(LocaleStrings.mainPage.settings),
+          label: LocaleStrings.mainPage.settings,
         ),
       ],
       index: _currentPage,

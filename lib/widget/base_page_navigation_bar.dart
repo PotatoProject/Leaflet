@@ -40,7 +40,7 @@ class BasePageNavigationBar extends StatelessWidget {
                               .map(
                                 (e) => NavigationRailDestination(
                                   icon: e.icon,
-                                  label: e.label,
+                                  label: Text(e.label),
                                   selectedIcon: e.activeIcon,
                                 ),
                               )
@@ -93,7 +93,7 @@ class BasePageNavigationBar extends StatelessWidget {
                       .map(
                         (e) => BottomNavigationBarItem(
                           icon: e.icon,
-                          title: e.label,
+                          label: e.label,
                           activeIcon: e.activeIcon,
                         ),
                       )
@@ -120,7 +120,7 @@ class BasePageNavigationBar extends StatelessWidget {
 class AdaptiveNavigationDestination {
   final Widget icon;
   final Widget activeIcon;
-  final Widget label;
+  final String label;
 
   AdaptiveNavigationDestination({
     @required this.icon,

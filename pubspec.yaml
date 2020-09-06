@@ -59,8 +59,6 @@ dependencies:
   mobx:
   flutter_mobx:
   mobx_codegen:
-  flutter_cache_manager:
-    git: https://github.com/Baseflow/flutter_cache_manager
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
