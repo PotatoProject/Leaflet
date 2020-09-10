@@ -79,6 +79,10 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
+  List<String> downloadedImagesValue = [];
+
+  @observable
+  @protected
   int lastUpdatedValue;
 
   String get masterPass => masterPassValue;
@@ -95,6 +99,7 @@ abstract class _PreferencesBase with Store {
   String get email => emailValue;
   int get logLevel => logLevelValue;
   List<dynamic> get tags => tagsValue;
+  List<String> get downloadedImages => downloadedImagesValue;
   int get lastUpdated => lastUpdatedValue;
 
   set masterPass(String value) {
@@ -172,6 +177,11 @@ abstract class _PreferencesBase with Store {
     prefs.setLastUpdated(value);
   }
 
+  set downloadedImages(List<String> value) {
+    downloadedImagesValue = value;
+    prefs.setDownloadedImages(value);
+  }
+
   void loadData() async {
     welcomePageSeenValue = await prefs.getWelcomePageSeen();
     themeModeValue = await prefs.getThemeMode();
@@ -197,6 +207,8 @@ abstract class _PreferencesBase with Store {
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       tagsValue = newTags;
     });
+
+    downloadedImagesValue = await prefs.getDownloadedImages();
   }
 
   Future<String> getToken() async {

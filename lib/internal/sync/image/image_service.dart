@@ -12,20 +12,26 @@ import 'package:potato_notes/internal/sync/image_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class ImageService {
-  static final int jpegQuality = 90;
-  static final int maxHeight = 2048;
-  List<String> currentDownloads = List();
+  static const JPEG_QUALITY = 90;
+  static const maxHeight = 2048;
 
-  Future<String> downloadImage(SavedImage savedImage) async {
-    if (!this.currentDownloads.contains(savedImage.hash)) {
-      this.currentDownloads.add(savedImage.hash);
+  static Future<String> downloadImage(SavedImage savedImage) async {
       String url =
           await ImageController.getDownloadUrlFromSync(savedImage.hash);
       String path = await ImageController.downloadImageToCache(url, savedImage);
-      this.currentDownloads.remove(savedImage.hash);
+      addToDownloaded(savedImage.hash);
       return path;
-    } else {
-      return "";
+  }
+
+  static Future<void> handleDownloads(List<Note> changedNotes) async {
+    for(Note note in changedNotes){
+      if(note.images.length > 0){
+        for(SavedImage image in note.images){
+          if(!image.existsLocally){
+            downloadImage(image);
+          }
+        }
+      }
     }
   }
 
@@ -47,14 +53,25 @@ class ImageService {
     //return true if no error
   }
 
+  static void handleUpload(Note note){
+    for(SavedImage image in note.images){
+      if(image.existsLocally && !image.uploaded){
+        uploadImage(image).then((_) {
+          image.uploaded = true;
+          helper.saveNote(note.markChanged());
+        });
+      }
+    }
+  }
+
   static Future<void> ensureImageExists(List<SavedImage> images) async {
     for (SavedImage savedImage in images) {
-      await imageService.downloadImage(savedImage);
+      await downloadImage(savedImage);
     }
   }
 
   static bool imageCached(SavedImage savedImage) {
-    return File(savedImage.getPath()).existsSync();
+    return File(savedImage.path).existsSync();
   }
 
   static Future<void> uploadImage(SavedImage savedImage) async {
@@ -64,6 +81,7 @@ class ImageService {
     switch (savedImage.storageLocation) {
       case StorageLocation.LOCAL:
         // TODO: Handle this case.
+        // Just dont upload duh
         break;
       case StorageLocation.IMGUR:
         // TODO: Handle this case.
@@ -74,7 +92,7 @@ class ImageService {
     }
   }
 
-  static Future<SavedImage> loadLocalFile(File file) async {
+  static Future<SavedImage> prepareLocally(File file) async {
     SavedImage savedImage = SavedImage.empty();
     Uint8List rawBytes = await file.readAsBytes();
     savedImage.hash = await _generateImageHash(rawBytes);
@@ -83,6 +101,7 @@ class ImageService {
     savedImage.blurHash = blurHash;
     File imageFile = await _saveImage(compressedImage, savedImage);
     savedImage.uri = imageFile.uri;
+    addToDownloaded(savedImage.hash);
     return savedImage;
   }
 
@@ -115,8 +134,14 @@ class ImageService {
   }
 
   static Future<File> _saveImage(Image image, SavedImage savedImage) async {
-    File imageFile = File(savedImage.getPath());
-    await imageFile.writeAsBytes(encodeJpg(image, quality: jpegQuality));
+    File imageFile = File(savedImage.path);
+    await imageFile.writeAsBytes(encodeJpg(image, quality: JPEG_QUALITY));
     return imageFile;
+  }
+
+  static addToDownloaded(String hash){
+    List<String> downloadedImages = prefs.downloadedImages;
+    downloadedImages.add(hash);
+    prefs.downloadedImages = downloadedImages;
   }
 }

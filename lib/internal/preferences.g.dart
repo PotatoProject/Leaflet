@@ -226,6 +226,23 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$downloadedImagesValueAtom =
+      Atom(name: '_PreferencesBase.downloadedImagesValue');
+
+  @override
+  List<String> get downloadedImagesValue {
+    _$downloadedImagesValueAtom.reportRead();
+    return super.downloadedImagesValue;
+  }
+
+  @override
+  set downloadedImagesValue(List<String> value) {
+    _$downloadedImagesValueAtom.reportWrite(value, super.downloadedImagesValue,
+        () {
+      super.downloadedImagesValue = value;
+    });
+  }
+
   final _$lastUpdatedValueAtom =
       Atom(name: '_PreferencesBase.lastUpdatedValue');
 
@@ -259,6 +276,7 @@ usernameValue: ${usernameValue},
 emailValue: ${emailValue},
 logLevelValue: ${logLevelValue},
 tagsValue: ${tagsValue},
+downloadedImagesValue: ${downloadedImagesValue},
 lastUpdatedValue: ${lastUpdatedValue}
     ''';
   }

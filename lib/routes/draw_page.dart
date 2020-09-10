@@ -187,7 +187,7 @@ class _DrawPageState extends State<DrawPage>
                       Loggy.d(message: drawing);
 
                       SavedImage savedImage =
-                          await ImageService.loadLocalFile(imgFile);
+                          await ImageService.prepareLocally(imgFile);
                       if (widget.savedImage != null) {
                         widget.note.images.removeWhere((savedImage) =>
                             savedImage.id == widget.savedImage.id);

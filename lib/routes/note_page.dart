@@ -48,6 +48,7 @@ class _NotePageState extends State<NotePage> {
   FocusNode titleFocusNode = FocusNode();
   TextEditingController contentController;
   FocusNode contentFocusNode = FocusNode();
+
   //SpannableTextEditingController contentController;
 
   List<TextEditingController> listContentControllers = [];
@@ -111,6 +112,10 @@ class _NotePageState extends State<NotePage> {
 
   void notifyNoteChanged() {
     helper.saveNote(note.markChanged());
+  }
+  
+  void handleImageUpload(){
+    ImageService.handleUpload(note);
   }
 
   void generateId() {
@@ -675,11 +680,11 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.gallery);
 
               if (image != null) {
-                SavedImage savedImage =
-                    await ImageService.loadLocalFile(File(image.path));
+                Navigator.pop(context);
+                SavedImage savedImage = await ImageService.prepareLocally(File(image.path));
                 setState(() => note.images.add(savedImage));
                 notifyNoteChanged();
-                Navigator.pop(context);
+                handleImageUpload();
               }
             },
           ),
@@ -692,7 +697,7 @@ class _NotePageState extends State<NotePage> {
 
               if (image != null) {
                 SavedImage savedImage =
-                    await ImageService.loadLocalFile(File(image.path));
+                    await ImageService.prepareLocally(File(image.path));
                 setState(() => note.images.add(savedImage));
                 notifyNoteChanged();
                 Navigator.pop(context);

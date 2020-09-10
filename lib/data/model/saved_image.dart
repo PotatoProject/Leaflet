@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobx/mobx.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
@@ -14,7 +15,12 @@ class SavedImage {
   String hash;
   String blurHash;
   bool encrypted = false;
+  @observable
   bool uploaded = false;
+
+  @observable
+  get existsLocally => prefs.downloadedImages.contains(hash);
+  get path => appInfo.tempDirectory.path + "/$hash.jpg";
 
   SavedImage(
       this.id, this.uri, this.storageLocation, this.hash, this.encrypted);
@@ -27,10 +33,6 @@ class SavedImage {
 
   enableEncryption() {
     encrypted = true;
-  }
-
-  String getPath() {
-    return appInfo.tempDirectory.path + "/$hash.jpg";
   }
 
   @override

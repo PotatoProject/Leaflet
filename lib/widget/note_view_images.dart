@@ -1,10 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class NoteViewImages extends StatefulWidget {
@@ -56,6 +57,52 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
+                return Observer(builder: (_) {
+                  SavedImage savedImage = widget.images[index];
+                  ImageProvider image;
+                  if (savedImage.existsLocally) {
+                    image = FileImage(File(savedImage.path));
+                  } else {
+                    image = BlurHashImage(savedImage.blurHash);
+                  }
+                  return Stack(
+                    children: [
+                      SizedBox.expand(
+                        child: Image(
+                            image: image,
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true),
+                      ),
+                      SizedBox.expand(
+                        child: Visibility(
+                          visible: (index == widget.images.length - 1 &&
+                                  widget.numPlusImages > 0) &&
+                              widget.showPlusImages,
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.black.withOpacity(0.4),
+                            child: Text(
+                              "+" + widget.numPlusImages.toString(),
+                              style: TextStyle(
+                                fontSize: widget.useSmallFont ? 24.0 : 36.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox.expand(
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: InkWell(
+                            onTap: () => widget.onImageTap(index),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                });
                 //ImageProvider image;
                 /*String scheme = widget.images[index].uri.scheme;
 
@@ -79,8 +126,11 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   image: image
                   fit: BoxFit.cover,
                   gaplessPlayback: true,
-                );*/
+                );
+                SavedImage savedImage = widget.images[index];
+                if(savedImage.existsLocally){
 
+                }
                 final Widget image = OctoImage(
                   image: CachedNetworkImageProvider(
                     () async {
@@ -101,39 +151,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   gaplessPlayback: false,
                   fadeInDuration: const Duration(milliseconds: 1000),
                   fadeOutDuration: const Duration(milliseconds: 500),
-                );
-                return Stack(
-                  children: [
-                    SizedBox.expand(child: image),
-                    SizedBox.expand(
-                      child: Visibility(
-                        visible: (index == widget.images.length - 1 &&
-                                widget.numPlusImages > 0) &&
-                            widget.showPlusImages,
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.black.withOpacity(0.4),
-                          child: Text(
-                            "+" + widget.numPlusImages.toString(),
-                            style: TextStyle(
-                              fontSize: widget.useSmallFont ? 24.0 : 36.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox.expand(
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: InkWell(
-                          onTap: () => widget.onImageTap(index),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
+                );*/
               },
               staggeredTileBuilder: (index) {
                 int crossAxisExtent = 1;

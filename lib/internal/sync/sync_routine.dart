@@ -175,6 +175,7 @@ class SyncRoutine {
       await saveSyncedNote(note);
     }
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+    ImageService.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
     return true;
   }
 

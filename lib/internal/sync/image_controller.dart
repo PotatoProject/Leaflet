@@ -44,14 +44,6 @@ class ImageController {
     return "";
   }
 
-  static Future<bool> fullExists(SavedImage image) async {
-    return await fileExists(image.getPath());
-  }
-
-  static Future<bool> thumbExists(String hash) async {
-    return await fileExists(hash + "-thumb");
-  }
-
   static Future<bool> fileExists(String path) async {
     File file = File(path);
     return await file.exists();
@@ -59,17 +51,8 @@ class ImageController {
 
   static Future<String> downloadImageToCache(
       String url, SavedImage savedImage) async {
-    var path = savedImage.getPath();
+    var path = savedImage.path;
     Response response = await http.get(url);
-    /*
-    dio.Response response = await dio.Dio().download(
-      url,
-      path,
-      onReceiveProgress: (int sentBytes, int totalBytes) {
-        double progressPercent = sentBytes / totalBytes * 100;
-        print("upload $progressPercent %");
-      },
-    );*/
     Loggy.v(
         message:
             "(${savedImage.hash} downloadImage) Server responded with (${response.statusCode}): ${response.contentLength}");
@@ -89,15 +72,15 @@ class ImageController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    dio.Response getResult = await dio.Dio().get(url,
-        options: dio.Options(headers: {"Authorization": "Bearer $token"}));
+    Response getResult = await http.get(url,
+        headers: {"Authorization": "Bearer $token"});
     Loggy.d(
         message:
-            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.data.toString()}");
+            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.body}");
     if (getResult.statusCode == 200) {
-      return getResult.data.toString();
+      return getResult.body;
     } else {
-      throw ("Cant get imageurl " + getResult.data.toString());
+      throw ("Cant get imageurl " + getResult.body);
     }
   }
 
@@ -109,10 +92,6 @@ class ImageController {
       options: dio.Options(contentType: 'image/jpg', headers: {
         dio.Headers.contentLengthHeader: await file.length(),
       }),
-      onSendProgress: (int sentBytes, int totalBytes) {
-        double progressPercent = sentBytes / totalBytes * 100;
-        print("upload $progressPercent %");
-      },
     );
     print(uploadResponse.data.toString());
     return;
@@ -122,15 +101,15 @@ class ImageController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    dio.Response getResult = await dio.Dio().get(url,
-        options: dio.Options(headers: {"Authorization": "Bearer $token"}));
+    Response getResult = await http.get(url,
+        headers: {"Authorization": "Bearer $token"});
     Loggy.d(
         message:
-            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.data.toString()}");
+            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.body}");
     if (getResult.statusCode == 200) {
-      return getResult.data.toString();
+      return getResult.body;
     } else {
-      throw ("Cant get imageurl " + getResult.data.toString());
+      throw ("Cant get imageurl " + getResult.body);
     }
   }
 }

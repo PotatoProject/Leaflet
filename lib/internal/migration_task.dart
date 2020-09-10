@@ -65,7 +65,7 @@ class MigrationTask {
 
       SavedImage savedImage;
       if (v1Note.imagePath != null) {
-        savedImage = await ImageService.loadLocalFile(File(v1Note.imagePath));
+        savedImage = await ImageService.prepareLocally(File(v1Note.imagePath));
       }
       Note note = Note(
         id: Utils.generateId(),

@@ -162,6 +162,14 @@ class SharedPrefs {
     await prefs.setInt("last_updated", value);
   }
 
+  Future<List<String>> getDownloadedImages() async {
+    return prefs.getStringList("downloaded_images") ?? [];
+  }
+
+  void setDownloadedImages(List<String> value) async {
+    await prefs.setStringList("downloaded_images", value);
+  }
+
   void addChangedKey(String key) async {
     var changedKeys = prefs.getStringList("updated_keys") ?? new List<String>();
     if (!changedKeys.contains(key)) {

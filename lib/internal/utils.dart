@@ -452,7 +452,7 @@ class Utils {
 
     if (image != null) {
       SavedImage savedImage =
-          await ImageService.loadLocalFile(File(image.path));
+          await ImageService.prepareLocally(File(image.path));
       note.images.add(savedImage);
 
       if (shouldPop) Navigator.pop(context);
