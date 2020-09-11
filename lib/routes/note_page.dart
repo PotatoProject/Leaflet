@@ -113,6 +113,13 @@ class _NotePageState extends State<NotePage> {
   void notifyNoteChanged() {
     helper.saveNote(note.markChanged());
   }
+
+  void handleImageAdd(String path) async{
+    SavedImage savedImage = await ImageService.prepareLocally(File(path));
+    setState(() => note.images.add(savedImage));
+    notifyNoteChanged();
+    handleImageUpload();
+  }
   
   void handleImageUpload(){
     ImageService.handleUpload(note);
@@ -678,13 +685,9 @@ class _NotePageState extends State<NotePage> {
             onTap: () async {
               PickedFile image =
                   await ImagePicker().getImage(source: ImageSource.gallery);
-
               if (image != null) {
                 Navigator.pop(context);
-                SavedImage savedImage = await ImageService.prepareLocally(File(image.path));
-                setState(() => note.images.add(savedImage));
-                notifyNoteChanged();
-                handleImageUpload();
+                handleImageAdd(image.path);
               }
             },
           ),
@@ -696,11 +699,8 @@ class _NotePageState extends State<NotePage> {
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                SavedImage savedImage =
-                    await ImageService.prepareLocally(File(image.path));
-                setState(() => note.images.add(savedImage));
-                notifyNoteChanged();
                 Navigator.pop(context);
+                handleImageAdd(image.path);
               }
             },
           ),
@@ -709,7 +709,6 @@ class _NotePageState extends State<NotePage> {
             title: Text(LocaleStrings.notePage.drawing),
             onTap: () {
               Navigator.pop(context);
-
               addDrawing();
             },
           ),
