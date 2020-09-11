@@ -236,7 +236,7 @@ class Utils {
         ),
       ];
 
-  static get defaultAccent => Color(0xFFFF9100);
+  static get defaultAccent => Color(0xFF66BB6A);
 
   static Future<void> deleteNotes({
     @required BuildContext context,

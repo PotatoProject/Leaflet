@@ -34,7 +34,6 @@ dependencies:
   share:
   animations:
   material_design_icons_flutter:
-  google_fonts:
   path_drawing:
   quick_actions:
   image_picker_for_web:
@@ -110,3 +109,6 @@ flutter:
           weight: 600
         - asset: fonts/Manrope-ExtraBold.otf
           weight: 700
+    - family:  ValeraRound
+      fonts:
+        - asset: fonts/ValeraRound.ttf

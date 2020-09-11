@@ -18,7 +18,7 @@ class BottomSheetBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double shortestSide = MediaQuery.of(context).size.shortestSide;
+    double shortestSide = 600;
     int roundedShortestSide = (shortestSide / 10).round() * 10;
     double padding = (width - roundedShortestSide) / 2;
 
@@ -27,10 +27,13 @@ class BottomSheetBase extends StatelessWidget {
       onTap: () => Navigator.pop(context),
       child: SafeArea(
         child: Container(
-          width: MediaQuery.of(context).size.width,
+          width: width,
           margin: EdgeInsets.only(
             left: padding.isNegative ? 0 : padding,
             right: padding.isNegative ? 0 : padding,
+          ),
+          constraints: BoxConstraints(
+            maxHeight: 600,
           ),
           child: GestureDetector(
             onTapDown: (_) {},

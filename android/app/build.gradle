@@ -70,8 +70,7 @@ android {
             applicationId = "com.potatoproject.notes.dev"
             dimension "app"
             manifestPlaceholders = [
-                label: "Notes Dev",
-                icon: "@drawable/ic_launcher_debug",
+                label: "Leaflet Dev",
             ]
         }
         
@@ -80,8 +79,7 @@ android {
             applicationId = "com.potatoproject.notes.ci"
             dimension "app"
             manifestPlaceholders = [
-                label: "Notes CI",
-                icon: "@drawable/ic_launcher_ci",
+                label: "Leaflet CI",
             ]
         }
         
@@ -90,8 +88,7 @@ android {
             applicationId = "com.potatoproject.notes"
             dimension "app"
             manifestPlaceholders = [
-                label: "Notes",
-                icon: "@drawable/ic_launcher",
+                label: "Leaflet",
             ]
         }
     }

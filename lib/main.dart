@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,7 @@ main() async {
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
-  tempDirectory = await getTemporaryDirectory();
+  tempDirectory = !kIsWeb ? await getTemporaryDirectory() : Directory("");
   Loggy.generateAppLabel();
 
   final sharedPrefs = SharedPrefs.instance;
@@ -112,7 +114,7 @@ class PotatoNotes extends StatelessWidget {
         Themes themes = Themes(accentColor.withOpacity(1));
 
         return MaterialApp(
-          title: "PotatoNotes",
+          title: "Leaflet",
           theme: themes.light,
           darkTheme: prefs.useAmoled ? themes.black : themes.dark,
           supportedLocales: context.supportedLocales,

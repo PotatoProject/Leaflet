@@ -1,80 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
-class NotesLogo extends StatelessWidget {
+class IconLogo extends StatelessWidget {
+  static const Size logoSize = Size(46, 64);
   final double height;
-  final Color bgColor;
-  final Color fgColor;
-  final Color penColor;
 
-  NotesLogo({
-    this.height = 36,
-    this.bgColor = const Color(0xFFE07F00),
-    this.fgColor = const Color(0xFFFF9100),
-    this.penColor = const Color(0xFFFFFFFF),
+  IconLogo({
+    this.height = 64,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(
-        height / 1.2183908046,
+        height * logoSize.aspectRatio,
         height,
       ),
       isComplex: true,
-      painter: NotesPainter(
-        bg: PathData(
-          "M 77.694 0.093 L 9.556 0.093 C 4.701 0.093 0.764 4.03 0.764 8.885 L 0.764 96.804 C 0.764 101.66 4.701 105.596 9.556 105.596 L 77.694 105.596 C 82.549 105.596 86.486 101.66 86.486 96.804 L 86.486 8.885 C 86.486 4.03 82.549 0.093 77.694 0.093 Z",
-          bgColor,
-        ),
-        fg: PathData(
-          "M 86.486 23.271 L 86.486 96.804 C 86.486 99.136 85.559 101.372 83.91 103.021 C 82.262 104.67 80.025 105.596 77.694 105.596 L 9.556 105.596 C 7.225 105.596 4.988 104.67 3.339 103.021 C 1.691 101.372 0.764 99.136 0.764 96.804 L 0.764 23.271 C 0.764 22.105 1.228 20.987 2.052 20.163 C 2.876 19.338 3.994 18.875 5.16 18.875 L 82.09 18.875 C 83.255 18.875 84.374 19.338 85.198 20.163 C 86.022 20.987 86.486 22.105 86.486 23.271 Z",
-          fgColor,
-        ),
-        pen: PathData(
-          "M 52.417 62.626 L 52.417 105.596 L 34.833 105.596 L 34.833 62.626 C 34.832 61.134 35.21 59.667 35.932 58.362 L 41.68 47.998 C 41.87 47.655 42.148 47.368 42.487 47.169 C 42.825 46.97 43.21 46.864 43.603 46.864 C 43.996 46.864 44.381 46.97 44.719 47.169 C 45.058 47.368 45.336 47.655 45.526 47.998 L 51.274 58.362 C 52.011 59.663 52.405 61.13 52.417 62.626 Z",
-          penColor,
-        ),
+      painter: IconLogoPainter(
         height: height,
       ),
     );
   }
 }
 
-class NotesPainter extends CustomPainter {
-  NotesPainter({
-    this.bg,
-    this.fg,
-    this.pen,
+class IconLogoPainter extends CustomPainter {
+  IconLogoPainter({
     this.height,
   });
 
-  final PathData bg;
-  final PathData fg;
-  final PathData pen;
   final double height;
 
   @override
-  bool shouldRepaint(NotesPainter oldDelegate) => true;
+  bool shouldRepaint(IconLogoPainter oldDelegate) =>
+      oldDelegate.height != this.height;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path bgPath = parseSvgPathData(bg.path);
-    Rect rect = bgPath.getBounds();
-    canvas.scale(height / rect.bottom);
-    canvas.drawPath(bgPath, new Paint()..color = bg.color);
+    for (int i = 0; i < _logoPaths.length; i++) {
+      final pathData = _logoPaths[i];
+      final path = parseSvgPathData(pathData.path);
+      final paint = Paint()..color = pathData.color;
 
-    Path fgPath = parseSvgPathData(fg.path);
-    canvas.drawPath(fgPath, new Paint()..color = fg.color);
+      if (i == 0) {
+        Rect rect = path.getBounds();
+        canvas.scale(height / rect.bottom);
+      }
 
-    Path penPath = parseSvgPathData(pen.path);
-    canvas.drawPath(penPath, new Paint()..color = pen.color);
+      canvas.drawPath(path, paint);
+    }
   }
 }
 
 class PathData {
-  String path;
-  Color color;
+  final String path;
+  final Color color;
 
-  PathData(this.path, this.color);
+  const PathData(this.path, this.color);
 }
+
+const List<PathData> _logoPaths = [
+  PathData(
+    "M0 41.8462C0 19.6923 23 0 23 0C23 0 46 19.6923 46 41.8462C46 59.5443 25.5091 64 23 64C20.4909 64 0 59.5443 0 41.8462Z",
+    Color(0xFF66BB6A),
+  ),
+  PathData(
+    "M45.2224 34.6307C41.2071 15.589 22.9996 0 22.9996 0C22.9996 0 4.79205 15.5891 0.776855 34.6309L22.9995 47.3924L45.2224 34.6307Z",
+    Color(0xFF81C784),
+  ),
+  PathData(
+    "M22.9996 47.3925L0.777875 34.627L0.626953 35.3793L22.9996 48.227L45.3726 35.3791L45.2215 34.6257L22.9996 47.3925Z",
+    Color(0x3333691E),
+  ),
+  PathData(
+    "M38.1014 17.8594C31.4457 7.23119 22.9999 0 22.9999 0C22.9999 0 14.5541 7.23119 7.89844 17.8594L22.9999 26.5315L38.1014 17.8594Z",
+    Color(0xFFA5D6A7),
+  ),
+  PathData(
+    "M22.9996 26.5315L7.8981 17.8594L7.51709 18.475L22.9996 27.366L38.4827 18.4747L38.1011 17.8594L22.9996 26.5315Z",
+    Color(0x3333691E),
+  ),
+  PathData(
+    "M23 64V0C23 0 46 19.6923 46 41.8462C46 59.5443 25.5091 64 23 64Z",
+    Color(0x3333691E),
+  ),
+  PathData(
+    "M19.6548 63.3976C21.2823 63.8225 22.4995 64 23.0002 64C23.501 64 24.7181 63.8225 26.3457 63.3976L26.3457 36.2531C26.3457 36.2531 24.4639 31.7975 23.6693 29.7721C23.3515 28.962 22.6657 28.962 22.3312 29.7721L19.6548 36.2531L19.6548 63.3976Z",
+    Color(0xFFE8F5E9),
+  ),
+];

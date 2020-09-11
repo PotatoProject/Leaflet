@@ -34,11 +34,8 @@ class AboutPage extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 48,
-                      backgroundColor: Utils.defaultAccent,
-                      child: NotesLogo(
-                        bgColor: Colors.grey[300],
-                        fgColor: Colors.white,
-                        penColor: Colors.grey[900],
+                      backgroundColor: Color(0xFF212C21),
+                      child: IconLogo(
                         height: 48,
                       ),
                     ),

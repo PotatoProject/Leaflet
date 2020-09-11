@@ -64,7 +64,7 @@ class _NoteListPageState extends State<NoteListPage> {
           )
         : DefaultAppBar(
             extraActions: appBarButtons,
-            title: Utils.getNameFromMode(widget.noteKind),
+            title: Text(Utils.getNameFromMode(widget.noteKind)),
           )) as PreferredSizeWidget;
 
     return DependentScaffold(

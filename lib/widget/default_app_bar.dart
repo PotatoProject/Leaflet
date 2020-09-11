@@ -10,7 +10,7 @@ import 'package:potato_notes/widget/notes_logo.dart';
 
 class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> extraActions;
-  final String title;
+  final Widget title;
 
   const DefaultAppBar({
     this.extraActions = const [],
@@ -27,17 +27,22 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
     final state = BasePage.of(context);
     final _leading = state != null
         ? Center(
-            child: NotesLogo(
+            child: IconLogo(
               height: 28,
             ),
           )
         : null;
-    final _title = state != null ? "PotatoNotes" : title ?? "";
+    final _title = state != null
+        ? Text(
+            "leaflet",
+            style: TextStyle(fontFamily: "ValeraRound"),
+          )
+        : title ?? null;
 
     return AppBar(
       leading: _leading,
       titleSpacing: 0,
-      title: Text(_title),
+      title: _title,
       textTheme: Theme.of(context).textTheme,
       actions: [
         Visibility(

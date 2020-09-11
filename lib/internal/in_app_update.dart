@@ -141,7 +141,7 @@ class InAppUpdater {
             return AlertDialog(
               title: Row(
                 children: [
-                  NotesLogo(
+                  IconLogo(
                     height: 24,
                   ),
                   SizedBox(width: 16),
@@ -227,8 +227,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
           alignment: Alignment.bottomCenter,
           children: [
             Center(
-              child: NotesLogo(
-                penColor: Theme.of(context).scaffoldBackgroundColor,
+              child: IconLogo(
                 height: 106,
               ),
             ),
