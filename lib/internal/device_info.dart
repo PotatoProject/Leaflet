@@ -63,9 +63,14 @@ abstract class _DeviceInfoBase with Store {
 
   @action
   Future<void> _loadInitialData() async {
-    canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
-    availableBiometricsValue =
-        await LocalAuthentication().getAvailableBiometrics();
+    if (!DeviceInfo.isDesktopOrWeb) {
+      canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
+      availableBiometricsValue =
+          await LocalAuthentication().getAvailableBiometrics();
+    } else {
+      canCheckBiometricsValue = false;
+      availableBiometricsValue = [];
+    }
   }
 
   @action

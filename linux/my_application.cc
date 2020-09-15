@@ -20,6 +20,18 @@ static void my_application_activate(GApplication* application) {
   gtk_header_bar_set_show_close_button(header_bar, TRUE);
   gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   gtk_window_set_default_size(window, 1280, 720);
+
+  GdkGeometry* hints = new GdkGeometry();
+  hints->min_width = 400;
+  hints->min_height = 600;
+  
+  gtk_window_set_geometry_hints(
+    window,
+    GTK_WIDGET(window),
+    hints,
+    (GdkWindowHints)(GDK_HINT_MIN_SIZE)
+  );
+
   gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();

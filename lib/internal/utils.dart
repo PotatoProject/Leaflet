@@ -11,7 +11,6 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/routes/about_page.dart';
@@ -30,14 +29,6 @@ import 'locale_strings.dart';
 const int kMaxImageCount = 4;
 const double kCardBorderRadius = 6;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
-const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
-  horizontal: 180,
-  vertical: 64,
-);
-const EdgeInsets kTertiaryRoutePadding = const EdgeInsets.symmetric(
-  horizontal: 240,
-  vertical: 96,
-);
 
 class Utils {
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -367,54 +358,16 @@ class Utils {
   static Future<dynamic> showSecondaryRoute(
     BuildContext context,
     Widget route, {
-    EdgeInsets sidePadding = kSecondaryRoutePadding,
-    RouteTransitionsBuilder transitionsBuilder,
-    bool barrierDismissible = true,
     bool allowGestures = true,
+    bool pushImmediate = false,
   }) async {
-    bool shouldUseDialog = deviceInfo.uiType == UiType.LARGE_TABLET ||
-        deviceInfo.uiType == UiType.DESKTOP;
-
-    if (shouldUseDialog) {
-      showDialog(
-        context: context,
-        barrierDismissible: barrierDismissible,
-        builder: (context) => Dialog(
-          insetPadding: sidePadding,
-          child: route,
-        ),
-      );
-    } else {
-      if (transitionsBuilder != null) {
-        return Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return transitionsBuilder(
-                context,
-                animation,
-                secondaryAnimation,
-                route,
-              );
-            },
-          ),
-        );
-      } else {
-        if (allowGestures) {
-          return Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => route,
-            ),
-          );
-        } else {
-          return Navigator.of(context).push(
-            DismissiblePageRoute(
-              builder: (context) => route,
-              allowGestures: false,
-            ),
-          );
-        }
-      }
-    }
+    return Navigator.of(context).push(
+      DismissiblePageRoute(
+        builder: (context) => route,
+        allowGestures: allowGestures,
+        pushImmediate: pushImmediate,
+      ),
+    );
   }
 
   static void newNote(BuildContext context) async {

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
@@ -100,13 +101,7 @@ class _BasePageState extends State<BasePage> {
           context,
           SetupPage(),
           allowGestures: false,
-          barrierDismissible: false,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
+          pushImmediate: true,
         );
       }
     });

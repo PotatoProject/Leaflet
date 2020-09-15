@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -156,7 +157,7 @@ class _DrawPageState extends State<DrawPage>
                     final box = key.currentContext.findRenderObject()
                         as RenderRepaintBoundary;
 
-                    if (DeviceInfo.isDesktopOrWeb) {
+                    if (kIsWeb) {
                       drawing = await WebDrawingExporter.export(
                         widget.savedImage?.uri,
                         objects,
@@ -174,8 +175,14 @@ class _DrawPageState extends State<DrawPage>
                         context.locale.toLanguageTag(),
                       ).format(now);
 
+                      final drawingsDirectory = DeviceInfo.isDesktopOrWeb
+                          ? await getApplicationSupportDirectory()
+                          : await getApplicationDocumentsDirectory();
+
+                      print(drawingsDirectory);
+
                       drawing =
-                          "${(await getApplicationDocumentsDirectory()).path}/drawing-$timestamp.png";
+                          "${drawingsDirectory.path}/drawing-$timestamp.png";
                       if (filePath == null) {
                         filePath = drawing;
                       } else {

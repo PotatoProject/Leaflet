@@ -8,7 +8,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -48,19 +47,19 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           color: Colors.transparent,
         ),
         builder: (context, index) {
-            SavedImage savedImage = widget.note.images[index];
-            ImageProvider image;
-            if (savedImage.existsLocally) {
-              image = FileImage(File(savedImage.path));
-            } else {
-              image = BlurHashImage(savedImage.blurHash);
-            }
-            return PhotoViewGalleryPageOptions(
-              imageProvider: image,
-              initialScale: PhotoViewComputedScale.contained,
-              minScale: PhotoViewComputedScale.contained,
-              maxScale: 3.0,
-            );
+          SavedImage savedImage = widget.note.images[index];
+          ImageProvider image;
+          if (savedImage.existsLocally) {
+            image = FileImage(File(savedImage.path));
+          } else {
+            image = BlurHashImage(savedImage.blurHash);
+          }
+          return PhotoViewGalleryPageOptions(
+            imageProvider: image,
+            initialScale: PhotoViewComputedScale.contained,
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: 3.0,
+          );
         },
         pageController: PageController(initialPage: widget.currentImage),
         onPageChanged: (index) => setState(() => currentPage = index),
@@ -81,7 +80,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             icon: Icon(MdiIcons.pencilOutline),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
-            onPressed: !DeviceInfo.isDesktopOrWeb
+            onPressed: !kIsWeb
                 ? () async {
                     await Utils.showSecondaryRoute(
                       context,
@@ -89,7 +88,6 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
                         note: widget.note,
                         savedImage: widget.note.images[currentPage],
                       ),
-                      sidePadding: kTertiaryRoutePadding,
                       allowGestures: false,
                     );
 

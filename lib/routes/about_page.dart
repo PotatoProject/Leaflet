@@ -41,7 +41,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      "PotatoNotes",
+                      "Leaflet",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w400,

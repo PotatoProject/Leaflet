@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,10 +11,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController emailOrUserController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final emailOrUserController = TextEditingController();
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final emailOrUserFocusNode = FocusNode();
+  final emailFocusNode = FocusNode();
+  final usernameFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool obscurePass = true;
   bool register = false;
   bool showLoadingOverlay = false;
@@ -20,6 +30,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     BackButtonInterceptor.add((_) => showLoadingOverlay, name: "antiPop");
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => FocusScope.of(context).requestFocus(emailOrUserFocusNode),
+    );
     super.initState();
   }
 
@@ -31,6 +44,19 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool enabledCondition;
+
+    if (register) {
+      enabledCondition = usernameController.text.isNotEmpty &&
+          emailController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty;
+    } else {
+      enabledCondition = emailOrUserController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty;
+    }
+
+    DismissibleRoute.of(context).requestDisableGestures = showLoadingOverlay;
+
     final items = [
       TextFormField(
         decoration: InputDecoration(
@@ -40,7 +66,11 @@ class _LoginPageState extends State<LoginPage> {
         autofillHints: [
           AutofillHints.email,
         ],
+        onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
+          register ? usernameFocusNode : passwordFocusNode,
+        ),
         controller: register ? emailController : emailOrUserController,
+        focusNode: register ? emailFocusNode : emailOrUserFocusNode,
         onChanged: (_) => setState(() {}),
       ),
       Visibility(
@@ -54,7 +84,13 @@ class _LoginPageState extends State<LoginPage> {
             border: OutlineInputBorder(),
             labelText: "Username",
           ),
+          autofillHints: [
+            AutofillHints.username,
+          ],
+          onFieldSubmitted: (_) =>
+              FocusScope.of(context).requestFocus(passwordFocusNode),
           controller: usernameController,
+          focusNode: usernameFocusNode,
           onChanged: (_) => setState(() {}),
         ),
       ),
@@ -70,6 +106,13 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () => setState(() => obscurePass = !obscurePass),
           ),
         ),
+        focusNode: passwordFocusNode,
+        onFieldSubmitted: enabledCondition
+            ? (text) => onSubmit()
+            : (text) => FocusScope.of(context).unfocus(),
+        autofillHints: [
+          AutofillHints.password,
+        ],
         controller: passwordController,
         keyboardType: TextInputType.visiblePassword,
         obscureText: obscurePass,
@@ -83,7 +126,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Expanded(
               flex: 12,
               child: FlatButton(
-                child: Text("Forgot password"),
+                child: Text(
+                  "Forgot password",
+                  textAlign: TextAlign.center,
+                ),
                 onPressed: () {},
                 textColor: Theme.of(context).accentColor,
               ),
@@ -95,82 +141,51 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Expanded(
             flex: 12,
-            child: Builder(
-              builder: (context) {
-                bool enabledCondition;
-
-                if (register) {
-                  enabledCondition = usernameController.text.isNotEmpty &&
-                      emailController.text.isNotEmpty &&
-                      passwordController.text.isNotEmpty;
-                } else {
-                  enabledCondition = emailOrUserController.text.isNotEmpty &&
-                      passwordController.text.isNotEmpty;
-                }
-                return RaisedButton(
-                  child: Text(register ? "Register" : "Login"),
-                  disabledColor: Theme.of(context).disabledColor,
-                  disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
-                  onPressed: enabledCondition
-                      ? () async {
-                          AuthResponse response;
-
-                          setState(() => showLoadingOverlay = true);
-
-                          if (register) {
-                            response = await AccountController.register(
-                              usernameController.text,
-                              emailController.text,
-                              passwordController.text,
-                            );
-                          } else {
-                            response = await AccountController.login(
-                              emailOrUserController.text,
-                              passwordController.text,
-                            );
-                          }
-
-                          setState(() => showLoadingOverlay = false);
-
-                          if (response.status && !register) {
-                            Navigator.pop(context);
-                          } else {
-                            Scaffold.of(context).removeCurrentSnackBar();
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  register
-                                      ? response.message ?? "Registered!"
-                                      : response.message,
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      : null,
-                );
-              },
+            child: RaisedButton(
+              child: Text(register ? "Register" : "Login"),
+              disabledColor: Theme.of(context).disabledColor,
+              disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
+              textColor: Theme.of(context).scaffoldBackgroundColor,
+              onPressed: enabledCondition ? onSubmit : null,
             ),
           ),
         ],
       ),
     ];
+
     return Stack(
       children: [
         Scaffold(
+          key: scaffoldKey,
           appBar: AppBar(
             title: Text(register ? "Register" : "Login"),
             textTheme: Theme.of(context).textTheme,
           ),
           body: Center(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
               padding: EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: items,
+              child: PageTransitionSwitcher(
+                duration: Duration(milliseconds: 250),
+                transitionBuilder:
+                    (child, primaryAnimation, secondaryAnimation) {
+                  return FadeThroughTransition(
+                    animation: primaryAnimation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: child,
+                  );
+                },
+                child: ConstrainedBox(
+                  key: register ? Key("register") : Key("login"),
+                  constraints: BoxConstraints(
+                    maxWidth: 480,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: items,
+                  ),
+                ),
               ),
             ),
           ),
@@ -185,9 +200,24 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Divider(height: 1),
                   Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4),
-                      child: FlatButton(
+                    child: FlatButton(
+                      onPressed: () {
+                        emailOrUserController.clear();
+                        emailController.clear();
+                        usernameController.clear();
+                        passwordController.clear();
+                        setState(() => register = !register);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (register) {
+                            FocusScope.of(context).requestFocus(emailFocusNode);
+                          } else {
+                            FocusScope.of(context)
+                                .requestFocus(emailOrUserFocusNode);
+                          }
+                        });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4),
                         child: RichText(
                           text: TextSpan(
                             style: Theme.of(context).textTheme.bodyText2,
@@ -206,13 +236,6 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                        onPressed: () {
-                          emailOrUserController.clear();
-                          emailController.clear();
-                          usernameController.clear();
-                          passwordController.clear();
-                          setState(() => register = !register);
-                        },
                       ),
                     ),
                   ),
@@ -236,5 +259,39 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  void onSubmit() async {
+    AuthResponse response;
+
+    setState(() => showLoadingOverlay = true);
+
+    if (register) {
+      response = await AccountController.register(
+        usernameController.text,
+        emailController.text,
+        passwordController.text,
+      );
+    } else {
+      response = await AccountController.login(
+        emailOrUserController.text,
+        passwordController.text,
+      );
+    }
+
+    setState(() => showLoadingOverlay = false);
+
+    if (response.status && !register) {
+      Navigator.pop(context);
+    } else {
+      scaffoldKey.currentState.removeCurrentSnackBar();
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            register ? response.message ?? "Registered!" : response.message,
+          ),
+        ),
+      );
+    }
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
@@ -15,5 +13,3 @@ final Preferences prefs = Preferences();
 NoteHelper helper;
 
 TagHelper tagHelper;
-
-Directory tempDirectory;

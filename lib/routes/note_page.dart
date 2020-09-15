@@ -42,7 +42,6 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   Note note;
-  bool firstTimeRunning = true;
 
   TextEditingController titleController;
   FocusNode titleFocusNode = FocusNode();
@@ -114,14 +113,14 @@ class _NotePageState extends State<NotePage> {
     helper.saveNote(note.markChanged());
   }
 
-  void handleImageAdd(String path) async{
+  void handleImageAdd(String path) async {
     SavedImage savedImage = await ImageService.prepareLocally(File(path));
     setState(() => note.images.add(savedImage));
     notifyNoteChanged();
     handleImageUpload();
   }
-  
-  void handleImageUpload(){
+
+  void handleImageUpload() {
     ImageService.handleUpload(note);
   }
 
@@ -137,10 +136,6 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (firstTimeRunning) {
-      firstTimeRunning = false;
-    }
-
     final Widget imagesWidget = NoteViewImages(
       images: note.images,
       showPlusImages: true,
@@ -155,8 +150,6 @@ class _NotePageState extends State<NotePage> {
             note: note,
             currentImage: index,
           ),
-          sidePadding: kTertiaryRoutePadding,
-          allowGestures: false,
         );
 
         setState(() {});
@@ -442,7 +435,9 @@ class _NotePageState extends State<NotePage> {
                         }),
                         AnimatedOpacity(
                           opacity: note.listContent.isNotEmpty
-                              ? note.listContent.last.text != "" ? 1 : 0
+                              ? note.listContent.last.text != ""
+                                  ? 1
+                                  : 0
                               : 1,
                           duration: note.listContent.isNotEmpty
                               ? note.listContent.last.text != ""
@@ -527,7 +522,6 @@ class _NotePageState extends State<NotePage> {
               SearchPage(
                 delegate: TagSearchDelegate(note),
               ),
-              sidePadding: kTertiaryRoutePadding,
             );
 
             setState(() {});
@@ -732,7 +726,6 @@ class _NotePageState extends State<NotePage> {
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),
-      sidePadding: kTertiaryRoutePadding,
       allowGestures: false,
     );
 

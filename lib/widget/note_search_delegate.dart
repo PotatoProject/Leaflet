@@ -146,7 +146,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         NotePage(
           note: note,
         ),
-        sidePadding: kTertiaryRoutePadding,
       );
     }
   }

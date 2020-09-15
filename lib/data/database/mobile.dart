@@ -17,8 +17,8 @@ QueryExecutor constructDb({bool logStatements = false}) {
   }
   if (Platform.isMacOS || Platform.isLinux) {
     final executor = LazyDatabase(() async {
-      final dataDir = await pathProvider.getApplicationDocumentsDirectory();
-      final dbFile = File(p.join(dataDir.path, '.notes.sqlite'));
+      final dataDir = await pathProvider.getApplicationSupportDirectory();
+      final dbFile = File(p.join(dataDir.path, 'notes.sqlite'));
       return VmDatabase(dbFile, logStatements: logStatements);
     });
     return executor;

@@ -58,7 +58,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => Utils.showSecondaryRoute(
                         context,
                         AboutPage(),
-                        sidePadding: kTertiaryRoutePadding,
                       ),
                     ),
                     SettingsTile(

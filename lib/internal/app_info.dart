@@ -84,12 +84,13 @@ abstract class _AppInfoBase with Store {
   }
 
   void loadData() async {
+    tempDirectory = await getTemporaryDirectory();
+    print(tempDirectory);
+
     if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();
+      packageInfo = await PackageInfo.fromPlatform();
     }
-
-    packageInfo = await PackageInfo.fromPlatform();
-    tempDirectory = await getTemporaryDirectory();
 
     if (DeviceInfo.isAndroid) {
       accentStreamChannel.receiveBroadcastStream().listen(updateAccent);

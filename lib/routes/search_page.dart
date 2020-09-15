@@ -57,6 +57,7 @@ class _SearchPageState<T> extends State<SearchPage> {
             decoration: InputDecoration.collapsed(
               hintText: LocaleStrings.searchPage.textboxHint,
             ),
+            autofocus: true,
             onChanged: (value) => _onSearchBodyChanged(),
           ),
         ),

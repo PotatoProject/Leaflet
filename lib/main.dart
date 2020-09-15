@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/android_xml_asset_loader.dart';
@@ -19,6 +16,7 @@ import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 main() async {
@@ -32,8 +30,9 @@ main() async {
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
-  tempDirectory = !kIsWeb ? await getTemporaryDirectory() : Directory("");
-  Loggy.generateAppLabel();
+  if (DeviceInfo.isAndroid) {
+    Loggy.generateAppLabel();
+  }
 
   final sharedPrefs = SharedPrefs.instance;
   final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
@@ -113,7 +112,7 @@ class PotatoNotes extends StatelessWidget {
 
         Themes themes = Themes(accentColor.withOpacity(1));
 
-        return MaterialApp(
+        return NotesApp(
           title: "Leaflet",
           theme: themes.light,
           darkTheme: prefs.useAmoled ? themes.black : themes.dark,
