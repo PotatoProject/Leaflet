@@ -157,7 +157,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           Note note = selectionList[i];
 
           if (note.deleted) {
-            helper.deleteNote(note);
+            Utils.deleteNoteSafely(note);
           } else {
             await Utils.deleteNotes(
               context: context,

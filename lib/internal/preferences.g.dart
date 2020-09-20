@@ -243,6 +243,22 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$deletedImagesValueAtom =
+      Atom(name: '_PreferencesBase.deletedImagesValue');
+
+  @override
+  List<String> get deletedImagesValue {
+    _$deletedImagesValueAtom.reportRead();
+    return super.deletedImagesValue;
+  }
+
+  @override
+  set deletedImagesValue(List<String> value) {
+    _$deletedImagesValueAtom.reportWrite(value, super.deletedImagesValue, () {
+      super.deletedImagesValue = value;
+    });
+  }
+
   final _$lastUpdatedValueAtom =
       Atom(name: '_PreferencesBase.lastUpdatedValue');
 
@@ -277,6 +293,7 @@ emailValue: ${emailValue},
 logLevelValue: ${logLevelValue},
 tagsValue: ${tagsValue},
 downloadedImagesValue: ${downloadedImagesValue},
+deletedImagesValue: ${deletedImagesValue},
 lastUpdatedValue: ${lastUpdatedValue}
     ''';
   }

@@ -11,7 +11,7 @@ part 'saved_image.g.dart';
 class SavedImage {
   String id = Utils.generateId();
   Uri uri;
-  StorageLocation storageLocation = StorageLocation.SYNC;
+  StorageLocation storageLocation = StorageLocation.IMGUR;
   String hash;
   String blurHash;
   bool encrypted = false;

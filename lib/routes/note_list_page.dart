@@ -213,7 +213,7 @@ class _NoteListPageState extends State<NoteListPage> {
               NotePage(
                 note: note,
               ),
-            );
+            ).then((_) => {Utils.handleNotePagePop(note)});
           }
         }
       },

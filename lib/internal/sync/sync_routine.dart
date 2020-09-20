@@ -109,7 +109,7 @@ class SyncRoutine {
     List<Note> changedNotes = updatedNotes.keys.toList();
     changedNotes.addAll(addedNotes);
     await ImageService.handleUploads(changedNotes);
-
+    await ImageService.handleUploads(addedNotes);
     addedNotes.clear();
     updatedNotes.clear();
     deletedNotes.clear();
@@ -124,6 +124,11 @@ class SyncRoutine {
     // Send all of the note-related requests to the remote server
     try {
       await sendNoteUpdates();
+    } catch (e) {
+      return false;
+    }
+    try{
+      await ImageService.handleDeletes();
     } catch (e) {
       return false;
     }
@@ -179,16 +184,56 @@ class SyncRoutine {
     return true;
   }
 
+  static Future<bool> syncNote(Note note) async {
+    var synced = await helper.listNotes(ReturnMode.SYNCED);
+    try{
+      if(synced.indexWhere((syncedNote) => syncedNote.id == note.id + "-synced") != -1){
+        var deletedIdList = await NoteController.listDeleted(
+            [note.id]);
+        if(deletedIdList.length > 0){
+          Loggy.d(message: "Since note is deleted on remote, we should safely remove it");
+          Utils.deleteNoteSafely(note);
+          return true;
+        } else {
+          var syncedNote = synced.firstWhere((synced) => synced.id == note.id + "-synced");
+          if(syncedNote.lastModifyDate == note.lastModifyDate){
+            Loggy.v(message: "Dont need to sync note, it hasnt been updated");
+            return true;
+          } else {
+            var delta = getNoteDelta(
+                note,
+                syncedNote);
+            await NoteController.update(note.id, delta);
+            await saveSyncedNote(note);
+            return true;
+          }
+        }
+      } else {
+        return await addNote(note);
+      }
+    } catch (e) {
+      Loggy.e(message: "Could not sync note in background: ${e.toString()}");
+      return false;
+    }
+  }
+
+  static Future<bool> addNote(Note note) async {
+    try {
+      await NoteController.add(note);
+      await saveSyncedNote(note);
+      Loggy.i(message: "Added note: " + note.id);
+      return true;
+    } catch (e) {
+      Loggy.e(message: "Failed to add note: " + e.toString());
+      return false;
+    }
+  }
+
   Future<bool> sendNoteUpdates() async {
     // Send the post requests to add new notes
     for (Note note in addedNotes) {
-      try {
-        await NoteController.add(note);
-        await saveSyncedNote(note);
-        Loggy.i(message: "Added note: " + note.id);
-      } catch (e) {
-        Loggy.e(message: e.toString());
-        throw ("Failed to add notes: " + e.toString());
+      if(await addNote(note) == false){
+        return false;
       }
     }
     // Get list of notes which should be deleted on the client since they are deleted on the remote server
@@ -417,7 +462,7 @@ class SyncRoutine {
     }
   }
 
-  Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
+  static Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
     Map<String, dynamic> localMap = localNote.toSyncMap();
     Map<String, dynamic> syncedMap = syncedNote.toSyncMap();
     Map<String, dynamic> noteDelta = Map();
@@ -431,7 +476,7 @@ class SyncRoutine {
     return noteDelta;
   }
 
-  Map<String, dynamic> getTagDelta(Tag localTag, Tag syncedTag) {
+  static Map<String, dynamic> getTagDelta(Tag localTag, Tag syncedTag) {
     Map<String, dynamic> localMap = TagController.toSync(localTag);
     Map<String, dynamic> syncedMap = TagController.toSync(syncedTag);
     Map<String, dynamic> tagDelta = Map();

@@ -13,6 +13,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -31,6 +32,19 @@ const double kCardBorderRadius = 6;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
+
+  static deleteNoteSafely(Note note){
+    ImageService.handleNoteDeletion(note);
+    helper.deleteNote(note);
+  }
+
+  static handleNotePagePop(Note note){
+    ImageService.handleDeletes();
+    helper.listNotes(ReturnMode.LOCAL).then((notes) => {
+      SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
+    });
+  }
+
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
     return await showNotesModalBottomSheet(
       context: context,

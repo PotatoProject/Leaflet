@@ -4,23 +4,60 @@ import 'dart:typed_data';
 
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 import 'package:image/image.dart';
+import 'package:loggy/loggy.dart';
+import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image_controller.dart';
+import 'package:potato_notes/internal/sync/image/imgur_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
+
+import 'files_controller.dart';
 
 class ImageService {
   static const JPEG_QUALITY = 90;
   static const maxHeight = 2048;
 
-  static Future<String> downloadImage(SavedImage savedImage) async {
-      String url =
-          await ImageController.getDownloadUrlFromSync(savedImage.hash);
-      String path = await ImageController.downloadImageToCache(url, savedImage);
-      addToDownloaded(savedImage.hash);
-      return path;
+  static Future<void> downloadImage(SavedImage savedImage) async {
+    switch (savedImage.storageLocation) {
+      case StorageLocation.LOCAL:
+        break;
+      case StorageLocation.IMGUR:
+        String url = savedImage.uri.toString();
+        await downloadImageToCache(url, savedImage);
+        addToDownloaded(savedImage.hash);
+        break;
+      case StorageLocation.SYNC:
+        String url = await FilesController.getDownloadUrlFromSync(savedImage.hash);
+        await downloadImageToCache(url, savedImage);
+        addToDownloaded(savedImage.hash);
+        break;
+    }
+    return;
+  }
+
+  static Future<void> downloadImageToCache(
+      String url, SavedImage savedImage) async {
+    var path = savedImage.path;
+    Response response = await http.get(url);
+    Loggy.v(
+        message:
+        "(${savedImage.hash} downloadImage) Server responded with (${response.statusCode}): ${response.contentLength}");
+    if (response.statusCode == 200) {
+      File file = new File(path);
+      file.writeAsBytesSync(response.bodyBytes);
+      return;
+    } else if (response.statusCode == 404) {
+      throw ("File doesnt exist on server");
+    } else if (response.statusCode == 403) {
+      throw ("Not allowed to access file");
+    }
+    return;
   }
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
@@ -49,8 +86,6 @@ class ImageService {
       helper.saveNote(note.markChanged());
     }
     return true;
-    //uploadImage(uri, savedImage);
-    //return true if no error
   }
 
   static void handleUpload(Note note){
@@ -84,10 +119,10 @@ class ImageService {
         // Just dont upload duh
         break;
       case StorageLocation.IMGUR:
-        // TODO: Handle this case.
+        await ImgurController.uploadImage(savedImage, normalImage);
         break;
       case StorageLocation.SYNC:
-        await ImageController.uploadImageToSync(savedImage.hash, normalImage);
+        await FilesController.uploadImageToSync(savedImage.hash, normalImage);
         break;
     }
   }
@@ -97,7 +132,7 @@ class ImageService {
     Uint8List rawBytes = await file.readAsBytes();
     savedImage.hash = await _generateImageHash(rawBytes);
     Image compressedImage = await _compressImage(rawBytes, savedImage);
-    String blurHash = _generateBlurHash(compressedImage);
+    String blurHash = _generateBlurHash(await _compressForBlur(compressedImage, savedImage));
     savedImage.blurHash = blurHash;
     File imageFile = await _saveImage(compressedImage, savedImage);
     savedImage.uri = imageFile.uri;
@@ -126,12 +161,28 @@ class ImageService {
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
     if (image.height > height) {
+      resized = copyResize(image, height: height, width: height);
+    } else {
+      resized = image;
+    }
+    return resized;
+  }
+
+  static Future<Image> _compressForBlur(
+      Image image, SavedImage savedImage) async {
+    // Default height of compressed images
+    int height = 100;
+    Image resized;
+    // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
+    if (image.height > height) {
       resized = copyResize(image, height: height);
     } else {
       resized = image;
     }
     return resized;
   }
+
+
 
   static Future<File> _saveImage(Image image, SavedImage savedImage) async {
     File imageFile = File(savedImage.path);
@@ -143,5 +194,56 @@ class ImageService {
     List<String> downloadedImages = prefs.downloadedImages;
     downloadedImages.add(hash);
     prefs.downloadedImages = downloadedImages;
+  }
+
+  static addToDeleted(String hash){
+    List<String> deletedImages = prefs.deletedImages;
+    deletedImages.add(hash);
+    prefs.deletedImages = deletedImages;
+  }
+
+  static removeFromDeleted(String hash){
+    List<String> deletedImages = prefs.deletedImages;
+    deletedImages.remove(hash);
+    prefs.deletedImages = deletedImages;
+  }
+
+  static deleteImage(SavedImage image) {
+    if(image.uploaded == true){
+      helper.listNotes(ReturnMode.LOCAL).then((notes) {
+        var images = List<SavedImage>();
+        for(var note in notes){
+          images.addAll(note.images);
+        }
+        if(images.where((otherImage) => otherImage.id != image.id).length > 0){
+          return;
+        } else {
+          if(image.storageLocation == StorageLocation.SYNC) {
+            addToDeleted(image.hash);
+          }
+          if(image.existsLocally){
+            try{
+              File(image.path).deleteSync();
+            } catch (e){
+              Loggy.e(message: "Could not remove local file ${e.toString()}");
+            }
+          }
+        }
+      });
+    }
+  }
+
+  static Future<bool> handleDeletes() async {
+    for(String hash in prefs.deletedImages){
+        await FilesController.deleteImage(hash);
+    }
+    prefs.deletedImages = [];
+    return true;
+  }
+
+  static handleNoteDeletion(Note note) {
+    for(SavedImage image in note.images){
+      deleteImage(image);
+    }
   }
 }

@@ -116,7 +116,7 @@ class _NotePageState extends State<NotePage> {
   void handleImageAdd(String path) async {
     SavedImage savedImage = await ImageService.prepareLocally(File(path));
     setState(() => note.images.add(savedImage));
-    notifyNoteChanged();
+    await helper.saveNote(note.markChanged());
     handleImageUpload();
   }
 

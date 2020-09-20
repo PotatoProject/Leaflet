@@ -10,6 +10,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 
@@ -100,11 +101,10 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
+              ImageService.deleteImage(widget.note.images[currentPage]);
               widget.note.images.removeWhere((savedImage) =>
                   widget.note.images[currentPage].id == savedImage.id);
-
               helper.saveNote(widget.note.markChanged());
-
               Navigator.pop(context);
             },
           ),
