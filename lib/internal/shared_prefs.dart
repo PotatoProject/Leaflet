@@ -155,14 +155,6 @@ class SharedPrefs {
     await prefs.setInt("log_level", value);
   }
 
-  Future<int> getLastUpdated() async {
-    return prefs.getInt("last_updated") ?? 0;
-  }
-
-  void setLastUpdated(int value) async {
-    await prefs.setInt("last_updated", value);
-  }
-
   Future<List<String>> getDownloadedImages() async {
     return prefs.getStringList("downloaded_images") ?? [];
   }
@@ -177,6 +169,14 @@ class SharedPrefs {
 
   void setDeletedImages(List<String> value) async {
     await prefs.setStringList("deleted_images", value);
+  }
+
+  Future<int> getLastUpdated() async {
+    return prefs.getInt("last_updated") ?? 0;
+  }
+
+  void setLastUpdated(int value) async {
+    await prefs.setInt("last_updated", value);
   }
 
   void addChangedKey(String key) async {

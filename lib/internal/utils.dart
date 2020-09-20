@@ -363,6 +363,7 @@ class Utils {
 
     if (newLength > currentLength) {
       Note lastNote = notes.last;
+      Utils.handleNotePagePop(lastNote);
 
       if (lastNote.title.isEmpty &&
           lastNote.content.isEmpty &&

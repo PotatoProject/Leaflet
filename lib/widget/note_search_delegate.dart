@@ -146,7 +146,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         NotePage(
           note: note,
         ),
-      ).then((_) => {Utils.handleNotePagePop(note)});
+      ).then((_) => Utils.handleNotePagePop(note));
     }
   }
 

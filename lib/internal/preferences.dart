@@ -177,11 +177,6 @@ abstract class _PreferencesBase with Store {
     prefs.setLogLevel(value);
   }
 
-  set lastUpdated(int value) {
-    lastUpdatedValue = value;
-    prefs.setLastUpdated(value);
-  }
-
   set downloadedImages(List<String> value) {
     downloadedImagesValue = value;
     prefs.setDownloadedImages(value);
@@ -190,6 +185,11 @@ abstract class _PreferencesBase with Store {
   set deletedImages(List<String> value) {
     deletedImagesValue = value;
     prefs.setDeletedImages(value);
+  }
+
+  set lastUpdated(int value) {
+    lastUpdatedValue = value;
+    prefs.setLastUpdated(value);
   }
 
   void loadData() async {
@@ -212,14 +212,13 @@ abstract class _PreferencesBase with Store {
     usernameValue = await prefs.getUsername();
     emailValue = await prefs.getEmail();
     logLevelValue = await prefs.getLogLevel();
+    downloadedImagesValue = await prefs.getDownloadedImages();
+    deletedImagesValue = await prefs.getDeletedImages();
     lastUpdatedValue = await prefs.getLastUpdated();
 
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       tagsValue = newTags;
     });
-
-    downloadedImagesValue = await prefs.getDownloadedImages();
-    deletedImagesValue = await prefs.getDeletedImages();
   }
 
   Future<String> getToken() async {

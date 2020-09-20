@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/sync/image/files_controller.dart';
 
 class AccountInfo extends StatelessWidget {
   @override
@@ -45,6 +48,26 @@ class AccountInfo extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        FutureBuilder(
+          future: FilesController.getStats(),
+          builder: (context, snapshot) {
+            return ListTile(
+              leading: Icon(Icons.image_outlined),
+              title: Text("Image upload capacity"),
+              subtitle: LinearProgressIndicator(
+                value: snapshot.hasData
+                    ? snapshot.data.used / snapshot.data.limit
+                    : null,
+                backgroundColor: Theme.of(context).accentColor.withOpacity(0.2),
+              ),
+              trailing: Text(
+                snapshot.hasData
+                    ? '${snapshot.data.used} of ${snapshot.data.limit}'
+                    : '-',
+              ),
+            );
+          },
         ),
         Divider(),
         ListTile(

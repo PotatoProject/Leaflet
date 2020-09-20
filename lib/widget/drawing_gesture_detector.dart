@@ -78,7 +78,8 @@ class MonoDragGestureDetector
   @override
   createNewPointerState(PointerDownEvent event) {
     events.add(event);
-    return _MonoDragPointerState(event.position, event.kind, onDisposeState: () {
+    return _MonoDragPointerState(event.position, event.kind,
+        onDisposeState: () {
       events.remove(event);
     });
   }
@@ -92,7 +93,8 @@ typedef OnDisposeState();
 class _MonoDragPointerState extends MultiDragPointerState {
   final OnDisposeState onDisposeState;
 
-  _MonoDragPointerState(Offset initialPosition, PointerDeviceKind kind, {this.onDisposeState})
+  _MonoDragPointerState(Offset initialPosition, PointerDeviceKind kind,
+      {this.onDisposeState})
       : super(initialPosition, kind);
 
   @override
