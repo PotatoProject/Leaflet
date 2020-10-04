@@ -27,19 +27,25 @@
     <string name="selection_bar.pin" comment="Pin to notifications shade">Przypnij</string>
     <string name="selection_bar.share">Udostępnij</string>
     <plurals name="notes_deleted">
+        <item quantity="zero">%s notatek zostało przeniesiono do kosza</item>
         <item quantity="one">%s notatka została przeniesiona do kosza</item>
+        <item quantity="two">%s notatki zostały przeniesione do kosza</item>
         <item quantity="few">%s notatek zostało przeniesionych do kosza</item>
         <item quantity="many">%s notatek zostało przeniesionych do kosza</item>
         <item quantity="other">%s notatek zostało przeniesionych do kosza</item>
     </plurals>
     <plurals name="notes_archived">
+        <item quantity="zero"Zarchiwizowano %s notatek</item>
         <item quantity="one">Zarchiwizowano %s notatkę</item>
+        <item quantity="two">Zarchiwizowano %s notatki</item>
         <item quantity="few">Zarchiwizowano %s notatek</item>
         <item quantity="many">Zarchiwizowano %s notatek</item>
         <item quantity="other">Zarchiwizowano %s notatek</item>
     </plurals>
     <plurals name="notes_restored">
+        <item quantity="zero">Przywrócono %s notatek</item>
         <item quantity="one">Przywrócono %s notatkę</item>
+        <item quantity="two">Przywrócono %s notatki</item>
         <item quantity="few">Przywrócono %s notatek</item>
         <item quantity="many">Przywrócono %s notatek</item>
         <item quantity="other">Przywrócono %s notatek</item>

@@ -3,7 +3,7 @@
     <string name="title">Ustawienia</string>
     <string name="personalization.title">Personalizacja</string>
     <string name="personalization.theme_mode">Tryb motywu</string>
-    <string name="personalization.theme_mode.system">System</string>
+    <string name="personalization.theme_mode.system">Systemowy</string>
     <string name="personalization.theme_mode.light">Jasny</string>
     <string name="personalization.theme_mode.dark">Ciemny</string>
     <string name="personalization.use_amoled">Użyj czarnego motywu</string>
@@ -13,7 +13,7 @@
     <string name="personalization.locale">Ustawienia regionalne aplikacji</string>
     <string name="privacy.title">Prywatność</string>
     <string name="privacy.use_master_pass">Używaj hasła głównego</string>
-    <string name="privacy.use_master_pass.disclaimer">Ostrzeżenie: jeśli kiedykolwiek zapomnisz hasła, nie możesz go zresetować, musisz odinstalować aplikację, dzięki czemu wszystkie notatki zostaną skasowane i zainstaluj je ponownie. Proszę zapisz to gdzieś miejsce.</string>
+    <string name="privacy.use_master_pass.disclaimer">Ostrzeżenie: jeśli kiedykolwiek zapomnisz hasła, nie możesz go zresetować, musisz odinstalować aplikację, dzięki czemu wszystkie notatki zostaną skasowane i zainstalować ją ponownie. Proszę zapisz je gdzieś.</string>
     <string name="privacy.modify_master_pass">Modyfikuj hasło główne</string>
     <string name="info.title">Informacje</string>
     <string name="info.about_app">O PotatoNotes</string>

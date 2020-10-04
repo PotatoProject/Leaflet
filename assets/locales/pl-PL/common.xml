@@ -33,13 +33,13 @@
     <string name="color.yellow">Żółty</string>
     <string name="color.green">Zielony</string>
     <string name="color.cyan">Błękitny</string>
-    <string name="color.light_blue">Jasnoniebieski</string>
+    <string name="color.light_blue">Jasno niebieski</string>
     <string name="color.blue">Niebieski</string>
     <string name="color.purple">Fioletowy</string>
     <string name="color.pink">Różowy</string>
     <string name="notification.default_title">Przypięte powiadomienie</string>
     <string name="notification.details_title">Przypięte powiadomienia</string>
-    <string name="notification.details_desc">Przypięte powiadomienia przez użytkownika</string>
+    <string name="notification.details_desc" >Przypięte powiadomienia użytkownika</string>
     <string name="tag.new">Nowa etykieta</string>
     <string name="tag.modify">Modyfikuj etykietę</string>
     <string name="tag.textbox_hint">Nazwa</string>

@@ -7,5 +7,5 @@
     <string name="basic_customization.title">Podstawowe dostosowywanie</string>
     <string name="welcome.catchphrase">Twoja nowa ulubiona aplikacja do notatek</string>
     <string name="finish.title">Wszystko gotowe!</string>
-    <string name="finish.last_words">Teraz jesteś gotowy, aby w pełni cieszyć się z PotatoNotes \nJeśli chcesz dostosować więcej nagłówków do ustawień w bocznej szufladzie, Zamiast tego, jeśli chcesz zarządzać kontem PotatoSync kliknij na awatar na górnym pasku.</string>
+    <string name="finish.last_words">Teraz jesteś gotowy, aby w pełni cieszyć się z PotatoNotes \nJeśli chcesz dostosować więcej, wejdź do ustawień w bocznej szufladzie, jeśli chcesz zarządzać kontem PotatoSync kliknij na awatar na górnym pasku.</string>
 </resources>
