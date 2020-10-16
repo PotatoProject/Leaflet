@@ -595,9 +595,7 @@ extension UriX on Uri {
     if (data != null) {
       return MemoryImage(data.contentAsBytes());
     } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
-      return CachedNetworkImageProvider(
-        () => toString(),
-      );
+      return CachedNetworkImageProvider(toString());
     } else {
       return FileImage(File(path));
     }

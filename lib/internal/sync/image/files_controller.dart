@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
 import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 
 class FilesController {

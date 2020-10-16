@@ -40,7 +40,6 @@ dependencies:
   package_info:
   url_launcher:
   cached_network_image:
-    git: https://github.com/broodroosterdev/flutter_cached_network_image.git
   path:
   easy_localization: ^2.3.2
   xml: ^4.2.0

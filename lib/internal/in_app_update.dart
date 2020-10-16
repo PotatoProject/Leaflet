@@ -12,7 +12,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 
 class InAppUpdater {
@@ -75,7 +74,7 @@ class InAppUpdater {
           builder: (context) => AlertDialog(
             content: Text("You're already on the latest app version"),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Close"),
                 onPressed: () => Navigator.pop(context),
               )
@@ -153,16 +152,14 @@ class InAppUpdater {
               ),
               buttonPadding: EdgeInsets.symmetric(horizontal: 16),
               actions: [
-                FlatButton(
+                TextButton(
                   child: Text("Not now".toUpperCase()),
                   onPressed: () => Navigator.pop(context, false),
-                  textColor: Utils.defaultAccent,
+                  style: ButtonStyle(),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text("Update".toUpperCase()),
                   onPressed: () => Navigator.pop(context, true),
-                  color: Utils.defaultAccent,
-                  textColor: Theme.of(context).dialogTheme.backgroundColor,
                 ),
               ],
             );
@@ -262,11 +259,10 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                       title: Text(
                         "Update ready to install",
                       ),
-                      trailing: FlatButton(
+                      trailing: TextButton(
                         onPressed: () async {
                           await FlutterDownloader.open(taskId: widget.taskId);
                         },
-                        padding: EdgeInsets.all(0),
                         child: Text("INSTALL"),
                       ),
                     );

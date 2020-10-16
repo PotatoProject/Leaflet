@@ -23,9 +23,5 @@ QueryExecutor constructDb({bool logStatements = false}) {
     });
     return executor;
   }
-  // if (Platform.isWindows) {
-  //   final file = File('db.sqlite');
-  //   return Database(VMDatabase(file, logStatements: logStatements));
-  // }
   return VmDatabase.memory(logStatements: logStatements);
 }

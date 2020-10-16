@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart' as dio;
 
 
 class ImgurController{

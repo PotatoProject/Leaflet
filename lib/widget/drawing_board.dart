@@ -34,7 +34,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
       String scheme = widget.uri.scheme;
 
       if (scheme.startsWith("http")) {
-        image = CachedNetworkImageProvider(() => widget.uri.toString());
+        image = CachedNetworkImageProvider(widget.uri.toString());
       } else {
         image = FileImage(File(widget.uri.path));
       }

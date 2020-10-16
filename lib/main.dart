@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -21,6 +22,7 @@ import 'package:quick_actions/quick_actions.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   if (DeviceInfo.isAndroid) {
     await FlutterDownloader.initialize(

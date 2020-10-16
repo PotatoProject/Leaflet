@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:image/image.dart';
 import 'package:loggy/loggy.dart';
@@ -15,7 +14,6 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/imgur_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart' as dio;
 
 import 'files_controller.dart';
 

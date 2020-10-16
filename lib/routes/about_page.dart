@@ -77,7 +77,7 @@ class AboutPage extends StatelessWidget {
   Widget contributorTile(BuildContext context, ContributorInfo info) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(() => info.avatarUrl),
+        backgroundImage: CachedNetworkImageProvider(info.avatarUrl),
       ),
       title: Text(info.name),
       subtitle: Text(info.role),
