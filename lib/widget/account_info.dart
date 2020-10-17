@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 
@@ -18,7 +17,7 @@ class AccountInfo extends StatelessWidget {
                 backgroundColor:
                     Theme.of(context).iconTheme.color.withOpacity(0.1),
                 child: Icon(
-                  MdiIcons.accountOutline,
+                  Icons.person_outlined,
                   size: 24,
                   color: Theme.of(context).iconTheme.color,
                 ),
@@ -49,7 +48,7 @@ class AccountInfo extends StatelessWidget {
         ),
         Divider(),
         ListTile(
-          leading: Icon(MdiIcons.logout),
+          leading: Icon(Icons.logout),
           title: Text("Logout"),
           onTap: () async {
             Navigator.pop(context);

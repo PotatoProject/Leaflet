@@ -5,7 +5,6 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
@@ -53,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   header: LocaleStrings.settingsPage.infoTitle,
                   children: <Widget>[
                     SettingsTile(
-                      icon: Icon(MdiIcons.informationOutline),
+                      icon: Icon(Icons.info_outline),
                       title: Text(LocaleStrings.settingsPage.infoAboutApp),
                       onTap: () => Utils.showSecondaryRoute(
                         context,
@@ -61,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     SettingsTile(
-                      icon: Icon(MdiIcons.update),
+                      icon: Icon(Icons.update_outlined),
                       title: Text("Check for app updates"),
                       onTap: () => InAppUpdater.checkForUpdate(
                         context,
@@ -127,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                       ),
                       SettingsTile(
-                        icon: Icon(MdiIcons.text),
+                        icon: Icon(Icons.text_snippet_outlined),
                         title: Text(LocaleStrings.settingsPage.debugLogLevel),
                         onTap: () {
                           showDropdownSheet(
@@ -175,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
           header: LocaleStrings.settingsPage.personalizationTitle,
           children: [
             SettingsTile(
-              icon: Icon(OMIcons.brightnessMedium),
+              icon: Icon(Icons.brightness_medium_outlined),
               title: Text(LocaleStrings.settingsPage.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
@@ -203,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseAmoled),
-              icon: Icon(OMIcons.brightness2),
+              icon: Icon(Icons.brightness_2_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile.withSwitch(
@@ -214,7 +213,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text(
                 LocaleStrings.settingsPage.personalizationUseCustomAccent,
               ),
-              icon: Icon(OMIcons.colorLens),
+              icon: Icon(Icons.color_lens_outlined),
               activeColor: Theme.of(context).accentColor,
               enabled: deviceInfo.canUseSystemAccent,
             ),
@@ -222,7 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text(
                 LocaleStrings.settingsPage.personalizationCustomAccent,
               ),
-              icon: Icon(OMIcons.colorize),
+              icon: Icon(Icons.colorize_outlined),
               enabled: DeviceInfo.isDesktopOrWeb ? true : prefs.useCustomAccent,
               trailing: AnimatedOpacity(
                 opacity:
@@ -261,7 +260,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
-              icon: Icon(MdiIcons.viewDashboardOutline),
+              icon: Icon(Icons.dashboard_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile(
@@ -353,7 +352,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
-              icon: Icon(OMIcons.vpnKey),
+              icon: Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settingsPage.privacyUseMasterPass),
               activeColor: Theme.of(context).accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
@@ -387,7 +386,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text(content),
               ),
               ListTile(
-                leading: Icon(MdiIcons.arrowRight),
+                leading: Icon(Icons.arrow_forward),
                 title: Text(buttonAction),
                 onTap: () {
                   Navigator.pop(context, true);

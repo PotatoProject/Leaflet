@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
@@ -140,7 +138,7 @@ class _NoteListPageState extends State<NoteListPage> {
       heroTag: "fabMenu",
       shape: StadiumBorder(),
       onTap: () => Utils.newNote(context),
-      child: Icon(OMIcons.edit),
+      child: Icon(Icons.edit_outlined),
     );
   }
 
@@ -236,7 +234,7 @@ class _NoteListPageState extends State<NoteListPage> {
           child: Builder(
             builder: (context) {
               return IconButton(
-                icon: Icon(MdiIcons.backupRestore),
+                icon: Icon(Icons.settings_backup_restore),
                 onPressed: () async {
                   List<Note> notes = await helper.listNotes(widget.noteKind);
                   bool result = await showDialog(
@@ -278,7 +276,7 @@ class _NoteListPageState extends State<NoteListPage> {
         Visibility(
           visible: widget.noteKind == ReturnMode.TAG,
           child: IconButton(
-            icon: Icon(MdiIcons.tagRemoveOutline),
+            icon: Icon(Icons.label_off_outlined),
             onPressed: () async {
               bool result = await showDialog(
                     context: context,
@@ -314,7 +312,7 @@ class _NoteListPageState extends State<NoteListPage> {
         Visibility(
           visible: widget.noteKind == ReturnMode.TAG,
           child: IconButton(
-            icon: Icon(MdiIcons.pencilOutline),
+            icon: Icon(Icons.edit_outlined),
             onPressed: () {
               Utils.showNotesModalBottomSheet(
                 context: context,

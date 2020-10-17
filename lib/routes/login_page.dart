@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
@@ -101,7 +100,9 @@ class _LoginPageState extends State<LoginPage> {
           labelText: "Password",
           suffixIcon: IconButton(
             icon: Icon(
-              obscurePass ? MdiIcons.eyeOffOutline : MdiIcons.eyeOutline,
+              obscurePass
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
             ),
             onPressed: () => setState(() => obscurePass = !obscurePass),
           ),
@@ -172,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                     animation: primaryAnimation,
                     secondaryAnimation: secondaryAnimation,
                     child: child,
+                    fillColor: Colors.transparent,
                   );
                 },
                 child: ConstrainedBox(

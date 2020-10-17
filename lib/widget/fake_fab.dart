@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
@@ -99,7 +97,7 @@ class _FakeFabState extends State<FakeFab> {
       ListTile(
         tileColor: Theme.of(context).accentColor,
         leading: Icon(
-          OMIcons.edit,
+          Icons.edit_outlined,
           color: Theme.of(context).cardColor,
         ),
         title: Text(
@@ -116,7 +114,7 @@ class _FakeFabState extends State<FakeFab> {
         },
       ),
       ListTile(
-        leading: AccentedIcon(MdiIcons.checkboxMarkedOutline),
+        leading: AccentedIcon(Icons.check_box_outlined),
         title: Text(
           LocaleStrings.common.newList,
           overflow: TextOverflow.ellipsis,
@@ -128,7 +126,7 @@ class _FakeFabState extends State<FakeFab> {
         },
       ),
       ListTile(
-        leading: AccentedIcon(OMIcons.image),
+        leading: AccentedIcon(Icons.image_outlined),
         title: Text(
           LocaleStrings.common.newImage,
           overflow: TextOverflow.ellipsis,
@@ -137,7 +135,7 @@ class _FakeFabState extends State<FakeFab> {
             Utils.newImage(context, ImageSource.gallery, shouldPop: true),
       ),
       ListTile(
-        leading: AccentedIcon(OMIcons.brush),
+        leading: AccentedIcon(Icons.brush_outlined),
         title: Text(
           LocaleStrings.common.newDrawing,
           overflow: TextOverflow.ellipsis,

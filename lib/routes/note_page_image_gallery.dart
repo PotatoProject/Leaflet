@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
@@ -78,7 +77,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         ),
         actions: [
           IconButton(
-            icon: Icon(MdiIcons.pencilOutline),
+            icon: Icon(Icons.edit_outlined),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
             onPressed: !kIsWeb

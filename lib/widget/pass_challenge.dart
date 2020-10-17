@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 
@@ -70,8 +69,9 @@ class _PassChallengeState extends State<PassChallenge> {
               onChanged: (_) => setState(() => status = null),
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  icon: Icon(
-                      showPass ? MdiIcons.eyeOutline : MdiIcons.eyeOffOutline),
+                  icon: Icon(showPass
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined),
                   onPressed: () => setState(() => showPass = !showPass),
                 ),
                 errorText: status,

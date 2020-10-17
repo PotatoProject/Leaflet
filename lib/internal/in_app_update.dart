@@ -8,7 +8,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -244,7 +243,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                             Theme.of(context).accentColor.withOpacity(0.2),
                       ),
                       trailing: IconButton(
-                        icon: Icon(MdiIcons.close),
+                        icon: Icon(Icons.close),
                         onPressed: () async {
                           await FlutterDownloader.cancel(taskId: widget.taskId);
                           Navigator.pop(context);
@@ -254,7 +253,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                   case 3:
                     return ListTile(
                       leading: Icon(
-                        MdiIcons.check,
+                        Icons.check,
                       ),
                       title: Text(
                         "Update ready to install",
@@ -279,7 +278,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(MdiIcons.restore),
+                            icon: Icon(Icons.settings_backup_restore),
                             onPressed: () async {
                               progress = null;
                               status = DownloadTaskStatus.enqueued;
@@ -289,7 +288,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(MdiIcons.close),
+                            icon: Icon(Icons.close),
                             onPressed: () async {
                               await FlutterDownloader.cancel(
                                   taskId: widget.taskId);

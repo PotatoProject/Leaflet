@@ -63,7 +63,7 @@ android {
     flavorDimensions "app"
     productFlavors {
         def debugSigning = signingConfigs.debug
-        def releaseSigning = signingConfigs.release
+        def releaseSigning = signingConfigs.debug
         
         dev {
             signingConfig debugSigning

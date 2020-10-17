@@ -12,7 +12,6 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -124,7 +123,7 @@ class _DrawPageState extends State<DrawPage>
         ),
         actions: [
           IconButton(
-            icon: Icon(MdiIcons.undo),
+            icon: Icon(Icons.undo),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.undo,
             onPressed: objects.isNotEmpty
@@ -136,7 +135,7 @@ class _DrawPageState extends State<DrawPage>
                 : null,
           ),
           IconButton(
-            icon: Icon(MdiIcons.redo),
+            icon: Icon(Icons.redo),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.redo,
             onPressed: actionQueueIndex < backupObjects.length - 1
@@ -148,7 +147,7 @@ class _DrawPageState extends State<DrawPage>
                 : null,
           ),
           IconButton(
-            icon: Icon(MdiIcons.contentSaveOutline),
+            icon: Icon(Icons.save_outlined),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.save,
             onPressed: !saved
@@ -278,6 +277,7 @@ class _DrawPageState extends State<DrawPage>
                                 : availableColors[index].label;
 
                             return IconButton(
+                              visualDensity: VisualDensity.standard,
                               icon: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(16),
@@ -308,7 +308,7 @@ class _DrawPageState extends State<DrawPage>
               elevation: 0,
               leftItems: <Widget>[
                 IconButton(
-                  icon: Icon(MdiIcons.brush),
+                  icon: Icon(Icons.brush_outlined),
                   color: currentTool == DrawTool.PEN
                       ? Theme.of(context).accentColor
                       : null,
@@ -339,7 +339,7 @@ class _DrawPageState extends State<DrawPage>
               ],
               rightItems: <Widget>[
                 IconButton(
-                  icon: Icon(OMIcons.colorLens),
+                  icon: Icon(Icons.color_lens_outlined),
                   padding: EdgeInsets.all(0),
                   tooltip: LocaleStrings.drawPage.toolsColorPicker,
                   onPressed: () async {

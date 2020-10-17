@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -19,7 +18,6 @@ import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
-import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:recase/recase.dart';
@@ -32,17 +30,16 @@ const double kCardBorderRadius = 6;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
-
-  static deleteNoteSafely(Note note){
+  static deleteNoteSafely(Note note) {
     ImageService.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
 
-  static handleNotePagePop(Note note){
+  static handleNotePagePop(Note note) {
     ImageService.handleDeletes();
     helper.listNotes(ReturnMode.LOCAL).then((notes) => {
-      SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
-    });
+          SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
+        });
   }
 
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -106,12 +103,12 @@ class Utils {
   static List<ListTilePopupMenuItem<String>> popupItems(BuildContext context) {
     return [
       ListTilePopupMenuItem(
-        leading: Icon(MdiIcons.pinOutline),
+        leading: Icon(Icons.push_pin_outlined),
         title: Text(LocaleStrings.mainPage.selectionBarPin),
         value: 'pin',
       ),
       ListTilePopupMenuItem(
-        leading: Icon(MdiIcons.shareVariant),
+        leading: Icon(Icons.share_outlined),
         title: Text(LocaleStrings.mainPage.selectionBarShare),
         value: 'share',
       ),
@@ -217,29 +214,6 @@ class Utils {
         return LocaleStrings.mainPage.titleAll;
     }
   }
-
-  static List<DrawerListItem> getDestinations(ReturnMode mode) => [
-        DrawerListItem(
-          icon: Icon(MdiIcons.homeVariantOutline),
-          selectedIcon: Icon(MdiIcons.homeVariant),
-          label: Utils.getNameFromMode(ReturnMode.NORMAL),
-        ),
-        DrawerListItem(
-          icon: Icon(MdiIcons.archiveOutline),
-          selectedIcon: Icon(MdiIcons.archive),
-          label: Utils.getNameFromMode(ReturnMode.ARCHIVE),
-        ),
-        DrawerListItem(
-          icon: Icon(MdiIcons.trashCanOutline),
-          selectedIcon: Icon(MdiIcons.trashCan),
-          label: Utils.getNameFromMode(ReturnMode.TRASH),
-        ),
-        DrawerListItem(
-          icon: Icon(MdiIcons.heartMultipleOutline),
-          selectedIcon: Icon(MdiIcons.heartMultiple),
-          label: Utils.getNameFromMode(ReturnMode.FAVOURITES),
-        ),
-      ];
 
   static get defaultAccent => Color(0xFF66BB6A);
 

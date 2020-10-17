@@ -1,13 +1,10 @@
 name: potato_notes
-description: Official POSP note app
+description: Official POSP notes app
+publish_to: 'none'
 version: 2.0.0-beta1+16
 
 environment:
-  sdk: '>=2.9.0 <3.0.0'
-  # The example interacts with build scripts on the Flutter side that are not
-  # yet stable, so it requires a very recent version of Flutter.
-  # This version will increase regularly as the build scripts change.
-  flutter: '>=1.5.9-pre.270'
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -18,8 +15,6 @@ dependencies:
   json_serializable:
   sqflite:
   path_provider:
-  streams_channel:
-  outline_material_icons:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:
@@ -31,13 +26,13 @@ dependencies:
   jwt_decode:
   intl:
   flutter_local_notifications:
-  share:
+  share_plus:
   animations:
   material_design_icons_flutter:
   path_drawing:
   quick_actions:
   image_picker_for_web:
-  package_info:
+  package_info_plus:
   url_launcher:
   cached_network_image:
   path:
@@ -53,7 +48,6 @@ dependencies:
   image:
   blurhash_dart:
   flutter_blurhash:
-  octo_image:
   mobx:
   flutter_mobx:
   mobx_codegen:
@@ -94,19 +88,15 @@ flutter:
         - asset: fonts/CustomIcons.ttf
     - family: Manrope
       fonts:
-        - asset: fonts/Manrope-ExtraLight.otf
-          weight: 100
         - asset: fonts/Manrope-Light.otf
-          weight: 200
-        - asset: fonts/Manrope-Regular.otf
           weight: 300
-        - asset: fonts/Manrope-Medium.otf
+        - asset: fonts/Manrope-Regular.otf
           weight: 400
-        - asset: fonts/Manrope-SemiBold.otf
+        - asset: fonts/Manrope-Medium.otf
           weight: 500
-        - asset: fonts/Manrope-Bold.otf
+        - asset: fonts/Manrope-SemiBold.otf
           weight: 600
-        - asset: fonts/Manrope-ExtraBold.otf
+        - asset: fonts/Manrope-Bold.otf
           weight: 700
     - family:  ValeraRound
       fonts:

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -48,7 +47,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
         Visibility(
           visible: state != null,
           child: IconButton(
-            icon: Icon(OMIcons.person),
+            icon: Icon(Icons.person_outlined),
             tooltip: LocaleStrings.mainPage.account,
             onPressed: () async {
               bool loggedIn = prefs.accessToken != null;

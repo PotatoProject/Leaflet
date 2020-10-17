@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(potato_notes LANGUAGES CXX)
+project(Leaflet LANGUAGES CXX)
 
 set(BINARY_NAME "leaflet")
 
@@ -92,4 +92,7 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 # Install the AOT library on non-Debug builds only.
 install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
+  COMPONENT Runtime)
+
+install(FILES "libs/sqlite3.dll" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
   COMPONENT Runtime)

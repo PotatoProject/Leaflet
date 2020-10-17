@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
@@ -40,7 +39,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(OMIcons.colorLens),
+          leading: Icon(Icons.color_lens_outlined),
           title: Text(LocaleStrings.common.colorFilter),
           trailing: Icon(
             Icons.brightness_1,
@@ -70,7 +69,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(OMIcons.dateRange),
+          leading: Icon(Icons.date_range_outlined),
           title: Text(LocaleStrings.common.dateFilter),
           subtitle: widget.query.date != null
               ? Text(DateFormat("EEEE d MMM yyyy").format(widget.query.date) +

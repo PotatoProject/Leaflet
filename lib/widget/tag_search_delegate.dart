@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
@@ -39,7 +38,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             filteredTags.length,
             (index) => CheckboxListTile(
               secondary: Icon(
-                MdiIcons.tagOutline,
+                Icons.label_outlined,
                 color: filteredTags[index].color != 0
                     ? Color(
                         NoteColors.colorList[filteredTags[index].color].color)

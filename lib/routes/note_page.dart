@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -188,15 +186,13 @@ class _NotePageState extends State<NotePage> {
           actions: <Widget>[
             ...getToolbarButtons(!deviceInfo.isLandscape),
             IconButton(
-              icon: Icon(OMIcons.removeRedEye),
+              icon: Icon(Icons.remove_red_eye_outlined),
               padding: EdgeInsets.all(0),
               tooltip: LocaleStrings.notePage.privacyTitle,
               onPressed: showPrivacyOptionSheet,
             ),
             IconButton(
-              icon: Icon(
-                note.starred ? MdiIcons.heart : MdiIcons.heartOutline,
-              ),
+              icon: Icon(note.starred ? Icons.favorite : Icons.favorite_border),
               padding: EdgeInsets.all(0),
               tooltip: note.starred
                   ? LocaleStrings.mainPage.selectionBarRmFav
@@ -513,7 +509,7 @@ class _NotePageState extends State<NotePage> {
     } else {
       return [
         IconButton(
-          icon: Icon(MdiIcons.tagMultipleOutline),
+          icon: Icon(Icons.local_offer_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarTags,
           onPressed: () async {
@@ -528,7 +524,7 @@ class _NotePageState extends State<NotePage> {
           },
         ),
         IconButton(
-          icon: Icon(OMIcons.colorLens),
+          icon: Icon(Icons.color_lens_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showNotesModalBottomSheet(
@@ -596,7 +592,7 @@ class _NotePageState extends State<NotePage> {
                 notifyNoteChanged();
               },
               activeColor: Theme.of(context).accentColor,
-              secondary: Icon(OMIcons.removeRedEye),
+              secondary: Icon(Icons.remove_red_eye_outlined),
               title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
             SwitchListTile(
@@ -614,7 +610,7 @@ class _NotePageState extends State<NotePage> {
                     }
                   : null,
               activeColor: Theme.of(context).accentColor,
-              secondary: Icon(OMIcons.lock),
+              secondary: Icon(Icons.lock_outlined),
               title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
                   ? Text(
@@ -645,7 +641,7 @@ class _NotePageState extends State<NotePage> {
                       }
                     : null,
                 activeColor: Theme.of(context).accentColor,
-                secondary: Icon(OMIcons.fingerprint),
+                secondary: Icon(Icons.fingerprint_outlined),
                 title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),
             ),
@@ -674,7 +670,7 @@ class _NotePageState extends State<NotePage> {
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.photo),
+            leading: Icon(Icons.photo_outlined),
             title: Text(LocaleStrings.notePage.imageGallery),
             onTap: () async {
               PickedFile image =
@@ -686,7 +682,7 @@ class _NotePageState extends State<NotePage> {
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.camera),
+            leading: Icon(Icons.camera_outlined),
             title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
               PickedFile image =
@@ -699,7 +695,7 @@ class _NotePageState extends State<NotePage> {
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.brush),
+            leading: Icon(Icons.brush_outlined),
             title: Text(LocaleStrings.notePage.drawing),
             onTap: () {
               Navigator.pop(context);

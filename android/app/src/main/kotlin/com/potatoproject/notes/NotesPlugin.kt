@@ -6,8 +6,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Handler
-import app.loup.streams_channel.StreamsChannel
-import app.loup.streams_channel.StreamsChannel.StreamHandlerFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.EventChannel

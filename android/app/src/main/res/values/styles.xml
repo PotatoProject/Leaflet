@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LaunchTheme" parent="@android:style/Theme.AppCompat.NoTitleBar">
+    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
 
         <item name="android:windowNoTitle">true</item>
@@ -9,7 +9,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="NormalTheme" parent="@android:style/Theme.AppCompat.NoTitleBar">
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
 
         <item name="android:windowNoTitle">true</item>

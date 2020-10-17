@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -13,7 +11,7 @@ import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Note> selectionList;
@@ -63,7 +61,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       buttons.add(
         IconButton(
           icon: Icon(
-            anyStarred ? MdiIcons.heart : MdiIcons.heartOutline,
+            anyStarred ? Icons.favorite : Icons.favorite_border,
           ),
           tooltip: anyStarred
               ? LocaleStrings.mainPage.selectionBarRmFav
@@ -90,7 +88,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     if (currentMode == ReturnMode.NORMAL || currentMode == ReturnMode.TAG) {
       buttons.addAll([
         IconButton(
-          icon: Icon(OMIcons.colorLens),
+          icon: Icon(Icons.color_lens_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.mainPage.selectionBarChangeColor,
           onPressed: () async {
@@ -130,7 +128,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
     if (currentMode != ReturnMode.ARCHIVE) {
       buttons.add(IconButton(
-        icon: Icon(OMIcons.archive),
+        icon: Icon(Icons.archive_outlined),
         padding: EdgeInsets.all(0),
         tooltip: LocaleStrings.mainPage.selectionBarArchive,
         onPressed: () async {
