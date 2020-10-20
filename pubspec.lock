@@ -232,6 +232,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1"
+  file_chooser:
+    dependency: "direct main"
+    description:
+      path: "plugins/file_chooser"
+      ref: HEAD
+      resolved-ref: "8ea9f1ce79f04e44bd6392f4155a014b0a7eb6e8"
+      url: "git://github.com/google/flutter-desktop-embedding.git"
+    source: git
+    version: "0.2.0"
   fixnum:
     dependency: transitive
     description:
@@ -312,6 +321,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.4"
+  flutter_staggered_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_animations
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:

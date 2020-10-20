@@ -47,13 +47,13 @@ class _NoteViewState extends State<NoteView> {
     Color borderColor;
 
     if (widget.selected) {
-      _elevation = 10;
-    } else if (_highlighted) {
       _elevation = 8;
-    } else if (_hovered) {
+    } else if (_highlighted) {
       _elevation = 6;
-    } else if (_focused) {
+    } else if (_hovered) {
       _elevation = 4;
+    } else if (_focused) {
+      _elevation = 3;
     } else {
       _elevation = 2;
     }
@@ -77,7 +77,7 @@ class _NoteViewState extends State<NoteView> {
       ),
       clipBehavior: Clip.antiAlias,
       elevation: _elevation,
-      shadowColor: Colors.black.withOpacity(0.5),
+      shadowColor: Colors.black.withOpacity(0.4),
       margin: kCardPadding,
       child: InkWell(
         onTap: widget.onTap,

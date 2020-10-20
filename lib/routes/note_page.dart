@@ -8,6 +8,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
@@ -51,8 +52,6 @@ class _NotePageState extends State<NotePage> {
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
-
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -181,7 +180,6 @@ class _NotePageState extends State<NotePage> {
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
-        key: scaffoldKey,
         appBar: AppBar(
           actions: <Widget>[
             ...getToolbarButtons(!deviceInfo.isLandscape),
@@ -200,8 +198,8 @@ class _NotePageState extends State<NotePage> {
               onPressed: () {
                 setState(() => note = note.copyWith(starred: !note.starred));
                 notifyNoteChanged();
-                scaffoldKey.currentState.removeCurrentSnackBar();
-                scaffoldKey.currentState.showSnackBar(
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
                       note.starred
@@ -468,8 +466,7 @@ class _NotePageState extends State<NotePage> {
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 56,
                 ),
-                width: MediaQuery.of(context).size.height -
-                    (MediaQuery.of(context).padding.top + 56),
+                width: 360,
                 child: imagesWidget,
               ),
             ),
@@ -673,8 +670,8 @@ class _NotePageState extends State<NotePage> {
             leading: Icon(Icons.photo_outlined),
             title: Text(LocaleStrings.notePage.imageGallery),
             onTap: () async {
-              PickedFile image =
-                  await ImagePicker().getImage(source: ImageSource.gallery);
+              final image = await Utils.pickImage();
+
               if (image != null) {
                 Navigator.pop(context);
                 handleImageAdd(image.path);
@@ -683,6 +680,7 @@ class _NotePageState extends State<NotePage> {
           ),
           ListTile(
             leading: Icon(Icons.camera_outlined),
+            enabled: !DeviceInfo.isDesktop,
             title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
               PickedFile image =

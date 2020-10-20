@@ -272,9 +272,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   scrollable: true,
                   itemBuilder: (context, index) {
                     Locale locale = context.supportedLocales[index];
-                    String localizedName = firstLetterToUppercase(
-                      LocaleNames.of(context).nameOf(locale.languageCode),
-                    );
                     String nativeName = firstLetterToUppercase(
                       LocaleNamesLocalizationsDelegate
                           .nativeLocaleNames[locale.languageCode],
@@ -282,8 +279,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     bool selected = context.locale == locale;
 
                     return dropDownTile(
-                      title: Text(localizedName),
-                      subtitle: Text(nativeName),
+                      title: Text(nativeName),
                       selected: selected,
                       onTap: () {
                         context.locale = locale;

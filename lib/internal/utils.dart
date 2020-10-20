@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_chooser/file_chooser.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -10,6 +11,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
@@ -235,8 +237,9 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.hideCurrentSnackBar(context);
     BasePage.of(context)?.showSnackBar(
+      context,
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -265,8 +268,9 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar();
+    BasePage.of(context)?.hideCurrentSnackBar(context);
     BasePage.of(context)?.showSnackBar(
+      context,
       SnackBar(
         content: Text(reason),
         action: SnackBarAction(
@@ -389,7 +393,7 @@ class Utils {
   static void newImage(BuildContext context, ImageSource source,
       {bool shouldPop = false}) async {
     Note note = NoteX.emptyNote;
-    PickedFile image = await ImagePicker().getImage(source: source);
+    File image = await pickImage();
 
     if (image != null) {
       SavedImage savedImage =
@@ -426,6 +430,38 @@ class Utils {
         openWithDrawing: true,
       ),
     );
+  }
+
+  static Future<File> pickImage() async {
+    String path;
+
+    try {
+      if (DeviceInfo.isDesktop) {
+        final image = await showOpenPanel(
+          canSelectDirectories: false,
+          allowsMultipleSelection: false,
+          allowedFileTypes: [
+            FileTypeFilterGroup(
+              label: 'images',
+              fileExtensions: [
+                'png',
+                'jpg',
+                'jpeg',
+                'bmp',
+              ],
+            ),
+          ],
+        );
+
+        path = image.paths[0];
+      } else {
+        final image = await ImagePicker().getImage(source: ImageSource.gallery);
+
+        path = image.path;
+      }
+    } catch (e) {}
+
+    return path != null ? File(path) : null;
   }
 
   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -57,52 +56,50 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
-                return Observer(builder: (_) {
-                  SavedImage savedImage = widget.images[index];
-                  ImageProvider image;
-                  if (savedImage.existsLocally) {
-                    image = FileImage(File(savedImage.path));
-                  } else {
-                    image = BlurHashImage(savedImage.blurHash);
-                  }
-                  return Stack(
-                    children: [
-                      SizedBox.expand(
-                        child: Image(
-                            image: image,
-                            fit: BoxFit.cover,
-                            gaplessPlayback: true),
-                      ),
-                      SizedBox.expand(
-                        child: Visibility(
-                          visible: (index == widget.images.length - 1 &&
-                                  widget.numPlusImages > 0) &&
-                              widget.showPlusImages,
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Colors.black.withOpacity(0.4),
-                            child: Text(
-                              "+" + widget.numPlusImages.toString(),
-                              style: TextStyle(
-                                fontSize: widget.useSmallFont ? 24.0 : 36.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
+                SavedImage savedImage = widget.images[index];
+                ImageProvider image;
+                if (savedImage.existsLocally) {
+                  image = FileImage(File(savedImage.path));
+                } else {
+                  image = BlurHashImage(savedImage.blurHash);
+                }
+                return Stack(
+                  children: [
+                    SizedBox.expand(
+                      child: Image(
+                          image: image,
+                          fit: BoxFit.cover,
+                          gaplessPlayback: true),
+                    ),
+                    SizedBox.expand(
+                      child: Visibility(
+                        visible: (index == widget.images.length - 1 &&
+                                widget.numPlusImages > 0) &&
+                            widget.showPlusImages,
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.black.withOpacity(0.4),
+                          child: Text(
+                            "+" + widget.numPlusImages.toString(),
+                            style: TextStyle(
+                              fontSize: widget.useSmallFont ? 24.0 : 36.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox.expand(
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: InkWell(
-                            onTap: () => widget.onImageTap(index),
-                          ),
+                    ),
+                    SizedBox.expand(
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          onTap: () => widget.onImageTap(index),
                         ),
                       ),
-                    ],
-                  );
-                });
+                    ),
+                  ],
+                );
                 //ImageProvider image;
                 /*String scheme = widget.images[index].uri.scheme;
 

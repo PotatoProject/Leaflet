@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
@@ -119,10 +118,7 @@ class PotatoNotes extends StatelessWidget {
           theme: themes.light,
           darkTheme: prefs.useAmoled ? themes.black : themes.dark,
           supportedLocales: context.supportedLocales,
-          localizationsDelegates: [
-            ...context.localizationDelegates,
-            LocaleNamesLocalizationsDelegate(),
-          ],
+          localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
           builder: (context, child) {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path/path.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
@@ -19,7 +21,8 @@ class SavedImage {
   bool uploaded = false;
 
   @observable
-  get existsLocally => prefs.downloadedImages.contains(hash);
+  bool get existsLocally =>
+      Directory(join(appInfo.tempDirectory.path, "$hash.jpg")).existsSync();
   get path => appInfo.tempDirectory.path + "/$hash.jpg";
 
   SavedImage(

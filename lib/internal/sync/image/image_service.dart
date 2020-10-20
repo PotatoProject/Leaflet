@@ -31,7 +31,8 @@ class ImageService {
         addToDownloaded(savedImage.hash);
         break;
       case StorageLocation.SYNC:
-        String url = await FilesController.getDownloadUrlFromSync(savedImage.hash);
+        String url =
+            await FilesController.getDownloadUrlFromSync(savedImage.hash);
         await downloadImageToCache(url, savedImage);
         addToDownloaded(savedImage.hash);
         break;
@@ -45,9 +46,10 @@ class ImageService {
     Response response = await http.get(url);
     Loggy.v(
         message:
-        "(${savedImage.hash} downloadImage) Server responded with (${response.statusCode}): ${response.contentLength}");
+            "(${savedImage.hash} downloadImage) Server responded with (${response.statusCode}): ${response.contentLength}");
     if (response.statusCode == 200) {
       File file = new File(path);
+      await file.create();
       file.writeAsBytesSync(response.bodyBytes);
       return;
     } else if (response.statusCode == 404) {
@@ -59,10 +61,10 @@ class ImageService {
   }
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
-    for(Note note in changedNotes){
-      if(note.images.length > 0){
-        for(SavedImage image in note.images){
-          if(!image.existsLocally){
+    for (Note note in changedNotes) {
+      if (note.images.length > 0) {
+        for (SavedImage image in note.images) {
+          if (!image.existsLocally) {
             downloadImage(image);
           }
         }
@@ -86,9 +88,9 @@ class ImageService {
     return true;
   }
 
-  static void handleUpload(Note note){
-    for(SavedImage image in note.images){
-      if(image.existsLocally && !image.uploaded){
+  static void handleUpload(Note note) {
+    for (SavedImage image in note.images) {
+      if (image.existsLocally && !image.uploaded) {
         uploadImage(image).then((_) {
           image.uploaded = true;
           helper.saveNote(note.markChanged());
@@ -130,7 +132,8 @@ class ImageService {
     Uint8List rawBytes = await file.readAsBytes();
     savedImage.hash = await _generateImageHash(rawBytes);
     Image compressedImage = await _compressImage(rawBytes, savedImage);
-    String blurHash = _generateBlurHash(await _compressForBlur(compressedImage, savedImage));
+    String blurHash =
+        _generateBlurHash(await _compressForBlur(compressedImage, savedImage));
     savedImage.blurHash = blurHash;
     File imageFile = await _saveImage(compressedImage, savedImage);
     savedImage.uri = imageFile.uri;
@@ -180,49 +183,48 @@ class ImageService {
     return resized;
   }
 
-
-
   static Future<File> _saveImage(Image image, SavedImage savedImage) async {
     File imageFile = File(savedImage.path);
     await imageFile.writeAsBytes(encodeJpg(image, quality: JPEG_QUALITY));
     return imageFile;
   }
 
-  static addToDownloaded(String hash){
+  static void addToDownloaded(String hash) {
     List<String> downloadedImages = prefs.downloadedImages;
     downloadedImages.add(hash);
     prefs.downloadedImages = downloadedImages;
   }
 
-  static addToDeleted(String hash){
+  static void addToDeleted(String hash) {
     List<String> deletedImages = prefs.deletedImages;
     deletedImages.add(hash);
     prefs.deletedImages = deletedImages;
   }
 
-  static removeFromDeleted(String hash){
+  static void removeFromDeleted(String hash) {
     List<String> deletedImages = prefs.deletedImages;
     deletedImages.remove(hash);
     prefs.deletedImages = deletedImages;
   }
 
-  static deleteImage(SavedImage image) {
-    if(image.uploaded == true){
+  static void deleteImage(SavedImage image) {
+    if (image.uploaded == true) {
       helper.listNotes(ReturnMode.LOCAL).then((notes) {
         var images = List<SavedImage>();
-        for(var note in notes){
+        for (var note in notes) {
           images.addAll(note.images);
         }
-        if(images.where((otherImage) => otherImage.id != image.id).length > 0){
+        if (images.where((otherImage) => otherImage.id != image.id).length >
+            0) {
           return;
         } else {
-          if(image.storageLocation == StorageLocation.SYNC) {
+          if (image.storageLocation == StorageLocation.SYNC) {
             addToDeleted(image.hash);
           }
-          if(image.existsLocally){
-            try{
+          if (image.existsLocally) {
+            try {
               File(image.path).deleteSync();
-            } catch (e){
+            } catch (e) {
               Loggy.e(message: "Could not remove local file ${e.toString()}");
             }
           }
@@ -232,15 +234,15 @@ class ImageService {
   }
 
   static Future<bool> handleDeletes() async {
-    for(String hash in prefs.deletedImages){
-        await FilesController.deleteImage(hash);
+    for (String hash in prefs.deletedImages) {
+      await FilesController.deleteImage(hash);
     }
     prefs.deletedImages = [];
     return true;
   }
 
   static handleNoteDeletion(Note note) {
-    for(SavedImage image in note.images){
+    for (SavedImage image in note.images) {
       deleteImage(image);
     }
   }

@@ -16,6 +16,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/routes/setup/setup_page.dart';
 import 'package:potato_notes/widget/base_page_navigation_bar.dart';
+import 'package:potato_notes/widget/constrained_width_appbar.dart';
 import 'package:potato_notes/widget/note_search_delegate.dart';
 
 class BasePage extends StatefulWidget {
@@ -67,10 +68,13 @@ class _BasePageState extends State<BasePage> {
   void setAppBar(Widget appBar) => WidgetsBinding.instance.addPostFrameCallback(
         (_) => setState(() => _appBar = appBar),
       );
-  void hideCurrentSnackBar() => _scaffoldKey.currentState.hideCurrentSnackBar();
+  void hideCurrentSnackBar(BuildContext context) =>
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
-          SnackBar snackBar) =>
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+    BuildContext context,
+    SnackBar snackBar,
+  ) =>
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
   @override
   void initState() {
@@ -129,7 +133,7 @@ class _BasePageState extends State<BasePage> {
               Expanded(
                 child: Scaffold(
                   key: _scaffoldKey,
-                  appBar: _appBar,
+                  appBar: ConstrainedWidthAppbar(child: _appBar),
                   extendBodyBehindAppBar: true,
                   body: PageTransitionSwitcher(
                     child: _pages.get(_currentPage),

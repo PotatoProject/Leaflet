@@ -16,6 +16,14 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
     return false;
   }
 
+  static bool get isDesktop {
+    if (kIsWeb) return false;
+
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) return true;
+
+    return false;
+  }
+
   static bool get isAndroid {
     if (kIsWeb) return false;
 

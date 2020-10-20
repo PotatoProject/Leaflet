@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:potato_notes/internal/providers.dart';
+
 class BottomSheetBase extends StatelessWidget {
   final Widget child;
   final Color backgroundColor;
@@ -33,7 +35,7 @@ class BottomSheetBase extends StatelessWidget {
             right: padding.isNegative ? 0 : padding,
           ),
           constraints: BoxConstraints(
-            maxHeight: 600,
+            maxHeight: deviceInfo.isLandscape ? 600 : double.infinity,
           ),
           child: GestureDetector(
             onTapDown: (_) {},

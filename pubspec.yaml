@@ -51,6 +51,7 @@ dependencies:
   mobx:
   flutter_mobx:
   mobx_codegen:
+  flutter_staggered_animations:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -58,6 +59,10 @@ dependencies:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
+  file_chooser:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/file_chooser
 
 dev_dependencies:
   moor_generator:

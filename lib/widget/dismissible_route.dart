@@ -21,10 +21,10 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
 
   @override
   Duration get transitionDuration =>
-      Duration(milliseconds: pushImmediate ? 0 : 300);
+      Duration(milliseconds: pushImmediate ? 0 : 250);
 
   @override
-  Duration get reverseTransitionDuration => Duration(milliseconds: 250);
+  Duration get reverseTransitionDuration => Duration(milliseconds: 200);
 
   @override
   bool get opaque => false;

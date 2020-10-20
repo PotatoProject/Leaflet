@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -65,71 +66,98 @@ class _NoteListPageState extends State<NoteListPage> {
             title: Text(Utils.getNameFromMode(widget.noteKind)),
           )) as PreferredSizeWidget;
 
-    return DependentScaffold(
-      appBar: appBar,
-      body: StreamBuilder<List<Note>>(
-        stream: helper.noteStream(widget.noteKind),
-        initialData: [],
-        builder: (context, snapshot) {
-          Widget child;
-          List<Note> notes = widget.noteKind == ReturnMode.TAG
-              ? snapshot.data
-                  .where(
-                    (note) =>
-                        note.tags.contains(prefs.tags[widget.tagIndex].id) &&
-                        !note.archived &&
-                        !note.deleted,
-                  )
-                  .toList()
-              : snapshot.data ?? [];
+    return AnimationLimiter(
+      child: DependentScaffold(
+        appBar: appBar,
+        body: StreamBuilder<List<Note>>(
+          stream: helper.noteStream(widget.noteKind),
+          initialData: [],
+          builder: (context, snapshot) {
+            Widget child;
+            List<Note> notes = widget.noteKind == ReturnMode.TAG
+                ? snapshot.data
+                    .where(
+                      (note) =>
+                          note.tags.contains(prefs.tags[widget.tagIndex].id) &&
+                          !note.archived &&
+                          !note.deleted,
+                    )
+                    .toList()
+                : snapshot.data ?? [];
 
-          if (notes.isNotEmpty) {
-            if (prefs.useGrid) {
-              child = StaggeredGridView.countBuilder(
-                crossAxisCount: deviceInfo.uiSizeFactor,
-                itemBuilder: (context, index) => commonNote(notes[index]),
-                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                itemCount: notes.length,
-                controller: scrollController,
-                padding: padding,
-                physics: const AlwaysScrollableScrollPhysics(),
-              );
+            notes = notes.reversed.toList();
+
+            if (notes.isNotEmpty) {
+              if (prefs.useGrid) {
+                child = StaggeredGridView.countBuilder(
+                  crossAxisCount: deviceInfo.uiSizeFactor,
+                  itemBuilder: (context, index) {
+                    return AnimationConfiguration.staggeredGrid(
+                      columnCount: deviceInfo.uiSizeFactor,
+                      position: index,
+                      duration: const Duration(milliseconds: 350),
+                      child: SlideAnimation(
+                        verticalOffset: 128,
+                        child: FadeInAnimation(
+                          child: commonNote(notes[index]),
+                        ),
+                      ),
+                    );
+                  },
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                  itemCount: notes.length,
+                  controller: scrollController,
+                  padding: padding,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                );
+              } else {
+                child = ListView.builder(
+                  itemBuilder: (context, index) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: Duration(milliseconds: 350),
+                      child: SlideAnimation(
+                        verticalOffset: 128,
+                        child: FadeInAnimation(
+                          child: commonNote(notes[index]),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: notes.length,
+                  controller: scrollController,
+                  padding: padding,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                );
+              }
             } else {
-              child = ListView.builder(
-                itemBuilder: (context, index) => commonNote(notes[index]),
-                itemCount: notes.length,
-                controller: scrollController,
-                padding: padding,
-                physics: const AlwaysScrollableScrollPhysics(),
+              child = LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: constraints.maxHeight,
+                      child: Illustrations.quickIllustration(
+                        context,
+                        getInfoOnCurrentMode.key,
+                        getInfoOnCurrentMode.value,
+                      ),
+                    ),
+                  );
+                },
               );
             }
-          } else {
-            child = LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: SizedBox(
-                    height: constraints.maxHeight,
-                    child: Illustrations.quickIllustration(
-                      context,
-                      getInfoOnCurrentMode.key,
-                      getInfoOnCurrentMode.value,
-                    ),
-                  ),
-                );
-              },
-            );
-          }
 
-          return RefreshIndicator(
-            child: child,
-            onRefresh: sync,
-            displacement: MediaQuery.of(context).padding.top + 40,
-          );
-        },
+            return RefreshIndicator(
+              child: child,
+              onRefresh: sync,
+              displacement: MediaQuery.of(context).padding.top + 40,
+            );
+          },
+        ),
+        floatingActionButton:
+            widget.noteKind == ReturnMode.NORMAL && !selecting ? fab : null,
       ),
-      floatingActionButton:
-          widget.noteKind == ReturnMode.NORMAL && !selecting ? fab : null,
     );
   }
 

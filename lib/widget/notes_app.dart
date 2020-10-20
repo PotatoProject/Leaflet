@@ -2,15 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart = 2.8
-
 import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
 /// [MaterialApp] uses this [TextStyle] as its [DefaultTextStyle] to encourage
@@ -149,6 +144,7 @@ class NotesApp extends StatefulWidget {
   const NotesApp({
     Key key,
     this.navigatorKey,
+    this.scaffoldMessengerKey,
     this.home,
     this.routes = const <String, WidgetBuilder>{},
     this.initialRoute,
@@ -178,6 +174,7 @@ class NotesApp extends StatefulWidget {
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
     this.actions,
+    this.restorationScopeId,
   })  : assert(routes != null),
         assert(navigatorObservers != null),
         assert(title != null),
@@ -196,6 +193,7 @@ class NotesApp extends StatefulWidget {
   /// Creates a [MaterialApp] that uses the [Router] instead of a [Navigator].
   const NotesApp.router({
     Key key,
+    this.scaffoldMessengerKey,
     this.routeInformationProvider,
     @required this.routeInformationParser,
     @required this.routerDelegate,
@@ -222,6 +220,7 @@ class NotesApp extends StatefulWidget {
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
     this.actions,
+    this.restorationScopeId,
   })  : assert(routeInformationParser != null),
         assert(routerDelegate != null),
         assert(title != null),
@@ -243,6 +242,14 @@ class NotesApp extends StatefulWidget {
 
   /// {@macro flutter.widgets.widgetsApp.navigatorKey}
   final GlobalKey<NavigatorState> navigatorKey;
+
+  /// A key to use when building the [ScaffoldMessenger].
+  ///
+  /// If a [scaffoldMessengerKey] is specified, the [ScaffoldMessenger] can be
+  /// directly manipulated without first obtaining it from a [BuildContext] via
+  /// [ScaffoldMessenger.of]: from the [scaffoldMessengerKey], use the
+  /// [GlobalKey.currentState] getter.
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
 
   /// {@macro flutter.widgets.widgetsApp.home}
   final Widget home;
@@ -601,6 +608,9 @@ class NotesApp extends StatefulWidget {
   /// {@macro flutter.widgets.widgetsApp.actions.seeAlso}
   final Map<Type, Action<Intent>> actions;
 
+  /// {@macro flutter.widgets.widgetsApp.restorationScopeId}
+  final String restorationScopeId;
+
   /// Turns on a [GridPaper] overlay that paints a baseline grid
   /// Material apps.
   ///
@@ -612,7 +622,7 @@ class NotesApp extends StatefulWidget {
   final bool debugShowMaterialGrid;
 
   @override
-  _NotesAppState createState() => _NotesAppState();
+  _MaterialAppState createState() => _MaterialAppState();
 
   /// The [HeroController] used for Material page transitions.
   ///
@@ -645,17 +655,17 @@ class _MaterialScrollBehavior extends ScrollBehavior {
         return child;
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
+      default:
         return GlowingOverscrollIndicator(
           child: child,
           axisDirection: axisDirection,
           color: Theme.of(context).accentColor,
         );
     }
-    return null;
   }
 }
 
-class _NotesAppState extends State<NotesApp> {
+class _MaterialAppState extends State<NotesApp> {
   HeroController _heroController;
 
   bool get _usesRouter => widget.routerDelegate != null;
@@ -706,28 +716,30 @@ class _NotesAppState extends State<NotesApp> {
     }
     theme ??= widget.theme ?? ThemeData.light();
 
-    return AnimatedTheme(
-      data: theme,
-      isMaterialAppTheme: true,
-      child: widget.builder != null
-          ? Builder(
-              builder: (BuildContext context) {
-                // Why are we surrounding a builder with a builder?
-                //
-                // The widget.builder may contain code that invokes
-                // Theme.of(), which should return the theme we selected
-                // above in AnimatedTheme. However, if we invoke
-                // widget.builder() directly as the child of AnimatedTheme
-                // then there is no Context separating them, and the
-                // widget.builder() will not find the theme. Therefore, we
-                // surround widget.builder with yet another builder so that
-                // a context separates them and Theme.of() correctly
-                // resolves to the theme we passed to AnimatedTheme.
-                return widget.builder(context, child);
-              },
-            )
-          : child,
-    );
+    return ScaffoldMessenger(
+        key: widget.scaffoldMessengerKey,
+        child: AnimatedTheme(
+          data: theme,
+          isMaterialAppTheme: true,
+          child: widget.builder != null
+              ? Builder(
+                  builder: (BuildContext context) {
+                    // Why are we surrounding a builder with a builder?
+                    //
+                    // The widget.builder may contain code that invokes
+                    // Theme.of(), which should return the theme we selected
+                    // above in AnimatedTheme. However, if we invoke
+                    // widget.builder() directly as the child of AnimatedTheme
+                    // then there is no Context separating them, and the
+                    // widget.builder() will not find the theme. Therefore, we
+                    // surround widget.builder with yet another builder so that
+                    // a context separates them and Theme.of() correctly
+                    // resolves to the theme we passed to AnimatedTheme.
+                    return widget.builder(context, child);
+                  },
+                )
+              : child,
+        ));
   }
 
   Widget _buildWidgetApp(BuildContext context) {
@@ -765,6 +777,7 @@ class _NotesAppState extends State<NotesApp> {
         inspectorSelectButtonBuilder: _inspectorSelectButtonBuilder,
         shortcuts: widget.shortcuts,
         actions: widget.actions,
+        restorationScopeId: widget.restorationScopeId,
       );
     }
 
@@ -799,6 +812,7 @@ class _NotesAppState extends State<NotesApp> {
       inspectorSelectButtonBuilder: _inspectorSelectButtonBuilder,
       shortcuts: widget.shortcuts,
       actions: widget.actions,
+      restorationScopeId: widget.restorationScopeId,
     );
   }
 

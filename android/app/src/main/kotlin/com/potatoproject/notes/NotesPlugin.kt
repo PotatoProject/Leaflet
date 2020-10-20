@@ -18,9 +18,7 @@ class NotesPlugin : FlutterPlugin {
         )
     }
 
-    override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
-        
-    }
+    override fun onDetachedFromEngine(binding: FlutterPluginBinding) {}
 
     class AccentStreamHandler(private val mContext: Context) : EventChannel.StreamHandler {
         private val handler = Handler()

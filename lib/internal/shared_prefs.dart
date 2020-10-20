@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,7 +81,7 @@ class SharedPrefs {
   }
 
   Future<bool> getUseGrid() async {
-    return prefs.getBool("use_grid") ?? false;
+    return prefs.getBool("use_grid") ?? DeviceInfo.isDesktop;
   }
 
   void setUseGrid(bool value) async {
