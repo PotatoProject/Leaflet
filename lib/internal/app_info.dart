@@ -64,8 +64,12 @@ abstract class _AppInfoBase with Store {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
     var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettingsMacOS = MacOSInitializationSettings();
     var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+      macOS: initializationSettingsMacOS,
+    );
     await notifications.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
   }

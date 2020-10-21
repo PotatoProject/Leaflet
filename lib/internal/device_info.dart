@@ -31,6 +31,14 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
 
     return false;
   }
+
+  static bool get isMacOS {
+    if (kIsWeb) return false;
+
+    if (Platform.isMacOS) return true;
+
+    return false;
+  }
 }
 
 abstract class _DeviceInfoBase with Store {

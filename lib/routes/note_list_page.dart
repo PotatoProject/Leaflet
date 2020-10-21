@@ -85,8 +85,6 @@ class _NoteListPageState extends State<NoteListPage> {
                     .toList()
                 : snapshot.data ?? [];
 
-            notes = notes.reversed.toList();
-
             if (notes.isNotEmpty) {
               if (prefs.useGrid) {
                 child = StaggeredGridView.countBuilder(

@@ -80,6 +80,7 @@ class _NewTagState extends State<TagEditor> {
               itemCount: NoteColors.colorList.length,
               itemBuilder: (context, index) {
                 return IconButton(
+                  visualDensity: VisualDensity.standard,
                   icon: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),

@@ -232,15 +232,16 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           : note.title,
       note.content,
       NotificationDetails(
-        AndroidNotificationDetails(
+        android: AndroidNotificationDetails(
           'pinned_notifications',
           LocaleStrings.common.notificationDetailsTitle,
           LocaleStrings.common.notificationDetailsDesc,
           color: Utils.defaultAccent,
           ongoing: true,
-          priority: Priority.Max,
+          priority: Priority.max,
         ),
-        IOSNotificationDetails(),
+        iOS: IOSNotificationDetails(),
+        macOS: MacOSNotificationDetails(),
       ),
       payload: json.encode(
         NotificationPayload(
