@@ -52,6 +52,7 @@ dependencies:
   flutter_mobx:
   mobx_codegen:
   flutter_staggered_animations:
+  
   crayola:
 
   rich_text_editor:
