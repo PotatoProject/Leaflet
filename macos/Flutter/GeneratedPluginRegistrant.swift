@@ -5,6 +5,7 @@
 import FlutterMacOS
 import Foundation
 
+import crayola
 import file_chooser
 import flutter_local_notifications
 import package_info_plus_macos
@@ -14,6 +15,7 @@ import sqflite
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  CrayolaPlugin.register(with: registry.registrar(forPlugin: "CrayolaPlugin"))
   FileChooserPlugin.register(with: registry.registrar(forPlugin: "FileChooserPlugin"))
   FlutterLocalNotificationsPlugin.register(with: registry.registrar(forPlugin: "FlutterLocalNotificationsPlugin"))
   FLTPackageInfoPlugin.register(with: registry.registrar(forPlugin: "FLTPackageInfoPlugin"))

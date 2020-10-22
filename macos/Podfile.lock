@@ -1,4 +1,6 @@
 PODS:
+  - crayola (0.0.1):
+    - FlutterMacOS
   - file_chooser (0.0.2):
     - FlutterMacOS
   - flutter_local_notifications (0.0.1):
@@ -25,6 +27,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - crayola (from `Flutter/ephemeral/.symlinks/plugins/crayola/macos`)
   - file_chooser (from `Flutter/ephemeral/.symlinks/plugins/file_chooser/macos`)
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
   - FlutterMacOS (from `Flutter/ephemeral/.symlinks/flutter/darwin-x64`)
@@ -43,6 +46,8 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
+  crayola:
+    :path: Flutter/ephemeral/.symlinks/plugins/crayola/macos
   file_chooser:
     :path: Flutter/ephemeral/.symlinks/plugins/file_chooser/macos
   flutter_local_notifications:
@@ -69,6 +74,7 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
 
 SPEC CHECKSUMS:
+  crayola: 24527d1859aa605e6d41c349db1c1a30d127f523
   file_chooser: 24432cf5dc836722b05c11c2a0a30d19c3c9b996
   flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
   FlutterMacOS: 15bea8a44d2fa024068daa0140371c020b4b6ff9
