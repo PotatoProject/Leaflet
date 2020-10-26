@@ -77,28 +77,16 @@ class Utils {
     Clip clipBehavior,
     Color barrierColor,
     bool isScrollControlled = false,
-    bool useRootNavigator = false,
-    bool isDismissible = true,
-    bool enableDrag = true,
   }) async {
-    return await showModalBottomSheet(
-      context: context,
-      builder: (context) => BottomSheetBase(
+    return await Navigator.push(
+      context,
+      BottomSheetRoute(
         child: builder(context),
         backgroundColor: backgroundColor,
         elevation: elevation,
         shape: shape,
         clipBehavior: clipBehavior,
       ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      shape: null,
-      clipBehavior: Clip.none,
-      barrierColor: barrierColor,
-      isScrollControlled: isScrollControlled,
-      useRootNavigator: useRootNavigator,
-      isDismissible: isDismissible,
-      enableDrag: enableDrag,
     );
   }
 
