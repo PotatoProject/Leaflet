@@ -1,6 +1,8 @@
 package com.potatoproject.notes
 
 import android.graphics.drawable.Drawable
+import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.widget.ImageView.ScaleType
 

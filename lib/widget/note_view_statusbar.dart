@@ -27,7 +27,7 @@ class NoteViewStatusbar extends StatelessWidget {
             visible: note.tags.isNotEmpty,
             child: Container(
               width: width,
-              padding: padding ?? const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: Wrap(
                 spacing: 4,
                 runSpacing: 4,
@@ -64,7 +64,12 @@ class NoteViewStatusbar extends StatelessWidget {
             visible: icons.isNotEmpty,
             child: Container(
               width: width,
-              padding: padding ?? const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: padding ??
+                  EdgeInsets.only(
+                    left: 16 + Theme.of(context).visualDensity.horizontal,
+                    right: 16 + Theme.of(context).visualDensity.horizontal,
+                    bottom: 16 + Theme.of(context).visualDensity.vertical,
+                  ),
               child: IconTheme(
                 data: Theme.of(context).iconTheme.copyWith(size: 16),
                 child: Wrap(

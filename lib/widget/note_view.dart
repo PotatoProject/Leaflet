@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
@@ -35,6 +36,24 @@ class _NoteViewState extends State<NoteView> {
   bool _focused = false;
   bool _highlighted = false;
   double _elevation;
+  bool _mouseIsConnected;
+
+  @override
+  void initState() {
+    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
+    RendererBinding.instance.mouseTracker.addListener(mouseListener);
+    super.initState();
+  }
+
+  void mouseListener() {
+    final bool mouseIsConnected =
+        RendererBinding.instance.mouseTracker.mouseIsConnected;
+    if (mouseIsConnected != _mouseIsConnected) {
+      setState(() {
+        _mouseIsConnected = mouseIsConnected;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +133,14 @@ class _NoteViewState extends State<NoteView> {
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16 + Theme.of(context).visualDensity.horizontal,
+                  vertical: 16 + Theme.of(context).visualDensity.vertical,
+                ),
                 itemBuilder: (context, index) => content[index],
                 separatorBuilder: (context, index) {
-                  return SizedBox(height: 4);
+                  return SizedBox(
+                      height: 4 + Theme.of(context).visualDensity.vertical);
                 },
                 itemCount: content.length,
               ),
@@ -128,7 +151,14 @@ class _NoteViewState extends State<NoteView> {
                 child: NoteViewStatusbar(
                   note: widget.note,
                   width: constraints.maxWidth,
-                  padding: content.isEmpty ? EdgeInsets.all(16) : null,
+                  padding: content.isEmpty
+                      ? EdgeInsets.symmetric(
+                          horizontal:
+                              16 + Theme.of(context).visualDensity.horizontal,
+                          vertical:
+                              16 + Theme.of(context).visualDensity.vertical,
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -240,28 +270,40 @@ class _NoteViewState extends State<NoteView> {
             : (widget.note.listContent?.length ?? 0),
         (index) {
           ListItem item = widget.note.listContent[index];
+          Color backgroundColor = widget.note.color != 0
+              ? Color(
+                  NoteColors.colorList[widget.note.color].dynamicColor(context))
+              : Theme.of(context).cardColor;
 
           return LayoutBuilder(
             builder: (context, constraints) {
               return Row(
                 children: [
-                  Icon(
-                    item.status
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: item.status
-                        ? widget.note.color != 0
-                            ? Theme.of(context).textTheme.caption.color
-                            : Theme.of(context).accentColor
-                        : null,
-                    size: 20,
+                  IgnorePointer(
+                    ignoring: !_mouseIsConnected || widget.selected,
+                    child: Checkbox(
+                      value: item.status,
+                      activeColor: widget.note.color != 0
+                          ? Theme.of(context).textTheme.caption.color
+                          : Theme.of(context).accentColor,
+                      checkColor: backgroundColor,
+                      onChanged: (value) {
+                        widget.note.listContent[index].status = value;
+                        widget.note.markChanged();
+                        helper.saveNote(widget.note);
+                        setState(() {});
+                      },
+                      splashRadius: 14,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity:
+                          VisualDensity(horizontal: -4, vertical: -4),
+                    ),
                   ),
-                  VerticalDivider(
-                    color: Colors.transparent,
+                  SizedBox(
                     width: 8,
                   ),
                   SizedBox(
-                    width: constraints.maxWidth - 28,
+                    width: constraints.maxWidth - 32,
                     child: Text(
                       item.text,
                       overflow: TextOverflow.ellipsis,
