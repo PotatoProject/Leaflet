@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -90,11 +91,16 @@ class Utils {
     );
   }
 
-  static List<ListTilePopupMenuItem<String>> popupItems(BuildContext context) {
+  static List<ListTilePopupMenuItem<String>> popupItems(
+      BuildContext context, Note note) {
+    bool showUnpin = appInfo.activeNotifications.any(
+      (e) => e.id == int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
+    );
     return [
       ListTilePopupMenuItem(
-        leading: Icon(Icons.push_pin_outlined),
-        title: Text(LocaleStrings.mainPage.selectionBarPin),
+        leading: Icon(showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline),
+        title:
+            Text(showUnpin ? "Unpin" : LocaleStrings.mainPage.selectionBarPin),
         value: 'pin',
       ),
       ListTilePopupMenuItem(
@@ -580,6 +586,15 @@ extension NoteX on Note {
 
   Note markChanged() {
     return copyWith(synced: false, lastModifyDate: DateTime.now());
+  }
+
+  int get notificationId =>
+      int.parse(this.id.split("-")[0], radix: 16).toUnsigned(31);
+
+  bool get pinned {
+    return appInfo.activeNotifications.any(
+      (e) => e.id == notificationId,
+    );
   }
 }
 

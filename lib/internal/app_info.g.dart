@@ -24,6 +24,23 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
+  final _$activeNotificationsValueAtom =
+      Atom(name: '_AppInfoBase.activeNotificationsValue');
+
+  @override
+  List<ActiveNotification> get activeNotificationsValue {
+    _$activeNotificationsValueAtom.reportRead();
+    return super.activeNotificationsValue;
+  }
+
+  @override
+  set activeNotificationsValue(List<ActiveNotification> value) {
+    _$activeNotificationsValueAtom
+        .reportWrite(value, super.activeNotificationsValue, () {
+      super.activeNotificationsValue = value;
+    });
+  }
+
   final _$_AppInfoBaseActionController = ActionController(name: '_AppInfoBase');
 
   @override
@@ -38,9 +55,21 @@ mixin _$AppInfo on _AppInfoBase, Store {
   }
 
   @override
+  void pollForActiveNotifications() {
+    final _$actionInfo = _$_AppInfoBaseActionController.startAction(
+        name: '_AppInfoBase.pollForActiveNotifications');
+    try {
+      return super.pollForActiveNotifications();
+    } finally {
+      _$_AppInfoBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-accentDataValue: ${accentDataValue}
+accentDataValue: ${accentDataValue},
+activeNotificationsValue: ${activeNotificationsValue}
     ''';
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 
-class NoteViewStatusbar extends StatelessWidget {
+class NoteViewStatusbar extends StatefulWidget {
   final Note note;
   final EdgeInsets padding;
   final double width;
@@ -15,32 +18,64 @@ class NoteViewStatusbar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    List<Widget> icons = getIcons(context);
+  _NoteViewStatusbarState createState() => _NoteViewStatusbarState();
+}
 
+class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
+  List<Widget> icons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (DeviceInfo.isAndroid) {
+      reaction(
+        (_) => appInfo.activeNotifications,
+        (msg) => _updateIcons(),
+      );
+    } else {
+      _updateIcons();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant NoteViewStatusbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.note != widget.note) {
+      _updateIcons();
+    }
+  }
+
+  void _updateIcons() {
+    icons = getIcons(context);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Visibility(
-      visible: icons.isNotEmpty || note.tags.isNotEmpty,
+      visible: icons.isNotEmpty || widget.note.tags.isNotEmpty,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Visibility(
-            visible: note.tags.isNotEmpty,
+            visible: widget.note.tags.isNotEmpty,
             child: Container(
-              width: width,
-              padding: padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              width: widget.width,
+              padding:
+                  widget.padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: Wrap(
                 spacing: 4,
                 runSpacing: 4,
                 alignment: WrapAlignment.start,
                 children: List.generate(
-                  note.tags.length > 3 ? 4 : note.tags.length,
+                  widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
                   (index) {
                     if (index != 3) {
                       Tag tag;
 
                       try {
-                        tag = prefs.tags
-                            .firstWhere((tag) => tag.id == note.tags[index]);
+                        tag = prefs.tags.firstWhere(
+                            (tag) => tag.id == widget.note.tags[index]);
                       } on StateError {
                         return Container();
                       }
@@ -51,7 +86,7 @@ class NoteViewStatusbar extends StatelessWidget {
                       );
                     } else {
                       return TagChip(
-                        title: "+${note.tags.length - 3}",
+                        title: "+${widget.note.tags.length - 3}",
                         showIcon: false,
                       );
                     }
@@ -63,8 +98,8 @@ class NoteViewStatusbar extends StatelessWidget {
           Visibility(
             visible: icons.isNotEmpty,
             child: Container(
-              width: width,
-              padding: padding ??
+              width: widget.width,
+              padding: widget.padding ??
                   EdgeInsets.only(
                     left: 16 + Theme.of(context).visualDensity.horizontal,
                     right: 16 + Theme.of(context).visualDensity.horizontal,
@@ -95,27 +130,32 @@ class NoteViewStatusbar extends StatelessWidget {
     );
   }
 
-  List<Widget> getIcons(BuildContext context) {
+  List<Widget> getIcons(
+    BuildContext context,
+  ) {
     List<IconData> iconData = [
       Icons.visibility_off_outlined,
-      note.usesBiometrics ? Icons.fingerprint : Icons.lock_outlined,
+      widget.note.usesBiometrics ? Icons.fingerprint : Icons.lock_outlined,
       Icons.alarm_outlined,
       Icons.cloud_outlined,
-      Icons.favorite_border
+      Icons.favorite_border,
+      Icons.push_pin_outlined,
     ];
 
     List<int> iconDataIndexes = [];
     List<Widget> icons = [];
 
-    if (note.hideContent) iconDataIndexes.add(0);
+    if (widget.note.hideContent) iconDataIndexes.add(0);
 
-    if (note.lockNote) iconDataIndexes.add(1);
+    if (widget.note.lockNote) iconDataIndexes.add(1);
 
-    if (note.reminders.isNotEmpty) iconDataIndexes.add(2);
+    if (widget.note.reminders.isNotEmpty) iconDataIndexes.add(2);
 
-    if (note.synced) iconDataIndexes.add(3);
+    //if (note.synced) iconDataIndexes.add(3);
 
-    if (note.starred) iconDataIndexes.add(4);
+    if (widget.note.starred) iconDataIndexes.add(4);
+
+    if (widget.note.pinned) iconDataIndexes.add(5);
 
     for (int i = 0; i < iconDataIndexes.length; i++) {
       icons.add(Icon(iconData[iconDataIndexes[i]]));

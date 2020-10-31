@@ -194,7 +194,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         !DeviceInfo.isDesktopOrWeb) {
       buttons.add(
         PopupMenuButton(
-          itemBuilder: (context) => Utils.popupItems(context),
+          itemBuilder: (context) => Utils.popupItems(context, selectionList[0]),
           onSelected: (action) async {
             Note note = selectionList[0];
 
@@ -225,31 +225,35 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void handlePinNotes(BuildContext context, Note note) {
-    appInfo.notifications.show(
-      int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
-      note.title.isEmpty
-          ? LocaleStrings.common.notificationDefaultTitle
-          : note.title,
-      note.content,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          'pinned_notifications',
-          LocaleStrings.common.notificationDetailsTitle,
-          LocaleStrings.common.notificationDetailsDesc,
-          color: Utils.defaultAccent,
-          ongoing: true,
-          priority: Priority.max,
+    if (note.pinned) {
+      appInfo.notifications.cancel(note.notificationId);
+    } else {
+      appInfo.notifications.show(
+        note.notificationId,
+        note.title.isEmpty
+            ? LocaleStrings.common.notificationDefaultTitle
+            : note.title,
+        note.content,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'pinned_notifications',
+            LocaleStrings.common.notificationDetailsTitle,
+            LocaleStrings.common.notificationDetailsDesc,
+            color: Utils.defaultAccent,
+            ongoing: true,
+            priority: Priority.max,
+          ),
+          iOS: IOSNotificationDetails(),
+          macOS: MacOSNotificationDetails(),
         ),
-        iOS: IOSNotificationDetails(),
-        macOS: MacOSNotificationDetails(),
-      ),
-      payload: json.encode(
-        NotificationPayload(
-          action: NotificationAction.PIN,
-          id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
-          noteId: note.id,
-        ).toJson(),
-      ),
-    );
+        payload: json.encode(
+          NotificationPayload(
+            action: NotificationAction.PIN,
+            id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
+            noteId: note.id,
+          ).toJson(),
+        ),
+      );
+    }
   }
 }

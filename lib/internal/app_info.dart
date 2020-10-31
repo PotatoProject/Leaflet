@@ -45,6 +45,12 @@ abstract class _AppInfoBase with Store {
 
   int get accentData => accentDataValue;
 
+  @observable
+  @protected
+  List<ActiveNotification> activeNotificationsValue = [];
+
+  List<ActiveNotification> get activeNotifications => activeNotificationsValue;
+
   void updateIllustrations(Brightness systemTheme) async {
     noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
     emptyArchiveIllustration =
@@ -101,10 +107,24 @@ abstract class _AppInfoBase with Store {
     } else {
       accentDataValue = -1;
     }
+
+    if (DeviceInfo.isAndroid) {
+      pollForActiveNotifications();
+    }
   }
 
   @action
   void updateAccent(dynamic event) {
     accentDataValue = event as int;
+  }
+
+  @action
+  void pollForActiveNotifications() {
+    Timer.periodic(Duration(milliseconds: 500), (timer) async {
+      activeNotificationsValue = await notifications
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          .getActiveNotifications();
+    });
   }
 }
