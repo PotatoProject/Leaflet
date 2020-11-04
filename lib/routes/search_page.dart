@@ -63,6 +63,7 @@ class _SearchPageState<T> extends State<SearchPage> {
         ),
         actions: widget.delegate.buildActions(context),
       ),
+      useAppBarAsSecondary: true,
       body: body,
     );
   }

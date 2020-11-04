@@ -7,6 +7,9 @@ class DependentScaffold extends StatelessWidget {
   const DependentScaffold({
     Key key,
     this.appBar = const DefaultAppBar(),
+    this.secondaryAppBar,
+    this.secondaryAppBarHeroTag,
+    this.useAppBarAsSecondary = false,
     this.body,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -35,6 +38,9 @@ class DependentScaffold extends StatelessWidget {
   final bool extendBody;
   final bool extendBodyBehindAppBar;
   final PreferredSizeWidget appBar;
+  final Widget secondaryAppBar;
+  final String secondaryAppBarHeroTag;
+  final bool useAppBarAsSecondary;
   final Widget body;
   final Widget floatingActionButton;
   final FloatingActionButtonLocation floatingActionButtonLocation;
@@ -60,17 +66,29 @@ class DependentScaffold extends StatelessWidget {
     if (state != null) {
       BasePage.of(context).setFAB(floatingActionButton);
       BasePage.of(context).setAppBar(appBar);
+      BasePage.of(context).setSecondaryAppBarHeroTag(secondaryAppBarHeroTag);
+
+      if (secondaryAppBar != null) {
+        if (!(secondaryAppBar is DefaultAppBar)) {
+          BasePage.of(context).setSecondaryAppBar(secondaryAppBar);
+        } else {
+          BasePage.of(context).setSecondaryAppBar(null);
+        }
+      } else if (useAppBarAsSecondary && appBar != null) {
+        if (!(appBar is DefaultAppBar)) {
+          BasePage.of(context).setSecondaryAppBar(appBar);
+        } else {
+          BasePage.of(context).setSecondaryAppBar(null);
+        }
+      } else {
+        BasePage.of(context).setSecondaryAppBar(null);
+      }
     }
 
     return Scaffold(
       appBar: state == null ? appBar : null,
       floatingActionButton: state == null ? floatingActionButton : null,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 1080),
-          child: body,
-        ),
-      ),
+      body: body,
       persistentFooterButtons: persistentFooterButtons,
       drawer: drawer,
       endDrawer: endDrawer,
@@ -84,6 +102,7 @@ class DependentScaffold extends StatelessWidget {
       drawerEdgeDragWidth: drawerEdgeDragWidth,
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+      extendBodyBehindAppBar: true,
     );
   }
 }

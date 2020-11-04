@@ -47,7 +47,9 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
         Visibility(
           visible: state != null,
           child: IconButton(
+            padding: EdgeInsets.all(16),
             icon: Icon(Icons.person_outlined),
+            splashRadius: 28,
             tooltip: LocaleStrings.mainPage.account,
             onPressed: () async {
               bool loggedIn = prefs.accessToken != null;
@@ -67,7 +69,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
             },
           ),
         ),
-      ]..addAll(extraActions),
+      ]..insertAll(0, extraActions),
     );
   }
 }

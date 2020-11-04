@@ -10,11 +10,13 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     @required this.builder,
     this.allowGestures = false,
     this.pushImmediate = false,
+    this.heroTag,
   });
 
   final WidgetBuilder builder;
   final bool allowGestures;
   final bool pushImmediate;
+  final String heroTag;
 
   @override
   final bool maintainState = false;
@@ -113,6 +115,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
       secondaryAnimation,
       child,
       allowGestures: allowGestures,
+      heroTag: heroTag,
     );
   }
 
@@ -123,6 +126,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child, {
     bool allowGestures = true,
+    String heroTag,
   }) {
     return DismissiblePageTransition(
       child: DismissibleRoute(
@@ -132,6 +136,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
         controller: route.controller,
         navigator: route.navigator,
         isFirst: route.isFirst,
+        heroTag: heroTag,
       ),
       animation: animation,
       secondaryAnimation: secondaryAnimation,
@@ -217,6 +222,7 @@ class DismissibleRoute extends StatefulWidget {
   final AnimationController controller;
   final NavigatorState navigator;
   final bool isFirst;
+  final String heroTag;
 
   DismissibleRoute({
     @required this.child,
@@ -225,6 +231,7 @@ class DismissibleRoute extends StatefulWidget {
     @required this.controller,
     @required this.navigator,
     this.isFirst = false,
+    this.heroTag,
   });
 
   @override
@@ -265,6 +272,51 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
     final EdgeInsets effectivePadding = MediaQuery.of(context).viewInsets +
         (padding ?? const EdgeInsets.all(0.0));
 
+    final Widget content = Material(
+      elevation: 16,
+      shape: !widget.isFirst
+          ? deviceInfo.uiSizeFactor > 3
+              ? Theme.of(context).dialogTheme.shape
+              : RoundedRectangleBorder()
+          : RoundedRectangleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        dragStartBehavior: DragStartBehavior.down,
+        onTap: () {},
+        onHorizontalDragStart: _enableGesture
+            ? (details) {
+                setState(() => _gestureStartAllowed = true);
+              }
+            : null,
+        onHorizontalDragUpdate: _gestureStartAllowed
+            ? (details) {
+                widget.controller.value -= (textDirection == TextDirection.rtl
+                        ? -details.primaryDelta
+                        : details.primaryDelta) /
+                    widget.maxWidth;
+              }
+            : null,
+        onHorizontalDragEnd: _gestureStartAllowed
+            ? (details) async {
+                setState(() => _gestureStartAllowed = false);
+                if (details.primaryVelocity > 345) {
+                  await widget.controller.animateBack(0);
+                  Navigator.pop(context);
+                } else {
+                  if (widget.controller.value < 0.5) {
+                    await widget.controller.animateBack(0);
+                    Navigator.pop(context);
+                  } else {
+                    await widget.controller.animateTo(1);
+                  }
+                }
+              }
+            : null,
+        child: widget.child,
+      ),
+    );
+
     return _DismissibleRouteInheritedWidget(
       state: this,
       child: GestureDetector(
@@ -282,51 +334,12 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
             removeRight: true,
             removeBottom: true,
             context: context,
-            child: Material(
-              elevation: 16,
-              shape: !widget.isFirst
-                  ? deviceInfo.uiSizeFactor > 3
-                      ? Theme.of(context).dialogTheme.shape
-                      : RoundedRectangleBorder()
-                  : RoundedRectangleBorder(),
-              clipBehavior: Clip.antiAlias,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                dragStartBehavior: DragStartBehavior.down,
-                onTap: () {},
-                onHorizontalDragStart: _enableGesture
-                    ? (details) {
-                        setState(() => _gestureStartAllowed = true);
-                      }
-                    : null,
-                onHorizontalDragUpdate: _gestureStartAllowed
-                    ? (details) {
-                        widget.controller.value -=
-                            (textDirection == TextDirection.rtl
-                                    ? -details.primaryDelta
-                                    : details.primaryDelta) /
-                                widget.maxWidth;
-                      }
-                    : null,
-                onHorizontalDragEnd: _gestureStartAllowed
-                    ? (details) async {
-                        setState(() => _gestureStartAllowed = false);
-                        if (details.primaryVelocity > 345) {
-                          await widget.controller.animateBack(0);
-                          Navigator.pop(context);
-                        } else {
-                          if (widget.controller.value < 0.5) {
-                            await widget.controller.animateBack(0);
-                            Navigator.pop(context);
-                          } else {
-                            await widget.controller.animateTo(1);
-                          }
-                        }
-                      }
-                    : null,
-                child: widget.child,
-              ),
-            ),
+            child: widget.heroTag != null
+                ? Hero(
+                    tag: widget.heroTag,
+                    child: content,
+                  )
+                : content,
           ),
         ),
       ),

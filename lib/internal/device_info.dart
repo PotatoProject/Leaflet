@@ -95,7 +95,16 @@ abstract class _DeviceInfoBase with Store {
     isLandscapeValue = mq.orientation == Orientation.landscape;
     double width = mq.size.width;
 
-    if (width >= 1280) {
+    if (width >= 1920) {
+      uiSizeFactorValue = 8;
+      uiTypeValue = UiType.DESKTOP;
+    } else if (width >= 1600) {
+      uiSizeFactorValue = 7;
+      uiTypeValue = UiType.DESKTOP;
+    } else if (width >= 1460) {
+      uiSizeFactorValue = 6;
+      uiTypeValue = UiType.DESKTOP;
+    } else if (width >= 1280) {
       uiSizeFactorValue = 5;
       uiTypeValue = UiType.DESKTOP;
     } else if (width >= 900) {

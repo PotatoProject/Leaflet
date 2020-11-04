@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_chooser/file_chooser.dart';
@@ -93,9 +94,8 @@ class Utils {
 
   static List<ListTilePopupMenuItem<String>> popupItems(
       BuildContext context, Note note) {
-    bool showUnpin = appInfo.activeNotifications.any(
-      (e) => e.id == int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
-    );
+    bool showUnpin = note.pinned;
+
     return [
       ListTilePopupMenuItem(
         leading: Icon(showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline),
@@ -236,6 +236,8 @@ class Utils {
       context,
       SnackBar(
         content: Text(reason),
+        behavior: SnackBarBehavior.floating,
+        width: min(640, MediaQuery.of(context).size.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -267,6 +269,8 @@ class Utils {
       context,
       SnackBar(
         content: Text(reason),
+        behavior: SnackBarBehavior.floating,
+        width: min(640, MediaQuery.of(context).size.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -344,6 +348,7 @@ class Utils {
   static Future<dynamic> showSecondaryRoute(
     BuildContext context,
     Widget route, {
+    String heroTag,
     bool allowGestures = true,
     bool pushImmediate = false,
   }) async {
@@ -352,6 +357,7 @@ class Utils {
         builder: (context) => route,
         allowGestures: allowGestures,
         pushImmediate: pushImmediate,
+        heroTag: heroTag,
       ),
     );
   }
@@ -362,6 +368,7 @@ class Utils {
     await Utils.showSecondaryRoute(
       context,
       NotePage(),
+      heroTag: "writeNoteTag",
     );
 
     List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);

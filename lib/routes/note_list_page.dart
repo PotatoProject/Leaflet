@@ -14,6 +14,7 @@ import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
+import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
@@ -49,7 +50,7 @@ class _NoteListPageState extends State<NoteListPage> {
       4,
       4 + MediaQuery.of(context).padding.top,
       4,
-      4,
+      4 + 80.0,
     );
 
     PreferredSizeWidget appBar = (selecting
@@ -69,6 +70,11 @@ class _NoteListPageState extends State<NoteListPage> {
     return AnimationLimiter(
       child: DependentScaffold(
         appBar: appBar,
+        useAppBarAsSecondary: selecting,
+        secondaryAppBar: widget.noteKind == ReturnMode.NORMAL && !selecting
+            ? NewNoteBar()
+            : null,
+        secondaryAppBarHeroTag: "writeNoteTag",
         body: StreamBuilder<List<Note>>(
           stream: helper.noteStream(widget.noteKind),
           initialData: [],

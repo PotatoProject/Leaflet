@@ -46,6 +46,9 @@ class _SettingsPageState extends State<SettingsPage> {
           onWillPop: () async => !removingMasterPass,
           child: DependentScaffold(
             body: ListView(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+              ),
               children: [
                 commonSettings,
                 SettingsCategory(

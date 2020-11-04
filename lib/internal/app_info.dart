@@ -95,7 +95,6 @@ abstract class _AppInfoBase with Store {
 
   void loadData() async {
     tempDirectory = await getTemporaryDirectory();
-    print(tempDirectory);
 
     if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();
