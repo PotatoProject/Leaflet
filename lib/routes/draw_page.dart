@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -24,8 +23,9 @@ import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_gesture_detector.dart';
+import 'package:potato_notes/widget/drawing_toolbar.dart';
+import 'package:potato_notes/widget/fake_appbar.dart';
 import 'package:potato_notes/widget/web_drawing_exporter.dart/shared.dart';
-import 'package:spicy_components/spicy_components.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
@@ -40,71 +40,62 @@ class DrawPage extends StatefulWidget {
   _DrawPageState createState() => _DrawPageState();
 }
 
-class _DrawPageState extends State<DrawPage>
-    with SingleTickerProviderStateMixin {
-  static List<ColorInfo> availableColors = NoteColors.colorList;
+class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
+  BuildContext _globalContext;
+  List<DrawObject> _objects = [];
+  List<DrawObject> _backupObjects = [];
+  int _currentIndex;
+  int _actionQueueIndex = 0;
+  bool _saved = true;
+  Offset _mousePosition = Offset.zero;
+  DrawingToolbarController _toolbarController = DrawingToolbarController();
 
-  BuildContext globalContext;
-  List<DrawObject> objects = [];
-  List<DrawObject> backupObjects = [];
-  int currentIndex;
-  int actionQueueIndex = 0;
-  double strokeWidth = 6;
-  Color selectedColor = Colors.black;
-  DrawTool currentTool = DrawTool.PEN;
-  MenuShowReason showReason = MenuShowReason.COLOR_PICKER;
-  AnimationController controller;
-  bool saved = true;
-  Matrix4 matrix = Matrix4.identity();
+  AnimationController _appbarAc;
+  AnimationController _toolbarAc;
 
-  String filePath;
+  List<DrawingTool> _tools = [
+    DrawingTool(
+      icon: Icons.brush_outlined,
+      title: LocaleStrings.drawPage.toolsBrush,
+      toolType: DrawTool.PEN,
+      color: Colors.black,
+      size: ToolSize.FOUR,
+    ),
+    DrawingTool(
+      icon: MdiIcons.marker,
+      title: LocaleStrings.drawPage.toolsMarker,
+      toolType: DrawTool.MARKER,
+      color: Color(NoteColors.yellow.color),
+      size: ToolSize.TWELVE,
+    ),
+    DrawingTool(
+      icon: MdiIcons.eraserVariant,
+      title: LocaleStrings.drawPage.toolsEraser,
+      toolType: DrawTool.ERASER,
+      size: ToolSize.THIRTYTWO,
+      allowColor: false,
+    ),
+  ];
+  int _toolIndex = 0;
 
-  final GlobalKey key = new GlobalKey();
+  String _filePath;
+
+  final GlobalKey _drawingKey = GlobalKey();
+  final GlobalKey _appbarKey = GlobalKey();
+  final GlobalKey _toolbarKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     BackButtonInterceptor.add(exitPrompt);
-  }
-
-  bool exitPrompt(bool _) {
-    Uri uri = filePath != null ? Uri.file(filePath) : null;
-
-    void _internal() async {
-      if (!saved) {
-        bool exit = await showDialog(
-          context: globalContext,
-          builder: (context) => AlertDialog(
-            title: Text(LocaleStrings.common.areYouSure),
-            content: Text(LocaleStrings.drawPage.exitPrompt),
-            actions: [
-              FlatButton(
-                onPressed: () => Navigator.pop(context),
-                textColor: Theme.of(context).accentColor,
-                child: Text(LocaleStrings.common.cancel),
-              ),
-              FlatButton(
-                onPressed: () => Navigator.pop(context, true),
-                textColor: Theme.of(context).accentColor,
-                child: Text(LocaleStrings.common.exit),
-              ),
-            ],
-          ),
-        );
-
-        if (exit != null) {
-          Navigator.pop(globalContext, uri);
-        }
-      } else {
-        Navigator.pop(globalContext, uri);
-      }
-    }
-
-    _internal();
-
-    return true;
+    _appbarAc = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150),
+    );
+    _toolbarAc = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150),
+    );
   }
 
   @override
@@ -115,122 +106,131 @@ class _DrawPageState extends State<DrawPage>
 
   @override
   Widget build(BuildContext context) {
-    if (this.globalContext == null) this.globalContext = context;
+    _globalContext ??= context;
+
+    final _curvedAppbarAc = CurvedAnimation(
+      parent: _appbarAc,
+      curve: decelerateEasing,
+    );
+    final _curvedToolbarAc = CurvedAnimation(
+      parent: _toolbarAc,
+      curve: decelerateEasing,
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => exitPrompt(true),
+      appBar: FakeAppbar(
+        child: AnimatedBuilder(
+          animation: _appbarAc,
+          builder: (context, _) {
+            return FadeTransition(
+              opacity: ReverseAnimation(_curvedAppbarAc),
+              key: _appbarKey,
+              child: AppBar(
+                leading: BackButton(
+                  onPressed: () => exitPrompt(true),
+                ),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.save_outlined),
+                    padding: EdgeInsets.all(0),
+                    tooltip: LocaleStrings.common.save,
+                    onPressed: !_saved ? _saveImage : null,
+                  ),
+                ],
+              ),
+            );
+          },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.undo),
-            padding: EdgeInsets.all(0),
-            tooltip: LocaleStrings.common.undo,
-            onPressed: objects.isNotEmpty
-                ? () => setState(() {
-                      objects.removeLast();
-                      actionQueueIndex = objects.length - 1;
-                      saved = false;
-                    })
-                : null,
-          ),
-          IconButton(
-            icon: Icon(Icons.redo),
-            padding: EdgeInsets.all(0),
-            tooltip: LocaleStrings.common.redo,
-            onPressed: actionQueueIndex < backupObjects.length - 1
-                ? () => setState(() {
-                      actionQueueIndex = objects.length;
-                      objects.add(backupObjects[actionQueueIndex]);
-                      saved = false;
-                    })
-                : null,
-          ),
-          IconButton(
-            icon: Icon(Icons.save_outlined),
-            padding: EdgeInsets.all(0),
-            tooltip: LocaleStrings.common.save,
-            onPressed: !saved
-                ? () async {
-                    String drawing;
-                    final box = key.currentContext.findRenderObject()
-                        as RenderRepaintBoundary;
-
-                    if (kIsWeb) {
-                      drawing = await WebDrawingExporter.export(
-                        widget.savedImage?.uri,
-                        objects,
-                        box.size,
-                      );
-                    } else {
-                      ui.Image image = await box.toImage();
-                      ByteData byteData = await image.toByteData(
-                        format: ui.ImageByteFormat.png,
-                      );
-                      Uint8List pngBytes = byteData.buffer.asUint8List();
-                      DateTime now = DateTime.now();
-                      String timestamp = DateFormat(
-                        "HH_mm_ss-MM_dd_yyyy",
-                        context.locale.toLanguageTag(),
-                      ).format(now);
-
-                      final drawingsDirectory = DeviceInfo.isDesktopOrWeb
-                          ? await getApplicationSupportDirectory()
-                          : await getApplicationDocumentsDirectory();
-
-                      print(drawingsDirectory);
-
-                      drawing =
-                          "${drawingsDirectory.path}/drawing-$timestamp.png";
-                      if (filePath == null) {
-                        filePath = drawing;
-                      } else {
-                        drawing = filePath;
-                      }
-
-                      File imgFile = File(drawing);
-                      await imgFile.writeAsBytes(pngBytes, flush: true);
-                      Loggy.d(message: drawing);
-
-                      SavedImage savedImage =
-                          await ImageService.prepareLocally(imgFile);
-                      if (widget.savedImage != null) {
-                        widget.note.images.removeWhere((savedImage) =>
-                            savedImage.id == widget.savedImage.id);
-                        savedImage.id = widget.savedImage.id;
-                      }
-                      widget.note.images.add(savedImage);
-                    }
-                    helper.saveNote(widget.note.markChanged());
-
-                    setState(() => saved = true);
-                  }
-                : null,
-          ),
-        ],
       ),
+      extendBodyBehindAppBar: true,
       extendBody: true,
       resizeToAvoidBottomInset: false,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height -
-            56 -
-            48 -
-            MediaQuery.of(context).padding.top,
-        child: DrawingGestureDetector(
-          onUpdate: currentTool == DrawTool.ERASER
-              ? _eraserModePan
-              : _normalModePanUpdate,
-          onEnd: currentTool == DrawTool.ERASER ? null : _normalModePanEnd,
-          child: DrawingBoard(
-            repaintKey: key,
-            objects: objects,
-            uri: widget.savedImage != null ? widget.savedImage.uri : null,
-            color: Colors.grey[50],
+      body: SizedBox.expand(
+        child: MouseRegion(
+          onExit: (event) => setState(() => _mousePosition = null),
+          onHover: (event) {
+            RenderBox box = context.findRenderObject() as RenderBox;
+            Offset offset = box.localToGlobal(Offset.zero);
+            _mousePosition = event.position.translate(-offset.dx, -offset.dy);
+            setState(() {});
+          },
+          child: CustomPaint(
+            foregroundPainter: _CursorPainter(
+              offset: _mousePosition,
+              brushWidth: _tools[_toolIndex].size,
+            ),
+            child: DrawingGestureDetector(
+              onUpdate: _normalModePanUpdate,
+              onEnd: _normalModePanEnd,
+              child: DrawingBoard(
+                repaintKey: _drawingKey,
+                objects: _objects,
+                uri: widget.savedImage != null ? widget.savedImage.uri : null,
+                color: Colors.grey[50],
+              ),
+            ),
           ),
         ),
       ),
-      bottomNavigationBar: Material(
+      bottomNavigationBar: AnimatedBuilder(
+        animation: _toolbarAc,
+        builder: (context, _) {
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: FadeTransition(
+              opacity: ReverseAnimation(_curvedToolbarAc),
+              key: _toolbarKey,
+              child: DrawingToolbar(
+                controller: _toolbarController,
+                tools: _tools,
+                toolIndex: _toolIndex,
+                onIndexChanged: (value) => setState(() => _toolIndex = value),
+                onUndo: _objects.isNotEmpty
+                    ? () => setState(() {
+                          _objects.removeLast();
+                          _actionQueueIndex = _objects.length - 1;
+                          _saved = false;
+                        })
+                    : null,
+                onRedo: _actionQueueIndex < _backupObjects.length - 1
+                    ? () => setState(() {
+                          _actionQueueIndex = _objects.length;
+                          _objects.add(_backupObjects[_actionQueueIndex]);
+                          _saved = false;
+                        })
+                    : null,
+                clearCanvas: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(LocaleStrings.common.areYouSure),
+                      content:
+                          Text("This operation can't be undone. Continue?"),
+                      actions: [
+                        TextButton(
+                          child: Text(LocaleStrings.common.cancel),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        TextButton(
+                          child: Text(LocaleStrings.common.confirm),
+                          onPressed: () {
+                            _objects.clear();
+                            _backupObjects.clear();
+                            _actionQueueIndex = 0;
+                            setState(() {});
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
+      /*bottomNavigationBar: Material(
         elevation: 12,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -372,135 +372,247 @@ class _DrawPageState extends State<DrawPage>
             ),
           ],
         ),
-      ),
+      ),*/
     );
   }
 
-  void _normalModePanStart(details) {
-    controller.animateTo(0);
-    setState(() => saved = false);
-    if (currentTool == DrawTool.MARKER) {
-      objects.add(DrawObject(
+  void _normalModePanStart(DragUpdateDetails details) {
+    setState(() => _saved = false);
+    _toolbarController.closePanel();
+    DrawObject object;
+
+    switch (_tools[_toolIndex].toolType) {
+      case DrawTool.MARKER:
+        object = DrawObject(
           Paint()
             ..strokeCap = StrokeCap.square
             ..isAntiAlias = true
-            ..color = selectedColor.withOpacity(0.5)
-            ..strokeWidth = strokeWidth
+            ..color = _tools[_toolIndex].color.withOpacity(0.5)
+            ..strokeWidth = _tools[_toolIndex].size
             ..strokeJoin = StrokeJoin.round
             ..style = PaintingStyle.stroke,
-          []));
-    } else {
-      objects.add(DrawObject(
+          [],
+        );
+        break;
+      case DrawTool.ERASER:
+        object = DrawObject(
           Paint()
             ..strokeCap = StrokeCap.round
             ..isAntiAlias = true
-            ..color = selectedColor
-            ..strokeWidth = strokeWidth
+            ..color = Colors.transparent
+            ..blendMode = BlendMode.clear
+            ..strokeWidth = _tools[_toolIndex].size
             ..strokeJoin = StrokeJoin.round
             ..style = PaintingStyle.stroke,
-          []));
+          [],
+        );
+        break;
+      case DrawTool.PEN:
+      default:
+        object = DrawObject(
+          Paint()
+            ..strokeCap = StrokeCap.round
+            ..isAntiAlias = true
+            ..color = _tools[_toolIndex].color
+            ..strokeWidth = _tools[_toolIndex].size
+            ..strokeJoin = StrokeJoin.round
+            ..style = PaintingStyle.stroke,
+          [],
+        );
+        break;
     }
 
-    currentIndex = objects.length - 1;
-    actionQueueIndex = currentIndex;
+    _objects.add(object);
+    //_ac.forward();
+
+    _currentIndex = _objects.length - 1;
+    _actionQueueIndex = _currentIndex;
 
     RenderBox box = context.findRenderObject() as RenderBox;
-    Offset localOffset = box.globalToLocal(details.globalPosition);
+    Offset localOffset = box.globalToLocal(details.localPosition);
+    Offset topLeft = box.localToGlobal(Offset.zero);
 
     Offset point = Offset(
       localOffset.dx,
-      localOffset.dy - 56 - MediaQuery.of(context).padding.top,
+      localOffset.dy,
     );
+    _mousePosition = details.globalPosition.translate(-topLeft.dx, -topLeft.dy);
 
-    setState(() => objects[currentIndex].points.add(point));
+    setState(() => _objects[_currentIndex].points.add(point));
   }
 
-  void _normalModePanUpdate(details) {
-    if (currentIndex == null) {
+  void _normalModePanUpdate(DragUpdateDetails details) {
+    final RenderBox appbarBox = _appbarKey.currentContext.findRenderObject();
+    Rect appbarRect =
+        (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
+
+    final RenderBox toolbarBox = _toolbarKey.currentContext.findRenderObject();
+    Rect toolbarRect =
+        (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
+
+    if (_currentIndex == null) {
       _normalModePanStart(details);
       return;
     }
+
     RenderBox box = context.findRenderObject() as RenderBox;
-    Offset localOffset = box.globalToLocal(details.globalPosition);
+    Offset localOffset = box.globalToLocal(details.localPosition);
+    Offset topLeft = box.localToGlobal(Offset.zero);
+
+    appbarRect = appbarRect.shift(topLeft * -1);
+    toolbarRect = toolbarRect.shift(topLeft * -1);
+    _mousePosition = details.globalPosition.translate(-topLeft.dx, -topLeft.dy);
 
     Offset point = Offset(
       localOffset.dx,
-      localOffset.dy - 56 - MediaQuery.of(context).padding.top,
+      localOffset.dy,
     );
 
-    setState(() => objects[currentIndex].points.add(point));
-  }
-
-  void _eraserModePan(details) {
-    controller.animateTo(0);
-    setState(() => saved = false);
-
-    for (int i = 0; i < objects.length; i++) {
-      DrawObject object = objects[i];
-      RenderBox box = context.findRenderObject() as RenderBox;
-      Offset localOffset = box.globalToLocal(details.globalPosition);
-
-      Offset point = Offset(
-        localOffset.dx,
-        localOffset.dy - 56 - MediaQuery.of(context).padding.top,
-      );
-
-      //Offset touchPoint = box.globalToLocal(Offset(details.globalPosition.dx,
-      //    details.globalPosition.dy - MediaQuery.of(context).padding.top - 56));
-
-      if (object.points.length > 1) {
-        for (int j = 1; j < object.points.length - 1; j++) {
-          double distanceAC = distanceBetweenPoints(object.points[j], point);
-          double distanceCB =
-              distanceBetweenPoints(point, object.points[j + 1]);
-          double distanceAB =
-              distanceBetweenPoints(object.points[j], object.points[j + 1]);
-
-          if (distanceAB - distanceCB >=
-              distanceAC - (object.paint.strokeWidth / 2)) {
-            setState(() {
-              objects.remove(object);
-              actionQueueIndex = objects.length - 1;
-            });
-          }
-        }
-      } else {
-        double distanceAC = distanceBetweenPoints(object.points[0], point);
-
-        if (distanceAC < object.paint.strokeWidth / 2) {
-          setState(() {
-            objects.remove(object);
-            actionQueueIndex = objects.length - 1;
-          });
-        }
-      }
+    if (!_appbarAc.isAnimating) {
+      if (appbarRect.contains(point))
+        _appbarAc.forward();
+      else
+        _appbarAc.reverse();
     }
+
+    if (!_toolbarAc.isAnimating) {
+      if (toolbarRect.contains(point))
+        _toolbarAc.forward();
+      else
+        _toolbarAc.reverse();
+    }
+
+    setState(() => _objects[_currentIndex].points.add(point));
   }
 
   void _normalModePanEnd(details) {
-    currentIndex = null;
-    backupObjects = List.from(objects);
+    _currentIndex = null;
+    _backupObjects = List.from(_objects);
+    _appbarAc.reverse();
+    _toolbarAc.reverse();
+    setState(() => _mousePosition = null);
   }
 
-  double distanceBetweenPoints(Offset p1, Offset p2) {
-    double pXDifference = p2.dx - p1.dx;
-    double pYDifference = p2.dy - p1.dy;
+  bool exitPrompt(bool _) {
+    Uri uri = _filePath != null ? Uri.file(_filePath) : null;
 
-    double xDiffPlusYDiff =
-        (pXDifference * pXDifference) + (pYDifference * pYDifference);
-    double squaredXDiffPlusYDiff = sqrt(xDiffPlusYDiff);
+    void _internal() async {
+      if (!_saved) {
+        bool exit = await showDialog(
+          context: _globalContext,
+          builder: (context) => AlertDialog(
+            title: Text(LocaleStrings.common.areYouSure),
+            content: Text(LocaleStrings.drawPage.exitPrompt),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                textColor: Theme.of(context).accentColor,
+                child: Text(LocaleStrings.common.cancel),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.pop(context, true),
+                textColor: Theme.of(context).accentColor,
+                child: Text(LocaleStrings.common.exit),
+              ),
+            ],
+          ),
+        );
 
-    return squaredXDiffPlusYDiff;
+        if (exit != null) {
+          Navigator.pop(_globalContext, uri);
+        }
+      } else {
+        Navigator.pop(_globalContext, uri);
+      }
+    }
+
+    _internal();
+
+    return true;
   }
-}
 
-enum DrawTool {
-  PEN,
-  ERASER,
-  MARKER,
+  void _saveImage() async {
+    String drawing;
+    final box =
+        _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+
+    if (kIsWeb) {
+      drawing = await WebDrawingExporter.export(
+        widget.savedImage?.uri,
+        _objects,
+        box.size,
+      );
+    } else {
+      ui.Image image = await box.toImage();
+      ByteData byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      DateTime now = DateTime.now();
+      String timestamp = DateFormat(
+        "HH_mm_ss-MM_dd_yyyy",
+        context.locale.toLanguageTag(),
+      ).format(now);
+
+      final drawingsDirectory = DeviceInfo.isDesktopOrWeb
+          ? await getApplicationSupportDirectory()
+          : await getApplicationDocumentsDirectory();
+
+      print(drawingsDirectory);
+
+      drawing = "${drawingsDirectory.path}/drawing-$timestamp.png";
+      if (_filePath == null) {
+        _filePath = drawing;
+      } else {
+        drawing = _filePath;
+      }
+
+      File imgFile = File(drawing);
+      await imgFile.writeAsBytes(pngBytes, flush: true);
+      Loggy.d(message: drawing);
+
+      SavedImage savedImage = await ImageService.prepareLocally(imgFile);
+      if (widget.savedImage != null) {
+        widget.note.images
+            .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);
+        savedImage.id = widget.savedImage.id;
+      }
+      widget.note.images.add(savedImage);
+    }
+    helper.saveNote(widget.note.markChanged());
+
+    setState(() => _saved = true);
+  }
 }
 
 enum MenuShowReason {
   COLOR_PICKER,
   RADIUS_PICKER,
+}
+
+class _CursorPainter extends CustomPainter {
+  final Offset offset;
+  final double brushWidth;
+
+  _CursorPainter({
+    @required this.offset,
+    @required this.brushWidth,
+  });
+
+  @override
+  void paint(ui.Canvas canvas, ui.Size size) {
+    if (offset == null) return;
+
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black
+      ..strokeWidth = 1;
+
+    canvas.drawCircle(offset, brushWidth / 2, paint);
+  }
+
+  @override
+  bool shouldRepaint(_CursorPainter old) {
+    return this.offset != old.offset || this.brushWidth != old.brushWidth;
+  }
 }

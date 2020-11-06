@@ -77,16 +77,6 @@ class _DrawingBoardState extends State<DrawingBoard> {
   }
 }
 
-class CommonClipper extends CustomClipper<Rect> {
-  @override
-  Rect getClip(ui.Size size) {
-    return Rect.fromLTWH(0, 0, size.width, size.height);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper oldClipper) => false;
-}
-
 class DrawPainter extends CustomPainter {
   List<DrawObject> objects;
 
@@ -94,6 +84,7 @@ class DrawPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.saveLayer(Rect.fromLTWH(0, 0, size.width, size.height), Paint());
     objects.forEach((object) {
       if (object.points.length > 1) {
         Path path = Path();
@@ -106,6 +97,7 @@ class DrawPainter extends CustomPainter {
             object.paint..style = PaintingStyle.fill);
       }
     });
+    canvas.restore();
   }
 
   @override
