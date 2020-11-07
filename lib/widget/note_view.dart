@@ -5,6 +5,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
@@ -15,6 +16,7 @@ class NoteView extends StatefulWidget {
   final SpannableList providedContentList;
   final Function() onTap;
   final Function() onLongPress;
+  final bool selectorOpen;
   final bool selected;
 
   NoteView({
@@ -24,6 +26,7 @@ class NoteView extends StatefulWidget {
     this.providedContentList,
     this.onTap,
     this.onLongPress,
+    this.selectorOpen = false,
     this.selected = false,
   }) : super(key: key);
 
@@ -280,8 +283,8 @@ class _NoteViewState extends State<NoteView> {
               return Row(
                 children: [
                   IgnorePointer(
-                    ignoring: !_mouseIsConnected || widget.selected,
-                    child: Checkbox(
+                    ignoring: !_mouseIsConnected || widget.selectorOpen,
+                    child: NoteViewCheckbox(
                       value: item.status,
                       activeColor: widget.note.color != 0
                           ? Theme.of(context).textTheme.caption.color

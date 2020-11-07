@@ -255,6 +255,7 @@ class _NoteListPageState extends State<NoteListPage> {
           selectionList.add(note);
         });
       },
+      selectorOpen: selecting,
       selected: selectionList.any((item) => item.id == note.id),
     );
   }
