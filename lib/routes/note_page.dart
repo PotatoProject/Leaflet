@@ -9,8 +9,8 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
@@ -193,8 +193,8 @@ class _NotePageState extends State<NotePage> {
               icon: Icon(note.starred ? Icons.favorite : Icons.favorite_border),
               padding: EdgeInsets.all(0),
               tooltip: note.starred
-                  ? LocaleStrings.mainPage.selectionBarRmFav
-                  : LocaleStrings.mainPage.selectionBarAddFav,
+                  ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                  : LocaleStrings.mainPage.selectionBarAddFavourites,
               onPressed: () {
                 setState(() => note = note.copyWith(starred: !note.starred));
                 notifyNoteChanged();

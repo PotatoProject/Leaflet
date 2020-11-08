@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class DateFilterSelector extends StatefulWidget {
   final DateTime date;

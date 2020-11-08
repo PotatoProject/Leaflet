@@ -9,9 +9,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/database/shared.dart';
-import 'package:potato_notes/internal/android_xml_asset_loader.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/themes.dart';
@@ -52,34 +53,9 @@ main() async {
   runApp(
     EasyLocalization(
       child: PotatoNotes(),
-      supportedLocales: [
-        Locale("de", "DE"),
-        Locale("en", "US"),
-        Locale("es", "ES"),
-        Locale("fr", "FR"),
-        Locale("hu", "HU"),
-        Locale("it", "IT"),
-        Locale("nl", "NL"),
-        Locale("pl", "PL"),
-        Locale("pt", "BR"),
-        Locale("ro", "RO"),
-        Locale("ru", "RU"),
-        Locale("sr", "SR"),
-        Locale("tr", "TR"),
-        Locale("uk", "UK"),
-        Locale("zh", "CN"),
-      ],
+      supportedLocales: Locales.supported,
       fallbackLocale: Locale("en", "US"),
-      assetLoader: AndroidXmlAssetLoader([
-        "common",
-        "about_page",
-        "draw_page",
-        "main_page",
-        "note_page",
-        "search_page",
-        "settings_page",
-        "setup_page",
-      ]),
+      assetLoader: GeneratedAssetLoader(),
       path: "assets/locales",
       preloaderColor: color,
     ),

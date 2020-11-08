@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/date_selector.dart';
 
 import 'note_color_selector.dart';

@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/setup/finish_page.dart';
 import 'package:potato_notes/routes/setup/basic_customization_page.dart';
 import 'package:potato_notes/routes/setup/welcome_page.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class DrawingToolbar extends StatefulWidget {
   final DrawingToolbarController controller;

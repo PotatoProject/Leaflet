@@ -6,10 +6,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -64,8 +64,8 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             anyStarred ? Icons.favorite : Icons.favorite_border,
           ),
           tooltip: anyStarred
-              ? LocaleStrings.mainPage.selectionBarRmFav
-              : LocaleStrings.mainPage.selectionBarAddFav,
+              ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+              : LocaleStrings.mainPage.selectionBarAddFavourites,
           padding: EdgeInsets.all(0),
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {

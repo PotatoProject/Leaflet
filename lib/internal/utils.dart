@@ -16,6 +16,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/routes/about_page.dart';
@@ -27,8 +28,6 @@ import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:recase/recase.dart';
 import 'package:uuid/uuid.dart';
-
-import 'locale_strings.dart';
 
 const int kMaxImageCount = 4;
 const double kCardBorderRadius = 6;
@@ -293,7 +292,7 @@ class Utils {
   static List<ContributorInfo> get contributors => [
         ContributorInfo(
           name: "Davide Bianco",
-          role: LocaleStrings.aboutPage.contributorsHrX,
+          role: LocaleStrings.aboutPage.contributorsHrx,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "HrX03"),
@@ -337,7 +336,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "RshBfn",
-          role: LocaleStrings.aboutPage.contributorsRshBfn,
+          role: LocaleStrings.aboutPage.contributorsRshbfn,
           avatarUrl:
               "https://pbs.twimg.com/profile_images/1282395593646604288/Rkxny-Fi.jpg",
           socialLinks: [

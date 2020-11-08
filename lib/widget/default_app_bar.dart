@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/login_page.dart';
 import 'package:potato_notes/widget/account_info.dart';

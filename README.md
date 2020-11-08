@@ -45,6 +45,14 @@ After that, building is simple as this:
 ~$ flutter build apk     # release build (fat apk)
 ```
 
+## Generating locales
+After adding or updating the locales, run the following command from Leaflet root dir:
+```
+dart bin/locale_gen.dart assets/locales lib/internal/locales
+```
+
+This will generate and update the required files
+
 ## Contributing
 The entire app and even the [online sync api](https://github.com/broodroosterdev/potatosync-rust) is completely open source.  
 Feel free to open a PR to suggest fixes, features or whatever you want, just remember that PRs are subjected to manual review so you gotta wait for actual people to look at your contributions
