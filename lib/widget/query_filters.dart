@@ -4,7 +4,9 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/date_selector.dart';
+import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 import 'note_color_selector.dart';
 
@@ -34,6 +36,17 @@ class _QueryFiltersState extends State<QueryFilters> {
           activeColor: Theme.of(context).accentColor,
           onChanged: (value) {
             setState(() => widget.query.caseSensitive = value);
+            if (widget.filterChangedCallback != null)
+              widget.filterChangedCallback();
+          },
+        ),
+        SwitchListTile(
+          secondary: Icon(Icons.favorite_border),
+          title: Text("Favourites only"),
+          value: widget.query.onlyFavourites,
+          activeColor: Theme.of(context).accentColor,
+          onChanged: (value) {
+            setState(() => widget.query.onlyFavourites = value);
             if (widget.filterChangedCallback != null)
               widget.filterChangedCallback();
           },
@@ -100,6 +113,29 @@ class _QueryFiltersState extends State<QueryFilters> {
                           widget.filterChangedCallback();
                       },
                     ));
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.label_outline),
+          title: Text("Tags"),
+          trailing: Text(
+            widget.query.tags.isNotEmpty
+                ? "${widget.query.tags.length} selected"
+                : "",
+          ),
+          onTap: () async {
+            await Utils.showSecondaryRoute(
+              context,
+              SearchPage(
+                delegate: TagSearchDelegate(
+                  widget.query.tags,
+                  onChanged: () => setState(() {}),
+                ),
+              ),
+            );
+
+            if (widget.filterChangedCallback != null)
+              widget.filterChangedCallback();
           },
         ),
       ],

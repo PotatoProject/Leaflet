@@ -21,6 +21,7 @@ class _SearchPageState<T> extends State<SearchPage> {
     super.initState();
     widget.delegate._queryTextController.addListener(_onQueryChanged);
     widget.delegate._focusNode = focusNode;
+    widget.delegate._setState = setState;
   }
 
   @override
@@ -105,4 +106,8 @@ abstract class CustomSearchDelegate<T> {
 
   final ProxyAnimation _proxyAnimation =
       ProxyAnimation(kAlwaysDismissedAnimation);
+
+  void Function(VoidCallback) _setState;
+
+  void Function(VoidCallback) get setState => _setState;
 }

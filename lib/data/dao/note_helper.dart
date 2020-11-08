@@ -136,6 +136,8 @@ class SearchQuery {
   int _color;
   DateTime date;
   DateFilterMode dateMode;
+  List<String> tags = [];
+  bool onlyFavourites;
 
   int get color => _color ?? 0;
 
@@ -152,6 +154,7 @@ class SearchQuery {
     int color,
     this.date,
     this.dateMode = DateFilterMode.ONLY,
+    this.onlyFavourites = false,
   }) : _color = color;
 }
 

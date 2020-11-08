@@ -29,6 +29,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           isScrollControlled: true,
           builder: (context) => QueryFilters(
             query: searchQuery,
+            filterChangedCallback: () => setState(() {}),
           ),
         ),
       ),
@@ -43,7 +44,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       builder: (context, snapshot) {
         Widget child;
 
-        if (snapshot.data.isNotEmpty) {
+        if (snapshot.data?.isNotEmpty ?? false) {
           if (prefs.useGrid) {
             child = StaggeredGridView.countBuilder(
               crossAxisCount: deviceInfo.uiSizeFactor,
@@ -199,30 +200,37 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       return sanitizedText.contains(sanitizedQuery);
     }
 
+    bool _getTagBool(List<String> tags) {
+      bool matchResult;
+
+      searchQuery.tags.forEach((tag) {
+        if (matchResult != null) {
+          matchResult = matchResult && tags.any((element) => element == tag);
+        } else {
+          matchResult = tags.any((element) => element == tag);
+        }
+      });
+
+      return matchResult;
+    }
+
     for (Note note in notes) {
       bool titleMatch = _getTextBool(note.title);
       bool contentMatch = _getTextBool(note.content);
-      bool dateMatch = _getDateBool(note.creationDate);
-      bool colorMatch = _getColorBool(note.color);
+      bool dateMatch =
+          searchQuery.date != null ? _getDateBool(note.creationDate) : true;
+      bool colorMatch =
+          searchQuery.color != null ? _getColorBool(note.color) : true;
+      bool tagMatch =
+          searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
+      bool favouriteMatch = searchQuery.onlyFavourites ? note.starred : true;
 
-      if (searchQuery.color != null && searchQuery.date != null) {
-        if (colorMatch && dateMatch && (titleMatch || contentMatch)) {
-          results.add(note);
-        }
-      } else {
-        if (searchQuery.color != 0) {
-          if (colorMatch && (titleMatch || contentMatch)) {
-            results.add(note);
-          }
-        } else if (searchQuery.date != null) {
-          if (dateMatch && (titleMatch || contentMatch)) {
-            results.add(note);
-          }
-        } else {
-          if (titleMatch || contentMatch) {
-            results.add(note);
-          }
-        }
+      if (tagMatch &&
+          colorMatch &&
+          dateMatch &&
+          favouriteMatch &&
+          (titleMatch || contentMatch)) {
+        results.add(note);
       }
     }
 

@@ -513,7 +513,10 @@ class _NotePageState extends State<NotePage> {
             await Utils.showSecondaryRoute(
               context,
               SearchPage(
-                delegate: TagSearchDelegate(note),
+                delegate: TagSearchDelegate(
+                  note.tags,
+                  onChanged: () => helper.saveNote(note.markChanged()),
+                ),
               ),
             );
 
