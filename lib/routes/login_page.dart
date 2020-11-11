@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
@@ -286,9 +288,11 @@ class _LoginPageState extends State<LoginPage> {
     if (response.status && !register) {
       Navigator.pop(context);
     } else {
-      scaffoldKey.currentState.removeCurrentSnackBar();
-      scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
+          width: min(640, MediaQuery.of(context).size.width - 32),
           content: Text(
             register ? response.message ?? "Registered!" : response.message,
           ),

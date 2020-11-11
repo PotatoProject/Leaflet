@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -47,7 +48,9 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
+                      DeviceInfo.isDesktop
+                          ? "Desktop version"
+                          : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -138,6 +141,8 @@ class AboutPage extends StatelessWidget {
         return MdiIcons.github;
       case SocialLinkType.INSTAGRAM:
         return MdiIcons.instagram;
+      case SocialLinkType.STEAM:
+        return MdiIcons.steam;
       default:
         throw ArgumentError.notNull("type");
     }
@@ -151,6 +156,8 @@ class AboutPage extends StatelessWidget {
         return "Github";
       case SocialLinkType.INSTAGRAM:
         return "Instagram";
+      case SocialLinkType.STEAM:
+        return "Steaj";
       default:
         throw ArgumentError.notNull("type");
     }
@@ -164,6 +171,8 @@ class AboutPage extends StatelessWidget {
         return "https://github.com/${link.username}";
       case SocialLinkType.INSTAGRAM:
         return "https://instagram.com/${link.username}";
+      case SocialLinkType.STEAM:
+        return "https://https://steamcommunity.com/id/${link.username}";
       default:
         throw ArgumentError.notNull("type");
     }
@@ -195,4 +204,5 @@ enum SocialLinkType {
   TWITTER,
   GITHUB,
   INSTAGRAM,
+  STEAM,
 }

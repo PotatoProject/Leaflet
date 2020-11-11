@@ -85,24 +85,26 @@ class DependentScaffold extends StatelessWidget {
       }
     }
 
-    return Scaffold(
-      appBar: state == null ? appBar : null,
-      floatingActionButton: state == null ? floatingActionButton : null,
-      body: body,
-      persistentFooterButtons: persistentFooterButtons,
-      drawer: drawer,
-      endDrawer: endDrawer,
-      drawerScrimColor: drawerScrimColor,
-      backgroundColor: state != null ? Colors.transparent : backgroundColor,
-      bottomNavigationBar: bottomNavigationBar,
-      bottomSheet: bottomSheet,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      primary: primary,
-      drawerDragStartBehavior: drawerDragStartBehavior,
-      drawerEdgeDragWidth: drawerEdgeDragWidth,
-      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-      endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-      extendBodyBehindAppBar: true,
+    return ScaffoldMessenger(
+      child: Scaffold(
+        appBar: state == null ? appBar : null,
+        floatingActionButton: state == null ? floatingActionButton : null,
+        body: body,
+        persistentFooterButtons: persistentFooterButtons,
+        drawer: drawer,
+        endDrawer: endDrawer,
+        drawerScrimColor: drawerScrimColor,
+        backgroundColor: state != null ? Colors.transparent : backgroundColor,
+        bottomNavigationBar: bottomNavigationBar,
+        bottomSheet: bottomSheet,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        primary: primary,
+        drawerDragStartBehavior: drawerDragStartBehavior,
+        drawerEdgeDragWidth: drawerEdgeDragWidth,
+        drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+        endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+        extendBodyBehindAppBar: true,
+      ),
     );
   }
 }

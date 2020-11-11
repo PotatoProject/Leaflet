@@ -338,9 +338,19 @@ class Utils {
           name: "RshBfn",
           role: LocaleStrings.aboutPage.contributorsRshbfn,
           avatarUrl:
-              "https://pbs.twimg.com/profile_images/1282395593646604288/Rkxny-Fi.jpg",
+              "https://pbs.twimg.com/profile_images/1306121394241953792/G0zeUpRb.jpg",
           socialLinks: [
             SocialLink(SocialLinkType.TWITTER, "RshBfn"),
+          ],
+        ),
+        ContributorInfo(
+          name: "Elias Gagnef",
+          role: "Leaflet brand name",
+          avatarUrl: "https://avatars.githubusercontent.com/u/46574798",
+          socialLinks: [
+            SocialLink(SocialLinkType.TWITTER, "EliasGagnef"),
+            SocialLink(SocialLinkType.GITHUB, "EliasGagnef"),
+            SocialLink(SocialLinkType.STEAM, "Gagnef"),
           ],
         ),
       ];
@@ -348,34 +358,38 @@ class Utils {
   static Future<dynamic> showSecondaryRoute(
     BuildContext context,
     Widget route, {
-    String heroTag,
     bool allowGestures = true,
     bool pushImmediate = false,
   }) async {
     return Navigator.of(context).push(
       DismissiblePageRoute(
-        builder: (context) => route,
+        builder: (context) => ScaffoldMessenger(
+          child: route,
+        ),
         allowGestures: allowGestures,
         pushImmediate: pushImmediate,
-        heroTag: heroTag,
       ),
     );
   }
 
   static void newNote(BuildContext context) async {
     int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+    String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
-      NotePage(),
-      heroTag: "writeNoteTag",
+      NotePage(note: NoteX.emptyNote.copyWith(id: id)),
     );
 
     List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
     int newLength = notes.length;
 
     if (newLength > currentLength) {
-      Note lastNote = notes.last;
+      Note lastNote = notes.firstWhere(
+        (element) => element.id == id,
+        orElse: () => null,
+      );
+      if (lastNote == null) return;
       Utils.handleNotePagePop(lastNote);
 
       if (lastNote.title.isEmpty &&

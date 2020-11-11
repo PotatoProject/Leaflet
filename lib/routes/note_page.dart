@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -189,25 +190,32 @@ class _NotePageState extends State<NotePage> {
               tooltip: LocaleStrings.notePage.privacyTitle,
               onPressed: showPrivacyOptionSheet,
             ),
-            IconButton(
-              icon: Icon(note.starred ? Icons.favorite : Icons.favorite_border),
-              padding: EdgeInsets.all(0),
-              tooltip: note.starred
-                  ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                  : LocaleStrings.mainPage.selectionBarAddFavourites,
-              onPressed: () {
-                setState(() => note = note.copyWith(starred: !note.starred));
-                notifyNoteChanged();
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      note.starred
-                          ? LocaleStrings.notePage.addedFavourites
-                          : LocaleStrings.notePage.removedFavourites,
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(
+                      note.starred ? Icons.favorite : Icons.favorite_border),
+                  padding: EdgeInsets.all(0),
+                  tooltip: note.starred
+                      ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                      : LocaleStrings.mainPage.selectionBarAddFavourites,
+                  onPressed: () {
+                    setState(
+                        () => note = note.copyWith(starred: !note.starred));
+                    notifyNoteChanged();
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          note.starred
+                              ? LocaleStrings.notePage.addedFavourites
+                              : LocaleStrings.notePage.removedFavourites,
+                        ),
+                        width: min(640, MediaQuery.of(context).size.width - 32),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
                 );
               },
             ),

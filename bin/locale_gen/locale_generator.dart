@@ -61,7 +61,7 @@ class LocaleGenerator {
     localesBuffer.writeln("}");
 
     await localesFile
-        .writeAsString(localesBuffer.toString() + "\n\n" + buffer.toString());
+        .writeAsString(localesBuffer.toString() + "\n" + buffer.toString());
   }
 }
 

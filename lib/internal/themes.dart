@@ -16,8 +16,11 @@ class Themes {
 
   ThemeData get light => ThemeData.light().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.light(
           surface: lightColor,
           primary: mainColor,
@@ -32,7 +35,6 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
           brightness: Brightness.light,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: lightColor,
           shape: RoundedRectangleBorder(
@@ -80,8 +82,11 @@ class Themes {
 
   ThemeData get dark => ThemeData.dark().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.dark(
           surface: darkColor,
           primary: mainColor,
@@ -96,7 +101,6 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           brightness: Brightness.dark,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: darkColor,
           shape: RoundedRectangleBorder(
@@ -144,8 +148,11 @@ class Themes {
 
   ThemeData get black => ThemeData.dark().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.dark(
           surface: blackColor,
           primary: mainColor,
@@ -160,7 +167,6 @@ class Themes {
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           brightness: Brightness.dark,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
           backgroundColor: blackColor,
           shape: RoundedRectangleBorder(

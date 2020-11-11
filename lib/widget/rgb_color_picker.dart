@@ -37,14 +37,18 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        cursorColor:
-            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        textSelectionHandleColor:
-            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        textSelectionColor: (currentColor.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white)
-            .withOpacity(0.4),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: currentColor.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white,
+          selectionHandleColor: currentColor.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white,
+          selectionColor: (currentColor.computeLuminance() > 0.5
+                  ? Colors.black
+                  : Colors.white)
+              .withOpacity(0.4),
+        ),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {

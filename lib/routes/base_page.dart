@@ -111,12 +111,12 @@ class _BasePageState extends State<BasePage>
         (_) => setState(() => _secondaryAppBarHeroTag = secondaryAppBarHeroTag),
       );
   void hideCurrentSnackBar(BuildContext context) =>
-      _scaffoldKey.currentState.hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     BuildContext context,
     SnackBar snackBar,
   ) =>
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
         BottomNavigationBarItem(

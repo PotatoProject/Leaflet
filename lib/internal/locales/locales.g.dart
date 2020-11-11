@@ -40,7 +40,6 @@ class Locales {
   };
 }
 
-
 abstract class _$LocaleBase {
   String locale;
   Map<String, String> data;

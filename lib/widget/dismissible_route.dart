@@ -10,13 +10,11 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     @required this.builder,
     this.allowGestures = false,
     this.pushImmediate = false,
-    this.heroTag,
   });
 
   final WidgetBuilder builder;
   final bool allowGestures;
   final bool pushImmediate;
-  final String heroTag;
 
   @override
   final bool maintainState = false;
@@ -115,7 +113,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
       secondaryAnimation,
       child,
       allowGestures: allowGestures,
-      heroTag: heroTag,
     );
   }
 
@@ -126,7 +123,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child, {
     bool allowGestures = true,
-    String heroTag,
   }) {
     return DismissiblePageTransition(
       child: DismissibleRoute(
@@ -136,7 +132,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
         controller: route.controller,
         navigator: route.navigator,
         isFirst: route.isFirst,
-        heroTag: heroTag,
       ),
       animation: animation,
       secondaryAnimation: secondaryAnimation,
@@ -222,7 +217,6 @@ class DismissibleRoute extends StatefulWidget {
   final AnimationController controller;
   final NavigatorState navigator;
   final bool isFirst;
-  final String heroTag;
 
   DismissibleRoute({
     @required this.child,
@@ -231,7 +225,6 @@ class DismissibleRoute extends StatefulWidget {
     @required this.controller,
     @required this.navigator,
     this.isFirst = false,
-    this.heroTag,
   });
 
   @override
@@ -334,12 +327,7 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
             removeRight: true,
             removeBottom: true,
             context: context,
-            child: widget.heroTag != null
-                ? Hero(
-                    tag: widget.heroTag,
-                    child: content,
-                  )
-                : content,
+            child: content,
           ),
         ),
       ),

@@ -167,13 +167,17 @@ class AccountController {
   // When there is an error it throws an exception which needs to be catched
   static Future<AuthResponse> refreshToken() async {
     Response refresh;
+
+    if (prefs.refreshToken == null)
+      return AuthResponse(status: false, message: "Not logged in");
+
     try {
       var url = "${prefs.apiUrl}/login/user/refresh";
       Loggy.v(message: "Going to send GET to " + url);
       refresh = await get(
         url,
         headers: {
-          "Authorization": "Bearer " + prefs.refreshToken,
+          "Authorization": "Bearer ",
         },
       );
       Loggy.v(
