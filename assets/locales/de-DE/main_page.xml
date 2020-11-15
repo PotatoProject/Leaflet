@@ -3,7 +3,7 @@
     <string name="settings">Einstellungen</string>
     <string name="search">Suche</string>
     <string name="account">Konto</string>
-    <string name="restore_prompt.archive">Möchten Sie alle Notizen im Archiv wiederherstellen?</string>
+    <string name="restore_prompt.archive">Möchtest du alle Notizen im Archiv wiederherstellen?</string>
     <string name="restore_prompt.trash">Möchtest du alle Notizen im Papierkorb wiederherstellen?</string>
     <string name="tag_delete_prompt">Dieses Etikett kann nach dem Löschen nicht wiederhergestellt werden</string>
     <string name="deleted_empty_note">Leere Notiz gelöscht</string>
