@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 
 class BasicCustomizationPage extends StatelessWidget {

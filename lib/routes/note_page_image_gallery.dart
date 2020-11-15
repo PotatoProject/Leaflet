@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 
@@ -41,21 +42,18 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: PhotoViewGallery.builder(
-        itemCount: widget.note.images.data.length,
+        itemCount: widget.note.images.length,
         backgroundDecoration: BoxDecoration(
           color: Colors.transparent,
         ),
         builder: (context, index) {
+          SavedImage savedImage = widget.note.images[index];
           ImageProvider image;
-          String scheme = widget.note.images.uris[index].scheme;
-
-          if (scheme.startsWith("http")) {
-            image = CachedNetworkImageProvider(
-                widget.note.images.uris[index].toString());
+          if (savedImage.existsLocally) {
+            image = FileImage(File(savedImage.path));
           } else {
-            image = FileImage(File(widget.note.images.uris[index].path));
+            image = BlurHashImage(savedImage.blurHash);
           }
-
           return PhotoViewGalleryPageOptions(
             imageProvider: image,
             initialScale: PhotoViewComputedScale.contained,
@@ -71,7 +69,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         title: Text(
           LocaleStrings.common.xOfY(
             (currentPage + 1),
-            widget.note.images.data.length,
+            widget.note.images.length,
           ),
           style: TextStyle(
             fontSize: 18,
@@ -79,7 +77,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
         ),
         actions: [
           IconButton(
-            icon: Icon(CommunityMaterialIcons.pencil_outline),
+            icon: Icon(Icons.edit_outlined),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
             onPressed: !kIsWeb
@@ -88,12 +86,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
                       context,
                       DrawPage(
                         note: widget.note,
-                        data: MapEntry(
-                          widget.note.images.uris[currentPage].path,
-                          widget.note.images.uris[currentPage],
-                        ),
+                        savedImage: widget.note.images[currentPage],
                       ),
-                      sidePadding: kTertiaryRoutePadding,
                       allowGestures: false,
                     );
 
@@ -106,11 +100,10 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
-              widget.note.images.data
-                  .remove(widget.note.images.uris[currentPage].path);
-
-              helper.saveNote(widget.note);
-
+              ImageService.deleteImage(widget.note.images[currentPage]);
+              widget.note.images.removeWhere((savedImage) =>
+                  widget.note.images[currentPage].id == savedImage.id);
+              helper.saveNote(widget.note.markChanged());
               Navigator.pop(context);
             },
           ),

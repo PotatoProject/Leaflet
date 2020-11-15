@@ -1,31 +1,24 @@
 name: potato_notes
-description: Official POSP note app
+description: Official POSP notes app
+publish_to: 'none'
 version: 2.0.0-beta1+16
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
-  # The example interacts with build scripts on the Flutter side that are not
-  # yet stable, so it requires a very recent version of Flutter.
-  # This version will increase regularly as the build scripts change.
-  flutter: '>=1.5.9-pre.270'
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  moor_ffi: "0.5.0"
+  sqlite3_flutter_libs:
   moor:
   json_serializable:
   sqflite:
   path_provider:
-  flutter_riverpod:
-  streams_channel:
-  outline_material_icons:
-  community_material_icon:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:
-  back_button_interceptor:
+  back_button_interceptor: "4.2.4"
   shared_preferences:
   local_auth:
   flutter_secure_storage:
@@ -33,68 +26,74 @@ dependencies:
   jwt_decode:
   intl:
   flutter_local_notifications:
-  share:
+  share_plus:
   animations:
   material_design_icons_flutter:
-  google_fonts:
   path_drawing:
   quick_actions:
   image_picker_for_web:
-  package_info:
+  package_info_plus:
   url_launcher:
   cached_network_image:
   path:
   easy_localization: ^2.3.2
   xml: ^4.2.0
   flutter_localized_locales:
+  uuid:
+  recase:
+  in_app_update:
+  yaml:
+  flutter_downloader:
+  dio:
+  image:
+  blurhash_dart:
+  flutter_blurhash:
+  mobx:
+  flutter_mobx:
+  mobx_codegen:
+  flutter_staggered_animations:
+  waterfall_flow:
   
+  crayola:
+
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
   spicy_components:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
+  file_chooser:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/file_chooser
 
 dev_dependencies:
   moor_generator:
   build_runner:
 
+dependency_overrides:
+  intl: ^0.16.0
+
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/locales/de-DE/
-    - assets/locales/en-US/
-    - assets/locales/es-ES/
-    - assets/locales/fr-FR/
-    - assets/locales/hu-HU/
-    - assets/locales/it-IT/
-    - assets/locales/nl-NL/
-    - assets/locales/pl-PL/
-    - assets/locales/pt-BR/
-    - assets/locales/ro-RO/
-    - assets/locales/ru-RU/
-    - assets/locales/sr-SR/
-    - assets/locales/tr-TR/
-    - assets/locales/uk-UK/
-    - assets/locales/zh-CN/
   fonts:
     - family:  CustomIcons
       fonts:
         - asset: fonts/CustomIcons.ttf
     - family: Manrope
       fonts:
-        - asset: fonts/Manrope-ExtraLight.otf
-          weight: 100
         - asset: fonts/Manrope-Light.otf
-          weight: 200
-        - asset: fonts/Manrope-Regular.otf
           weight: 300
-        - asset: fonts/Manrope-Medium.otf
+        - asset: fonts/Manrope-Regular.otf
           weight: 400
-        - asset: fonts/Manrope-SemiBold.otf
+        - asset: fonts/Manrope-Medium.otf
           weight: 500
-        - asset: fonts/Manrope-Bold.otf
+        - asset: fonts/Manrope-SemiBold.otf
           weight: 600
-        - asset: fonts/Manrope-ExtraBold.otf
+        - asset: fonts/Manrope-Bold.otf
           weight: 700
+    - family:  ValeraRound
+      fonts:
+        - asset: fonts/ValeraRound.ttf

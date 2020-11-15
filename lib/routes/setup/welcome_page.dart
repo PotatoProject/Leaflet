@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 
-const double _logoHeight = 106;
+const double _logoHeight = 64;
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -24,9 +23,20 @@ class WelcomePage extends StatelessWidget {
               children: <Widget>[
                 Positioned(
                   top: (height / 2) - (_logoHeight / 2),
-                  child: NotesLogo(
-                    penColor: Theme.of(context).scaffoldBackgroundColor,
-                    height: _logoHeight,
+                  child: Row(
+                    children: [
+                      IconLogo(
+                        height: _logoHeight,
+                      ),
+                      SizedBox(width: 32),
+                      Text(
+                        "leaflet",
+                        style: TextStyle(
+                          fontFamily: "ValeraRound",
+                          fontSize: 48,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -35,13 +45,6 @@ class WelcomePage extends StatelessWidget {
                     width: constraints.maxWidth,
                     child: Column(
                       children: <Widget>[
-                        Text(
-                          "PotatoNotes",
-                          style: GoogleFonts.poppins(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
                         Text(
                           LocaleStrings.setupPage.welcomeCatchphrase,
                           textAlign: TextAlign.center,

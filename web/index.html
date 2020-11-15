@@ -15,11 +15,13 @@
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
-  <title>PotatoNotes</title>
+  <title>Leaflet</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
+  <img src="splash_screen.png" class="center" width="auto" height="64"/>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
@@ -28,7 +30,7 @@
     }
   </script>
   <script defer src="sql-wasm.js"></script>
-  <script src="main.dart.js" type="application/javascript"></script>
+  <script src="main.dart.js?version=1" type="application/javascript"></script>
 </body>
 
 </html>

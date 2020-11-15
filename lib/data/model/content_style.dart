@@ -1,38 +1,24 @@
 import 'dart:convert';
 
-import 'package:json_annotation/json_annotation.dart';
 import 'package:moor/moor.dart';
 
-part 'content_style.g.dart';
-
-@JsonSerializable()
-class ContentStyle {
-  List<int> data;
-
-  ContentStyle(this.data);
-
-  factory ContentStyle.fromJson(Map<String, dynamic> json) =>
-      _$ContentStyleFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContentStyleToJson(this);
-}
-
-class ContentStyleConverter extends TypeConverter<ContentStyle, String> {
+class ContentStyleConverter extends TypeConverter<List<int>, String> {
   const ContentStyleConverter();
   @override
-  ContentStyle mapToDart(String fromDb) {
+  List<int> mapToDart(String fromDb) {
     if (fromDb == null) {
       return null;
     }
-    return ContentStyle.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+    List<dynamic> decoded = json.decode(fromDb);
+    return List.generate(decoded.length, (index) => decoded[index] as int);
   }
 
   @override
-  String mapToSql(ContentStyle value) {
+  String mapToSql(List<int> value) {
     if (value == null) {
       return null;
     }
 
-    return json.encode(value.toJson());
+    return json.encode(value);
   }
 }

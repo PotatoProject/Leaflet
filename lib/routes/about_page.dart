@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,25 +34,22 @@ class AboutPage extends StatelessWidget {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 48,
-                      backgroundColor: Utils.defaultAccent,
-                      child: NotesLogo(
-                        bgColor: Colors.grey[300],
-                        fgColor: Colors.white,
-                        penColor: Colors.grey[900],
+                      backgroundColor: Color(0xFF212C21),
+                      child: IconLogo(
                         height: 48,
                       ),
                     ),
                     SizedBox(height: 16),
                     Text(
-                      "PotatoNotes",
+                      "Leaflet",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      kIsWeb
-                          ? LocaleStrings.aboutPage.pwaVersion
+                      DeviceInfo.isDesktop
+                          ? "Desktop version"
                           : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
                       style: TextStyle(
                         fontSize: 16,
@@ -144,6 +141,8 @@ class AboutPage extends StatelessWidget {
         return MdiIcons.github;
       case SocialLinkType.INSTAGRAM:
         return MdiIcons.instagram;
+      case SocialLinkType.STEAM:
+        return MdiIcons.steam;
       default:
         throw ArgumentError.notNull("type");
     }
@@ -157,6 +156,8 @@ class AboutPage extends StatelessWidget {
         return "Github";
       case SocialLinkType.INSTAGRAM:
         return "Instagram";
+      case SocialLinkType.STEAM:
+        return "Steaj";
       default:
         throw ArgumentError.notNull("type");
     }
@@ -170,6 +171,8 @@ class AboutPage extends StatelessWidget {
         return "https://github.com/${link.username}";
       case SocialLinkType.INSTAGRAM:
         return "https://instagram.com/${link.username}";
+      case SocialLinkType.STEAM:
+        return "https://https://steamcommunity.com/id/${link.username}";
       default:
         throw ArgumentError.notNull("type");
     }
@@ -201,4 +204,5 @@ enum SocialLinkType {
   TWITTER,
   GITHUB,
   INSTAGRAM,
+  STEAM,
 }

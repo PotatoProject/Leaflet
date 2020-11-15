@@ -1,23 +1,26 @@
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 
 part 'database.g.dart';
 
 class Notes extends Table {
-  IntColumn get id => integer()();
+  TextColumn get id => text()();
   TextColumn get title => text().nullable()();
   TextColumn get content => text().nullable()();
-  TextColumn get styleJson => text().map(const ContentStyleConverter()).nullable()();
+  TextColumn get styleJson =>
+      text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
   DateTimeColumn get creationDate =>
-      dateTime().withDefault(Constant(DateTime.now()))();
+      dateTime()();
   DateTimeColumn get lastModifyDate =>
-      dateTime().withDefault(Constant(DateTime.now()))();
+      dateTime()();
   IntColumn get color => integer().withDefault(Constant(0))();
   TextColumn get images => text().map(const ImageListConverter())();
   BoolColumn get list => boolean().withDefault(Constant(false))();
@@ -32,10 +35,20 @@ class Notes extends Table {
   BoolColumn get synced => boolean().withDefault(Constant(false))();
 
   @override
-  Set<Column> get primaryKey => {id, synced};
+  Set<Column> get primaryKey => {id};
 }
 
-@UseMoor(tables: [Notes], daos: [NoteHelper])
+class Tags extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  IntColumn get color => integer().withDefault(Constant(0))();
+  DateTimeColumn get lastModifyDate =>
+      dateTime()();
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@UseMoor(tables: [Notes, Tags], daos: [NoteHelper, TagHelper])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 

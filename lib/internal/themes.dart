@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
@@ -6,33 +7,36 @@ class Themes {
 
   Themes(this.mainColor);
 
-  static final Color _lightColor = Colors.white;
-  static final Color _lightSecondaryColor = Color(0xFFF6F6F6);
-  static final Color _darkColor = Color(0xFF212121);
-  static final Color _darkSecondaryColor = Color(0xFF161616);
-  static final Color _blackColor = Color(0xFF0E0E0E);
-  static final Color _blackSecondaryColor = Colors.black;
+  static final Color lightColor = Colors.white;
+  static final Color lightSecondaryColor = Color(0xFFFAFAFA);
+  static final Color darkColor = Color(0xFF212121);
+  static final Color darkSecondaryColor = Color(0xFF161616);
+  static final Color blackColor = Color(0xFF0E0E0E);
+  static final Color blackSecondaryColor = Colors.black;
 
   ThemeData get light => ThemeData.light().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.light(
-          surface: _lightColor,
+          surface: lightColor,
           primary: mainColor,
-          secondary: _lightColor,
-          onPrimary: _lightColor,
+          secondary: lightColor,
+          onPrimary: lightColor,
           onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _lightSecondaryColor.withOpacity(0.9),
+          color: lightSecondaryColor.withOpacity(0.9),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
+          brightness: Brightness.light,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
-          backgroundColor: _lightColor,
+          backgroundColor: lightColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -47,54 +51,58 @@ class Themes {
           elevation: 0,
         ),
         snackBarTheme: SnackBarThemeData(
-          actionTextColor: _lightColor,
+          actionTextColor: lightColor,
         ),
         textTheme: ThemeData.light().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
-          modalBackgroundColor: _lightColor,
+          modalBackgroundColor: lightColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _lightSecondaryColor,
-        cardColor: _lightColor,
-        canvasColor: _lightColor,
+        scaffoldBackgroundColor: lightSecondaryColor,
+        cardColor: lightColor,
+        canvasColor: lightColor,
         buttonColor: mainColor,
         primaryColor: mainColor,
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
-        chipTheme: ThemeData.dark().chipTheme.copyWith(
-              backgroundColor: _lightSecondaryColor,
-              elevation: 0,
-              pressElevation: 0,
-            ),
+        platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
 
   ThemeData get dark => ThemeData.dark().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.dark(
-          surface: _darkColor,
+          surface: darkColor,
           primary: mainColor,
-          secondary: _darkColor,
-          onPrimary: _darkColor,
+          secondary: darkColor,
+          onPrimary: darkColor,
           onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _darkSecondaryColor.withOpacity(0.9),
+          color: darkSecondaryColor.withOpacity(0.9),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          brightness: Brightness.dark,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
-          backgroundColor: _darkColor,
+          backgroundColor: darkColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -109,49 +117,58 @@ class Themes {
           elevation: 0,
         ),
         snackBarTheme: SnackBarThemeData(
-          actionTextColor: _darkColor,
+          actionTextColor: darkColor,
         ),
         textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
-          modalBackgroundColor: _darkColor,
+          modalBackgroundColor: darkColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _darkSecondaryColor,
-        cardColor: _darkColor,
-        canvasColor: _darkColor,
+        scaffoldBackgroundColor: darkSecondaryColor,
+        cardColor: darkColor,
+        canvasColor: darkColor,
         buttonColor: mainColor,
         primaryColor: mainColor,
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
+        platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );
 
   ThemeData get black => ThemeData.dark().copyWith(
         accentColor: mainColor,
-        cursorColor: mainColor,
-        textSelectionHandleColor: mainColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: mainColor,
+          selectionHandleColor: mainColor,
+          selectionColor: mainColor,
+        ),
         colorScheme: ColorScheme.dark(
-          surface: _blackColor,
+          surface: blackColor,
           primary: mainColor,
-          secondary: _blackColor,
-          onPrimary: _blackColor,
+          secondary: blackColor,
+          onPrimary: blackColor,
           onSecondary: mainColor,
         ),
         appBarTheme: AppBarTheme(
-          color: _blackSecondaryColor.withOpacity(0.7),
+          color: blackSecondaryColor.withOpacity(0.7),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
           actionsIconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
+          brightness: Brightness.dark,
         ),
-        textSelectionColor: mainColor,
         dialogTheme: DialogTheme(
-          backgroundColor: _blackColor,
+          backgroundColor: blackColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -166,25 +183,31 @@ class Themes {
           elevation: 0,
         ),
         snackBarTheme: SnackBarThemeData(
-          actionTextColor: _blackColor,
+          actionTextColor: blackColor,
         ),
         textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
-          modalBackgroundColor: _blackColor,
+          modalBackgroundColor: blackColor,
           shape: RoundedRectangleBorder(),
         ),
-        scaffoldBackgroundColor: _blackSecondaryColor,
-        cardColor: _blackColor,
-        canvasColor: _blackColor,
+        scaffoldBackgroundColor: blackSecondaryColor,
+        cardColor: blackColor,
+        canvasColor: blackColor,
         buttonColor: mainColor,
         primaryColor: mainColor,
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
+        platform: defaultTargetPlatform,
+        shadowColor: Colors.black.withOpacity(0.5),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
             TargetPlatform.iOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.fuchsia: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.macOS: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.linux: DismissiblePageTransitionsBuilder(),
+            TargetPlatform.windows: DismissiblePageTransitionsBuilder(),
           },
         ),
       );

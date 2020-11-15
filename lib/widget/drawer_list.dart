@@ -3,12 +3,13 @@ import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {
   final Widget header;
-  final List<DrawerListItem> items;
-  final List<DrawerListItem> secondaryItems;
+  final List<BottomNavigationBarItem> items;
+  final List<BottomNavigationBarItem> secondaryItems;
   final Widget secondaryItemsFooter;
   final Widget footer;
   final int currentIndex;
   final bool showTitles;
+  final bool enabled;
   final void Function(int index) onTap;
   final void Function(int index) onSecondaryTap;
 
@@ -20,6 +21,7 @@ class DrawerList extends StatelessWidget {
     this.footer,
     this.currentIndex = 0,
     this.showTitles = true,
+    this.enabled,
     this.onTap,
     this.onSecondaryTap,
   });
@@ -48,14 +50,7 @@ class DrawerList extends StatelessWidget {
     List<Widget> list = [];
 
     if (header != null) {
-      list.add(
-        Column(
-          children: <Widget>[
-            SizedBox(height: 8),
-            header,
-          ],
-        ),
-      );
+      list.add(header);
     }
 
     if (items != null) {
@@ -69,30 +64,37 @@ class DrawerList extends StatelessWidget {
     return list;
   }
 
-  Widget generateDrawerListTiles(List<DrawerListItem> items, bool secondary) =>
-      Column(
-        children: [
-          ...List.generate(
-            items.length,
-            (index) => DrawerListTile(
-              icon: items[index].icon,
-              activeIcon: items[index].selectedIcon,
-              title: items[index].label,
-              onTap: secondary
-                  ? () => onSecondaryTap(index)
-                  : () => onTap(index),
-              active: secondary
-                  ? currentIndex == (index + (this.items.length))
-                  : currentIndex == index,
-              showTitle: showTitles,
-              iconColor: items[index].color,
-              activeColor: items[index].selectedColor,
-            ),
+  Widget generateDrawerListTiles(
+    List<BottomNavigationBarItem> items,
+    bool secondary,
+  ) =>
+      IgnorePointer(
+        ignoring: !enabled,
+        child: AnimatedOpacity(
+          opacity: enabled ? 1 : 0.5,
+          duration: Duration(milliseconds: 200),
+          curve: decelerateEasing,
+          child: Column(
+            children: [
+              ...List.generate(
+                items.length,
+                (index) => DrawerListTile(
+                  icon: items[index].icon,
+                  activeIcon: items[index].activeIcon,
+                  title: Text(items[index].label),
+                  onTap: secondary
+                      ? () => onSecondaryTap(index)
+                      : () => onTap(index),
+                  active: secondary
+                      ? currentIndex == (index + (this.items.length))
+                      : currentIndex == index,
+                  showTitle: showTitles,
+                ),
+              ),
+              secondary ? secondaryItemsFooter ?? Container() : Container(),
+            ],
           ),
-          secondary
-              ? secondaryItemsFooter ?? Container()
-              : Container(),
-        ],
+        ),
       );
 }
 

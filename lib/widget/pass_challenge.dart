@@ -1,7 +1,6 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
@@ -70,11 +69,9 @@ class _PassChallengeState extends State<PassChallenge> {
               onChanged: (_) => setState(() => status = null),
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  icon: Icon(
-                    showPass
-                        ? CommunityMaterialIcons.eye_outline
-                        : CommunityMaterialIcons.eye_off_outline,
-                  ),
+                  icon: Icon(showPass
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined),
                   onPressed: () => setState(() => showPass = !showPass),
                 ),
                 errorText: status,

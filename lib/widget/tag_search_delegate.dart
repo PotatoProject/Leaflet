@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/tag_model.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
 
 class TagSearchDelegate extends CustomSearchDelegate {
-  final Note note;
+  final List<String> tags;
+  final VoidCallback onChanged;
 
-  TagSearchDelegate(this.note);
+  TagSearchDelegate(
+    this.tags, {
+    this.onChanged,
+  });
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -21,7 +23,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<TagModel> filteredTags;
+    List<Tag> filteredTags;
 
     if (query.isEmpty) {
       filteredTags = prefs.tags;
@@ -40,26 +42,26 @@ class TagSearchDelegate extends CustomSearchDelegate {
             filteredTags.length,
             (index) => CheckboxListTile(
               secondary: Icon(
-                MdiIcons.tagOutline,
+                Icons.label_outlined,
                 color: filteredTags[index].color != 0
                     ? Color(
                         NoteColors.colorList[filteredTags[index].color].color)
                     : Theme.of(context).accentColor,
               ),
               title: Text(filteredTags[index].name),
-              value: note.tags.tagIds.contains(filteredTags[index].id),
+              value: tags.contains(filteredTags[index].id),
               checkColor: Theme.of(context).scaffoldBackgroundColor,
               activeColor: Theme.of(context).accentColor,
               onChanged: (value) {
                 setState(() {
                   if (value) {
-                    note.tags.tagIds.add(filteredTags[index].id);
+                    tags.add(filteredTags[index].id);
                   } else {
-                    note.tags.tagIds.remove(filteredTags[index].id);
+                    tags.remove(filteredTags[index].id);
                   }
                 });
 
-                helper.saveNote(note);
+                onChanged?.call();
               },
             ),
           ),
@@ -75,7 +77,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   initialInput: query,
                   onSave: (tag) {
                     Navigator.pop(context);
-                    prefs.tags = prefs.tags..add(tag);
+                    tagHelper.saveTag(tag.markChanged());
                   },
                 ),
               ),

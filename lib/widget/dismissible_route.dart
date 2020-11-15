@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 bool _gestureStartAllowed = false;
 
@@ -8,19 +9,22 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   DismissiblePageRoute({
     @required this.builder,
     this.allowGestures = false,
+    this.pushImmediate = false,
   });
 
   final WidgetBuilder builder;
   final bool allowGestures;
+  final bool pushImmediate;
 
   @override
   final bool maintainState = false;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 300);
+  Duration get transitionDuration =>
+      Duration(milliseconds: pushImmediate ? 0 : 250);
 
   @override
-  Duration get reverseTransitionDuration => Duration(milliseconds: 250);
+  Duration get reverseTransitionDuration => Duration(milliseconds: 200);
 
   @override
   bool get opaque => false;
@@ -32,7 +36,29 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   String get barrierLabel => null;
 
   @override
-  bool get canPop => true;
+  Curve get barrierCurve => Curves.easeIn;
+
+  @override
+  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
+    // Don't perform outgoing animation if the next route is a fullscreen dialog.
+    return nextRoute is MaterialPageRoute ||
+        nextRoute is CupertinoPageRoute ||
+        nextRoute is DismissiblePageRoute;
+  }
+
+  @override
+  bool canTransitionFrom(TransitionRoute<dynamic> nextRoute) {
+    // Don't perform outgoing animation if the next route is a fullscreen dialog.
+    return nextRoute is MaterialPageRoute ||
+        nextRoute is CupertinoPageRoute ||
+        nextRoute is DismissiblePageRoute;
+  }
+
+  @override
+  bool get canPop => super.canPop;
+
+  @override
+  bool get barrierDismissible => false;
 
   static bool isPopGestureInProgress(PageRoute<dynamic> route) {
     return _gestureStartAllowed;
@@ -81,8 +107,13 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     return buildPageTransitions(
-        this, context, animation, secondaryAnimation, child,
-        allowGestures: allowGestures);
+      this,
+      context,
+      animation,
+      secondaryAnimation,
+      child,
+      allowGestures: allowGestures,
+    );
   }
 
   static Widget buildPageTransitions<T>(
@@ -94,12 +125,13 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     bool allowGestures = true,
   }) {
     return DismissiblePageTransition(
-      child: _DismissibleRoute(
+      child: DismissibleRoute(
         child: child,
         maxWidth: MediaQuery.of(context).size.width,
         enableGesture: allowGestures && _isPopGestureEnabled(route),
         controller: route.controller,
         navigator: route.navigator,
+        isFirst: route.isFirst,
       ),
       animation: animation,
       secondaryAnimation: secondaryAnimation,
@@ -130,7 +162,7 @@ class DismissiblePageTransition extends StatelessWidget {
       curve: linearTransition ? Curves.linear : Curves.easeOut,
       reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
     ).drive(Tween<Offset>(
-      begin: Offset(1, 0),
+      begin: Offset(textDirection == TextDirection.rtl ? -1 : 1, 0),
       end: Offset(0, 0),
     ));
 
@@ -143,15 +175,25 @@ class DismissiblePageTransition extends StatelessWidget {
       end: Offset(-0.3, 0),
     ));
 
-    return SlideTransition(
-      position: bgAnimation,
-      textDirection: textDirection,
-      transformHitTests: false,
-      child: SlideTransition(
-        position: fgAnimation,
+    if (deviceInfo.uiSizeFactor > 3) {
+      return FadeTransition(
+        opacity: CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOut,
+        ),
         child: child,
-      ),
-    );
+      );
+    } else {
+      return SlideTransition(
+        position: bgAnimation,
+        textDirection: textDirection,
+        transformHitTests: false,
+        child: SlideTransition(
+          position: fgAnimation,
+          child: child,
+        ),
+      );
+    }
   }
 }
 
@@ -168,42 +210,84 @@ class DismissiblePageTransitionsBuilder extends PageTransitionsBuilder {
           route, context, animation, secondaryAnimation, child);
 }
 
-class _DismissibleRoute extends StatefulWidget {
+class DismissibleRoute extends StatefulWidget {
   final Widget child;
   final double maxWidth;
   final bool enableGesture;
   final AnimationController controller;
   final NavigatorState navigator;
+  final bool isFirst;
 
-  _DismissibleRoute({
+  DismissibleRoute({
     @required this.child,
     @required this.maxWidth,
     this.enableGesture = true,
     @required this.controller,
     @required this.navigator,
+    this.isFirst = false,
   });
 
   @override
   _DismissibleRouteState createState() => _DismissibleRouteState();
+
+  static _DismissibleRouteState of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_DismissibleRouteInheritedWidget>()
+        ?.state;
+  }
 }
 
-class _DismissibleRouteState extends State<_DismissibleRoute> {
+class _DismissibleRouteState extends State<DismissibleRoute> {
+  bool _requestDisableGestures = false;
+
+  set requestDisableGestures(bool disable) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(() => _requestDisableGestures = disable),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
+    final TextDirection textDirection = Directionality.of(context);
+    final _barrierDismissible =
+        _requestDisableGestures ? false : widget.enableGesture;
+    final _enableGesture =
+        deviceInfo.uiSizeFactor > 3 ? false : _barrierDismissible;
+    final padding = EdgeInsets.symmetric(
+      horizontal: !widget.isFirst && deviceInfo.uiSizeFactor > 3
+          ? MediaQuery.of(context).size.width / 8
+          : 0,
+      vertical: !widget.isFirst && deviceInfo.uiSizeFactor > 3
+          ? MediaQuery.of(context).size.height / 16
+          : 0,
+    );
+
+    final EdgeInsets effectivePadding = MediaQuery.of(context).viewInsets +
+        (padding ?? const EdgeInsets.all(0.0));
+
+    final Widget content = Material(
+      elevation: 16,
+      shape: !widget.isFirst
+          ? deviceInfo.uiSizeFactor > 3
+              ? Theme.of(context).dialogTheme.shape
+              : RoundedRectangleBorder()
+          : RoundedRectangleBorder(),
+      clipBehavior: Clip.antiAlias,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         dragStartBehavior: DragStartBehavior.down,
-        onHorizontalDragStart: widget.enableGesture
+        onTap: () {},
+        onHorizontalDragStart: _enableGesture
             ? (details) {
                 setState(() => _gestureStartAllowed = true);
               }
             : null,
         onHorizontalDragUpdate: _gestureStartAllowed
             ? (details) {
-                widget.controller.value -=
-                    details.primaryDelta / widget.maxWidth;
+                widget.controller.value -= (textDirection == TextDirection.rtl
+                        ? -details.primaryDelta
+                        : details.primaryDelta) /
+                    widget.maxWidth;
               }
             : null,
         onHorizontalDragEnd: _gestureStartAllowed
@@ -222,14 +306,46 @@ class _DismissibleRouteState extends State<_DismissibleRoute> {
                 }
               }
             : null,
-        child: IgnorePointer(
-          ignoring: false,
-          child: Material(
-            elevation: 16,
-            child: widget.child,
+        child: widget.child,
+      ),
+    );
+
+    return _DismissibleRouteInheritedWidget(
+      state: this,
+      child: GestureDetector(
+        onTap: () {
+          if (_barrierDismissible) widget.navigator.pop();
+        },
+        child: AnimatedContainer(
+          color: Colors.black45,
+          padding: effectivePadding,
+          duration: Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          child: MediaQuery.removeViewInsets(
+            removeLeft: true,
+            removeTop: true,
+            removeRight: true,
+            removeBottom: true,
+            context: context,
+            child: content,
           ),
         ),
       ),
     );
+  }
+}
+
+class _DismissibleRouteInheritedWidget extends InheritedWidget {
+  _DismissibleRouteInheritedWidget({
+    Key key,
+    Widget child,
+    this.state,
+  }) : super(key: key, child: child);
+
+  final _DismissibleRouteState state;
+
+  @override
+  bool updateShouldNotify(_DismissibleRouteInheritedWidget oldWidget) {
+    return oldWidget.state != state;
   }
 }

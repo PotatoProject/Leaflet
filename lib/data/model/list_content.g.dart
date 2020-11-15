@@ -6,20 +6,6 @@ part of 'list_content.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ListContent _$ListContentFromJson(Map<String, dynamic> json) {
-  return ListContent(
-    (json['content'] as List)
-        ?.map((e) =>
-            e == null ? null : ListItem.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
-
-Map<String, dynamic> _$ListContentToJson(ListContent instance) =>
-    <String, dynamic>{
-      'content': instance.content,
-    };
-
 ListItem _$ListItemFromJson(Map<String, dynamic> json) {
   return ListItem(
     json['id'] as int,

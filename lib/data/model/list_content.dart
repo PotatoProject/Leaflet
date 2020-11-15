@@ -6,18 +6,6 @@ import 'package:moor/moor.dart';
 part 'list_content.g.dart';
 
 @JsonSerializable()
-class ListContent {
-  List<ListItem> content;
-
-  ListContent(this.content);
-
-  factory ListContent.fromJson(Map<String, dynamic> json) =>
-      _$ListContentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ListContentToJson(this);
-}
-
-@JsonSerializable()
 class ListItem {
   int id;
   String text;
@@ -29,24 +17,33 @@ class ListItem {
       _$ListItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListItemToJson(this);
+
+  @override
+  String toString() => json.encode(toJson());
 }
 
-class ListContentConverter extends TypeConverter<ListContent, String> {
+class ListContentConverter extends TypeConverter<List<ListItem>, String> {
   const ListContentConverter();
   @override
-  ListContent mapToDart(String fromDb) {
+  List<ListItem> mapToDart(String fromDb) {
     if (fromDb == null) {
       return null;
     }
-    return ListContent.fromJson(json.decode(fromDb) as Map<String, dynamic>);
+    List<dynamic> decoded = json.decode(fromDb);
+    return List.generate(
+      decoded.length,
+      (index) => ListItem.fromJson(
+        decoded[index],
+      ),
+    );
   }
 
   @override
-  String mapToSql(ListContent value) {
+  String mapToSql(List<ListItem> value) {
     if (value == null) {
       return null;
     }
 
-    return json.encode(value.toJson());
+    return json.encode(value);
   }
 }

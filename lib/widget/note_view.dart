@@ -1,20 +1,24 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
-const double _kBorderRadius = 10.0;
-
-class NoteView extends StatelessWidget {
+class NoteView extends StatefulWidget {
   final Note note;
   final SpannableList providedTitleList;
   final SpannableList providedContentList;
   final Function() onTap;
   final Function() onLongPress;
+  final bool selectorOpen;
   final bool selected;
 
   NoteView({
@@ -24,18 +28,68 @@ class NoteView extends StatelessWidget {
     this.providedContentList,
     this.onTap,
     this.onLongPress,
+    this.selectorOpen = false,
     this.selected = false,
   }) : super(key: key);
 
   @override
+  _NoteViewState createState() => _NoteViewState();
+}
+
+class _NoteViewState extends State<NoteView> {
+  bool _hovered = false;
+  bool _focused = false;
+  bool _highlighted = false;
+  double _elevation;
+  bool _mouseIsConnected;
+
+  @override
+  void initState() {
+    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
+    RendererBinding.instance.mouseTracker.addListener(mouseListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
+    super.dispose();
+  }
+
+  void mouseListener() {
+    final bool mouseIsConnected =
+        RendererBinding.instance.mouseTracker.mouseIsConnected;
+    if (mouseIsConnected != _mouseIsConnected) {
+      setState(() {
+        _mouseIsConnected = mouseIsConnected;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     //String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    SpannableList spannableList =
-        providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
+    SpannableList spannableList = widget
+        .providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
+    Color backgroundColor = widget.note.color != 0
+        ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
+        : Theme.of(context).cardColor;
     Color borderColor;
 
-    if (selected) {
-      borderColor = Theme.of(context).textTheme.caption.color;
+    if (widget.selected) {
+      _elevation = 8;
+    } else if (_highlighted) {
+      _elevation = 6;
+    } else if (_hovered) {
+      _elevation = 4;
+    } else if (_focused) {
+      _elevation = 3;
+    } else {
+      _elevation = 2;
+    }
+
+    if (widget.selected) {
+      borderColor = Theme.of(context).iconTheme.color;
     } else {
       borderColor = Colors.transparent;
     }
@@ -43,41 +97,45 @@ class NoteView extends StatelessWidget {
     List<Widget> content = getItems(context, spannableList);
 
     return Card(
-      color: note.color != 0
-          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-          : null,
+      color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_kBorderRadius),
+        borderRadius: BorderRadius.circular(kCardBorderRadius),
         side: BorderSide(
           color: borderColor,
-          width: 1.5,
+          width: 2,
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      elevation: note.color != 0 ? 0 : 0,
-      margin: EdgeInsets.all(4),
+      elevation: _elevation,
+      shadowColor: Colors.black.withOpacity(0.4),
+      margin: kCardPadding,
       child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        borderRadius: BorderRadius.circular(_kBorderRadius),
+        onTap: widget.onTap,
+        onLongPress: widget.onLongPress,
+        onHover: (value) => setState(() {
+          _hovered = value;
+        }),
+        onFocusChange: (value) => setState(() {
+          _focused = value;
+        }),
+        onHighlightChanged: (value) => setState(() {
+          _highlighted = value;
+        }),
+        borderRadius: BorderRadius.circular(kCardBorderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             IgnorePointer(
               child: Visibility(
-                visible: (note.images.data?.isNotEmpty ?? false) &&
-                    !note.hideContent,
+                visible: (widget.note.images?.isNotEmpty ?? false) &&
+                    !widget.note.hideContent,
                 child: NoteViewImages(
-                  images: note.images.uris.sublist(
-                      0,
-                      note.images.data.length > kMaxImageCount
-                          ? kMaxImageCount
-                          : note.images.data.length),
+                  images: widget.note.images,
                   showPlusImages: true,
-                  numPlusImages: note.images.data.length < kMaxImageCount
+                  numPlusImages: widget.note.images.length < kMaxImageCount
                       ? 0
-                      : note.images.data.length - kMaxImageCount,
+                      : widget.note.images.length - kMaxImageCount,
                 ),
               ),
             ),
@@ -86,10 +144,14 @@ class NoteView extends StatelessWidget {
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16 + Theme.of(context).visualDensity.horizontal,
+                  vertical: 16 + Theme.of(context).visualDensity.vertical,
+                ),
                 itemBuilder: (context, index) => content[index],
                 separatorBuilder: (context, index) {
-                  return SizedBox(height: 4);
+                  return SizedBox(
+                      height: 4 + Theme.of(context).visualDensity.vertical);
                 },
                 itemCount: content.length,
               ),
@@ -98,9 +160,16 @@ class NoteView extends StatelessWidget {
               builder: (context, constraints) => SizedBox(
                 width: constraints.maxWidth,
                 child: NoteViewStatusbar(
-                  note: note,
+                  note: widget.note,
                   width: constraints.maxWidth,
-                  padding: content.isEmpty ? EdgeInsets.all(16) : null,
+                  padding: content.isEmpty
+                      ? EdgeInsets.symmetric(
+                          horizontal:
+                              16 + Theme.of(context).visualDensity.horizontal,
+                          vertical:
+                              16 + Theme.of(context).visualDensity.vertical,
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -113,12 +182,12 @@ class NoteView extends StatelessWidget {
   List<Widget> getItems(BuildContext context, SpannableList spannableList) {
     List<Widget> items = [];
 
-    if (note.title != "") {
+    if (widget.note.title != "") {
       items.add(
-        providedTitleList != null
+        widget.providedTitleList != null
             ? RichText(
-                text: providedTitleList.toTextSpan(
-                  note.title,
+                text: widget.providedTitleList.toTextSpan(
+                  widget.note.title,
                   defaultStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -133,7 +202,7 @@ class NoteView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             : Text(
-                note.title ?? "",
+                widget.note.title ?? "",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -149,17 +218,17 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if ((note.title.isEmpty &&
-            note.content.isEmpty &&
-            note.listContent.content.isEmpty &&
-            !note.hideContent &&
-            note.images.data.isEmpty) ||
-        (note.content.isNotEmpty && !note.hideContent)) {
+    if ((widget.note.title.isEmpty &&
+            widget.note.content.isEmpty &&
+            widget.note.listContent.isEmpty &&
+            !widget.note.hideContent &&
+            widget.note.images.isEmpty) ||
+        (widget.note.content.isNotEmpty && !widget.note.hideContent)) {
       items.add(
         spannableList != null
             ? RichText(
                 text: spannableList.toTextSpan(
-                  note.content,
+                  widget.note.content,
                   defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
                         fontSize: 16,
                         color: Theme.of(context)
@@ -173,7 +242,7 @@ class NoteView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             : Text(
-                note.content,
+                widget.note.content,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context)
@@ -188,7 +257,9 @@ class NoteView extends StatelessWidget {
       );
     }
 
-    if (note.list && note.listContent.content.isNotEmpty && !note.hideContent) {
+    if (widget.note.list &&
+        widget.note.listContent.isNotEmpty &&
+        !widget.note.hideContent) {
       items.add(
         ListView.separated(
           shrinkWrap: true,
@@ -205,44 +276,60 @@ class NoteView extends StatelessWidget {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-        (note.listContent?.content?.length ?? 0) > 5
-            ? 5
-            : (note.listContent?.content?.length ?? 0),
+        min(widget.note.listContent?.length ?? 0, 6),
         (index) {
-          ListItem item = note.listContent.content[index];
+          ListItem item = widget.note.listContent[index];
+          Color backgroundColor = widget.note.color != 0
+              ? Color(
+                  NoteColors.colorList[widget.note.color].dynamicColor(context))
+              : Theme.of(context).cardColor;
+          final icon = index == 5
+              ? Icon(Icons.add)
+              : NoteViewCheckbox(
+                  value: item.status,
+                  activeColor: widget.note.color != 0
+                      ? Theme.of(context).textTheme.caption.color
+                      : Theme.of(context).accentColor,
+                  checkColor: backgroundColor,
+                  onChanged: (value) {
+                    widget.note.listContent[index].status = value;
+                    widget.note.markChanged();
+                    helper.saveNote(widget.note);
+                    setState(() {});
+                  },
+                  splashRadius: 14,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                );
+          final text = index == 5
+              ? "${(widget.note.listContent?.length ?? 0) - 5} more items"
+              : item.text;
 
           return LayoutBuilder(
             builder: (context, constraints) {
               return Row(
                 children: [
-                  Icon(
-                    item.status
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: item.status
-                        ? note.color != 0
-                            ? Theme.of(context).textTheme.caption.color
-                            : Theme.of(context).accentColor
-                        : null,
-                    size: 20,
+                  IgnorePointer(
+                    ignoring: !_mouseIsConnected || widget.selectorOpen,
+                    child: icon,
                   ),
-                  VerticalDivider(
-                    color: Colors.transparent,
+                  SizedBox(
                     width: 8,
                   ),
                   SizedBox(
-                    width: constraints.maxWidth - 28,
+                    width: constraints.maxWidth - 32,
                     child: Text(
-                      item.text,
+                      text,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .color
-                              .withOpacity(item.status ? 0.5 : 0.7),
-                          decoration:
-                              item.status ? TextDecoration.lineThrough : null),
+                        color: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .color
+                            .withOpacity(item.status ? 0.5 : 0.7),
+                        decoration:
+                            item.status ? TextDecoration.lineThrough : null,
+                      ),
                     ),
                   ),
                 ],

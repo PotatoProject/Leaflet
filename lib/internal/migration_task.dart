@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -64,23 +63,23 @@ class MigrationTask {
         );
       }
 
+      SavedImage savedImage;
+      if (v1Note.imagePath != null) {
+        savedImage = await ImageService.prepareLocally(File(v1Note.imagePath));
+      }
       Note note = Note(
-        id: await Utils.generateId(),
+        id: Utils.generateId(),
         title: v1Note.title ?? "",
         content: v1Note.content ?? "",
         starred: v1Note.isStarred == 1,
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
         lastModifyDate: DateTime.now(),
         color: v1Note.color,
-        images: ImageList(
-          v1Note.imagePath != null
-              ? {v1Note.imagePath: Uri.parse(v1Note.imagePath)}
-              : {},
-        ),
+        images: savedImage != null ? [savedImage] : List(),
         list: v1Note.isList == 1,
-        listContent: ListContent(listItems),
-        reminders: ReminderList([]),
-        tags: TagList([]),
+        listContent: listItems,
+        reminders: [],
+        tags: [],
         hideContent: v1Note.hideContent == 1,
         lockNote: false,
         usesBiometrics: false,

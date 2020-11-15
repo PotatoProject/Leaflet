@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DrawerListTile extends StatelessWidget {
+class DrawerListTile extends StatefulWidget {
   final Widget icon;
   final Widget activeIcon;
-  final String title;
+  final Text title;
   final bool showTitle;
   final void Function() onTap;
   final bool active;
-  final double height;
-  final ShapeBorder activeShape;
-  final EdgeInsets activeShapePadding;
-  final Color iconColor;
-  final Color activeColor;
 
   DrawerListTile({
     @required this.icon,
@@ -20,13 +15,39 @@ class DrawerListTile extends StatelessWidget {
     this.showTitle = true,
     this.onTap,
     this.active = false,
-    this.height = 56,
-    this.activeShape,
-    this.activeShapePadding =
-        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    this.iconColor,
-    this.activeColor,
   });
+
+  @override
+  _DrawerListTileState createState() => _DrawerListTileState();
+}
+
+class _DrawerListTileState extends State<DrawerListTile>
+    with SingleTickerProviderStateMixin {
+  AnimationController _ac;
+
+  @override
+  void initState() {
+    super.initState();
+    _ac = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant DrawerListTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.showTitle != widget.showTitle) {
+      _ac.animateTo(widget.showTitle ? 1 : 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,71 +57,82 @@ class DrawerListTile extends StatelessWidget {
 
     TextTheme textTheme = Theme.of(context).textTheme;
     IconThemeData iconTheme = Theme.of(context).iconTheme;
-    Color _activeColor = activeColor ?? Theme.of(context).accentColor;
-    ShapeBorder _activeShape = activeShape ??
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-        );
+    Color _activeColor = Theme.of(context).accentColor;
+    final visualDensity = Theme.of(context).visualDensity;
+    final baseDensity = visualDensity.baseSizeAdjustment;
+    final height = 56 + baseDensity.dy;
 
-    return SizedBox(
-      height: height,
-      child: showTitle
-          ? Stack(
-              children: <Widget>[
-                Container(
-                  margin: activeShapePadding,
-                  decoration: ShapeDecoration(
-                    shape: _activeShape,
-                    color: active
-                        ? _activeColor.withOpacity(0.2)
-                        : Colors.transparent,
-                  ),
-                ),
-                Material(
-                  type: MaterialType.transparency,
-                  child: ListTile(
-                    leading: Theme(
-                      data: Theme.of(context).copyWith(
-                        iconTheme: iconTheme.copyWith(
-                          color: active
-                              ? _activeColor
-                              : iconColor ?? (contrast.withOpacity(0.7)),
+    final _curvedAc = CurvedAnimation(
+      parent: _ac,
+      curve: decelerateEasing,
+    );
+
+    Widget child = Row(
+      children: [
+        Theme(
+          data: Theme.of(context).copyWith(
+            iconTheme: iconTheme.copyWith(
+              color: widget.active ? _activeColor : contrast.withOpacity(0.7),
+              size: 24,
+            ),
+          ),
+          child:
+              widget.active ? (widget.activeIcon ?? widget.icon) : widget.icon,
+        ),
+        Expanded(
+          child: AnimatedBuilder(
+            animation: _ac,
+            builder: (context, _) {
+              return ClipRect(
+                child: Align(
+                  alignment: AlignmentDirectional(-1, 0),
+                  widthFactor: _curvedAc.value,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      SizedBox(
+                        width: 24,
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: DefaultTextStyle(
+                          style: textTheme.bodyText1.copyWith(
+                            color: widget.active
+                                ? _activeColor
+                                : contrast.withOpacity(0.7),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          child: widget.title,
                         ),
                       ),
-                      child: active ? (activeIcon ?? icon) : icon,
-                    ),
-                    title: DefaultTextStyle(
-                      style: textTheme.bodyText1.copyWith(
-                        color:
-                            active ? _activeColor : contrast.withOpacity(0.7),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      child: Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    onTap: onTap,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                    ],
                   ),
                 ),
-              ],
-            )
-          : IconButton(
-              icon: Theme(
-                data: Theme.of(context).copyWith(
-                  iconTheme: iconTheme.copyWith(
-                    color: active
-                        ? _activeColor
-                        : iconColor ?? (contrast.withOpacity(0.7)),
-                    size: 24,
-                  ),
-                ),
-                child: active ? (activeIcon ?? icon) : icon,
-              ),
-              tooltip: title,
-              onPressed: onTap,
-            ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+
+    if (!widget.showTitle) {
+      child = Tooltip(
+        message: widget.title.data,
+        child: child,
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) => InkWell(
+        onTap: widget.onTap,
+        child: Container(
+          height: height,
+          width: constraints.maxWidth,
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: child,
+        ),
+      ),
     );
   }
 }

@@ -1,37 +1,51 @@
-import 'package:community_material_icon/community_material_icon.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_chooser/file_chooser.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/content_style.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
-import 'package:potato_notes/widget/drawer_list.dart';
+import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
-
-import 'locale_strings.dart';
+import 'package:recase/recase.dart';
+import 'package:uuid/uuid.dart';
 
 const int kMaxImageCount = 4;
-const EdgeInsets kSecondaryRoutePadding = const EdgeInsets.symmetric(
-  horizontal: 180,
-  vertical: 64,
-);
-const EdgeInsets kTertiaryRoutePadding = const EdgeInsets.symmetric(
-  horizontal: 240,
-  vertical: 96,
-);
+const double kCardBorderRadius = 6;
+const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
+  static deleteNoteSafely(Note note) {
+    ImageService.handleNoteDeletion(note);
+    helper.deleteNote(note);
+  }
+
+  static handleNotePagePop(Note note) {
+    ImageService.handleDeletes();
+    helper.listNotes(ReturnMode.LOCAL).then((notes) => {
+          SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
+        });
+  }
+
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
     return await showNotesModalBottomSheet(
       context: context,
@@ -65,144 +79,114 @@ class Utils {
     Clip clipBehavior,
     Color barrierColor,
     bool isScrollControlled = false,
-    bool useRootNavigator = false,
-    bool isDismissible = true,
-    bool enableDrag = true,
   }) async {
-    double topPadding = MediaQuery.of(context).padding.top;
-
-    return await showModalBottomSheet(
-      context: context,
-      builder: (context) => BottomSheetBase(
+    return await Navigator.push(
+      context,
+      BottomSheetRoute(
         child: builder(context),
         backgroundColor: backgroundColor,
         elevation: elevation,
         shape: shape,
         clipBehavior: clipBehavior,
-        topPadding: topPadding,
       ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      shape: null,
-      clipBehavior: Clip.none,
-      barrierColor: barrierColor,
-      isScrollControlled: isScrollControlled,
-      useRootNavigator: useRootNavigator,
-      isDismissible: isDismissible,
-      enableDrag: enableDrag,
     );
   }
 
-  static List<PopupMenuItem<String>> popupItems(BuildContext context) {
-    Widget _popupMenuItem({
-      IconData icon,
-      String title,
-      String value,
-    }) =>
-        PopupMenuItem(
-          child: Row(
-            children: [
-              Icon(icon),
-              SizedBox(width: 24),
-              Text(title),
-            ],
-          ),
-          value: value,
-        );
+  static List<ListTilePopupMenuItem<String>> popupItems(
+      BuildContext context, Note note) {
+    bool showUnpin = note.pinned;
+
     return [
-      _popupMenuItem(
-        icon: CommunityMaterialIcons.pin_outline,
-        title: LocaleStrings.mainPage.selectionBarPin,
+      ListTilePopupMenuItem(
+        leading: Icon(showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline),
+        title:
+            Text(showUnpin ? "Unpin" : LocaleStrings.mainPage.selectionBarPin),
         value: 'pin',
       ),
-      _popupMenuItem(
-        icon: CommunityMaterialIcons.share_variant,
-        title: LocaleStrings.mainPage.selectionBarShare,
+      ListTilePopupMenuItem(
+        leading: Icon(Icons.share_outlined),
+        title: Text(LocaleStrings.mainPage.selectionBarShare),
         value: 'share',
       ),
     ];
   }
 
-  static void showFabMenu(BuildContext context, List<Widget> items) {
-    RenderBox fabBox =
-        GlobalKeyRegistry.get("fab").currentContext.findRenderObject();
-
+  static void showFabMenu(
+      BuildContext context, RenderBox fabBox, List<Widget> items) {
     Size fabSize = fabBox.size;
     Offset fabPosition = fabBox.localToGlobal(Offset(0, 0));
+    Size screenSize = MediaQuery.of(context).size;
 
-    Widget child = Stack(
-      children: <Widget>[
-        Positioned(
-          bottom: MediaQuery.of(context).size.height -
-              (fabPosition.dy + fabSize.height),
-          right: MediaQuery.of(context).size.width -
-              (fabPosition.dx + fabSize.width),
-          child: Hero(
-            tag: "fabMenu",
-            child: Material(
-              elevation: 2,
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SizedBox(
-                width: 250,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.all(0),
-                  reverse: true,
-                  children: items,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    bool isOnTop = fabPosition.dy < screenSize.height / 2;
+    bool isOnLeft = fabPosition.dx < screenSize.width / 2;
+
+    double top = isOnTop ? fabPosition.dy : null;
+    double left = isOnLeft ? fabPosition.dx : null;
+    double right =
+        !isOnTop ? screenSize.width - (fabPosition.dx + fabSize.width) : null;
+    double bottom = !isOnLeft
+        ? screenSize.height - (fabPosition.dy + fabSize.height)
+        : null;
 
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, anim, secAnim) => child,
+        pageBuilder: (context, anim, secAnim) {
+          return Stack(
+            children: <Widget>[
+              GestureDetector(
+                onTapDown: (details) => Navigator.pop(context),
+                child: SizedBox.expand(
+                  child: AnimatedBuilder(
+                    animation: anim,
+                    builder: (context, _) => DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: ColorTween(
+                          begin: Colors.transparent,
+                          end: Colors.black38,
+                        ).animate(anim).value,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: top,
+                left: left,
+                right: right,
+                bottom: bottom,
+                child: Hero(
+                  tag: "fabMenu",
+                  child: Material(
+                    elevation: 6,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kCardBorderRadius),
+                    ),
+                    child: SizedBox(
+                      width: 250,
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.all(0),
+                        reverse: true,
+                        children: isOnTop ? items.reversed.toList() : items,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
         opaque: false,
         barrierDismissible: true,
       ),
     );
   }
 
-  static Future<int> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
-
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
-
-    return (lastNote?.id ?? 0) + 1;
+  static String generateId() {
+    return Uuid().v4();
   }
-
-  static Note get emptyNote => Note(
-        id: null,
-        title: "",
-        content: "",
-        styleJson: ContentStyle([]),
-        starred: false,
-        creationDate: DateTime.now(),
-        lastModifyDate: DateTime.now(),
-        color: 0,
-        images: ImageList({}),
-        list: false,
-        listContent: ListContent([]),
-        reminders: ReminderList([]),
-        tags: TagList([]),
-        hideContent: false,
-        lockNote: false,
-        usesBiometrics: false,
-        deleted: false,
-        archived: false,
-        synced: false,
-      );
 
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
@@ -227,51 +211,33 @@ class Utils {
     }
   }
 
-  static List<DrawerListItem> getDestinations(ReturnMode mode) => [
-        DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.home_variant_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.home_variant),
-          label: Utils.getNameFromMode(ReturnMode.NORMAL),
-        ),
-        DrawerListItem(
-          icon: Icon(MdiIcons.archiveOutline),
-          selectedIcon: Icon(MdiIcons.archive),
-          label: Utils.getNameFromMode(ReturnMode.ARCHIVE),
-        ),
-        DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.trash_can_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.trash_can),
-          label: Utils.getNameFromMode(ReturnMode.TRASH),
-        ),
-        DrawerListItem(
-          icon: Icon(CommunityMaterialIcons.heart_multiple_outline),
-          selectedIcon: Icon(CommunityMaterialIcons.heart_multiple),
-          label: Utils.getNameFromMode(ReturnMode.FAVOURITES),
-        ),
-      ];
-
-  static get defaultAccent => Color(0xFFFF9100);
+  static get defaultAccent => Color(0xFF66BB6A);
 
   static Future<void> deleteNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
   }) async {
     for (Note note in notes) {
       if (archive) {
-        await helper.saveNote(note.copyWith(deleted: false, archived: true));
+        await helper.saveNote(
+            note.markChanged().copyWith(deleted: false, archived: true));
       } else {
-        await helper.saveNote(note.copyWith(deleted: true, archived: false));
+        await helper.saveNote(
+            note.markChanged().copyWith(deleted: true, archived: false));
       }
     }
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar(context);
+    BasePage.of(context)?.showSnackBar(
+      context,
       SnackBar(
         content: Text(reason),
+        behavior: SnackBarBehavior.floating,
+        width: min(640, MediaQuery.of(context).size.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -286,21 +252,25 @@ class Utils {
   }
 
   static Future<void> restoreNotes({
-    GlobalKey<ScaffoldState> scaffoldKey,
+    @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
   }) async {
     for (Note note in notes) {
-      await helper.saveNote(note.copyWith(deleted: false, archived: false));
+      await helper.saveNote(
+          note.markChanged().copyWith(deleted: false, archived: false));
     }
 
     List<Note> backupNotes = List.from(notes);
 
-    scaffoldKey?.currentState?.hideCurrentSnackBar();
-    scaffoldKey?.currentState?.showSnackBar(
+    BasePage.of(context)?.hideCurrentSnackBar(context);
+    BasePage.of(context)?.showSnackBar(
+      context,
       SnackBar(
         content: Text(reason),
+        behavior: SnackBarBehavior.floating,
+        width: min(640, MediaQuery.of(context).size.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -322,7 +292,7 @@ class Utils {
   static List<ContributorInfo> get contributors => [
         ContributorInfo(
           name: "Davide Bianco",
-          role: LocaleStrings.aboutPage.contributorsHrX,
+          role: LocaleStrings.aboutPage.contributorsHrx,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "HrX03"),
@@ -366,11 +336,21 @@ class Utils {
         ),
         ContributorInfo(
           name: "RshBfn",
-          role: LocaleStrings.aboutPage.contributorsRshBfn,
+          role: LocaleStrings.aboutPage.contributorsRshbfn,
           avatarUrl:
-              "https://pbs.twimg.com/profile_images/1282395593646604288/Rkxny-Fi.jpg",
+              "https://pbs.twimg.com/profile_images/1306121394241953792/G0zeUpRb.jpg",
           socialLinks: [
             SocialLink(SocialLinkType.TWITTER, "RshBfn"),
+          ],
+        ),
+        ContributorInfo(
+          name: "Elias Gagnef",
+          role: "Leaflet brand name",
+          avatarUrl: "https://avatars.githubusercontent.com/u/46574798",
+          socialLinks: [
+            SocialLink(SocialLinkType.TWITTER, "EliasGagnef"),
+            SocialLink(SocialLinkType.GITHUB, "EliasGagnef"),
+            SocialLink(SocialLinkType.STEAM, "Gagnef"),
           ],
         ),
       ];
@@ -378,53 +358,316 @@ class Utils {
   static Future<dynamic> showSecondaryRoute(
     BuildContext context,
     Widget route, {
-    EdgeInsets sidePadding = kSecondaryRoutePadding,
-    RouteTransitionsBuilder transitionsBuilder,
-    bool barrierDismissible = true,
     bool allowGestures = true,
+    bool pushImmediate = false,
   }) async {
-    bool shouldUseDialog = deviceInfo.uiType == UiType.LARGE_TABLET ||
-        deviceInfo.uiType == UiType.DESKTOP;
-
-    if (shouldUseDialog) {
-      showDialog(
-        context: context,
-        barrierDismissible: barrierDismissible,
-        builder: (context) => Dialog(
-          insetPadding: sidePadding,
+    return Navigator.of(context).push(
+      DismissiblePageRoute(
+        builder: (context) => ScaffoldMessenger(
           child: route,
         ),
+        allowGestures: allowGestures,
+        pushImmediate: pushImmediate,
+      ),
+    );
+  }
+
+  static void newNote(BuildContext context) async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+    String id = generateId();
+
+    await Utils.showSecondaryRoute(
+      context,
+      NotePage(note: NoteX.emptyNote.copyWith(id: id)),
+    );
+
+    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    int newLength = notes.length;
+
+    if (newLength > currentLength) {
+      Note lastNote = notes.firstWhere(
+        (element) => element.id == id,
+        orElse: () => null,
       );
-    } else {
-      if (transitionsBuilder != null) {
-        return Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return transitionsBuilder(
-                context,
-                animation,
-                secondaryAnimation,
-                route,
-              );
-            },
-          ),
+      if (lastNote == null) return;
+      Utils.handleNotePagePop(lastNote);
+
+      if (lastNote.title.isEmpty &&
+          lastNote.content.isEmpty &&
+          lastNote.listContent.isEmpty &&
+          lastNote.images.isEmpty &&
+          lastNote.reminders.isEmpty) {
+        Utils.deleteNotes(
+          context: context,
+          notes: [lastNote],
+          reason: LocaleStrings.mainPage.deletedEmptyNote,
         );
-      } else {
-        if (allowGestures) {
-          return Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => route,
-            ),
-          );
-        } else {
-          return Navigator.of(context).push(
-            DismissiblePageRoute(
-              builder: (context) => route,
-              allowGestures: false,
-            ),
-          );
-        }
       }
     }
+  }
+
+  static void newImage(BuildContext context, ImageSource source,
+      {bool shouldPop = false}) async {
+    Note note = NoteX.emptyNote;
+    File image = await pickImage();
+
+    if (image != null) {
+      SavedImage savedImage =
+          await ImageService.prepareLocally(File(image.path));
+      note.images.add(savedImage);
+
+      if (shouldPop) Navigator.pop(context);
+      note = note.copyWith(id: Utils.generateId());
+
+      Utils.showSecondaryRoute(
+        context,
+        NotePage(
+          note: note,
+        ),
+      );
+
+      helper.saveNote(note.markChanged());
+    }
+  }
+
+  static void newList(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithList: true,
+      ),
+    );
+  }
+
+  static void newDrawing(BuildContext context) {
+    Utils.showSecondaryRoute(
+      context,
+      NotePage(
+        openWithDrawing: true,
+      ),
+    );
+  }
+
+  static Future<File> pickImage() async {
+    String path;
+
+    try {
+      if (DeviceInfo.isDesktop) {
+        final image = await showOpenPanel(
+          canSelectDirectories: false,
+          allowsMultipleSelection: false,
+          allowedFileTypes: [
+            FileTypeFilterGroup(
+              label: 'images',
+              fileExtensions: [
+                'png',
+                'jpg',
+                'jpeg',
+                'bmp',
+              ],
+            ),
+          ],
+        );
+
+        path = image.paths[0];
+      } else {
+        final image = await ImagePicker().getImage(source: ImageSource.gallery);
+
+        path = image.path;
+      }
+    } catch (e) {}
+
+    return path != null ? File(path) : null;
+  }
+
+  static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
+}
+
+extension NoteX on Note {
+  static Note get emptyNote => Note(
+        id: null,
+        title: "",
+        content: "",
+        styleJson: [],
+        starred: false,
+        creationDate: DateTime.now(),
+        lastModifyDate: DateTime.now(),
+        color: 0,
+        images: [],
+        list: false,
+        listContent: [],
+        reminders: [],
+        tags: [],
+        hideContent: false,
+        lockNote: false,
+        usesBiometrics: false,
+        deleted: false,
+        archived: false,
+        synced: false,
+      );
+
+  static Note fromSyncMap(Map<String, dynamic> syncMap) {
+    Map<String, dynamic> newMap = Map();
+    syncMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).camelCase;
+      switch (key) {
+        case "style_json":
+          {
+            var map = json.decode(value);
+            List<int> data = List<int>.from(map.map((i) => i as int)).toList();
+            newValue = data;
+            break;
+          }
+        case "images":
+          {
+            List<dynamic> list = json.decode(value);
+            List<SavedImage> images =
+                list.map((i) => SavedImage.fromJson(i)).toList();
+            newValue = images;
+            break;
+          }
+        case "list_content":
+          {
+            var map = json.decode(value);
+            List<ListItem> content =
+                List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
+                    .toList();
+            newValue = content;
+            break;
+          }
+        case "reminders":
+          {
+            var map = json.decode(value);
+            List<DateTime> reminders =
+                List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
+            newValue = reminders;
+            break;
+          }
+        case "tags":
+          {
+            var map = json.decode(value);
+            List<String> tagIds = List<String>.from(map).toList();
+            newValue = tagIds;
+          }
+      }
+      if (key == "note_id") {
+        newKey = "id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return Note.fromJson(newMap);
+  }
+
+  Map<String, dynamic> toSyncMap() {
+    var originalMap = this.toJson();
+    Map<String, dynamic> newMap = Map();
+    originalMap.forEach((key, value) {
+      var newValue = value;
+      var newKey = ReCase(key).snakeCase;
+      switch (key) {
+        case "styleJson":
+          {
+            var style = value as List<int>;
+            newValue = json.encode(style);
+            break;
+          }
+        case "images":
+          {
+            var images = value as List<SavedImage>;
+            newValue = json.encode(images);
+            break;
+          }
+        case "listContent":
+          {
+            var listContent = value as List<ListItem>;
+            newValue = json.encode(listContent);
+            break;
+          }
+        case "reminders":
+          {
+            var reminders = value as List<DateTime>;
+            newValue = json.encode(reminders);
+            break;
+          }
+        case "tags":
+          {
+            var tags = value as List<String>;
+            newValue = json.encode(tags);
+            break;
+          }
+      }
+      if (key == "id") {
+        newKey = "note_id";
+      }
+      newMap.putIfAbsent(newKey, () => newValue);
+    });
+    return newMap;
+  }
+
+  Note markChanged() {
+    return copyWith(synced: false, lastModifyDate: DateTime.now());
+  }
+
+  int get notificationId =>
+      int.parse(this.id.split("-")[0], radix: 16).toUnsigned(31);
+
+  bool get pinned {
+    return appInfo.activeNotifications.any(
+      (e) => e.id == notificationId,
+    );
+  }
+}
+
+extension TagX on Tag {
+  Tag markChanged() {
+    return copyWith(lastModifyDate: DateTime.now());
+  }
+}
+
+extension UriX on Uri {
+  ImageProvider toImageProvider() {
+    if (data != null) {
+      return MemoryImage(data.contentAsBytes());
+    } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
+      return CachedNetworkImageProvider(toString());
+    } else {
+      return FileImage(File(path));
+    }
+  }
+}
+
+class SuspendedCurve extends Curve {
+  /// Creates a suspended curve.
+  const SuspendedCurve(
+    this.startingPoint, {
+    this.curve = Curves.easeOutCubic,
+  })  : assert(startingPoint != null),
+        assert(curve != null);
+
+  /// The progress value at which [curve] should begin.
+  ///
+  /// This defaults to [Curves.easeOutCubic].
+  final double startingPoint;
+
+  /// The curve to use when [startingPoint] is reached.
+  final Curve curve;
+
+  @override
+  double transform(double t) {
+    assert(t >= 0.0 && t <= 1.0);
+    assert(startingPoint >= 0.0 && startingPoint <= 1.0);
+
+    if (t < startingPoint) {
+      return t;
+    }
+
+    if (t == 1.0) {
+      return t;
+    }
+
+    final double curveProgress = (t - startingPoint) / (1 - startingPoint);
+    final double transformed = curve.transform(curveProgress);
+    return lerpDouble(startingPoint, 1, transformed);
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
-import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/tag_model.dart';
+import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class TagEditor extends StatefulWidget {
-  final TagModel tag;
+  final Tag tag;
   final String initialInput;
-  final void Function(TagModel) onSave;
+  final void Function(Tag) onSave;
 
   TagEditor({
     this.tag,
@@ -20,7 +20,8 @@ class TagEditor extends StatefulWidget {
 }
 
 class _NewTagState extends State<TagEditor> {
-  TagModel tag = TagModel(
+  // ignore: missing_required_param
+  Tag tag = Tag(
     color: 0,
   );
   TextEditingController controller;
@@ -28,16 +29,8 @@ class _NewTagState extends State<TagEditor> {
   @override
   void initState() {
     if (widget.tag == null) {
-      TagModel lastTag;
-      List<TagModel> tags = prefs.tags ?? [];
-      tags.sort((a, b) => a.id.compareTo(b.id));
-
-      if (tags.isNotEmpty) {
-        lastTag = tags.last;
-      }
-
-      tag.id = (lastTag?.id ?? 0) + 1;
-      tag.name = widget.initialInput;
+      tag = tag.copyWith(id: Utils.generateId());
+      tag = tag.copyWith(name: widget.initialInput);
     } else
       tag = widget.tag;
 
@@ -75,7 +68,8 @@ class _NewTagState extends State<TagEditor> {
               ),
               initialValue: tag.name,
               maxLength: 30,
-              onChanged: (text) => setState(() => tag.name = text),
+              onChanged: (text) =>
+                  setState(() => tag = tag.copyWith(name: text)),
             ),
           ),
           Container(
@@ -86,6 +80,7 @@ class _NewTagState extends State<TagEditor> {
               itemCount: NoteColors.colorList.length,
               itemBuilder: (context, index) {
                 return IconButton(
+                  visualDensity: VisualDensity.standard,
                   icon: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -111,7 +106,7 @@ class _NewTagState extends State<TagEditor> {
                   ),
                   tooltip: NoteColors.colorList[index].label,
                   onPressed: () {
-                    setState(() => tag.color = index);
+                    setState(() => tag = tag.copyWith(color: index));
                   },
                 );
               },
@@ -124,7 +119,7 @@ class _NewTagState extends State<TagEditor> {
               children: [
                 FlatButton(
                   onPressed: tag.name.trim().isNotEmpty
-                      ? () => widget.onSave(tag..name = tag.name.trim())
+                      ? () => widget.onSave(tag.copyWith(name: tag.name.trim()))
                       : null,
                   child: Text(LocaleStrings.common.save),
                   color: Theme.of(context).accentColor,

@@ -1,23 +1,18 @@
 import 'dart:io';
+import 'dart:math';
 
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/content_style.dart';
-import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/tag_model.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
@@ -47,17 +42,17 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   Note note;
-  bool firstTimeRunning = true;
 
   TextEditingController titleController;
+  FocusNode titleFocusNode = FocusNode();
   TextEditingController contentController;
+  FocusNode contentFocusNode = FocusNode();
+
   //SpannableTextEditingController contentController;
 
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
-
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -65,16 +60,16 @@ class _NotePageState extends State<NotePage> {
       id: widget.note?.id,
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
-      styleJson: ContentStyle([]),
+      styleJson: [],
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
-      images: widget.note?.images ?? ImageList({}),
+      images: widget.note?.images ?? [],
       list: widget.note?.list ?? false,
-      listContent: widget.note?.listContent ?? ListContent([]),
-      reminders: widget.note?.reminders ?? ReminderList([]),
-      tags: widget.note?.tags ?? TagList([]),
+      listContent: widget.note?.listContent ?? [],
+      reminders: widget.note?.reminders ?? [],
+      tags: widget.note?.tags ?? [],
       hideContent: widget.note?.hideContent ?? false,
       lockNote: widget.note?.lockNote ?? false,
       usesBiometrics: widget.note?.usesBiometrics ?? false,
@@ -94,6 +89,18 @@ class _NotePageState extends State<NotePage> {
           ? SpannableList.fromJson(parsedStyleJson)
           : null,
     );*/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!widget.openWithList && !widget.openWithDrawing) {
+        if (note.id == null) {
+          FocusScope.of(context).requestFocus(titleFocusNode);
+        }
+        generateId();
+      } else {
+        if (widget.openWithList) toggleList();
+
+        if (widget.openWithDrawing) addDrawing();
+      }
+    });
 
     buildListContentElements();
 
@@ -101,19 +108,22 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    helper.saveNote(note);
+    helper.saveNote(note.markChanged());
   }
 
-  Future<void> generateId() async {
-    Note lastNote;
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-    notes.sort((a, b) => a.id.compareTo(b.id));
+  void handleImageAdd(String path) async {
+    SavedImage savedImage = await ImageService.prepareLocally(File(path));
+    setState(() => note.images.add(savedImage));
+    await helper.saveNote(note.markChanged());
+    handleImageUpload();
+  }
 
-    if (notes.isNotEmpty) {
-      lastNote = notes.last;
-    }
+  void handleImageUpload() {
+    ImageService.handleUpload(note);
+  }
 
-    if (note.id == null) note = note.copyWith(id: (lastNote?.id ?? 0) + 1);
+  void generateId() {
+    if (note.id == null) note = note.copyWith(id: Utils.generateId());
   }
 
   @override
@@ -124,27 +134,12 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (firstTimeRunning) {
-      firstTimeRunning = false;
-
-      if (!widget.openWithList && !widget.openWithDrawing) generateId();
-
-      if (widget.openWithList) toggleList();
-
-      if (widget.openWithDrawing)
-        WidgetsBinding.instance.addPostFrameCallback((_) => addDrawing());
-    }
-
     final Widget imagesWidget = NoteViewImages(
-      images: note.images.uris.sublist(
-          0,
-          note.images.data.length > kMaxImageCount
-              ? kMaxImageCount
-              : note.images.data.length),
+      images: note.images,
       showPlusImages: true,
-      numPlusImages: note.images.data.length < kMaxImageCount
+      numPlusImages: note.images.length < kMaxImageCount
           ? 0
-          : note.images.data.length - kMaxImageCount,
+          : note.images.length - kMaxImageCount,
       useSmallFont: false,
       onImageTap: (index) async {
         await Utils.showSecondaryRoute(
@@ -153,8 +148,6 @@ class _NotePageState extends State<NotePage> {
             note: note,
             currentImage: index,
           ),
-          sidePadding: kTertiaryRoutePadding,
-          allowGestures: false,
         );
 
         setState(() {});
@@ -188,39 +181,41 @@ class _NotePageState extends State<NotePage> {
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
-        key: scaffoldKey,
         appBar: AppBar(
           actions: <Widget>[
             ...getToolbarButtons(!deviceInfo.isLandscape),
             IconButton(
-              icon: Icon(OMIcons.removeRedEye),
+              icon: Icon(Icons.remove_red_eye_outlined),
               padding: EdgeInsets.all(0),
               tooltip: LocaleStrings.notePage.privacyTitle,
               onPressed: showPrivacyOptionSheet,
             ),
-            IconButton(
-              icon: Icon(
-                note.starred
-                    ? CommunityMaterialIcons.heart
-                    : CommunityMaterialIcons.heart_outline,
-              ),
-              padding: EdgeInsets.all(0),
-              tooltip: note.starred
-                  ? LocaleStrings.mainPage.selectionBarRmFav
-                  : LocaleStrings.mainPage.selectionBarAddFav,
-              onPressed: () {
-                setState(() => note = note.copyWith(starred: !note.starred));
-                notifyNoteChanged();
-                scaffoldKey.currentState.removeCurrentSnackBar();
-                scaffoldKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      note.starred
-                          ? LocaleStrings.notePage.addedFavourites
-                          : LocaleStrings.notePage.removedFavourites,
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(
+                      note.starred ? Icons.favorite : Icons.favorite_border),
+                  padding: EdgeInsets.all(0),
+                  tooltip: note.starred
+                      ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                      : LocaleStrings.mainPage.selectionBarAddFavourites,
+                  onPressed: () {
+                    setState(
+                        () => note = note.copyWith(starred: !note.starred));
+                    notifyNoteChanged();
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          note.starred
+                              ? LocaleStrings.notePage.addedFavourites
+                              : LocaleStrings.notePage.removedFavourites,
+                        ),
+                        width: min(640, MediaQuery.of(context).size.width - 32),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -238,12 +233,11 @@ class _NotePageState extends State<NotePage> {
                 ),
                 children: [
                   Visibility(
-                    visible:
-                        note.images.data.isNotEmpty && !deviceInfo.isLandscape,
+                    visible: note.images.isNotEmpty && !deviceInfo.isLandscape,
                     child: imagesWidget,
                   ),
                   Visibility(
-                    visible: note.tags.tagIds.isNotEmpty,
+                    visible: note.tags.isNotEmpty,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8,
@@ -254,10 +248,10 @@ class _NotePageState extends State<NotePage> {
                         spacing: 8,
                         runSpacing: 8,
                         children: List.generate(
-                          note.tags.tagIds.length,
+                          note.tags.length,
                           (index) {
-                            TagModel tag = prefs.tags.firstWhere(
-                              (tag) => tag.id == note.tags.tagIds[index],
+                            Tag tag = prefs.tags.firstWhere(
+                              (tag) => tag.id == note.tags[index],
                             );
 
                             return TagChip(
@@ -277,6 +271,7 @@ class _NotePageState extends State<NotePage> {
                       children: [
                         TextFormField(
                           controller: titleController,
+                          focusNode: titleFocusNode,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: LocaleStrings.notePage.titleHint,
@@ -303,9 +298,12 @@ class _NotePageState extends State<NotePage> {
                             note = note.copyWith(title: text);
                             notifyNoteChanged();
                           },
+                          onFieldSubmitted: (value) => FocusScope.of(context)
+                              .requestFocus(contentFocusNode),
                         ),
                         TextField(
                           controller: contentController,
+                          focusNode: contentFocusNode,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: LocaleStrings.notePage.contentHint,
@@ -350,13 +348,11 @@ class _NotePageState extends State<NotePage> {
                     visible: note.list,
                     child: Column(
                       children: <Widget>[
-                        ...List.generate(note.listContent.content.length,
-                            (index) {
-                          ListItem currentItem =
-                              note.listContent.content[index];
+                        ...List.generate(note.listContent.length, (index) {
+                          ListItem currentItem = note.listContent[index];
 
                           if (needsFocus &&
-                              index == note.listContent.content.length - 1) {
+                              index == note.listContent.length - 1) {
                             needsFocus = false;
                             FocusScope.of(context)
                                 .requestFocus(listContentNodes.last);
@@ -365,7 +361,7 @@ class _NotePageState extends State<NotePage> {
                           return Dismissible(
                             key: Key(currentItem.id.toString()),
                             onDismissed: (_) => setState(() {
-                              note.listContent.content.removeAt(index);
+                              note.listContent.removeAt(index);
                               listContentControllers.removeAt(index);
                               listContentNodes.removeAt(index);
                               notifyNoteChanged();
@@ -385,8 +381,8 @@ class _NotePageState extends State<NotePage> {
                               leading: Checkbox(
                                 value: currentItem.status,
                                 onChanged: (value) {
-                                  setState(() => note.listContent.content[index]
-                                      .status = value);
+                                  setState(() =>
+                                      note.listContent[index].status = value);
                                   notifyNoteChanged();
                                 },
                                 checkColor: note.color != 0
@@ -408,27 +404,24 @@ class _NotePageState extends State<NotePage> {
                                       .iconTheme
                                       .color
                                       .withOpacity(
-                                        note.listContent.content[index].status
+                                        note.listContent[index].status
                                             ? 0.3
                                             : 0.7,
                                       ),
-                                  decoration:
-                                      note.listContent.content[index].status
-                                          ? TextDecoration.lineThrough
-                                          : null,
+                                  decoration: note.listContent[index].status
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                 ),
                                 onChanged: (text) {
-                                  setState(() => note
-                                      .listContent.content[index].text = text);
+                                  setState(() =>
+                                      note.listContent[index].text = text);
                                   notifyNoteChanged();
                                 },
                                 onSubmitted: (_) {
-                                  if (index ==
-                                      note.listContent.content.length - 1) {
-                                    if (note.listContent.content.last.text !=
-                                        "")
+                                  if (index == note.listContent.length - 1) {
+                                    if (note.listContent.last.text != "") {
                                       addListContentItem();
-                                    else {
+                                    } else {
                                       FocusScope.of(context).requestFocus(
                                           listContentNodes[index]);
                                     }
@@ -443,11 +436,13 @@ class _NotePageState extends State<NotePage> {
                           );
                         }),
                         AnimatedOpacity(
-                          opacity: note.listContent.content.isNotEmpty
-                              ? note.listContent.content.last.text != "" ? 1 : 0
+                          opacity: note.listContent.isNotEmpty
+                              ? note.listContent.last.text != ""
+                                  ? 1
+                                  : 0
                               : 1,
-                          duration: note.listContent.content.isNotEmpty
-                              ? note.listContent.content.last.text != ""
+                          duration: note.listContent.isNotEmpty
+                              ? note.listContent.last.text != ""
                                   ? Duration(milliseconds: 300)
                                   : Duration(milliseconds: 0)
                               : Duration(milliseconds: 0),
@@ -459,9 +454,9 @@ class _NotePageState extends State<NotePage> {
                                   color: Theme.of(context).iconTheme.color),
                             ),
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 28),
-                            onTap: note.listContent.content.isNotEmpty
-                                ? note.listContent.content.last.text != ""
+                                EdgeInsets.symmetric(horizontal: 20),
+                            onTap: note.listContent.isNotEmpty
+                                ? note.listContent.last.text != ""
                                     ? () => addListContentItem()
                                     : null
                                 : () => addListContentItem(),
@@ -474,13 +469,12 @@ class _NotePageState extends State<NotePage> {
               ),
             ),
             Visibility(
-              visible: note.images.data.isNotEmpty && deviceInfo.isLandscape,
+              visible: note.images.isNotEmpty && deviceInfo.isLandscape,
               child: Container(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 56,
                 ),
-                width: MediaQuery.of(context).size.height -
-                    (MediaQuery.of(context).padding.top + 56),
+                width: 360,
                 child: imagesWidget,
               ),
             ),
@@ -520,23 +514,25 @@ class _NotePageState extends State<NotePage> {
     } else {
       return [
         IconButton(
-          icon: Icon(MdiIcons.tagMultipleOutline),
+          icon: Icon(Icons.local_offer_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarTags,
           onPressed: () async {
             await Utils.showSecondaryRoute(
               context,
               SearchPage(
-                delegate: TagSearchDelegate(note),
+                delegate: TagSearchDelegate(
+                  note.tags,
+                  onChanged: () => helper.saveNote(note.markChanged()),
+                ),
               ),
-              sidePadding: kTertiaryRoutePadding,
             );
 
             setState(() {});
           },
         ),
         IconButton(
-          icon: Icon(OMIcons.colorLens),
+          icon: Icon(Icons.color_lens_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showNotesModalBottomSheet(
@@ -554,32 +550,23 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
         ),
-        (!kIsWeb)
-            ? IconButton(
-                icon: Icon(Icons.add),
-                padding: EdgeInsets.all(0),
-                tooltip: LocaleStrings.notePage.toolbarAddItem,
-                onPressed: showAddElementsSheet,
-              )
-            : IconButton(
-                icon: Icon(
-                  note.list ? Icons.check_circle : Icons.check_circle_outline,
-                ),
-                padding: EdgeInsets.all(0),
-                tooltip: LocaleStrings.notePage.toggleList,
-                onPressed: toggleList,
-              ),
+        IconButton(
+          icon: Icon(Icons.add),
+          padding: EdgeInsets.all(0),
+          tooltip: LocaleStrings.notePage.toolbarAddItem,
+          onPressed: showAddElementsSheet,
+        )
       ];
     }
   }
 
   void addListContentItem() {
-    List<ListItem> sortedList = note.listContent.content;
+    List<ListItem> sortedList = note.listContent;
     sortedList.sort((a, b) => a.id.compareTo(b.id));
 
     int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
 
-    note.listContent.content.add(
+    note.listContent.add(
       ListItem(
         id,
         "",
@@ -613,7 +600,7 @@ class _NotePageState extends State<NotePage> {
                 notifyNoteChanged();
               },
               activeColor: Theme.of(context).accentColor,
-              secondary: Icon(OMIcons.removeRedEye),
+              secondary: Icon(Icons.remove_red_eye_outlined),
               title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
             SwitchListTile(
@@ -631,7 +618,7 @@ class _NotePageState extends State<NotePage> {
                     }
                   : null,
               activeColor: Theme.of(context).accentColor,
-              secondary: Icon(OMIcons.lock),
+              secondary: Icon(Icons.lock_outlined),
               title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
                   ? Text(
@@ -662,7 +649,7 @@ class _NotePageState extends State<NotePage> {
                       }
                     : null,
                 activeColor: Theme.of(context).accentColor,
-                secondary: Icon(OMIcons.fingerprint),
+                secondary: Icon(Icons.fingerprint_outlined),
                 title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),
             ),
@@ -691,41 +678,36 @@ class _NotePageState extends State<NotePage> {
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.photo),
+            leading: Icon(Icons.photo_outlined),
             title: Text(LocaleStrings.notePage.imageGallery),
             onTap: () async {
-              PickedFile image =
-                  await ImagePicker().getImage(source: ImageSource.gallery);
+              final image = await Utils.pickImage();
 
               if (image != null) {
-                setState(
-                    () => note.images.data[image.path] = File(image.path).uri);
-                notifyNoteChanged();
                 Navigator.pop(context);
+                handleImageAdd(image.path);
               }
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.camera),
+            leading: Icon(Icons.camera_outlined),
+            enabled: !DeviceInfo.isDesktop,
             title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
               PickedFile image =
                   await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
-                setState(
-                    () => note.images.data[image.path] = File(image.path).uri);
-                notifyNoteChanged();
                 Navigator.pop(context);
+                handleImageAdd(image.path);
               }
             },
           ),
           ListTile(
-            leading: Icon(OMIcons.brush),
+            leading: Icon(Icons.brush_outlined),
             title: Text(LocaleStrings.notePage.drawing),
             onTap: () {
               Navigator.pop(context);
-
               addDrawing();
             },
           ),
@@ -735,21 +717,20 @@ class _NotePageState extends State<NotePage> {
   }
 
   void toggleList() async {
-    await generateId();
+    generateId();
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
-    if (note.listContent.content.isEmpty && note.list) {
+    if (note.listContent.isEmpty && note.list) {
       addListContentItem();
     }
   }
 
   void addDrawing() async {
-    await generateId();
+    generateId();
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),
-      sidePadding: kTertiaryRoutePadding,
       allowGestures: false,
     );
 
@@ -759,9 +740,9 @@ class _NotePageState extends State<NotePage> {
   void buildListContentElements() {
     listContentControllers.clear();
     listContentNodes.clear();
-    for (int i = 0; i < note.listContent.content.length; i++) {
+    for (int i = 0; i < note.listContent.length; i++) {
       listContentControllers
-          .add(TextEditingController(text: note.listContent.content[i].text));
+          .add(TextEditingController(text: note.listContent[i].text));
 
       FocusNode node = FocusNode();
       listContentNodes.add(node);

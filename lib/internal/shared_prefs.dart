@@ -1,24 +1,29 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
-import 'package:potato_notes/internal/tag_model.dart';
+import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
+  static SharedPrefs _instance;
   SharedPreferences prefs;
 
   SharedPrefs._(this.prefs);
-  static Future<SharedPrefs> newInstance() async {
+
+  static Future<void> init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return SharedPrefs._(preferences);
+    _instance = SharedPrefs._(preferences);
   }
+
+  static SharedPrefs get instance => _instance;
 
   Future<String> getMasterPass() async {
     return prefs.getString("master_pass") ?? "";
   }
 
   void setMasterPass(String value) async {
+    //TODO Only remove comment chars after master_pass is hashed before saving
+    //addChangedKey("master_pass");
     await prefs.setString("master_pass", value);
   }
 
@@ -37,6 +42,7 @@ class SharedPrefs {
   }
 
   void setThemeMode(ThemeMode value) async {
+    addChangedKey("theme_mode");
     int newValue;
     switch (value) {
       case ThemeMode.system:
@@ -61,6 +67,7 @@ class SharedPrefs {
   }
 
   void setCustomAccent(Color value) async {
+    addChangedKey("custom_accent");
     await prefs.setInt("custom_accent", value?.value);
   }
 
@@ -69,14 +76,16 @@ class SharedPrefs {
   }
 
   void setUseAmoled(bool value) async {
+    addChangedKey("use_amoled");
     await prefs.setBool("use_amoled", value);
   }
 
   Future<bool> getUseGrid() async {
-    return prefs.getBool("use_grid") ?? false;
+    return prefs.getBool("use_grid") ?? DeviceInfo.isDesktop;
   }
 
   void setUseGrid(bool value) async {
+    addChangedKey("use_grid");
     await prefs.setBool("use_grid", value);
   }
 
@@ -85,6 +94,7 @@ class SharedPrefs {
   }
 
   void setUseCustomAccent(bool value) async {
+    addChangedKey("use_custom_accent");
     await prefs.setBool("use_custom_accent", value);
   }
 
@@ -97,7 +107,8 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    return prefs.getString("api_url") ?? "https://sync.potatoproject.co";
+    // http://stats.corbellum.nl/api/v2
+    return prefs.getString("api_url") ?? Utils.defaultApiUrl;
   }
 
   void setApiUrl(String value) async {
@@ -144,28 +155,43 @@ class SharedPrefs {
     await prefs.setInt("log_level", value);
   }
 
-  Future<List<TagModel>> getTags() async {
-    List<String> encodedList = prefs.getStringList("tags");
-
-    if (encodedList == null) return [];
-
-    return List.generate(
-      encodedList.length,
-      (index) => TagModel.fromJson(
-        json.decode(encodedList[index]),
-      ),
-    );
+  Future<List<String>> getDownloadedImages() async {
+    return prefs.getStringList("downloaded_images") ?? [];
   }
 
-  void setTags(List<TagModel> value) async {
-    await prefs.setStringList(
-      "tags",
-      List.generate(
-        value.length,
-        (index) => json.encode(
-          value[index].toJson(),
-        ),
-      ),
-    );
+  void setDownloadedImages(List<String> value) async {
+    await prefs.setStringList("downloaded_images", value);
+  }
+
+  Future<List<String>> getDeletedImages() async {
+    return prefs.getStringList("deleted_images") ?? [];
+  }
+
+  void setDeletedImages(List<String> value) async {
+    await prefs.setStringList("deleted_images", value);
+  }
+
+  Future<int> getLastUpdated() async {
+    return prefs.getInt("last_updated") ?? 0;
+  }
+
+  void setLastUpdated(int value) async {
+    await prefs.setInt("last_updated", value);
+  }
+
+  void addChangedKey(String key) async {
+    var changedKeys = prefs.getStringList("updated_keys") ?? new List<String>();
+    if (!changedKeys.contains(key)) {
+      changedKeys.add(key);
+    }
+    await prefs.setStringList("updated_keys", changedKeys);
+  }
+
+  void clearChangedKeys() async {
+    await prefs.setStringList("updated_keys", null);
+  }
+
+  List<String> getChangedKeys() {
+    return prefs.getStringList("updated_keys") ?? new List<String>();
   }
 }

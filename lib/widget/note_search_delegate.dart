@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/illustrations.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
   SearchQuery searchQuery = SearchQuery();
@@ -29,6 +29,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           isScrollControlled: true,
           builder: (context) => QueryFilters(
             query: searchQuery,
+            filterChangedCallback: () => setState(() {}),
           ),
         ),
       ),
@@ -37,26 +38,36 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    EdgeInsets padding = EdgeInsets.fromLTRB(
+      4,
+      4 + MediaQuery.of(context).padding.top,
+      4,
+      4 + 80.0,
+    );
+
     return FutureBuilder(
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
         Widget child;
 
-        if (snapshot.data.isNotEmpty) {
+        if (snapshot.data?.isNotEmpty ?? false) {
           if (prefs.useGrid) {
-            child = StaggeredGridView.countBuilder(
-              crossAxisCount: deviceInfo.uiSizeFactor,
+            child = WaterfallFlow.builder(
+              gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                crossAxisCount: deviceInfo.uiSizeFactor,
+              ),
               itemBuilder: (context, index) =>
                   noteView(context, snapshot.data[index]),
-              staggeredTileBuilder: (index) => StaggeredTile.fit(1),
               itemCount: snapshot.data.length,
+              padding: padding,
             );
           } else {
             child = ListView.builder(
               itemBuilder: (context, index) =>
                   noteView(context, snapshot.data[index]),
               itemCount: snapshot.data.length,
+              padding: padding,
             );
           }
         } else {
@@ -146,24 +157,30 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         NotePage(
           note: note,
         ),
-        sidePadding: kTertiaryRoutePadding,
-      );
+      ).then((_) => Utils.handleNotePagePop(note));
     }
   }
 
   Future<List<Note>> getNotesForQuery() async {
-    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+    List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
     List<Note> results = [];
 
-    if (query.trim().isEmpty) {
+    if (query.trim().isEmpty &&
+        !searchQuery.onlyFavourites &&
+        searchQuery.date == null &&
+        searchQuery.tags.isEmpty &&
+        searchQuery.color == 0) {
       return [];
     }
 
     bool _getColorBool(int noteColor) {
+      if (searchQuery.color == null) return false;
       return noteColor == searchQuery.color;
     }
 
     bool _getDateBool(DateTime noteDate) {
+      if (searchQuery.date == null) return false;
+
       DateTime sanitizedNoteDate = DateTime(
         noteDate.year,
         noteDate.month,
@@ -197,29 +214,37 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       return sanitizedText.contains(sanitizedQuery);
     }
 
-    for (Note note in notes) {
-      if (searchQuery.color != null && searchQuery.date != null) {
-        if (_getColorBool(note.color) &&
-            _getDateBool(note.creationDate) &&
-            (_getTextBool(note.title) || _getTextBool(note.content))) {
-          results.add(note);
-        }
-      } else {
-        if (searchQuery.color != null) {
-          if (_getColorBool(note.color) &&
-              (_getTextBool(note.title) || _getTextBool(note.content))) {
-            results.add(note);
-          }
-        } else if (searchQuery.date != null) {
-          if (_getDateBool(note.creationDate) &&
-              (_getTextBool(note.title) || _getTextBool(note.content))) {
-            results.add(note);
-          }
+    bool _getTagBool(List<String> tags) {
+      bool matchResult;
+
+      searchQuery.tags.forEach((tag) {
+        if (matchResult != null) {
+          matchResult = matchResult && tags.any((element) => element == tag);
         } else {
-          if (_getTextBool(note.title) || _getTextBool(note.content)) {
-            results.add(note);
-          }
+          matchResult = tags.any((element) => element == tag);
         }
+      });
+
+      return matchResult;
+    }
+
+    for (Note note in notes) {
+      bool titleMatch = _getTextBool(note.title);
+      bool contentMatch = _getTextBool(note.content);
+      bool dateMatch =
+          searchQuery.date != null ? _getDateBool(note.creationDate) : true;
+      bool colorMatch =
+          searchQuery.color != null ? _getColorBool(note.color) : true;
+      bool tagMatch =
+          searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
+      bool favouriteMatch = searchQuery.onlyFavourites ? note.starred : true;
+
+      if (tagMatch &&
+          colorMatch &&
+          dateMatch &&
+          favouriteMatch &&
+          (titleMatch || contentMatch)) {
+        results.add(note);
       }
     }
 

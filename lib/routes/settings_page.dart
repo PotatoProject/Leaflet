@@ -1,22 +1,26 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/sync/note_controller.dart';
+import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
+import 'package:potato_notes/widget/sync_url_editor.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -34,121 +38,130 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.trimmed) return commonSettings;
+    return Observer(
+      builder: (context) {
+        if (widget.trimmed) return commonSettings;
 
-    return WillPopScope(
-      onWillPop: () async => !removingMasterPass,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(LocaleStrings.settingsPage.title),
-          textTheme: Theme.of(context).textTheme,
-        ),
-        extendBodyBehindAppBar: true,
-        body: ListView(
-          children: [
-            commonSettings,
-            SettingsCategory(
-              header: LocaleStrings.settingsPage.infoTitle,
-              children: <Widget>[
-                SettingsTile(
-                  icon: Icon(MdiIcons.informationOutline),
-                  title: Text(LocaleStrings.settingsPage.infoAboutApp),
-                  onTap: () => Utils.showSecondaryRoute(
-                    context,
-                    AboutPage(),
-                    sidePadding: kTertiaryRoutePadding,
+        return WillPopScope(
+          onWillPop: () async => !removingMasterPass,
+          child: DependentScaffold(
+            body: ListView(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+              ),
+              children: [
+                commonSettings,
+                SettingsCategory(
+                  header: LocaleStrings.settingsPage.infoTitle,
+                  children: <Widget>[
+                    SettingsTile(
+                      icon: Icon(Icons.info_outline),
+                      title: Text(LocaleStrings.settingsPage.infoAboutApp),
+                      onTap: () => Utils.showSecondaryRoute(
+                        context,
+                        AboutPage(),
+                      ),
+                    ),
+                    SettingsTile(
+                      icon: Icon(Icons.update_outlined),
+                      title: Text("Check for app updates"),
+                      onTap: () => InAppUpdater.checkForUpdate(
+                        context,
+                        showNoUpdatesAvailable: true,
+                      ),
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: kDebugMode,
+                  child: SettingsCategory(
+                    header: LocaleStrings.settingsPage.debugTitle,
+                    children: [
+                      SettingsTile.withSwitch(
+                        icon: Icon(MdiIcons.humanGreeting),
+                        title: Text(
+                          LocaleStrings.settingsPage.debugShowSetupScreen,
+                        ),
+                        value: !prefs.welcomePageSeen,
+                        activeColor: Theme.of(context).accentColor,
+                        onChanged: (value) async {
+                          prefs.welcomePageSeen = !value;
+                        },
+                      ),
+                      SettingsTile(
+                        icon: Icon(MdiIcons.databaseRemove),
+                        title:
+                            Text(LocaleStrings.settingsPage.debugClearDatabase),
+                        onTap: () async {
+                          await helper.deleteAllNotes();
+                          await NoteController.deleteAll();
+                        },
+                      ),
+                      SettingsTile(
+                        icon: Icon(MdiIcons.databaseImport),
+                        title: Text(
+                            LocaleStrings.settingsPage.debugMigrateDatabase),
+                        onTap: () async {
+                          bool canMigrate =
+                              await MigrationTask.migrationAvailable;
+
+                          if (canMigrate) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: Text("Migrating..."),
+                                    content: StreamBuilder<double>(
+                                      stream: MigrationTask.migrate(),
+                                      initialData: 0.0,
+                                      builder: (context, snapshot) {
+                                        return LinearProgressIndicator(
+                                          value: snapshot.data,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      SettingsTile(
+                        icon: Icon(Icons.text_snippet_outlined),
+                        title: Text(LocaleStrings.settingsPage.debugLogLevel),
+                        onTap: () {
+                          showDropdownSheet(
+                            context: context,
+                            itemBuilder: (context, index) {
+                              bool selected =
+                                  prefs.logLevel == logEntryValues[index];
+
+                              return dropDownTile(
+                                selected: selected,
+                                title: Text(
+                                  getLogEntryName(logEntryValues[index]),
+                                ),
+                                onTap: () {
+                                  prefs.logLevel = logEntryValues[index];
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                            itemCount: logEntryValues.length,
+                          );
+                        },
+                        subtitle: Text(getLogEntryName(prefs.logLevel)),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            Visibility(
-              visible: kDebugMode,
-              child: SettingsCategory(
-                header: LocaleStrings.settingsPage.debugTitle,
-                children: [
-                  SettingsTile.withSwitch(
-                    icon: Icon(MdiIcons.humanGreeting),
-                    title: Text(
-                      LocaleStrings.settingsPage.debugShowSetupScreen,
-                    ),
-                    value: !prefs.welcomePageSeen,
-                    activeColor: Theme.of(context).accentColor,
-                    onChanged: (value) async {
-                      prefs.welcomePageSeen = !value;
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.database_remove),
-                    title: Text(LocaleStrings.settingsPage.debugClearDatabase),
-                    onTap: () async {
-                      List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-
-                      notes.forEach(
-                          (element) async => await helper.deleteNote(element));
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.database_import),
-                    title:
-                        Text(LocaleStrings.settingsPage.debugMigrateDatabase),
-                    onTap: () async {
-                      bool canMigrate = await MigrationTask.migrationAvailable;
-
-                      if (canMigrate) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => StatefulBuilder(
-                            builder: (context, setState) {
-                              return AlertDialog(
-                                title: Text("Migrating..."),
-                                content: StreamBuilder<double>(
-                                  stream: MigrationTask.migrate(),
-                                  initialData: 0.0,
-                                  builder: (context, snapshot) {
-                                    return LinearProgressIndicator(
-                                      value: snapshot.data,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icon(CommunityMaterialIcons.text),
-                    title: Text(LocaleStrings.settingsPage.debugLogLevel),
-                    onTap: () {
-                      showDropdownSheet(
-                        context: context,
-                        itemBuilder: (context, index) {
-                          bool selected =
-                              prefs.logLevel == logEntryValues[index];
-
-                          return dropDownTile(
-                            selected: selected,
-                            title: Text(
-                              getLogEntryName(logEntryValues[index]),
-                            ),
-                            onTap: () {
-                              prefs.logLevel = logEntryValues[index];
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                        itemCount: logEntryValues.length,
-                      );
-                    },
-                    subtitle: Text(getLogEntryName(prefs.logLevel)),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -164,7 +177,7 @@ class _SettingsPageState extends State<SettingsPage> {
           header: LocaleStrings.settingsPage.personalizationTitle,
           children: [
             SettingsTile(
-              icon: Icon(OMIcons.brightnessMedium),
+              icon: Icon(Icons.brightness_medium_outlined),
               title: Text(LocaleStrings.settingsPage.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
@@ -192,30 +205,32 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseAmoled),
-              icon: Icon(OMIcons.brightness2),
+              icon: Icon(Icons.brightness_2_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile.withSwitch(
               value: !deviceInfo.canUseSystemAccent
                   ? false
                   : !prefs.useCustomAccent,
-              onChanged: !deviceInfo.canUseSystemAccent
-                  ? null
-                  : (value) => prefs.useCustomAccent = !value,
+              onChanged: (value) => prefs.useCustomAccent = !value,
               title: Text(
                 LocaleStrings.settingsPage.personalizationUseCustomAccent,
               ),
-              icon: Icon(OMIcons.colorLens),
+              icon: Icon(Icons.color_lens_outlined),
               activeColor: Theme.of(context).accentColor,
+              enabled: deviceInfo.canUseSystemAccent,
             ),
             SettingsTile(
               title: Text(
                 LocaleStrings.settingsPage.personalizationCustomAccent,
               ),
-              icon: Icon(OMIcons.colorize),
-              enabled: kIsWeb ? true : prefs.useCustomAccent,
+              icon: Icon(Icons.colorize_outlined),
+              enabled: DeviceInfo.isDesktopOrWeb ? true : prefs.useCustomAccent,
               trailing: AnimatedOpacity(
-                opacity: (kIsWeb ? true : prefs.useCustomAccent) ? 1 : 0.5,
+                opacity:
+                    (DeviceInfo.isDesktopOrWeb ? true : prefs.useCustomAccent)
+                        ? 1
+                        : 0.5,
                 duration: Duration(milliseconds: 200),
                 child: SizedBox(
                   width: 60,
@@ -248,7 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
-              icon: Icon(CommunityMaterialIcons.view_dashboard_outline),
+              icon: Icon(Icons.dashboard_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile(
@@ -260,9 +275,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   scrollable: true,
                   itemBuilder: (context, index) {
                     Locale locale = context.supportedLocales[index];
-                    String localizedName = firstLetterToUppercase(
-                      LocaleNames.of(context).nameOf(locale.languageCode),
-                    );
                     String nativeName = firstLetterToUppercase(
                       LocaleNamesLocalizationsDelegate
                           .nativeLocaleNames[locale.languageCode],
@@ -270,8 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     bool selected = context.locale == locale;
 
                     return dropDownTile(
-                      title: Text(localizedName),
-                      subtitle: Text(nativeName),
+                      title: Text(nativeName),
                       selected: selected,
                       onTap: () {
                         context.locale = locale;
@@ -284,6 +295,24 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               subtitle: Text(currentLocaleName),
             ),
+            SettingsTile(
+              icon: Icon(Icons.autorenew),
+              title: Text("Change sync API url"),
+              onTap: () async {
+                bool status = await showInfoSheet(
+                  context,
+                  content:
+                      "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
+                  buttonAction: LocaleStrings.common.goOn,
+                );
+                if (status)
+                  Utils.showNotesModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SyncUrlEditor(),
+                  );
+              },
+            )
           ],
         ),
         SettingsCategory(
@@ -307,23 +336,28 @@ class _SettingsPageState extends State<SettingsPage> {
                   if (confirm) {
                     prefs.masterPass = "";
 
-                    List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+                    List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
 
                     setState(() => removingMasterPass = true);
                     for (int i = 0; i < notes.length; i++) {
-                      await helper.saveNote(notes[i].copyWith(lockNote: false));
+                      final note = notes[i];
+                      if (note.lockNote) {
+                        await helper.saveNote(
+                          note.markChanged().copyWith(lockNote: false),
+                        );
+                      }
                     }
                     setState(() => removingMasterPass = false);
                   }
                 }
               },
-              icon: Icon(OMIcons.vpnKey),
+              icon: Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settingsPage.privacyUseMasterPass),
               activeColor: Theme.of(context).accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
             ),
             SettingsTile(
-              icon: Icon(CommunityMaterialIcons.form_textbox_password),
+              icon: Icon(MdiIcons.formTextboxPassword),
               title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
@@ -351,7 +385,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text(content),
               ),
               ListTile(
-                leading: Icon(CommunityMaterialIcons.arrow_right),
+                leading: Icon(Icons.arrow_forward),
                 title: Text(buttonAction),
                 onTap: () {
                   Navigator.pop(context, true);

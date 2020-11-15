@@ -1,100 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/widget/accented_icon.dart';
 
 class FakeFab extends StatefulWidget {
   final Key key;
-  final ScrollController controller;
+  final Object heroTag;
   final Widget child;
-  final double elevation;
   final ShapeBorder shape;
   final void Function() onTap;
-  final void Function() onLongPress;
 
   FakeFab({
     this.key,
-    @required this.controller,
+    this.heroTag = "defaultTag",
     this.child,
-    this.elevation = 2,
     this.shape,
     this.onTap,
-    this.onLongPress,
   }) : super(key: key);
 
   @override
   _FakeFabState createState() => _FakeFabState();
 }
 
-class _FakeFabState extends State<FakeFab> with SingleTickerProviderStateMixin {
-  AnimationController controller;
-
-  @override
-  void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-
-    widget.controller.addListener(updatePosition);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(updatePosition);
-    super.dispose();
-  }
-
-  void updatePosition() {
-    ScrollPosition position = widget.controller.position;
-
-    if (!controller.isAnimating) {
-      if (position.userScrollDirection == ScrollDirection.reverse) {
-        controller.forward();
-      } else if (position.userScrollDirection == ScrollDirection.forward) {
-        controller.reverse();
-      }
-    }
-  }
+class _FakeFabState extends State<FakeFab> {
+  bool _hovered = false;
+  bool _focused = false;
+  bool _highlighted = false;
+  double _elevation;
 
   @override
   Widget build(BuildContext context) {
-    Animation<Offset> pos = CurvedAnimation(
-      parent: controller,
-      curve: Curves.fastOutSlowIn,
-    ).drive(
-      Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(0, 2),
-      ),
-    );
     ThemeData theme = Theme.of(context);
 
-    return SlideTransition(
-      position: pos,
+    if (_highlighted) {
+      _elevation = 12;
+    } else if (_hovered) {
+      _elevation = 10;
+    } else if (_focused) {
+      _elevation = 8;
+    } else {
+      _elevation = 6;
+    }
+
+    return Hero(
+      tag: widget.heroTag,
       child: Material(
-        color: Theme.of(context).colorScheme.surface,
-        elevation: widget.elevation,
+        color: theme.accentColor,
+        elevation: _elevation,
         clipBehavior: Clip.antiAlias,
         shape: widget.shape,
-        child: InkWell(
-          onTap: widget.onTap,
-          onLongPress: widget.onLongPress,
-          customBorder: widget.shape,
-          child: Container(
-            width: 56,
-            height: 56,
-            child: Theme(
-              data: theme.copyWith(
-                iconTheme: theme.iconTheme.copyWith(
-                  color: theme.accentColor,
+        child: GestureDetector(
+          onSecondaryTap: onLongPress,
+          child: InkWell(
+            onTap: widget.onTap,
+            onLongPress: onLongPress,
+            onHover: (value) => setState(() {
+              _hovered = value;
+            }),
+            onFocusChange: (value) => setState(() {
+              _focused = value;
+            }),
+            onHighlightChanged: (value) => setState(() {
+              _highlighted = value;
+            }),
+            customBorder: widget.shape,
+            child: Container(
+              width: 56,
+              height: 56,
+              child: Theme(
+                data: theme.copyWith(
+                  iconTheme: theme.iconTheme.copyWith(
+                    color: theme.scaffoldBackgroundColor,
+                  ),
                 ),
+                child: widget.child,
               ),
-              child: widget.child,
             ),
           ),
         ),
       ),
     );
+  }
+
+  void onLongPress() {
+    Utils.showFabMenu(
+      context,
+      context.findRenderObject(),
+      fabOptions,
+    );
+  }
+
+  List<Widget> get fabOptions {
+    return [
+      ListTile(
+        tileColor: Theme.of(context).accentColor,
+        leading: Icon(
+          Icons.edit_outlined,
+          color: Theme.of(context).cardColor,
+        ),
+        title: Text(
+          LocaleStrings.common.newNote,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newNote(context);
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(Icons.check_box_outlined),
+        title: Text(
+          LocaleStrings.common.newList,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newList(context);
+        },
+      ),
+      ListTile(
+        leading: AccentedIcon(Icons.image_outlined),
+        title: Text(
+          LocaleStrings.common.newImage,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () =>
+            Utils.newImage(context, ImageSource.gallery, shouldPop: true),
+      ),
+      ListTile(
+        leading: AccentedIcon(Icons.brush_outlined),
+        title: Text(
+          LocaleStrings.common.newDrawing,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+
+          Utils.newDrawing(context);
+        },
+      ),
+    ];
   }
 }

@@ -1,27 +1,24 @@
 import 'dart:convert';
 
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/locale_strings.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
   final List<Note> selectionList;
   final ReturnMode currentMode;
   final Function() onCloseSelection;
 
   SelectionBar({
-    @required this.scaffoldKey,
     @required this.selectionList,
     this.currentMode = ReturnMode.NORMAL,
     this.onCloseSelection,
@@ -64,21 +61,22 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       buttons.add(
         IconButton(
           icon: Icon(
-            anyStarred
-                ? CommunityMaterialIcons.heart
-                : CommunityMaterialIcons.heart_outline,
+            anyStarred ? Icons.favorite : Icons.favorite_border,
           ),
           tooltip: anyStarred
-              ? LocaleStrings.mainPage.selectionBarRmFav
-              : LocaleStrings.mainPage.selectionBarAddFav,
+              ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+              : LocaleStrings.mainPage.selectionBarAddFavourites,
           padding: EdgeInsets.all(0),
           onPressed: () async {
             for (int i = 0; i < selectionList.length; i++) {
               if (anyStarred)
-                await helper
-                    .saveNote(selectionList[i].copyWith(starred: false));
+                await helper.saveNote(
+                  selectionList[i].markChanged().copyWith(starred: false),
+                );
               else
-                await helper.saveNote(selectionList[i].copyWith(starred: true));
+                await helper.saveNote(
+                  selectionList[i].markChanged().copyWith(starred: true),
+                );
             }
 
             onCloseSelection();
@@ -90,7 +88,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     if (currentMode == ReturnMode.NORMAL || currentMode == ReturnMode.TAG) {
       buttons.addAll([
         IconButton(
-          icon: Icon(OMIcons.colorLens),
+          icon: Icon(Icons.color_lens_outlined),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.mainPage.selectionBarChangeColor,
           onPressed: () async {
@@ -130,13 +128,13 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
     if (currentMode != ReturnMode.ARCHIVE) {
       buttons.add(IconButton(
-        icon: Icon(OMIcons.archive),
+        icon: Icon(Icons.archive_outlined),
         padding: EdgeInsets.all(0),
         tooltip: LocaleStrings.mainPage.selectionBarArchive,
         onPressed: () async {
           for (int i = 0; i < selectionList.length; i++)
             await Utils.deleteNotes(
-              scaffoldKey: scaffoldKey,
+              context: context,
               notes: selectionList,
               reason:
                   LocaleStrings.mainPage.notesArchived(selectionList.length),
@@ -157,10 +155,10 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           Note note = selectionList[i];
 
           if (note.deleted) {
-            helper.deleteNote(note);
+            Utils.deleteNoteSafely(note);
           } else {
             await Utils.deleteNotes(
-              scaffoldKey: scaffoldKey,
+              context: context,
               notes: selectionList,
               reason: LocaleStrings.mainPage.notesDeleted(selectionList.length),
             );
@@ -180,7 +178,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         tooltip: LocaleStrings.common.restore,
         onPressed: () async {
           await Utils.restoreNotes(
-            scaffoldKey: scaffoldKey,
+            context: context,
             notes: selectionList,
             reason: LocaleStrings.mainPage.notesRestored(selectionList.length),
             archive: currentMode == ReturnMode.ARCHIVE,
@@ -191,10 +189,12 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       ));
     }
 
-    if (selectionList.length == 1 && !selectionList[0].hideContent && !kIsWeb) {
+    if (selectionList.length == 1 &&
+        !selectionList[0].hideContent &&
+        !DeviceInfo.isDesktopOrWeb) {
       buttons.add(
         PopupMenuButton(
-          itemBuilder: (context) => Utils.popupItems(context),
+          itemBuilder: (context) => Utils.popupItems(context, selectionList[0]),
           onSelected: (action) async {
             Note note = selectionList[0];
 
@@ -225,29 +225,35 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void handlePinNotes(BuildContext context, Note note) {
-    appInfo.notifications.show(
-      note.id,
-      note.title.isEmpty
-          ? LocaleStrings.common.notificationDefaultTitle
-          : note.title,
-      note.content,
-      NotificationDetails(
-        AndroidNotificationDetails(
-          'pinned_notifications',
-          LocaleStrings.common.notificationDetailsTitle,
-          LocaleStrings.common.notificationDetailsDesc,
-          color: Utils.defaultAccent,
-          ongoing: true,
-          priority: Priority.Max,
+    if (note.pinned) {
+      appInfo.notifications.cancel(note.notificationId);
+    } else {
+      appInfo.notifications.show(
+        note.notificationId,
+        note.title.isEmpty
+            ? LocaleStrings.common.notificationDefaultTitle
+            : note.title,
+        note.content,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'pinned_notifications',
+            LocaleStrings.common.notificationDetailsTitle,
+            LocaleStrings.common.notificationDetailsDesc,
+            color: Utils.defaultAccent,
+            ongoing: true,
+            priority: Priority.max,
+          ),
+          iOS: IOSNotificationDetails(),
+          macOS: MacOSNotificationDetails(),
         ),
-        IOSNotificationDetails(),
-      ),
-      payload: json.encode(
-        NotificationPayload(
-          action: NotificationAction.PIN,
-          id: note.id,
-        ).toJson(),
-      ),
-    );
+        payload: json.encode(
+          NotificationPayload(
+            action: NotificationAction.PIN,
+            id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
+            noteId: note.id,
+          ).toJson(),
+        ),
+      );
+    }
   }
 }

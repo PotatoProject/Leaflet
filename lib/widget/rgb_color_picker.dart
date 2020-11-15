@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class RGBColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -21,8 +22,8 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
     super.initState();
     currentColor = widget.initialColor;
     controller = TextEditingController(
-        text:
-            currentColor.value.toRadixString(16).substring(2, 8).toUpperCase());
+      text: currentColor.value.toRadixString(16).substring(2, 8).toUpperCase(),
+    );
   }
 
   @override
@@ -36,14 +37,18 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        cursorColor:
-            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        textSelectionHandleColor:
-            currentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-        textSelectionColor: (currentColor.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white)
-            .withOpacity(0.4),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: currentColor.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white,
+          selectionHandleColor: currentColor.computeLuminance() > 0.5
+              ? Colors.black
+              : Colors.white,
+          selectionColor: (currentColor.computeLuminance() > 0.5
+                  ? Colors.black
+                  : Colors.white)
+              .withOpacity(0.4),
+        ),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -51,7 +56,8 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
 
           return Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -64,46 +70,40 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                       Container(
                         height: shortestSide / 2,
                         width: shortestSide / 2,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "#",
-                              style: TextStyle(
+                        alignment: Alignment.center,
+                        child: IntrinsicWidth(
+                          child: TextField(
+                            controller: controller,
+                            textCapitalization: TextCapitalization.characters,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp("[0-9|A-F|a-f]"),
+                              ),
+                              LengthLimitingTextInputFormatter(6),
+                            ],
+                            onChanged: (text) {
+                              if (text.length == 6) {
+                                Color newColor =
+                                    Color(int.parse(text, radix: 16));
+                                setState(() =>
+                                    currentColor = newColor.withAlpha(0xFF));
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              prefixText: "#",
+                              prefixStyle: TextStyle(
                                 color: currentColor.computeLuminance() > 0.5
                                     ? Colors.black
                                     : Colors.white,
                               ),
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 6,
-                              child: TextField(
-                                controller: controller,
-                                textCapitalization:
-                                    TextCapitalization.characters,
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter(
-                                      RegExp("[0-9|A-F|a-f]")),
-                                  LengthLimitingTextInputFormatter(6)
-                                ],
-                                onChanged: (text) {
-                                  if (text.length == 6) {
-                                    Color newColor =
-                                        Color(int.parse(text, radix: 16));
-                                    setState(() => currentColor =
-                                        newColor.withAlpha(0xFF));
-                                  }
-                                },
-                                decoration:
-                                    InputDecoration(border: InputBorder.none),
-                                style: TextStyle(
-                                    color: currentColor.computeLuminance() > 0.5
-                                        ? Colors.black
-                                        : Colors.white),
-                              ),
-                            )
-                          ],
+                            style: TextStyle(
+                              color: currentColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -146,18 +146,18 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                     FlatButton(
                       onPressed: () => Navigator.pop(context, -1),
                       textColor: currentColor,
-                      child: Text("Reset"),
+                      child: Text(LocaleStrings.common.reset),
                     ),
                     FlatButton(
                       onPressed: () => Navigator.pop(context),
                       textColor: currentColor,
-                      child: Text("Cancel"),
+                      child: Text(LocaleStrings.common.cancel),
                     ),
                     FlatButton(
                       onPressed: () =>
                           Navigator.pop(context, currentColor.value),
                       textColor: currentColor,
-                      child: Text("Confirm"),
+                      child: Text(LocaleStrings.common.confirm),
                     ),
                   ],
                 ),
@@ -194,7 +194,11 @@ class ColorSlider extends StatelessWidget {
             size: Size.square(24),
             child: Center(
               child: Text(
-                rgb == RGB.RED ? "R" : rgb == RGB.GREEN ? "G" : "B",
+                rgb == RGB.RED
+                    ? "R"
+                    : rgb == RGB.GREEN
+                        ? "G"
+                        : "B",
                 style: TextStyle(
                   color: widgetColor,
                 ),
@@ -212,7 +216,9 @@ class ColorSlider extends StatelessWidget {
               min: 0,
               value: (rgb == RGB.RED
                       ? color.red
-                      : rgb == RGB.GREEN ? color.green : color.blue)
+                      : rgb == RGB.GREEN
+                          ? color.green
+                          : color.blue)
                   .toDouble(),
               onChanged: (value) => onChange(
                 rgb == RGB.RED
