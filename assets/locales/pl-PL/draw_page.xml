@@ -4,7 +4,7 @@
     <string name="exit_prompt">Wszelkie niezapisane zmiany zostaną utracone, czy na pewno chcesz opuścić?</string>
     <string name="tools.brush">Pędzel</string>
     <string name="tools.eraser">Gumka</string>
-    <string name="tools.marker">Marker</string>
+    <string name="tools.marker">Znacznik</string>
     <string name="tools.color_picker">Kolor</string>
     <string name="tools.radius_picker">Promień</string>
 </resources>
