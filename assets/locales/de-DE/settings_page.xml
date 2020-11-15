@@ -18,7 +18,7 @@
     <string name="info.title">Info</string>
     <string name="info.about_app">Über Leaflet</string>
     <string name="debug.title">Fehlerbeseitigung</string>
-    <string name="debug.show_setup_screen">Erststartmenü bei nächstem Start</string>
+    <string name="debug.show_setup_screen">Erststartmenü bei nächstem Öffnen</string>
     <string name="debug.clear_database">Datenbank leeren</string>
     <string name="debug.migrate_database">Datenbank integrieren</string>
     <string name="debug.log_level">Log-Level</string>
