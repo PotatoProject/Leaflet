@@ -40,7 +40,7 @@
     <string name="notification.default_title">Angeheftete Benachrichtigung</string>
     <string name="notification.details_title">Angeheftete Benachrichtigungen</string>
     <string name="notification.details_desc">Vom Benutzer angeheftete Benachrichtigungen</string>
-    <string name="tag.new">Neues Tag</string>
-    <string name="tag.modify">Stichwort bearbeiten</string>
+    <string name="tag.new">Neues Etikett</string>
+    <string name="tag.modify">Etikett bearbeiten</string>
     <string name="tag.textbox_hint">Name</string>
 </resources>
