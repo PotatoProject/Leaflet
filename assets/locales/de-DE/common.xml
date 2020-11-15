@@ -18,7 +18,7 @@
     <string name="new_drawing">Neue Zeichnung</string>
     <string name="biometrics_prompt">Biometrie bestätigen</string>
     <string name="master_pass.modify">Master-Pass ändern</string>
-    <string name="master_pass.confirm">Masterpass bestätigen</string>
+    <string name="master_pass.confirm">Master-Pass bestätigen</string>
     <string name="are_you_sure">Bist du sicher?</string>
     <string name="case_sensitive">Unterscheide Groß-/Kleinschreibung</string>
     <string name="color_filter">Farbfilter</string>
@@ -32,7 +32,7 @@
     <string name="color.orange">Orange</string>
     <string name="color.yellow">Gelb</string>
     <string name="color.green">Grün</string>
-    <string name="color.cyan">Cyan</string>
+    <string name="color.cyan">Blaugrün</string>
     <string name="color.light_blue">Hellblau</string>
     <string name="color.blue">Blau</string>
     <string name="color.purple">Lila</string>
