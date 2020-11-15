@@ -44,6 +44,12 @@ class _DrawerListTileState extends State<DrawerListTile>
   }
 
   @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Color contrast = Theme.of(context).brightness == Brightness.dark
         ? Colors.white

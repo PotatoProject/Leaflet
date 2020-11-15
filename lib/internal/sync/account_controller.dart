@@ -177,7 +177,7 @@ class AccountController {
       refresh = await get(
         url,
         headers: {
-          "Authorization": "Bearer ",
+          "Authorization": "Bearer ${prefs.refreshToken}",
         },
       );
       Loggy.v(

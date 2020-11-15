@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
@@ -18,6 +17,7 @@ import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
@@ -74,7 +74,6 @@ class _NoteListPageState extends State<NoteListPage> {
         secondaryAppBar: widget.noteKind == ReturnMode.NORMAL && !selecting
             ? NewNoteBar()
             : null,
-        secondaryAppBarHeroTag: "writeNoteTag",
         body: StreamBuilder<List<Note>>(
           stream: helper.noteStream(widget.noteKind),
           initialData: [],
@@ -93,8 +92,11 @@ class _NoteListPageState extends State<NoteListPage> {
 
             if (notes.isNotEmpty) {
               if (prefs.useGrid) {
-                child = StaggeredGridView.countBuilder(
-                  crossAxisCount: deviceInfo.uiSizeFactor,
+                child = WaterfallFlow.builder(
+                  gridDelegate:
+                      SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: deviceInfo.uiSizeFactor,
+                  ),
                   itemBuilder: (context, index) {
                     return AnimationConfiguration.staggeredGrid(
                       columnCount: deviceInfo.uiSizeFactor,
@@ -108,7 +110,6 @@ class _NoteListPageState extends State<NoteListPage> {
                       ),
                     );
                   },
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                   itemCount: notes.length,
                   controller: scrollController,
                   padding: padding,

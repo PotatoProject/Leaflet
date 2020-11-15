@@ -70,6 +70,12 @@ class _NavigationButtonState extends State<_NavigationButton>
   }
 
   @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant _NavigationButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     _ac.animateTo(widget.selected ? 1 : 0);

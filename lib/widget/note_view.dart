@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
@@ -46,6 +48,12 @@ class _NoteViewState extends State<NoteView> {
     _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
     RendererBinding.instance.mouseTracker.addListener(mouseListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
+    super.dispose();
   }
 
   void mouseListener() {
@@ -268,15 +276,34 @@ class _NoteViewState extends State<NoteView> {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-        (widget.note.listContent?.length ?? 0) > 5
-            ? 5
-            : (widget.note.listContent?.length ?? 0),
+        min(widget.note.listContent?.length ?? 0, 6),
         (index) {
           ListItem item = widget.note.listContent[index];
           Color backgroundColor = widget.note.color != 0
               ? Color(
                   NoteColors.colorList[widget.note.color].dynamicColor(context))
               : Theme.of(context).cardColor;
+          final icon = index == 5
+              ? Icon(Icons.add)
+              : NoteViewCheckbox(
+                  value: item.status,
+                  activeColor: widget.note.color != 0
+                      ? Theme.of(context).textTheme.caption.color
+                      : Theme.of(context).accentColor,
+                  checkColor: backgroundColor,
+                  onChanged: (value) {
+                    widget.note.listContent[index].status = value;
+                    widget.note.markChanged();
+                    helper.saveNote(widget.note);
+                    setState(() {});
+                  },
+                  splashRadius: 14,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                );
+          final text = index == 5
+              ? "${(widget.note.listContent?.length ?? 0) - 5} more items"
+              : item.text;
 
           return LayoutBuilder(
             builder: (context, constraints) {
@@ -284,23 +311,7 @@ class _NoteViewState extends State<NoteView> {
                 children: [
                   IgnorePointer(
                     ignoring: !_mouseIsConnected || widget.selectorOpen,
-                    child: NoteViewCheckbox(
-                      value: item.status,
-                      activeColor: widget.note.color != 0
-                          ? Theme.of(context).textTheme.caption.color
-                          : Theme.of(context).accentColor,
-                      checkColor: backgroundColor,
-                      onChanged: (value) {
-                        widget.note.listContent[index].status = value;
-                        widget.note.markChanged();
-                        helper.saveNote(widget.note);
-                        setState(() {});
-                      },
-                      splashRadius: 14,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity:
-                          VisualDensity(horizontal: -4, vertical: -4),
-                    ),
+                    child: icon,
                   ),
                   SizedBox(
                     width: 8,
@@ -308,16 +319,17 @@ class _NoteViewState extends State<NoteView> {
                   SizedBox(
                     width: constraints.maxWidth - 32,
                     child: Text(
-                      item.text,
+                      text,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .color
-                              .withOpacity(item.status ? 0.5 : 0.7),
-                          decoration:
-                              item.status ? TextDecoration.lineThrough : null),
+                        color: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .color
+                            .withOpacity(item.status ? 0.5 : 0.7),
+                        decoration:
+                            item.status ? TextDecoration.lineThrough : null,
+                      ),
                     ),
                   ),
                 ],

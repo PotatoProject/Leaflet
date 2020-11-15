@@ -454,7 +454,7 @@ class _NotePageState extends State<NotePage> {
                                   color: Theme.of(context).iconTheme.color),
                             ),
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 28),
+                                EdgeInsets.symmetric(horizontal: 20),
                             onTap: note.listContent.isNotEmpty
                                 ? note.listContent.last.text != ""
                                     ? () => addListContentItem()

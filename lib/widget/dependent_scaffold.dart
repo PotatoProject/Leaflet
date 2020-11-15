@@ -8,7 +8,6 @@ class DependentScaffold extends StatelessWidget {
     Key key,
     this.appBar = const DefaultAppBar(),
     this.secondaryAppBar,
-    this.secondaryAppBarHeroTag,
     this.useAppBarAsSecondary = false,
     this.body,
     this.floatingActionButton,
@@ -39,7 +38,6 @@ class DependentScaffold extends StatelessWidget {
   final bool extendBodyBehindAppBar;
   final PreferredSizeWidget appBar;
   final Widget secondaryAppBar;
-  final String secondaryAppBarHeroTag;
   final bool useAppBarAsSecondary;
   final Widget body;
   final Widget floatingActionButton;
@@ -66,7 +64,6 @@ class DependentScaffold extends StatelessWidget {
     if (state != null) {
       BasePage.of(context).setFAB(floatingActionButton);
       BasePage.of(context).setAppBar(appBar);
-      BasePage.of(context).setSecondaryAppBarHeroTag(secondaryAppBarHeroTag);
 
       if (secondaryAppBar != null) {
         if (!(secondaryAppBar is DefaultAppBar)) {

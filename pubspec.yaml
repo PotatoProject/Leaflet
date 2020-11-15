@@ -52,6 +52,7 @@ dependencies:
   flutter_mobx:
   mobx_codegen:
   flutter_staggered_animations:
+  waterfall_flow:
   
   crayola:
 
@@ -69,6 +70,9 @@ dependencies:
 dev_dependencies:
   moor_generator:
   build_runner:
+
+dependency_overrides:
+  intl: ^0.16.0
 
 flutter:
   uses-material-design: true

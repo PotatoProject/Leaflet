@@ -222,19 +222,17 @@ abstract class _PreferencesBase with Store {
   }
 
   Future<String> getToken() async {
-    bool status = true;
     if (accessToken == null ||
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
       final response = await AccountController.refreshToken();
-      status = response.status;
+
+      if (!response.status) {
+        throw response.message;
+      }
     }
 
-    if (status) {
-      return accessToken;
-    } else {
-      throw "Error while refreshing token";
-    }
+    return accessToken;
   }
 }

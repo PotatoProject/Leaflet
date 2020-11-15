@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/colors.dart';
@@ -12,6 +11,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
   SearchQuery searchQuery = SearchQuery();
@@ -38,6 +38,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    EdgeInsets padding = EdgeInsets.fromLTRB(
+      4,
+      4 + MediaQuery.of(context).padding.top,
+      4,
+      4 + 80.0,
+    );
+
     return FutureBuilder(
       future: getNotesForQuery(),
       initialData: [],
@@ -46,18 +53,21 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
         if (snapshot.data?.isNotEmpty ?? false) {
           if (prefs.useGrid) {
-            child = StaggeredGridView.countBuilder(
-              crossAxisCount: deviceInfo.uiSizeFactor,
+            child = WaterfallFlow.builder(
+              gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                crossAxisCount: deviceInfo.uiSizeFactor,
+              ),
               itemBuilder: (context, index) =>
                   noteView(context, snapshot.data[index]),
-              staggeredTileBuilder: (index) => StaggeredTile.fit(1),
               itemCount: snapshot.data.length,
+              padding: padding,
             );
           } else {
             child = ListView.builder(
               itemBuilder: (context, index) =>
                   noteView(context, snapshot.data[index]),
               itemCount: snapshot.data.length,
+              padding: padding,
             );
           }
         } else {
@@ -155,7 +165,11 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
     List<Note> results = [];
 
-    if (query.trim().isEmpty) {
+    if (query.trim().isEmpty &&
+        !searchQuery.onlyFavourites &&
+        searchQuery.date == null &&
+        searchQuery.tags.isEmpty &&
+        searchQuery.color == 0) {
       return [];
     }
 

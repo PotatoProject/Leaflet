@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +68,6 @@ class _BasePageState extends State<BasePage>
   Widget _floatingActionButton;
   Widget _appBar;
   Widget _secondaryAppBar;
-  String _secondaryAppBarHeroTag;
   AnimationController _ac;
   DefaultDrawerMode _defaultDrawerMode = DefaultDrawerMode.COLLAPSED;
   bool _collapsedDrawer = false;
@@ -105,10 +106,6 @@ class _BasePageState extends State<BasePage>
 
           setState(() => _secondaryAppBar = secondaryAppBar);
         },
-      );
-  void setSecondaryAppBarHeroTag(String secondaryAppBarHeroTag) =>
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() => _secondaryAppBarHeroTag = secondaryAppBarHeroTag),
       );
   void hideCurrentSnackBar(BuildContext context) =>
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -301,35 +298,31 @@ class _BasePageState extends State<BasePage>
                                   bottom: 16 +
                                       MediaQuery.of(context).viewInsets.bottom,
                                 ),
-                                child: Hero(
-                                  tag: _secondaryAppBarHeroTag ??
-                                      _DummyHeroTag(),
-                                  child: ConstrainedWidthAppbar(
-                                    child: Material(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      color: Theme.of(context).cardColor,
-                                      child: SizedBox(
-                                        height: 48,
-                                        child: Theme(
-                                          data: Theme.of(context).copyWith(
-                                            appBarTheme: Theme.of(context)
-                                                .appBarTheme
-                                                .copyWith(
-                                                  color: Theme.of(context)
-                                                      .cardColor,
-                                                ),
-                                          ),
-                                          child:
-                                              _secondaryAppBar ?? Container(),
-                                        ),
-                                      ),
-                                      clipBehavior: Clip.antiAlias,
-                                      elevation: 8,
+                                child: ConstrainedWidthAppbar(
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6),
                                     ),
-                                    width: 640,
+                                    color: Theme.of(context).cardColor,
+                                    child: SizedBox(
+                                      height: 48,
+                                      child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                          appBarTheme: Theme.of(context)
+                                              .appBarTheme
+                                              .copyWith(
+                                                color:
+                                                    Theme.of(context).cardColor,
+                                              ),
+                                        ),
+                                        child: _secondaryAppBar ?? Container(),
+                                      ),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 8,
                                   ),
+                                  width: min(640,
+                                      MediaQuery.of(context).size.width - 32),
                                 ),
                               ),
                             ),
@@ -392,7 +385,7 @@ class _BasePageState extends State<BasePage>
                               ),
                               title: Text(
                                 prefs.accessToken != null
-                                    ? prefs.username
+                                    ? prefs.username ?? "Guest"
                                     : LocaleStrings.mainPage.account,
                               ),
                               onTap: () async {
@@ -454,10 +447,6 @@ class BasePageInheritedWidget extends InheritedWidget {
   bool updateShouldNotify(BasePageInheritedWidget oldWidget) {
     return oldWidget.state != state;
   }
-}
-
-class _DummyHeroTag {
-  const _DummyHeroTag();
 }
 
 extension SafeGetList<T> on List<T> {
