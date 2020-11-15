@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_black">Black</string>
+    <string name="exit_prompt">Any unsaved change will be lost. Do you want to exit?</string>
+    <string name="tools.brush">Brush</string>
+    <string name="tools.eraser">Eraser</string>
+    <string name="tools.marker">Marker</string>
+    <string name="tools.color_picker">Color</string>
+    <string name="tools.radius_picker">Radius</string>
+</resources>
