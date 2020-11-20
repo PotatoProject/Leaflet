@@ -38,7 +38,9 @@ class DrawerList extends StatelessWidget {
             ),
             itemBuilder: (context, index) => drawerSections[index],
             itemCount: drawerSections.length,
-            padding: EdgeInsets.all(0),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+            ),
           ),
         ),
         footer ?? Container(),

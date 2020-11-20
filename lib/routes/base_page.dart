@@ -217,8 +217,8 @@ class _BasePageState extends State<BasePage>
               children: [
                 Positioned.fill(
                   child: AnimatedPadding(
-                    padding: EdgeInsets.only(
-                      left: useDynamicDrawer
+                    padding: EdgeInsetsDirectional.only(
+                      start: useDynamicDrawer
                           ? _defaultDrawerMode == DefaultDrawerMode.EXPANDED
                               ? _collapsedDrawer
                                   ? 72
@@ -248,6 +248,7 @@ class _BasePageState extends State<BasePage>
                             : null,
                         width: 1920,
                       ),
+                      resizeToAvoidBottomInset: false,
                       extendBody: useDesktopLayout,
                       extendBodyBehindAppBar: true,
                       body: PageTransitionSwitcher(
@@ -295,8 +296,7 @@ class _BasePageState extends State<BasePage>
                               child: Padding(
                                 padding: EdgeInsets.only(
                                   top: 16,
-                                  bottom: 16 +
-                                      MediaQuery.of(context).viewInsets.bottom,
+                                  bottom: 16,
                                 ),
                                 child: ConstrainedWidthAppbar(
                                   child: Material(

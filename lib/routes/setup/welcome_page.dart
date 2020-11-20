@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
@@ -11,8 +10,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double height = deviceInfo.uiType == UiType.LARGE_TABLET ||
-                deviceInfo.uiType == UiType.DESKTOP
+        final double height = deviceInfo.uiSizeFactor > 3
             ? constraints.maxHeight
             : MediaQuery.of(context).size.height;
 

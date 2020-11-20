@@ -283,8 +283,12 @@ class _NoteViewState extends State<NoteView> {
               ? Color(
                   NoteColors.colorList[widget.note.color].dynamicColor(context))
               : Theme.of(context).cardColor;
-          final icon = index == 5
-              ? Icon(Icons.add)
+          bool showMoreItem = index == 5;
+          final icon = showMoreItem
+              ? Icon(
+                  Icons.add,
+                  size: 20,
+                )
               : NoteViewCheckbox(
                   value: item.status,
                   activeColor: widget.note.color != 0
@@ -301,7 +305,7 @@ class _NoteViewState extends State<NoteView> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                 );
-          final text = index == 5
+          final text = showMoreItem
               ? "${(widget.note.listContent?.length ?? 0) - 5} more items"
               : item.text;
 
@@ -311,7 +315,12 @@ class _NoteViewState extends State<NoteView> {
                 children: [
                   IgnorePointer(
                     ignoring: !_mouseIsConnected || widget.selectorOpen,
-                    child: icon,
+                    child: SizedBox.fromSize(
+                      size: Size.square(24),
+                      child: Center(
+                        child: icon,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: 8,
@@ -326,9 +335,12 @@ class _NoteViewState extends State<NoteView> {
                             .textTheme
                             .caption
                             .color
-                            .withOpacity(item.status ? 0.5 : 0.7),
-                        decoration:
-                            item.status ? TextDecoration.lineThrough : null,
+                            .withOpacity(
+                              item.status && !showMoreItem ? 0.5 : 0.7,
+                            ),
+                        decoration: item.status && !showMoreItem
+                            ? TextDecoration.lineThrough
+                            : null,
                       ),
                     ),
                   ),

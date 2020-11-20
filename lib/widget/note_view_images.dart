@@ -67,9 +67,11 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   children: [
                     SizedBox.expand(
                       child: Image(
-                          image: image,
-                          fit: BoxFit.cover,
-                          gaplessPlayback: true),
+                        image: image,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        gaplessPlayback: true,
+                      ),
                     ),
                     SizedBox.expand(
                       child: Visibility(

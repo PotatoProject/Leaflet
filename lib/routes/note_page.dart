@@ -111,15 +111,15 @@ class _NotePageState extends State<NotePage> {
     helper.saveNote(note.markChanged());
   }
 
-  void handleImageAdd(String path) async {
+  Future<void> handleImageAdd(String path) async {
     SavedImage savedImage = await ImageService.prepareLocally(File(path));
     setState(() => note.images.add(savedImage));
     await helper.saveNote(note.markChanged());
-    handleImageUpload();
+    await handleImageUpload();
   }
 
-  void handleImageUpload() {
-    ImageService.handleUpload(note);
+  Future<void> handleImageUpload() async {
+    return await ImageService.handleUploads([note]);
   }
 
   void generateId() {
@@ -685,7 +685,7 @@ class _NotePageState extends State<NotePage> {
 
               if (image != null) {
                 Navigator.pop(context);
-                handleImageAdd(image.path);
+                await handleImageAdd(image.path);
               }
             },
           ),

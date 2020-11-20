@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/sync/image/files_controller.dart';
@@ -61,7 +62,8 @@ class AccountInfo extends StatelessWidget {
               ),
               trailing: Text(
                 snapshot.hasData
-                    ? '${snapshot.data.used} of ${snapshot.data.limit}'
+                    ? LocaleStrings.common
+                        .xOfY(snapshot.data.used, snapshot.data.limit)
                     : '-',
               ),
             );

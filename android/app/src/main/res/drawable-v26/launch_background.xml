@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/splash_screen_bg" />
+
+    <item
+        android:gravity="center"
+        android:drawable="@drawable/splash_screen_logo" />
+
+    <item
+        android:gravity="bottom|center_horizontal"
+        android:bottom="32dp"
+        android:drawable="@drawable/posp_logo" />
+</layer-list>

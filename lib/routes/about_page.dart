@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -48,7 +47,7 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      DeviceInfo.isDesktop
+                      appInfo.packageInfo == null
                           ? "Desktop version"
                           : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
                       style: TextStyle(

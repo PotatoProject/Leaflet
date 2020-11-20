@@ -293,12 +293,11 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
         onHorizontalDragEnd: _gestureStartAllowed
             ? (details) async {
                 setState(() => _gestureStartAllowed = false);
+                print(details.primaryVelocity);
                 if (details.primaryVelocity > 345) {
-                  await widget.controller.animateBack(0);
                   Navigator.pop(context);
                 } else {
                   if (widget.controller.value < 0.5) {
-                    await widget.controller.animateBack(0);
                     Navigator.pop(context);
                   } else {
                     await widget.controller.animateTo(1);
@@ -327,7 +326,14 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
             removeRight: true,
             removeBottom: true,
             context: context,
-            child: content,
+            child: MediaQuery(
+              child: content,
+              data: MediaQuery.of(context).copyWith(
+                padding: deviceInfo.uiSizeFactor > 3
+                    ? EdgeInsets.zero
+                    : MediaQuery.of(context).padding,
+              ),
+            ),
           ),
         ),
       ),

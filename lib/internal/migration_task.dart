@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -65,12 +66,17 @@ class MigrationTask {
 
       SavedImage savedImage;
       if (v1Note.imagePath != null) {
-        savedImage = await ImageService.prepareLocally(File(v1Note.imagePath));
+        final response = await get(v1Note.imagePath);
+        final file = File(join(appInfo.tempDirectory.path, "id.jpg"))..create();
+        await file.writeAsBytes(response.bodyBytes);
+        savedImage = await ImageService.prepareLocally(file);
       }
+
       Note note = Note(
         id: Utils.generateId(),
         title: v1Note.title ?? "",
-        content: v1Note.content ?? "",
+        content:
+            v1Note.content != null && v1Note.isList == 0 ? v1Note.content : "",
         starred: v1Note.isStarred == 1,
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
         lastModifyDate: DateTime.now(),

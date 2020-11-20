@@ -22,7 +22,7 @@ class SavedImage {
 
   @observable
   bool get existsLocally =>
-      Directory(join(appInfo.tempDirectory.path, "$hash.jpg")).existsSync();
+      File(join(appInfo.tempDirectory.path, "$hash.jpg")).existsSync();
   get path => appInfo.tempDirectory.path + "/$hash.jpg";
 
   SavedImage(

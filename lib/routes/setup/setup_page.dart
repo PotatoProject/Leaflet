@@ -5,6 +5,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/setup/finish_page.dart';
 import 'package:potato_notes/routes/setup/basic_customization_page.dart';
+import 'package:potato_notes/routes/setup/import_page.dart';
 import 'package:potato_notes/routes/setup/welcome_page.dart';
 import 'package:potato_notes/widget/flat_icon_button.dart';
 
@@ -17,6 +18,7 @@ class _SetupPagetate extends State<SetupPage> {
   final List<Widget> pages = [
     WelcomePage(),
     BasicCustomizationPage(),
+    ImportPage(),
     FinishPage(),
   ];
 

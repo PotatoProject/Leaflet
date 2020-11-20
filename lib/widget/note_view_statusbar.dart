@@ -151,14 +151,19 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
     if (widget.note.reminders.isNotEmpty) iconDataIndexes.add(2);
 
-    //if (note.synced) iconDataIndexes.add(3);
+    //if (widget.note.synced) iconDataIndexes.add(3);
 
     if (widget.note.starred) iconDataIndexes.add(4);
 
     if (widget.note.pinned) iconDataIndexes.add(5);
 
     for (int i = 0; i < iconDataIndexes.length; i++) {
-      icons.add(Icon(iconData[iconDataIndexes[i]]));
+      icons.add(
+        Icon(
+          iconData[iconDataIndexes[i]],
+          size: 14,
+        ),
+      );
     }
 
     return icons;
