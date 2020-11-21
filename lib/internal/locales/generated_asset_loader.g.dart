@@ -6,6 +6,6 @@ import './locales.g.dart';
 class GeneratedAssetLoader extends AssetLoader {
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async {
-    return Locales.data[locale.toLanguageTag()];
+    return Locales.data[locale.toLanguageTag()]!;
   }
 }

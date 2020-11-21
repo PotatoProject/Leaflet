@@ -10,6 +10,6 @@ final DeviceInfo deviceInfo = DeviceInfo();
 
 final Preferences prefs = Preferences();
 
-NoteHelper helper;
+late NoteHelper helper;
 
-TagHelper tagHelper;
+late TagHelper tagHelper;

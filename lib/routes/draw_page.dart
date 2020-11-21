@@ -29,10 +29,10 @@ import 'package:potato_notes/widget/web_drawing_exporter.dart/shared.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
-  final SavedImage savedImage;
+  final SavedImage? savedImage;
 
   DrawPage({
-    @required this.note,
+    required this.note,
     this.savedImage,
   });
 
@@ -41,17 +41,17 @@ class DrawPage extends StatefulWidget {
 }
 
 class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
-  BuildContext _globalContext;
+  BuildContext? _globalContext;
   List<DrawObject> _objects = [];
   List<DrawObject> _backupObjects = [];
-  int _currentIndex;
-  int _actionQueueIndex = 0;
+  int? _currentIndex;
+  int? _actionQueueIndex = 0;
   bool _saved = true;
-  Offset _mousePosition = Offset.zero;
+  Offset? _mousePosition = Offset.zero;
   DrawingToolbarController _toolbarController = DrawingToolbarController();
 
-  AnimationController _appbarAc;
-  AnimationController _toolbarAc;
+  late AnimationController _appbarAc;
+  late AnimationController _toolbarAc;
 
   List<DrawingTool> _tools = [
     DrawingTool(
@@ -78,7 +78,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   ];
   int _toolIndex = 0;
 
-  String _filePath;
+  String? _filePath;
 
   final GlobalKey _drawingKey = GlobalKey();
   final GlobalKey _appbarKey = GlobalKey();
@@ -165,7 +165,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               child: DrawingBoard(
                 repaintKey: _drawingKey,
                 objects: _objects,
-                uri: widget.savedImage != null ? widget.savedImage.uri : null,
+                uri: widget.savedImage?.uri,
                 color: Colors.grey[50],
               ),
             ),
@@ -192,10 +192,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                           _saved = false;
                         })
                     : null,
-                onRedo: _actionQueueIndex < _backupObjects.length - 1
+                onRedo: _actionQueueIndex! < _backupObjects.length - 1
                     ? () => setState(() {
                           _actionQueueIndex = _objects.length;
-                          _objects.add(_backupObjects[_actionQueueIndex]);
+                          _objects.add(_backupObjects[_actionQueueIndex!]);
                           _saved = false;
                         })
                     : null,
@@ -438,15 +438,17 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     );
     _mousePosition = details.globalPosition.translate(-topLeft.dx, -topLeft.dy);
 
-    setState(() => _objects[_currentIndex].points.add(point));
+    setState(() => _objects[_currentIndex!].points.add(point));
   }
 
   void _normalModePanUpdate(DragUpdateDetails details) {
-    final RenderBox appbarBox = _appbarKey.currentContext.findRenderObject();
+    final RenderBox appbarBox =
+        _appbarKey.currentContext!.findRenderObject()! as RenderBox;
     Rect appbarRect =
         (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
 
-    final RenderBox toolbarBox = _toolbarKey.currentContext.findRenderObject();
+    final RenderBox toolbarBox =
+        _toolbarKey.currentContext!.findRenderObject()! as RenderBox;
     Rect toolbarRect =
         (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
 
@@ -482,7 +484,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         _toolbarAc.reverse();
     }
 
-    setState(() => _objects[_currentIndex].points.add(point));
+    setState(() => _objects[_currentIndex!].points.add(point));
   }
 
   void _normalModePanEnd(details) {
@@ -494,12 +496,12 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   bool exitPrompt(bool _) {
-    Uri uri = _filePath != null ? Uri.file(_filePath) : null;
+    Uri? uri = _filePath != null ? Uri.file(_filePath!) : null;
 
     void _internal() async {
       if (!_saved) {
-        bool exit = await showDialog(
-          context: _globalContext,
+        bool? exit = await showDialog(
+          context: _globalContext!,
           builder: (context) => AlertDialog(
             title: Text(LocaleStrings.common.areYouSure),
             content: Text(LocaleStrings.drawPage.exitPrompt),
@@ -519,10 +521,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         );
 
         if (exit != null) {
-          Navigator.pop(_globalContext, uri);
+          Navigator.pop(_globalContext!, uri);
         }
       } else {
-        Navigator.pop(_globalContext, uri);
+        Navigator.pop(_globalContext!, uri);
       }
     }
 
@@ -532,9 +534,9 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   void _saveImage() async {
-    String drawing;
+    late String drawing;
     final box =
-        _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+        _drawingKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
 
     if (kIsWeb) {
       drawing = await WebDrawingExporter.export(
@@ -544,10 +546,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       );
     } else {
       ui.Image image = await box.toImage();
-      ByteData byteData = await image.toByteData(
+      ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
-      Uint8List pngBytes = byteData.buffer.asUint8List();
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
       DateTime now = DateTime.now();
       String timestamp = DateFormat(
         "HH_mm_ss-MM_dd_yyyy",
@@ -564,7 +566,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       if (_filePath == null) {
         _filePath = drawing;
       } else {
-        drawing = _filePath;
+        drawing = _filePath!;
       }
 
       File imgFile = File(drawing);
@@ -573,9 +575,9 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
       SavedImage savedImage = await ImageService.prepareLocally(imgFile);
       if (widget.savedImage != null) {
-        widget.note.images
-            .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);
-        savedImage.id = widget.savedImage.id;
+        widget.note.images.removeWhere(
+            (savedImage) => savedImage.id == widget.savedImage!.id);
+        savedImage.id = widget.savedImage!.id;
       }
       widget.note.images.add(savedImage);
     }
@@ -591,12 +593,12 @@ enum MenuShowReason {
 }
 
 class _CursorPainter extends CustomPainter {
-  final Offset offset;
+  final Offset? offset;
   final double brushWidth;
 
   _CursorPainter({
-    @required this.offset,
-    @required this.brushWidth,
+    required this.offset,
+    required this.brushWidth,
   });
 
   @override
@@ -608,7 +610,7 @@ class _CursorPainter extends CustomPainter {
       ..color = Colors.black
       ..strokeWidth = 1;
 
-    canvas.drawCircle(offset, brushWidth / 2, paint);
+    canvas.drawCircle(offset!, brushWidth / 2, paint);
   }
 
   @override

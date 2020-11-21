@@ -4,17 +4,17 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class DrawingToolbar extends StatefulWidget {
-  final DrawingToolbarController controller;
+  final DrawingToolbarController? controller;
   final List<DrawingTool> tools;
   final int toolIndex;
-  final ValueChanged<int> onIndexChanged;
-  final VoidCallback onUndo;
-  final VoidCallback onRedo;
-  final VoidCallback clearCanvas;
+  final ValueChanged<int>? onIndexChanged;
+  final VoidCallback? onUndo;
+  final VoidCallback? onRedo;
+  final VoidCallback? clearCanvas;
 
   DrawingToolbar({
     this.controller,
-    @required this.tools,
+    required this.tools,
     this.toolIndex = 0,
     this.onIndexChanged,
     this.onUndo,
@@ -28,8 +28,8 @@ class DrawingToolbar extends StatefulWidget {
 
 class _DrawingToolbarState extends State<DrawingToolbar>
     with TickerProviderStateMixin {
-  AnimationController _ac;
-  AnimationController _colorPanelAc;
+  late AnimationController _ac;
+  late AnimationController _colorPanelAc;
   double _panelHeight = 0;
   Curve _curve = decelerateEasing;
 
@@ -75,13 +75,15 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 setState(() => _curve = Curves.linear);
               },
               onVerticalDragUpdate: (details) {
-                _ac.value -= details.primaryDelta / _panelHeight;
+                if (details.primaryDelta == null) return;
+                _ac.value -= details.primaryDelta! / _panelHeight;
               },
               onVerticalDragEnd: (details) {
+                if (details.primaryVelocity == null) return;
                 setState(() => _curve =
                     SuspendedCurve(_ac.value, curve: decelerateEasing));
 
-                if (details.primaryVelocity > 350) {
+                if (details.primaryVelocity! > 350) {
                   final _animForward = _ac.status == AnimationStatus.forward ||
                       _ac.status == AnimationStatus.completed;
                   if (!_animForward)
@@ -270,9 +272,9 @@ class _DrawingToolbarState extends State<DrawingToolbar>
     );
   }
 
-  Widget _animatedVisibility({Widget child, AnimationController controller}) {
+  Widget _animatedVisibility({Widget? child, AnimationController? controller}) {
     return Align(
-      heightFactor: controller.value,
+      heightFactor: controller!.value,
       child: FadeTransition(
         opacity: controller,
         child: child,
@@ -363,7 +365,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
 class DrawingToolbarController {
   DrawingToolbarController();
 
-  _DrawingToolbarState _state;
+  late _DrawingToolbarState _state;
 
   void _provideState(_DrawingToolbarState state) {
     this._state = state;
@@ -381,9 +383,9 @@ class DrawingTool {
   double size;
 
   DrawingTool({
-    @required this.title,
-    @required this.icon,
-    @required this.toolType,
+    required this.title,
+    required this.icon,
+    required this.toolType,
     this.allowColor = true,
     this.color = Colors.black,
     this.size = ToolSize.FOUR,

@@ -49,7 +49,7 @@ class AboutPage extends StatelessWidget {
                     Text(
                       appInfo.packageInfo == null
                           ? "Desktop version"
-                          : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
+                          : "${appInfo.packageInfo!.version}+${appInfo.packageInfo!.buildNumber}",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -179,16 +179,16 @@ class AboutPage extends StatelessWidget {
 }
 
 class ContributorInfo {
-  String name;
-  String role;
-  String avatarUrl;
-  List<SocialLink> socialLinks;
+  final String name;
+  final String role;
+  final String avatarUrl;
+  final List<SocialLink> socialLinks;
 
   ContributorInfo({
-    this.name,
-    this.role,
-    this.avatarUrl,
-    this.socialLinks,
+    required this.name,
+    required this.role,
+    required this.avatarUrl,
+    required this.socialLinks,
   });
 }
 

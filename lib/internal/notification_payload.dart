@@ -9,9 +9,9 @@ class NotificationPayload {
   NotificationAction action;
 
   NotificationPayload({
-    this.id,
-    this.noteId,
-    this.action,
+    required this.id,
+    required this.noteId,
+    required this.action,
   });
 
   factory NotificationPayload.fromJson(Map<String, dynamic> json) =>

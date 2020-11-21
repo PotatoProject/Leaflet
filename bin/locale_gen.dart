@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'locale_gen/asset_loader_generator.dart';
 import 'locale_gen/key_generator.dart';
 import 'locale_gen/locale_generator.dart';

@@ -69,7 +69,7 @@ class SyncRoutine {
       var url = prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
       Response securePingResponse =
-          await get(url, headers: {"Authorization": prefs.accessToken});
+          await get(url, headers: {"Authorization": prefs.accessToken ?? ""});
       if (securePingResponse.statusCode == 401) {
         Loggy.e(message: "Token is not valid");
         return false;
@@ -127,7 +127,7 @@ class SyncRoutine {
     } catch (e) {
       return false;
     }
-    try{
+    try {
       await ImageService.handleDeletes();
     } catch (e) {
       return false;
@@ -186,23 +186,25 @@ class SyncRoutine {
 
   static Future<bool> syncNote(Note note) async {
     var synced = await helper.listNotes(ReturnMode.SYNCED);
-    try{
-      if(synced.indexWhere((syncedNote) => syncedNote.id == note.id + "-synced") != -1){
-        var deletedIdList = await NoteController.listDeleted(
-            [note.id]);
-        if(deletedIdList.length > 0){
-          Loggy.d(message: "Since note is deleted on remote, we should safely remove it");
+    try {
+      if (synced.indexWhere(
+              (syncedNote) => syncedNote.id == note.id + "-synced") !=
+          -1) {
+        var deletedIdList = await NoteController.listDeleted([note.id]);
+        if (deletedIdList.length > 0) {
+          Loggy.d(
+              message:
+                  "Since note is deleted on remote, we should safely remove it");
           Utils.deleteNoteSafely(note);
           return true;
         } else {
-          var syncedNote = synced.firstWhere((synced) => synced.id == note.id + "-synced");
-          if(syncedNote.lastModifyDate == note.lastModifyDate){
+          var syncedNote =
+              synced.firstWhere((synced) => synced.id == note.id + "-synced");
+          if (syncedNote.lastModifyDate == note.lastModifyDate) {
             Loggy.v(message: "Dont need to sync note, it hasnt been updated");
             return true;
           } else {
-            var delta = getNoteDelta(
-                note,
-                syncedNote);
+            var delta = getNoteDelta(note, syncedNote);
             await NoteController.update(note.id, delta);
             await saveSyncedNote(note);
             return true;
@@ -232,7 +234,7 @@ class SyncRoutine {
   Future<bool> sendNoteUpdates() async {
     // Send the post requests to add new notes
     for (Note note in addedNotes) {
-      if(await addNote(note) == false){
+      if (await addNote(note) == false) {
         return false;
       }
     }
@@ -269,7 +271,7 @@ class SyncRoutine {
         Loggy.i(message: "Deleted note: " + localNoteId);
       } catch (e) {
         Loggy.e(message: e.toString());
-        throw ("Failed to delete notes: " + e);
+        throw ("Failed to delete notes: $e");
       }
     });
     return true;
@@ -310,7 +312,7 @@ class SyncRoutine {
         Loggy.i(message: "Updated tag:" + tag.id);
       } catch (e) {
         Loggy.e(message: e);
-        throw ("Failed to update tags: " + e);
+        throw ("Failed to update tags: $e");
       }
     });
     deletedTags.forEach((tag) async {
@@ -321,7 +323,7 @@ class SyncRoutine {
         Loggy.i(message: "Deleted tag: " + localTagId);
       } catch (e) {
         Loggy.e(message: e.toString());
-        throw ("Failed to delete tags: " + e);
+        throw ("Failed to delete tags: $e");
       }
     });
     return true;
@@ -333,7 +335,7 @@ class SyncRoutine {
       changedSettings = await SettingController.getChanged(prefs.lastUpdated);
     } catch (e) {
       Loggy.e(message: e);
-      throw ("Failed to get changed settings: " + e);
+      throw ("Failed to get changed settings: $e");
     }
 
     changedSettings.forEach((key, value) {
@@ -382,7 +384,7 @@ class SyncRoutine {
           Loggy.v(message: "Saved setting $key");
         } catch (e) {
           Loggy.e(message: e);
-          throw ("Failed to save setting: " + e);
+          throw ("Failed to save setting: $e");
         }
       }
     }

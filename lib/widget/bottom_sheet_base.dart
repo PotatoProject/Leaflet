@@ -8,25 +8,25 @@ import 'package:potato_notes/internal/utils.dart';
 // ignore_for_file: invalid_use_of_protected_member
 class BottomSheetRoute<T> extends PopupRoute<T> {
   BottomSheetRoute({
-    @required this.child,
+    required this.child,
     this.backgroundColor,
-    this.elevation = 0,
+    this.elevation,
     this.shape = const RoundedRectangleBorder(),
-    this.clipBehavior = Clip.none,
+    this.clipBehavior,
     this.maintainState = true,
   });
 
   final Widget child;
-  final Color backgroundColor;
-  final double elevation;
-  final ShapeBorder shape;
-  final Clip clipBehavior;
+  final Color? backgroundColor;
+  final double? elevation;
+  final ShapeBorder? shape;
+  final Clip? clipBehavior;
 
   @override
   Color get barrierColor => Colors.black54;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
@@ -60,14 +60,14 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
 class _BottomSheetBase extends StatefulWidget {
   final Widget child;
   final BottomSheetRoute route;
-  final Color backgroundColor;
-  final double elevation;
-  final ShapeBorder shape;
-  final Clip clipBehavior;
+  final Color? backgroundColor;
+  final double? elevation;
+  final ShapeBorder? shape;
+  final Clip? clipBehavior;
 
   _BottomSheetBase({
-    @required this.child,
-    @required this.route,
+    required this.child,
+    required this.route,
     this.backgroundColor,
     this.elevation,
     this.shape,
@@ -82,7 +82,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
   GlobalKey _childKey = GlobalKey();
 
   double get _childHeight {
-    RenderBox box = _childKey.currentContext.findRenderObject();
+    RenderBox box = _childKey.currentContext!.findRenderObject() as RenderBox;
     return box.size.height;
   }
 
@@ -91,7 +91,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.route.animation,
+      animation: widget.route.animation!,
       builder: (context, _) {
         return SafeArea(
           child: LayoutBuilder(builder: (context, constraints) {
@@ -114,30 +114,30 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                   : null,
               onVerticalDragUpdate: !_useDesktopLayout
                   ? (details) {
-                      widget.route.controller.value -=
-                          details.primaryDelta / _childHeight;
+                      widget.route.controller!.value -=
+                          details.primaryDelta ?? 0 / _childHeight;
                     }
                   : null,
               onVerticalDragEnd: !_useDesktopLayout
                   ? (details) {
                       _curve = SuspendedCurve(
-                        widget.route.animation.value,
+                        widget.route.animation!.value,
                         curve: decelerateEasing,
                       );
 
-                      if (details.primaryVelocity > 350) {
-                        final _animForward = widget.route.controller.status ==
+                      if ((details.primaryVelocity ?? 0) > 350) {
+                        final _animForward = widget.route.controller!.status ==
                                 AnimationStatus.forward ||
-                            widget.route.controller.status ==
+                            widget.route.controller!.status ==
                                 AnimationStatus.completed;
                         if (!_animForward)
                           widget.route.navigator?.pop();
                         else
-                          widget.route.controller.fling(velocity: 1);
+                          widget.route.controller!.fling(velocity: 1);
                       }
 
-                      if (widget.route.controller.value > 0.5) {
-                        widget.route.controller.fling(velocity: 1);
+                      if (widget.route.controller!.value > 0.5) {
+                        widget.route.controller!.fling(velocity: 1);
                       } else {
                         widget.route.navigator?.pop();
                       }
@@ -170,7 +170,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                         return FadeTransition(
                           opacity: CurvedAnimation(
                             curve: Curves.easeOut,
-                            parent: widget.route.animation,
+                            parent: widget.route.animation!,
                           ),
                           child: commonChild,
                         );
@@ -182,7 +182,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                           ).animate(
                             CurvedAnimation(
                               curve: _curve,
-                              parent: widget.route.animation,
+                              parent: widget.route.animation!,
                             ),
                           ),
                           child: commonChild,

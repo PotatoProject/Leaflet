@@ -17,7 +17,7 @@ class XmlFileParser {
 
       final routeFile =
           getNameFromPath(file.absolute.path).replaceAll(".xml", "");
-      final fileContent = await (file as File).readAsString();
+      final fileContent = await file.readAsString();
       var document = XmlDocument.parse(fileContent);
       document.normalize();
 
@@ -27,7 +27,7 @@ class XmlFileParser {
         if (item is XmlElement) {
           XmlElement element = item;
 
-          String name = element.getAttribute("name");
+          String? name = element.getAttribute("name") as String?;
           if (name == null) continue;
 
           if (element.name.toString() == "string") {
@@ -37,7 +37,8 @@ class XmlFileParser {
               if (plural is XmlElement) {
                 XmlElement pluralElement = plural;
 
-                String pluralAttribute = pluralElement.getAttribute("quantity");
+                String? pluralAttribute =
+                    pluralElement.getAttribute("quantity") as String?;
                 if (pluralAttribute == null) continue;
 
                 returnMap["$routeFile.$name.$pluralAttribute"] =
@@ -64,7 +65,7 @@ class XmlFileParser {
       final routeFile =
           getNameFromPath(file.absolute.path).replaceAll(".xml", "");
       returnMap[routeFile] = {};
-      final fileContent = await (file as File).readAsString();
+      final fileContent = await file.readAsString();
       var document = XmlDocument.parse(fileContent);
       document.normalize();
 
@@ -74,18 +75,18 @@ class XmlFileParser {
         if (item is XmlElement) {
           XmlElement element = item;
 
-          String name = element.getAttribute("name");
+          String? name = element.getAttribute("name") as String?;
           if (name == null) continue;
 
           if (element.name.toString() == "string") {
             if (element.text.contains("%s")) {
-              returnMap[routeFile][name] ??= ArgumentString()
+              returnMap[routeFile]![name] ??= ArgumentString()
                 ..argNum = _argumentNum(element.text);
             } else {
-              returnMap[routeFile][name] ??= CommonString();
+              returnMap[routeFile]![name] ??= CommonString();
             }
           } else if (element.name.toString() == "plurals") {
-            returnMap[routeFile][name] ??= PluralString();
+            returnMap[routeFile]![name] ??= PluralString();
           }
         }
       }
@@ -123,5 +124,5 @@ class CommonString extends StringInfo {}
 class PluralString extends StringInfo {}
 
 class ArgumentString extends StringInfo {
-  int argNum;
+  int argNum = 0;
 }

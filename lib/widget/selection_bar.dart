@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -16,10 +15,10 @@ import 'package:share_plus/share_plus.dart';
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Note> selectionList;
   final ReturnMode currentMode;
-  final Function() onCloseSelection;
+  final Function()? onCloseSelection;
 
   SelectionBar({
-    @required this.selectionList,
+    required this.selectionList,
     this.currentMode = ReturnMode.NORMAL,
     this.onCloseSelection,
   });
@@ -79,7 +78,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                 );
             }
 
-            onCloseSelection();
+            onCloseSelection?.call();
           },
         ),
       );
@@ -92,7 +91,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.mainPage.selectionBarChangeColor,
           onPressed: () async {
-            int selectedColor;
+            int? selectedColor;
 
             if (selectionList.length > 1) {
               int color = selectionList[0].color;
@@ -107,7 +106,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             selectedColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
-                selectedColor: selectedColor,
+                selectedColor: selectedColor!,
                 onColorSelect: (color) {
                   Navigator.pop(context, color);
                 },
@@ -119,7 +118,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                 await helper
                     .saveNote(selectionList[i].copyWith(color: selectedColor));
 
-              onCloseSelection();
+              onCloseSelection?.call();
             }
           },
         ),
@@ -141,7 +140,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
               archive: true,
             );
 
-          onCloseSelection();
+          onCloseSelection?.call();
         },
       ));
     }
@@ -165,7 +164,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
           }
         }
 
-        onCloseSelection();
+        onCloseSelection?.call();
       },
     ));
 
@@ -184,7 +183,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             archive: currentMode == ReturnMode.ARCHIVE,
           );
 
-          onCloseSelection();
+          onCloseSelection?.call();
         },
       ));
     }
@@ -203,19 +202,21 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                 handlePinNotes(context, selectionList[0]);
                 break;
               case 'share':
-                bool status = note.lockNote
+                bool? status = note.lockNote
                     ? await Utils.showPassChallengeSheet(context)
                     : true;
                 if (status ?? false) {
                   Share.share(
-                    (note.title.isNotEmpty ? note.title + "\n\n" : "") +
-                        note.content,
+                    (note.title != null && note.title!.isNotEmpty
+                            ? note.title! + "\n\n"
+                            : "") +
+                        (note.content ?? ""),
                   );
                 }
                 break;
             }
 
-            onCloseSelection();
+            onCloseSelection?.call();
           },
         ),
       );
@@ -226,11 +227,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
   void handlePinNotes(BuildContext context, Note note) {
     if (note.pinned) {
-      appInfo.notifications.cancel(note.notificationId);
+      appInfo.notifications?.cancel(note.notificationId);
     } else {
-      appInfo.notifications.show(
+      appInfo.notifications?.show(
         note.notificationId,
-        note.title.isEmpty
+        note.title != null && note.title!.isEmpty
             ? LocaleStrings.common.notificationDefaultTitle
             : note.title,
         note.content,

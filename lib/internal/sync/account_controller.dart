@@ -104,7 +104,6 @@ class AccountController {
               message: loginResponse.body,
             );
           }
-          break;
         default:
           Loggy.d(message: loginResponse.body);
           throw ("Unexpected response from auth server");
@@ -120,12 +119,12 @@ class AccountController {
     bool loggedIn = await SyncRoutine.checkLoginStatus();
 
     if (loggedIn) {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
 
       try {
         Response profileRequest = await get(
             "${prefs.apiUrl}/login/user/profile",
-            headers: {"Authorization": "Bearer " + token});
+            headers: {"Authorization": "Bearer $token"});
         switch (profileRequest.statusCode) {
           case 200:
             Map<String, dynamic> response = json.decode(profileRequest.body);
@@ -189,7 +188,7 @@ class AccountController {
         case 200:
           {
             prefs.accessToken = json.decode(refresh.body)["token"];
-            Loggy.d(message: "accessToken: " + prefs.accessToken, secure: true);
+            Loggy.d(message: "accessToken: ${prefs.accessToken}", secure: true);
             return AuthResponse(status: true);
           }
         case 400:
@@ -210,10 +209,10 @@ class AccountController {
 
 class AuthResponse {
   final bool status;
-  final String message;
+  final String? message;
 
   AuthResponse({
-    @required this.status,
+    required this.status,
     this.message,
   });
 }

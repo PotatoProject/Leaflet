@@ -31,7 +31,7 @@ import 'package:potato_notes/widget/note_search_delegate.dart';
 import 'package:potato_notes/widget/notes_logo.dart';
 
 class BasePage extends StatefulWidget {
-  static _BasePageState of(BuildContext context) {
+  static _BasePageState? of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<BasePageInheritedWidget>()
         ?.state;
@@ -65,16 +65,16 @@ class _BasePageState extends State<BasePage>
 
   int _currentPage = 0;
   bool _bottomBarEnabled = true;
-  Widget _floatingActionButton;
-  Widget _appBar;
-  Widget _secondaryAppBar;
-  AnimationController _ac;
+  Widget? _floatingActionButton;
+  Widget? _appBar;
+  Widget? _secondaryAppBar;
+  late AnimationController _ac;
   DefaultDrawerMode _defaultDrawerMode = DefaultDrawerMode.COLLAPSED;
   bool _collapsedDrawer = false;
 
-  Widget get fab => _floatingActionButton;
-  Widget get appBar => _appBar;
-  Widget get secondaryAppBar => _secondaryAppBar;
+  Widget? get fab => _floatingActionButton;
+  Widget? get appBar => _appBar;
+  Widget? get secondaryAppBar => _secondaryAppBar;
 
   void setCurrentPage(int newPage) {
     if (_defaultDrawerMode == DefaultDrawerMode.COLLAPSED) {
@@ -86,14 +86,15 @@ class _BasePageState extends State<BasePage>
 
   void setBottomBarEnabled(bool enabled) =>
       setState(() => _bottomBarEnabled = enabled);
-  void setFAB(Widget fab) => WidgetsBinding.instance.addPostFrameCallback(
+  void setFAB(Widget? fab) => WidgetsBinding.instance!.addPostFrameCallback(
         (_) => setState(() => _floatingActionButton = fab),
       );
-  void setAppBar(Widget appBar) => WidgetsBinding.instance.addPostFrameCallback(
+  void setAppBar(Widget? appBar) =>
+      WidgetsBinding.instance!.addPostFrameCallback(
         (_) => setState(() => _appBar = appBar),
       );
-  void setSecondaryAppBar(Widget secondaryAppBar) =>
-      WidgetsBinding.instance.addPostFrameCallback(
+  void setSecondaryAppBar(Widget? secondaryAppBar) =>
+      WidgetsBinding.instance!.addPostFrameCallback(
         (_) async {
           if (secondaryAppBar.runtimeType != _secondaryAppBar.runtimeType) {
             if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null)
@@ -141,7 +142,7 @@ class _BasePageState extends State<BasePage>
   @override
   void initState() {
     if (!DeviceInfo.isDesktopOrWeb) {
-      appInfo.quickActions.initialize((shortcutType) async {
+      appInfo.quickActions?.initialize((shortcutType) async {
         switch (shortcutType) {
           case 'new_text':
             Utils.newNote(context);
@@ -166,7 +167,7 @@ class _BasePageState extends State<BasePage>
 
     InAppUpdater.checkForUpdate(context);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (!prefs.welcomePageSeen) {
         Utils.showSecondaryRoute(
           context,
@@ -436,12 +437,11 @@ class _BasePageState extends State<BasePage>
 
 class BasePageInheritedWidget extends InheritedWidget {
   BasePageInheritedWidget({
-    Key key,
-    Widget child,
+    required Widget child,
     this.state,
-  }) : super(key: key, child: child);
+  }) : super(child: child);
 
-  final _BasePageState state;
+  final _BasePageState? state;
 
   @override
   bool updateShouldNotify(BasePageInheritedWidget oldWidget) {

@@ -8,11 +8,11 @@ import 'package:potato_notes/widget/tag_chip.dart';
 
 class NoteViewStatusbar extends StatefulWidget {
   final Note note;
-  final EdgeInsets padding;
-  final double width;
+  final EdgeInsets? padding;
+  final double? width;
 
   NoteViewStatusbar({
-    @required this.note,
+    required this.note,
     this.padding,
     this.width,
   });

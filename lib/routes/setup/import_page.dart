@@ -44,7 +44,7 @@ class ImportPage extends StatelessWidget {
                             height: 16,
                           ),
                           LinearProgressIndicator(
-                            value: snapshot.data,
+                            value: snapshot.data as double?,
                           ),
                         ],
                       ),

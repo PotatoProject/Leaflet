@@ -5,7 +5,7 @@ import 'package:moor/moor.dart';
 class TagListConverter extends TypeConverter<List<String>, String> {
   const TagListConverter();
   @override
-  List<String> mapToDart(String fromDb) {
+  List<String>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -14,7 +14,7 @@ class TagListConverter extends TypeConverter<List<String>, String> {
   }
 
   @override
-  String mapToSql(List<String> value) {
+  String? mapToSql(List<String>? value) {
     if (value == null) {
       return null;
     }

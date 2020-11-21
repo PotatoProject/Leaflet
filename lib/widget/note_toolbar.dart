@@ -28,18 +28,18 @@ import 'package:flutter/material.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteToolbar extends StatefulWidget {
-  final SpannableTextEditingController controller;
+  final SpannableTextEditingController? controller;
   final bool showLeftActions;
   final List<Widget> rightActions;
   final Axis axis;
-  final Color toolbarActionToggleColor;
-  final Color toolbarBackgroundColor;
-  final Color toolbarActionColor;
+  final Color? toolbarActionToggleColor;
+  final Color? toolbarBackgroundColor;
+  final Color? toolbarActionColor;
   final bool stayFocused;
-  final void Function() onButtonTap;
+  final void Function()? onButtonTap;
 
   NoteToolbar({
-    Key key,
+    Key? key,
     this.controller,
     this.showLeftActions = false,
     this.rightActions = const [],
@@ -63,7 +63,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
   void initState() {
     super.initState();
     widget.controller?.addListener(() {
-      _streamController.sink.add(widget.controller?.value);
+      _streamController.sink.add(widget.controller!.value);
     });
   }
 
@@ -77,11 +77,11 @@ class _NoteToolbarState extends State<NoteToolbar> {
     return StreamBuilder<TextEditingValue>(
       stream: _streamController.stream,
       builder: (context, snapshot) {
-        var currentStyle = SpannableStyle();
+        SpannableStyle? currentStyle = SpannableStyle();
         var currentSelection;
         if (snapshot.hasData) {
           var value = snapshot.data;
-          var selection = value.selection;
+          var selection = value?.selection;
           if (selection != null && !selection.isCollapsed) {
             currentSelection = selection;
             currentStyle = widget.controller?.getSelectionStyle();
@@ -106,7 +106,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
                           child: Column(
                             children: <Widget>[
                               ..._buildActions(
-                                currentStyle ?? SpannableStyle(),
+                                currentStyle,
                                 currentSelection,
                               ),
                             ],
@@ -125,7 +125,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
                           child: Row(
                             children: <Widget>[
                               ..._buildActions(
-                                currentStyle ?? SpannableStyle(),
+                                currentStyle,
                                 currentSelection,
                               ),
                             ],
@@ -151,7 +151,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
   }
 
   List<Widget> _buildActions(
-      SpannableStyle spannableStyle, TextSelection selection) {
+      SpannableStyle? spannableStyle, TextSelection selection) {
     final Map<int, IconData> styleMap = {
       styleBold: Icons.format_bold,
       styleItalic: Icons.format_italic,
@@ -162,14 +162,14 @@ class _NoteToolbarState extends State<NoteToolbar> {
     return styleMap.keys
         .map((style) => IconButton(
               icon: CircleAvatar(
-                backgroundColor: spannableStyle.hasStyle(style)
+                backgroundColor: spannableStyle?.hasStyle(style) ?? false
                     ? Theme.of(context).accentColor.withOpacity(0.2)
                     : Colors.transparent,
                 child: SizedBox.fromSize(
                   size: Size.square(36),
                   child: Icon(
                     styleMap[style],
-                    color: spannableStyle.hasStyle(style)
+                    color: spannableStyle?.hasStyle(style) ?? false
                         ? Theme.of(context).accentColor
                         : Theme.of(context).iconTheme.color,
                     size: 24,
@@ -178,7 +178,7 @@ class _NoteToolbarState extends State<NoteToolbar> {
               ),
               padding: EdgeInsets.all(0),
               onPressed: () => _toggleTextStyle(
-                spannableStyle.copy(),
+                spannableStyle?.copy() ?? SpannableStyle(),
                 style,
                 selection: selection,
               ),
@@ -189,26 +189,26 @@ class _NoteToolbarState extends State<NoteToolbar> {
   void _toggleTextStyle(
     SpannableStyle spannableStyle,
     int textStyle, {
-    TextSelection selection,
+    TextSelection? selection,
   }) {
     bool hasSelection = selection != null;
     if (spannableStyle.hasStyle(textStyle)) {
       if (hasSelection) {
         widget.controller
-            .setSelectionStyle((style) => style..clearStyle(textStyle));
+            ?.setSelectionStyle((style) => style..clearStyle(textStyle));
       } else {
-        widget.controller.composingStyle = spannableStyle
+        widget.controller?.composingStyle = spannableStyle
           ..clearStyle(textStyle);
       }
     } else {
       if (hasSelection) {
         widget.controller
-            .setSelectionStyle((style) => style..setStyle(textStyle));
+            ?.setSelectionStyle((style) => style..setStyle(textStyle));
       } else {
-        widget.controller.composingStyle = spannableStyle..setStyle(textStyle);
+        widget.controller?.composingStyle = spannableStyle..setStyle(textStyle);
       }
     }
 
-    widget.onButtonTap();
+    widget.onButtonTap?.call();
   }
 }

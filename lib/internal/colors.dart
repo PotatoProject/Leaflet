@@ -18,6 +18,8 @@ class NoteColors {
   static ColorInfo get none => ColorInfo(
         label: LocaleStrings.common.colorNone,
         color: Colors.transparent.value,
+        lightColor: Colors.transparent.value,
+        darkColor: Colors.transparent.value,
       );
 
   static ColorInfo get red => ColorInfo(
@@ -91,17 +93,15 @@ class ColorInfo {
   final int darkColor;
 
   ColorInfo({
-    @required this.label,
-    @required this.color,
-    this.lightColor,
-    this.darkColor,
+    required this.label,
+    required this.color,
+    required this.lightColor,
+    required this.darkColor,
   });
 
   int dynamicColor(BuildContext context) {
     Brightness brightness = Theme.of(context).brightness;
 
-    return brightness == Brightness.light
-        ? lightColor ?? color
-        : darkColor ?? color;
+    return brightness == Brightness.light ? lightColor : darkColor;
   }
 }

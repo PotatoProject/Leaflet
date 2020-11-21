@@ -64,7 +64,7 @@ class MigrationTask {
         );
       }
 
-      SavedImage savedImage;
+      SavedImage? savedImage;
       if (v1Note.imagePath != null) {
         final response = await get(v1Note.imagePath);
         final file = File(join(appInfo.tempDirectory.path, "id.jpg"))..create();
@@ -81,7 +81,7 @@ class MigrationTask {
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
         lastModifyDate: DateTime.now(),
         color: v1Note.color,
-        images: savedImage != null ? [savedImage] : List(),
+        images: savedImage != null ? [savedImage] : [],
         list: v1Note.isList == 1,
         listContent: listItems,
         reminders: [],
@@ -104,29 +104,29 @@ class MigrationTask {
 }
 
 class NoteV1Model {
-  final int id;
-  final String title;
-  final String content;
-  final int isStarred;
+  final int? id;
+  final String? title;
+  final String? content;
+  final int? isStarred;
   final int date;
   final int color;
-  final String imagePath;
-  final int isList;
-  final String listParseString;
-  final String reminders;
-  final int hideContent;
-  final String pin;
-  final String password;
-  final int isDeleted;
-  final int isArchived;
+  final String? imagePath;
+  final int? isList;
+  final String? listParseString;
+  final String? reminders;
+  final int? hideContent;
+  final String? pin;
+  final String? password;
+  final int? isDeleted;
+  final int? isArchived;
 
   NoteV1Model({
     this.id,
     this.title,
     this.content,
     this.isStarred,
-    this.date,
-    this.color,
+    required this.date,
+    this.color = 0,
     this.imagePath,
     this.isList,
     this.listParseString,

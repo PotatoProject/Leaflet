@@ -10,11 +10,11 @@ SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
   return SavedImage(
     json['id'] as String,
     json['uri'] == null ? null : Uri.parse(json['uri'] as String),
-    _$enumDecodeNullable(_$StorageLocationEnumMap, json['storageLocation']),
-    json['hash'] as String,
+    _$enumDecode(_$StorageLocationEnumMap, json['storageLocation']),
+    json['hash'] as String?,
     json['encrypted'] as bool,
   )
-    ..blurHash = json['blurHash'] as String
+    ..blurHash = json['blurHash'] as String?
     ..uploaded = json['uploaded'] as bool;
 }
 
@@ -30,35 +30,29 @@ Map<String, dynamic> _$SavedImageToJson(SavedImage instance) =>
     };
 
 T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+  Map<T, Object> enumValues,
+  Object? source, {
+  T? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .cast<MapEntry<T, Object>?>()
+      .singleWhere((e) => e!.value == source, orElse: () => null)
       ?.key;
 
   if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      '`$source` is not one of the supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return value ?? unknownValue!;
 }
 
 const _$StorageLocationEnumMap = {

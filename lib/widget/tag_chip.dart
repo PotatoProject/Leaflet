@@ -8,19 +8,19 @@ class TagChip extends StatelessWidget {
   final bool shrink;
 
   TagChip({
-    @required this.title,
-    this.color,
+    required this.title,
+    this.color = 0,
     this.showIcon = true,
     this.shrink = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
+    Color contrast = Theme.of(context).iconTheme.color!.withOpacity(0.2);
 
     Color _color = color != 0
-        ? Color(NoteColors.colorList[color ?? 0].color)
-        : Theme.of(context).iconTheme.color.withOpacity(1);
+        ? Color(NoteColors.colorList[color].color)
+        : Theme.of(context).iconTheme.color!.withOpacity(1);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -64,7 +64,7 @@ class TagChip extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: shrink ? 12 : 14,
-                    color: Theme.of(context).iconTheme.color.withOpacity(1),
+                    color: Theme.of(context).iconTheme.color!.withOpacity(1),
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,

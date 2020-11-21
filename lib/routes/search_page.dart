@@ -5,7 +5,7 @@ import 'package:potato_notes/widget/dependent_scaffold.dart';
 class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
 
-  SearchPage({@required this.delegate});
+  SearchPage({required this.delegate});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -14,7 +14,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState<T> extends State<SearchPage> {
   // This node is owned, but not hosted by, the search page. Hosting is done by
   // the text field.
-  FocusNode focusNode = FocusNode();
+  FocusNode? focusNode = FocusNode();
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _SearchPageState<T> extends State<SearchPage> {
     super.dispose();
     widget.delegate._queryTextController.removeListener(_onQueryChanged);
     widget.delegate._focusNode = null;
-    focusNode.dispose();
+    focusNode?.dispose();
   }
 
   void _onQueryChanged() {
@@ -84,31 +84,30 @@ abstract class CustomSearchDelegate<T> {
 
   String get query => _queryTextController.text;
   set query(String value) {
-    assert(query != null);
     _queryTextController.text = value;
   }
 
   void close(BuildContext context) {
     _focusNode?.unfocus();
-    Navigator.of(context)..pop();
+    Navigator.of(context)?..pop();
   }
 
-  final String searchFieldLabel;
+  final String? searchFieldLabel;
 
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
 
   final TextInputAction textInputAction;
 
   Animation<double> get transitionAnimation => _proxyAnimation;
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
 
   final TextEditingController _queryTextController = TextEditingController();
 
   final ProxyAnimation _proxyAnimation =
       ProxyAnimation(kAlwaysDismissedAnimation);
 
-  void Function(VoidCallback) _setState;
+  late void Function(VoidCallback) _setState;
 
   void Function(VoidCallback) get setState => _setState;
 }

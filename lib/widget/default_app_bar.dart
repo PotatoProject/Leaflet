@@ -9,7 +9,7 @@ import 'package:potato_notes/widget/notes_logo.dart';
 
 class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> extraActions;
-  final Widget title;
+  final Widget? title;
 
   const DefaultAppBar({
     this.extraActions = const [],

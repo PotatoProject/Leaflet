@@ -24,7 +24,7 @@ import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class NotePage extends StatefulWidget {
-  final Note note;
+  final Note? note;
   final bool openWithList;
   final bool openWithDrawing;
 
@@ -41,11 +41,11 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
-  Note note;
+  late Note note;
 
-  TextEditingController titleController;
+  late TextEditingController titleController;
   FocusNode titleFocusNode = FocusNode();
-  TextEditingController contentController;
+  late TextEditingController contentController;
   FocusNode contentFocusNode = FocusNode();
 
   //SpannableTextEditingController contentController;
@@ -56,8 +56,10 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
+    bool shouldFocusTitle = widget.note?.id == null;
+
     note = Note(
-      id: widget.note?.id,
+      id: widget.note?.id ?? Utils.generateId(),
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
       styleJson: [],
@@ -89,12 +91,11 @@ class _NotePageState extends State<NotePage> {
           ? SpannableList.fromJson(parsedStyleJson)
           : null,
     );*/
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
-        if (note.id == null) {
+        if (shouldFocusTitle) {
           FocusScope.of(context).requestFocus(titleFocusNode);
         }
-        generateId();
       } else {
         if (widget.openWithList) toggleList();
 
@@ -119,11 +120,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> handleImageUpload() async {
-    return await ImageService.handleUploads([note]);
-  }
-
-  void generateId() {
-    if (note.id == null) note = note.copyWith(id: Utils.generateId());
+    await ImageService.handleUploads([note]);
   }
 
   @override
@@ -163,10 +160,10 @@ class _NotePageState extends State<NotePage> {
             ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
         accentColor:
-            note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
+            note.color != 0 ? Theme.of(context).textTheme.caption!.color : null,
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: note.color != 0
-              ? Theme.of(context).textTheme.caption.color
+              ? Theme.of(context).textTheme.caption!.color
               : null,
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
@@ -177,7 +174,7 @@ class _NotePageState extends State<NotePage> {
                   : null,
             ),
         toggleableActiveColor: note.color != 0
-            ? Theme.of(context).textTheme.caption.color
+            ? Theme.of(context).textTheme.caption!.color
             : Theme.of(context).accentColor,
       ),
       child: Scaffold(
@@ -278,8 +275,8 @@ class _NotePageState extends State<NotePage> {
                             hintStyle: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
-                                  .caption
-                                  .color
+                                  .caption!
+                                  .color!
                                   .withOpacity(0.5),
                             ),
                           ),
@@ -290,8 +287,8 @@ class _NotePageState extends State<NotePage> {
                             fontWeight: FontWeight.w500,
                             color: Theme.of(context)
                                 .textTheme
-                                .caption
-                                .color
+                                .caption!
+                                .color!
                                 .withOpacity(0.7),
                           ),
                           onChanged: (text) {
@@ -310,8 +307,8 @@ class _NotePageState extends State<NotePage> {
                             hintStyle: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
-                                  .caption
-                                  .color
+                                  .caption!
+                                  .color!
                                   .withOpacity(0.3),
                             ),
                             isDense: true,
@@ -323,8 +320,8 @@ class _NotePageState extends State<NotePage> {
                             fontSize: 16,
                             color: Theme.of(context)
                                 .textTheme
-                                .caption
-                                .color
+                                .caption!
+                                .color!
                                 .withOpacity(0.5),
                           ),
                           onChanged: (text) {
@@ -382,7 +379,7 @@ class _NotePageState extends State<NotePage> {
                                 value: currentItem.status,
                                 onChanged: (value) {
                                   setState(() =>
-                                      note.listContent[index].status = value);
+                                      note.listContent[index].status = value!);
                                   notifyNoteChanged();
                                 },
                                 checkColor: note.color != 0
@@ -402,7 +399,7 @@ class _NotePageState extends State<NotePage> {
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .iconTheme
-                                      .color
+                                      .color!
                                       .withOpacity(
                                         note.listContent[index].status
                                             ? 0.3
@@ -628,7 +625,7 @@ class _NotePageState extends State<NotePage> {
                   : null,
             ),
             Visibility(
-              visible: deviceInfo.canCheckBiometrics ?? false,
+              visible: deviceInfo.canCheckBiometrics,
               child: SwitchListTile(
                 value: note.usesBiometrics,
                 onChanged: note.lockNote
@@ -694,8 +691,8 @@ class _NotePageState extends State<NotePage> {
             enabled: !DeviceInfo.isDesktop,
             title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
-              PickedFile image =
-                  await ImagePicker().getImage(source: ImageSource.camera);
+              PickedFile? image = await ImagePicker()
+                  .getImage(source: ImageSource.camera) as PickedFile?;
 
               if (image != null) {
                 Navigator.pop(context);
@@ -717,8 +714,8 @@ class _NotePageState extends State<NotePage> {
   }
 
   void toggleList() async {
-    generateId();
-    setState(() => note = note.copyWith(list: !note.list));
+    setState(
+        () => note = note.copyWith(id: Utils.generateId(), list: !note.list));
     notifyNoteChanged();
 
     if (note.listContent.isEmpty && note.list) {
@@ -727,7 +724,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addDrawing() async {
-    generateId();
+    note = note.copyWith(id: Utils.generateId());
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),

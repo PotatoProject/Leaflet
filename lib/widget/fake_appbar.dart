@@ -4,7 +4,7 @@ class FakeAppbar extends StatelessWidget with PreferredSizeWidget {
   final Widget child;
 
   FakeAppbar({
-    @required this.child,
+    required this.child,
   });
 
   @override

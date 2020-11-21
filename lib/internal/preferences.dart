@@ -3,11 +3,13 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 part 'preferences.g.dart';
 
@@ -23,7 +25,7 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  String masterPassValue;
+  String? masterPassValue;
 
   @observable
   @protected
@@ -31,7 +33,7 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  Color customAccentValue;
+  Color? customAccentValue;
 
   @observable
   @protected
@@ -51,23 +53,23 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  String apiUrlValue;
+  String apiUrlValue = Utils.defaultApiUrl;
 
   @observable
   @protected
-  String accessTokenValue;
+  String? accessTokenValue;
 
   @observable
   @protected
-  String refreshTokenValue;
+  String? refreshTokenValue;
 
   @observable
   @protected
-  String usernameValue;
+  String? usernameValue;
 
   @observable
   @protected
-  String emailValue;
+  String? emailValue;
 
   @observable
   @protected
@@ -75,7 +77,7 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  List<dynamic> tagsValue = [];
+  List<Tag> tagsValue = [];
 
   @observable
   @protected
@@ -87,27 +89,27 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  int lastUpdatedValue;
+  int lastUpdatedValue = 0;
 
-  String get masterPass => masterPassValue;
+  String? get masterPass => masterPassValue;
   ThemeMode get themeMode => themeModeValue;
-  Color get customAccent => customAccentValue;
+  Color? get customAccent => customAccentValue;
   bool get useAmoled => useAmoledValue;
   bool get useGrid => useGridValue;
   bool get useCustomAccent => useCustomAccentValue;
   bool get welcomePageSeen => welcomePageSeenValue;
   String get apiUrl => apiUrlValue;
-  String get accessToken => accessTokenValue;
-  String get refreshToken => refreshTokenValue;
-  String get username => usernameValue;
-  String get email => emailValue;
+  String? get accessToken => accessTokenValue;
+  String? get refreshToken => refreshTokenValue;
+  String? get username => usernameValue;
+  String? get email => emailValue;
   int get logLevel => logLevelValue;
-  List<dynamic> get tags => tagsValue;
+  List<Tag> get tags => tagsValue;
   List<String> get downloadedImages => downloadedImagesValue;
   List<String> get deletedImages => deletedImagesValue;
   int get lastUpdated => lastUpdatedValue;
 
-  set masterPass(String value) {
+  set masterPass(String? value) {
     masterPassValue = value;
 
     if (DeviceInfo.isDesktopOrWeb) {
@@ -122,7 +124,7 @@ abstract class _PreferencesBase with Store {
     prefs.setThemeMode(value);
   }
 
-  set customAccent(Color value) {
+  set customAccent(Color? value) {
     customAccentValue = value;
     prefs.setCustomAccent(value);
   }
@@ -152,22 +154,22 @@ abstract class _PreferencesBase with Store {
     prefs.setApiUrl(value);
   }
 
-  set accessToken(String value) {
+  set accessToken(String? value) {
     accessTokenValue = value;
     prefs.setAccessToken(value);
   }
 
-  set refreshToken(String value) {
+  set refreshToken(String? value) {
     refreshTokenValue = value;
     prefs.setRefreshToken(value);
   }
 
-  set username(String value) {
+  set username(String? value) {
     usernameValue = value;
     prefs.setUsername(value);
   }
 
-  set email(String value) {
+  set email(String? value) {
     emailValue = value;
     prefs.setEmail(value);
   }
@@ -221,15 +223,15 @@ abstract class _PreferencesBase with Store {
     });
   }
 
-  Future<String> getToken() async {
+  Future<String?> getToken() async {
     if (accessToken == null ||
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
       final response = await AccountController.refreshToken();
 
-      if (!response.status) {
-        throw response.message;
+      if (!response.status && response.message != null) {
+        throw response.message ?? "";
       }
     }
 

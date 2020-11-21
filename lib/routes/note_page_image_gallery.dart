@@ -18,8 +18,8 @@ class NotePageImageGallery extends StatefulWidget {
   final int currentImage;
 
   NotePageImageGallery({
-    @required this.note,
-    @required this.currentImage,
+    required this.note,
+    required this.currentImage,
   });
 
   @override
@@ -27,8 +27,8 @@ class NotePageImageGallery extends StatefulWidget {
 }
 
 class _NotePageImageGalleryState extends State<NotePageImageGallery> {
-  PageController pageController;
-  int currentPage;
+  late PageController pageController;
+  late int currentPage;
 
   @override
   void initState() {

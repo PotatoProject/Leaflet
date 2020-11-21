@@ -26,7 +26,7 @@ class IconLogo extends StatelessWidget {
 
 class IconLogoPainter extends CustomPainter {
   IconLogoPainter({
-    this.height,
+    required this.height,
   });
 
   final double height;

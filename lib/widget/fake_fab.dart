@@ -6,19 +6,17 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/accented_icon.dart';
 
 class FakeFab extends StatefulWidget {
-  final Key key;
   final Object heroTag;
   final Widget child;
-  final ShapeBorder shape;
-  final void Function() onTap;
+  final ShapeBorder? shape;
+  final void Function()? onTap;
 
   FakeFab({
-    this.key,
     this.heroTag = "defaultTag",
-    this.child,
+    required this.child,
     this.shape,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   _FakeFabState createState() => _FakeFabState();
@@ -28,7 +26,7 @@ class _FakeFabState extends State<FakeFab> {
   bool _hovered = false;
   bool _focused = false;
   bool _highlighted = false;
-  double _elevation;
+  double _elevation = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +85,7 @@ class _FakeFabState extends State<FakeFab> {
   void onLongPress() {
     Utils.showFabMenu(
       context,
-      context.findRenderObject(),
+      context.findRenderObject() as RenderBox,
       fabOptions,
     );
   }

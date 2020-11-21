@@ -13,11 +13,11 @@ class SettingController {
 
   static Future<String> get(String key) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
       Loggy.v(message: "Going to send GET to " + url);
       Response getResult =
-          await http.get(url, headers: {"Authorization": "Bearer " + token});
+          await http.get(url, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "($key get) Server responded with (${getResult.statusCode}): " +
@@ -32,11 +32,11 @@ class SettingController {
 
   static Future<String> set(String key, String value) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
       Loggy.v(message: "Going to send PUT to " + url);
       Response setResult = await http
-          .put(url, body: value, headers: {"Authorization": "Bearer " + token});
+          .put(url, body: value, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "($key set) Server responded with (${setResult.statusCode}): " +
@@ -51,12 +51,12 @@ class SettingController {
 
   static Future<Map<String, String>> getChanged(int lastUpdated) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       String url =
           "${prefs.apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
       Response getResult =
-          await http.get(url, headers: {"Authorization": "Bearer " + token});
+          await http.get(url, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "(getChanged) Server responded with (${getResult.statusCode}): " +

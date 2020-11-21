@@ -5,7 +5,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static SharedPrefs _instance;
+  static late SharedPrefs _instance;
   SharedPreferences prefs;
 
   SharedPrefs._(this.prefs);
@@ -21,7 +21,7 @@ class SharedPrefs {
     return prefs.getString("master_pass") ?? "";
   }
 
-  void setMasterPass(String value) async {
+  void setMasterPass(String? value) async {
     //TODO Only remove comment chars after master_pass is hashed before saving
     //addChangedKey("master_pass");
     await prefs.setString("master_pass", value);
@@ -58,15 +58,15 @@ class SharedPrefs {
     await prefs.setInt("theme_mode", newValue);
   }
 
-  Future<Color> getCustomAccent() async {
-    int colorValue = prefs.getInt("custom_accent");
+  Future<Color?> getCustomAccent() async {
+    int? colorValue = prefs.getInt("custom_accent") as int?;
     if (colorValue != null)
       return Color(colorValue);
     else
       return null;
   }
 
-  void setCustomAccent(Color value) async {
+  void setCustomAccent(Color? value) async {
     addChangedKey("custom_accent");
     await prefs.setInt("custom_accent", value?.value);
   }
@@ -115,35 +115,35 @@ class SharedPrefs {
     await prefs.setString("api_url", value);
   }
 
-  Future<String> getAccessToken() async {
+  Future<String?> getAccessToken() async {
     return prefs.getString("access_token");
   }
 
-  void setAccessToken(String value) async {
+  void setAccessToken(String? value) async {
     await prefs.setString("access_token", value);
   }
 
-  Future<String> getRefreshToken() async {
+  Future<String?> getRefreshToken() async {
     return prefs.getString("refresh_token");
   }
 
-  void setRefreshToken(String value) async {
+  void setRefreshToken(String? value) async {
     await prefs.setString("refresh_token", value);
   }
 
-  Future<String> getUsername() async {
+  Future<String?> getUsername() async {
     return prefs.getString("username");
   }
 
-  void setUsername(String value) async {
+  void setUsername(String? value) async {
     await prefs.setString("username", value);
   }
 
-  Future<String> getEmail() async {
+  Future<String?> getEmail() async {
     return prefs.getString("email");
   }
 
-  void setEmail(String value) async {
+  void setEmail(String? value) async {
     await prefs.setString("email", value);
   }
 
@@ -180,7 +180,7 @@ class SharedPrefs {
   }
 
   void addChangedKey(String key) async {
-    var changedKeys = prefs.getStringList("updated_keys") ?? new List<String>();
+    var changedKeys = prefs.getStringList("updated_keys") ?? [];
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
@@ -192,6 +192,6 @@ class SharedPrefs {
   }
 
   List<String> getChangedKeys() {
-    return prefs.getStringList("updated_keys") ?? new List<String>();
+    return prefs.getStringList("updated_keys") ?? [];
   }
 }

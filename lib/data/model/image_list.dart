@@ -6,7 +6,7 @@ import 'package:potato_notes/data/model/saved_image.dart';
 class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
   const ImageListConverter();
   @override
-  List<SavedImage> mapToDart(String fromDb) {
+  List<SavedImage>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -21,7 +21,7 @@ class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
   }
 
   @override
-  String mapToSql(List<SavedImage> value) {
+  String? mapToSql(List<SavedImage>? value) {
     if (value == null) {
       return null;
     }

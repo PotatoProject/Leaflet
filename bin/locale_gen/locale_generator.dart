@@ -22,7 +22,6 @@ class LocaleGenerator {
 
     for (var element in folders) {
       if (element is Directory) {
-        print(element);
         final locale = getNameFromPath(element.path);
         locales.add(locale);
         paths.add(element);
@@ -39,7 +38,6 @@ class LocaleGenerator {
     localesBuffer.writeln();
     localesBuffer.writeln("  static List<Locale> get supported => [");
     locales.forEach((e) {
-      //print(e);
       final splittedLocale = e.split("-");
       localesBuffer.writeln(
           '    Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');
@@ -84,8 +82,8 @@ String getClassNameFromLocale(String locale) {
 
 String _baseLocaleClass = """
 abstract class _\$LocaleBase {
-  String locale;
-  Map<String, String> data;
+  String get locale;
+  Map<String, String> get data;
 }
 """;
 

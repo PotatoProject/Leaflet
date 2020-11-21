@@ -8,14 +8,14 @@ import 'package:moor/moor.dart';
 import 'package:potato_notes/internal/draw_object.dart';
 
 class DrawingBoard extends StatefulWidget {
-  final Key repaintKey;
+  final Key? repaintKey;
   final List<DrawObject> objects;
-  final Color color;
-  final Uri uri;
+  final Color? color;
+  final Uri? uri;
 
   DrawingBoard({
     this.repaintKey,
-    @required this.objects,
+    required this.objects,
     this.color,
     this.uri,
   });
@@ -27,19 +27,19 @@ class DrawingBoard extends StatefulWidget {
 class _DrawingBoardState extends State<DrawingBoard> {
   @override
   Widget build(BuildContext context) {
-    ImageProvider image;
+    ImageProvider? image;
     Completer<ui.Image> completer = Completer<ui.Image>();
 
     if (widget.uri != null) {
-      String scheme = widget.uri.scheme;
+      String scheme = widget.uri!.scheme;
 
       if (scheme.startsWith("http")) {
         image = CachedNetworkImageProvider(widget.uri.toString());
       } else {
-        image = FileImage(File(widget.uri.path));
+        image = FileImage(File(widget.uri!.path));
       }
 
-      image?.resolve(ImageConfiguration())?.addListener(
+      image.resolve(ImageConfiguration()).addListener(
         ImageStreamListener(
           (image, synchronousCall) {
             completer.complete(image.image);
@@ -61,7 +61,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
     );
   }
 
-  Widget getCommonChild(ui.Image image) {
+  Widget getCommonChild(ui.Image? image) {
     return ClipRect(
       child: CustomPaint(
         willChange: true,
@@ -105,7 +105,7 @@ class DrawPainter extends CustomPainter {
 }
 
 class BackgroundPainter extends CustomPainter {
-  ui.Image image;
+  ui.Image? image;
 
   BackgroundPainter(this.image);
 
@@ -115,7 +115,7 @@ class BackgroundPainter extends CustomPainter {
       paintImage(
         canvas: canvas,
         rect: Rect.fromLTWH(0, 0, size.width, size.height),
-        image: image,
+        image: image!,
         fit: BoxFit.cover,
         alignment: Alignment.center,
         filterQuality: FilterQuality.none,

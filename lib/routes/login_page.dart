@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     BackButtonInterceptor.add((_) => showLoadingOverlay, name: "antiPop");
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance!.addPostFrameCallback(
       (_) => FocusScope.of(context).requestFocus(emailOrUserFocusNode),
     );
     super.initState();
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
           passwordController.text.isNotEmpty;
     }
 
-    DismissibleRoute.of(context).requestDisableGestures = showLoadingOverlay;
+    DismissibleRoute.of(context)?.requestDisableGestures = showLoadingOverlay;
 
     final items = [
       TextFormField(
@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                         usernameController.clear();
                         passwordController.clear();
                         setState(() => register = !register);
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                        WidgetsBinding.instance!.addPostFrameCallback((_) {
                           if (register) {
                             FocusScope.of(context).requestFocus(emailFocusNode);
                           } else {
@@ -288,13 +288,14 @@ class _LoginPageState extends State<LoginPage> {
     if (response.status && !register) {
       Navigator.pop(context);
     } else {
+      if (response.message == null) return;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
           width: min(640, MediaQuery.of(context).size.width - 32),
           content: Text(
-            register ? response.message ?? "Registered!" : response.message,
+            register ? response.message ?? "Registered!" : response.message!,
           ),
         ),
       );

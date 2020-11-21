@@ -4,8 +4,11 @@
 
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// A material design checkbox.
 ///
@@ -39,7 +42,7 @@ class NoteViewCheckbox extends StatefulWidget {
   /// rebuild the checkbox with a new [value] to update the visual appearance of
   /// the checkbox.
   ///
-  /// The following arguments are @required:
+  /// The following arguments are required:
   ///
   /// * [value], which determines whether the checkbox is checked. The [value]
   ///   can only be null if [tristate] is true.
@@ -48,12 +51,13 @@ class NoteViewCheckbox extends StatefulWidget {
   ///
   /// The values of [tristate] and [autofocus] must not be null.
   const NoteViewCheckbox({
-    Key key,
-    @required this.value,
+    Key? key,
+    required this.value,
     this.tristate = false,
-    @required this.onChanged,
+    required this.onChanged,
     this.mouseCursor,
     this.activeColor,
+    this.fillColor,
     this.checkColor,
     this.focusColor,
     this.hoverColor,
@@ -62,15 +66,12 @@ class NoteViewCheckbox extends StatefulWidget {
     this.visualDensity,
     this.focusNode,
     this.autofocus = false,
-  })  : assert(tristate != null),
-        assert(tristate || value != null),
-        assert(autofocus != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// Whether this checkbox is checked.
   ///
   /// This property must not be null.
-  final bool value;
+  final bool? value;
 
   /// Called when the value of the checkbox should change.
   ///
@@ -99,7 +100,7 @@ class NoteViewCheckbox extends StatefulWidget {
   ///   },
   /// )
   /// ```
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool?>? onChanged;
 
   /// The cursor for a mouse pointer when it enters or is hovering over the
   /// widget.
@@ -116,17 +117,32 @@ class NoteViewCheckbox extends StatefulWidget {
   /// included as a state.
   ///
   /// If this property is null, [MaterialStateMouseCursor.clickable] will be used.
-  final MouseCursor mouseCursor;
+  final MouseCursor? mouseCursor;
 
   /// The color to use when this checkbox is checked.
   ///
   /// Defaults to [ThemeData.toggleableActiveColor].
-  final Color activeColor;
+  ///
+  /// If [fillColor] returns a non-null color in the [MaterialState.selected]
+  /// state, it will be used instead of this color.
+  final Color? activeColor;
+
+  /// The color that fills the checkbox when it is checked, in all
+  /// [MaterialState]s.
+  ///
+  /// If this is provided, it will be used over [activeColor].
+  ///
+  /// Resolves in the following states:
+  ///  * [MaterialState.selected].
+  ///  * [MaterialState.hovered].
+  ///  * [MaterialState.focused].
+  ///  * [MaterialState.disabled].
+  final MaterialStateProperty<Color?>? fillColor;
 
   /// The color to use for the check icon when this checkbox is checked.
   ///
   /// Defaults to Color(0xFFFFFFFF)
-  final Color checkColor;
+  final Color? checkColor;
 
   /// If true the checkbox's [value] can be true, false, or null.
   ///
@@ -147,7 +163,7 @@ class NoteViewCheckbox extends StatefulWidget {
   /// See also:
   ///
   ///  * [MaterialTapTargetSize], for a description of how this affects tap targets.
-  final MaterialTapTargetSize materialTapTargetSize;
+  final MaterialTapTargetSize? materialTapTargetSize;
 
   /// Defines how compact the checkbox's layout will be.
   ///
@@ -157,21 +173,21 @@ class NoteViewCheckbox extends StatefulWidget {
   ///
   ///  * [ThemeData.visualDensity], which specifies the [visualDensity] for all
   ///    widgets within a [Theme].
-  final VisualDensity visualDensity;
+  final VisualDensity? visualDensity;
 
   /// The color for the checkbox's [Material] when it has the input focus.
-  final Color focusColor;
+  final Color? focusColor;
 
   /// The color for the checkbox's [Material] when a pointer is hovering over it.
-  final Color hoverColor;
+  final Color? hoverColor;
 
   /// The splash radius of the circular [Material] ink response.
   ///
   /// If null, then [kRadialReactionRadius] is used.
-  final double splashRadius;
+  final double? splashRadius;
 
   /// {@macro flutter.widgets.Focus.focusNode}
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// {@macro flutter.widgets.Focus.autofocus}
   final bool autofocus;
@@ -186,7 +202,7 @@ class NoteViewCheckbox extends StatefulWidget {
 class _CheckboxState extends State<NoteViewCheckbox>
     with TickerProviderStateMixin {
   bool get enabled => widget.onChanged != null;
-  Map<Type, Action<Intent>> _actionMap;
+  late Map<Type, Action<Intent>> _actionMap;
 
   @override
   void initState() {
@@ -200,17 +216,17 @@ class _CheckboxState extends State<NoteViewCheckbox>
     if (widget.onChanged != null) {
       switch (widget.value) {
         case false:
-          widget.onChanged(true);
+          widget.onChanged!(true);
           break;
         case true:
-          widget.onChanged(widget.tristate ? null : false);
+          widget.onChanged!(widget.tristate ? null : false);
           break;
-        default:
-          widget.onChanged(false);
+        case null:
+          widget.onChanged!(false);
           break;
       }
     }
-    final RenderObject renderObject = context.findRenderObject();
+    final RenderObject renderObject = context.findRenderObject()!;
     renderObject.sendSemanticsEvent(const TapSemanticEvent());
   }
 
@@ -230,6 +246,38 @@ class _CheckboxState extends State<NoteViewCheckbox>
         _hovering = hovering;
       });
     }
+  }
+
+  Set<MaterialState> get _states => <MaterialState>{
+        if (!enabled) MaterialState.disabled,
+        if (_hovering) MaterialState.hovered,
+        if (_focused) MaterialState.focused,
+        if (widget.value == null || widget.value!) MaterialState.selected,
+      };
+
+  MaterialStateProperty<Color?> get _widgetFillColor {
+    return MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return widget.activeColor;
+      }
+      return null;
+    });
+  }
+
+  MaterialStateProperty<Color> get _defaultFillColor {
+    final ThemeData themeData = Theme.of(context);
+    return MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return themeData.disabledColor;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return themeData.toggleableActiveColor;
+      }
+      return themeData.unselectedWidgetColor;
+    });
   }
 
   @override
@@ -252,13 +300,22 @@ class _CheckboxState extends State<NoteViewCheckbox>
     final MouseCursor effectiveMouseCursor =
         MaterialStateProperty.resolveAs<MouseCursor>(
       widget.mouseCursor ?? MaterialStateMouseCursor.clickable,
-      <MaterialState>{
-        if (!enabled) MaterialState.disabled,
-        if (_hovering) MaterialState.hovered,
-        if (_focused) MaterialState.focused,
-        if (widget.tristate || widget.value) MaterialState.selected,
-      },
+      _states,
     );
+    // Colors need to be resolved in selected and non selected states separately
+    // so that they can be lerped between.
+    final Set<MaterialState> activeStates = _states
+      ..add(MaterialState.selected);
+    final Set<MaterialState> inactiveStates = _states
+      ..remove(MaterialState.selected);
+    final Color effectiveActiveColor =
+        widget.fillColor?.resolve(activeStates) ??
+            _widgetFillColor.resolve(activeStates) ??
+            _defaultFillColor.resolve(activeStates);
+    final Color effectiveInactiveColor =
+        widget.fillColor?.resolve(inactiveStates) ??
+            _widgetFillColor.resolve(inactiveStates) ??
+            _defaultFillColor.resolve(inactiveStates);
 
     return FocusableActionDetector(
       actions: _actionMap,
@@ -273,11 +330,9 @@ class _CheckboxState extends State<NoteViewCheckbox>
           return _CheckboxRenderObjectWidget(
             value: widget.value,
             tristate: widget.tristate,
-            activeColor: widget.activeColor ?? themeData.toggleableActiveColor,
+            activeColor: effectiveActiveColor,
             checkColor: widget.checkColor ?? const Color(0xFFFFFFFF),
-            inactiveColor: enabled
-                ? themeData.unselectedWidgetColor
-                : themeData.disabledColor,
+            inactiveColor: effectiveInactiveColor,
             focusColor: widget.focusColor ?? themeData.focusColor,
             hoverColor: widget.hoverColor ?? themeData.hoverColor,
             splashRadius: widget.splashRadius ?? kRadialReactionRadius,
@@ -295,28 +350,23 @@ class _CheckboxState extends State<NoteViewCheckbox>
 
 class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
   const _CheckboxRenderObjectWidget({
-    Key key,
-    @required this.value,
-    @required this.tristate,
-    @required this.activeColor,
-    @required this.checkColor,
-    @required this.inactiveColor,
-    @required this.focusColor,
-    @required this.hoverColor,
-    @required this.splashRadius,
-    @required this.onChanged,
-    @required this.vsync,
-    @required this.additionalConstraints,
-    @required this.hasFocus,
-    @required this.hovering,
-  })  : assert(tristate != null),
-        assert(tristate || value != null),
-        assert(activeColor != null),
-        assert(inactiveColor != null),
-        assert(vsync != null),
-        super(key: key);
+    Key? key,
+    required this.value,
+    required this.tristate,
+    required this.activeColor,
+    required this.checkColor,
+    required this.inactiveColor,
+    required this.focusColor,
+    required this.hoverColor,
+    required this.splashRadius,
+    required this.onChanged,
+    required this.vsync,
+    required this.additionalConstraints,
+    required this.hasFocus,
+    required this.hovering,
+  }) : super(key: key);
 
-  final bool value;
+  final bool? value;
   final bool tristate;
   final bool hasFocus;
   final bool hovering;
@@ -326,7 +376,7 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
   final Color focusColor;
   final Color hoverColor;
   final double splashRadius;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool?>? onChanged;
   final TickerProvider vsync;
   final BoxConstraints additionalConstraints;
 
@@ -374,20 +424,20 @@ const double _kStrokeWidth = 2.0;
 
 class _RenderCheckbox extends RenderToggleable {
   _RenderCheckbox({
-    bool value,
-    @required bool tristate,
-    @required Color activeColor,
-    @required this.checkColor,
-    @required Color inactiveColor,
-    Color focusColor,
-    Color hoverColor,
-    @required double splashRadius,
-    @required BoxConstraints additionalConstraints,
-    ValueChanged<bool> onChanged,
-    @required bool hasFocus,
-    @required bool hovering,
-    @required TickerProvider vsync,
-  })  : _oldValue = value,
+    bool? value,
+    required bool tristate,
+    required Color activeColor,
+    required this.checkColor,
+    required Color inactiveColor,
+    Color? focusColor,
+    Color? hoverColor,
+    required double splashRadius,
+    required BoxConstraints additionalConstraints,
+    ValueChanged<bool?>? onChanged,
+    required bool hasFocus,
+    required bool hovering,
+    required TickerProvider vsync,
+  })   : _oldValue = value,
         super(
           value: value,
           tristate: tristate,
@@ -403,11 +453,11 @@ class _RenderCheckbox extends RenderToggleable {
           hovering: hovering,
         );
 
-  bool _oldValue;
+  bool? _oldValue;
   Color checkColor;
 
   @override
-  set value(bool newValue) {
+  set value(bool? newValue) {
     if (newValue == value) return;
     _oldValue = value;
     super.value = newValue;
@@ -435,11 +485,9 @@ class _RenderCheckbox extends RenderToggleable {
   // value == true or null.
   Color _colorAt(double t) {
     // As t goes from 0.0 to 0.25, animate from the inactiveColor to activeColor.
-    return onChanged == null
-        ? inactiveColor
-        : (t >= 0.25
-            ? activeColor
-            : Color.lerp(inactiveColor, activeColor, t * 4.0));
+    return t >= 0.25
+        ? activeColor
+        : Color.lerp(inactiveColor, activeColor, t * 4.0)!;
   }
 
   // White stroke used to paint the check and dash.
@@ -469,12 +517,12 @@ class _RenderCheckbox extends RenderToggleable {
     const Offset end = Offset(_kEdgeSize * 0.85, _kEdgeSize * 0.25);
     if (t < 0.5) {
       final double strokeT = t * 2.0;
-      final Offset drawMid = Offset.lerp(start, mid, strokeT);
+      final Offset drawMid = Offset.lerp(start, mid, strokeT)!;
       path.moveTo(origin.dx + start.dx, origin.dy + start.dy);
       path.lineTo(origin.dx + drawMid.dx, origin.dy + drawMid.dy);
     } else {
       final double strokeT = (t - 0.5) * 2.0;
-      final Offset drawEnd = Offset.lerp(mid, end, strokeT);
+      final Offset drawEnd = Offset.lerp(mid, end, strokeT)!;
       path.moveTo(origin.dx + start.dx, origin.dy + start.dy);
       path.lineTo(origin.dx + mid.dx, origin.dy + mid.dy);
       path.lineTo(origin.dx + drawEnd.dx, origin.dy + drawEnd.dy);
@@ -489,8 +537,8 @@ class _RenderCheckbox extends RenderToggleable {
     const Offset start = Offset(_kEdgeSize * 0.2, _kEdgeSize * 0.5);
     const Offset mid = Offset(_kEdgeSize * 0.5, _kEdgeSize * 0.5);
     const Offset end = Offset(_kEdgeSize * 0.8, _kEdgeSize * 0.5);
-    final Offset drawStart = Offset.lerp(start, mid, 1.0 - t);
-    final Offset drawEnd = Offset.lerp(mid, end, t);
+    final Offset drawStart = Offset.lerp(start, mid, 1.0 - t)!;
+    final Offset drawEnd = Offset.lerp(mid, end, t)!;
     canvas.drawLine(origin + drawStart, origin + drawEnd, paint);
   }
 

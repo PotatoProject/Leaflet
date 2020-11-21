@@ -3,19 +3,17 @@ import 'package:flutter/rendering.dart';
 
 class ListTilePopupMenuItem<T> extends PopupMenuEntry<T> {
   const ListTilePopupMenuItem({
-    Key key,
-    this.value,
+    Key? key,
+    required this.value,
     this.enabled = true,
     this.height = kMinInteractiveDimension,
     this.textStyle,
     this.mouseCursor,
-    @required this.title,
+    required this.title,
     this.subtitle,
     this.leading,
     this.trailing,
-  })  : assert(enabled != null),
-        assert(height != null),
-        super(key: key);
+  }) : super(key: key);
 
   final T value;
 
@@ -24,20 +22,20 @@ class ListTilePopupMenuItem<T> extends PopupMenuEntry<T> {
   @override
   final double height;
 
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
-  final MouseCursor mouseCursor;
+  final MouseCursor? mouseCursor;
 
-  final Widget title;
+  final Widget? title;
 
-  final Widget subtitle;
+  final Widget? subtitle;
 
-  final Widget leading;
+  final Widget? leading;
 
-  final Widget trailing;
+  final Widget? trailing;
 
   @override
-  bool represents(T value) => value == this.value;
+  bool represents(T? value) => value == this.value;
 
   @override
   ListTilePopupMenuItemState<T, ListTilePopupMenuItem<T>> createState() =>
@@ -57,7 +55,7 @@ class ListTilePopupMenuItemState<T, W extends ListTilePopupMenuItem<T>>
     final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     TextStyle style = widget.textStyle ??
         popupMenuTheme.textStyle ??
-        theme.textTheme.subtitle1;
+        theme.textTheme.subtitle1!;
 
     if (!widget.enabled) style = style.copyWith(color: theme.disabledColor);
 

@@ -12,10 +12,10 @@ part 'saved_image.g.dart';
 @JsonSerializable()
 class SavedImage {
   String id = Utils.generateId();
-  Uri uri;
+  Uri? uri;
   StorageLocation storageLocation = StorageLocation.IMGUR;
-  String hash;
-  String blurHash;
+  String? hash;
+  String? blurHash;
   bool encrypted = false;
   @observable
   bool uploaded = false;

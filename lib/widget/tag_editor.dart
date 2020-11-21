@@ -5,9 +5,9 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class TagEditor extends StatefulWidget {
-  final Tag tag;
+  final Tag? tag;
   final String initialInput;
-  final void Function(Tag) onSave;
+  final void Function(Tag)? onSave;
 
   TagEditor({
     this.tag,
@@ -23,8 +23,11 @@ class _NewTagState extends State<TagEditor> {
   // ignore: missing_required_param
   Tag tag = Tag(
     color: 0,
+    name: "",
+    id: Utils.generateId(),
+    lastModifyDate: DateTime.now(),
   );
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -32,7 +35,7 @@ class _NewTagState extends State<TagEditor> {
       tag = tag.copyWith(id: Utils.generateId());
       tag = tag.copyWith(name: widget.initialInput);
     } else
-      tag = widget.tag;
+      tag = widget.tag!;
 
     controller = TextEditingController();
     super.initState();
@@ -86,7 +89,7 @@ class _NewTagState extends State<TagEditor> {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: index == 0
-                              ? Theme.of(context).iconTheme.color
+                              ? Theme.of(context).iconTheme.color!
                               : Colors.transparent,
                           width: 1.5,
                         ),
@@ -119,7 +122,8 @@ class _NewTagState extends State<TagEditor> {
               children: [
                 FlatButton(
                   onPressed: tag.name.trim().isNotEmpty
-                      ? () => widget.onSave(tag.copyWith(name: tag.name.trim()))
+                      ? () => widget.onSave
+                          ?.call(tag.copyWith(name: tag.name.trim()))
                       : null,
                   child: Text(LocaleStrings.common.save),
                   color: Theme.of(context).accentColor,

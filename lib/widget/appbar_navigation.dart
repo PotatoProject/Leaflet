@@ -6,11 +6,11 @@ class AppbarNavigation extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
   final int index;
   final bool enabled;
-  final ValueChanged<int> onPageChanged;
+  final ValueChanged<int>? onPageChanged;
 
   AppbarNavigation({
-    @required this.items,
-    @required this.index,
+    required this.items,
+    required this.index,
     this.enabled = true,
     this.onPageChanged,
   });
@@ -30,7 +30,7 @@ class AppbarNavigation extends StatelessWidget {
               item: items[index],
               selected: this.index == index,
               selectedColor: Theme.of(context).accentColor,
-              onTap: () => onPageChanged(index),
+              onTap: () => onPageChanged?.call(index),
             ),
           ),
         ),
@@ -42,11 +42,11 @@ class AppbarNavigation extends StatelessWidget {
 class _NavigationButton extends StatefulWidget {
   final BottomNavigationBarItem item;
   final bool selected;
-  final Color selectedColor;
-  final VoidCallback onTap;
+  final Color? selectedColor;
+  final VoidCallback? onTap;
 
   _NavigationButton({
-    @required this.item,
+    required this.item,
     this.selected = false,
     this.selectedColor,
     this.onTap,
@@ -58,7 +58,7 @@ class _NavigationButton extends StatefulWidget {
 
 class _NavigationButtonState extends State<_NavigationButton>
     with SingleTickerProviderStateMixin {
-  AnimationController _ac;
+  late AnimationController _ac;
 
   @override
   void initState() {
@@ -121,7 +121,7 @@ class _NavigationButtonState extends State<_NavigationButton>
                         children: [
                           SizedBox(width: 8),
                           Text(
-                            widget.item.label,
+                            widget.item.label ?? "",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color:

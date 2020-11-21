@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:crayola/crayola.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +25,7 @@ import 'package:quick_actions/quick_actions.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GestureBinding.instance.resamplingEnabled = true;
+  GestureBinding.instance!.resamplingEnabled = true;
   await SharedPrefs.init();
   if (DeviceInfo.isAndroid) {
     await FlutterDownloader.initialize(
@@ -38,7 +40,7 @@ main() async {
   }
 
   final sharedPrefs = SharedPrefs.instance;
-  final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+  final data = MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
   final isDarkSystemTheme = data.platformBrightness == Brightness.dark;
   final themeMode = await sharedPrefs.getThemeMode();
   final useAmoled = await sharedPrefs.getUseAmoled();
@@ -105,7 +107,7 @@ class PotatoNotes extends StatelessWidget {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = QuickActions();
 
-              appInfo.quickActions.setShortcutItems([
+              appInfo.quickActions?.setShortcutItems([
                 ShortcutItem(
                   type: 'new_text',
                   localizedTitle: LocaleStrings.common.newNote,
@@ -142,7 +144,7 @@ class PotatoNotes extends StatelessWidget {
               ),
             );
 
-            return child;
+            return child!;
           },
           themeMode: prefs.themeMode,
           home: BasePage(),

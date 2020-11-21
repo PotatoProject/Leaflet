@@ -25,7 +25,7 @@ class ListItem {
 class ListContentConverter extends TypeConverter<List<ListItem>, String> {
   const ListContentConverter();
   @override
-  List<ListItem> mapToDart(String fromDb) {
+  List<ListItem>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -39,7 +39,7 @@ class ListContentConverter extends TypeConverter<List<ListItem>, String> {
   }
 
   @override
-  String mapToSql(List<ListItem> value) {
+  String? mapToSql(List<ListItem>? value) {
     if (value == null) {
       return null;
     }

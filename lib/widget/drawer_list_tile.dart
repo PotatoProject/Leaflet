@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class DrawerListTile extends StatefulWidget {
   final Widget icon;
-  final Widget activeIcon;
+  final Widget? activeIcon;
   final Text title;
   final bool showTitle;
-  final void Function() onTap;
+  final void Function()? onTap;
   final bool active;
 
   DrawerListTile({
-    @required this.icon,
+    required this.icon,
     this.activeIcon,
-    @required this.title,
+    required this.title,
     this.showTitle = true,
     this.onTap,
     this.active = false,
@@ -23,7 +23,7 @@ class DrawerListTile extends StatefulWidget {
 
 class _DrawerListTileState extends State<DrawerListTile>
     with SingleTickerProviderStateMixin {
-  AnimationController _ac;
+  late AnimationController _ac;
 
   @override
   void initState() {
@@ -97,7 +97,7 @@ class _DrawerListTileState extends State<DrawerListTile>
                       Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: DefaultTextStyle(
-                          style: textTheme.bodyText1.copyWith(
+                          style: textTheme.bodyText1!.copyWith(
                             color: widget.active
                                 ? _activeColor
                                 : contrast.withOpacity(0.7),
@@ -118,7 +118,7 @@ class _DrawerListTileState extends State<DrawerListTile>
 
     if (!widget.showTitle) {
       child = Tooltip(
-        message: widget.title.data,
+        message: widget.title.data ?? "",
         child: child,
       );
     }
@@ -139,12 +139,12 @@ class _DrawerListTileState extends State<DrawerListTile>
 
 class DrawerListTileData {
   final Widget icon;
-  final Widget activeIcon;
+  final Widget? activeIcon;
   final Widget title;
 
   DrawerListTileData({
-    this.icon,
+    required this.icon,
     this.activeIcon,
-    this.title,
+    required this.title,
   });
 }

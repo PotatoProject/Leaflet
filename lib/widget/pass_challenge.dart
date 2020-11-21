@@ -4,13 +4,13 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
-  final Function(String) onSave;
+  final Function(String)? onSave;
   final Function() onChallengeSuccess;
 
   PassChallenge({
     this.editMode = false,
     this.onSave,
-    this.onChallengeSuccess,
+    required this.onChallengeSuccess,
   });
 
   @override
@@ -18,10 +18,10 @@ class PassChallenge extends StatefulWidget {
 }
 
 class _PassChallengeState extends State<PassChallenge> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   bool showPass = false;
-  String status;
+  String? status;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _PassChallengeState extends State<PassChallenge> {
   @override
   Widget build(BuildContext context) {
     final bool numericPass =
-        !widget.editMode ? int.tryParse(prefs.masterPass) != null : false;
+        !widget.editMode ? int.tryParse(prefs.masterPass!) != null : false;
 
     return Padding(
       padding:
@@ -87,7 +87,7 @@ class _PassChallengeState extends State<PassChallenge> {
                 FlatButton(
                   onPressed: controller.text.length >= 4
                       ? widget.editMode
-                          ? () => widget.onSave(controller.text)
+                          ? () => widget.onSave?.call(controller.text)
                           : () {
                               if (prefs.masterPass == controller.text) {
                                 setState(() => status = null);

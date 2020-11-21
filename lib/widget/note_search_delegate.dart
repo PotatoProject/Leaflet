@@ -45,7 +45,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       4 + 80.0,
     );
 
-    return FutureBuilder(
+    return FutureBuilder<List<Note>>(
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
@@ -58,15 +58,15 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                 crossAxisCount: deviceInfo.uiSizeFactor,
               ),
               itemBuilder: (context, index) =>
-                  noteView(context, snapshot.data[index]),
-              itemCount: snapshot.data.length,
+                  noteView(context, snapshot.data![index]),
+              itemCount: snapshot.data!.length,
               padding: padding,
             );
           } else {
             child = ListView.builder(
               itemBuilder: (context, index) =>
-                  noteView(context, snapshot.data[index]),
-              itemCount: snapshot.data.length,
+                  noteView(context, snapshot.data![index]),
+              itemCount: snapshot.data!.length,
               padding: padding,
             );
           }
@@ -74,13 +74,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           if (query.isEmpty) {
             child = Illustrations.quickIllustration(
               context,
-              appInfo.typeToSearchIllustration,
+              appInfo.typeToSearchIllustration ?? Container(),
               LocaleStrings.searchPage.noteTypeToSearch,
             );
           } else {
             child = Illustrations.quickIllustration(
               context,
-              appInfo.nothingFoundIllustration,
+              appInfo.nothingFoundIllustration ?? Container(),
               LocaleStrings.searchPage.noteNothingFound,
             );
           }
@@ -91,22 +91,23 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   }
 
   Widget noteView(BuildContext context, Note note) {
-    SpannableList titleList = SpannableList.generate(note.title.length);
-    SpannableList contentList = SpannableList.generate(note.content.length);
+    SpannableList titleList = SpannableList.generate(note.title?.length ?? 0);
+    SpannableList contentList =
+        SpannableList.generate(note.content?.length ?? 0);
 
     Color noteColor =
         Color(NoteColors.colorList[note.color].dynamicColor(context));
     Color bgColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
-        : Colors.grey[900];
+        : Colors.grey[900]!;
 
     int titleIndex = searchQuery.caseSensitive
-        ? note.title.indexOf(query)
-        : note.title.toLowerCase().indexOf(query.toLowerCase());
+        ? note.title?.indexOf(query) ?? -1
+        : note.title?.toLowerCase().indexOf(query.toLowerCase()) ?? -1;
 
     int contentIndex = searchQuery.caseSensitive
-        ? note.content.indexOf(query)
-        : note.content.toLowerCase().indexOf(query.toLowerCase());
+        ? note.content?.indexOf(query) ?? -1
+        : note.content?.toLowerCase().indexOf(query.toLowerCase()) ?? -1;
 
     if (titleIndex != -1) {
       for (int i = titleIndex; i < query.length + titleIndex; i++) {
@@ -188,9 +189,9 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       );
 
       DateTime sanitizedQueryDate = DateTime(
-        searchQuery.date.year,
-        searchQuery.date.month,
-        searchQuery.date.day,
+        searchQuery.date!.year,
+        searchQuery.date!.month,
+        searchQuery.date!.day,
       );
 
       switch (searchQuery.dateMode) {
@@ -215,22 +216,22 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     bool _getTagBool(List<String> tags) {
-      bool matchResult;
+      bool? matchResult;
 
       searchQuery.tags.forEach((tag) {
         if (matchResult != null) {
-          matchResult = matchResult && tags.any((element) => element == tag);
+          matchResult = matchResult! && tags.any((element) => element == tag);
         } else {
           matchResult = tags.any((element) => element == tag);
         }
       });
 
-      return matchResult;
+      return matchResult ?? false;
     }
 
     for (Note note in notes) {
-      bool titleMatch = _getTextBool(note.title);
-      bool contentMatch = _getTextBool(note.content);
+      bool titleMatch = _getTextBool(note.title ?? "");
+      bool contentMatch = _getTextBool(note.content ?? "");
       bool dateMatch =
           searchQuery.date != null ? _getDateBool(note.creationDate) : true;
       bool colorMatch =

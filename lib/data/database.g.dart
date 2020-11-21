@@ -9,9 +9,9 @@ part of 'database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Note extends DataClass implements Insertable<Note> {
   final String id;
-  final String title;
-  final String content;
-  final List<int> styleJson;
+  final String? title;
+  final String? content;
+  final List<int>? styleJson;
   final bool starred;
   final DateTime creationDate;
   final DateTime lastModifyDate;
@@ -28,34 +28,34 @@ class Note extends DataClass implements Insertable<Note> {
   final bool archived;
   final bool synced;
   Note(
-      {@required this.id,
+      {required this.id,
       this.title,
       this.content,
       this.styleJson,
-      @required this.starred,
-      @required this.creationDate,
-      @required this.lastModifyDate,
-      @required this.color,
-      @required this.images,
-      @required this.list,
-      @required this.listContent,
-      @required this.reminders,
-      @required this.tags,
-      @required this.hideContent,
-      @required this.lockNote,
-      @required this.usesBiometrics,
-      @required this.deleted,
-      @required this.archived,
-      @required this.synced});
+      required this.starred,
+      required this.creationDate,
+      required this.lastModifyDate,
+      required this.color,
+      required this.images,
+      required this.list,
+      required this.listContent,
+      required this.reminders,
+      required this.tags,
+      required this.hideContent,
+      required this.lockNote,
+      required this.usesBiometrics,
+      required this.deleted,
+      required this.archived,
+      required this.synced});
   factory Note.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final boolType = db.typeSystem.forDartType<bool>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     final intType = db.typeSystem.forDartType<int>();
     return Note(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       title:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
       content:
@@ -63,106 +63,82 @@ class Note extends DataClass implements Insertable<Note> {
       styleJson: $NotesTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}style_json'])),
       starred:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}starred']),
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}starred'])!,
       creationDate: dateTimeType
-          .mapFromDatabaseResponse(data['${effectivePrefix}creation_date']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}creation_date'])!,
       lastModifyDate: dateTimeType
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date']),
-      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color']),
-      images: $NotesTable.$converter1.mapToDart(
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}images'])),
-      list: boolType.mapFromDatabaseResponse(data['${effectivePrefix}list']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date'])!,
+      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
+      images: $NotesTable.$converter1.mapToDart(stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}images']))!,
+      list: boolType.mapFromDatabaseResponse(data['${effectivePrefix}list'])!,
       listContent: $NotesTable.$converter2.mapToDart(stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}list_content'])),
+          .mapFromDatabaseResponse(data['${effectivePrefix}list_content']))!,
       reminders: $NotesTable.$converter3.mapToDart(stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}reminders'])),
+          .mapFromDatabaseResponse(data['${effectivePrefix}reminders']))!,
       tags: $NotesTable.$converter4.mapToDart(
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}tags'])),
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}tags']))!,
       hideContent: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}hide_content']),
-      lockNote:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}lock_note']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}hide_content'])!,
+      lockNote: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}lock_note'])!,
       usesBiometrics: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}uses_biometrics']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}uses_biometrics'])!,
       deleted:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}deleted']),
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}deleted'])!,
       archived:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}archived']),
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}archived'])!,
       synced:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}synced']),
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
+    map['id'] = Variable<String>(id);
     if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String>(title);
+      map['title'] = Variable<String?>(title);
     }
     if (!nullToAbsent || content != null) {
-      map['content'] = Variable<String>(content);
+      map['content'] = Variable<String?>(content);
     }
     if (!nullToAbsent || styleJson != null) {
       final converter = $NotesTable.$converter0;
-      map['style_json'] = Variable<String>(converter.mapToSql(styleJson));
+      map['style_json'] = Variable<String?>(converter.mapToSql(styleJson));
     }
-    if (!nullToAbsent || starred != null) {
-      map['starred'] = Variable<bool>(starred);
-    }
-    if (!nullToAbsent || creationDate != null) {
-      map['creation_date'] = Variable<DateTime>(creationDate);
-    }
-    if (!nullToAbsent || lastModifyDate != null) {
-      map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
-    }
-    if (!nullToAbsent || color != null) {
-      map['color'] = Variable<int>(color);
-    }
-    if (!nullToAbsent || images != null) {
+    map['starred'] = Variable<bool>(starred);
+    map['creation_date'] = Variable<DateTime>(creationDate);
+    map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
+    map['color'] = Variable<int>(color);
+    {
       final converter = $NotesTable.$converter1;
-      map['images'] = Variable<String>(converter.mapToSql(images));
+      map['images'] = Variable<String>(converter.mapToSql(images)!);
     }
-    if (!nullToAbsent || list != null) {
-      map['list'] = Variable<bool>(list);
-    }
-    if (!nullToAbsent || listContent != null) {
+    map['list'] = Variable<bool>(list);
+    {
       final converter = $NotesTable.$converter2;
-      map['list_content'] = Variable<String>(converter.mapToSql(listContent));
+      map['list_content'] = Variable<String>(converter.mapToSql(listContent)!);
     }
-    if (!nullToAbsent || reminders != null) {
+    {
       final converter = $NotesTable.$converter3;
-      map['reminders'] = Variable<String>(converter.mapToSql(reminders));
+      map['reminders'] = Variable<String>(converter.mapToSql(reminders)!);
     }
-    if (!nullToAbsent || tags != null) {
+    {
       final converter = $NotesTable.$converter4;
-      map['tags'] = Variable<String>(converter.mapToSql(tags));
+      map['tags'] = Variable<String>(converter.mapToSql(tags)!);
     }
-    if (!nullToAbsent || hideContent != null) {
-      map['hide_content'] = Variable<bool>(hideContent);
-    }
-    if (!nullToAbsent || lockNote != null) {
-      map['lock_note'] = Variable<bool>(lockNote);
-    }
-    if (!nullToAbsent || usesBiometrics != null) {
-      map['uses_biometrics'] = Variable<bool>(usesBiometrics);
-    }
-    if (!nullToAbsent || deleted != null) {
-      map['deleted'] = Variable<bool>(deleted);
-    }
-    if (!nullToAbsent || archived != null) {
-      map['archived'] = Variable<bool>(archived);
-    }
-    if (!nullToAbsent || synced != null) {
-      map['synced'] = Variable<bool>(synced);
-    }
+    map['hide_content'] = Variable<bool>(hideContent);
+    map['lock_note'] = Variable<bool>(lockNote);
+    map['uses_biometrics'] = Variable<bool>(usesBiometrics);
+    map['deleted'] = Variable<bool>(deleted);
+    map['archived'] = Variable<bool>(archived);
+    map['synced'] = Variable<bool>(synced);
     return map;
   }
 
   NotesCompanion toCompanion(bool nullToAbsent) {
     return NotesCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       title:
           title == null && nullToAbsent ? const Value.absent() : Value(title),
       content: content == null && nullToAbsent
@@ -170,55 +146,32 @@ class Note extends DataClass implements Insertable<Note> {
           : Value(content),
       styleJson: styleJson == null && nullToAbsent
           ? const Value.absent()
-          : Value(styleJson),
-      starred: starred == null && nullToAbsent
-          ? const Value.absent()
-          : Value(starred),
-      creationDate: creationDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(creationDate),
-      lastModifyDate: lastModifyDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastModifyDate),
-      color:
-          color == null && nullToAbsent ? const Value.absent() : Value(color),
-      images:
-          images == null && nullToAbsent ? const Value.absent() : Value(images),
-      list: list == null && nullToAbsent ? const Value.absent() : Value(list),
-      listContent: listContent == null && nullToAbsent
-          ? const Value.absent()
-          : Value(listContent),
-      reminders: reminders == null && nullToAbsent
-          ? const Value.absent()
-          : Value(reminders),
-      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
-      hideContent: hideContent == null && nullToAbsent
-          ? const Value.absent()
-          : Value(hideContent),
-      lockNote: lockNote == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lockNote),
-      usesBiometrics: usesBiometrics == null && nullToAbsent
-          ? const Value.absent()
-          : Value(usesBiometrics),
-      deleted: deleted == null && nullToAbsent
-          ? const Value.absent()
-          : Value(deleted),
-      archived: archived == null && nullToAbsent
-          ? const Value.absent()
-          : Value(archived),
-      synced:
-          synced == null && nullToAbsent ? const Value.absent() : Value(synced),
+          : Value(styleJson ?? []),
+      starred: Value(starred),
+      creationDate: Value(creationDate),
+      lastModifyDate: Value(lastModifyDate),
+      color: Value(color),
+      images: Value(images),
+      list: Value(list),
+      listContent: Value(listContent),
+      reminders: Value(reminders),
+      tags: Value(tags),
+      hideContent: Value(hideContent),
+      lockNote: Value(lockNote),
+      usesBiometrics: Value(usesBiometrics),
+      deleted: Value(deleted),
+      archived: Value(archived),
+      synced: Value(synced),
     );
   }
 
   factory Note.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Note(
       id: serializer.fromJson<String>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      content: serializer.fromJson<String>(json['content']),
+      title: serializer.fromJson<String?>(json['title']),
+      content: serializer.fromJson<String?>(json['content']),
       styleJson: serializer.fromJson<List<int>>(json['styleJson']),
       starred: serializer.fromJson<bool>(json['starred']),
       creationDate: serializer.fromJson<DateTime>(json['creationDate']),
@@ -238,13 +191,13 @@ class Note extends DataClass implements Insertable<Note> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'title': serializer.toJson<String>(title),
-      'content': serializer.toJson<String>(content),
-      'styleJson': serializer.toJson<List<int>>(styleJson),
+      'title': serializer.toJson<String?>(title),
+      'content': serializer.toJson<String?>(content),
+      'styleJson': serializer.toJson<List<int>>(styleJson ?? []),
       'starred': serializer.toJson<bool>(starred),
       'creationDate': serializer.toJson<DateTime>(creationDate),
       'lastModifyDate': serializer.toJson<DateTime>(lastModifyDate),
@@ -264,25 +217,25 @@ class Note extends DataClass implements Insertable<Note> {
   }
 
   Note copyWith(
-          {String id,
-          String title,
-          String content,
-          List<int> styleJson,
-          bool starred,
-          DateTime creationDate,
-          DateTime lastModifyDate,
-          int color,
-          List<SavedImage> images,
-          bool list,
-          List<ListItem> listContent,
-          List<DateTime> reminders,
-          List<String> tags,
-          bool hideContent,
-          bool lockNote,
-          bool usesBiometrics,
-          bool deleted,
-          bool archived,
-          bool synced}) =>
+          {String? id,
+          String? title,
+          String? content,
+          List<int>? styleJson,
+          bool? starred,
+          DateTime? creationDate,
+          DateTime? lastModifyDate,
+          int? color,
+          List<SavedImage>? images,
+          bool? list,
+          List<ListItem>? listContent,
+          List<DateTime>? reminders,
+          List<String>? tags,
+          bool? hideContent,
+          bool? lockNote,
+          bool? usesBiometrics,
+          bool? deleted,
+          bool? archived,
+          bool? synced}) =>
       Note(
         id: id ?? this.id,
         title: title ?? this.title,
@@ -399,8 +352,8 @@ class Note extends DataClass implements Insertable<Note> {
 
 class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> id;
-  final Value<String> title;
-  final Value<String> content;
+  final Value<String?> title;
+  final Value<String?> content;
   final Value<List<int>> styleJson;
   final Value<bool> starred;
   final Value<DateTime> creationDate;
@@ -439,19 +392,19 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.synced = const Value.absent(),
   });
   NotesCompanion.insert({
-    @required String id,
+    required String id,
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
-    @required DateTime creationDate,
-    @required DateTime lastModifyDate,
+    required DateTime creationDate,
+    required DateTime lastModifyDate,
     this.color = const Value.absent(),
-    @required List<SavedImage> images,
+    required List<SavedImage> images,
     this.list = const Value.absent(),
-    @required List<ListItem> listContent,
-    @required List<DateTime> reminders,
-    @required List<String> tags,
+    required List<ListItem> listContent,
+    required List<DateTime> reminders,
+    required List<String> tags,
     this.hideContent = const Value.absent(),
     this.lockNote = const Value.absent(),
     this.usesBiometrics = const Value.absent(),
@@ -466,25 +419,25 @@ class NotesCompanion extends UpdateCompanion<Note> {
         reminders = Value(reminders),
         tags = Value(tags);
   static Insertable<Note> custom({
-    Expression<String> id,
-    Expression<String> title,
-    Expression<String> content,
-    Expression<String> styleJson,
-    Expression<bool> starred,
-    Expression<DateTime> creationDate,
-    Expression<DateTime> lastModifyDate,
-    Expression<int> color,
-    Expression<String> images,
-    Expression<bool> list,
-    Expression<String> listContent,
-    Expression<String> reminders,
-    Expression<String> tags,
-    Expression<bool> hideContent,
-    Expression<bool> lockNote,
-    Expression<bool> usesBiometrics,
-    Expression<bool> deleted,
-    Expression<bool> archived,
-    Expression<bool> synced,
+    Expression<String>? id,
+    Expression<String?>? title,
+    Expression<String?>? content,
+    Expression<List<int>>? styleJson,
+    Expression<bool>? starred,
+    Expression<DateTime>? creationDate,
+    Expression<DateTime>? lastModifyDate,
+    Expression<int>? color,
+    Expression<List<SavedImage>>? images,
+    Expression<bool>? list,
+    Expression<List<ListItem>>? listContent,
+    Expression<List<DateTime>>? reminders,
+    Expression<List<String>>? tags,
+    Expression<bool>? hideContent,
+    Expression<bool>? lockNote,
+    Expression<bool>? usesBiometrics,
+    Expression<bool>? deleted,
+    Expression<bool>? archived,
+    Expression<bool>? synced,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -510,25 +463,25 @@ class NotesCompanion extends UpdateCompanion<Note> {
   }
 
   NotesCompanion copyWith(
-      {Value<String> id,
-      Value<String> title,
-      Value<String> content,
-      Value<List<int>> styleJson,
-      Value<bool> starred,
-      Value<DateTime> creationDate,
-      Value<DateTime> lastModifyDate,
-      Value<int> color,
-      Value<List<SavedImage>> images,
-      Value<bool> list,
-      Value<List<ListItem>> listContent,
-      Value<List<DateTime>> reminders,
-      Value<List<String>> tags,
-      Value<bool> hideContent,
-      Value<bool> lockNote,
-      Value<bool> usesBiometrics,
-      Value<bool> deleted,
-      Value<bool> archived,
-      Value<bool> synced}) {
+      {Value<String>? id,
+      Value<String?>? title,
+      Value<String?>? content,
+      Value<List<int>>? styleJson,
+      Value<bool>? starred,
+      Value<DateTime>? creationDate,
+      Value<DateTime>? lastModifyDate,
+      Value<int>? color,
+      Value<List<SavedImage>>? images,
+      Value<bool>? list,
+      Value<List<ListItem>>? listContent,
+      Value<List<DateTime>>? reminders,
+      Value<List<String>>? tags,
+      Value<bool>? hideContent,
+      Value<bool>? lockNote,
+      Value<bool>? usesBiometrics,
+      Value<bool>? deleted,
+      Value<bool>? archived,
+      Value<bool>? synced}) {
     return NotesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
@@ -559,14 +512,15 @@ class NotesCompanion extends UpdateCompanion<Note> {
       map['id'] = Variable<String>(id.value);
     }
     if (title.present) {
-      map['title'] = Variable<String>(title.value);
+      map['title'] = Variable<String?>(title.value);
     }
     if (content.present) {
-      map['content'] = Variable<String>(content.value);
+      map['content'] = Variable<String?>(content.value);
     }
     if (styleJson.present) {
       final converter = $NotesTable.$converter0;
-      map['style_json'] = Variable<String>(converter.mapToSql(styleJson.value));
+      map['style_json'] =
+          Variable<String?>(converter.mapToSql(styleJson.value));
     }
     if (starred.present) {
       map['starred'] = Variable<bool>(starred.value);
@@ -582,7 +536,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     }
     if (images.present) {
       final converter = $NotesTable.$converter1;
-      map['images'] = Variable<String>(converter.mapToSql(images.value));
+      map['images'] = Variable<String>(converter.mapToSql(images.value)!);
     }
     if (list.present) {
       map['list'] = Variable<bool>(list.value);
@@ -590,15 +544,15 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (listContent.present) {
       final converter = $NotesTable.$converter2;
       map['list_content'] =
-          Variable<String>(converter.mapToSql(listContent.value));
+          Variable<String>(converter.mapToSql(listContent.value)!);
     }
     if (reminders.present) {
       final converter = $NotesTable.$converter3;
-      map['reminders'] = Variable<String>(converter.mapToSql(reminders.value));
+      map['reminders'] = Variable<String>(converter.mapToSql(reminders.value)!);
     }
     if (tags.present) {
       final converter = $NotesTable.$converter4;
-      map['tags'] = Variable<String>(converter.mapToSql(tags.value));
+      map['tags'] = Variable<String>(converter.mapToSql(tags.value)!);
     }
     if (hideContent.present) {
       map['hide_content'] = Variable<bool>(hideContent.value);
@@ -650,12 +604,11 @@ class NotesCompanion extends UpdateCompanion<Note> {
 
 class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   final GeneratedDatabase _db;
-  final String _alias;
+  final String? _alias;
   $NotesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
   @override
-  GeneratedTextColumn get id => _id ??= _constructId();
+  late final GeneratedTextColumn id = _constructId();
   GeneratedTextColumn _constructId() {
     return GeneratedTextColumn(
       'id',
@@ -665,9 +618,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  GeneratedTextColumn _title;
   @override
-  GeneratedTextColumn get title => _title ??= _constructTitle();
+  late final GeneratedTextColumn title = _constructTitle();
   GeneratedTextColumn _constructTitle() {
     return GeneratedTextColumn(
       'title',
@@ -677,9 +629,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _contentMeta = const VerificationMeta('content');
-  GeneratedTextColumn _content;
   @override
-  GeneratedTextColumn get content => _content ??= _constructContent();
+  late final GeneratedTextColumn content = _constructContent();
   GeneratedTextColumn _constructContent() {
     return GeneratedTextColumn(
       'content',
@@ -689,9 +640,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _styleJsonMeta = const VerificationMeta('styleJson');
-  GeneratedTextColumn _styleJson;
   @override
-  GeneratedTextColumn get styleJson => _styleJson ??= _constructStyleJson();
+  late final GeneratedTextColumn styleJson = _constructStyleJson();
   GeneratedTextColumn _constructStyleJson() {
     return GeneratedTextColumn(
       'style_json',
@@ -701,9 +651,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _starredMeta = const VerificationMeta('starred');
-  GeneratedBoolColumn _starred;
   @override
-  GeneratedBoolColumn get starred => _starred ??= _constructStarred();
+  late final GeneratedBoolColumn starred = _constructStarred();
   GeneratedBoolColumn _constructStarred() {
     return GeneratedBoolColumn('starred', $tableName, false,
         defaultValue: Constant(false));
@@ -711,10 +660,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   final VerificationMeta _creationDateMeta =
       const VerificationMeta('creationDate');
-  GeneratedDateTimeColumn _creationDate;
   @override
-  GeneratedDateTimeColumn get creationDate =>
-      _creationDate ??= _constructCreationDate();
+  late final GeneratedDateTimeColumn creationDate = _constructCreationDate();
   GeneratedDateTimeColumn _constructCreationDate() {
     return GeneratedDateTimeColumn(
       'creation_date',
@@ -725,10 +672,9 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
-  GeneratedDateTimeColumn _lastModifyDate;
   @override
-  GeneratedDateTimeColumn get lastModifyDate =>
-      _lastModifyDate ??= _constructLastModifyDate();
+  late final GeneratedDateTimeColumn lastModifyDate =
+      _constructLastModifyDate();
   GeneratedDateTimeColumn _constructLastModifyDate() {
     return GeneratedDateTimeColumn(
       'last_modify_date',
@@ -738,18 +684,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _colorMeta = const VerificationMeta('color');
-  GeneratedIntColumn _color;
   @override
-  GeneratedIntColumn get color => _color ??= _constructColor();
+  late final GeneratedIntColumn color = _constructColor();
   GeneratedIntColumn _constructColor() {
     return GeneratedIntColumn('color', $tableName, false,
         defaultValue: Constant(0));
   }
 
   final VerificationMeta _imagesMeta = const VerificationMeta('images');
-  GeneratedTextColumn _images;
   @override
-  GeneratedTextColumn get images => _images ??= _constructImages();
+  late final GeneratedTextColumn images = _constructImages();
   GeneratedTextColumn _constructImages() {
     return GeneratedTextColumn(
       'images',
@@ -759,9 +703,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _listMeta = const VerificationMeta('list');
-  GeneratedBoolColumn _list;
   @override
-  GeneratedBoolColumn get list => _list ??= _constructList();
+  late final GeneratedBoolColumn list = _constructList();
   GeneratedBoolColumn _constructList() {
     return GeneratedBoolColumn('list', $tableName, false,
         defaultValue: Constant(false));
@@ -769,10 +712,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   final VerificationMeta _listContentMeta =
       const VerificationMeta('listContent');
-  GeneratedTextColumn _listContent;
   @override
-  GeneratedTextColumn get listContent =>
-      _listContent ??= _constructListContent();
+  late final GeneratedTextColumn listContent = _constructListContent();
   GeneratedTextColumn _constructListContent() {
     return GeneratedTextColumn(
       'list_content',
@@ -782,9 +723,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _remindersMeta = const VerificationMeta('reminders');
-  GeneratedTextColumn _reminders;
   @override
-  GeneratedTextColumn get reminders => _reminders ??= _constructReminders();
+  late final GeneratedTextColumn reminders = _constructReminders();
   GeneratedTextColumn _constructReminders() {
     return GeneratedTextColumn(
       'reminders',
@@ -794,9 +734,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   }
 
   final VerificationMeta _tagsMeta = const VerificationMeta('tags');
-  GeneratedTextColumn _tags;
   @override
-  GeneratedTextColumn get tags => _tags ??= _constructTags();
+  late final GeneratedTextColumn tags = _constructTags();
   GeneratedTextColumn _constructTags() {
     return GeneratedTextColumn(
       'tags',
@@ -807,19 +746,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   final VerificationMeta _hideContentMeta =
       const VerificationMeta('hideContent');
-  GeneratedBoolColumn _hideContent;
   @override
-  GeneratedBoolColumn get hideContent =>
-      _hideContent ??= _constructHideContent();
+  late final GeneratedBoolColumn hideContent = _constructHideContent();
   GeneratedBoolColumn _constructHideContent() {
     return GeneratedBoolColumn('hide_content', $tableName, false,
         defaultValue: Constant(false));
   }
 
   final VerificationMeta _lockNoteMeta = const VerificationMeta('lockNote');
-  GeneratedBoolColumn _lockNote;
   @override
-  GeneratedBoolColumn get lockNote => _lockNote ??= _constructLockNote();
+  late final GeneratedBoolColumn lockNote = _constructLockNote();
   GeneratedBoolColumn _constructLockNote() {
     return GeneratedBoolColumn('lock_note', $tableName, false,
         defaultValue: Constant(false));
@@ -827,37 +763,32 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   final VerificationMeta _usesBiometricsMeta =
       const VerificationMeta('usesBiometrics');
-  GeneratedBoolColumn _usesBiometrics;
   @override
-  GeneratedBoolColumn get usesBiometrics =>
-      _usesBiometrics ??= _constructUsesBiometrics();
+  late final GeneratedBoolColumn usesBiometrics = _constructUsesBiometrics();
   GeneratedBoolColumn _constructUsesBiometrics() {
     return GeneratedBoolColumn('uses_biometrics', $tableName, false,
         defaultValue: Constant(false));
   }
 
   final VerificationMeta _deletedMeta = const VerificationMeta('deleted');
-  GeneratedBoolColumn _deleted;
   @override
-  GeneratedBoolColumn get deleted => _deleted ??= _constructDeleted();
+  late final GeneratedBoolColumn deleted = _constructDeleted();
   GeneratedBoolColumn _constructDeleted() {
     return GeneratedBoolColumn('deleted', $tableName, false,
         defaultValue: Constant(false));
   }
 
   final VerificationMeta _archivedMeta = const VerificationMeta('archived');
-  GeneratedBoolColumn _archived;
   @override
-  GeneratedBoolColumn get archived => _archived ??= _constructArchived();
+  late final GeneratedBoolColumn archived = _constructArchived();
   GeneratedBoolColumn _constructArchived() {
     return GeneratedBoolColumn('archived', $tableName, false,
         defaultValue: Constant(false));
   }
 
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
-  GeneratedBoolColumn _synced;
   @override
-  GeneratedBoolColumn get synced => _synced ??= _constructSynced();
+  late final GeneratedBoolColumn synced = _constructSynced();
   GeneratedBoolColumn _constructSynced() {
     return GeneratedBoolColumn('synced', $tableName, false,
         defaultValue: Constant(false));
@@ -897,28 +828,28 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title'], _titleMeta));
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content'], _contentMeta));
+          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
     }
     context.handle(_styleJsonMeta, const VerificationResult.success());
     if (data.containsKey('starred')) {
       context.handle(_starredMeta,
-          starred.isAcceptableOrUnknown(data['starred'], _starredMeta));
+          starred.isAcceptableOrUnknown(data['starred']!, _starredMeta));
     }
     if (data.containsKey('creation_date')) {
       context.handle(
           _creationDateMeta,
           creationDate.isAcceptableOrUnknown(
-              data['creation_date'], _creationDateMeta));
+              data['creation_date']!, _creationDateMeta));
     } else if (isInserting) {
       context.missing(_creationDateMeta);
     }
@@ -926,18 +857,18 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       context.handle(
           _lastModifyDateMeta,
           lastModifyDate.isAcceptableOrUnknown(
-              data['last_modify_date'], _lastModifyDateMeta));
+              data['last_modify_date']!, _lastModifyDateMeta));
     } else if (isInserting) {
       context.missing(_lastModifyDateMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color'], _colorMeta));
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
     }
     context.handle(_imagesMeta, const VerificationResult.success());
     if (data.containsKey('list')) {
       context.handle(
-          _listMeta, list.isAcceptableOrUnknown(data['list'], _listMeta));
+          _listMeta, list.isAcceptableOrUnknown(data['list']!, _listMeta));
     }
     context.handle(_listContentMeta, const VerificationResult.success());
     context.handle(_remindersMeta, const VerificationResult.success());
@@ -946,29 +877,29 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       context.handle(
           _hideContentMeta,
           hideContent.isAcceptableOrUnknown(
-              data['hide_content'], _hideContentMeta));
+              data['hide_content']!, _hideContentMeta));
     }
     if (data.containsKey('lock_note')) {
       context.handle(_lockNoteMeta,
-          lockNote.isAcceptableOrUnknown(data['lock_note'], _lockNoteMeta));
+          lockNote.isAcceptableOrUnknown(data['lock_note']!, _lockNoteMeta));
     }
     if (data.containsKey('uses_biometrics')) {
       context.handle(
           _usesBiometricsMeta,
           usesBiometrics.isAcceptableOrUnknown(
-              data['uses_biometrics'], _usesBiometricsMeta));
+              data['uses_biometrics']!, _usesBiometricsMeta));
     }
     if (data.containsKey('deleted')) {
       context.handle(_deletedMeta,
-          deleted.isAcceptableOrUnknown(data['deleted'], _deletedMeta));
+          deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
     }
     if (data.containsKey('archived')) {
       context.handle(_archivedMeta,
-          archived.isAcceptableOrUnknown(data['archived'], _archivedMeta));
+          archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta));
     }
     if (data.containsKey('synced')) {
       context.handle(_syncedMeta,
-          synced.isAcceptableOrUnknown(data['synced'], _syncedMeta));
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
     }
     return context;
   }
@@ -976,7 +907,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Note map(Map<String, dynamic> data, {String tablePrefix}) {
+  Note map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
     return Note.fromData(data, _db, prefix: effectivePrefix);
   }
@@ -986,15 +917,15 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return $NotesTable(_db, alias);
   }
 
-  static TypeConverter<List<int>, String> $converter0 =
+  static TypeConverter<List<int>, String?> $converter0 =
       const ContentStyleConverter();
-  static TypeConverter<List<SavedImage>, String> $converter1 =
+  static TypeConverter<List<SavedImage>, String?> $converter1 =
       const ImageListConverter();
-  static TypeConverter<List<ListItem>, String> $converter2 =
+  static TypeConverter<List<ListItem>, String?> $converter2 =
       const ListContentConverter();
-  static TypeConverter<List<DateTime>, String> $converter3 =
+  static TypeConverter<List<DateTime>, String?> $converter3 =
       const ReminderListConverter();
-  static TypeConverter<List<String>, String> $converter4 =
+  static TypeConverter<List<String>, String?> $converter4 =
       const TagListConverter();
 }
 
@@ -1004,56 +935,45 @@ class Tag extends DataClass implements Insertable<Tag> {
   final int color;
   final DateTime lastModifyDate;
   Tag(
-      {@required this.id,
-      @required this.name,
-      @required this.color,
-      @required this.lastModifyDate});
+      {required this.id,
+      required this.name,
+      required this.color,
+      required this.lastModifyDate});
   factory Tag.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Tag(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color']),
+      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
       lastModifyDate: dateTimeType
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || color != null) {
-      map['color'] = Variable<int>(color);
-    }
-    if (!nullToAbsent || lastModifyDate != null) {
-      map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
-    }
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['color'] = Variable<int>(color);
+    map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
     return map;
   }
 
   TagsCompanion toCompanion(bool nullToAbsent) {
     return TagsCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      color:
-          color == null && nullToAbsent ? const Value.absent() : Value(color),
-      lastModifyDate: lastModifyDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastModifyDate),
+      id: Value(id),
+      name: Value(name),
+      color: Value(color),
+      lastModifyDate: Value(lastModifyDate),
     );
   }
 
   factory Tag.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Tag(
       id: serializer.fromJson<String>(json['id']),
@@ -1063,7 +983,7 @@ class Tag extends DataClass implements Insertable<Tag> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
@@ -1073,7 +993,8 @@ class Tag extends DataClass implements Insertable<Tag> {
     };
   }
 
-  Tag copyWith({String id, String name, int color, DateTime lastModifyDate}) =>
+  Tag copyWith(
+          {String? id, String? name, int? color, DateTime? lastModifyDate}) =>
       Tag(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -1116,18 +1037,18 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     this.lastModifyDate = const Value.absent(),
   });
   TagsCompanion.insert({
-    @required String id,
-    @required String name,
+    required String id,
+    required String name,
     this.color = const Value.absent(),
-    @required DateTime lastModifyDate,
-  })  : id = Value(id),
+    required DateTime lastModifyDate,
+  })   : id = Value(id),
         name = Value(name),
         lastModifyDate = Value(lastModifyDate);
   static Insertable<Tag> custom({
-    Expression<String> id,
-    Expression<String> name,
-    Expression<int> color,
-    Expression<DateTime> lastModifyDate,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<int>? color,
+    Expression<DateTime>? lastModifyDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1138,10 +1059,10 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   }
 
   TagsCompanion copyWith(
-      {Value<String> id,
-      Value<String> name,
-      Value<int> color,
-      Value<DateTime> lastModifyDate}) {
+      {Value<String>? id,
+      Value<String>? name,
+      Value<int>? color,
+      Value<DateTime>? lastModifyDate}) {
     return TagsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -1182,12 +1103,11 @@ class TagsCompanion extends UpdateCompanion<Tag> {
 
 class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   final GeneratedDatabase _db;
-  final String _alias;
+  final String? _alias;
   $TagsTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
   @override
-  GeneratedTextColumn get id => _id ??= _constructId();
+  late final GeneratedTextColumn id = _constructId();
   GeneratedTextColumn _constructId() {
     return GeneratedTextColumn(
       'id',
@@ -1197,9 +1117,8 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   }
 
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
   @override
-  GeneratedTextColumn get name => _name ??= _constructName();
+  late final GeneratedTextColumn name = _constructName();
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
@@ -1209,9 +1128,8 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   }
 
   final VerificationMeta _colorMeta = const VerificationMeta('color');
-  GeneratedIntColumn _color;
   @override
-  GeneratedIntColumn get color => _color ??= _constructColor();
+  late final GeneratedIntColumn color = _constructColor();
   GeneratedIntColumn _constructColor() {
     return GeneratedIntColumn('color', $tableName, false,
         defaultValue: Constant(0));
@@ -1219,10 +1137,9 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
 
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
-  GeneratedDateTimeColumn _lastModifyDate;
   @override
-  GeneratedDateTimeColumn get lastModifyDate =>
-      _lastModifyDate ??= _constructLastModifyDate();
+  late final GeneratedDateTimeColumn lastModifyDate =
+      _constructLastModifyDate();
   GeneratedDateTimeColumn _constructLastModifyDate() {
     return GeneratedDateTimeColumn(
       'last_modify_date',
@@ -1245,25 +1162,25 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color'], _colorMeta));
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
     }
     if (data.containsKey('last_modify_date')) {
       context.handle(
           _lastModifyDateMeta,
           lastModifyDate.isAcceptableOrUnknown(
-              data['last_modify_date'], _lastModifyDateMeta));
+              data['last_modify_date']!, _lastModifyDateMeta));
     } else if (isInserting) {
       context.missing(_lastModifyDateMeta);
     }
@@ -1273,7 +1190,7 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Tag map(Map<String, dynamic> data, {String tablePrefix}) {
+  Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
     return Tag.fromData(data, _db, prefix: effectivePrefix);
   }
@@ -1286,14 +1203,10 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $NotesTable _notes;
-  $NotesTable get notes => _notes ??= $NotesTable(this);
-  $TagsTable _tags;
-  $TagsTable get tags => _tags ??= $TagsTable(this);
-  NoteHelper _noteHelper;
-  NoteHelper get noteHelper => _noteHelper ??= NoteHelper(this as AppDatabase);
-  TagHelper _tagHelper;
-  TagHelper get tagHelper => _tagHelper ??= TagHelper(this as AppDatabase);
+  late final $NotesTable notes = $NotesTable(this);
+  late final $TagsTable tags = $TagsTable(this);
+  late final NoteHelper noteHelper = NoteHelper(this as AppDatabase);
+  late final TagHelper tagHelper = TagHelper(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

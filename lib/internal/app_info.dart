@@ -22,22 +22,21 @@ abstract class _AppInfoBase with Store {
       EventChannel('potato_notes_accents');
 
   _AppInfoBase() {
-    illustrations = Illustrations();
     loadData();
   }
 
-  Directory tempDirectory;
-  Illustrations illustrations;
-  FlutterLocalNotificationsPlugin notifications;
-  QuickActions quickActions;
-  PackageInfo packageInfo;
+  late Directory tempDirectory;
+  final Illustrations illustrations = Illustrations();
+  FlutterLocalNotificationsPlugin? notifications;
+  QuickActions? quickActions;
+  PackageInfo? packageInfo;
 
-  Widget noNotesIllustration;
-  Widget emptyArchiveIllustration;
-  Widget emptyTrashIllustration;
-  Widget noFavouritesIllustration;
-  Widget nothingFoundIllustration;
-  Widget typeToSearchIllustration;
+  Widget? noNotesIllustration;
+  Widget? emptyArchiveIllustration;
+  Widget? emptyTrashIllustration;
+  Widget? noFavouritesIllustration;
+  Widget? nothingFoundIllustration;
+  Widget? typeToSearchIllustration;
 
   @observable
   @protected
@@ -76,7 +75,7 @@ abstract class _AppInfoBase with Store {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    await notifications.initialize(initializationSettings,
+    await notifications?.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
   }
 
@@ -86,7 +85,7 @@ abstract class _AppInfoBase with Store {
 
     switch (nPayload.action) {
       case NotificationAction.PIN:
-        notifications.cancel(nPayload.id);
+        notifications?.cancel(nPayload.id);
         break;
       case NotificationAction.REMINDER:
         break;
@@ -120,7 +119,7 @@ abstract class _AppInfoBase with Store {
   @action
   void pollForActiveNotifications() {
     Timer.periodic(Duration(milliseconds: 500), (timer) async {
-      activeNotificationsValue = await notifications
+      activeNotificationsValue = await notifications!
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           .getActiveNotifications();

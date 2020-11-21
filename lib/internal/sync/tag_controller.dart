@@ -12,12 +12,12 @@ import 'package:recase/recase.dart';
 class TagController {
   static Future<String> add(Tag tag) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       String tagJson = json.encode(toSync(tag));
       var url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag";
       Loggy.v(message: "Going to send POST to $url");
       Response addResult = await http.post(url,
-          body: tagJson, headers: {"Authorization": "Bearer " + token});
+          body: tagJson, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "(${tag.id} tag-add) Server responded with (${addResult.statusCode}): ${addResult.body}");
@@ -31,11 +31,11 @@ class TagController {
 
   static Future<String> delete(String id) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
       Loggy.v(message: "Goind to send DELETE to " + url);
       Response deleteResponse =
-          await http.delete(url, headers: {"Authorization": "Bearer " + token});
+          await http.delete(url, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "($id tag-delete) Server responded with (${deleteResponse.statusCode}}: " +
@@ -50,12 +50,12 @@ class TagController {
 
   static Future<List<Tag>> list(int lastUpdated) async {
     try {
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url =
           "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
       Response listResult =
-          await http.get(url, headers: {"Authorization": "Bearer " + token});
+          await http.get(url, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "(tag-list) Server responded with (${listResult.statusCode}): " +
@@ -77,11 +77,11 @@ class TagController {
   static Future<String> update(String id, Map<String, dynamic> tagDelta) async {
     try {
       String deltaJson = jsonEncode(tagDelta);
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
       Response updateResult = await http.patch(url,
-          body: deltaJson, headers: {"Authorization": "Bearer " + token});
+          body: deltaJson, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "($id tag-update) Server responded with (${updateResult.statusCode}): " +
@@ -97,11 +97,11 @@ class TagController {
   static Future<List<String>> listDeleted(List<String> localIdList) async {
     try {
       String idListJson = jsonEncode(localIdList);
-      String token = await prefs.getToken();
+      String? token = await prefs.getToken();
       var url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/deleted";
       Loggy.v(message: "Going to send POST to " + url);
       Response listResult = await http.post(url,
-          body: idListJson, headers: {"Authorization": "Bearer " + token});
+          body: idListJson, headers: {"Authorization": "Bearer $token"});
       Loggy.d(
           message:
               "(tag-listDeleted) Server responded with (${listResult.statusCode})}: " +

@@ -12,10 +12,10 @@ import 'note_color_selector.dart';
 
 class QueryFilters extends StatefulWidget {
   final SearchQuery query;
-  final Function() filterChangedCallback;
+  final Function()? filterChangedCallback;
 
   QueryFilters({
-    @required this.query,
+    required this.query,
     this.filterChangedCallback,
   });
 
@@ -37,7 +37,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           onChanged: (value) {
             setState(() => widget.query.caseSensitive = value);
             if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+              widget.filterChangedCallback?.call();
           },
         ),
         SwitchListTile(
@@ -48,7 +48,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           onChanged: (value) {
             setState(() => widget.query.onlyFavourites = value);
             if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+              widget.filterChangedCallback?.call();
           },
         ),
         ListTile(
@@ -57,11 +57,11 @@ class _QueryFiltersState extends State<QueryFilters> {
           trailing: Icon(
             Icons.brightness_1,
             size: 28,
-            color: Color(
-                NoteColors.colorList[widget.query.color].dynamicColor(context)),
+            color: Color(NoteColors.colorList[widget.query.color ?? 0]
+                .dynamicColor(context)),
           ),
           onTap: () async {
-            int queryColor = await Utils.showNotesModalBottomSheet(
+            int? queryColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
                 selectedColor: widget.query.color ?? 0,
@@ -78,7 +78,7 @@ class _QueryFiltersState extends State<QueryFilters> {
               setState(() => widget.query.color = queryColor);
             }
             if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+              widget.filterChangedCallback?.call();
           },
         ),
         ListTile(
@@ -102,7 +102,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                           widget.query.dateMode = mode;
                         });
                         if (widget.filterChangedCallback != null)
-                          widget.filterChangedCallback();
+                          widget.filterChangedCallback?.call();
                       },
                       onReset: () {
                         setState(() {
@@ -110,7 +110,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                           widget.query.dateMode = DateFilterMode.ONLY;
                         });
                         if (widget.filterChangedCallback != null)
-                          widget.filterChangedCallback();
+                          widget.filterChangedCallback?.call();
                       },
                     ));
           },
@@ -135,7 +135,7 @@ class _QueryFiltersState extends State<QueryFilters> {
             );
 
             if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+              widget.filterChangedCallback?.call();
           },
         ),
       ],

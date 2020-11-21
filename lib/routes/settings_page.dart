@@ -168,7 +168,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget get commonSettings {
     String currentLocaleName = firstLetterToUppercase(
       LocaleNamesLocalizationsDelegate
-          .nativeLocaleNames[context.locale.languageCode],
+          .nativeLocaleNames[context.locale.languageCode]!,
     );
 
     return Column(
@@ -242,7 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () async {
-                int result = await Utils.showNotesModalBottomSheet(
+                int? result = await Utils.showNotesModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
                   builder: (context) => RGBColorPicker(
@@ -277,7 +277,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Locale locale = context.supportedLocales[index];
                     String nativeName = firstLetterToUppercase(
                       LocaleNamesLocalizationsDelegate
-                          .nativeLocaleNames[locale.languageCode],
+                          .nativeLocaleNames[locale.languageCode]!,
                     );
                     bool selected = context.locale == locale;
 
@@ -373,7 +373,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<bool> showInfoSheet(BuildContext context,
-      {String content, String buttonAction}) async {
+      {required String content, required String buttonAction}) async {
     return await Utils.showNotesModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -398,9 +398,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<dynamic> showDropdownSheet({
-    @required BuildContext context,
-    @required IndexedWidgetBuilder itemBuilder,
-    int itemCount,
+    required BuildContext context,
+    required IndexedWidgetBuilder itemBuilder,
+    int? itemCount,
     bool scrollable = false,
   }) async {
     final list = ListView.builder(
@@ -427,10 +427,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget dropDownTile({
-    @required Widget title,
-    Widget subtitle,
-    @required bool selected,
-    VoidCallback onTap,
+    required Widget title,
+    Widget? subtitle,
+    required bool selected,
+    VoidCallback? onTap,
   }) {
     return ListTile(
       selected: selected,

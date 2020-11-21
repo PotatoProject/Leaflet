@@ -9,7 +9,7 @@ import 'package:potato_notes/widget/tag_editor.dart';
 
 class TagSearchDelegate extends CustomSearchDelegate {
   final List<String> tags;
-  final VoidCallback onChanged;
+  final VoidCallback? onChanged;
 
   TagSearchDelegate(
     this.tags, {
@@ -54,7 +54,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
               activeColor: Theme.of(context).accentColor,
               onChanged: (value) {
                 setState(() {
-                  if (value) {
+                  if (value!) {
                     tags.add(filteredTags[index].id);
                   } else {
                     tags.remove(filteredTags[index].id);

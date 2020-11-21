@@ -14,8 +14,8 @@ class RGBColorPicker extends StatefulWidget {
 }
 
 class _RGBColorPickerState extends State<RGBColorPicker> {
-  Color currentColor;
-  TextEditingController controller;
+  late Color currentColor;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -176,9 +176,9 @@ class ColorSlider extends StatelessWidget {
   final RGB rgb;
 
   ColorSlider({
-    @required this.color,
-    @required this.onChange,
-    @required this.rgb,
+    required this.color,
+    required this.onChange,
+    required this.rgb,
   });
 
   @override
@@ -237,13 +237,13 @@ class ColorSlider extends StatelessWidget {
 
 class CustomTrackShape extends RoundedRectSliderTrackShape {
   Rect getPreferredRect({
-    @required RenderBox parentBox,
+    required RenderBox parentBox,
     Offset offset = Offset.zero,
-    @required SliderThemeData sliderTheme,
+    required SliderThemeData sliderTheme,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    final double trackHeight = sliderTheme.trackHeight;
+    final double trackHeight = sliderTheme.trackHeight!;
     final double trackLeft = offset.dx;
     final double trackTop =
         offset.dy + (parentBox.size.height - trackHeight) / 2;

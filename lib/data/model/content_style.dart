@@ -5,7 +5,7 @@ import 'package:moor/moor.dart';
 class ContentStyleConverter extends TypeConverter<List<int>, String> {
   const ContentStyleConverter();
   @override
-  List<int> mapToDart(String fromDb) {
+  List<int>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -14,7 +14,7 @@ class ContentStyleConverter extends TypeConverter<List<int>, String> {
   }
 
   @override
-  String mapToSql(List<int> value) {
+  String? mapToSql(List<int>? value) {
     if (value == null) {
       return null;
     }

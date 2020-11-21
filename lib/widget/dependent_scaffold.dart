@@ -5,7 +5,7 @@ import 'package:potato_notes/widget/default_app_bar.dart';
 
 class DependentScaffold extends StatelessWidget {
   const DependentScaffold({
-    Key key,
+    Key? key,
     this.appBar = const DefaultAppBar(),
     this.secondaryAppBar,
     this.useAppBarAsSecondary = false,
@@ -28,32 +28,28 @@ class DependentScaffold extends StatelessWidget {
     this.drawerEdgeDragWidth,
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
-  })  : assert(primary != null),
-        assert(extendBody != null),
-        assert(extendBodyBehindAppBar != null),
-        assert(drawerDragStartBehavior != null),
-        super(key: key);
+  }) : super(key: key);
 
   final bool extendBody;
   final bool extendBodyBehindAppBar;
-  final PreferredSizeWidget appBar;
-  final Widget secondaryAppBar;
+  final PreferredSizeWidget? appBar;
+  final Widget? secondaryAppBar;
   final bool useAppBarAsSecondary;
-  final Widget body;
-  final Widget floatingActionButton;
-  final FloatingActionButtonLocation floatingActionButtonLocation;
-  final FloatingActionButtonAnimator floatingActionButtonAnimator;
-  final List<Widget> persistentFooterButtons;
-  final Widget drawer;
-  final Widget endDrawer;
-  final Color drawerScrimColor;
-  final Color backgroundColor;
-  final Widget bottomNavigationBar;
-  final Widget bottomSheet;
-  final bool resizeToAvoidBottomInset;
+  final Widget? body;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
+  final List<Widget>? persistentFooterButtons;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final Color? drawerScrimColor;
+  final Color? backgroundColor;
+  final Widget? bottomNavigationBar;
+  final Widget? bottomSheet;
+  final bool? resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
-  final double drawerEdgeDragWidth;
+  final double? drawerEdgeDragWidth;
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
 
@@ -62,23 +58,23 @@ class DependentScaffold extends StatelessWidget {
     final state = BasePage.of(context);
 
     if (state != null) {
-      BasePage.of(context).setFAB(floatingActionButton);
-      BasePage.of(context).setAppBar(appBar);
+      BasePage.of(context)?.setFAB(floatingActionButton);
+      BasePage.of(context)?.setAppBar(appBar);
 
       if (secondaryAppBar != null) {
         if (!(secondaryAppBar is DefaultAppBar)) {
-          BasePage.of(context).setSecondaryAppBar(secondaryAppBar);
+          BasePage.of(context)?.setSecondaryAppBar(secondaryAppBar);
         } else {
-          BasePage.of(context).setSecondaryAppBar(null);
+          BasePage.of(context)?.setSecondaryAppBar(null);
         }
       } else if (useAppBarAsSecondary && appBar != null) {
         if (!(appBar is DefaultAppBar)) {
-          BasePage.of(context).setSecondaryAppBar(appBar);
+          BasePage.of(context)?.setSecondaryAppBar(appBar);
         } else {
-          BasePage.of(context).setSecondaryAppBar(null);
+          BasePage.of(context)?.setSecondaryAppBar(null);
         }
       } else {
-        BasePage.of(context).setSecondaryAppBar(null);
+        BasePage.of(context)?.setSecondaryAppBar(null);
       }
     }
 

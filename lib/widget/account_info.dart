@@ -17,7 +17,7 @@ class AccountInfo extends StatelessWidget {
               CircleAvatar(
                 radius: 32,
                 backgroundColor:
-                    Theme.of(context).iconTheme.color.withOpacity(0.1),
+                    Theme.of(context).iconTheme.color!.withOpacity(0.1),
                 child: Icon(
                   Icons.person_outlined,
                   size: 24,
@@ -48,7 +48,7 @@ class AccountInfo extends StatelessWidget {
             ],
           ),
         ),
-        FutureBuilder(
+        FutureBuilder<FilesApiStats>(
           future: FilesController.getStats(),
           builder: (context, snapshot) {
             return ListTile(
@@ -56,14 +56,14 @@ class AccountInfo extends StatelessWidget {
               title: Text("Image upload capacity"),
               subtitle: LinearProgressIndicator(
                 value: snapshot.hasData
-                    ? snapshot.data.used / snapshot.data.limit
+                    ? snapshot.data!.used / snapshot.data!.limit
                     : null,
                 backgroundColor: Theme.of(context).accentColor.withOpacity(0.2),
               ),
               trailing: Text(
                 snapshot.hasData
                     ? LocaleStrings.common
-                        .xOfY(snapshot.data.used, snapshot.data.limit)
+                        .xOfY(snapshot.data!.used, snapshot.data!.limit)
                     : '-',
               ),
             );

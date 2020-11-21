@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class DrawingGestureDetector extends StatelessWidget {
   final Widget child;
-  final GestureDragUpdateCallback onUpdate;
-  final GestureDragEndCallback onEnd;
+  final GestureDragUpdateCallback? onUpdate;
+  final GestureDragEndCallback? onEnd;
 
   DrawingGestureDetector({
-    this.child,
+    required this.child,
     this.onUpdate,
     this.onEnd,
   });
@@ -38,11 +38,11 @@ class DrawingGestureDetector extends StatelessWidget {
 class MonoDrag extends Drag {
   final List<PointerDownEvent> events;
 
-  final GestureDragUpdateCallback onUpdate;
-  final GestureDragEndCallback onEnd;
+  final GestureDragUpdateCallback? onUpdate;
+  final GestureDragEndCallback? onEnd;
 
   MonoDrag({
-    this.events,
+    required this.events,
     this.onUpdate,
     this.onEnd,
   });
@@ -91,7 +91,7 @@ class MonoDragGestureDetector
 typedef OnDisposeState();
 
 class _MonoDragPointerState extends MultiDragPointerState {
-  final OnDisposeState onDisposeState;
+  final OnDisposeState? onDisposeState;
 
   _MonoDragPointerState(Offset initialPosition, PointerDeviceKind kind,
       {this.onDisposeState})
@@ -99,8 +99,9 @@ class _MonoDragPointerState extends MultiDragPointerState {
 
   @override
   void checkForResolutionAfterMove() {
-    if (pendingDelta.dy.abs() > kTouchSlop &&
-        pendingDelta.dx.abs() > kTouchSlop) {
+    if (pendingDelta == null) return;
+    if (pendingDelta!.dy.abs() > kTouchSlop &&
+        pendingDelta!.dx.abs() > kTouchSlop) {
       resolve(GestureDisposition.accepted);
     }
   }

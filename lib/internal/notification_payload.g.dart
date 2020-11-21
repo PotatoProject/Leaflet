@@ -10,7 +10,7 @@ NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
   return NotificationPayload(
     id: json['id'] as int,
     noteId: json['noteId'] as String,
-    action: _$enumDecodeNullable(_$NotificationActionEnumMap, json['action']),
+    action: _$enumDecode(_$NotificationActionEnumMap, json['action']),
   );
 }
 
@@ -23,35 +23,29 @@ Map<String, dynamic> _$NotificationPayloadToJson(
     };
 
 T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+  Map<T, Object> enumValues,
+  Object? source, {
+  T? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
   final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
+      .cast<MapEntry<T, Object>?>()
+      .singleWhere((e) => e!.value == source, orElse: () => null)
       ?.key;
 
   if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      '`$source` is not one of the supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return value ?? unknownValue!;
 }
 
 const _$NotificationActionEnumMap = {

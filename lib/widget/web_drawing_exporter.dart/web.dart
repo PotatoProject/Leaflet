@@ -11,7 +11,7 @@ import 'package:potato_notes/internal/utils.dart';
 
 class WebDrawingExporter {
   static Future<String> export(
-      Uri uri, List<DrawObject> objects, Size size) async {
+      Uri? uri, List<DrawObject> objects, Size size) async {
     ImageProvider image;
     Completer<ui.Image> completer = Completer<ui.Image>();
 
@@ -60,7 +60,7 @@ class WebDrawingExporter {
     if (uri != null) {
       image = uri.toImageProvider();
 
-      image?.resolve(ImageConfiguration())?.addListener(
+      image.resolve(ImageConfiguration()).addListener(
         ImageStreamListener(
           (image, synchronousCall) {
             completer.complete(image.image);
@@ -69,7 +69,7 @@ class WebDrawingExporter {
       );
 
       final parsedImage = await completer.future;
-      final bytes = (await parsedImage.toByteData()).buffer.asUint8List();
+      final bytes = (await parsedImage.toByteData())!.buffer.asUint8List();
       final imageData = base64.encode(bytes);
       final imageElement = html.ImageElement(
         src: imageData,

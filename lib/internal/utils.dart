@@ -71,14 +71,14 @@ class Utils {
   }
 
   static Future<dynamic> showNotesModalBottomSheet({
-    @required BuildContext context,
-    @required WidgetBuilder builder,
-    Color backgroundColor,
-    double elevation,
-    ShapeBorder shape,
-    Clip clipBehavior,
-    Color barrierColor,
-    bool isScrollControlled = false,
+    required BuildContext context,
+    required WidgetBuilder builder,
+    Color? backgroundColor,
+    double? elevation,
+    ShapeBorder? shape,
+    Clip? clipBehavior,
+    Color? barrierColor,
+    bool? isScrollControlled = false,
   }) async {
     return await Navigator.push(
       context,
@@ -120,15 +120,15 @@ class Utils {
     bool isOnTop = fabPosition.dy < screenSize.height / 2;
     bool isOnLeft = fabPosition.dx < screenSize.width / 2;
 
-    double top = isOnTop ? fabPosition.dy : null;
-    double left = isOnLeft ? fabPosition.dx : null;
-    double right =
+    double? top = isOnTop ? fabPosition.dy : null;
+    double? left = isOnLeft ? fabPosition.dx : null;
+    double? right =
         !isOnTop ? screenSize.width - (fabPosition.dx + fabSize.width) : null;
-    double bottom = !isOnLeft
+    double? bottom = !isOnLeft
         ? screenSize.height - (fabPosition.dy + fabSize.height)
         : null;
 
-    Navigator.of(context).push(
+    Navigator.of(context)?.push(
       PageRouteBuilder(
         pageBuilder: (context, anim, secAnim) {
           return Stack(
@@ -204,7 +204,6 @@ class Utils {
         } else {
           return LocaleStrings.mainPage.titleTag;
         }
-        break;
       case ReturnMode.ALL:
       default:
         return LocaleStrings.mainPage.titleAll;
@@ -214,9 +213,9 @@ class Utils {
   static get defaultAccent => Color(0xFF66BB6A);
 
   static Future<void> deleteNotes({
-    @required BuildContext context,
-    @required List<Note> notes,
-    @required String reason,
+    required BuildContext context,
+    required List<Note> notes,
+    required String reason,
     bool archive = false,
   }) async {
     for (Note note in notes) {
@@ -252,9 +251,9 @@ class Utils {
   }
 
   static Future<void> restoreNotes({
-    @required BuildContext context,
-    @required List<Note> notes,
-    @required String reason,
+    required BuildContext context,
+    required List<Note> notes,
+    required String reason,
     bool archive = false,
   }) async {
     for (Note note in notes) {
@@ -361,7 +360,7 @@ class Utils {
     bool allowGestures = true,
     bool pushImmediate = false,
   }) async {
-    return Navigator.of(context).push(
+    return Navigator.of(context)?.push(
       DismissiblePageRoute(
         builder: (context) => ScaffoldMessenger(
           child: route,
@@ -381,19 +380,19 @@ class Utils {
       NotePage(note: NoteX.emptyNote.copyWith(id: id)),
     );
 
-    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    List<Note?> notes = await helper.listNotes(ReturnMode.NORMAL);
     int newLength = notes.length;
 
     if (newLength > currentLength) {
-      Note lastNote = notes.firstWhere(
-        (element) => element.id == id,
+      Note? lastNote = notes.firstWhere(
+        (element) => element?.id == id,
         orElse: () => null,
       );
       if (lastNote == null) return;
       Utils.handleNotePagePop(lastNote);
 
-      if (lastNote.title.isEmpty &&
-          lastNote.content.isEmpty &&
+      if ((lastNote.title?.isEmpty ?? false) &&
+          (lastNote.content?.isEmpty ?? false) &&
           lastNote.listContent.isEmpty &&
           lastNote.images.isEmpty &&
           lastNote.reminders.isEmpty) {
@@ -409,7 +408,7 @@ class Utils {
   static void newImage(BuildContext context, ImageSource source,
       {bool shouldPop = false}) async {
     Note note = NoteX.emptyNote;
-    File image = await pickImage();
+    File? image = await pickImage();
 
     if (image != null) {
       SavedImage savedImage =
@@ -448,8 +447,8 @@ class Utils {
     );
   }
 
-  static Future<File> pickImage() async {
-    String path;
+  static Future<File?> pickImage() async {
+    String? path;
 
     try {
       if (DeviceInfo.isDesktop) {
@@ -485,7 +484,7 @@ class Utils {
 
 extension NoteX on Note {
   static Note get emptyNote => Note(
-        id: null,
+        id: Utils.generateId(),
         title: "",
         content: "",
         styleJson: [],
@@ -628,7 +627,7 @@ extension TagX on Tag {
 extension UriX on Uri {
   ImageProvider toImageProvider() {
     if (data != null) {
-      return MemoryImage(data.contentAsBytes());
+      return MemoryImage(data!.contentAsBytes());
     } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
       return CachedNetworkImageProvider(toString());
     } else {
@@ -642,8 +641,7 @@ class SuspendedCurve extends Curve {
   const SuspendedCurve(
     this.startingPoint, {
     this.curve = Curves.easeOutCubic,
-  })  : assert(startingPoint != null),
-        assert(curve != null);
+  });
 
   /// The progress value at which [curve] should begin.
   ///
@@ -668,6 +666,6 @@ class SuspendedCurve extends Curve {
 
     final double curveProgress = (t - startingPoint) / (1 - startingPoint);
     final double transformed = curve.transform(curveProgress);
-    return lerpDouble(startingPoint, 1, transformed);
+    return lerpDouble(startingPoint, 1, transformed)!;
   }
 }

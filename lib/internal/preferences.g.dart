@@ -12,13 +12,13 @@ mixin _$Preferences on _PreferencesBase, Store {
   final _$masterPassValueAtom = Atom(name: '_PreferencesBase.masterPassValue');
 
   @override
-  String get masterPassValue {
+  String? get masterPassValue {
     _$masterPassValueAtom.reportRead();
     return super.masterPassValue;
   }
 
   @override
-  set masterPassValue(String value) {
+  set masterPassValue(String? value) {
     _$masterPassValueAtom.reportWrite(value, super.masterPassValue, () {
       super.masterPassValue = value;
     });
@@ -43,13 +43,13 @@ mixin _$Preferences on _PreferencesBase, Store {
       Atom(name: '_PreferencesBase.customAccentValue');
 
   @override
-  Color get customAccentValue {
+  Color? get customAccentValue {
     _$customAccentValueAtom.reportRead();
     return super.customAccentValue;
   }
 
   @override
-  set customAccentValue(Color value) {
+  set customAccentValue(Color? value) {
     _$customAccentValueAtom.reportWrite(value, super.customAccentValue, () {
       super.customAccentValue = value;
     });
@@ -138,13 +138,13 @@ mixin _$Preferences on _PreferencesBase, Store {
       Atom(name: '_PreferencesBase.accessTokenValue');
 
   @override
-  String get accessTokenValue {
+  String? get accessTokenValue {
     _$accessTokenValueAtom.reportRead();
     return super.accessTokenValue;
   }
 
   @override
-  set accessTokenValue(String value) {
+  set accessTokenValue(String? value) {
     _$accessTokenValueAtom.reportWrite(value, super.accessTokenValue, () {
       super.accessTokenValue = value;
     });
@@ -154,13 +154,13 @@ mixin _$Preferences on _PreferencesBase, Store {
       Atom(name: '_PreferencesBase.refreshTokenValue');
 
   @override
-  String get refreshTokenValue {
+  String? get refreshTokenValue {
     _$refreshTokenValueAtom.reportRead();
     return super.refreshTokenValue;
   }
 
   @override
-  set refreshTokenValue(String value) {
+  set refreshTokenValue(String? value) {
     _$refreshTokenValueAtom.reportWrite(value, super.refreshTokenValue, () {
       super.refreshTokenValue = value;
     });
@@ -169,13 +169,13 @@ mixin _$Preferences on _PreferencesBase, Store {
   final _$usernameValueAtom = Atom(name: '_PreferencesBase.usernameValue');
 
   @override
-  String get usernameValue {
+  String? get usernameValue {
     _$usernameValueAtom.reportRead();
     return super.usernameValue;
   }
 
   @override
-  set usernameValue(String value) {
+  set usernameValue(String? value) {
     _$usernameValueAtom.reportWrite(value, super.usernameValue, () {
       super.usernameValue = value;
     });
@@ -184,13 +184,13 @@ mixin _$Preferences on _PreferencesBase, Store {
   final _$emailValueAtom = Atom(name: '_PreferencesBase.emailValue');
 
   @override
-  String get emailValue {
+  String? get emailValue {
     _$emailValueAtom.reportRead();
     return super.emailValue;
   }
 
   @override
-  set emailValue(String value) {
+  set emailValue(String? value) {
     _$emailValueAtom.reportWrite(value, super.emailValue, () {
       super.emailValue = value;
     });
@@ -214,13 +214,13 @@ mixin _$Preferences on _PreferencesBase, Store {
   final _$tagsValueAtom = Atom(name: '_PreferencesBase.tagsValue');
 
   @override
-  List<dynamic> get tagsValue {
+  List<Tag> get tagsValue {
     _$tagsValueAtom.reportRead();
     return super.tagsValue;
   }
 
   @override
-  set tagsValue(List<dynamic> value) {
+  set tagsValue(List<Tag> value) {
     _$tagsValueAtom.reportWrite(value, super.tagsValue, () {
       super.tagsValue = value;
     });

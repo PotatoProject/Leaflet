@@ -75,8 +75,8 @@ class Locales {
 }
 
 abstract class _$LocaleBase {
-  String locale;
-  Map<String, String> data;
+  String get locale;
+  Map<String, String> get data;
 }
 
 class _$LocaleAfZA extends _$LocaleBase {

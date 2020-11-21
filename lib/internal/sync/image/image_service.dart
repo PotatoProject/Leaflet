@@ -28,13 +28,13 @@ class ImageService {
       case StorageLocation.IMGUR:
         String url = savedImage.uri.toString();
         await downloadImageToCache(url, savedImage);
-        addToDownloaded(savedImage.hash);
+        addToDownloaded(savedImage.hash!);
         break;
       case StorageLocation.SYNC:
         String url =
-            await FilesController.getDownloadUrlFromSync(savedImage.hash);
+            await FilesController.getDownloadUrlFromSync(savedImage.hash!);
         await downloadImageToCache(url, savedImage);
-        addToDownloaded(savedImage.hash);
+        addToDownloaded(savedImage.hash!);
         break;
     }
     return;
@@ -122,7 +122,7 @@ class ImageService {
         await ImgurController.uploadImage(savedImage, normalImage);
         break;
       case StorageLocation.SYNC:
-        await FilesController.uploadImageToSync(savedImage.hash, normalImage);
+        await FilesController.uploadImageToSync(savedImage.hash!, normalImage);
         break;
     }
   }
@@ -137,7 +137,7 @@ class ImageService {
     savedImage.blurHash = blurHash;
     File imageFile = await _saveImage(compressedImage, savedImage);
     savedImage.uri = imageFile.uri;
-    addToDownloaded(savedImage.hash);
+    addToDownloaded(savedImage.hash!);
     return savedImage;
   }
 
@@ -210,7 +210,7 @@ class ImageService {
   static void deleteImage(SavedImage image) {
     if (image.uploaded == true) {
       helper.listNotes(ReturnMode.LOCAL).then((notes) {
-        var images = List<SavedImage>();
+        var images = [];
         for (var note in notes) {
           images.addAll(note.images);
         }
@@ -219,7 +219,7 @@ class ImageService {
           return;
         } else {
           if (image.storageLocation == StorageLocation.SYNC) {
-            addToDeleted(image.hash);
+            addToDeleted(image.hash!);
           }
           if (image.existsLocally) {
             try {

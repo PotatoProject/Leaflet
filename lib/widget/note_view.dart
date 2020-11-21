@@ -14,16 +14,16 @@ import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteView extends StatefulWidget {
   final Note note;
-  final SpannableList providedTitleList;
-  final SpannableList providedContentList;
-  final Function() onTap;
-  final Function() onLongPress;
+  final SpannableList? providedTitleList;
+  final SpannableList? providedContentList;
+  final Function()? onTap;
+  final Function()? onLongPress;
   final bool selectorOpen;
   final bool selected;
 
   NoteView({
-    Key key,
-    @required this.note,
+    Key? key,
+    required this.note,
     this.providedTitleList,
     this.providedContentList,
     this.onTap,
@@ -40,25 +40,25 @@ class _NoteViewState extends State<NoteView> {
   bool _hovered = false;
   bool _focused = false;
   bool _highlighted = false;
-  double _elevation;
-  bool _mouseIsConnected;
+  double _elevation = 2;
+  bool _mouseIsConnected = false;
 
   @override
   void initState() {
-    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
-    RendererBinding.instance.mouseTracker.addListener(mouseListener);
+    _mouseIsConnected = RendererBinding.instance!.mouseTracker.mouseIsConnected;
+    RendererBinding.instance!.mouseTracker.addListener(mouseListener);
     super.initState();
   }
 
   @override
   void dispose() {
-    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
+    RendererBinding.instance!.mouseTracker.removeListener(mouseListener);
     super.dispose();
   }
 
   void mouseListener() {
     final bool mouseIsConnected =
-        RendererBinding.instance.mouseTracker.mouseIsConnected;
+        RendererBinding.instance!.mouseTracker.mouseIsConnected;
     if (mouseIsConnected != _mouseIsConnected) {
       setState(() {
         _mouseIsConnected = mouseIsConnected;
@@ -69,7 +69,7 @@ class _NoteViewState extends State<NoteView> {
   @override
   Widget build(BuildContext context) {
     //String parsedStyleJson = utf8.decode(gzip.decode(note.styleJson.data));
-    SpannableList spannableList = widget
+    SpannableList? spannableList = widget
         .providedContentList; // ?? SpannableList.fromJson(parsedStyleJson);
     Color backgroundColor = widget.note.color != 0
         ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
@@ -89,7 +89,7 @@ class _NoteViewState extends State<NoteView> {
     }
 
     if (widget.selected) {
-      borderColor = Theme.of(context).iconTheme.color;
+      borderColor = Theme.of(context).iconTheme.color!;
     } else {
       borderColor = Colors.transparent;
     }
@@ -128,8 +128,8 @@ class _NoteViewState extends State<NoteView> {
           children: <Widget>[
             IgnorePointer(
               child: Visibility(
-                visible: (widget.note.images?.isNotEmpty ?? false) &&
-                    !widget.note.hideContent,
+                visible:
+                    widget.note.images.isNotEmpty && !widget.note.hideContent,
                 child: NoteViewImages(
                   images: widget.note.images,
                   showPlusImages: true,
@@ -179,22 +179,25 @@ class _NoteViewState extends State<NoteView> {
     );
   }
 
-  List<Widget> getItems(BuildContext context, SpannableList spannableList) {
+  List<Widget> getItems(BuildContext context, SpannableList? spannableList) {
     List<Widget> items = [];
+
+    String title = widget.note.title ?? "";
+    String content = widget.note.content ?? "";
 
     if (widget.note.title != "") {
       items.add(
         widget.providedTitleList != null
             ? RichText(
-                text: widget.providedTitleList.toTextSpan(
+                text: widget.providedTitleList!.toTextSpan(
                   widget.note.title,
                   defaultStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context)
                         .textTheme
-                        .caption
-                        .color
+                        .caption!
+                        .color!
                         .withOpacity(0.7),
                   ),
                 ),
@@ -208,8 +211,8 @@ class _NoteViewState extends State<NoteView> {
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context)
                       .textTheme
-                      .caption
-                      .color
+                      .caption!
+                      .color!
                       .withOpacity(0.7),
                 ),
                 maxLines: 1,
@@ -218,23 +221,23 @@ class _NoteViewState extends State<NoteView> {
       );
     }
 
-    if ((widget.note.title.isEmpty &&
-            widget.note.content.isEmpty &&
+    if ((title.isEmpty &&
+            content.isEmpty &&
             widget.note.listContent.isEmpty &&
             !widget.note.hideContent &&
             widget.note.images.isEmpty) ||
-        (widget.note.content.isNotEmpty && !widget.note.hideContent)) {
+        (content.isNotEmpty && !widget.note.hideContent)) {
       items.add(
         spannableList != null
             ? RichText(
                 text: spannableList.toTextSpan(
                   widget.note.content,
-                  defaultStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                  defaultStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
                         fontSize: 16,
                         color: Theme.of(context)
                             .textTheme
-                            .caption
-                            .color
+                            .caption!
+                            .color!
                             .withOpacity(0.5),
                       ),
                 ),
@@ -242,13 +245,13 @@ class _NoteViewState extends State<NoteView> {
                 overflow: TextOverflow.ellipsis,
               )
             : Text(
-                widget.note.content,
+                content,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context)
                       .textTheme
-                      .caption
-                      .color
+                      .caption!
+                      .color!
                       .withOpacity(0.5),
                 ),
                 maxLines: 8,
@@ -276,7 +279,7 @@ class _NoteViewState extends State<NoteView> {
   }
 
   List<Widget> get listContentWidgets => List.generate(
-        min(widget.note.listContent?.length ?? 0, 6),
+        min(widget.note.listContent.length, 6),
         (index) {
           ListItem item = widget.note.listContent[index];
           Color backgroundColor = widget.note.color != 0
@@ -292,11 +295,11 @@ class _NoteViewState extends State<NoteView> {
               : NoteViewCheckbox(
                   value: item.status,
                   activeColor: widget.note.color != 0
-                      ? Theme.of(context).textTheme.caption.color
+                      ? Theme.of(context).textTheme.caption!.color!
                       : Theme.of(context).accentColor,
                   checkColor: backgroundColor,
                   onChanged: (value) {
-                    widget.note.listContent[index].status = value;
+                    widget.note.listContent[index].status = value!;
                     widget.note.markChanged();
                     helper.saveNote(widget.note);
                     setState(() {});
@@ -306,7 +309,7 @@ class _NoteViewState extends State<NoteView> {
                   visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                 );
           final text = showMoreItem
-              ? "${(widget.note.listContent?.length ?? 0) - 5} more items"
+              ? "${(widget.note.listContent.length) - 5} more items"
               : item.text;
 
           return LayoutBuilder(
@@ -333,8 +336,8 @@ class _NoteViewState extends State<NoteView> {
                       style: TextStyle(
                         color: Theme.of(context)
                             .textTheme
-                            .caption
-                            .color
+                            .caption!
+                            .color!
                             .withOpacity(
                               item.status && !showMoreItem ? 0.5 : 0.7,
                             ),

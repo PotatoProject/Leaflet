@@ -34,6 +34,8 @@ class InAppUpdater {
   }
 
   static Future<AppUpdateInfo> _internalCheckForUpdate() async {
+    if (appInfo.packageInfo == null)
+      throw UnsupportedError("Platform not supported");
     switch (buildType) {
       case BuildType.FDROID:
         // TODO: implement when app is uploaded to fdroid
@@ -48,7 +50,7 @@ class InAppUpdater {
         Map<dynamic, dynamic> body = json.decode(githubRelease.body);
         int versionCode = int.parse(body["tag_name"].split("+")[1]);
         return AppUpdateInfo(
-          versionCode > int.parse(appInfo.packageInfo.buildNumber),
+          versionCode > int.parse(appInfo.packageInfo!.buildNumber),
           false,
           true,
           versionCode,
@@ -116,7 +118,7 @@ class InAppUpdater {
           showNotification: false,
           openFileFromNotification: false,
         );
-        Navigator.of(context).push(
+        Navigator.of(context)?.push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
               return FadeTransition(
@@ -131,40 +133,40 @@ class InAppUpdater {
     }
   }
 
-  static Future<bool> _showUpdateDialog(BuildContext context) {
-    return showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  IconLogo(
-                    height: 24,
-                  ),
-                  SizedBox(width: 16),
-                  Text("Update available!"),
-                ],
+  static Future<bool> _showUpdateDialog(BuildContext context) async {
+    bool? status = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              IconLogo(
+                height: 24,
               ),
-              content: Text(
-                "A new update is available to download, click update to start downloading and installing the update.",
-              ),
-              buttonPadding: EdgeInsets.symmetric(horizontal: 16),
-              actions: [
-                TextButton(
-                  child: Text("Not now".toUpperCase()),
-                  onPressed: () => Navigator.pop(context, false),
-                  style: ButtonStyle(),
-                ),
-                TextButton(
-                  child: Text("Update".toUpperCase()),
-                  onPressed: () => Navigator.pop(context, true),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
+              SizedBox(width: 16),
+              Text("Update available!"),
+            ],
+          ),
+          content: Text(
+            "A new update is available to download, click update to start downloading and installing the update.",
+          ),
+          buttonPadding: EdgeInsets.symmetric(horizontal: 16),
+          actions: [
+            TextButton(
+              child: Text("Not now".toUpperCase()),
+              onPressed: () => Navigator.pop(context, false),
+              style: ButtonStyle(),
+            ),
+            TextButton(
+              child: Text("Update".toUpperCase()),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+          ],
+        );
+      },
+    );
+    return status ?? false;
   }
 }
 
@@ -172,8 +174,8 @@ class InAppUpdatePage extends StatefulWidget {
   final String taskId;
 
   InAppUpdatePage({
-    @required this.taskId,
-  }) : assert(taskId != null);
+    required this.taskId,
+  });
 
   @override
   _InAppUpdatePageState createState() => _InAppUpdatePageState();
@@ -183,7 +185,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
   ReceivePort _port = ReceivePort();
 
   DownloadTaskStatus status = DownloadTaskStatus.enqueued;
-  int progress;
+  int? progress;
 
   @override
   void initState() {
@@ -211,7 +213,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
   static void downloadCallback(
       String id, DownloadTaskStatus status, int progress) {
     final SendPort send =
-        IsolateNameServer.lookupPortByName('downloader_send_port');
+        IsolateNameServer.lookupPortByName('downloader_send_port')!;
     send.send([id, status, progress]);
   }
 
@@ -238,7 +240,7 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
                         "Downloading update: ${progress ?? 0}%",
                       ),
                       subtitle: LinearProgressIndicator(
-                        value: progress != null ? progress / 100 : null,
+                        value: progress != null ? progress! / 100 : null,
                         backgroundColor:
                             Theme.of(context).accentColor.withOpacity(0.2),
                       ),

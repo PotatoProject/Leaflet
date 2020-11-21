@@ -14,11 +14,14 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
       case TagReturnMode.ALL:
         return select(tags).get();
       case TagReturnMode.SYNCED:
-        return (select(tags)..where((table) => table.id.contains("-synced")))
+        return (select(tags)
+              ..where(
+                  (table) => table.id.contains("-synced") as Expression<bool>))
             .get();
       default:
         return (select(tags)
-              ..where((table) => table.id.contains("-synced").not()))
+              ..where((table) =>
+                  table.id.contains("-synced").not() as Expression<bool>))
             .get();
     }
   }
@@ -31,11 +34,12 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
         break;
       case TagReturnMode.SYNCED:
         selectQuery = select(tags)
-          ..where((table) => table.id.contains("-synced"));
+          ..where((table) => table.id.contains("-synced") as Expression<bool>);
         break;
       default:
         selectQuery = select(tags)
-          ..where((table) => table.id.contains("-synced").not());
+          ..where((table) =>
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
     }
     return (selectQuery).watch();

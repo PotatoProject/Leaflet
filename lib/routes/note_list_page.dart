@@ -21,11 +21,11 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
-  final int tagIndex;
+  final int? tagIndex;
 
   NoteListPage({
-    Key key,
-    @required this.noteKind,
+    Key? key,
+    required this.noteKind,
     this.tagIndex,
   }) : super(key: key);
 
@@ -41,7 +41,7 @@ class _NoteListPageState extends State<NoteListPage> {
   bool get selecting => _selecting;
   set selecting(bool value) {
     _selecting = value;
-    BasePage.of(context).setBottomBarEnabled(!value);
+    BasePage.of(context)?.setBottomBarEnabled(!value);
   }
 
   @override
@@ -80,10 +80,10 @@ class _NoteListPageState extends State<NoteListPage> {
           builder: (context, snapshot) {
             Widget child;
             List<Note> notes = widget.noteKind == ReturnMode.TAG
-                ? snapshot.data
+                ? snapshot.data!
                     .where(
                       (note) =>
-                          note.tags.contains(prefs.tags[widget.tagIndex].id) &&
+                          note.tags.contains(prefs.tags[widget.tagIndex!].id) &&
                           !note.archived &&
                           !note.deleted,
                     )
@@ -179,29 +179,29 @@ class _NoteListPageState extends State<NoteListPage> {
     switch (widget.noteKind) {
       case ReturnMode.ARCHIVE:
         return MapEntry(
-          appInfo.emptyArchiveIllustration,
+          appInfo.emptyArchiveIllustration ?? Container(),
           LocaleStrings.mainPage.emptyStateArchive,
         );
       case ReturnMode.TRASH:
         return MapEntry(
-          appInfo.emptyTrashIllustration,
+          appInfo.emptyTrashIllustration ?? Container(),
           LocaleStrings.mainPage.emptyStateTrash,
         );
       case ReturnMode.FAVOURITES:
         return MapEntry(
-          appInfo.noFavouritesIllustration,
+          appInfo.noFavouritesIllustration ?? Container(),
           LocaleStrings.mainPage.emptyStateFavourites,
         );
       case ReturnMode.TAG:
         return MapEntry(
-          appInfo.noNotesIllustration,
+          appInfo.noNotesIllustration ?? Container(),
           LocaleStrings.mainPage.emptyStateTag,
         );
       case ReturnMode.ALL:
       case ReturnMode.NORMAL:
       default:
         return MapEntry(
-          appInfo.noNotesIllustration,
+          appInfo.noNotesIllustration ?? Container(),
           LocaleStrings.mainPage.emptyStateHome,
         );
     }
@@ -271,7 +271,7 @@ class _NoteListPageState extends State<NoteListPage> {
                 icon: Icon(Icons.settings_backup_restore),
                 onPressed: () async {
                   List<Note> notes = await helper.listNotes(widget.noteKind);
-                  bool result = await showDialog(
+                  bool? result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(LocaleStrings.common.areYouSure),
@@ -334,10 +334,10 @@ class _NoteListPageState extends State<NoteListPage> {
               if (result) {
                 List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
-                  note.tags.remove(prefs.tags[widget.tagIndex].id);
+                  note.tags.remove(prefs.tags[widget.tagIndex!].id);
                   await helper.saveNote(note.markChanged());
                 }
-                tagHelper.deleteTag(prefs.tags[widget.tagIndex]);
+                tagHelper.deleteTag(prefs.tags[widget.tagIndex!]);
                 Navigator.pop(context);
               }
             },
@@ -352,7 +352,7 @@ class _NoteListPageState extends State<NoteListPage> {
                 context: context,
                 isScrollControlled: true,
                 builder: (context) => TagEditor(
-                  tag: prefs.tags[widget.tagIndex],
+                  tag: prefs.tags[widget.tagIndex!],
                   onSave: (tag) {
                     Navigator.pop(context);
                     tagHelper.saveTag(tag.markChanged());

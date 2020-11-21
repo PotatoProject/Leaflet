@@ -24,7 +24,7 @@ class FilesController {
   }
 
   static Future<String> getUploadUrlFromSync(String hash) async {
-    String token = await prefs.getToken();
+    String? token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
     Response getResult =
@@ -40,7 +40,7 @@ class FilesController {
   }
 
   static Future<String> getDownloadUrlFromSync(String hash) async {
-    String token = await prefs.getToken();
+    String? token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
     Response getResult =
@@ -56,7 +56,7 @@ class FilesController {
   }
 
   static Future<void> deleteImage(String hash) async {
-    String token = await prefs.getToken();
+    String? token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/delete/$hash.jpg";
     Loggy.v(message: "Going to send DELETE to $url");
     Response deleteResult =
@@ -70,7 +70,7 @@ class FilesController {
   }
 
   static Future<FilesApiStats> getStats() async {
-    String token = await prefs.getToken();
+    String? token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/limit";
     Loggy.v(message: "Going to send GET to " + url);
     Response getResult =

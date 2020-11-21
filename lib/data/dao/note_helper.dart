@@ -16,40 +16,50 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         return select(notes).get();
       case ReturnMode.NORMAL:
         return (select(notes)
-              ..where((table) =>
-                  table.archived.not() &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) => table.archived.not() &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not() as Expression<bool>,
+              ))
             .get();
       case ReturnMode.ARCHIVE:
         return (select(notes)
-              ..where((table) =>
-                  table.archived &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) => table.archived &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not() as Expression<bool>,
+              ))
             .get();
       case ReturnMode.TRASH:
         return (select(notes)
-              ..where((table) =>
-                  table.archived.not() &
-                  table.deleted &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) => table.archived.not() &
+                    table.deleted &
+                    table.id.contains("-synced").not() as Expression<bool>,
+              ))
             .get();
       case ReturnMode.SYNCED:
-        return (select(notes)..where((table) => table.id.contains("-synced")))
+        return (select(notes)
+              ..where(
+                (table) => table.id.contains("-synced") as Expression<bool>,
+              ))
             .get();
       case ReturnMode.TAG:
       case ReturnMode.LOCAL:
         return (select(notes)
-              ..where((table) => table.id.contains("-synced").not()))
+              ..where(
+                (table) =>
+                    table.id.contains("-synced").not() as Expression<bool>,
+              ))
             .get();
       case ReturnMode.FAVOURITES:
         return (select(notes)
-              ..where((table) =>
-                  table.starred &
-                  table.archived.not() &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) => table.starred &
+                    table.archived.not() &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not() as Expression<bool>,
+              ))
             .get();
 
       default:
@@ -66,41 +76,38 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
         break;
       case ReturnMode.NORMAL:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived.not() &
+          ..where((table) => table.archived.not() &
               table.deleted.not() &
-              table.id.contains("-synced").not());
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
       case ReturnMode.ARCHIVE:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived &
+          ..where((table) => table.archived &
               table.deleted.not() &
-              table.id.contains("-synced").not());
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
       case ReturnMode.FAVOURITES:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.starred &
+          ..where((table) => table.starred &
               table.archived.not() &
               table.deleted.not() &
-              table.id.contains("-synced").not());
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
       case ReturnMode.TRASH:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived.not() &
+          ..where((table) => table.archived.not() &
               table.deleted &
-              table.id.contains("-synced").not());
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
       case ReturnMode.SYNCED:
         selectQuery = select(notes)
-          ..where((table) => table.id.contains("-synced"));
+          ..where((table) => table.id.contains("-synced") as Expression<bool>);
         break;
       case ReturnMode.TAG:
       case ReturnMode.LOCAL:
         selectQuery = select(notes)
-          ..where((table) => table.id.contains("-synced").not());
+          ..where((table) =>
+              table.id.contains("-synced").not() as Expression<bool>);
         break;
     }
 
@@ -133,15 +140,15 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
 class SearchQuery {
   bool caseSensitive;
-  int _color;
-  DateTime date;
+  int? _color;
+  DateTime? date;
   DateFilterMode dateMode;
   List<String> tags = [];
   bool onlyFavourites;
 
-  int get color => _color ?? 0;
+  int? get color => _color ?? 0;
 
-  set color(int value) {
+  set color(int? value) {
     if (value == -1) {
       _color = 0;
     } else {
@@ -151,7 +158,7 @@ class SearchQuery {
 
   SearchQuery({
     this.caseSensitive = true,
-    int color,
+    int? color,
     this.date,
     this.dateMode = DateFilterMode.ONLY,
     this.onlyFavourites = false,

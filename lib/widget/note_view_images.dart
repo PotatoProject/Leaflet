@@ -12,11 +12,11 @@ class NoteViewImages extends StatefulWidget {
   final double borderRadius;
   final bool showPlusImages;
   final int numPlusImages;
-  final Function(int) onImageTap;
+  final Function(int)? onImageTap;
   final bool useSmallFont;
 
   NoteViewImages({
-    @required this.images,
+    required this.images,
     this.borderRadius = 0,
     this.showPlusImages = false,
     this.numPlusImages = 0,
@@ -96,7 +96,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                       child: Material(
                         type: MaterialType.transparency,
                         child: InkWell(
-                          onTap: () => widget.onImageTap(index),
+                          onTap: () => widget.onImageTap?.call(index),
                         ),
                       ),
                     ),
