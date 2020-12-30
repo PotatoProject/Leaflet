@@ -89,6 +89,10 @@ abstract class _PreferencesBase with Store {
   @protected
   int lastUpdatedValue;
 
+  @observable
+  @protected
+  String deleteQueueValue;
+
   String get masterPass => masterPassValue;
   ThemeMode get themeMode => themeModeValue;
   Color get customAccent => customAccentValue;
@@ -106,6 +110,7 @@ abstract class _PreferencesBase with Store {
   List<String> get downloadedImages => downloadedImagesValue;
   List<String> get deletedImages => deletedImagesValue;
   int get lastUpdated => lastUpdatedValue;
+  String get deleteQueue => deleteQueueValue;
 
   set masterPass(String value) {
     masterPassValue = value;
@@ -192,6 +197,11 @@ abstract class _PreferencesBase with Store {
     prefs.setLastUpdated(value);
   }
 
+  set deleteQueue(String value) {
+    deleteQueueValue = value;
+    prefs.setDeleteQueue(value);
+  }
+
   void loadData() async {
     welcomePageSeenValue = await prefs.getWelcomePageSeen();
     themeModeValue = await prefs.getThemeMode();
@@ -215,7 +225,7 @@ abstract class _PreferencesBase with Store {
     downloadedImagesValue = await prefs.getDownloadedImages();
     deletedImagesValue = await prefs.getDeletedImages();
     lastUpdatedValue = await prefs.getLastUpdated();
-
+    deleteQueueValue = await prefs.getDeleteQueue();
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       tagsValue = newTags;
     });

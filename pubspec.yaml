@@ -48,6 +48,7 @@ dependencies:
   yaml:
   flutter_downloader:
   dio:
+  dio_http2_adapter:
   image:
   blurhash_dart:
   flutter_blurhash:
@@ -56,8 +57,12 @@ dependencies:
   mobx_codegen:
   flutter_staggered_animations:
   waterfall_flow:
-  
+  worker_manager:
   crayola:
+  file_selector:
+  file_selector_macos:
+  file_selector_linux:
+  file_selector_windows:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
@@ -65,14 +70,13 @@ dependencies:
     git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
-  file_chooser:
-    git:
-      url: git://github.com/google/flutter-desktop-embedding.git
-      path: plugins/file_chooser
 
 dev_dependencies:
   moor_generator:
   build_runner:
+  flutter_test:
+    sdk: flutter
+  mockito:
 
 flutter:
   uses-material-design: true

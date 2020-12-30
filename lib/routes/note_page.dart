@@ -12,7 +12,8 @@ import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
+import 'package:potato_notes/internal/sync/image_queue.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
@@ -56,6 +57,8 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
+    bool shouldFocusTitle = widget.note?.id == null;
+
     note = Note(
       id: widget.note?.id,
       title: widget.note?.title ?? "",
@@ -91,10 +94,9 @@ class _NotePageState extends State<NotePage> {
     );*/
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
-        if (note.id == null) {
+        if (shouldFocusTitle) {
           FocusScope.of(context).requestFocus(titleFocusNode);
         }
-        generateId();
       } else {
         if (widget.openWithList) toggleList();
 
@@ -112,18 +114,11 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> handleImageAdd(String path) async {
-    SavedImage savedImage = await ImageService.prepareLocally(File(path));
+    SavedImage savedImage = await ImageHelper.copyToCache(File(path));
     setState(() => note.images.add(savedImage));
+    ImageQueue.addUpload(savedImage, note.id);
     await helper.saveNote(note.markChanged());
-    await handleImageUpload();
-  }
-
-  Future<void> handleImageUpload() async {
-    return await ImageService.handleUploads([note]);
-  }
-
-  void generateId() {
-    if (note.id == null) note = note.copyWith(id: Utils.generateId());
+    //await handleImageUpload();
   }
 
   @override
@@ -716,7 +711,6 @@ class _NotePageState extends State<NotePage> {
   }
 
   void toggleList() async {
-    generateId();
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
@@ -726,7 +720,6 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addDrawing() async {
-    generateId();
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),

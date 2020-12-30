@@ -9,11 +9,11 @@ import 'package:potato_notes/internal/utils.dart';
 
 part 'saved_image.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(nullable: true)
 class SavedImage {
   String id = Utils.generateId();
   Uri uri;
-  StorageLocation storageLocation = StorageLocation.IMGUR;
+  StorageLocation storageLocation = StorageLocation.SYNC;
   String hash;
   String blurHash;
   bool encrypted = false;
@@ -21,9 +21,8 @@ class SavedImage {
   bool uploaded = false;
 
   @observable
-  bool get existsLocally =>
-      File(join(appInfo.tempDirectory.path, "$hash.jpg")).existsSync();
-  get path => appInfo.tempDirectory.path + "/$hash.jpg";
+  bool get existsLocally => File(path).existsSync();
+  get path => join(appInfo.tempDirectory.path, "$hash.jpg");
 
   SavedImage(
       this.id, this.uri, this.storageLocation, this.hash, this.encrypted);

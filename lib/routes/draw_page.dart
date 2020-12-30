@@ -18,7 +18,7 @@ import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_toolbar.dart';
@@ -394,7 +394,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       await imgFile.writeAsBytes(pngBytes, flush: true);
       Loggy.d(message: drawing);
 
-      SavedImage savedImage = await ImageService.prepareLocally(imgFile);
+      SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
       if (widget.savedImage != null) {
         widget.note.images
             .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);

@@ -4,7 +4,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file_chooser/file_chooser.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -17,8 +17,7 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
@@ -35,15 +34,15 @@ const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
   static deleteNoteSafely(Note note) {
-    ImageService.handleNoteDeletion(note);
+    ImageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
 
   static handleNotePagePop(Note note) {
-    ImageService.handleDeletes();
-    helper.listNotes(ReturnMode.LOCAL).then((notes) => {
-          SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
-        });
+    //ImageService.handleDeletes();
+    //helper.listNotes(ReturnMode.LOCAL).then((notes) => {
+    //      SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
+    //    });
   }
 
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -414,8 +413,7 @@ class Utils {
     File image = await pickImage();
 
     if (image != null) {
-      SavedImage savedImage =
-          await ImageService.prepareLocally(File(image.path));
+      SavedImage savedImage = await ImageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
       if (shouldPop) Navigator.pop(context);
@@ -455,13 +453,11 @@ class Utils {
 
     try {
       if (DeviceInfo.isDesktop) {
-        final image = await showOpenPanel(
-          canSelectDirectories: false,
-          allowsMultipleSelection: false,
-          allowedFileTypes: [
-            FileTypeFilterGroup(
+        final image = await openFile(
+          acceptedTypeGroups: [
+            XTypeGroup(
               label: 'images',
-              fileExtensions: [
+              extensions: [
                 'png',
                 'jpg',
                 'jpeg',
@@ -471,7 +467,7 @@ class Utils {
           ],
         );
 
-        path = image.paths[0];
+        path = image.path;
       } else {
         final image = await ImagePicker.pickImage(source: ImageSource.gallery);
 

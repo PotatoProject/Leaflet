@@ -20,8 +20,10 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:worker_manager/worker_manager.dart';
 
 main() async {
+  await Executor().warmUp();
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();

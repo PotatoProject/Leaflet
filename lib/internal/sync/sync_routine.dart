@@ -8,11 +8,13 @@ import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/sync/setting_controller.dart';
 import 'package:potato_notes/internal/sync/tag_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
+
+import 'image_queue.dart';
 
 class SyncRoutine {
   static const Set<String> settingsToSync = {
@@ -100,16 +102,15 @@ class SyncRoutine {
         throw ("Not logged in!");
       }
     }
+    ImageQueue.uploadQueue.clear();
+    await ImageQueue.fillUploadQueue();
+    await ImageQueue.process();
     // Recieve and send changes from API
     await sendSettingUpdates();
 
     // Fill the list of added, deleted and updated notes to create a local cache
     await updateLists();
 
-    List<Note> changedNotes = updatedNotes.keys.toList();
-    changedNotes.addAll(addedNotes);
-    await ImageService.handleUploads(changedNotes);
-    await ImageService.handleUploads(addedNotes);
     addedNotes.clear();
     updatedNotes.clear();
     deletedNotes.clear();
@@ -124,11 +125,6 @@ class SyncRoutine {
     // Send all of the note-related requests to the remote server
     try {
       await sendNoteUpdates();
-    } catch (e) {
-      return false;
-    }
-    try{
-      await ImageService.handleDeletes();
     } catch (e) {
       return false;
     }
@@ -180,29 +176,31 @@ class SyncRoutine {
       await saveSyncedNote(note);
     }
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
-    ImageService.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
+    await ImageHelper.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
     return true;
   }
 
   static Future<bool> syncNote(Note note) async {
     var synced = await helper.listNotes(ReturnMode.SYNCED);
-    try{
-      if(synced.indexWhere((syncedNote) => syncedNote.id == note.id + "-synced") != -1){
-        var deletedIdList = await NoteController.listDeleted(
-            [note.id]);
-        if(deletedIdList.length > 0){
-          Loggy.d(message: "Since note is deleted on remote, we should safely remove it");
+    try {
+      if (synced.indexWhere(
+              (syncedNote) => syncedNote.id == note.id + "-synced") !=
+          -1) {
+        var deletedIdList = await NoteController.listDeleted([note.id]);
+        if (deletedIdList.length > 0) {
+          Loggy.d(
+              message:
+                  "Since note is deleted on remote, we should safely remove it");
           Utils.deleteNoteSafely(note);
           return true;
         } else {
-          var syncedNote = synced.firstWhere((synced) => synced.id == note.id + "-synced");
-          if(syncedNote.lastModifyDate == note.lastModifyDate){
+          var syncedNote =
+              synced.firstWhere((synced) => synced.id == note.id + "-synced");
+          if (syncedNote.lastModifyDate == note.lastModifyDate) {
             Loggy.v(message: "Dont need to sync note, it hasnt been updated");
             return true;
           } else {
-            var delta = getNoteDelta(
-                note,
-                syncedNote);
+            var delta = getNoteDelta(note, syncedNote);
             await NoteController.update(note.id, delta);
             await saveSyncedNote(note);
             return true;
@@ -232,7 +230,7 @@ class SyncRoutine {
   Future<bool> sendNoteUpdates() async {
     // Send the post requests to add new notes
     for (Note note in addedNotes) {
-      if(await addNote(note) == false){
+      if (await addNote(note) == false) {
         return false;
       }
     }

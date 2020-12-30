@@ -6,7 +6,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -69,7 +69,7 @@ class MigrationTask {
         final response = await get(v1Note.imagePath);
         final file = File(join(appInfo.tempDirectory.path, "id.jpg"))..create();
         await file.writeAsBytes(response.bodyBytes);
-        savedImage = await ImageService.prepareLocally(file);
+        savedImage = await ImageHelper.copyToCache(file);
       }
 
       Note note = Note(
