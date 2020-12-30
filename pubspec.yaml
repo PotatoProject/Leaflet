@@ -45,6 +45,7 @@ dependencies:
   yaml:
   flutter_downloader:
   dio:
+  dio_http2_adapter:
   image:
   blurhash_dart:
   flutter_blurhash:
@@ -53,7 +54,8 @@ dependencies:
   mobx_codegen:
   flutter_staggered_animations:
   waterfall_flow:
-  
+  worker_manager:
+
   crayola:
 
   rich_text_editor:
@@ -70,6 +72,9 @@ dependencies:
 dev_dependencies:
   moor_generator:
   build_runner:
+  flutter_test:
+    sdk: flutter
+  mockito:
 
 dependency_overrides:
   intl: ^0.16.0

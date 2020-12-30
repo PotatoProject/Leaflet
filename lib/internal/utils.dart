@@ -17,7 +17,7 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
@@ -35,15 +35,15 @@ const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
   static deleteNoteSafely(Note note) {
-    ImageService.handleNoteDeletion(note);
+    ImageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
 
   static handleNotePagePop(Note note) {
-    ImageService.handleDeletes();
-    helper.listNotes(ReturnMode.LOCAL).then((notes) => {
-          SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
-        });
+    //ImageService.handleDeletes();
+    //helper.listNotes(ReturnMode.LOCAL).then((notes) => {
+    //      SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
+    //    });
   }
 
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
@@ -128,7 +128,7 @@ class Utils {
         ? screenSize.height - (fabPosition.dy + fabSize.height)
         : null;
 
-    Navigator.of(context)?.push(
+    Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, anim, secAnim) {
           return Stack(
@@ -360,7 +360,7 @@ class Utils {
     bool allowGestures = true,
     bool pushImmediate = false,
   }) async {
-    return Navigator.of(context)?.push(
+    return Navigator.of(context).push(
       DismissiblePageRoute(
         builder: (context) => ScaffoldMessenger(
           child: route,
@@ -411,8 +411,7 @@ class Utils {
     File? image = await pickImage();
 
     if (image != null) {
-      SavedImage savedImage =
-          await ImageService.prepareLocally(File(image.path));
+      SavedImage savedImage = await ImageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
       if (shouldPop) Navigator.pop(context);

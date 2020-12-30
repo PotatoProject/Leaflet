@@ -118,7 +118,7 @@ class InAppUpdater {
           showNotification: false,
           openFileFromNotification: false,
         );
-        Navigator.of(context)?.push(
+        Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
               return FadeTransition(

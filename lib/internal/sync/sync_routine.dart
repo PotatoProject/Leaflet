@@ -8,11 +8,13 @@ import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
-import 'package:potato_notes/internal/sync/image/image_service.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/sync/setting_controller.dart';
 import 'package:potato_notes/internal/sync/tag_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
+
+import 'image_queue.dart';
 
 class SyncRoutine {
   static const Set<String> settingsToSync = {
@@ -100,16 +102,16 @@ class SyncRoutine {
         throw ("Not logged in!");
       }
     }
+    ImageQueue.uploadQueue.clear();
+    await ImageQueue.fillUploadQueue();
+    await ImageQueue.process();
     // Recieve and send changes from API
     await sendSettingUpdates();
 
     // Fill the list of added, deleted and updated notes to create a local cache
     await updateLists();
 
-    List<Note> changedNotes = updatedNotes.keys.toList();
-    changedNotes.addAll(addedNotes);
-    await ImageService.handleUploads(changedNotes);
-    await ImageService.handleUploads(addedNotes);
+
     addedNotes.clear();
     updatedNotes.clear();
     deletedNotes.clear();
@@ -124,11 +126,6 @@ class SyncRoutine {
     // Send all of the note-related requests to the remote server
     try {
       await sendNoteUpdates();
-    } catch (e) {
-      return false;
-    }
-    try {
-      await ImageService.handleDeletes();
     } catch (e) {
       return false;
     }
@@ -180,7 +177,7 @@ class SyncRoutine {
       await saveSyncedNote(note);
     }
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
-    ImageService.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
+    await ImageHelper.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
     return true;
   }
 

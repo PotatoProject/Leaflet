@@ -705,7 +705,7 @@ class _MaterialAppState extends State<NotesApp> {
         key: widget.scaffoldMessengerKey,
         child: AnimatedTheme(
           data: theme,
-          isMaterialAppTheme: true,
+          //isMaterialAppTheme: true,
           child: widget.builder != null
               ? Builder(
                   builder: (BuildContext context) {

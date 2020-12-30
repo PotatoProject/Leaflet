@@ -194,4 +194,13 @@ class SharedPrefs {
   List<String> getChangedKeys() {
     return prefs.getStringList("updated_keys") ?? [];
   }
+
+  Future<String?> getDeleteQueue() async {
+    return prefs.getString("delete_queue");
+  }
+
+  void setDeleteQueue(String? value) async {
+    await prefs.setString("delete_queue", value);
+  }
+
 }

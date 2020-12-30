@@ -58,10 +58,12 @@ class _NoteViewImagesState extends State<NoteViewImages> {
               itemBuilder: (context, index) {
                 SavedImage savedImage = widget.images[index];
                 ImageProvider image;
-                if (savedImage.existsLocally) {
+                if (savedImage.existsLocally && savedImage.uploaded) {
                   image = FileImage(File(savedImage.path));
-                } else {
+                } else if(savedImage.hash != null) {
                   image = BlurHashImage(savedImage.blurHash);
+                } else {
+                  image = FileImage(File(savedImage.uri!.path));
                 }
                 return Stack(
                   children: [

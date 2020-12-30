@@ -89,7 +89,7 @@ abstract class CustomSearchDelegate<T> {
 
   void close(BuildContext context) {
     _focusNode?.unfocus();
-    Navigator.of(context)?..pop();
+    Navigator.of(context)..pop();
   }
 
   final String? searchFieldLabel;
