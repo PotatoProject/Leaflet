@@ -99,8 +99,11 @@ class ImageQueue {
     }
 
     await Future.wait(deleteQueue.map((item) async {
-      //if(await hasDuplicates(item.savedImage))
-      return await item.deleteImage();
+      if (await hasDuplicates(item.savedImage)) {
+        item.status = QueueItemStatus.COMPLETE;
+      } else {
+        return await item.deleteImage();
+      }
     }));
 
     /*for(var item in deleteQueue){
