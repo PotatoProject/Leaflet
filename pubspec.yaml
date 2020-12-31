@@ -55,6 +55,7 @@ dependencies:
   flutter_staggered_animations:
   waterfall_flow:
   worker_manager:
+  blake2:
 
   crayola:
 
