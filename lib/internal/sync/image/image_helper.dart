@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
-import 'package:crypto/crypto.dart';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
@@ -78,10 +77,10 @@ class ImageHelper {
   }
 
   static String generateImageHash(Uint8List rawBytes) {
-    String imageData = rawBytes.toString();
-    List<int> bytes = utf8.encode(imageData);
-    String digest = sha256.convert(bytes).toString();
-    return digest;
+    var blake2b = Blake2b();
+    blake2b.update(rawBytes);
+    var rawDigest = blake2b.digest();
+    return rawDigest.map((int) => int.toRadixString(16)).join('');
   }
 
   static String generateBlurHash(Image image) {
