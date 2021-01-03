@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Добавить в избранное</string>
     <string name="selection_bar.remove_favourites">Удалить из избранного</string>
     <string name="selection_bar.change_color">Изменить цвет</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Архивировать</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Архив</string>
     <string name="selection_bar.delete">Переместить в корзину</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Закрепить</string>
     <string name="selection_bar.share">Поделиться</string>
