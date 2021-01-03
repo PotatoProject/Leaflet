@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="textbox_hint">Search</string>
-    <string name="tag_create_hint">Create tag \"%s\"</string>
-    <string name="note.type_to_search">Type to start searching</string>
-    <string name="note.nothing_found">Nothing found...</string>
+    <string name="textbox_hint">Tìm kiếm</string>
+    <string name="tag_create_hint">Tạo nhãn “%s”</string>
+    <string name="note.type_to_search">Gõ để bắt đầu tìm kiếm</string>
+    <string name="note.nothing_found">Không tìm thấy kết quả phù hợp...</string>
 </resources>
