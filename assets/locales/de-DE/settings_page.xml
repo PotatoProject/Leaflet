@@ -16,7 +16,7 @@
     <string name="privacy.use_master_pass.disclaimer">Warnung: Falls sie den Master-Pass vergessen, können sie ihn NICHT zurücksetzen. Nur wenn sie die App löschen und neu installieren. Dabei werden alle Daten gelöscht. Bitte schreiben Sie ihn auf und bewahren sie ihn sicher auf.</string>
     <string name="privacy.modify_master_pass">Master-Pass ändern</string>
     <string name="info.title">Info</string>
-    <string name="info.about_app">Über Leaflet</string>
+    <string name="info.about_app">Über PotatoNotes</string>
     <string name="debug.title">Fehlerbeseitigung</string>
     <string name="debug.show_setup_screen">Erststartmenü bei nächstem Start</string>
     <string name="debug.clear_database">Datenbank leeren</string>
