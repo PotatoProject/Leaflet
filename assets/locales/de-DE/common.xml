@@ -20,10 +20,10 @@
     <string name="master_pass.modify">Master-Pass ändern</string>
     <string name="master_pass.confirm">Master-Pass bestätigen</string>
     <string name="are_you_sure">Bist du sicher?</string>
-    <string name="case_sensitive">Unterscheide Groß-/Kleinschreibung</string>
+    <string name="case_sensitive">Groß-/Kleinschreibung beachten</string>
     <string name="color_filter">Farbfilter</string>
     <string name="date_filter">Datumsfilter</string>
-    <string name="date_filter_mode">Filter-Modus</string>
+    <string name="date_filter_mode">Filtermodus</string>
     <string name="date_filter_mode.after">Nach diesem Datum</string>
     <string name="date_filter_mode.exact">An diesem Datum</string>
     <string name="date_filter_mode.before">Vor diesem Datum</string>
@@ -40,7 +40,7 @@
     <string name="notification.default_title">Angeheftete Benachrichtigung</string>
     <string name="notification.details_title">Angeheftete Benachrichtigungen</string>
     <string name="notification.details_desc">Vom Benutzer angeheftete Benachrichtigungen</string>
-    <string name="tag.new">Neues Tag</string>
+    <string name="tag.new">Neues Etikett</string>
     <string name="tag.modify">Stichwort bearbeiten</string>
     <string name="tag.textbox_hint">Name</string>
 </resources>
