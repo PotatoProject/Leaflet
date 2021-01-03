@@ -3,9 +3,9 @@
     <string name="settings">Instellingen</string>
     <string name="search">Zoeken</string>
     <string name="account">Account</string>
-    <string name="restore_prompt.archive">Wilt u alle notities in het archief terugzetten?</string>
-    <string name="restore_prompt.trash">Wilt u alle notities in de prullenbak herstellen?</string>
-    <string name="tag_delete_prompt">Dit label zal voor altijd verloren gaan als u het verwijdert</string>
+    <string name="restore_prompt.archive">Wil je alle notities in het archief terugzetten?</string>
+    <string name="restore_prompt.trash">Wil je alle notities in de prullenbak herstellen?</string>
+    <string name="tag_delete_prompt">Dit label zal voor altijd verloren gaan als je het verwijdert</string>
     <string name="deleted_empty_note">Lege notitie verwijderd</string>
     <string name="empty_state.home">Er zijn nog geen notities toegevoegd</string>
     <string name="empty_state.archive">Het archief is leeg</string>
@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Voeg toe aan favorieten</string>
     <string name="selection_bar.remove_favourites">Verwijder uit favorieten</string>
     <string name="selection_bar.change_color">Kleur wijzigen</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiveren</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archief</string>
     <string name="selection_bar.delete">Naar prullenbak verplaatsen</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Vastzetten</string>
     <string name="selection_bar.share">Deel</string>
