@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="button.get_started">Get started</string>
-    <string name="button.finish">Finish</string>
-    <string name="button.next">Next</string>
-    <string name="button.back">Back</string>
-    <string name="basic_customization.title">Basic customization</string>
-    <string name="welcome.catchphrase">Your new favourite notes app</string>
-    <string name="finish.title">All set!</string>
-    <string name="finish.last_words">Now you\'re ready to enjoy PotatoNotes to its fullest. \nIf you want to customize more head over to the settings page in the side drawer, instead if you want to manage your PotatoSync account instead click your avatar on the top bar.</string>
+    <string name="button.get_started">ابدأ الاستخدام</string>
+    <string name="button.finish">إنهاء</string>
+    <string name="button.next">التالي</string>
+    <string name="button.back">رجوع</string>
+    <string name="basic_customization.title">التخصيص البسيط</string>
+    <string name="welcome.catchphrase">تطبيق ملاحظاتك المفضل الجديد</string>
+    <string name="finish.title">كل شيء جاهز!</string>
+    <string name="finish.last_words">الآن أنت مستعد للإستمتاع بـPotatoNotes لأقصى حد.
+\nإذا كنت ترغب في تخصيص المزيد إنتقل للإعدادات في القائمة الجانبية، أو إذا كنت تريد إدارة حساب PotatoNotes الخاص بك إضغط على الأڨتار في الشريط العلوي.</string>
 </resources>
