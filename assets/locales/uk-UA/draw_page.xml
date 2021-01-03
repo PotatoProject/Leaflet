@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="color_black">Black</string>
-    <string name="exit_prompt">Any unsaved change will be lost. Do you want to exit?</string>
-    <string name="tools.brush">Brush</string>
-    <string name="tools.eraser">Eraser</string>
-    <string name="tools.marker">Marker</string>
-    <string name="tools.color_picker">Color</string>
-    <string name="tools.radius_picker">Radius</string>
+    <string name="color_black">Чорний</string>
+    <string name="exit_prompt">Всі незбережені зміни буде втрачено. Бажаєте вийти?</string>
+    <string name="tools.brush">Кисть</string>
+    <string name="tools.eraser">Гумка</string>
+    <string name="tools.marker">Маркер</string>
+    <string name="tools.color_picker">Колір</string>
+    <string name="tools.radius_picker">Радіус</string>
 </resources>
