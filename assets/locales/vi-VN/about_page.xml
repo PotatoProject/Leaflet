@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">About</string>
-    <string name="pwa_version">PWA version</string>
-    <string name="links">Links</string>
-    <string name="contributors">Contributors</string>
-    <string name="contributors.hrx">Lead developer and app design</string>
-    <string name="contributors.bas">Sync API and app</string>
-    <string name="contributors.nico">Sync API</string>
-    <string name="contributors.kat">Old sync API</string>
-    <string name="contributors.rohit">Illustrations and note colors</string>
-    <string name="contributors.rshbfn">App icon and main accent</string>
+    <string name="title">Cài đặt</string>
+    <string name="pwa_version">Phiên bản PWA</string>
+    <string name="links">Những liên kết</string>
+    <string name="contributors">Những người đóng góp</string>
+    <string name="contributors.hrx">Nhà phát triển và thiết kế ứng dụng</string>
+    <string name="contributors.bas">Đồng bộ API và ứng dụng</string>
+    <string name="contributors.nico">Đồng bộ API</string>
+    <string name="contributors.kat">API Đồng bộ Cũ</string>
+    <string name="contributors.rohit">Những nét kẻ và màu ghi nhớ</string>
+    <string name="contributors.rshbfn">Biểu tượng ứng dụng và màu chính</string>
 </resources>
