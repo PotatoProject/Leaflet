@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Névjegy</string>
+    <string name="title">Beállítások</string>
     <string name="pwa_version">PWA verzió</string>
     <string name="links">Linkek</string>
     <string name="contributors">Közreműködők</string>
