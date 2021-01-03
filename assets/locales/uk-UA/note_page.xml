@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_hint">Title</string>
-    <string name="content_hint">Content</string>
-    <string name="list_item_hint">Input</string>
-    <string name="add_entry_hint">Add entry</string>
-    <string name="toolbar.tags">Manage tags</string>
-    <string name="toolbar.color">Change color</string>
-    <string name="toolbar.add_item">Add item</string>
-    <string name="privacy.title">Privacy options</string>
-    <string name="privacy.hide_content">Hide content on main page</string>
-    <string name="privacy.lock_note">Lock note</string>
-    <string name="privacy.lock_note.missing_pass">You must set a master pass from settings</string>
-    <string name="privacy.use_biometrics">Use biometrics to unlock</string>
-    <string name="toggle_list">Toggle list</string>
-    <string name="image_gallery">Image from gallery</string>
-    <string name="image_camera">Take a photo</string>
-    <string name="drawing">Add a drawing</string>
-    <string name="added_favourites">Note added to favourites</string>
-    <string name="removed_favourites">Note removed from favourites</string>
+    <string name="title_hint">Заголовок</string>
+    <string name="content_hint">Вміст</string>
+    <string name="list_item_hint">Ввід</string>
+    <string name="add_entry_hint">Додати запис</string>
+    <string name="toolbar.tags">Керування тегами</string>
+    <string name="toolbar.color">Змінити колір</string>
+    <string name="toolbar.add_item">Додати елемент</string>
+    <string name="privacy.title">Налаштування приватності</string>
+    <string name="privacy.hide_content">Приховати вміст на головній сторінці</string>
+    <string name="privacy.lock_note">Заблокувати нотатку</string>
+    <string name="privacy.lock_note.missing_pass">Ви повинні встановити головний пароль з налаштувань</string>
+    <string name="privacy.use_biometrics">Використовувати біометрику для розблокування</string>
+    <string name="toggle_list">Список</string>
+    <string name="image_gallery">Зображення з галереї</string>
+    <string name="image_camera">Зробити знімок</string>
+    <string name="drawing">Додати малюнок</string>
+    <string name="added_favourites">Нотатку додано до обраного</string>
+    <string name="removed_favourites">Нотатку видалено з обраного</string>
 </resources>
