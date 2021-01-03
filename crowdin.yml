@@ -1,6 +1,6 @@
 project_id: 414076
-api_token: bc3d5dc96e5047ebd20907ccc1370141fb9f3f1c197d93a291e8b2d88d7eb39372a3422178c49ee2
-
+api_token: >-
+  bc3d5dc96e5047ebd20907ccc1370141fb9f3f1c197d93a291e8b2d88d7eb39372a3422178c49ee2
 files:
   - source: /assets/locales/en-US/*.xml
     translation: /assets/locales/%locale%/%original_file_name%
