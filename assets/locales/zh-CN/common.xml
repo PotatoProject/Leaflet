@@ -11,7 +11,7 @@
     <string name="edit">编辑</string>
     <string name="go_on">继续</string>
     <string name="exit">退出</string>
-    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s到%s</string>
+    <string name="x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s 共 %s</string>
     <string name="new_note">新建笔记</string>
     <string name="new_list">新建列表</string>
     <string name="new_image">新建图像</string>
