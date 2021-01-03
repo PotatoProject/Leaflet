@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Ajouter à vos favoris</string>
     <string name="selection_bar.remove_favourites">Retirer des favoris</string>
     <string name="selection_bar.change_color">Changer la couleur</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archives</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archive</string>
     <string name="selection_bar.delete">Déplacer vers la corbeille</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Épingler</string>
     <string name="selection_bar.share">Partager</string>
