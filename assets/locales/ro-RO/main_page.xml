@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Adaugă la favorite</string>
     <string name="selection_bar.remove_favourites">Elimină de la favorite</string>
     <string name="selection_bar.change_color">Schimbă culoarea</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Arhivează</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Arhivă</string>
     <string name="selection_bar.delete">Mută la gunoi</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Fixează</string>
     <string name="selection_bar.share">Distribuie</string>
