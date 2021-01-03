@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="textbox_hint">Search</string>
-    <string name="tag_create_hint">Create tag \"%s\"</string>
-    <string name="note.type_to_search">Type to start searching</string>
-    <string name="note.nothing_found">Nothing found...</string>
+    <string name="textbox_hint">بحث</string>
+    <string name="tag_create_hint">إنشاء علامة \"%s\"</string>
+    <string name="note.type_to_search">اكتب لبدء البحث</string>
+    <string name="note.nothing_found">لم يتم العثور على شيء...</string>
 </resources>
