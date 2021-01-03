@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Settings</string>
-    <string name="personalization.title">Personalization</string>
-    <string name="personalization.theme_mode">Theme mode</string>
-    <string name="personalization.theme_mode.system">System</string>
-    <string name="personalization.theme_mode.light">Light</string>
-    <string name="personalization.theme_mode.dark">Dark</string>
-    <string name="personalization.use_amoled">Use black theme</string>
-    <string name="personalization.use_custom_accent">Follow system accent</string>
-    <string name="personalization.custom_accent">Pick a custom accent</string>
-    <string name="personalization.use_grid">Grid view for notes</string>
-    <string name="personalization.locale">App locale</string>
-    <string name="privacy.title">Privacy</string>
-    <string name="privacy.use_master_pass">Use master pass</string>
-    <string name="privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can\'t reset it, you\'ll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.</string>
-    <string name="privacy.modify_master_pass">Modify master pass</string>
-    <string name="info.title">Info</string>
-    <string name="info.about_app">About PotatoNotes</string>
-    <string name="debug.title">Debug</string>
-    <string name="debug.show_setup_screen">Show setup screen on next startup</string>
-    <string name="debug.clear_database">Clear database</string>
-    <string name="debug.migrate_database">Migrate database</string>
-    <string name="debug.log_level">Log level</string>
+    <string name="title">Налаштування</string>
+    <string name="personalization.title">Персоналізація</string>
+    <string name="personalization.theme_mode">Тема</string>
+    <string name="personalization.theme_mode.system">Системна</string>
+    <string name="personalization.theme_mode.light">Світла</string>
+    <string name="personalization.theme_mode.dark">Темна</string>
+    <string name="personalization.use_amoled">Використовувати чорну тему</string>
+    <string name="personalization.use_custom_accent">Використовувати системний акцент</string>
+    <string name="personalization.custom_accent">Вибрати свій акцент</string>
+    <string name="personalization.use_grid">Сітка для нотаток</string>
+    <string name="personalization.locale">Мова додатку</string>
+    <string name="privacy.title">Приватність</string>
+    <string name="privacy.use_master_pass">Використовувати головний пароль</string>
+    <string name="privacy.use_master_pass.disclaimer">Увага: якщо ви забудете пароль, ви не зможете його скинути. Вам потрібно буде перевстановити додаток, що призведе до втрати даних. Будь ласка, запишіть його де-небудь.</string>
+    <string name="privacy.modify_master_pass">Змінити майстер-пароль</string>
+    <string name="info.title">Інформація</string>
+    <string name="info.about_app">Про PotatoNotes</string>
+    <string name="debug.title">Відладка</string>
+    <string name="debug.show_setup_screen">Показати екран налаштувань при наступному запуску</string>
+    <string name="debug.clear_database">Очистити базу даних</string>
+    <string name="debug.migrate_database">Мігрувати базу даних</string>
+    <string name="debug.log_level">Рівень логування</string>
 </resources>
