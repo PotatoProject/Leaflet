@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">À propos</string>
+    <string name="title">Paramètres</string>
     <string name="pwa_version">Version du PWA</string>
     <string name="links">Liens</string>
     <string name="contributors">Contributeurs</string>
