@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="color_black">Black</string>
-    <string name="exit_prompt">Any unsaved change will be lost. Do you want to exit?</string>
-    <string name="tools.brush">Brush</string>
-    <string name="tools.eraser">Eraser</string>
-    <string name="tools.marker">Marker</string>
-    <string name="tools.color_picker">Color</string>
-    <string name="tools.radius_picker">Radius</string>
+    <string name="color_black">Đen</string>
+    <string name="exit_prompt">Mọi chi tiết chưa được lưu sẽ mất. Bạn có chắc là muốn thoát?</string>
+    <string name="tools.brush">Cọ</string>
+    <string name="tools.eraser">Tẩy</string>
+    <string name="tools.marker">Đánh dấu</string>
+    <string name="tools.color_picker">Màu</string>
+    <string name="tools.radius_picker">Bán kính</string>
 </resources>
