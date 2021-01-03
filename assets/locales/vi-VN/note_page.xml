@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_hint">Title</string>
-    <string name="content_hint">Content</string>
-    <string name="list_item_hint">Input</string>
-    <string name="add_entry_hint">Add entry</string>
-    <string name="toolbar.tags">Manage tags</string>
-    <string name="toolbar.color">Change color</string>
-    <string name="toolbar.add_item">Add item</string>
-    <string name="privacy.title">Privacy options</string>
-    <string name="privacy.hide_content">Hide content on main page</string>
-    <string name="privacy.lock_note">Lock note</string>
-    <string name="privacy.lock_note.missing_pass">You must set a master pass from settings</string>
-    <string name="privacy.use_biometrics">Use biometrics to unlock</string>
-    <string name="toggle_list">Toggle list</string>
-    <string name="image_gallery">Image from gallery</string>
-    <string name="image_camera">Take a photo</string>
-    <string name="drawing">Add a drawing</string>
-    <string name="added_favourites">Note added to favourites</string>
-    <string name="removed_favourites">Note removed from favourites</string>
+    <string name="title_hint">Tiêu đề</string>
+    <string name="content_hint">Nội dung</string>
+    <string name="list_item_hint">Nhập vào</string>
+    <string name="add_entry_hint">Thêm mục nhập</string>
+    <string name="toolbar.tags">Quản lí nhãn</string>
+    <string name="toolbar.color">Thay đổi màu sắc</string>
+    <string name="toolbar.add_item">Thêm mục</string>
+    <string name="privacy.title">Cài đặt riêng tư</string>
+    <string name="privacy.hide_content">Ẩn nội dung ở trang chính</string>
+    <string name="privacy.lock_note">Khoá ghi chú</string>
+    <string name="privacy.lock_note.missing_pass">Bạn phải đặt một mật khẩu chính trong Cài đặt</string>
+    <string name="privacy.use_biometrics">Sử dụng sinh trắc học để mở khoá</string>
+    <string name="toggle_list">Danh sách công tắc</string>
+    <string name="image_gallery">Ảnh từ thư viện</string>
+    <string name="image_camera">Chụp ảnh</string>
+    <string name="drawing">Thêm một bức vẽ</string>
+    <string name="added_favourites">Ghi chú đã được thêm vào yêu thích</string>
+    <string name="removed_favourites">Ghi chú đã được loại bỏ khỏi yêu thích</string>
 </resources>
