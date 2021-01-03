@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Voeg toe aan favorieten</string>
     <string name="selection_bar.remove_favourites">Verwijder uit favorieten</string>
     <string name="selection_bar.change_color">Kleur wijzigen</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiveren</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archief</string>
     <string name="selection_bar.delete">Naar prullenbak verplaatsen</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Vastzetten</string>
     <string name="selection_bar.share">Deel</string>
