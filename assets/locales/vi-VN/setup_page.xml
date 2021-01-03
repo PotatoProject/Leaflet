@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="button.get_started">Get started</string>
-    <string name="button.finish">Finish</string>
-    <string name="button.next">Next</string>
-    <string name="button.back">Back</string>
-    <string name="basic_customization.title">Basic customization</string>
-    <string name="welcome.catchphrase">Your new favourite notes app</string>
-    <string name="finish.title">All set!</string>
-    <string name="finish.last_words">Now you\'re ready to enjoy PotatoNotes to its fullest. \nIf you want to customize more head over to the settings page in the side drawer, instead if you want to manage your PotatoSync account instead click your avatar on the top bar.</string>
+    <string name="button.get_started">Bắt đầu</string>
+    <string name="button.finish">Hoàn tất</string>
+    <string name="button.next">Tiếp tục</string>
+    <string name="button.back">Quay lại</string>
+    <string name="basic_customization.title">Cá nhân hoá đơn giản</string>
+    <string name="welcome.catchphrase">Ứng dụng ghi nhớ yêu thích mới của bạn</string>
+    <string name="finish.title">Tất cả đã hoàn thành!</string>
+    <string name="finish.last_words">Bây giờ thì bạn đã sẵn sàng để tận hưởng PotatoNotes đến tận cùng của nó. \n Nếu bạn muốn tuỳ chình thêm, hãy vào phần cài đặt ở ngăn kéo bên phải; nếu bạn muốn quản lí tài khoản PotatoSync của bạn, hãy bấm vào ảnh đại diện ở thanh trên cùng.</string>
 </resources>
