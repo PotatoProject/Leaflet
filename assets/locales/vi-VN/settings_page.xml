@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Settings</string>
-    <string name="personalization.title">Personalization</string>
-    <string name="personalization.theme_mode">Theme mode</string>
-    <string name="personalization.theme_mode.system">System</string>
-    <string name="personalization.theme_mode.light">Light</string>
-    <string name="personalization.theme_mode.dark">Dark</string>
-    <string name="personalization.use_amoled">Use black theme</string>
-    <string name="personalization.use_custom_accent">Follow system accent</string>
-    <string name="personalization.custom_accent">Pick a custom accent</string>
-    <string name="personalization.use_grid">Grid view for notes</string>
-    <string name="personalization.locale">App locale</string>
-    <string name="privacy.title">Privacy</string>
-    <string name="privacy.use_master_pass">Use master pass</string>
-    <string name="privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can\'t reset it, you\'ll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.</string>
-    <string name="privacy.modify_master_pass">Modify master pass</string>
-    <string name="info.title">Info</string>
-    <string name="info.about_app">About PotatoNotes</string>
-    <string name="debug.title">Debug</string>
-    <string name="debug.show_setup_screen">Show setup screen on next startup</string>
-    <string name="debug.clear_database">Clear database</string>
-    <string name="debug.migrate_database">Migrate database</string>
-    <string name="debug.log_level">Log level</string>
+    <string name="title">Cài đặt</string>
+    <string name="personalization.title">Cá nhân hoá</string>
+    <string name="personalization.theme_mode">Chế độ cá nhân hoá</string>
+    <string name="personalization.theme_mode.system">Hệ thống</string>
+    <string name="personalization.theme_mode.light">Sáng</string>
+    <string name="personalization.theme_mode.dark">Tối</string>
+    <string name="personalization.use_amoled">Sử dụng chủ đề tối</string>
+    <string name="personalization.use_custom_accent">Theo màu chính của hệ thống</string>
+    <string name="personalization.custom_accent">Chọn màu chính cụ thể</string>
+    <string name="personalization.use_grid">Chế độ hiển thị theo ô cho ghi nhớ</string>
+    <string name="personalization.locale">Ngôn ngữ úng dụng</string>
+    <string name="privacy.title">Riêng tư</string>
+    <string name="privacy.use_master_pass">Sử dụng mật khẩu chính</string>
+    <string name="privacy.use_master_pass.disclaimer">Cảnh cáo: nếu bạn có bao giờ quên mật khẩu, bạn sẽ không thể đặt lại nó, bắt buộc phải cài lại ứng dụng và dẫn đến việc tất cả các ghi chú bị xoá. Làm ơn hãy viết mật khẩu ra đâu đó.</string>
+    <string name="privacy.modify_master_pass">Chỉnh sửa mật khẩu chính</string>
+    <string name="info.title">Thông tin</string>
+    <string name="info.about_app">Thông tin về PotatoNotes</string>
+    <string name="debug.title">Gỡ lỗi</string>
+    <string name="debug.show_setup_screen">Hiển thị màn hình thiết lập vào lần khởi động ứng dụng tiếp theo</string>
+    <string name="debug.clear_database">Xoá cơ sở dữ liệu</string>
+    <string name="debug.migrate_database">Di chuyển dữ liệu</string>
+    <string name="debug.log_level">Cấp độ văn bản gỗ lỗi</string>
 </resources>
