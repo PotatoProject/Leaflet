@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Settings</string>
-    <string name="personalization.title">Personalization</string>
-    <string name="personalization.theme_mode">Theme mode</string>
-    <string name="personalization.theme_mode.system">System</string>
-    <string name="personalization.theme_mode.light">Light</string>
-    <string name="personalization.theme_mode.dark">Dark</string>
-    <string name="personalization.use_amoled">Use black theme</string>
-    <string name="personalization.use_custom_accent">Follow system accent</string>
-    <string name="personalization.custom_accent">Pick a custom accent</string>
-    <string name="personalization.use_grid">Grid view for notes</string>
-    <string name="personalization.locale">App locale</string>
-    <string name="privacy.title">Privacy</string>
-    <string name="privacy.use_master_pass">Use master pass</string>
-    <string name="privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can\'t reset it, you\'ll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere.</string>
-    <string name="privacy.modify_master_pass">Modify master pass</string>
-    <string name="info.title">Info</string>
-    <string name="info.about_app">About PotatoNotes</string>
+    <string name="title">الإعدادات</string>
+    <string name="personalization.title">التخصيص</string>
+    <string name="personalization.theme_mode">وضع السمة</string>
+    <string name="personalization.theme_mode.system">النظام</string>
+    <string name="personalization.theme_mode.light">فاتح</string>
+    <string name="personalization.theme_mode.dark">غامق</string>
+    <string name="personalization.use_amoled">استخدم السمة السوداء</string>
+    <string name="personalization.use_custom_accent">تتبع سمة النظام</string>
+    <string name="personalization.custom_accent">إختيار لون رئيسي خاص</string>
+    <string name="personalization.use_grid">عرض الشبكة للملاحظات</string>
+    <string name="personalization.locale">موضع التطبيق</string>
+    <string name="privacy.title">الخصوصية</string>
+    <string name="privacy.use_master_pass">استخدام التصريح الرئيسي</string>
+    <string name="privacy.use_master_pass.disclaimer">تحذير: إذا كنت قد نسيت المرور لا يمكنك إعادة تعيينه، سوف تحتاج إلى إلغاء تثبيت التطبيق، وبالتالي يتم مسح جميع الملاحظات، وإعادة تثبيتها. من فضلك قم بكتابتها في مكان ما.</string>
+    <string name="privacy.modify_master_pass">تعديل المرور الرئيسي</string>
+    <string name="info.title">معلومات</string>
+    <string name="info.about_app">حول PotatoNotes</string>
     <string name="debug.title">Debug</string>
-    <string name="debug.show_setup_screen">Show setup screen on next startup</string>
-    <string name="debug.clear_database">Clear database</string>
-    <string name="debug.migrate_database">Migrate database</string>
-    <string name="debug.log_level">Log level</string>
+    <string name="debug.show_setup_screen">إظهار شاشة الإعداد عند بدء التشغيل التالي</string>
+    <string name="debug.clear_database">مسح قاعدة البيانات</string>
+    <string name="debug.migrate_database">دمج قاعدة البيانات</string>
+    <string name="debug.log_level">مستوى التسجيل</string>
 </resources>
