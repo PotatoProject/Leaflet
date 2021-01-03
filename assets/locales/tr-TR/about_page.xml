@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Hakkında</string>
+    <string name="title">Ayarlar</string>
     <string name="pwa_version">PWA sürümü</string>
-    <string name="links">Linkler</string>
+    <string name="links">Bağlantılar</string>
     <string name="contributors">Katkıda Bulunanlar</string>
     <string name="contributors.hrx">Baş geliştirici ve uygulama tasarımı</string>
     <string name="contributors.bas">Senkronizasyon API\'si ve uygulaması</string>
