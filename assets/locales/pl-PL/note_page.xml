@@ -7,12 +7,12 @@
     <string name="toolbar.tags">Zarządzaj etykietami</string>
     <string name="toolbar.color">Zmień kolor</string>
     <string name="toolbar.add_item">Dodaj element</string>
-    <string name="privacy.title">Opcje prywatności</string>
+    <string name="privacy.title">Ustawienia prywatności</string>
     <string name="privacy.hide_content">Ukryj zawartość notatki na stronie głównej</string>
     <string name="privacy.lock_note">Zablokuj notatkę</string>
     <string name="privacy.lock_note.missing_pass">Musisz ustawić hasło główne w ustawieniach</string>
     <string name="privacy.use_biometrics">Użyj danych biometrycznych do odblokowania</string>
-    <string name="toggle_list">Przełącz listę</string>
+    <string name="toggle_list">Przełącz na listę</string>
     <string name="image_gallery">Obraz z galerii</string>
     <string name="image_camera">Zrób zdjęcie</string>
     <string name="drawing">Dodaj rysunek</string>
