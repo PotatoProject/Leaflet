@@ -15,6 +15,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -38,132 +39,125 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        if (widget.trimmed) return commonSettings;
+    if (widget.trimmed) return commonSettings;
 
-        return WillPopScope(
-          onWillPop: () async => !removingMasterPass,
-          child: DependentScaffold(
-            resizeToAvoidBottomInset: false,
-            body: ListView(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              children: [
-                commonSettings,
-                SettingsCategory(
-                  header: LocaleStrings.settingsPage.infoTitle,
-                  children: <Widget>[
-                    SettingsTile(
-                      icon: Icon(Icons.info_outline),
-                      title: Text(LocaleStrings.settingsPage.infoAboutApp),
-                      onTap: () => Utils.showSecondaryRoute(
-                        context,
-                        AboutPage(),
-                      ),
-                    ),
-                    SettingsTile(
-                      icon: Icon(Icons.update_outlined),
-                      title: Text("Check for app updates"),
-                      onTap: () => InAppUpdater.checkForUpdate(
-                        context,
-                        showNoUpdatesAvailable: true,
-                      ),
-                    ),
-                  ],
+    return DependentScaffold(
+      resizeToAvoidBottomInset: false,
+      body: Observer(builder: (context) {
+        return ListView(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          children: [
+            commonSettings,
+            SettingsCategory(
+              header: LocaleStrings.settingsPage.infoTitle,
+              children: <Widget>[
+                SettingsTile(
+                  icon: Icon(Icons.info_outline),
+                  title: Text(LocaleStrings.settingsPage.infoAboutApp),
+                  onTap: () => Utils.showSecondaryRoute(
+                    context,
+                    AboutPage(),
+                  ),
                 ),
-                Visibility(
-                  visible: kDebugMode,
-                  child: SettingsCategory(
-                    header: LocaleStrings.settingsPage.debugTitle,
-                    children: [
-                      SettingsTile.withSwitch(
-                        icon: Icon(MdiIcons.humanGreeting),
-                        title: Text(
-                          LocaleStrings.settingsPage.debugShowSetupScreen,
-                        ),
-                        value: !prefs.welcomePageSeen,
-                        activeColor: Theme.of(context).accentColor,
-                        onChanged: (value) async {
-                          prefs.welcomePageSeen = !value;
-                        },
-                      ),
-                      SettingsTile(
-                        icon: Icon(MdiIcons.databaseRemove),
-                        title:
-                            Text(LocaleStrings.settingsPage.debugClearDatabase),
-                        onTap: () async {
-                          await helper.deleteAllNotes();
-                          await NoteController.deleteAll();
-                        },
-                      ),
-                      SettingsTile(
-                        icon: Icon(MdiIcons.databaseImport),
-                        title: Text(
-                            LocaleStrings.settingsPage.debugMigrateDatabase),
-                        onTap: () async {
-                          bool canMigrate =
-                              await MigrationTask.migrationAvailable;
-
-                          if (canMigrate) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => StatefulBuilder(
-                                builder: (context, setState) {
-                                  return AlertDialog(
-                                    title: Text("Migrating..."),
-                                    content: StreamBuilder<double>(
-                                      stream: MigrationTask.migrate(),
-                                      initialData: 0.0,
-                                      builder: (context, snapshot) {
-                                        return LinearProgressIndicator(
-                                          value: snapshot.data,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      SettingsTile(
-                        icon: Icon(Icons.text_snippet_outlined),
-                        title: Text(LocaleStrings.settingsPage.debugLogLevel),
-                        onTap: () {
-                          showDropdownSheet(
-                            context: context,
-                            itemBuilder: (context, index) {
-                              bool selected =
-                                  prefs.logLevel == logEntryValues[index];
-
-                              return dropDownTile(
-                                selected: selected,
-                                title: Text(
-                                  getLogEntryName(logEntryValues[index]),
-                                ),
-                                onTap: () {
-                                  prefs.logLevel = logEntryValues[index];
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                            itemCount: logEntryValues.length,
-                          );
-                        },
-                        subtitle: Text(getLogEntryName(prefs.logLevel)),
-                      ),
-                    ],
+                SettingsTile(
+                  icon: Icon(Icons.update_outlined),
+                  title: Text("Check for app updates"),
+                  onTap: () => InAppUpdater.checkForUpdate(
+                    context,
+                    showNoUpdatesAvailable: true,
                   ),
                 ),
               ],
             ),
-          ),
+            Visibility(
+              visible: kDebugMode,
+              child: SettingsCategory(
+                header: LocaleStrings.settingsPage.debugTitle,
+                children: [
+                  SettingsTile.withSwitch(
+                    icon: Icon(MdiIcons.humanGreeting),
+                    title: Text(
+                      LocaleStrings.settingsPage.debugShowSetupScreen,
+                    ),
+                    value: !prefs.welcomePageSeen,
+                    activeColor: Theme.of(context).accentColor,
+                    onChanged: (value) async {
+                      prefs.welcomePageSeen = !value;
+                    },
+                  ),
+                  SettingsTile(
+                    icon: Icon(MdiIcons.databaseRemove),
+                    title: Text(LocaleStrings.settingsPage.debugClearDatabase),
+                    onTap: () async {
+                      await helper.deleteAllNotes();
+                      await NoteController.deleteAll();
+                    },
+                  ),
+                  SettingsTile(
+                    icon: Icon(MdiIcons.databaseImport),
+                    title:
+                        Text(LocaleStrings.settingsPage.debugMigrateDatabase),
+                    onTap: () async {
+                      bool canMigrate = await MigrationTask.migrationAvailable;
+
+                      if (canMigrate) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => StatefulBuilder(
+                            builder: (context, setState) {
+                              return AlertDialog(
+                                title: Text("Migrating..."),
+                                content: StreamBuilder<double>(
+                                  stream: MigrationTask.migrate(),
+                                  initialData: 0.0,
+                                  builder: (context, snapshot) {
+                                    return LinearProgressIndicator(
+                                      value: snapshot.data,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  SettingsTile(
+                    icon: Icon(Icons.text_snippet_outlined),
+                    title: Text(LocaleStrings.settingsPage.debugLogLevel),
+                    onTap: () {
+                      showDropdownSheet(
+                        context: context,
+                        itemBuilder: (context, index) {
+                          bool selected =
+                              prefs.logLevel == logEntryValues[index];
+
+                          return dropDownTile(
+                            selected: selected,
+                            title: Text(
+                              getLogEntryName(logEntryValues[index]),
+                            ),
+                            onTap: () {
+                              prefs.logLevel = logEntryValues[index];
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        itemCount: logEntryValues.length,
+                      );
+                    },
+                    subtitle: Text(getLogEntryName(prefs.logLevel)),
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
-      },
+      }),
     );
   }
 
@@ -341,6 +335,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
 
                     setState(() => removingMasterPass = true);
+                    BasePage.of(context).setBottomBarEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
                       final note = notes[i];
                       if (note.lockNote) {
@@ -349,7 +344,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       }
                     }
-                    setState(() => removingMasterPass = false);
+                    BasePage.of(context).setBottomBarEnabled(true);
                   }
                 }
               },

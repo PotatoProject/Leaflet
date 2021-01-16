@@ -1,0 +1,224 @@
+From 8b3a78f66b972477ec2da3676cce246f5e33fac4 Mon Sep 17 00:00:00 2001
+From: HrX03 <dn.bianco03@gmail.com>
+Date: Sat, 16 Jan 2021 20:12:18 +0100
+Subject: [PATCH 1/1] notes: Fullscreen time
+
+---
+ .../com/potatoproject/notes/MainActivity.kt   |  1 +
+ .../app/src/main/res/values-v30/styles.xml    | 14 ++++++
+ android/local.properties                      |  2 +-
+ lib/internal/utils.dart                       |  8 ++++
+ lib/main.dart                                 |  1 +
+ lib/routes/about_page.dart                    | 27 +++++++++--
+ lib/routes/note_page.dart                     |  2 +-
+ lib/widget/base_page_navigation_bar.dart      | 48 +++++++++++--------
+ lib/widget/bottom_sheet_base.dart             |  9 +++-
+ 9 files changed, 85 insertions(+), 27 deletions(-)
+ create mode 100644 android/app/src/main/res/values-v30/styles.xml
+
+diff --git a/android/app/src/main/kotlin/com/potatoproject/notes/MainActivity.kt b/android/app/src/main/kotlin/com/potatoproject/notes/MainActivity.kt
+index 34fca02..42abc78 100644
+--- a/android/app/src/main/kotlin/com/potatoproject/notes/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/potatoproject/notes/MainActivity.kt
+@@ -14,6 +14,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
+ 
+ class MainActivity : FlutterFragmentActivity() {
+     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
++        window.setDecorFitsSystemWindows(false)
+         GeneratedPluginRegistrant.registerWith(flutterEngine)
+         flutterEngine.getPlugins().add(NotesPlugin())
+     }
+diff --git a/android/app/src/main/res/values-v30/styles.xml b/android/app/src/main/res/values-v30/styles.xml
+new file mode 100644
+index 0000000..4250593
+--- /dev/null
++++ b/android/app/src/main/res/values-v30/styles.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
++        <item name="android:windowBackground">@drawable/launch_background</item>
++        <item name="android:statusBarColor">@android:color/transparent</item>
++        <item name="android:navigationBarColor">@android:color/transparent</item>
++    </style>
++
++    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
++        <item name="android:windowBackground">?android:colorBackground</item>
++        <item name="android:statusBarColor">@android:color/transparent</item>
++        <item name="android:navigationBarColor">@android:color/transparent</item>
++    </style>
++</resources>
+\ No newline at end of file
+diff --git a/android/local.properties b/android/local.properties
+index 7979ad7..85bb467 100644
+--- a/android/local.properties
++++ b/android/local.properties
+@@ -1,5 +1,5 @@
+ sdk.dir=C:\\Users\\dnbia\\AppData\\Local\\Android\\sdk
+ flutter.sdk=C:\\src\\flutter
+-flutter.buildMode=debug
++flutter.buildMode=release
+ flutter.versionName=2.0.0-beta1
+ flutter.versionCode=16
+\ No newline at end of file
+diff --git a/lib/internal/utils.dart b/lib/internal/utils.dart
+index d513d5b..c52de97 100644
+--- a/lib/internal/utils.dart
++++ b/lib/internal/utils.dart
+@@ -669,3 +669,11 @@ class SuspendedCurve extends Curve {
+     return lerpDouble(startingPoint, 1, transformed);
+   }
+ }
++
++extension MediaQueryInsetPaddingSum on MediaQueryData {
++  EdgeInsets get insetsWithPadding {
++    return viewInsets.copyWith(
++      bottom: viewInsets.bottom + padding.bottom,
++    );
++  }
++}
+diff --git a/lib/main.dart b/lib/main.dart
+index c6840d6..ebdbfb5 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -140,6 +140,7 @@ class PotatoNotes extends StatelessWidget {
+             SystemChrome.setSystemUIOverlayStyle(
+               SystemUiOverlayStyle(
+                 statusBarColor: Colors.transparent,
++                systemNavigationBarColor: Colors.transparent,
+               ),
+             );
+ 
+diff --git a/lib/routes/about_page.dart b/lib/routes/about_page.dart
+index 3c1c69f..77d25ba 100644
+--- a/lib/routes/about_page.dart
++++ b/lib/routes/about_page.dart
+@@ -31,11 +31,28 @@ class AboutPage extends StatelessWidget {
+                 ),
+                 child: Column(
+                   children: <Widget>[
+-                    CircleAvatar(
+-                      radius: 48,
+-                      backgroundColor: Color(0xFF212C21),
+-                      child: IconLogo(
+-                        height: 48,
++                    SizedBox.fromSize(
++                      size: Size.square(96),
++                      child: Material(
++                        shape: CircleBorder(),
++                        color: Color(0xFF212C21),
++                        clipBehavior: Clip.antiAlias,
++                        child: Container(
++                          alignment: Alignment.center,
++                          decoration: BoxDecoration(
++                            gradient: RadialGradient(
++                              center: Alignment.topLeft,
++                              radius: 1.4,
++                              colors: [
++                                Colors.white.withOpacity(0.3),
++                                Colors.white.withOpacity(0),
++                              ],
++                            ),
++                          ),
++                          child: IconLogo(
++                            height: 48,
++                          ),
++                        ),
+                       ),
+                     ),
+                     SizedBox(height: 16),
+diff --git a/lib/routes/note_page.dart b/lib/routes/note_page.dart
+index 4c3c4e8..2d1f06c 100644
+--- a/lib/routes/note_page.dart
++++ b/lib/routes/note_page.dart
+@@ -480,7 +480,7 @@ class _NotePageState extends State<NotePage> {
+                 elevation: 8,
+                 child: Padding(
+                   padding: EdgeInsets.only(
+-                    bottom: MediaQuery.of(context).viewInsets.bottom,
++                    bottom: MediaQuery.of(context).insetsWithPadding.bottom,
+                   ),
+                   child: NoteToolbar(
+                     //controller: contentController,
+diff --git a/lib/widget/base_page_navigation_bar.dart b/lib/widget/base_page_navigation_bar.dart
+index 28f35ce..1f2a286 100644
+--- a/lib/widget/base_page_navigation_bar.dart
++++ b/lib/widget/base_page_navigation_bar.dart
+@@ -38,25 +38,35 @@ class BasePageNavigationBar extends StatelessWidget {
+           child: AnimatedOpacity(
+             opacity: enabled ? 1.0 : 0.5,
+             duration: Duration(milliseconds: 300),
+-            child: BottomNavigationBar(
+-              items: items
+-                  .map(
+-                    (e) => BottomNavigationBarItem(
+-                      icon: e.icon,
+-                      label: e.label,
+-                      activeIcon: e.activeIcon,
+-                      tooltip: "",
+-                    ),
+-                  )
+-                  .toList(),
+-              backgroundColor: Colors.transparent,
+-              selectedFontSize: 12,
+-              currentIndex: index,
+-              onTap: onPageChanged,
+-              type: BottomNavigationBarType.fixed,
+-              selectedItemColor: Theme.of(context).accentColor,
+-              unselectedItemColor: Theme.of(context).textTheme.caption.color,
+-              elevation: 0,
++            child: Padding(
++              padding: EdgeInsets.only(
++                bottom: MediaQuery.of(context).padding.bottom,
++              ),
++              child: MediaQuery.removePadding(
++                context: context,
++                removeBottom: true,
++                child: BottomNavigationBar(
++                  items: items
++                      .map(
++                        (e) => BottomNavigationBarItem(
++                          icon: e.icon,
++                          label: e.label,
++                          activeIcon: e.activeIcon,
++                          tooltip: "",
++                        ),
++                      )
++                      .toList(),
++                  backgroundColor: Colors.transparent,
++                  selectedFontSize: 12,
++                  currentIndex: index,
++                  onTap: onPageChanged,
++                  type: BottomNavigationBarType.fixed,
++                  selectedItemColor: Theme.of(context).accentColor,
++                  unselectedItemColor:
++                      Theme.of(context).textTheme.caption.color,
++                  elevation: 0,
++                ),
++              ),
+             ),
+           ),
+         ),
+diff --git a/lib/widget/bottom_sheet_base.dart b/lib/widget/bottom_sheet_base.dart
+index 38c2d44..7c90748 100644
+--- a/lib/widget/bottom_sheet_base.dart
++++ b/lib/widget/bottom_sheet_base.dart
+@@ -162,7 +162,14 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
+                             : widget.shape,
+                         elevation: widget.elevation ?? 1,
+                         clipBehavior: widget.clipBehavior ?? Clip.antiAlias,
+-                        child: widget.child,
++                        child: Padding(
++                          padding: EdgeInsets.only(
++                            bottom: !_useDesktopLayout
++                                ? MediaQuery.of(context).padding.bottom
++                                : 0,
++                          ),
++                          child: widget.child,
++                        ),
+                       );
+ 
+                       if (_useDesktopLayout) {
+-- 
+2.29.2.windows.2
+
