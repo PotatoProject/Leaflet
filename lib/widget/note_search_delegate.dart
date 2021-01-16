@@ -8,10 +8,10 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
-import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
   SearchQuery searchQuery = SearchQuery();
@@ -38,54 +38,29 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    EdgeInsets padding = EdgeInsets.fromLTRB(
-      4,
-      4 + MediaQuery.of(context).padding.top,
-      4,
-      4 + 80.0,
-    );
-
     return FutureBuilder(
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
-        Widget child;
-
-        if (snapshot.data?.isNotEmpty ?? false) {
-          if (prefs.useGrid) {
-            child = WaterfallFlow.builder(
-              gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-                crossAxisCount: deviceInfo.uiSizeFactor,
-              ),
-              itemBuilder: (context, index) =>
-                  noteView(context, snapshot.data[index]),
-              itemCount: snapshot.data.length,
-              padding: padding,
-            );
-          } else {
-            child = ListView.builder(
-              itemBuilder: (context, index) =>
-                  noteView(context, snapshot.data[index]),
-              itemCount: snapshot.data.length,
-              padding: padding,
-            );
-          }
-        } else {
-          if (query.isEmpty) {
-            child = Illustrations.quickIllustration(
-              context,
-              appInfo.typeToSearchIllustration,
-              LocaleStrings.searchPage.noteTypeToSearch,
-            );
-          } else {
-            child = Illustrations.quickIllustration(
-              context,
-              appInfo.nothingFoundIllustration,
-              LocaleStrings.searchPage.noteNothingFound,
-            );
-          }
-        }
-        return child;
+        final illustration = query.isEmpty
+            ? Illustrations.quickIllustration(
+                context,
+                appInfo.typeToSearchIllustration,
+                LocaleStrings.searchPage.noteTypeToSearch,
+              )
+            : Illustrations.quickIllustration(
+                context,
+                appInfo.nothingFoundIllustration,
+                LocaleStrings.searchPage.noteNothingFound,
+              );
+        return NoteListWidget(
+          itemBuilder: (context, index) => noteView(
+            context,
+            snapshot.data[index],
+          ),
+          noteCount: snapshot.data.length,
+          customIllustration: illustration,
+        );
       },
     );
   }

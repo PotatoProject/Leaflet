@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/global_key_registry.dart';
-import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
+import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/new_note_bar.dart';
+import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
-import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
@@ -94,12 +93,23 @@ class _NoteListPageState extends State<NoteListPage> {
                     .toList()
                 : snapshot.data ?? [];
 
-            return _NoteListWidget(
-              notes: notes,
+            return NoteListWidget(
+              builder: (context, child) {
+                return RefreshIndicator(
+                  child: child,
+                  onRefresh: sync,
+                  displacement: MediaQuery.of(context).padding.top + 40,
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                );
+              },
+              itemBuilder: (context, index) =>
+                  _buildNoteList(context, notes, index),
+              noteCount: notes.length,
               noteKind: widget.noteKind,
             );
           },
         ),
+        resizeToAvoidBottomInset: false,
         floatingActionButton:
             widget.noteKind == ReturnMode.NORMAL && !selecting ? fab : null,
       ),
@@ -217,97 +227,8 @@ class _NoteListPageState extends State<NoteListPage> {
           ),
         ),
       ];
-}
 
-class SelectionState extends InheritedWidget {
-  @protected
-  final _NoteListPageState state;
-
-  SelectionState({
-    @required this.state,
-    Widget child,
-  }) : super(child: child);
-
-  @override
-  bool updateShouldNotify(covariant SelectionState old) {
-    return old.state != this.state;
-  }
-
-  static _NoteListPageState of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SelectionState>().state;
-  }
-}
-
-class _NoteListWidget extends StatelessWidget {
-  final List<Note> notes;
-  final ReturnMode noteKind;
-  final ScrollController scrollController;
-
-  const _NoteListWidget({
-    Key key,
-    @required this.notes,
-    @required this.noteKind,
-    this.scrollController,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final padding = EdgeInsets.fromLTRB(
-      4,
-      4 + MediaQuery.of(context).padding.top,
-      4,
-      4 + 80.0,
-    );
-    Widget child;
-
-    final _scrollController = scrollController ?? ScrollController();
-
-    if (notes.isNotEmpty) {
-      if (prefs.useGrid) {
-        child = WaterfallFlow.builder(
-          gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-            crossAxisCount: deviceInfo.uiSizeFactor,
-          ),
-          itemBuilder: _buildNoteList,
-          itemCount: notes.length,
-          padding: padding,
-          controller: _scrollController,
-        );
-      } else {
-        child = ListView.builder(
-          itemBuilder: _buildNoteList,
-          itemCount: notes.length,
-          padding: padding,
-          controller: _scrollController,
-        );
-      }
-    } else {
-      child = LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: SizedBox(
-              height: constraints.maxHeight,
-              child: Illustrations.quickIllustration(
-                context,
-                getInfoOnCurrentMode.key,
-                getInfoOnCurrentMode.value,
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return RefreshIndicator(
-      child: child,
-      onRefresh: sync,
-      displacement: MediaQuery.of(context).padding.top + 40,
-      triggerMode: RefreshIndicatorTriggerMode.anywhere,
-    );
-  }
-
-  Widget _buildNoteList(BuildContext context, int index) {
+  Widget _buildNoteList(BuildContext context, List<Note> notes, int index) {
     final _state = SelectionState.of(context);
     final note = notes[index];
 
@@ -366,39 +287,26 @@ class _NoteListWidget extends StatelessWidget {
     _state.addSelectedNote(note);
   }
 
-  MapEntry<Widget, String> get getInfoOnCurrentMode {
-    switch (noteKind) {
-      case ReturnMode.ARCHIVE:
-        return MapEntry(
-          appInfo.emptyArchiveIllustration,
-          LocaleStrings.mainPage.emptyStateArchive,
-        );
-      case ReturnMode.TRASH:
-        return MapEntry(
-          appInfo.emptyTrashIllustration,
-          LocaleStrings.mainPage.emptyStateTrash,
-        );
-      case ReturnMode.FAVOURITES:
-        return MapEntry(
-          appInfo.noFavouritesIllustration,
-          LocaleStrings.mainPage.emptyStateFavourites,
-        );
-      case ReturnMode.TAG:
-        return MapEntry(
-          appInfo.noNotesIllustration,
-          LocaleStrings.mainPage.emptyStateTag,
-        );
-      case ReturnMode.ALL:
-      case ReturnMode.NORMAL:
-      default:
-        return MapEntry(
-          appInfo.noNotesIllustration,
-          LocaleStrings.mainPage.emptyStateHome,
-        );
-    }
-  }
-
   Future<void> sync() async {
     await SyncRoutine().syncNotes();
+  }
+}
+
+class SelectionState extends InheritedWidget {
+  @protected
+  final _NoteListPageState state;
+
+  SelectionState({
+    @required this.state,
+    Widget child,
+  }) : super(child: child);
+
+  @override
+  bool updateShouldNotify(covariant SelectionState old) {
+    return old.state != this.state;
+  }
+
+  static _NoteListPageState of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SelectionState>().state;
   }
 }
