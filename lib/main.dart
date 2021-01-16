@@ -23,8 +23,8 @@ import 'package:quick_actions/quick_actions.dart';
 import 'package:worker_manager/worker_manager.dart';
 
 main() async {
-  await Executor().warmUp();
   WidgetsFlutterBinding.ensureInitialized();
+  await Executor().warmUp();
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   if (DeviceInfo.isAndroid) {
@@ -36,6 +36,7 @@ main() async {
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
   Loggy.generateAppLabel();
+  initProviders();
 
   final sharedPrefs = SharedPrefs.instance;
   final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);

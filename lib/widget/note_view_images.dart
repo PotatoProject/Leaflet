@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/note_view_image.dart';
 
 class NoteViewImages extends StatefulWidget {
   final List<SavedImage> images;
@@ -56,25 +54,9 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   ? kMaxImageCount
                   : widget.images.length,
               itemBuilder: (context, index) {
-                SavedImage savedImage = widget.images[index];
-                ImageProvider image;
-                if (savedImage.existsLocally && savedImage.uploaded) {
-                  image = FileImage(File(savedImage.path));
-                } else if (savedImage.hash != null) {
-                  image = BlurHashImage(savedImage.blurHash);
-                } else {
-                  image = FileImage(File(savedImage.uri.path));
-                }
                 return Stack(
                   children: [
-                    SizedBox.expand(
-                      child: Image(
-                        image: image,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                        gaplessPlayback: true,
-                      ),
-                    ),
+                    NoteViewImage(savedImage: widget.images[index]),
                     SizedBox.expand(
                       child: Visibility(
                         visible: (index == widget.images.length - 1 &&

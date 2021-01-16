@@ -8,7 +8,6 @@ import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image_queue.dart';
 
 class ImageHelper {
   static const JPEG_QUALITY = 90;
@@ -51,20 +50,20 @@ class ImageHelper {
   }*/
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
-    ImageQueue.downloadQueue.clear();
+    imageQueue.downloadQueue.clear();
     for (Note note in changedNotes) {
       if (note.images.length > 0) {
         for (SavedImage image in note.images) {
           print(image.existsLocally);
           if (!image.existsLocally) {
-            ImageQueue.addDownload(image, note.id);
+            imageQueue.addDownload(image, note.id);
             //downloadImage(image);
           }
         }
       }
     }
-    print(ImageQueue.downloadQueue.length);
-    await ImageQueue.processDownloads();
+    print(imageQueue.downloadQueue.length);
+    await imageQueue.processDownloads();
   }
 
   static Future<SavedImage> copyToCache(File file) async {
@@ -124,7 +123,7 @@ class ImageHelper {
 
   static handleNoteDeletion(Note note) {
     for (SavedImage image in note.images) {
-      ImageQueue.addDelete(image);
+      imageQueue.addDelete(image);
     }
   }
 }

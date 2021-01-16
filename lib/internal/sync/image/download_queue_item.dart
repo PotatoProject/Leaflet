@@ -10,9 +10,6 @@ class DownloadQueueItem extends QueueItem {
   final String localPath;
   final SavedImage savedImage;
 
-  @observable
-  double downloadStatus;
-
   DownloadQueueItem({
     @required this.noteId,
     @required this.localPath,
@@ -27,8 +24,8 @@ class DownloadQueueItem extends QueueItem {
       await getDownloadUrl(),
       localPath,
       onReceiveProgress: (count, total) {
-        downloadStatus = count / total;
-        print(downloadStatus);
+        progress = count / total;
+        print(progress);
       },
     );
     print('Downloaded!');

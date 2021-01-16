@@ -14,8 +14,6 @@ import 'package:potato_notes/internal/sync/setting_controller.dart';
 import 'package:potato_notes/internal/sync/tag_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
-import 'image_queue.dart';
-
 class SyncRoutine {
   static const Set<String> settingsToSync = {
     "theme_mode",
@@ -102,9 +100,9 @@ class SyncRoutine {
         throw ("Not logged in!");
       }
     }
-    ImageQueue.uploadQueue.clear();
-    await ImageQueue.fillUploadQueue();
-    await ImageQueue.process();
+    imageQueue.uploadQueue.clear();
+    await imageQueue.fillUploadQueue();
+    await imageQueue.process();
     // Recieve and send changes from API
     await sendSettingUpdates();
 

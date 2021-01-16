@@ -18,9 +18,6 @@ class UploadQueueItem extends QueueItem {
   final SavedImage savedImage;
   final StorageLocation storageLocation;
 
-  @observable
-  double uploadStatus;
-
   UploadQueueItem({
     @required this.noteId,
     @required this.localPath,
@@ -57,8 +54,8 @@ class UploadQueueItem extends QueueItem {
       await getUploadUrl(),
       data: File(localPath).openRead(),
       onSendProgress: (count, total) {
-        uploadStatus = count / total;
-        print(uploadStatus);
+        progress = count / total;
+        print(progress);
       },
       options: Options(
         method:
