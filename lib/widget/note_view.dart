@@ -141,19 +141,17 @@ class _NoteViewState extends State<NoteView> {
             ),
             Visibility(
               visible: content.isNotEmpty,
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+              child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 16 + Theme.of(context).visualDensity.horizontal,
                   vertical: 16 + Theme.of(context).visualDensity.vertical,
                 ),
-                itemBuilder: (context, index) => content[index],
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                      height: 4 + Theme.of(context).visualDensity.vertical);
-                },
-                itemCount: content.length,
+                child: _SeparatedColumn(
+                  children: content,
+                  separator: SizedBox(
+                    height: 4 + Theme.of(context).visualDensity.vertical,
+                  ),
+                ),
               ),
             ),
             LayoutBuilder(
@@ -350,4 +348,30 @@ class _NoteViewState extends State<NoteView> {
           );
         },
       );
+}
+
+class _SeparatedColumn extends StatelessWidget {
+  final List<Widget> children;
+  final Widget separator;
+
+  _SeparatedColumn({
+    @required this.children,
+    @required this.separator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(children.length * 2 - 1, (index) {
+        if (index.isEven) {
+          return children[index ~/ 2];
+        } else {
+          return separator;
+        }
+      }),
+    );
+  }
 }

@@ -408,20 +408,16 @@ class _SettingsPageState extends State<SettingsPage> {
       physics: scrollable ? null : NeverScrollableScrollPhysics(),
       itemBuilder: itemBuilder,
       itemCount: itemCount,
+      padding: EdgeInsets.all(0),
     );
 
     return await Utils.showNotesModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       builder: (context) => ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.shortestSide,
         ),
-        child: scrollable
-            ? Scrollbar(
-                child: list,
-              )
-            : list,
+        child: list,
       ),
     );
   }

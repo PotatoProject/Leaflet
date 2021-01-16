@@ -48,7 +48,7 @@ const TextStyle _errorTextStyle = TextStyle(
 /// If a [Navigator] is created, at least one of these options must handle the
 /// `/` route, since it is used when an invalid [initialRoute] is specified on
 /// startup (e.g. by another application launching this one with an intent on
-/// Android; see [Window.defaultRouteName]).
+/// Android; see [dart:ui.PlatformDispatcher.defaultRouteName]).
 ///
 /// This widget also configures the observer of the top-level [Navigator] (if
 /// any) to perform [Hero] animations.
@@ -508,7 +508,7 @@ class NotesApp extends StatefulWidget {
   /// This callback is passed along to the [WidgetsApp] built by this widget.
   final LocaleListResolutionCallback localeListResolutionCallback;
 
-  /// {@macro flutter.widgets.widgetsApp.localeResolutionCallback}
+  /// {@macro flutter.widgets.LocaleResolutionCallback}
   ///
   /// This callback is passed along to the [WidgetsApp] built by this widget.
   final LocaleResolutionCallback localeResolutionCallback;
@@ -565,7 +565,7 @@ class NotesApp extends StatefulWidget {
   ///       LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
   ///     },
   ///     color: const Color(0xFFFF0000),
-  ///     builder: (BuildContext context, Widget child) {
+  ///     builder: (BuildContext context, Widget? child) {
   ///       return const Placeholder();
   ///     },
   ///   );
@@ -598,7 +598,7 @@ class NotesApp extends StatefulWidget {
   ///       ),
   ///     },
   ///     color: const Color(0xFFFF0000),
-  ///     builder: (BuildContext context, Widget child) {
+  ///     builder: (BuildContext context, Widget? child) {
   ///       return const Placeholder();
   ///     },
   ///   );
@@ -622,7 +622,7 @@ class NotesApp extends StatefulWidget {
   final bool debugShowMaterialGrid;
 
   @override
-  _MaterialAppState createState() => _MaterialAppState();
+  _NotesAppState createState() => _NotesAppState();
 
   /// The [HeroController] used for Material page transitions.
   ///
@@ -665,7 +665,7 @@ class _MaterialScrollBehavior extends ScrollBehavior {
   }
 }
 
-class _MaterialAppState extends State<NotesApp> {
+class _NotesAppState extends State<NotesApp> {
   HeroController _heroController;
 
   bool get _usesRouter => widget.routerDelegate != null;
@@ -720,7 +720,6 @@ class _MaterialAppState extends State<NotesApp> {
         key: widget.scaffoldMessengerKey,
         child: AnimatedTheme(
           data: theme,
-          isMaterialAppTheme: true,
           child: widget.builder != null
               ? Builder(
                   builder: (BuildContext context) {

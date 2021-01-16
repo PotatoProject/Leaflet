@@ -98,8 +98,8 @@ abstract class _AppInfoBase with Store {
 
     if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();
-      packageInfo = await PackageInfo.fromPlatform();
     }
+    packageInfo = await PackageInfo.fromPlatform();
 
     if (DeviceInfo.isAndroid) {
       accentStreamChannel.receiveBroadcastStream().listen(updateAccent);

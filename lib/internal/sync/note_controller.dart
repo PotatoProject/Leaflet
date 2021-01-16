@@ -70,7 +70,7 @@ class NoteController {
   }
 
   static Future<List<Note>> list(int lastUpdated) async {
-    List<Note> notes = List();
+    List<Note> notes = [];
     try {
       String token = await prefs.getToken();
       var url =

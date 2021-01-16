@@ -33,9 +33,7 @@ main() async {
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;
-  if (DeviceInfo.isAndroid) {
-    Loggy.generateAppLabel();
-  }
+  Loggy.generateAppLabel();
 
   final sharedPrefs = SharedPrefs.instance;
   final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);

@@ -180,7 +180,7 @@ class SharedPrefs {
   }
 
   void addChangedKey(String key) async {
-    var changedKeys = prefs.getStringList("updated_keys") ?? new List<String>();
+    var changedKeys = prefs.getStringList("updated_keys") ?? [];
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
@@ -192,6 +192,6 @@ class SharedPrefs {
   }
 
   List<String> getChangedKeys() {
-    return prefs.getStringList("updated_keys") ?? new List<String>();
+    return prefs.getStringList("updated_keys") ?? [];
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
@@ -34,31 +33,36 @@ class NoteListPage extends StatefulWidget {
 }
 
 class _NoteListPageState extends State<NoteListPage> {
-  ScrollController scrollController = ScrollController();
   bool _selecting = false;
-  List<Note> selectionList = [];
+  List<Note> _selectionList = [];
 
   bool get selecting => _selecting;
   set selecting(bool value) {
     _selecting = value;
     BasePage.of(context).setBottomBarEnabled(!value);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  List<Note> get selectionList => _selectionList;
+
+  void addSelectedNote(Note note) {
+    _selectionList.add(note);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  void removeSelectedNoteWhere(bool Function(Note) test) {
+    _selectionList.removeWhere(test);
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsets padding = EdgeInsets.fromLTRB(
-      4,
-      4 + MediaQuery.of(context).padding.top,
-      4,
-      4 + 80.0,
-    );
-
     PreferredSizeWidget appBar = (selecting
         ? SelectionBar(
-            selectionList: selectionList,
+            selectionList: _selectionList,
             onCloseSelection: () => setState(() {
               selecting = false;
-              selectionList.clear();
+              _selectionList.clear();
             }),
             currentMode: widget.noteKind,
           )
@@ -67,7 +71,8 @@ class _NoteListPageState extends State<NoteListPage> {
             title: Text(Utils.getNameFromMode(widget.noteKind)),
           )) as PreferredSizeWidget;
 
-    return AnimationLimiter(
+    return SelectionState(
+      state: this,
       child: DependentScaffold(
         appBar: appBar,
         useAppBarAsSecondary: selecting,
@@ -78,7 +83,6 @@ class _NoteListPageState extends State<NoteListPage> {
           stream: helper.noteStream(widget.noteKind),
           initialData: [],
           builder: (context, snapshot) {
-            Widget child;
             List<Note> notes = widget.noteKind == ReturnMode.TAG
                 ? snapshot.data
                     .where(
@@ -90,73 +94,9 @@ class _NoteListPageState extends State<NoteListPage> {
                     .toList()
                 : snapshot.data ?? [];
 
-            if (notes.isNotEmpty) {
-              if (prefs.useGrid) {
-                child = WaterfallFlow.builder(
-                  gridDelegate:
-                      SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: deviceInfo.uiSizeFactor,
-                  ),
-                  itemBuilder: (context, index) {
-                    return AnimationConfiguration.staggeredGrid(
-                      columnCount: deviceInfo.uiSizeFactor,
-                      position: index,
-                      duration: const Duration(milliseconds: 350),
-                      child: SlideAnimation(
-                        verticalOffset: 128,
-                        child: FadeInAnimation(
-                          child: commonNote(notes[index]),
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: notes.length,
-                  controller: scrollController,
-                  padding: padding,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                );
-              } else {
-                child = ListView.builder(
-                  itemBuilder: (context, index) {
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: Duration(milliseconds: 350),
-                      child: SlideAnimation(
-                        verticalOffset: 128,
-                        child: FadeInAnimation(
-                          child: commonNote(notes[index]),
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: notes.length,
-                  controller: scrollController,
-                  padding: padding,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                );
-              }
-            } else {
-              child = LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: constraints.maxHeight,
-                      child: Illustrations.quickIllustration(
-                        context,
-                        getInfoOnCurrentMode.key,
-                        getInfoOnCurrentMode.value,
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-
-            return RefreshIndicator(
-              child: child,
-              onRefresh: sync,
-              displacement: MediaQuery.of(context).padding.top + 40,
+            return _NoteListWidget(
+              notes: notes,
+              noteKind: widget.noteKind,
             );
           },
         ),
@@ -172,92 +112,6 @@ class _NoteListPageState extends State<NoteListPage> {
       shape: StadiumBorder(),
       onTap: () => Utils.newNote(context),
       child: Icon(Icons.edit_outlined),
-    );
-  }
-
-  MapEntry<Widget, String> get getInfoOnCurrentMode {
-    switch (widget.noteKind) {
-      case ReturnMode.ARCHIVE:
-        return MapEntry(
-          appInfo.emptyArchiveIllustration,
-          LocaleStrings.mainPage.emptyStateArchive,
-        );
-      case ReturnMode.TRASH:
-        return MapEntry(
-          appInfo.emptyTrashIllustration,
-          LocaleStrings.mainPage.emptyStateTrash,
-        );
-      case ReturnMode.FAVOURITES:
-        return MapEntry(
-          appInfo.noFavouritesIllustration,
-          LocaleStrings.mainPage.emptyStateFavourites,
-        );
-      case ReturnMode.TAG:
-        return MapEntry(
-          appInfo.noNotesIllustration,
-          LocaleStrings.mainPage.emptyStateTag,
-        );
-      case ReturnMode.ALL:
-      case ReturnMode.NORMAL:
-      default:
-        return MapEntry(
-          appInfo.noNotesIllustration,
-          LocaleStrings.mainPage.emptyStateHome,
-        );
-    }
-  }
-
-  Widget commonNote(Note note) {
-    GlobalKey key = GlobalKeyRegistry.get(note.id);
-
-    return NoteView(
-      key: key,
-      note: note,
-      onTap: () async {
-        if (selecting) {
-          setState(() {
-            if (selectionList.any((item) => item.id == note.id)) {
-              selectionList.removeWhere((item) => item.id == note.id);
-              if (selectionList.isEmpty) selecting = false;
-            } else {
-              selectionList.add(note);
-            }
-          });
-        } else {
-          bool status = false;
-          if (note.lockNote && note.usesBiometrics) {
-            bool bioAuth = await Utils.showBiometricPrompt();
-
-            if (bioAuth)
-              status = bioAuth;
-            else
-              status = await Utils.showPassChallengeSheet(context) ?? false;
-          } else if (note.lockNote && !note.usesBiometrics) {
-            status = await Utils.showPassChallengeSheet(context) ?? false;
-          } else {
-            status = true;
-          }
-
-          if (status) {
-            Utils.showSecondaryRoute(
-              context,
-              NotePage(
-                note: note,
-              ),
-            ).then((_) => Utils.handleNotePagePop(note));
-          }
-        }
-      },
-      onLongPress: () async {
-        if (selecting) return;
-
-        setState(() {
-          selecting = true;
-          selectionList.add(note);
-        });
-      },
-      selectorOpen: selecting,
-      selected: selectionList.any((item) => item.id == note.id),
     );
   }
 
@@ -298,7 +152,7 @@ class _NoteListPageState extends State<NoteListPage> {
                       context: context,
                       notes: notes,
                       reason: LocaleStrings.mainPage
-                          .notesRestored(selectionList.length),
+                          .notesRestored(_selectionList.length),
                       archive: widget.noteKind == ReturnMode.ARCHIVE,
                     );
                   }
@@ -363,6 +217,186 @@ class _NoteListPageState extends State<NoteListPage> {
           ),
         ),
       ];
+}
+
+class SelectionState extends InheritedWidget {
+  @protected
+  final _NoteListPageState state;
+
+  SelectionState({
+    @required this.state,
+    Widget child,
+  }) : super(child: child);
+
+  @override
+  bool updateShouldNotify(covariant SelectionState old) {
+    return old.state != this.state;
+  }
+
+  static _NoteListPageState of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SelectionState>().state;
+  }
+}
+
+class _NoteListWidget extends StatelessWidget {
+  final List<Note> notes;
+  final ReturnMode noteKind;
+  final ScrollController scrollController;
+
+  const _NoteListWidget({
+    Key key,
+    @required this.notes,
+    @required this.noteKind,
+    this.scrollController,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final padding = EdgeInsets.fromLTRB(
+      4,
+      4 + MediaQuery.of(context).padding.top,
+      4,
+      4 + 80.0,
+    );
+    Widget child;
+
+    final _scrollController = scrollController ?? ScrollController();
+
+    if (notes.isNotEmpty) {
+      if (prefs.useGrid) {
+        child = WaterfallFlow.builder(
+          gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+            crossAxisCount: deviceInfo.uiSizeFactor,
+          ),
+          itemBuilder: _buildNoteList,
+          itemCount: notes.length,
+          padding: padding,
+          controller: _scrollController,
+        );
+      } else {
+        child = ListView.builder(
+          itemBuilder: _buildNoteList,
+          itemCount: notes.length,
+          padding: padding,
+          controller: _scrollController,
+        );
+      }
+    } else {
+      child = LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: constraints.maxHeight,
+              child: Illustrations.quickIllustration(
+                context,
+                getInfoOnCurrentMode.key,
+                getInfoOnCurrentMode.value,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return RefreshIndicator(
+      child: child,
+      onRefresh: sync,
+      displacement: MediaQuery.of(context).padding.top + 40,
+      triggerMode: RefreshIndicatorTriggerMode.anywhere,
+    );
+  }
+
+  Widget _buildNoteList(BuildContext context, int index) {
+    final _state = SelectionState.of(context);
+    final note = notes[index];
+
+    return NoteView(
+      key: GlobalKeyRegistry.get(note.id),
+      note: note,
+      onTap: () => _onNoteTap(context, note),
+      onLongPress: () => _onNoteLongPress(context, note),
+      selectorOpen: _state.selecting,
+      selected: _state.selectionList.any((item) => item.id == note.id),
+    );
+  }
+
+  void _onNoteTap(BuildContext context, Note note) async {
+    final _state = SelectionState.of(context);
+
+    if (_state.selecting) {
+      if (_state.selectionList.any((item) => item.id == note.id)) {
+        _state.removeSelectedNoteWhere((item) => item.id == note.id);
+        if (_state.selectionList.isEmpty) _state.selecting = false;
+      } else {
+        _state.addSelectedNote(note);
+      }
+    } else {
+      bool status = false;
+      if (note.lockNote && note.usesBiometrics) {
+        bool bioAuth = await Utils.showBiometricPrompt();
+
+        if (bioAuth)
+          status = bioAuth;
+        else
+          status = await Utils.showPassChallengeSheet(context) ?? false;
+      } else if (note.lockNote && !note.usesBiometrics) {
+        status = await Utils.showPassChallengeSheet(context) ?? false;
+      } else {
+        status = true;
+      }
+
+      if (status) {
+        Utils.showSecondaryRoute(
+          context,
+          NotePage(
+            note: note,
+          ),
+        ).then((_) => Utils.handleNotePagePop(note));
+      }
+    }
+  }
+
+  void _onNoteLongPress(BuildContext context, Note note) {
+    final _state = SelectionState.of(context);
+
+    if (_state.selecting) return;
+
+    _state.selecting = true;
+    _state.addSelectedNote(note);
+  }
+
+  MapEntry<Widget, String> get getInfoOnCurrentMode {
+    switch (noteKind) {
+      case ReturnMode.ARCHIVE:
+        return MapEntry(
+          appInfo.emptyArchiveIllustration,
+          LocaleStrings.mainPage.emptyStateArchive,
+        );
+      case ReturnMode.TRASH:
+        return MapEntry(
+          appInfo.emptyTrashIllustration,
+          LocaleStrings.mainPage.emptyStateTrash,
+        );
+      case ReturnMode.FAVOURITES:
+        return MapEntry(
+          appInfo.noFavouritesIllustration,
+          LocaleStrings.mainPage.emptyStateFavourites,
+        );
+      case ReturnMode.TAG:
+        return MapEntry(
+          appInfo.noNotesIllustration,
+          LocaleStrings.mainPage.emptyStateTag,
+        );
+      case ReturnMode.ALL:
+      case ReturnMode.NORMAL:
+      default:
+        return MapEntry(
+          appInfo.noNotesIllustration,
+          LocaleStrings.mainPage.emptyStateHome,
+        );
+    }
+  }
 
   Future<void> sync() async {
     await SyncRoutine().syncNotes();

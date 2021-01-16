@@ -47,9 +47,7 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      appInfo.packageInfo == null
-                          ? "Desktop version"
-                          : "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
+                      "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
                       style: TextStyle(
                         fontSize: 16,
                       ),

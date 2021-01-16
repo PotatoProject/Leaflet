@@ -195,9 +195,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
           bottomNavigationBar: Container(
             height: 49,
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
             child: Material(
               child: Column(
                 mainAxisSize: MainAxisSize.max,

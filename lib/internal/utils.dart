@@ -78,6 +78,8 @@ class Utils {
     ShapeBorder shape,
     Clip clipBehavior,
     Color barrierColor,
+
+    /// deprecated, doesn't actually do anything
     bool isScrollControlled = false,
   }) async {
     return await Navigator.push(
@@ -471,7 +473,7 @@ class Utils {
 
         path = image.paths[0];
       } else {
-        final image = await ImagePicker().getImage(source: ImageSource.gallery);
+        final image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
         path = image.path;
       }

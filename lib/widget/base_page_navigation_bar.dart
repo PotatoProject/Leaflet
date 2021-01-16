@@ -38,24 +38,29 @@ class BasePageNavigationBar extends StatelessWidget {
           child: AnimatedOpacity(
             opacity: enabled ? 1.0 : 0.5,
             duration: Duration(milliseconds: 300),
-            child: BottomNavigationBar(
-              items: items
-                  .map(
-                    (e) => BottomNavigationBarItem(
-                      icon: e.icon,
-                      label: e.label,
-                      activeIcon: e.activeIcon,
-                    ),
-                  )
-                  .toList(),
-              backgroundColor: Colors.transparent,
-              selectedFontSize: 12,
-              currentIndex: index,
-              onTap: onPageChanged,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Theme.of(context).accentColor,
-              unselectedItemColor: Theme.of(context).textTheme.caption.color,
-              elevation: 0,
+            child: MediaQuery.removeViewPadding(
+              context: context,
+              removeBottom: true,
+              child: BottomNavigationBar(
+                items: items
+                    .map(
+                      (e) => BottomNavigationBarItem(
+                        icon: e.icon,
+                        label: e.label,
+                        activeIcon: e.activeIcon,
+                        tooltip: "",
+                      ),
+                    )
+                    .toList(),
+                backgroundColor: Colors.transparent,
+                selectedFontSize: 12,
+                currentIndex: index,
+                onTap: onPageChanged,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: Theme.of(context).accentColor,
+                unselectedItemColor: Theme.of(context).textTheme.caption.color,
+                elevation: 0,
+              ),
             ),
           ),
         ),

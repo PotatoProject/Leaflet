@@ -16,13 +16,11 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/draw_object.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/image/image_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
-import 'package:potato_notes/widget/drawing_gesture_detector.dart';
 import 'package:potato_notes/widget/drawing_toolbar.dart';
 import 'package:potato_notes/widget/fake_appbar.dart';
 import 'package:potato_notes/widget/web_drawing_exporter.dart/shared.dart';
@@ -42,11 +40,7 @@ class DrawPage extends StatefulWidget {
 
 class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   BuildContext _globalContext;
-  List<DrawObject> _objects = [];
-  List<DrawObject> _backupObjects = [];
-  int _currentIndex;
-  int _actionQueueIndex = 0;
-  bool _saved = true;
+  DrawingBoardController _controller = DrawingBoardController();
   Offset _mousePosition = Offset.zero;
   DrawingToolbarController _toolbarController = DrawingToolbarController();
 
@@ -134,7 +128,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                     icon: Icon(Icons.save_outlined),
                     padding: EdgeInsets.all(0),
                     tooltip: LocaleStrings.common.save,
-                    onPressed: !_saved ? _saveImage : null,
+                    onPressed: !_controller.saved ? _saveImage : null,
                   ),
                 ],
               ),
@@ -159,12 +153,16 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               offset: _mousePosition,
               brushWidth: _tools[_toolIndex].size,
             ),
-            child: DrawingGestureDetector(
-              onUpdate: _normalModePanUpdate,
-              onEnd: _normalModePanEnd,
+            child: InteractiveViewer(
+              maxScale: 1,
+              minScale: 1,
+              onInteractionStart: _normalModePanStart,
+              onInteractionUpdate: _normalModePanUpdate,
+              onInteractionEnd: _normalModePanEnd,
+              scaleEnabled: false,
               child: DrawingBoard(
                 repaintKey: _drawingKey,
-                objects: _objects,
+                controller: _controller,
                 uri: widget.savedImage != null ? widget.savedImage.uri : null,
                 color: Colors.grey[50],
               ),
@@ -182,23 +180,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               key: _toolbarKey,
               child: DrawingToolbar(
                 controller: _toolbarController,
+                boardController: _controller,
                 tools: _tools,
                 toolIndex: _toolIndex,
                 onIndexChanged: (value) => setState(() => _toolIndex = value),
-                onUndo: _objects.isNotEmpty
-                    ? () => setState(() {
-                          _objects.removeLast();
-                          _actionQueueIndex = _objects.length - 1;
-                          _saved = false;
-                        })
-                    : null,
-                onRedo: _actionQueueIndex < _backupObjects.length - 1
-                    ? () => setState(() {
-                          _actionQueueIndex = _objects.length;
-                          _objects.add(_backupObjects[_actionQueueIndex]);
-                          _saved = false;
-                        })
-                    : null,
                 clearCanvas: () {
                   showDialog(
                     context: context,
@@ -214,10 +199,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                         TextButton(
                           child: Text(LocaleStrings.common.confirm),
                           onPressed: () {
-                            _objects.clear();
-                            _backupObjects.clear();
-                            _actionQueueIndex = 0;
-                            setState(() {});
+                            _controller.clearCanvas();
                             Navigator.pop(context);
                           },
                         ),
@@ -230,154 +212,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           );
         },
       ),
-      /*bottomNavigationBar: Material(
-        elevation: 12,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SizeTransition(
-              sizeFactor: controller,
-              axis: Axis.vertical,
-              axisAlignment: 1,
-              child: Material(
-                color: Theme.of(context).cardColor,
-                child: SizedBox(
-                  height: 48,
-                  child: showReason == MenuShowReason.RADIUS_PICKER
-                      ? Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            SizedBox(width: 16),
-                            Text(strokeWidth.toInt().toString()),
-                            Expanded(
-                              child: Slider(
-                                value: strokeWidth,
-                                min: 4,
-                                max: 50,
-                                onChanged: (value) =>
-                                    setState(() => strokeWidth = value),
-                                activeColor: Theme.of(context).accentColor,
-                                inactiveColor: Theme.of(context)
-                                    .accentColor
-                                    .withOpacity(0.2),
-                              ),
-                            ),
-                          ],
-                        )
-                      : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: availableColors.length,
-                          itemBuilder: (context, index) {
-                            Color currentColor = index == 0
-                                ? Colors.black
-                                : Color(availableColors[index].color);
-
-                            String tooltip = index == 0
-                                ? LocaleStrings.drawPage.colorBlack
-                                : availableColors[index].label;
-
-                            return IconButton(
-                              visualDensity: VisualDensity.standard,
-                              icon: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  color: currentColor,
-                                ),
-                                width: 32,
-                                height: 32,
-                                child: currentColor == selectedColor
-                                    ? Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      )
-                                    : Container(),
-                              ),
-                              tooltip: tooltip,
-                              onPressed: () {
-                                setState(() => selectedColor = currentColor);
-                                controller.animateBack(0);
-                              },
-                            );
-                          },
-                        ),
-                ),
-              ),
-            ),
-            SpicyBottomBar(
-              height: 48,
-              elevation: 0,
-              leftItems: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.brush_outlined),
-                  color: currentTool == DrawTool.PEN
-                      ? Theme.of(context).accentColor
-                      : null,
-                  padding: EdgeInsets.all(0),
-                  tooltip: LocaleStrings.drawPage.toolsBrush,
-                  onPressed: () => setState(() => currentTool = DrawTool.PEN),
-                ),
-                IconButton(
-                  icon: Icon(MdiIcons.eraserVariant),
-                  color: currentTool == DrawTool.ERASER
-                      ? Theme.of(context).accentColor
-                      : null,
-                  padding: EdgeInsets.all(0),
-                  tooltip: LocaleStrings.drawPage.toolsEraser,
-                  onPressed: () =>
-                      setState(() => currentTool = DrawTool.ERASER),
-                ),
-                IconButton(
-                  icon: Icon(MdiIcons.marker),
-                  color: currentTool == DrawTool.MARKER
-                      ? Theme.of(context).accentColor
-                      : null,
-                  padding: EdgeInsets.all(0),
-                  tooltip: LocaleStrings.drawPage.toolsMarker,
-                  onPressed: () =>
-                      setState(() => currentTool = DrawTool.MARKER),
-                ),
-              ],
-              rightItems: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.color_lens_outlined),
-                  padding: EdgeInsets.all(0),
-                  tooltip: LocaleStrings.drawPage.toolsColorPicker,
-                  onPressed: () async {
-                    if (showReason == MenuShowReason.COLOR_PICKER &&
-                        controller.value > 0) {
-                      await controller.animateBack(0);
-                    } else {
-                      await controller.animateBack(0);
-                      setState(() => showReason = MenuShowReason.COLOR_PICKER);
-                      await controller.animateTo(1);
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: Icon(MdiIcons.radiusOutline),
-                  padding: EdgeInsets.all(0),
-                  tooltip: LocaleStrings.drawPage.toolsRadiusPicker,
-                  onPressed: () async {
-                    if (showReason == MenuShowReason.RADIUS_PICKER &&
-                        controller.value > 0) {
-                      await controller.animateBack(0);
-                    } else {
-                      await controller.animateBack(0);
-                      setState(() => showReason = MenuShowReason.RADIUS_PICKER);
-                      await controller.animateTo(1);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),*/
     );
   }
 
-  void _normalModePanStart(DragUpdateDetails details) {
-    setState(() => _saved = false);
+  void _normalModePanStart(ScaleStartDetails details) {
+    _controller.saved = false;
     _toolbarController.closePanel();
     DrawObject object;
 
@@ -422,26 +261,20 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         break;
     }
 
-    _objects.add(object);
-    //_ac.forward();
+    _controller.addObject(object);
 
-    _currentIndex = _objects.length - 1;
-    _actionQueueIndex = _currentIndex;
+    _controller.currentIndex = _controller.objects.length - 1;
+    _controller.actionQueueIndex = _controller.currentIndex;
 
     RenderBox box = context.findRenderObject() as RenderBox;
-    Offset localOffset = box.globalToLocal(details.localPosition);
     Offset topLeft = box.localToGlobal(Offset.zero);
 
-    Offset point = Offset(
-      localOffset.dx,
-      localOffset.dy,
-    );
-    _mousePosition = details.globalPosition.translate(-topLeft.dx, -topLeft.dy);
+    _mousePosition = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
-    setState(() => _objects[_currentIndex].points.add(point));
+    _controller.addPointToObject(_controller.currentIndex, _mousePosition);
   }
 
-  void _normalModePanUpdate(DragUpdateDetails details) {
+  void _normalModePanUpdate(ScaleUpdateDetails details) {
     final RenderBox appbarBox = _appbarKey.currentContext.findRenderObject();
     Rect appbarRect =
         (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
@@ -450,44 +283,34 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     Rect toolbarRect =
         (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
 
-    if (_currentIndex == null) {
-      _normalModePanStart(details);
-      return;
-    }
-
     RenderBox box = context.findRenderObject() as RenderBox;
-    Offset localOffset = box.globalToLocal(details.localPosition);
     Offset topLeft = box.localToGlobal(Offset.zero);
 
     appbarRect = appbarRect.shift(topLeft * -1);
     toolbarRect = toolbarRect.shift(topLeft * -1);
-    _mousePosition = details.globalPosition.translate(-topLeft.dx, -topLeft.dy);
-
-    Offset point = Offset(
-      localOffset.dx,
-      localOffset.dy,
-    );
+    _mousePosition = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
+    setState(() {});
 
     if (!_appbarAc.isAnimating) {
-      if (appbarRect.contains(point))
+      if (appbarRect.contains(_mousePosition))
         _appbarAc.forward();
       else
         _appbarAc.reverse();
     }
 
     if (!_toolbarAc.isAnimating) {
-      if (toolbarRect.contains(point))
+      if (toolbarRect.contains(_mousePosition))
         _toolbarAc.forward();
       else
         _toolbarAc.reverse();
     }
 
-    setState(() => _objects[_currentIndex].points.add(point));
+    _controller.addPointToObject(_controller.currentIndex, _mousePosition);
   }
 
   void _normalModePanEnd(details) {
-    _currentIndex = null;
-    _backupObjects = List.from(_objects);
+    _controller.currentIndex = null;
+    _controller.backupObjects = List.from(_controller.objects);
     _appbarAc.reverse();
     _toolbarAc.reverse();
     setState(() => _mousePosition = null);
@@ -497,7 +320,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     Uri uri = _filePath != null ? Uri.file(_filePath) : null;
 
     void _internal() async {
-      if (!_saved) {
+      if (!_controller.saved) {
         bool exit = await showDialog(
           context: _globalContext,
           builder: (context) => AlertDialog(
@@ -539,7 +362,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     if (kIsWeb) {
       drawing = await WebDrawingExporter.export(
         widget.savedImage?.uri,
-        _objects,
+        _controller.objects,
         box.size,
       );
     } else {
@@ -581,7 +404,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     }
     helper.saveNote(widget.note.markChanged());
 
-    setState(() => _saved = true);
+    _controller.saved = true;
   }
 }
 

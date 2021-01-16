@@ -248,7 +248,6 @@ class _BasePageState extends State<BasePage>
                             : null,
                         width: 1920,
                       ),
-                      resizeToAvoidBottomInset: false,
                       extendBody: useDesktopLayout,
                       extendBodyBehindAppBar: true,
                       body: PageTransitionSwitcher(

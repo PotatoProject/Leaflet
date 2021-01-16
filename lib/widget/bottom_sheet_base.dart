@@ -80,21 +80,20 @@ class _BottomSheetBase extends StatefulWidget {
 
 class _BottomSheetBaseState extends State<_BottomSheetBase> {
   GlobalKey _childKey = GlobalKey();
+  Curve _curve = decelerateEasing;
 
   double get _childHeight {
     RenderBox box = _childKey.currentContext.findRenderObject();
     return box.size.height;
   }
 
-  Curve _curve = decelerateEasing;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: widget.route.animation,
       builder: (context, _) {
-        return SafeArea(
-          child: LayoutBuilder(builder: (context, constraints) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
             double shortestSide = 600;
             int roundedShortestSide = (shortestSide / 10).round() * 10;
 
@@ -193,7 +192,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                 ),
               ),
             );
-          }),
+          },
         );
       },
     );

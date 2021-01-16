@@ -81,7 +81,7 @@ class MigrationTask {
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
         lastModifyDate: DateTime.now(),
         color: v1Note.color,
-        images: savedImage != null ? [savedImage] : List(),
+        images: [if (savedImage != null) savedImage],
         list: v1Note.isList == 1,
         listContent: listItems,
         reminders: [],

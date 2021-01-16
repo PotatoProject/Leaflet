@@ -29,16 +29,20 @@ class _SearchPageState<T> extends State<SearchPage> {
     super.dispose();
     widget.delegate._queryTextController.removeListener(_onQueryChanged);
     widget.delegate._focusNode = null;
-    focusNode.dispose();
+    //focusNode.dispose();
   }
 
   void _onQueryChanged() {
+    if (!mounted) return;
+
     setState(() {
       // rebuild ourselves because query changed.
     });
   }
 
   void _onSearchBodyChanged() {
+    if (!mounted) return;
+
     setState(() {
       // rebuild ourselves because search body changed.
     });

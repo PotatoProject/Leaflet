@@ -262,8 +262,7 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
           : 0,
     );
 
-    final EdgeInsets effectivePadding = MediaQuery.of(context).viewInsets +
-        (padding ?? const EdgeInsets.all(0.0));
+    final EdgeInsets effectivePadding = (padding ?? EdgeInsets.zero);
 
     final Widget content = Material(
       elevation: 16,
@@ -293,7 +292,6 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
         onHorizontalDragEnd: _gestureStartAllowed
             ? (details) async {
                 setState(() => _gestureStartAllowed = false);
-                print(details.primaryVelocity);
                 if (details.primaryVelocity > 345) {
                   Navigator.pop(context);
                 } else {
@@ -320,19 +318,12 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
           padding: effectivePadding,
           duration: Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          child: MediaQuery.removeViewInsets(
-            removeLeft: true,
-            removeTop: true,
-            removeRight: true,
-            removeBottom: true,
-            context: context,
-            child: MediaQuery(
-              child: content,
-              data: MediaQuery.of(context).copyWith(
-                padding: deviceInfo.uiSizeFactor > 3
-                    ? EdgeInsets.zero
-                    : MediaQuery.of(context).padding,
-              ),
+          child: MediaQuery(
+            child: content,
+            data: MediaQuery.of(context).copyWith(
+              padding: deviceInfo.uiSizeFactor > 3
+                  ? EdgeInsets.zero
+                  : MediaQuery.of(context).padding,
             ),
           ),
         ),

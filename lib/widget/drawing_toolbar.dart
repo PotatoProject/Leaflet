@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/widget/drawing_board.dart';
 
 class DrawingToolbar extends StatefulWidget {
   final DrawingToolbarController controller;
   final List<DrawingTool> tools;
   final int toolIndex;
   final ValueChanged<int> onIndexChanged;
-  final VoidCallback onUndo;
-  final VoidCallback onRedo;
+  final DrawingBoardController boardController;
   final VoidCallback clearCanvas;
 
   DrawingToolbar({
-    this.controller,
     @required this.tools,
+    this.controller,
+    this.boardController,
     this.toolIndex = 0,
     this.onIndexChanged,
-    this.onUndo,
-    this.onRedo,
     this.clearCanvas,
   });
 
@@ -44,6 +43,9 @@ class _DrawingToolbarState extends State<DrawingToolbar>
       duration: Duration(milliseconds: 150),
     );
     widget.controller?._provideState(this);
+    widget.boardController.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -111,13 +113,17 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                         icon: Icon(Icons.undo),
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         tooltip: LocaleStrings.common.undo,
-                        onPressed: widget.onUndo,
+                        onPressed: widget.boardController.canUndo
+                            ? () => widget.boardController.undo()
+                            : null,
                       ),
                       IconButton(
                         icon: Icon(Icons.redo),
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         tooltip: LocaleStrings.common.redo,
-                        onPressed: widget.onRedo,
+                        onPressed: widget.boardController.canRedo
+                            ? () => widget.boardController.redo()
+                            : null,
                       ),
                       VerticalDivider(
                         indent: 8,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/draw_object.dart';
+import 'package:potato_notes/widget/drawing_board.dart';
 
 class WebDrawingExporter {
   static Future<String> export(
