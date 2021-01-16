@@ -270,6 +270,13 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 },
               ),
             ),
+            Material(
+              color: Theme.of(context).cardColor,
+              elevation: 4,
+              child: Container(
+                height: MediaQuery.of(context).padding.bottom,
+              ),
+            ),
           ],
         ),
       ),

@@ -45,9 +45,11 @@ class _SettingsPageState extends State<SettingsPage> {
         return WillPopScope(
           onWillPop: () async => !removingMasterPass,
           child: DependentScaffold(
+            resizeToAvoidBottomInset: false,
             body: ListView(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               children: [
                 commonSettings,

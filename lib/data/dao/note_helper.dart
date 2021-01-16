@@ -113,12 +113,12 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<void> saveNote(Note note) {
-    Loggy.d(message: "The note id is: " + note.id);
+    Loggy.d(message: "The note id is: ${note.id}");
     return into(notes).insert(note, mode: InsertMode.replace);
   }
 
   Future<void> deleteNote(Note note) {
-    Loggy.d(message: "The note id to delete: " + note.id);
+    Loggy.d(message: "The note id to delete: ${note.id}");
     return delete(notes).delete(note);
   }
 

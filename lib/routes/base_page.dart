@@ -274,6 +274,7 @@ class _BasePageState extends State<BasePage>
                           ),
                         ),
                       ),
+                      resizeToAvoidBottomInset: false,
                       bottomNavigationBar: !useDesktopLayout
                           ? BasePageNavigationBar(
                               items: _items,
@@ -281,49 +282,9 @@ class _BasePageState extends State<BasePage>
                               enabled: _bottomBarEnabled,
                               onPageChanged: setCurrentPage,
                             )
-                          : SlideTransition(
-                              position: Tween<Offset>(
-                                begin: Offset(0, 1),
-                                end: Offset.zero,
-                              ).animate(
-                                CurvedAnimation(
-                                  parent: _ac,
-                                  curve: accelerateEasing,
-                                  reverseCurve: decelerateEasing,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: 16,
-                                  bottom: 16,
-                                ),
-                                child: ConstrainedWidthAppbar(
-                                  child: Material(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    color: Theme.of(context).cardColor,
-                                    child: SizedBox(
-                                      height: 48,
-                                      child: Theme(
-                                        data: Theme.of(context).copyWith(
-                                          appBarTheme: Theme.of(context)
-                                              .appBarTheme
-                                              .copyWith(
-                                                color:
-                                                    Theme.of(context).cardColor,
-                                              ),
-                                        ),
-                                        child: _secondaryAppBar ?? Container(),
-                                      ),
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    elevation: 8,
-                                  ),
-                                  width: min(640,
-                                      MediaQuery.of(context).size.width - 32),
-                                ),
-                              ),
+                          : _SecondaryAppBar(
+                              animationController: _ac,
+                              child: _secondaryAppBar,
                             ),
                       floatingActionButton:
                           !useDesktopLayout ? _floatingActionButton : null,
@@ -460,4 +421,63 @@ extension SafeGetList<T> on List<T> {
 enum DefaultDrawerMode {
   COLLAPSED,
   EXPANDED,
+}
+
+class _SecondaryAppBar extends StatelessWidget {
+  final AnimationController animationController;
+  final Widget child;
+
+  _SecondaryAppBar({
+    @required this.animationController,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: Offset(0, 1),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: animationController,
+            curve: accelerateEasing,
+            reverseCurve: decelerateEasing,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 16,
+            bottom: 16,
+          ),
+          child: ConstrainedWidthAppbar(
+            child: Material(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              color: Theme.of(context).cardColor,
+              child: SizedBox(
+                height: 48,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                          color: Theme.of(context).cardColor,
+                        ),
+                  ),
+                  child: child ?? Container(),
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              elevation: 8,
+            ),
+            width: min(640, MediaQuery.of(context).size.width - 32),
+          ),
+        ),
+      ),
+    );
+  }
 }

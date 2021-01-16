@@ -43,7 +43,12 @@ class DrawerList extends StatelessWidget {
             ),
           ),
         ),
-        footer ?? Container(),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: footer ?? Container(),
+        ),
       ],
     );
   }
