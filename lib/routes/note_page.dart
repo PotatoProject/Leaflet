@@ -59,7 +59,7 @@ class _NotePageState extends State<NotePage> {
     bool shouldFocusTitle = widget.note?.id == null;
 
     note = Note(
-      id: widget.note?.id,
+      id: widget.note?.id ?? Utils.generateId(),
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
       styleJson: [],
