@@ -23,8 +23,6 @@ class InAppUpdater {
 
   static BuildType _getBuildType(String buildTypeFromEnv) {
     switch (buildTypeFromEnv.toLowerCase()) {
-      case 'fdroid':
-        return BuildType.FDROID;
       case 'playstore':
         return BuildType.PLAYSTORE;
       case 'github':
@@ -35,9 +33,6 @@ class InAppUpdater {
 
   static Future<AppUpdateInfo> _internalCheckForUpdate() async {
     switch (buildType) {
-      case BuildType.FDROID:
-        // TODO: implement when app is uploaded to fdroid
-        throw UnsupportedError("Implement when app is uploaded to fdroid");
       case BuildType.PLAYSTORE:
         return await InAppUpdate.checkForUpdate();
       case BuildType.GITHUB:
@@ -90,9 +85,6 @@ class InAppUpdater {
     bool flexibleUpdateAllowed,
   ) async {
     switch (buildType) {
-      case BuildType.FDROID:
-        // TODO: implement when app is uploaded to fdroid
-        throw UnsupportedError("Implement when app is uploaded to fdroid");
       case BuildType.PLAYSTORE:
         if (flexibleUpdateAllowed) {
           await InAppUpdate.startFlexibleUpdate();
@@ -312,6 +304,5 @@ class _InAppUpdatePageState extends State<InAppUpdatePage> {
 
 enum BuildType {
   GITHUB,
-  FDROID,
   PLAYSTORE,
 }
