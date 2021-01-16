@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
+import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:potato_notes/widget/note_view_image.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -27,41 +24,89 @@ class NotePageImageGallery extends StatefulWidget {
 
 class _NotePageImageGalleryState extends State<NotePageImageGallery> {
   PageController pageController;
+  TransformationController transformationController =
+      TransformationController();
   int currentPage;
+  bool _mouseIsConnected;
 
   @override
   void initState() {
     pageController = PageController(initialPage: widget.currentImage);
     currentPage = widget.currentImage;
+    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
+    RendererBinding.instance.mouseTracker.addListener(mouseListener);
     super.initState();
   }
 
   @override
+  void dispose() {
+    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
+    super.dispose();
+  }
+
+  void mouseListener() {
+    final bool mouseIsConnected =
+        RendererBinding.instance.mouseTracker.mouseIsConnected;
+    if (mouseIsConnected != _mouseIsConnected) {
+      setState(() {
+        _mouseIsConnected = mouseIsConnected;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    DismissibleRoute.of(context).requestDisableGestures = currentScale > 1;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: PhotoViewGallery.builder(
-        itemCount: widget.note.images.length,
-        backgroundDecoration: BoxDecoration(
-          color: Colors.transparent,
-        ),
-        builder: (context, index) {
-          SavedImage savedImage = widget.note.images[index];
-          ImageProvider image;
-          if (savedImage.existsLocally) {
-            image = FileImage(File(savedImage.path));
-          } else {
-            image = BlurHashImage(savedImage.blurHash);
-          }
-          return PhotoViewGalleryPageOptions(
-            imageProvider: image,
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: 3.0,
-          );
-        },
-        pageController: PageController(initialPage: widget.currentImage),
-        onPageChanged: (index) => setState(() => currentPage = index),
+      resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          PageView.builder(
+            itemCount: widget.note.images.length,
+            itemBuilder: (context, index) {
+              return ClipRect(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 56),
+                  child: InteractiveViewer(
+                    child: NoteViewImage(
+                      savedImage: widget.note.images[index],
+                      fit: BoxFit.contain,
+                    ),
+                    transformationController: transformationController,
+                    minScale: 1,
+                    maxScale: 4,
+                    onInteractionUpdate: (details) => setState(() {}),
+                  ),
+                ),
+              );
+            },
+            controller: pageController,
+            onPageChanged: (index) => setState(() => currentPage = index),
+            physics: currentScale > 1 ? NeverScrollableScrollPhysics() : null,
+          ),
+          Visibility(
+            visible: _mouseIsConnected,
+            child: Row(
+              children: [
+                _PageSwitchSideButton(
+                  icon: Icon(Icons.arrow_back),
+                  onTap: _previousPage,
+                  enabled: currentPage != 0,
+                ),
+                Spacer(),
+                _PageSwitchSideButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onTap: _nextPage,
+                  enabled: currentPage != widget.note.images.length - 1,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       appBar: AppBar(
         textTheme: Theme.of(context).textTheme,
@@ -108,6 +153,95 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
           ),
         ],
       ),
+    );
+  }
+
+  void _nextPage() async {
+    await pageController.nextPage(
+      duration: Duration(milliseconds: 250),
+      curve: decelerateEasing,
+    );
+    setState(() {});
+  }
+
+  void _previousPage() async {
+    await pageController.previousPage(
+      duration: Duration(milliseconds: 250),
+      curve: decelerateEasing,
+    );
+    setState(() {});
+  }
+
+  double get currentScale {
+    return transformationController.value.storage[0];
+  }
+}
+
+class _PageSwitchSideButton extends StatefulWidget {
+  final Widget icon;
+  final VoidCallback onTap;
+  final bool enabled;
+
+  _PageSwitchSideButton({
+    @required this.icon,
+    this.onTap,
+    this.enabled = true,
+  });
+
+  @override
+  _PageSwitchSideButtonState createState() => _PageSwitchSideButtonState();
+}
+
+class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 250,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return MouseRegion(
+          onEnter: (_) => _controller.forward(),
+          onExit: (_) => _controller.reverse(),
+          child: Container(
+            height: constraints.maxHeight,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: FadeTransition(
+              opacity: _controller,
+              child: SizedBox.fromSize(
+                size: Size.square(48),
+                child: AnimatedOpacity(
+                  opacity: widget.enabled ? 1 : 0.5,
+                  duration: Duration(milliseconds: 150),
+                  curve: decelerateEasing,
+                  child: FloatingActionButton(
+                    child: widget.icon,
+                    onPressed: widget.enabled ? widget.onTap : null,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
