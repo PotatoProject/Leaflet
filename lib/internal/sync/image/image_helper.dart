@@ -14,6 +14,8 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';
 
+import 'download_queue_item.dart';
+
 class ImageHelper {
   static const JPEG_QUALITY = 90;
   static const maxHeight = 2048;
@@ -55,20 +57,20 @@ class ImageHelper {
   }*/
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
-    ImageQueue.downloadQueue.clear();
+    imageQueue.downloadQueue.clear();
     for (Note note in changedNotes) {
       if (note.images.length > 0) {
         for (SavedImage image in note.images) {
           print(image.existsLocally);
           if (!image.existsLocally) {
-            ImageQueue.addDownload(image, note.id);
+            imageQueue.addDownload(image, note.id);
             //downloadImage(image);
           }
         }
       }
     }
-    print(ImageQueue.downloadQueue.length);
-    await ImageQueue.processDownloads();
+    print(imageQueue.downloadQueue.length);
+    await imageQueue.processDownloads();
   }
 
   static Future<SavedImage> copyToCache(File file) async {
@@ -127,11 +129,20 @@ class ImageHelper {
     return imageFile;
   }
 
+  static DownloadQueueItem? getDownloadItem(SavedImage savedimage){
+    var index = imageQueue.downloadQueue.indexWhere((e) => e.savedImage.id == savedimage.id);
+    if(index == -1){
+      return null;
+    } else {
+      return imageQueue.downloadQueue[index];
+    }
+  }
+
 
 
   static handleNoteDeletion(Note note) {
     for (SavedImage image in note.images) {
-      ImageQueue.addDelete(image);
+      imageQueue.addDelete(image);
     }
   }
 }

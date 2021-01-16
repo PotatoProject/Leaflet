@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  blake2:
+    dependency: "direct main"
+    description:
+      name: blake2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+1"
   blurhash_dart:
     dependency: "direct main"
     description:
@@ -259,7 +266,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.1"
+    version: "6.0.0-nullsafety.4"
   file_chooser:
     dependency: "direct main"
     description:
@@ -578,6 +585,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.4.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -591,7 +605,14 @@ packages:
       name: node_io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.1"
+  observable_ish:
+    dependency: transitive
+    description:
+      name: observable_ish
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   octo_image:
     dependency: transitive
     description:
@@ -731,7 +752,7 @@ packages:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.0-nullsafety.4"
   platform_detect:
     dependency: transitive
     description:
@@ -759,7 +780,14 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "4.0.0-nullsafety.4"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2+3"
   pub_semver:
     dependency: transitive
     description:
@@ -817,14 +845,14 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.0.0"
   share_plus_linux:
     dependency: transitive
     description:
       name: share_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.0.0"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -832,20 +860,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  share_plus_web:
-    dependency: transitive
-    description:
-      name: share_plus_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  share_plus_windows:
-    dependency: transitive
-    description:
-      name: share_plus_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -972,6 +986,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0-nullsafety.6"
+  stacked:
+    dependency: "direct main"
+    description:
+      name: stacked
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.7"
   stream_channel:
     dependency: transitive
     description:

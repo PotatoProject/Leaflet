@@ -102,9 +102,9 @@ class SyncRoutine {
         throw ("Not logged in!");
       }
     }
-    ImageQueue.uploadQueue.clear();
-    await ImageQueue.fillUploadQueue();
-    await ImageQueue.process();
+    imageQueue.uploadQueue.clear();
+    await imageQueue.fillUploadQueue();
+    await imageQueue.process();
     // Recieve and send changes from API
     await sendSettingUpdates();
 

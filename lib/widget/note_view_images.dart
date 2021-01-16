@@ -2,10 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/download_queue_item.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
+import 'package:potato_notes/internal/sync/image/queue_item.dart';
+import 'package:potato_notes/internal/sync/image/upload_queue_item.dart';
+import 'package:potato_notes/internal/sync/image_queue.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:provider/provider.dart';
 
 class NoteViewImages extends StatefulWidget {
   final List<SavedImage> images;
@@ -60,11 +68,12 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                 ImageProvider image;
                 if (savedImage.existsLocally && savedImage.uploaded) {
                   image = FileImage(File(savedImage.path));
-                } else if(savedImage.hash != null) {
+                } else if (savedImage.hash != null) {
                   image = BlurHashImage(savedImage.blurHash);
                 } else {
                   image = FileImage(File(savedImage.uri!.path));
                 }
+
                 return Stack(
                   children: [
                     SizedBox.expand(
@@ -73,6 +82,40 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
                         gaplessPlayback: true,
+                      ),
+                    ),
+                    Visibility(
+                      visible: savedImage.uploaded,
+                      child: Icon(Icons.cloud_done_outlined),
+                    ),
+                    ChangeNotifierProvider.value(
+                      value: imageQueue,
+                      child: Consumer<ImageQueue>(
+                        builder: (context, imageQueue, child) {
+                          print('Rebuilding item');
+                          if (imageQueue.queue
+                              .any((e) => e.savedImage.id == savedImage.id)) {
+                            print('Found Item');
+                            QueueItem item = imageQueue.queue.firstWhere(
+                                (e) => e.savedImage.id == savedImage.id);
+                            if (item.runtimeType == DownloadQueueItem &&
+                                item.status == QueueItemStatus.ONGOING) {
+                              var downloadItem = item as DownloadQueueItem;
+                              var progress = downloadItem.downloadStatus ?? 0;
+                              String text = 'Downloading: ' +
+                                  (progress * 100).toInt().toString();
+                              return Text(text);
+                            } else if (item.runtimeType == UploadQueueItem &&
+                                item.status == QueueItemStatus.ONGOING) {
+                              var uploadItem = item as UploadQueueItem;
+                              var progress = uploadItem.uploadStatus ?? 0;
+                              String text = 'Uploading: ' +
+                                  (progress * 100).toInt().toString();
+                              return Text(text);
+                            }
+                          }
+                          return Text("");
+                        },
                       ),
                     ),
                     SizedBox.expand(
@@ -86,10 +129,9 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                           child: Text(
                             "+" + widget.numPlusImages.toString(),
                             style: TextStyle(
-                              fontSize: widget.useSmallFont ? 24.0 : 36.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
+                                fontSize: widget.useSmallFont ? 24.0 : 36.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),

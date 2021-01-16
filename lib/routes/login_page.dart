@@ -5,22 +5,11 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:stacked/stacked.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
+import 'login_page_model.dart';
 
-class _LoginPageState extends State<LoginPage> {
-  final emailOrUserController = TextEditingController();
-  final emailController = TextEditingController();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  final emailOrUserFocusNode = FocusNode();
-  final emailFocusNode = FocusNode();
-  final usernameFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
+class LoginPage extends StatelessWidget {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -29,276 +18,230 @@ class _LoginPageState extends State<LoginPage> {
   bool showLoadingOverlay = false;
 
   @override
-  void initState() {
-    BackButtonInterceptor.add((_) => showLoadingOverlay, name: "antiPop");
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => FocusScope.of(context).requestFocus(emailOrUserFocusNode),
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    BackButtonInterceptor.removeByName("antiPop");
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    bool enabledCondition;
 
-    if (register) {
+    /*if (register) {
       enabledCondition = usernameController.text.isNotEmpty &&
           emailController.text.isNotEmpty &&
           passwordController.text.isNotEmpty;
     } else {
       enabledCondition = emailOrUserController.text.isNotEmpty &&
           passwordController.text.isNotEmpty;
-    }
+    }*/
 
     DismissibleRoute.of(context)?.requestDisableGestures = showLoadingOverlay;
 
-    final items = [
-      TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: register ? "Email" : "Email or username",
-        ),
-        autofillHints: [
-          AutofillHints.email,
-        ],
-        onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
-          register ? usernameFocusNode : passwordFocusNode,
-        ),
-        controller: register ? emailController : emailOrUserController,
-        focusNode: register ? emailFocusNode : emailOrUserFocusNode,
-        onChanged: (_) => setState(() {}),
-      ),
-      Visibility(
-        visible: register,
-        child: SizedBox(height: 16),
-      ),
-      Visibility(
-        visible: register,
-        child: TextFormField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: "Username",
-          ),
-          autofillHints: [
-            AutofillHints.username,
-          ],
-          onFieldSubmitted: (_) =>
-              FocusScope.of(context).requestFocus(passwordFocusNode),
-          controller: usernameController,
-          focusNode: usernameFocusNode,
-          onChanged: (_) => setState(() {}),
-        ),
-      ),
-      SizedBox(height: 16),
-      TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: "Password",
-          suffixIcon: IconButton(
-            icon: Icon(
-              obscurePass
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
+    return ViewModelBuilder<LoginPageModel>.reactive(
+      viewModelBuilder: () => LoginPageModel(),
+      builder: (context, model, _) => Stack(
+        children: [
+          Scaffold(
+            key: scaffoldKey,
+            appBar: AppBar(
+              title: Text(model.loginState == LoginState.REGISTER
+                  ? "Register"
+                  : "Login"),
+              textTheme: Theme.of(context).textTheme,
             ),
-            onPressed: () => setState(() => obscurePass = !obscurePass),
-          ),
-        ),
-        focusNode: passwordFocusNode,
-        onFieldSubmitted: enabledCondition
-            ? (text) => onSubmit()
-            : (text) => FocusScope.of(context).unfocus(),
-        autofillHints: [
-          AutofillHints.password,
-        ],
-        controller: passwordController,
-        keyboardType: TextInputType.visiblePassword,
-        obscureText: obscurePass,
-        onChanged: (_) => setState(() {}),
-      ),
-      SizedBox(height: 16),
-      Row(
-        children: <Widget>[
-          Visibility(
-            visible: !register,
-            child: Expanded(
-              flex: 12,
-              child: FlatButton(
-                child: Text(
-                  "Forgot password",
-                  textAlign: TextAlign.center,
-                ),
-                onPressed: () {},
-                textColor: Theme.of(context).accentColor,
-              ),
-            ),
-          ),
-          Visibility(
-            visible: !register,
-            child: Spacer(),
-          ),
-          Expanded(
-            flex: 12,
-            child: RaisedButton(
-              child: Text(register ? "Register" : "Login"),
-              disabledColor: Theme.of(context).disabledColor,
-              disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
-              textColor: Theme.of(context).scaffoldBackgroundColor,
-              onPressed: enabledCondition ? onSubmit : null,
-            ),
-          ),
-        ],
-      ),
-    ];
-
-    return Stack(
-      children: [
-        Scaffold(
-          key: scaffoldKey,
-          appBar: AppBar(
-            title: Text(register ? "Register" : "Login"),
-            textTheme: Theme.of(context).textTheme,
-          ),
-          body: Center(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(24),
-              child: PageTransitionSwitcher(
-                duration: Duration(milliseconds: 250),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                    fillColor: Colors.transparent,
-                  );
-                },
-                child: ConstrainedBox(
-                  key: register ? Key("register") : Key("login"),
-                  constraints: BoxConstraints(
-                    maxWidth: 480,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: items,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          bottomNavigationBar: Container(
-            height: 49,
-            margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Material(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Divider(height: 1),
-                  Expanded(
-                    child: FlatButton(
-                      onPressed: () {
-                        emailOrUserController.clear();
-                        emailController.clear();
-                        usernameController.clear();
-                        passwordController.clear();
-                        setState(() => register = !register);
-                        WidgetsBinding.instance!.addPostFrameCallback((_) {
-                          if (register) {
-                            FocusScope.of(context).requestFocus(emailFocusNode);
-                          } else {
-                            FocusScope.of(context)
-                                .requestFocus(emailOrUserFocusNode);
-                          }
-                        });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                        child: RichText(
-                          text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyText2,
-                            children: [
-                              TextSpan(
-                                text: register
-                                    ? "Already have an account?"
-                                    : "Don't have an account yet? ",
-                              ),
-                              TextSpan(
-                                text: register ? "Login." : "Register.",
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+            body: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(24),
+                child: PageTransitionSwitcher(
+                  duration: Duration(milliseconds: 250),
+                  transitionBuilder:
+                      (child, primaryAnimation, secondaryAnimation) {
+                    return FadeThroughTransition(
+                      animation: primaryAnimation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: child,
+                      fillColor: Colors.transparent,
+                    );
+                  },
+                  child: ConstrainedBox(
+                    key: register ? Key("register") : Key("login"),
+                    constraints: BoxConstraints(
+                      maxWidth: 480,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        buildEmailOrUsernameField(model),
+                        Visibility(
+                          visible: model.registering,
+                          child: SizedBox(height: 16),
+                        ),
+                        buildUsernameField(model),
+                        SizedBox(height: 16),
+                        buildPasswordField(context, model),
+                        SizedBox(height: 16),
+                        Row(
+                          children: <Widget>[
+                            Visibility(
+                              visible: model.loggingIn,
+                              child: Expanded(
+                                flex: 12,
+                                child: FlatButton(
+                                  child: Text(
+                                    "Forgot password",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  onPressed: () {},
+                                  textColor: Theme.of(context).accentColor,
                                 ),
                               ),
-                            ],
+                            ),
+                            Visibility(
+                              visible: model.loggingIn,
+                              child: Spacer(),
+                            ),
+                            Expanded(
+                              flex: 12,
+                              child: RaisedButton(
+                                child: Text(model.registering ? "Register" : "Login"),
+                                disabledColor: Theme.of(context).disabledColor,
+                                disabledTextColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                textColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                onPressed: () => model.submitEnabled ? model.onSubmit(context) : null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              height: 49,
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Material(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Divider(height: 1),
+                    Expanded(
+                      child: FlatButton(
+                        onPressed: () {
+                          model.switchState();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4),
+                          child: RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: [
+                                TextSpan(
+                                  text: model.loginState == LoginState.REGISTER
+                                      ? "Already have an account? "
+                                      : "Don't have an account yet? ",
+                                ),
+                                TextSpan(
+                                  text: model.loginState == LoginState.REGISTER
+                                      ? "Login."
+                                      : "Register.",
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Visibility(
-          visible: showLoadingOverlay,
-          child: SizedBox.expand(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.black54,
-              ),
-              child: Center(
-                child: CircularProgressIndicator(),
+          Visibility(
+            visible: model.isLoading,
+            child: SizedBox.expand(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                ),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  void onSubmit() async {
-    AuthResponse response;
+  Widget buildEmailOrUsernameField(LoginPageModel model) {
+    return TextFormField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: model.loginState == LoginState.REGISTER
+            ? "Email"
+            : "Email or username",
+      ),
+      autofillHints: [
+        AutofillHints.email,
+      ],
+      //onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
+      //  register ? usernameFocusNode : passwordFocusNode,
+      //),
+      //controller: register ? emailController : emailOrUserController,
+      //focusNode: register ? emailFocusNode : emailOrUserFocusNode,
+      onChanged: (text) => model.email = text,
+    );
+  }
 
-    setState(() => showLoadingOverlay = true);
-
-    if (register) {
-      response = await AccountController.register(
-        usernameController.text,
-        emailController.text,
-        passwordController.text,
-      );
-    } else {
-      response = await AccountController.login(
-        emailOrUserController.text,
-        passwordController.text,
-      );
-    }
-
-    setState(() => showLoadingOverlay = false);
-
-    if (response.status && !register) {
-      Navigator.pop(context);
-    } else {
-      if (response.message == null) return;
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          width: min(640, MediaQuery.of(context).size.width - 32),
-          content: Text(
-            register ? response.message ?? "Registered!" : response.message!,
-          ),
+  Widget buildUsernameField(LoginPageModel model) {
+    return Visibility(
+      visible: model.registering,
+      child: TextFormField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Username",
         ),
-      );
-    }
+        autofillHints: [
+          AutofillHints.username,
+        ],
+        //onFieldSubmitted: (_) =>
+        //    FocusScope.of(context).requestFocus(passwordFocusNode),
+        //controller: usernameController,
+        //focusNode: usernameFocusNode,
+        onChanged: (text) => model.username = text,
+      ),
+    );
+  }
+
+  Widget buildPasswordField(BuildContext context, LoginPageModel model) {
+    return TextFormField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: "Password",
+        suffixIcon: IconButton(
+          icon: Icon(
+            model.obscurePassword
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+          ),
+          onPressed: () => model.switchObscurePassword(),
+        ),
+      ),
+      onFieldSubmitted: model.submitEnabled
+          ? (text) => model.onSubmit(context)
+          : (text) => {},
+      autofillHints: [
+        AutofillHints.password,
+      ],
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: model.obscurePassword,
+      onChanged: (text) => model.password = text,
+    );
   }
 }

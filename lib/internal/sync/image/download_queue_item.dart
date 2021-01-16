@@ -4,8 +4,11 @@ import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
+import 'package:potato_notes/internal/sync/image_queue.dart';
 
-class DownloadQueueItem extends QueueItem {
+
+
+class DownloadQueueItem extends QueueItem{
   final String noteId;
   final String localPath;
   final SavedImage savedImage;
@@ -29,6 +32,7 @@ class DownloadQueueItem extends QueueItem {
       onReceiveProgress: (count, total) {
         downloadStatus = count / total;
         print(downloadStatus);
+        imageQueue.notifyListeners();
       },
     );
     print('Downloaded!');

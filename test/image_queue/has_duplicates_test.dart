@@ -8,8 +8,11 @@ import 'package:potato_notes/internal/sync/image_queue.dart';
 import '../helper/empty_note.dart';
 
 class MockNoteHelper extends Mock implements NoteHelper {}
-
+ImageQueue imageQueue = ImageQueue();
 main() {
+  setUpAll(() {
+    imageQueue = ImageQueue();
+  });
   test('returns true when image is uploaded and other uploaded images exist', () async {
     var fakeImage = new SavedImage.empty()..uploaded = true..hash="test";
     var otherImage = new SavedImage.empty()..uploaded = true..hash="test";
@@ -27,5 +30,5 @@ Future<bool> hasDuplicatesWith(SavedImage fakeImage, SavedImage otherImage){
   var fakeNote = EmptyNote.get();
   fakeNote = fakeNote.copyWith(images: [otherImage]);
   when(helper.listNotes(ReturnMode.LOCAL)).thenAnswer((_) => Future.value([fakeNote]));
-  return ImageQueue.hasDuplicates(fakeImage, noteHelper: helper);
+  return imageQueue.hasDuplicates(fakeImage, noteHelper: helper);
 }

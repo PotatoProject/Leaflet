@@ -64,6 +64,7 @@ class UploadQueueItem extends QueueItem {
       onSendProgress: (count, total) {
         uploadStatus = count / total;
         print(uploadStatus);
+        imageQueue.notifyListeners();
       },
       options: Options(
         method:

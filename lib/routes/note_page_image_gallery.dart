@@ -101,7 +101,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
-              ImageQueue.addDelete(widget.note.images[currentPage]);
+              imageQueue.addDelete(widget.note.images[currentPage]);
               widget.note.images.removeWhere((savedImage) =>
                   widget.note.images[currentPage].id == savedImage.id);
               helper.saveNote(widget.note.markChanged());

@@ -116,7 +116,7 @@ class _NotePageState extends State<NotePage> {
   Future<void> handleImageAdd(String path) async {
     SavedImage savedImage = await ImageHelper.copyToCache(File(path));
     setState(() => note.images.add(savedImage));
-    ImageQueue.addUpload(savedImage, note.id);
+    imageQueue.addUpload(savedImage, note.id);
     await helper.saveNote(note.markChanged());
     //await handleImageUpload();
   }

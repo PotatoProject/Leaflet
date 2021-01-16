@@ -56,6 +56,8 @@ dependencies:
   waterfall_flow:
   worker_manager:
   blake2:
+  stacked:
+  provider:
 
   crayola:
 
