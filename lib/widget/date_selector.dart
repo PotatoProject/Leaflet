@@ -105,9 +105,8 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FlatButton(
+              TextButton(
                 child: Text(LocaleStrings.common.cancel),
-                textColor: Theme.of(context).accentColor,
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -116,10 +115,8 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
               SizedBox(
                 width: 8,
               ),
-              FlatButton(
+              TextButton(
                 child: Text(LocaleStrings.common.confirm),
-                textColor: Theme.of(context).cardColor,
-                color: Theme.of(context).accentColor,
                 onPressed: () {
                   widget.onConfirm(selectedDate, selectedMode);
                   Navigator.pop(context);
@@ -171,10 +168,8 @@ class _DateFilterSelectorHeader extends StatelessWidget {
                   ),
             ),
             Spacer(),
-            FlatButton(
+            TextButton(
               child: Text(LocaleStrings.common.reset),
-              textColor: Theme.of(context).accentColor,
-              padding: EdgeInsets.symmetric(horizontal: 16),
               onPressed: () {
                 onReset?.call();
                 Navigator.pop(context);

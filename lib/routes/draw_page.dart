@@ -327,14 +327,12 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
             title: Text(LocaleStrings.common.areYouSure),
             content: Text(LocaleStrings.drawPage.exitPrompt),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
-                textColor: Theme.of(context).accentColor,
                 child: Text(LocaleStrings.common.cancel),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                textColor: Theme.of(context).accentColor,
                 child: Text(LocaleStrings.common.exit),
               ),
             ],

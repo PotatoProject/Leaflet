@@ -84,7 +84,7 @@ class _PassChallengeState extends State<PassChallenge> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Spacer(),
-                FlatButton(
+                TextButton(
                   onPressed: controller.text.length >= 4
                       ? widget.editMode
                           ? () => widget.onSave(controller.text)
@@ -98,10 +98,6 @@ class _PassChallengeState extends State<PassChallenge> {
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),
-                  color: Theme.of(context).accentColor,
-                  disabledColor: Theme.of(context).disabledColor,
-                  textColor: Theme.of(context).cardColor,
-                  disabledTextColor: Theme.of(context).cardColor,
                 ),
               ],
             ),

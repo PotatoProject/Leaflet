@@ -143,20 +143,17 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                 ButtonBar(
                   alignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    FlatButton(
+                    TextButton(
                       onPressed: () => Navigator.pop(context, -1),
-                      textColor: currentColor,
                       child: Text(LocaleStrings.common.reset),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () => Navigator.pop(context),
-                      textColor: currentColor,
                       child: Text(LocaleStrings.common.cancel),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () =>
                           Navigator.pop(context, currentColor.value),
-                      textColor: currentColor,
                       child: Text(LocaleStrings.common.confirm),
                     ),
                   ],

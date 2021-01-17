@@ -595,12 +595,12 @@ index 0000000..8728aeb
 +                borderRadius: BorderRadius.circular(Constants.dialogCornerRadius),
 +              ),
 +              actions: [
-+                FlatButton(
++                TextButton(
 +                  child: Text("Cancel"),
 +                  onPressed: () => Navigator.pop(context, false),
 +                  textColor: Theme.of(context).accentColor,
 +                ),
-+                FlatButton(
++                TextButton(
 +                  child: Text("Confirm"),
 +                  color: Theme.of(context).accentColor,
 +                  textColor: Theme.of(context).dialogBackgroundColor,

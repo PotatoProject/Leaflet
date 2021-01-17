@@ -41,12 +41,6 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
         cardTheme: CardTheme(
           elevation: 0,
         ),
@@ -68,6 +62,11 @@ class Themes {
         disabledColor: Colors.black.withOpacity(0.4),
         platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: mainColor,
+          ),
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
@@ -107,12 +106,6 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
         cardTheme: CardTheme(
           elevation: 0,
         ),
@@ -134,6 +127,11 @@ class Themes {
         disabledColor: Colors.white.withOpacity(0.4),
         platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: mainColor,
+          ),
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
@@ -173,12 +171,6 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
         cardTheme: CardTheme(
           elevation: 0,
         ),
@@ -200,6 +192,11 @@ class Themes {
         disabledColor: Colors.white.withOpacity(0.4),
         platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: mainColor,
+          ),
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),

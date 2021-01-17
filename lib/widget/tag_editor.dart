@@ -117,15 +117,11 @@ class _NewTagState extends State<TagEditor> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FlatButton(
+                TextButton(
                   onPressed: tag.name.trim().isNotEmpty
                       ? () => widget.onSave(tag.copyWith(name: tag.name.trim()))
                       : null,
                   child: Text(LocaleStrings.common.save),
-                  color: Theme.of(context).accentColor,
-                  disabledColor: Theme.of(context).disabledColor,
-                  textColor: Theme.of(context).cardColor,
-                  disabledTextColor: Theme.of(context).cardColor,
                 ),
               ],
             ),

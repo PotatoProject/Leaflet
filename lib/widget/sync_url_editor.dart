@@ -51,22 +51,20 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text(LocaleStrings.common.cancel),
-                  textColor: Theme.of(context).accentColor,
                 ),
                 Spacer(),
-                FlatButton(
+                TextButton(
                   onPressed: () async {
                     prefs.apiUrl = Utils.defaultApiUrl;
                     await helper.deleteAllNotes();
                     Navigator.pop(context);
                   },
                   child: Text(LocaleStrings.common.reset),
-                  textColor: Theme.of(context).accentColor,
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: controller.text.isNotEmpty
                       ? () async {
                           prefs.apiUrl = controller.text;
@@ -75,10 +73,6 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
                         }
                       : null,
                   child: Text(LocaleStrings.common.save),
-                  color: Theme.of(context).accentColor,
-                  disabledColor: Theme.of(context).disabledColor,
-                  textColor: Theme.of(context).cardColor,
-                  disabledTextColor: Theme.of(context).cardColor,
                 ),
               ],
             ),

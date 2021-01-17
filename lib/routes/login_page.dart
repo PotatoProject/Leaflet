@@ -128,13 +128,12 @@ class _LoginPageState extends State<LoginPage> {
             visible: !register,
             child: Expanded(
               flex: 12,
-              child: FlatButton(
+              child: TextButton(
                 child: Text(
                   "Forgot password",
                   textAlign: TextAlign.center,
                 ),
                 onPressed: () {},
-                textColor: Theme.of(context).accentColor,
               ),
             ),
           ),
@@ -144,11 +143,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Expanded(
             flex: 12,
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Text(register ? "Register" : "Login"),
-              disabledColor: Theme.of(context).disabledColor,
-              disabledTextColor: Theme.of(context).scaffoldBackgroundColor,
-              textColor: Theme.of(context).scaffoldBackgroundColor,
               onPressed: enabledCondition ? onSubmit : null,
             ),
           ),
@@ -201,31 +197,34 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Divider(height: 1),
                   Expanded(
-                    child: FlatButton(
-                      onPressed: () {
-                        emailOrUserController.clear();
-                        emailController.clear();
-                        usernameController.clear();
-                        passwordController.clear();
-                        setState(() => register = !register);
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (register) {
-                            FocusScope.of(context).requestFocus(emailFocusNode);
-                          } else {
-                            FocusScope.of(context)
-                                .requestFocus(emailOrUserFocusNode);
-                          }
-                        });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () {
+                          emailOrUserController.clear();
+                          emailController.clear();
+                          usernameController.clear();
+                          passwordController.clear();
+                          setState(() => register = !register);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (register) {
+                              FocusScope.of(context)
+                                  .requestFocus(emailFocusNode);
+                            } else {
+                              FocusScope.of(context)
+                                  .requestFocus(emailOrUserFocusNode);
+                            }
+                          });
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.all(16),
+                        ),
                         child: RichText(
                           text: TextSpan(
                             style: Theme.of(context).textTheme.bodyText2,
                             children: [
                               TextSpan(
                                 text: register
-                                    ? "Already have an account?"
+                                    ? "Already have an account? "
                                     : "Don't have an account yet? ",
                               ),
                               TextSpan(

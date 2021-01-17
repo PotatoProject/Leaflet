@@ -145,11 +145,11 @@ class _NoteListPageState extends State<NoteListPage> {
                             : LocaleStrings.mainPage.restorePromptTrash,
                       ),
                       actions: <Widget>[
-                        FlatButton(
+                        TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text(LocaleStrings.common.cancel),
                         ),
-                        FlatButton(
+                        TextButton(
                           onPressed: () => Navigator.pop(context, true),
                           child: Text(LocaleStrings.common.restore),
                         ),
@@ -182,11 +182,11 @@ class _NoteListPageState extends State<NoteListPage> {
                       title: Text(LocaleStrings.common.areYouSure),
                       content: Text(LocaleStrings.mainPage.tagDeletePrompt),
                       actions: <Widget>[
-                        FlatButton(
+                        TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text(LocaleStrings.common.cancel),
                         ),
-                        FlatButton(
+                        TextButton(
                           onPressed: () => Navigator.pop(context, true),
                           child: Text(LocaleStrings.common.delete),
                         ),
