@@ -49,12 +49,12 @@ class _BasePageState extends State<BasePage>
       key: ValueKey(ReturnMode.NORMAL),
       noteKind: ReturnMode.NORMAL,
     ),
-    SearchPage(
-      delegate: NoteSearchDelegate(),
-    ),
     NoteListPage(
       key: ValueKey(ReturnMode.ARCHIVE),
       noteKind: ReturnMode.ARCHIVE,
+    ),
+    SearchPage(
+      delegate: NoteSearchDelegate(),
     ),
     NoteListPage(
       key: ValueKey(ReturnMode.TRASH),
@@ -121,12 +121,12 @@ class _BasePageState extends State<BasePage>
           label: "Notes",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_outlined),
-          label: LocaleStrings.mainPage.search,
-        ),
-        BottomNavigationBarItem(
           icon: Icon(MdiIcons.archiveOutline),
           label: LocaleStrings.mainPage.titleArchive,
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search_outlined),
+          label: LocaleStrings.mainPage.search,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.delete_outlined),

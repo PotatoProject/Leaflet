@@ -379,7 +379,10 @@ class Utils {
 
     await Utils.showSecondaryRoute(
       context,
-      NotePage(note: NoteX.emptyNote.copyWith(id: id)),
+      NotePage(
+        note: NoteX.emptyNote.copyWith(id: id),
+        focusTitle: true,
+      ),
     );
 
     List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
