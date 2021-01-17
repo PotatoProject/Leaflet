@@ -232,13 +232,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.10"
-  dio_http2_adapter:
-    dependency: "direct main"
-    description:
-      name: dio_http2_adapter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   easy_localization:
     dependency: "direct main"
     description:
@@ -389,13 +382,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.5"
-  flutter_staggered_animations:
-    dependency: "direct main"
-    description:
-      name: flutter_staggered_animations
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -434,13 +420,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.2"
-  http2:
-    dependency: transitive
-    description:
-      name: http2
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   http_multi_server:
     dependency: transitive
     description:
@@ -469,20 +448,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2+3"
-  image_picker_for_web:
-    dependency: "direct main"
-    description:
-      name: image_picker_for_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0+2"
-  image_picker_platform_interface:
-    dependency: transitive
-    description:
-      name: image_picker_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   in_app_update:
     dependency: "direct main"
     description:
@@ -535,12 +500,10 @@ packages:
   local_auth:
     dependency: "direct main"
     description:
-      path: "packages/local_auth"
-      ref: HEAD
-      resolved-ref: faa26ec364cd6d3c738d73526ea55a95b7f4ab1a
-      url: "https://github.com/flutter/plugins"
-    source: git
-    version: "1.0.0-nullsafety.3"
+      name: local_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0-nullsafety"
   logging:
     dependency: transitive
     description:
@@ -949,15 +912,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.4"
-  spicy_components:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "7044b8c54dc3c18da73b158a1ec6a6d3d62b4ed5"
-      url: "https://github.com/HrX03/SpicyUIComponents"
-    source: git
-    version: "0.0.1"
   sqflite:
     dependency: "direct main"
     description:
@@ -1169,7 +1123,7 @@ packages:
     source: hosted
     version: "4.5.1"
   yaml:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: yaml
       url: "https://pub.dartlang.org"

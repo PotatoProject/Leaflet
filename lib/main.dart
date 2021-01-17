@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
@@ -27,11 +26,6 @@ main() async {
   await Executor().warmUp();
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
-  if (DeviceInfo.isAndroid) {
-    await FlutterDownloader.initialize(
-      debug: kDebugMode,
-    );
-  }
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   helper = _db.noteHelper;
   tagHelper = _db.tagHelper;

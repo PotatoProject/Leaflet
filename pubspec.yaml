@@ -20,12 +20,9 @@ dependencies:
   image_picker:
   back_button_interceptor: "4.2.4"
   shared_preferences:
-  local_auth:
-    git:
-      url: https://github.com/flutter/plugins
-      path: packages/local_auth
+  local_auth: ^1.1.0-nullsafety
   flutter_secure_storage:
-  http:
+  http: 
   jwt_decode:
   intl:
   flutter_local_notifications:
@@ -34,7 +31,6 @@ dependencies:
   material_design_icons_flutter:
   path_drawing:
   quick_actions:
-  image_picker_for_web:
   package_info_plus:
   url_launcher:
   cached_network_image:
@@ -45,30 +41,25 @@ dependencies:
   uuid:
   recase:
   in_app_update:
-  yaml:
   flutter_downloader:
   dio:
-  dio_http2_adapter:
   image:
   blurhash_dart:
   flutter_blurhash:
   mobx:
   flutter_mobx:
   mobx_codegen:
-  flutter_staggered_animations:
   waterfall_flow:
   worker_manager:
   crayola:
+  blake2:
   file_selector:
   file_selector_macos:
   file_selector_linux:
   file_selector_windows:
-  blake2:
 
   rich_text_editor:
     git: https://github.com/namhyun-gu/flutter_rich_text_editor
-  spicy_components:
-    git: https://github.com/HrX03/SpicyUIComponents
   loggy:
     git: https://github.com/HrX03/loggy
 
