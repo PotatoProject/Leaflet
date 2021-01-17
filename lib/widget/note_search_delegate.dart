@@ -205,7 +205,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
     for (Note note in notes) {
       bool titleMatch = _getTextBool(note.title);
-      bool contentMatch = _getTextBool(note.content);
+      bool contentMatch =
+          !note.hideContent ? _getTextBool(note.content) : false;
       bool dateMatch =
           searchQuery.date != null ? _getDateBool(note.creationDate) : true;
       bool colorMatch =

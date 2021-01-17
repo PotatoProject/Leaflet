@@ -26,10 +26,10 @@ class _SearchPageState<T> extends State<SearchPage> {
 
   @override
   void dispose() {
-    super.dispose();
     widget.delegate._queryTextController.removeListener(_onQueryChanged);
     widget.delegate._focusNode = null;
-    //focusNode.dispose();
+    focusNode.dispose();
+    super.dispose();
   }
 
   void _onQueryChanged() {
