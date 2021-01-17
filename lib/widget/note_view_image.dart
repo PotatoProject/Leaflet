@@ -73,35 +73,62 @@ class _NoteViewImageState extends State<NoteViewImage> {
     final displayLoadingIndicator =
         queueItem != null && queueItem.status == QueueItemStatus.ONGOING;
 
-    return Stack(
-      children: [
-        SizedBox.expand(
-          child: Image(
-            image: image,
-            fit: widget.fit,
-            alignment: Alignment.center,
-            gaplessPlayback: true,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: image,
+          fit: widget.fit,
+          alignment: Alignment.center,
         ),
-        if (displayLoadingIndicator)
-          Card(
-            margin: EdgeInsets.all(8),
-            elevation: 4,
-            shape: CircleBorder(),
-            child: SizedBox.fromSize(
-              size: Size.square(32),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    value: queueItem.progress,
+      ),
+      child: SizedBox.expand(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Visibility(
+            visible: displayLoadingIndicator,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: SizedBox.fromSize(
+                size: Size.square(32),
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  elevation: 4,
+                  shape: CircleBorder(),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        value: queueItem?.progress,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-      ],
+        ),
+      ),
+      /*child: Visibility(
+        visible: displayLoadingIndicator,
+        child: SizedBox.fromSize(
+          size: Size.square(32),
+          child: Card(
+            margin: EdgeInsets.all(8),
+            elevation: 4,
+            shape: CircleBorder(),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  value: queueItem?.progress,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),*/
     );
   }
 }

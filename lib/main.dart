@@ -23,7 +23,7 @@ import 'package:worker_manager/worker_manager.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Executor().warmUp();
+  Executor().warmUp();
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));

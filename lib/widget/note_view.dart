@@ -7,6 +7,7 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
@@ -36,35 +37,11 @@ class NoteView extends StatefulWidget {
   _NoteViewState createState() => _NoteViewState();
 }
 
-class _NoteViewState extends State<NoteView> {
+class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   bool _hovered = false;
   bool _focused = false;
   bool _highlighted = false;
   double _elevation;
-  bool _mouseIsConnected;
-
-  @override
-  void initState() {
-    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
-    RendererBinding.instance.mouseTracker.addListener(mouseListener);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
-    super.dispose();
-  }
-
-  void mouseListener() {
-    final bool mouseIsConnected =
-        RendererBinding.instance.mouseTracker.mouseIsConnected;
-    if (mouseIsConnected != _mouseIsConnected) {
-      setState(() {
-        _mouseIsConnected = mouseIsConnected;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +98,7 @@ class _NoteViewState extends State<NoteView> {
         onHighlightChanged: (value) => setState(() {
           _highlighted = value;
         }),
+        splashFactory: InkRipple.splashFactory,
         borderRadius: BorderRadius.circular(kCardBorderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +290,7 @@ class _NoteViewState extends State<NoteView> {
               return Row(
                 children: [
                   IgnorePointer(
-                    ignoring: !_mouseIsConnected || widget.selectorOpen,
+                    ignoring: !isMouseConnected || widget.selectorOpen,
                     child: SizedBox.fromSize(
                       size: Size.square(24),
                       child: Center(

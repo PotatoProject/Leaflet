@@ -7,6 +7,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_image.dart';
 
 class NotePageImageGallery extends StatefulWidget {
@@ -22,36 +23,18 @@ class NotePageImageGallery extends StatefulWidget {
   _NotePageImageGalleryState createState() => _NotePageImageGalleryState();
 }
 
-class _NotePageImageGalleryState extends State<NotePageImageGallery> {
+class _NotePageImageGalleryState extends State<NotePageImageGallery>
+    with MouseListenerMixin {
   PageController pageController;
   TransformationController transformationController =
       TransformationController();
   int currentPage;
-  bool _mouseIsConnected;
 
   @override
   void initState() {
+    super.initState();
     pageController = PageController(initialPage: widget.currentImage);
     currentPage = widget.currentImage;
-    _mouseIsConnected = RendererBinding.instance.mouseTracker.mouseIsConnected;
-    RendererBinding.instance.mouseTracker.addListener(mouseListener);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    RendererBinding.instance.mouseTracker.removeListener(mouseListener);
-    super.dispose();
-  }
-
-  void mouseListener() {
-    final bool mouseIsConnected =
-        RendererBinding.instance.mouseTracker.mouseIsConnected;
-    if (mouseIsConnected != _mouseIsConnected) {
-      setState(() {
-        _mouseIsConnected = mouseIsConnected;
-      });
-    }
   }
 
   @override
@@ -89,7 +72,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery> {
             physics: currentScale > 1 ? NeverScrollableScrollPhysics() : null,
           ),
           Visibility(
-            visible: _mouseIsConnected,
+            visible: isMouseConnected,
             child: Row(
               children: [
                 _PageSwitchSideButton(
@@ -209,8 +192,8 @@ class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -235,6 +218,7 @@ class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
                   child: FloatingActionButton(
                     child: widget.icon,
                     onPressed: widget.enabled ? widget.onTap : null,
+                    heroTag: null,
                   ),
                 ),
               ),

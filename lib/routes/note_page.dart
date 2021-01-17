@@ -17,6 +17,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
@@ -25,11 +26,13 @@ import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
+  final bool focusTitle;
   final bool openWithList;
   final bool openWithDrawing;
 
   NotePage({
     this.note,
+    this.focusTitle = false,
     this.openWithList = false,
     this.openWithDrawing = false,
   }) : assert((openWithList && !openWithDrawing) ||
@@ -56,8 +59,6 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    bool shouldFocusTitle = widget.note?.id == null;
-
     note = Note(
       id: widget.note?.id ?? Utils.generateId(),
       title: widget.note?.title ?? "",
@@ -91,9 +92,10 @@ class _NotePageState extends State<NotePage> {
           ? SpannableList.fromJson(parsedStyleJson)
           : null,
     );*/
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
-        if (shouldFocusTitle) {
+        if (widget.focusTitle) {
           FocusScope.of(context).requestFocus(titleFocusNode);
         }
       } else {
@@ -225,17 +227,11 @@ class _NotePageState extends State<NotePage> {
                   bottom: 16,
                 ),
                 children: [
-                  Visibility(
-                    visible: note.images.isNotEmpty && !deviceInfo.isLandscape,
-                    child: imagesWidget,
-                  ),
-                  Visibility(
-                    visible: note.tags.isNotEmpty,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 8,
-                      ),
+                  if (note.images.isNotEmpty && !deviceInfo.isLandscape)
+                    imagesWidget,
+                  if (note.tags.isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.all(8),
                       width: MediaQuery.of(context).size.width,
                       child: Wrap(
                         spacing: 8,
@@ -250,232 +246,129 @@ class _NotePageState extends State<NotePage> {
                             return TagChip(
                               title: tag.name,
                               color: tag.color,
-                              shrink: false,
+                              shrink: !(Platform.isAndroid || Platform.isIOS),
                             );
                           },
                         ),
                       ),
                     ),
+                  _NotePageTextFormField(
+                    hintText: LocaleStrings.notePage.titleHint,
+                    controller: titleController,
+                    focusNode: titleFocusNode,
+                    onChanged: (text) {
+                      note = note.copyWith(title: text);
+                      notifyNoteChanged();
+                    },
+                    onSubmitted: (value) =>
+                        FocusScope.of(context).requestFocus(contentFocusNode),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          controller: titleController,
-                          focusNode: titleFocusNode,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: LocaleStrings.notePage.titleHint,
-                            hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  .color
-                                  .withOpacity(0.5),
-                            ),
-                          ),
-                          textCapitalization: TextCapitalization.sentences,
-                          scrollPadding: EdgeInsets.all(0),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .color
-                                .withOpacity(0.7),
-                          ),
-                          onChanged: (text) {
-                            note = note.copyWith(title: text);
-                            notifyNoteChanged();
-                          },
-                          onFieldSubmitted: (value) => FocusScope.of(context)
-                              .requestFocus(contentFocusNode),
-                        ),
-                        TextField(
-                          controller: contentController,
-                          focusNode: contentFocusNode,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: LocaleStrings.notePage.contentHint,
-                            hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  .color
-                                  .withOpacity(0.3),
-                            ),
-                            isDense: true,
-                          ),
-                          textCapitalization: TextCapitalization.sentences,
-                          keyboardType: TextInputType.multiline,
-                          scrollPadding: EdgeInsets.all(0),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context)
-                                .textTheme
-                                .caption
-                                .color
-                                .withOpacity(0.5),
-                          ),
-                          onChanged: (text) {
-                            //List<int> styleJson = gzip.encode(utf8.encode(
-                            //    SpannableList(contentController.styleList.list)
-                            //        .toJson()));
+                  _NotePageTextFormField(
+                    contentField: true,
+                    hintText: LocaleStrings.notePage.contentHint,
+                    controller: contentController,
+                    focusNode: contentFocusNode,
+                    onChanged: (text) {
+                      //List<int> styleJson = gzip.encode(utf8.encode(
+                      //    SpannableList(contentController.styleList.list)
+                      //        .toJson()));
 
-                            note = note.copyWith(
-                              content: text,
-                              //styleJson: ContentStyle(styleJson),
-                            );
+                      note = note.copyWith(
+                        content: text,
+                        //styleJson: ContentStyle(styleJson),
+                      );
 
-                            notifyNoteChanged();
-                          },
-                          maxLines: null,
-                        ),
-                      ],
-                    ),
+                      notifyNoteChanged();
+                    },
                   ),
-                  Visibility(
-                    visible: note.list,
-                    child: Column(
-                      children: <Widget>[
-                        ...List.generate(note.listContent.length, (index) {
-                          ListItem currentItem = note.listContent[index];
+                  if (note.list)
+                    ...List.generate(note.listContent.length, (index) {
+                      ListItem currentItem = note.listContent[index];
 
-                          if (needsFocus &&
-                              index == note.listContent.length - 1) {
-                            needsFocus = false;
-                            FocusScope.of(context)
-                                .requestFocus(listContentNodes.last);
-                          }
+                      if (needsFocus && index == note.listContent.length - 1) {
+                        needsFocus = false;
+                        FocusScope.of(context)
+                            .requestFocus(listContentNodes.last);
+                      }
 
-                          return Dismissible(
-                            key: Key(currentItem.id.toString()),
-                            onDismissed: (_) => setState(() {
-                              note.listContent.removeAt(index);
-                              listContentControllers.removeAt(index);
-                              listContentNodes.removeAt(index);
-                              notifyNoteChanged();
-                            }),
-                            background: Container(
-                              color: Colors.red[400],
-                              padding: EdgeInsets.symmetric(horizontal: 24),
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.delete_outline,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                            ),
-                            direction: DismissDirection.endToStart,
-                            child: ListTile(
-                              leading: Checkbox(
-                                value: currentItem.status,
-                                onChanged: (value) {
-                                  setState(() =>
-                                      note.listContent[index].status = value);
-                                  notifyNoteChanged();
-                                },
-                                checkColor: note.color != 0
-                                    ? Color(NoteColors.colorList[note.color]
-                                        .dynamicColor(context))
-                                    : Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16),
-                              title: TextField(
-                                controller: listContentControllers[index],
-                                decoration: InputDecoration.collapsed(
-                                  hintText: LocaleStrings.notePage.listItemHint,
-                                ),
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .iconTheme
-                                      .color
-                                      .withOpacity(
-                                        note.listContent[index].status
-                                            ? 0.3
-                                            : 0.7,
-                                      ),
-                                  decoration: note.listContent[index].status
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                ),
-                                onChanged: (text) {
-                                  setState(() =>
-                                      note.listContent[index].text = text);
-                                  notifyNoteChanged();
-                                },
-                                onSubmitted: (_) {
-                                  if (index == note.listContent.length - 1) {
-                                    if (note.listContent.last.text != "") {
-                                      addListContentItem();
-                                    } else {
-                                      FocusScope.of(context).requestFocus(
-                                          listContentNodes[index]);
-                                    }
-                                  } else {
-                                    FocusScope.of(context).requestFocus(
-                                        listContentNodes[index + 1]);
-                                  }
-                                },
-                                focusNode: listContentNodes[index],
-                              ),
-                            ),
-                          );
+                      return _NoteListEntryItem(
+                        item: currentItem,
+                        controller: listContentControllers[index],
+                        focusNode: listContentNodes[index],
+                        onDismissed: (_) => setState(() {
+                          note.listContent.removeAt(index);
+                          listContentControllers.removeAt(index);
+                          listContentNodes.removeAt(index);
+                          notifyNoteChanged();
                         }),
-                        AnimatedOpacity(
-                          opacity: note.listContent.isNotEmpty
-                              ? note.listContent.last.text != ""
-                                  ? 1
-                                  : 0
-                              : 1,
-                          duration: note.listContent.isNotEmpty
-                              ? note.listContent.last.text != ""
-                                  ? Duration(milliseconds: 300)
-                                  : Duration(milliseconds: 0)
-                              : Duration(milliseconds: 0),
-                          child: ListTile(
-                            leading: Icon(Icons.add),
-                            title: Text(
-                              LocaleStrings.notePage.addEntryHint,
-                              style: TextStyle(
-                                  color: Theme.of(context).iconTheme.color),
-                            ),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
-                            onTap: note.listContent.isNotEmpty
-                                ? note.listContent.last.text != ""
-                                    ? () => addListContentItem()
-                                    : null
-                                : () => addListContentItem(),
+                        onTextChanged: (text) {
+                          setState(() => note.listContent[index].text = text);
+                          notifyNoteChanged();
+                        },
+                        onSubmitted: (_) {
+                          if (index == note.listContent.length - 1) {
+                            if (note.listContent.last.text != "") {
+                              addListContentItem();
+                            } else {
+                              FocusScope.of(context)
+                                  .requestFocus(listContentNodes[index]);
+                            }
+                          } else {
+                            FocusScope.of(context)
+                                .requestFocus(listContentNodes[index + 1]);
+                          }
+                        },
+                        onCheckChanged: (value) {
+                          setState(
+                              () => note.listContent[index].status = value);
+                          notifyNoteChanged();
+                        },
+                        checkColor: note.color != 0
+                            ? Color(NoteColors.colorList[note.color]
+                                .dynamicColor(context))
+                            : Theme.of(context).scaffoldBackgroundColor,
+                      );
+                    }),
+                  if (note.list)
+                    AnimatedOpacity(
+                      opacity: note.listContent.isNotEmpty &&
+                              note.listContent.last.text.isNotEmpty
+                          ? 1
+                          : 0,
+                      duration: note.listContent.isNotEmpty &&
+                              note.listContent.last.text.isNotEmpty
+                          ? Duration(milliseconds: 300)
+                          : Duration(milliseconds: 0),
+                      child: ListTile(
+                        leading: Icon(Icons.add),
+                        title: Text(
+                          LocaleStrings.notePage.addEntryHint,
+                          style: TextStyle(
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
-                      ],
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                        onTap: note.listContent.isNotEmpty &&
+                                note.listContent.last.text.isNotEmpty
+                            ? () => addListContentItem()
+                            : null,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
-            Visibility(
-              visible: note.images.isNotEmpty && deviceInfo.isLandscape,
-              child: Container(
+            if (note.images.isNotEmpty && deviceInfo.isLandscape)
+              Container(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 56,
                 ),
                 width: 360,
                 child: imagesWidget,
               ),
-            ),
           ],
         ),
-        bottomNavigationBar: deviceInfo.isLandscape
-            ? null
-            : Material(
+        bottomNavigationBar: !deviceInfo.isLandscape
+            ? Material(
                 color: Theme.of(context).cardColor,
                 elevation: 8,
                 child: Padding(
@@ -496,7 +389,8 @@ class _NotePageState extends State<NotePage> {
                     rightActions: getToolbarButtons(),
                   ),
                 ),
-              ),
+              )
+            : null,
       ),
     );
   }
@@ -738,5 +632,153 @@ class _NotePageState extends State<NotePage> {
       FocusNode node = FocusNode();
       listContentNodes.add(node);
     }
+  }
+}
+
+class _NoteListEntryItem extends StatefulWidget {
+  final ListItem item;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final DismissDirectionCallback onDismissed;
+  final ValueChanged<String> onTextChanged;
+  final ValueChanged<String> onSubmitted;
+  final ValueChanged<bool> onCheckChanged;
+  final Color checkColor;
+
+  _NoteListEntryItem({
+    @required this.item,
+    this.controller,
+    this.focusNode,
+    this.onDismissed,
+    this.onTextChanged,
+    this.onSubmitted,
+    this.onCheckChanged,
+    this.checkColor,
+  });
+
+  @override
+  _NoteListEntryItemState createState() => _NoteListEntryItemState();
+}
+
+class _NoteListEntryItemState extends State<_NoteListEntryItem>
+    with SingleTickerProviderStateMixin, MouseListenerMixin {
+  bool showDeleteButton = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: ValueKey(widget.item.id),
+      onDismissed: widget.onDismissed,
+      background: Container(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.red[400]
+            : Colors.red[600],
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        alignment: Alignment.centerRight,
+        child: Icon(
+          Icons.delete_outline,
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+      ),
+      direction: isMouseConnected
+          ? DismissDirection.none
+          : DismissDirection.endToStart,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => showDeleteButton = true),
+        onExit: (_) => setState(() => showDeleteButton = false),
+        child: ListTile(
+          leading: Checkbox(
+            value: widget.item.status,
+            onChanged: widget.onCheckChanged,
+            checkColor:
+                widget.checkColor ?? Theme.of(context).scaffoldBackgroundColor,
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          title: TextField(
+            controller: widget.controller,
+            decoration: InputDecoration.collapsed(
+              hintText: LocaleStrings.notePage.listItemHint,
+            ),
+            textCapitalization: TextCapitalization.sentences,
+            style: TextStyle(
+              color: Theme.of(context).iconTheme.color.withOpacity(
+                    widget.item.status ? 0.3 : 0.7,
+                  ),
+              decoration:
+                  widget.item.status ? TextDecoration.lineThrough : null,
+            ),
+            onChanged: widget.onTextChanged,
+            onSubmitted: widget.onSubmitted,
+            focusNode: widget.focusNode,
+          ),
+          trailing: AnimatedOpacity(
+            opacity: showDeleteButton ? 1 : 0,
+            duration: Duration(milliseconds: 200),
+            child: IconButton(
+              icon: Icon(Icons.delete_outline),
+              onPressed:
+                  showDeleteButton ? () => widget.onDismissed(null) : null,
+              padding: EdgeInsets.zero,
+              splashRadius: 24,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NotePageTextFormField extends StatelessWidget {
+  final bool contentField;
+  final String hintText;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
+
+  _NotePageTextFormField({
+    this.contentField = false,
+    this.hintText,
+    this.controller,
+    this.focusNode,
+    this.onChanged,
+    this.onSubmitted,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Theme.of(context)
+                .textTheme
+                .caption
+                .color
+                .withOpacity(contentField ? 0.3 : 0.5),
+          ),
+          isDense: contentField,
+        ),
+        textCapitalization: TextCapitalization.sentences,
+        scrollPadding: EdgeInsets.zero,
+        style: TextStyle(
+          fontSize: contentField ? 16 : 18,
+          fontWeight: contentField ? FontWeight.normal : FontWeight.w500,
+          color: Theme.of(context)
+              .textTheme
+              .caption
+              .color
+              .withOpacity(contentField ? 0.5 : 0.7),
+        ),
+        onChanged: onChanged,
+        onFieldSubmitted: onSubmitted,
+        maxLines: contentField ? null : 1,
+      ),
+    );
   }
 }
