@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 bool _gestureStartAllowed = false;
 
@@ -159,8 +160,18 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> fgAnimation = CurvedAnimation(
       parent: animation,
-      curve: linearTransition ? Curves.linear : Curves.easeOut,
-      reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
+      curve: linearTransition
+          ? Curves.linear
+          : SuspendedCurve(
+              animation.value,
+              curve: decelerateEasing,
+            ),
+      reverseCurve: linearTransition
+          ? Curves.linear
+          : SuspendedCurve(
+              animation.value,
+              curve: accelerateEasing,
+            ),
     ).drive(Tween<Offset>(
       begin: Offset(textDirection == TextDirection.rtl ? -1 : 1, 0),
       end: Offset(0, 0),
@@ -168,8 +179,18 @@ class DismissiblePageTransition extends StatelessWidget {
 
     Animation<Offset> bgAnimation = CurvedAnimation(
       parent: secondaryAnimation,
-      curve: linearTransition ? Curves.linear : Curves.easeOut,
-      reverseCurve: linearTransition ? Curves.linear : Curves.easeIn,
+      curve: linearTransition
+          ? Curves.linear
+          : SuspendedCurve(
+              secondaryAnimation.value,
+              curve: decelerateEasing,
+            ),
+      reverseCurve: linearTransition
+          ? Curves.linear
+          : SuspendedCurve(
+              secondaryAnimation.value,
+              curve: accelerateEasing,
+            ),
     ).drive(Tween<Offset>(
       begin: Offset(0, 0),
       end: Offset(-0.3, 0),
