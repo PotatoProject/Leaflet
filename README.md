@@ -1,4 +1,4 @@
-# PotatoNotes
+# Leaflet
 
 <img src="https://i.imgur.com/4Fm8gSc.png">
 
@@ -18,13 +18,13 @@ POSP official notes application, written in flutter, beautiful, fast and secure.
 - Trash and archive for notes
 
 ## Planned features
-- Note tags
-- Launcher widget
-- Quick note QS tile
-- Partial markdown support
-- Multiple image loading
-- Voice notes
-- Drawings
+[x] Note tags
+[ ] Launcher widget
+[ ] Quick note QS tile
+[ ] Partial markdown support
+[x] Multiple image loading
+[ ] Voice notes
+[x] Drawings
 
 ## Compiling the app
 Before anything, be sure to have a working flutter sdk setup.

@@ -17,10 +17,12 @@ class NoteView extends StatefulWidget {
   final Note note;
   final SpannableList providedTitleList;
   final SpannableList providedContentList;
-  final Function() onTap;
-  final Function() onLongPress;
+  final VoidCallback onTap;
+  final VoidCallback onLongPress;
   final bool selectorOpen;
   final bool selected;
+  final ValueChanged<bool> onCheckboxChanged;
+  final bool allowSelection;
 
   NoteView({
     Key key,
@@ -31,6 +33,8 @@ class NoteView extends StatefulWidget {
     this.onLongPress,
     this.selectorOpen = false,
     this.selected = false,
+    this.onCheckboxChanged,
+    this.allowSelection = false,
   }) : super(key: key);
 
   @override
@@ -51,7 +55,14 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     Color backgroundColor = widget.note.color != 0
         ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
         : Theme.of(context).cardColor;
-    Color borderColor;
+    Color borderColor = widget.selected
+        ? Theme.of(context).iconTheme.color
+        : Colors.transparent;
+    Color checkBoxColor = widget.note.images.isNotEmpty
+        ? Colors.white
+        : Theme.of(context).iconTheme.color.withOpacity(1);
+    Color checkColor =
+        widget.note.images.isNotEmpty ? Colors.black : backgroundColor;
 
     if (widget.selected) {
       _elevation = 8;
@@ -63,12 +74,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       _elevation = 3;
     } else {
       _elevation = 2;
-    }
-
-    if (widget.selected) {
-      borderColor = Theme.of(context).iconTheme.color;
-    } else {
-      borderColor = Colors.transparent;
     }
 
     List<Widget> content = getItems(context, spannableList);
@@ -88,7 +93,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       margin: kCardPadding,
       child: InkWell(
         onTap: widget.onTap,
-        onLongPress: widget.onLongPress,
+        onLongPress: !isMouseConnected ? widget.onLongPress : null,
         onHover: (value) => setState(() {
           _hovered = value;
         }),
@@ -100,52 +105,99 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         }),
         splashFactory: InkRipple.splashFactory,
         borderRadius: BorderRadius.circular(kCardBorderRadius),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            IgnorePointer(
-              child: Visibility(
-                visible: (widget.note.images?.isNotEmpty ?? false) &&
-                    !widget.note.hideContent,
-                child: NoteViewImages(
-                  images: widget.note.images,
-                  showPlusImages: true,
-                  numPlusImages: widget.note.images.length < kMaxImageCount
-                      ? 0
-                      : widget.note.images.length - kMaxImageCount,
-                ),
-              ),
-            ),
-            Visibility(
-              visible: content.isNotEmpty,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16 + Theme.of(context).visualDensity.horizontal,
-                  vertical: 16 + Theme.of(context).visualDensity.vertical,
-                ),
-                child: _SeparatedColumn(
-                  children: content,
-                  separator: SizedBox(
-                    height: 4 + Theme.of(context).visualDensity.vertical,
+        child: Stack(
+          fit: StackFit.passthrough,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                IgnorePointer(
+                  child: Visibility(
+                    visible: (widget.note.images?.isNotEmpty ?? false) &&
+                        !widget.note.hideContent,
+                    child: NoteViewImages(
+                      images: widget.note.images,
+                      showPlusImages: true,
+                      numPlusImages: widget.note.images.length < kMaxImageCount
+                          ? 0
+                          : widget.note.images.length - kMaxImageCount,
+                    ),
                   ),
                 ),
-              ),
+                Visibility(
+                  visible: content.isNotEmpty,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          16 + Theme.of(context).visualDensity.horizontal,
+                      vertical: 16 + Theme.of(context).visualDensity.vertical,
+                    ),
+                    child: _SeparatedColumn(
+                      children: content,
+                      separator: SizedBox(
+                        height: 4 + Theme.of(context).visualDensity.vertical,
+                      ),
+                    ),
+                  ),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) => SizedBox(
+                    width: constraints.maxWidth,
+                    child: NoteViewStatusbar(
+                      note: widget.note,
+                      width: constraints.maxWidth,
+                      padding: content.isEmpty
+                          ? EdgeInsets.symmetric(
+                              horizontal: 16 +
+                                  Theme.of(context).visualDensity.horizontal,
+                              vertical:
+                                  16 + Theme.of(context).visualDensity.vertical,
+                            )
+                          : null,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            LayoutBuilder(
-              builder: (context, constraints) => SizedBox(
-                width: constraints.maxWidth,
-                child: NoteViewStatusbar(
-                  note: widget.note,
-                  width: constraints.maxWidth,
-                  padding: content.isEmpty
-                      ? EdgeInsets.symmetric(
-                          horizontal:
-                              16 + Theme.of(context).visualDensity.horizontal,
-                          vertical:
-                              16 + Theme.of(context).visualDensity.vertical,
-                        )
-                      : null,
+            Positioned(
+              right: 0,
+              top: 0,
+              child: AnimatedOpacity(
+                opacity: _hovered || widget.selected ? 1 : 0,
+                duration: Duration(milliseconds: 200),
+                child: Container(
+                  alignment: Alignment.topRight,
+                  padding: EdgeInsets.only(top: 8, right: 8),
+                  height: 64,
+                  width: 64,
+                  clipBehavior: Clip.none,
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment.topRight,
+                      colors: [
+                        Colors.grey[900].withOpacity(
+                          widget.note.images.isNotEmpty ? 0.6 : 0.2,
+                        ),
+                        Colors.grey[900].withOpacity(0),
+                      ],
+                      radius: 1,
+                    ),
+                  ),
+                  child: IgnorePointer(
+                    ignoring: !((_hovered || widget.selected) &&
+                        widget.allowSelection),
+                    child: NoteViewCheckbox(
+                      value: widget.selected,
+                      onChanged: widget.onCheckboxChanged,
+                      width: 20,
+                      splashRadius: 18,
+                      inactiveColor: checkBoxColor,
+                      activeColor: checkBoxColor,
+                      checkColor: checkColor,
+                      shapeRadius: Radius.circular(4),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -278,8 +330,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     setState(() {});
                   },
                   splashRadius: 14,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                 );
           final text = showMoreItem
               ? "${(widget.note.listContent?.length ?? 0) - 5} more items"

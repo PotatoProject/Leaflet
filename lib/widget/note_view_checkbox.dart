@@ -58,10 +58,11 @@ class NoteViewCheckbox extends StatefulWidget {
     this.focusColor,
     this.hoverColor,
     this.splashRadius,
-    this.materialTapTargetSize,
-    this.visualDensity,
     this.focusNode,
     this.autofocus = false,
+    this.width = 16.0,
+    this.inactiveColor,
+    this.shapeRadius = const Radius.circular(2),
   })  : assert(tristate != null),
         assert(tristate || value != null),
         assert(autofocus != null),
@@ -140,25 +141,6 @@ class NoteViewCheckbox extends StatefulWidget {
   /// If tristate is false (the default), [value] must not be null.
   final bool tristate;
 
-  /// Configures the minimum size of the tap target.
-  ///
-  /// Defaults to [ThemeData.materialTapTargetSize].
-  ///
-  /// See also:
-  ///
-  ///  * [MaterialTapTargetSize], for a description of how this affects tap targets.
-  final MaterialTapTargetSize materialTapTargetSize;
-
-  /// Defines how compact the checkbox's layout will be.
-  ///
-  /// {@macro flutter.material.themedata.visualDensity}
-  ///
-  /// See also:
-  ///
-  ///  * [ThemeData.visualDensity], which specifies the [visualDensity] for all
-  ///    widgets within a [Theme].
-  final VisualDensity visualDensity;
-
   /// The color for the checkbox's [Material] when it has the input focus.
   final Color focusColor;
 
@@ -177,7 +159,11 @@ class NoteViewCheckbox extends StatefulWidget {
   final bool autofocus;
 
   /// The width of a checkbox widget.
-  static const double width = 16.0;
+  final double width;
+
+  final Color inactiveColor;
+
+  final Radius shapeRadius;
 
   @override
   _CheckboxState createState() => _CheckboxState();
@@ -236,18 +222,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
     final ThemeData themeData = Theme.of(context);
-    Size size;
-    switch (widget.materialTapTargetSize ?? themeData.materialTapTargetSize) {
-      case MaterialTapTargetSize.padded:
-        size = const Size(kMinInteractiveDimension, kMinInteractiveDimension);
-        break;
-      case MaterialTapTargetSize.shrinkWrap:
-        size = const Size(
-            kMinInteractiveDimension - 8.0, kMinInteractiveDimension - 8.0);
-        break;
-    }
-    size +=
-        (widget.visualDensity ?? themeData.visualDensity).baseSizeAdjustment;
+    Size size = Size.square(24);
     final BoxConstraints additionalConstraints = BoxConstraints.tight(size);
     final MouseCursor effectiveMouseCursor =
         MaterialStateProperty.resolveAs<MouseCursor>(
@@ -276,7 +251,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
             activeColor: widget.activeColor ?? themeData.toggleableActiveColor,
             checkColor: widget.checkColor ?? const Color(0xFFFFFFFF),
             inactiveColor: enabled
-                ? themeData.unselectedWidgetColor
+                ? widget.inactiveColor ?? themeData.unselectedWidgetColor
                 : themeData.disabledColor,
             focusColor: widget.focusColor ?? themeData.focusColor,
             hoverColor: widget.hoverColor ?? themeData.hoverColor,
@@ -286,6 +261,8 @@ class _CheckboxState extends State<NoteViewCheckbox>
             vsync: this,
             hasFocus: _focused,
             hovering: _hovering,
+            width: widget.width,
+            shapeRadius: widget.shapeRadius,
           );
         },
       ),
@@ -309,6 +286,8 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
     @required this.additionalConstraints,
     @required this.hasFocus,
     @required this.hovering,
+    @required this.width,
+    @required this.shapeRadius,
   })  : assert(tristate != null),
         assert(tristate || value != null),
         assert(activeColor != null),
@@ -329,6 +308,8 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<bool> onChanged;
   final TickerProvider vsync;
   final BoxConstraints additionalConstraints;
+  final double width;
+  final Radius shapeRadius;
 
   @override
   _RenderCheckbox createRenderObject(BuildContext context) => _RenderCheckbox(
@@ -345,6 +326,8 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
         additionalConstraints: additionalConstraints,
         hasFocus: hasFocus,
         hovering: hovering,
+        width: width,
+        shapeRadius: shapeRadius,
       );
 
   @override
@@ -364,12 +347,12 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
       ..additionalConstraints = additionalConstraints
       ..vsync = vsync
       ..hasFocus = hasFocus
-      ..hovering = hovering;
+      ..hovering = hovering
+      ..width = width
+      ..shapeRadius = shapeRadius;
   }
 }
 
-const double _kEdgeSize = NoteViewCheckbox.width;
-const Radius _kEdgeRadius = Radius.circular(2.0);
 const double _kStrokeWidth = 2.0;
 
 class _RenderCheckbox extends RenderToggleable {
@@ -387,6 +370,8 @@ class _RenderCheckbox extends RenderToggleable {
     @required bool hasFocus,
     @required bool hovering,
     @required TickerProvider vsync,
+    @required this.width,
+    @required this.shapeRadius,
   })  : _oldValue = value,
         super(
           value: value,
@@ -405,6 +390,8 @@ class _RenderCheckbox extends RenderToggleable {
 
   bool _oldValue;
   Color checkColor;
+  double width;
+  Radius shapeRadius;
 
   @override
   set value(bool newValue) {
@@ -423,12 +410,12 @@ class _RenderCheckbox extends RenderToggleable {
   // At t == 0.0, the outer rect's size is _kEdgeSize (Checkbox.width)
   // At t == 0.5, .. is _kEdgeSize - _kStrokeWidth
   // At t == 1.0, .. is _kEdgeSize
-  RRect _outerRectAt(Offset origin, double t) {
+  RRect _outerRectAt(Offset origin, double t, double strokeWidth) {
     final double inset = 1.0 - (t - 0.5).abs() * 2.0;
-    final double size = _kEdgeSize - inset * _kStrokeWidth;
+    final double size = width - inset * strokeWidth;
     final Rect rect =
         Rect.fromLTWH(origin.dx + inset, origin.dy + inset, size, size);
-    return RRect.fromRectAndRadius(rect, _kEdgeRadius);
+    return RRect.fromRectAndRadius(rect, shapeRadius);
   }
 
   // The checkbox's border color if value == false, or its fill color when
@@ -464,9 +451,9 @@ class _RenderCheckbox extends RenderToggleable {
     // As t goes from 0.0 to 1.0, animate the two check mark strokes from the
     // short side to the long side.
     final Path path = Path();
-    const Offset start = Offset(_kEdgeSize * 0.15, _kEdgeSize * 0.45);
-    const Offset mid = Offset(_kEdgeSize * 0.4, _kEdgeSize * 0.7);
-    const Offset end = Offset(_kEdgeSize * 0.85, _kEdgeSize * 0.25);
+    Offset start = Offset(width * 0.15, width * 0.45);
+    Offset mid = Offset(width * 0.4, width * 0.7);
+    Offset end = Offset(width * 0.85, width * 0.25);
     if (t < 0.5) {
       final double strokeT = t * 2.0;
       final Offset drawMid = Offset.lerp(start, mid, strokeT);
@@ -486,9 +473,9 @@ class _RenderCheckbox extends RenderToggleable {
     assert(t >= 0.0 && t <= 1.0);
     // As t goes from 0.0 to 1.0, animate the horizontal line from the
     // mid point outwards.
-    const Offset start = Offset(_kEdgeSize * 0.2, _kEdgeSize * 0.5);
-    const Offset mid = Offset(_kEdgeSize * 0.5, _kEdgeSize * 0.5);
-    const Offset end = Offset(_kEdgeSize * 0.8, _kEdgeSize * 0.5);
+    Offset start = Offset(width * 0.2, width * 0.5);
+    Offset mid = Offset(width * 0.5, width * 0.5);
+    Offset end = Offset(width * 0.8, width * 0.5);
     final Offset drawStart = Offset.lerp(start, mid, 1.0 - t);
     final Offset drawEnd = Offset.lerp(mid, end, t);
     canvas.drawLine(origin + drawStart, origin + drawEnd, paint);
@@ -501,7 +488,7 @@ class _RenderCheckbox extends RenderToggleable {
 
     final Paint strokePaint = _createStrokePaint();
     final Offset origin =
-        offset + (size / 2.0 - const Size.square(_kEdgeSize) / 2.0 as Offset);
+        offset + (size / 2.0 - Size.square(width) / 2.0 as Offset);
     final AnimationStatus status = position.status;
     final double tNormalized =
         status == AnimationStatus.forward || status == AnimationStatus.completed
@@ -511,7 +498,7 @@ class _RenderCheckbox extends RenderToggleable {
     // Four cases: false to null, false to true, null to false, true to false
     if (_oldValue == false || value == false) {
       final double t = value == false ? 1.0 - tNormalized : tNormalized;
-      final RRect outer = _outerRectAt(origin, t);
+      final RRect outer = _outerRectAt(origin, t, _kStrokeWidth);
       final Paint paint = Paint()..color = _colorAt(t);
 
       if (t <= 0.5) {
@@ -527,7 +514,7 @@ class _RenderCheckbox extends RenderToggleable {
       }
     } else {
       // Two cases: null to true, true to null
-      final RRect outer = _outerRectAt(origin, 1.0);
+      final RRect outer = _outerRectAt(origin, 1.0, _kStrokeWidth);
       final Paint paint = Paint()..color = _colorAt(1.0);
       canvas.drawRRect(outer, paint);
 

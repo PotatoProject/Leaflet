@@ -54,15 +54,19 @@ class _NoteListPageState extends State<NoteListPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
+  void closeSelection() {
+    setState(() {
+      selecting = false;
+      _selectionList.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget appBar = (selecting
         ? SelectionBar(
             selectionList: _selectionList,
-            onCloseSelection: () => setState(() {
-              selecting = false;
-              _selectionList.clear();
-            }),
+            onCloseSelection: closeSelection,
             currentMode: widget.noteKind,
           )
         : DefaultAppBar(
@@ -239,6 +243,16 @@ class _NoteListPageState extends State<NoteListPage> {
       onLongPress: () => _onNoteLongPress(context, note),
       selectorOpen: _state.selecting,
       selected: _state.selectionList.any((item) => item.id == note.id),
+      onCheckboxChanged: (value) {
+        if (!value) {
+          _state.removeSelectedNoteWhere((item) => item.id == note.id);
+          if (_state.selectionList.isEmpty) _state.selecting = false;
+        } else {
+          _state.selecting = true;
+          _state.addSelectedNote(note);
+        }
+      },
+      allowSelection: true,
     );
   }
 
