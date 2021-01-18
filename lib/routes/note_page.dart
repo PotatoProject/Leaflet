@@ -581,8 +581,8 @@ class _NotePageState extends State<NotePage> {
             enabled: !DeviceInfo.isDesktop,
             title: Text(LocaleStrings.notePage.imageCamera),
             onTap: () async {
-              File image =
-                  await ImagePicker.pickImage(source: ImageSource.camera);
+              PickedFile image =
+                  await ImagePicker().getImage(source: ImageSource.camera);
 
               if (image != null) {
                 Navigator.pop(context);

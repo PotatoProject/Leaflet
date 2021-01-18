@@ -18,15 +18,15 @@ dependencies:
   flutter_staggered_grid_view:
   photo_view:
   image_picker:
-  back_button_interceptor: "4.2.4"
-  shared_preferences:
-  local_auth: ^1.1.0-nullsafety
+  back_button_interceptor:
+  shared_preferences: ^0.5.12+4
+  local_auth:
   flutter_secure_storage:
   http: 
   jwt_decode:
   intl:
   flutter_local_notifications:
-  share_plus:
+  share_plus: ^1.2.0
   animations:
   material_design_icons_flutter:
   path_drawing:
@@ -35,9 +35,9 @@ dependencies:
   url_launcher:
   cached_network_image:
   path:
-  easy_localization: ^2.3.4-nullsafety.0
-  xml: ^4.2.0
-  flutter_localized_locales: ^2.0.0-nullsafety
+  easy_localization:
+  xml:
+  flutter_localized_locales: ^1.1.2
   uuid:
   recase:
   in_app_update:
@@ -69,6 +69,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito:
+
+dependency_overrides:
+  intl: '0.17.0-nullsafety.2'
+  platform: '2.2.1'
+  path: '1.7.0'
+  flutter_localized_locales: '1.1.2'
 
 flutter:
   uses-material-design: true

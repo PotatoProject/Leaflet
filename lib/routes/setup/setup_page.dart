@@ -27,7 +27,7 @@ class _SetupPagetate extends State<SetupPage> {
 
   @override
   void initState() {
-    BackButtonInterceptor.add((_) => true, name: "antiPop");
+    BackButtonInterceptor.add((_, __) => true, name: "antiPop");
     super.initState();
   }
 

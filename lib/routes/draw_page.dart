@@ -121,7 +121,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               key: _appbarKey,
               child: AppBar(
                 leading: BackButton(
-                  onPressed: () => exitPrompt(true),
+                  onPressed: () => exitPrompt(true, null),
                 ),
                 actions: [
                   IconButton(
@@ -316,7 +316,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     setState(() => _mousePosition = null);
   }
 
-  bool exitPrompt(bool _) {
+  bool exitPrompt(bool _, RouteInfo __) {
     Uri uri = _filePath != null ? Uri.file(_filePath) : null;
 
     void _internal() async {

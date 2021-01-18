@@ -58,10 +58,9 @@ class Utils {
   }
 
   static Future<bool> showBiometricPrompt() async {
-    return await LocalAuthentication().authenticate(
+    return await LocalAuthentication().authenticateWithBiometrics(
       localizedReason: "",
       stickyAuth: true,
-      biometricOnly: true,
       androidAuthStrings: AndroidAuthMessages(
         signInTitle: LocaleStrings.common.biometricsPrompt,
         cancelButton: LocaleStrings.common.cancel,
@@ -472,7 +471,7 @@ class Utils {
 
         path = image.path;
       } else {
-        final image = await ImagePicker.pickImage(source: ImageSource.gallery);
+        final image = await ImagePicker().getImage(source: ImageSource.gallery);
 
         path = image.path;
       }
