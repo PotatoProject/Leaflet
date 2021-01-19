@@ -162,7 +162,21 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                             : widget.shape,
                         elevation: widget.elevation ?? 1,
                         clipBehavior: widget.clipBehavior ?? Clip.antiAlias,
-                        child: widget.child,
+                        child: AnimatedPadding(
+                          duration: Duration(milliseconds: 300),
+                          curve: decelerateEasing,
+                          padding: EdgeInsets.only(
+                            bottom: !_useDesktopLayout
+                                ? MediaQuery.of(context).padding.bottom
+                                : 0,
+                          ),
+                          child: MediaQuery.removeViewPadding(
+                            context: context,
+                            removeLeft: _useDesktopLayout,
+                            removeRight: _useDesktopLayout,
+                            child: widget.child,
+                          ),
+                        ),
                       );
 
                       if (_useDesktopLayout) {

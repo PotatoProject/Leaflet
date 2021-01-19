@@ -38,38 +38,45 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
           )
         : title ?? null;
 
-    return AppBar(
-      leading: _leading,
-      titleSpacing: 0,
-      title: _title,
-      textTheme: Theme.of(context).textTheme,
-      actions: [
-        Visibility(
-          visible: state != null,
-          child: IconButton(
-            padding: EdgeInsets.all(16),
-            icon: Icon(Icons.person_outlined),
-            splashRadius: 28,
-            tooltip: LocaleStrings.mainPage.account,
-            onPressed: () async {
-              bool loggedIn = prefs.accessToken != null;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: MediaQuery.of(context).viewPadding.left,
+        right: MediaQuery.of(context).viewPadding.right,
+      ),
+      child: AppBar(
+        leading: _leading,
+        titleSpacing: 0,
+        title: _title,
+        textTheme: Theme.of(context).textTheme,
+        centerTitle: false,
+        actions: [
+          Visibility(
+            visible: state != null,
+            child: IconButton(
+              padding: EdgeInsets.all(16),
+              icon: Icon(Icons.person_outlined),
+              splashRadius: 28,
+              tooltip: LocaleStrings.mainPage.account,
+              onPressed: () async {
+                bool loggedIn = prefs.accessToken != null;
 
-              if (loggedIn) {
-                Utils.showNotesModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => AccountInfo(),
-                );
-              } else {
-                Utils.showSecondaryRoute(
-                  context,
-                  LoginPage(),
-                );
-              }
-            },
+                if (loggedIn) {
+                  Utils.showNotesModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => AccountInfo(),
+                  );
+                } else {
+                  Utils.showSecondaryRoute(
+                    context,
+                    LoginPage(),
+                  );
+                }
+              },
+            ),
           ),
-        ),
-      ]..insertAll(0, extraActions),
+        ]..insertAll(0, extraActions),
+      ),
     );
   }
 }

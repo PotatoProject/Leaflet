@@ -87,10 +87,13 @@ class _SetupPagetate extends State<SetupPage> {
           ),
         ),
         bottomNavigationBar: Material(
-          child: Padding(
+          child: Container(
+            height: 56,
             padding: EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: 4,
+            ),
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
             ),
             child: Row(
               children: [

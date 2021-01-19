@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
@@ -304,6 +305,7 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
             : null,
         onHorizontalDragUpdate: _gestureStartAllowed
             ? (details) {
+                SystemChannels.textInput.invokeMethod('TextInput.hide');
                 widget.controller.value -= (textDirection == TextDirection.rtl
                         ? -details.primaryDelta
                         : details.primaryDelta) /

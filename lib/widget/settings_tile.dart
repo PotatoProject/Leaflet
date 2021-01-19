@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SettingsTile extends StatelessWidget {
-  static const tilePadding = EdgeInsets.symmetric(horizontal: 16, vertical: 4);
-
   final Widget title;
   final Widget icon;
   final Widget subtitle;
@@ -51,7 +49,12 @@ class SettingsTile extends StatelessWidget {
     }
 
     return ListTile(
-      contentPadding: tilePadding,
+      contentPadding: EdgeInsets.fromLTRB(
+        16 + MediaQuery.of(context).viewPadding.left,
+        4,
+        16 + MediaQuery.of(context).viewPadding.right,
+        4,
+      ),
       leading: icon,
       title: title,
       trailing: trailing ?? _subtitle,

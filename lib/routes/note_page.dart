@@ -287,8 +287,10 @@ class _NotePageState extends State<NotePage> {
 
                       if (needsFocus && index == note.listContent.length - 1) {
                         needsFocus = false;
-                        FocusScope.of(context)
-                            .requestFocus(listContentNodes.last);
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => FocusScope.of(context)
+                              .requestFocus(listContentNodes.last),
+                        );
                       }
 
                       return _NoteListEntryItem(
@@ -373,7 +375,8 @@ class _NotePageState extends State<NotePage> {
                 elevation: 8,
                 child: Padding(
                   padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                    bottom: MediaQuery.of(context).viewInsets.bottom +
+                        MediaQuery.of(context).padding.bottom,
                   ),
                   child: NoteToolbar(
                     //controller: contentController,

@@ -181,6 +181,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                   return ListView(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
+                    padding: EdgeInsets.zero,
                     children: [
                       Container(
                         height: 56,

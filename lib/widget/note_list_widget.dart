@@ -26,9 +26,9 @@ class NoteListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final padding = EdgeInsets.fromLTRB(
-      4,
+      4 + MediaQuery.of(context).viewPadding.left,
       4 + MediaQuery.of(context).padding.top,
-      4,
+      4 + MediaQuery.of(context).viewPadding.right,
       4 + 80.0 + MediaQuery.of(context).viewInsets.bottom,
     );
     Widget child;

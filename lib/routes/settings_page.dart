@@ -39,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.trimmed) return commonSettings;
+    if (widget.trimmed) return Observer(builder: (context) => commonSettings);
 
     return DependentScaffold(
       resizeToAvoidBottomInset: false,
