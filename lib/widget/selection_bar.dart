@@ -243,7 +243,11 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             ongoing: true,
             priority: Priority.max,
           ),
-          iOS: IOSNotificationDetails(),
+          iOS: IOSNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
           macOS: MacOSNotificationDetails(),
         ),
         payload: json.encode(
