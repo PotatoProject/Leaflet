@@ -239,7 +239,7 @@ abstract class _PreferencesBase with Store {
       final response = await AccountController.refreshToken();
 
       if (!response.status) {
-        throw response.message;
+        Loggy.w(message: response.message);
       }
     }
 
