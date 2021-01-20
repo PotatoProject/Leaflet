@@ -5,7 +5,10 @@ import 'package:potato_notes/widget/dependent_scaffold.dart';
 class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
 
-  SearchPage({@required this.delegate});
+  SearchPage({
+    Key key,
+    @required this.delegate,
+  }) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();

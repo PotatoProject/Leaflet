@@ -27,8 +27,9 @@ class SettingsPage extends StatefulWidget {
   final bool trimmed;
 
   SettingsPage({
+    Key key,
     this.trimmed = false,
-  });
+  }) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();

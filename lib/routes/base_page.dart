@@ -44,23 +44,25 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final PageStorageBucket _bucket = PageStorageBucket();
   final _pages = [
     NoteListPage(
-      key: ValueKey(ReturnMode.NORMAL),
+      key: PageStorageKey(ReturnMode.NORMAL),
       noteKind: ReturnMode.NORMAL,
     ),
     NoteListPage(
-      key: ValueKey(ReturnMode.ARCHIVE),
+      key: PageStorageKey(ReturnMode.ARCHIVE),
       noteKind: ReturnMode.ARCHIVE,
     ),
     SearchPage(
+      key: PageStorageKey('search'),
       delegate: NoteSearchDelegate(),
     ),
     NoteListPage(
-      key: ValueKey(ReturnMode.TRASH),
+      key: PageStorageKey(ReturnMode.TRASH),
       noteKind: ReturnMode.TRASH,
     ),
-    SettingsPage(),
+    SettingsPage(key: PageStorageKey('settings')),
   ];
 
   int _currentPage = 0;
@@ -270,7 +272,10 @@ class _BasePageState extends State<BasePage>
                                             56,
                                   ),
                             ),
-                            child: child,
+                            child: PageStorage(
+                              bucket: _bucket,
+                              child: child,
+                            ),
                           ),
                         ),
                       ),
