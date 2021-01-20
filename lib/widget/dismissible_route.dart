@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 
 bool _gestureStartAllowed = false;
 
@@ -142,7 +141,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   }
 }
 
-class DismissiblePageTransition extends StatelessWidget {
+class DismissiblePageTransition extends StatefulWidget {
   final Widget child;
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -156,54 +155,73 @@ class DismissiblePageTransition extends StatelessWidget {
   });
 
   @override
+  _DismissiblePageTransitionState createState() =>
+      _DismissiblePageTransitionState();
+}
+
+class _DismissiblePageTransitionState extends State<DismissiblePageTransition> {
+  Curve _curveFg;
+  Curve _reverseCurveFg;
+  Curve _curveBg;
+  Curve _reverseCurveBg;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateCurves();
+  }
+
+  @override
+  void didUpdateWidget(DismissiblePageTransition old) {
+    super.didUpdateWidget(old);
+    if (widget.linearTransition != old.linearTransition) {
+      _updateCurves();
+    }
+  }
+
+  void _updateCurves() {
+    _curveFg = widget.linearTransition ? Curves.linear : decelerateEasing;
+    _reverseCurveFg =
+        widget.linearTransition ? Curves.linear : accelerateEasing;
+    _curveBg = widget.linearTransition ? Curves.linear : decelerateEasing;
+    _reverseCurveBg =
+        widget.linearTransition ? Curves.linear : accelerateEasing;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
 
     Animation<Offset> fgAnimation = CurvedAnimation(
-      parent: animation,
-      curve: linearTransition
-          ? Curves.linear
-          : SuspendedCurve(
-              animation.value,
-              curve: decelerateEasing,
-            ),
-      reverseCurve: linearTransition
-          ? Curves.linear
-          : SuspendedCurve(
-              animation.value,
-              curve: accelerateEasing,
-            ),
-    ).drive(Tween<Offset>(
-      begin: Offset(textDirection == TextDirection.rtl ? -1 : 1, 0),
-      end: Offset(0, 0),
-    ));
+      parent: widget.animation,
+      curve: _curveFg,
+      reverseCurve: _reverseCurveFg,
+    ).drive(
+      Tween<Offset>(
+        begin: Offset(textDirection == TextDirection.rtl ? -1 : 1, 0),
+        end: Offset.zero,
+      ),
+    );
 
     Animation<Offset> bgAnimation = CurvedAnimation(
-      parent: secondaryAnimation,
-      curve: linearTransition
-          ? Curves.linear
-          : SuspendedCurve(
-              secondaryAnimation.value,
-              curve: decelerateEasing,
-            ),
-      reverseCurve: linearTransition
-          ? Curves.linear
-          : SuspendedCurve(
-              secondaryAnimation.value,
-              curve: accelerateEasing,
-            ),
-    ).drive(Tween<Offset>(
-      begin: Offset(0, 0),
-      end: Offset(-0.3, 0),
-    ));
+      parent: widget.secondaryAnimation,
+      curve: _curveBg,
+      reverseCurve: _reverseCurveBg,
+    ).drive(
+      Tween<Offset>(
+        begin: Offset.zero,
+        end: Offset(-0.3, 0),
+      ),
+    );
 
     if (deviceInfo.uiSizeFactor > 3) {
       return FadeTransition(
         opacity: CurvedAnimation(
-          parent: animation,
+          parent: widget.animation,
           curve: Curves.easeOut,
         ),
-        child: child,
+        child: widget.child,
       );
     } else {
       return SlideTransition(
@@ -212,7 +230,7 @@ class DismissiblePageTransition extends StatelessWidget {
         transformHitTests: false,
         child: SlideTransition(
           position: fgAnimation,
-          child: child,
+          child: widget.child,
         ),
       );
     }
