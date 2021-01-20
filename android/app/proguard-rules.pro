@@ -7,6 +7,7 @@
 -keep class io.flutter.plugins.**  { *; }
 -dontwarn io.flutter.embedding.**
 -keep class com.dexterous.** { *; }
+-keep class androidx.lifecycle.** { *; }
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
