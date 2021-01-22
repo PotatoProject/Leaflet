@@ -17,6 +17,20 @@ class NoteViewImage extends StatefulWidget {
 
   @override
   _NoteViewImageState createState() => _NoteViewImageState();
+
+  static ImageProvider getProvider(SavedImage savedImage) {
+    ImageProvider image;
+
+    if (savedImage.existsLocally && savedImage.uploaded) {
+      image = FileImage(File(savedImage.path));
+    } else if (savedImage.hash != null) {
+      image = BlurHashImage(savedImage.blurHash);
+    } else {
+      image = FileImage(File(savedImage.uri.path));
+    }
+
+    return image;
+  }
 }
 
 class _NoteViewImageState extends State<NoteViewImage> {
@@ -60,23 +74,13 @@ class _NoteViewImageState extends State<NoteViewImage> {
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider image;
-
-    if (widget.savedImage.existsLocally && widget.savedImage.uploaded) {
-      image = FileImage(File(widget.savedImage.path));
-    } else if (widget.savedImage.hash != null) {
-      image = BlurHashImage(widget.savedImage.blurHash);
-    } else {
-      image = FileImage(File(widget.savedImage.uri.path));
-    }
-
     final displayLoadingIndicator =
         queueItem != null && queueItem.status == QueueItemStatus.ONGOING;
 
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: image,
+          image: NoteViewImage.getProvider(widget.savedImage),
           fit: widget.fit,
           alignment: Alignment.center,
         ),
@@ -109,26 +113,6 @@ class _NoteViewImageState extends State<NoteViewImage> {
           ),
         ),
       ),
-      /*child: Visibility(
-        visible: displayLoadingIndicator,
-        child: SizedBox.fromSize(
-          size: Size.square(32),
-          child: Card(
-            margin: EdgeInsets.all(8),
-            elevation: 4,
-            shape: CircleBorder(),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  value: queueItem?.progress,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),*/
     );
   }
 }
