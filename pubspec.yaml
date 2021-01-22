@@ -15,7 +15,6 @@ dependencies:
   json_serializable:
   sqflite:
   path_provider:
-  flutter_staggered_grid_view:
   photo_view:
   image_picker:
   back_button_interceptor:

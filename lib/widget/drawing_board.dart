@@ -165,7 +165,18 @@ class DrawPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(DrawPainter old) => true;
+  bool shouldRepaint(DrawPainter old) {
+    if (objects.length != old.objects.length) return true;
+
+    for (int i = 0; i < objects.length; i++) {
+      final object = objects[i];
+      final oldObject = old.objects[i];
+
+      if (!listEquals(object.points, oldObject.points)) return true;
+    }
+
+    return false;
+  }
 }
 
 class BackgroundPainter extends CustomPainter {
@@ -228,7 +239,7 @@ class DrawingBoardController extends ChangeNotifier {
 }
 
 class DrawObject {
-  Paint paint;
+  final Paint paint;
   List<Offset> points;
 
   DrawObject(this.paint, this.points);
@@ -244,5 +255,24 @@ class DrawObject {
       canvas.drawCircle(points.last, paint.strokeWidth / 2,
           paint..style = PaintingStyle.fill);
     }
+  }
+
+  @override
+  int get hashCode => hashValues(paint.hashCode, points.hashCode);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is DrawObject) {
+      return paint == other.paint && listEquals(points, other.points);
+    }
+
+    return false;
+  }
+
+  DrawObject get copy {
+    return DrawObject(
+      paint,
+      List.from(points),
+    );
   }
 }

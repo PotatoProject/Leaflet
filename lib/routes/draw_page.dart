@@ -41,7 +41,6 @@ class DrawPage extends StatefulWidget {
 class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   BuildContext _globalContext;
   DrawingBoardController _controller = DrawingBoardController();
-  Offset _mousePosition = Offset.zero;
   DrawingToolbarController _toolbarController = DrawingToolbarController();
 
   AnimationController _appbarAc;
@@ -140,33 +139,15 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: SizedBox.expand(
-        child: MouseRegion(
-          onExit: (event) => setState(() => _mousePosition = null),
-          onHover: (event) {
-            RenderBox box = context.findRenderObject() as RenderBox;
-            Offset offset = box.localToGlobal(Offset.zero);
-            _mousePosition = event.position.translate(-offset.dx, -offset.dy);
-            setState(() {});
-          },
-          child: CustomPaint(
-            foregroundPainter: _CursorPainter(
-              offset: _mousePosition,
-              brushWidth: _tools[_toolIndex].size,
-            ),
-            child: InteractiveViewer(
-              maxScale: 1,
-              minScale: 1,
-              onInteractionStart: _normalModePanStart,
-              onInteractionUpdate: _normalModePanUpdate,
-              onInteractionEnd: _normalModePanEnd,
-              scaleEnabled: false,
-              child: DrawingBoard(
-                repaintKey: _drawingKey,
-                controller: _controller,
-                uri: widget.savedImage != null ? widget.savedImage.uri : null,
-                color: Colors.grey[50],
-              ),
-            ),
+        child: GestureDetector(
+          onScaleStart: _normalModePanStart,
+          onScaleUpdate: _normalModePanUpdate,
+          onScaleEnd: _normalModePanEnd,
+          child: DrawingBoard(
+            repaintKey: _drawingKey,
+            controller: _controller,
+            uri: widget.savedImage != null ? widget.savedImage.uri : null,
+            color: Colors.grey[50],
           ),
         ),
       ),
@@ -216,6 +197,8 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   void _normalModePanStart(ScaleStartDetails details) {
+    if (details.pointerCount > 1) return;
+
     _controller.saved = false;
     _toolbarController.closePanel();
     DrawObject object;
@@ -269,12 +252,14 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset topLeft = box.localToGlobal(Offset.zero);
 
-    _mousePosition = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
+    final point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
-    _controller.addPointToObject(_controller.currentIndex, _mousePosition);
+    _controller.addPointToObject(_controller.currentIndex, point);
   }
 
   void _normalModePanUpdate(ScaleUpdateDetails details) {
+    if (details.pointerCount > 1) return;
+
     final RenderBox appbarBox = _appbarKey.currentContext.findRenderObject();
     Rect appbarRect =
         (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
@@ -288,24 +273,23 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
     appbarRect = appbarRect.shift(topLeft * -1);
     toolbarRect = toolbarRect.shift(topLeft * -1);
-    _mousePosition = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
-    setState(() {});
+    final point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
     if (!_appbarAc.isAnimating) {
-      if (appbarRect.contains(_mousePosition))
+      if (appbarRect.contains(point))
         _appbarAc.forward();
       else
         _appbarAc.reverse();
     }
 
     if (!_toolbarAc.isAnimating) {
-      if (toolbarRect.contains(_mousePosition))
+      if (toolbarRect.contains(point))
         _toolbarAc.forward();
       else
         _toolbarAc.reverse();
     }
 
-    _controller.addPointToObject(_controller.currentIndex, _mousePosition);
+    _controller.addPointToObject(_controller.currentIndex, point);
   }
 
   void _normalModePanEnd(details) {
@@ -313,7 +297,6 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     _controller.backupObjects = List.from(_controller.objects);
     _appbarAc.reverse();
     _toolbarAc.reverse();
-    setState(() => _mousePosition = null);
   }
 
   bool exitPrompt(bool _, RouteInfo __) {
@@ -409,31 +392,4 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 enum MenuShowReason {
   COLOR_PICKER,
   RADIUS_PICKER,
-}
-
-class _CursorPainter extends CustomPainter {
-  final Offset offset;
-  final double brushWidth;
-
-  _CursorPainter({
-    @required this.offset,
-    @required this.brushWidth,
-  });
-
-  @override
-  void paint(ui.Canvas canvas, ui.Size size) {
-    if (offset == null) return;
-
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.black
-      ..strokeWidth = 1;
-
-    canvas.drawCircle(offset, brushWidth / 2, paint);
-  }
-
-  @override
-  bool shouldRepaint(_CursorPainter old) {
-    return this.offset != old.offset || this.brushWidth != old.brushWidth;
-  }
 }
