@@ -7,10 +7,12 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
+import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteView extends StatefulWidget {
@@ -91,117 +93,124 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       elevation: _elevation,
       shadowColor: Colors.black.withOpacity(0.4),
       margin: kCardPadding,
-      child: InkWell(
-        onTap: widget.onTap,
-        onLongPress: !isMouseConnected ? widget.onLongPress : null,
-        onHover: (value) => setState(() {
-          _hovered = value;
-        }),
-        onFocusChange: (value) => setState(() {
-          _focused = value;
-        }),
-        onHighlightChanged: (value) => setState(() {
-          _highlighted = value;
-        }),
-        splashFactory: InkRipple.splashFactory,
-        borderRadius: BorderRadius.circular(kCardBorderRadius),
-        child: Stack(
-          fit: StackFit.passthrough,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                IgnorePointer(
-                  child: Visibility(
-                    visible: (widget.note.images?.isNotEmpty ?? false) &&
-                        !widget.note.hideContent,
-                    child: NoteViewImages(
-                      images: widget.note.images,
-                      showPlusImages: true,
-                      numPlusImages: widget.note.images.length < kMaxImageCount
-                          ? 0
-                          : widget.note.images.length - kMaxImageCount,
+      child: GestureDetector(
+        onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
+        child: InkWell(
+          onTap: widget.onTap,
+          onLongPress: !isMouseConnected ? widget.onLongPress : null,
+          onHover: (value) => setState(() {
+            _hovered = value;
+          }),
+          onFocusChange: (value) => setState(() {
+            _focused = value;
+          }),
+          onHighlightChanged: (value) => setState(() {
+            _highlighted = value;
+          }),
+          splashFactory: InkRipple.splashFactory,
+          borderRadius: BorderRadius.circular(kCardBorderRadius),
+          child: Stack(
+            fit: StackFit.passthrough,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IgnorePointer(
+                    child: Visibility(
+                      visible: (widget.note.images?.isNotEmpty ?? false) &&
+                          !widget.note.hideContent,
+                      child: NoteViewImages(
+                        images: widget.note.images,
+                        showPlusImages: true,
+                        numPlusImages:
+                            widget.note.images.length < kMaxImageCount
+                                ? 0
+                                : widget.note.images.length - kMaxImageCount,
+                      ),
                     ),
                   ),
-                ),
-                Visibility(
-                  visible: content.isNotEmpty,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal:
-                          16 + Theme.of(context).visualDensity.horizontal,
-                      vertical: 16 + Theme.of(context).visualDensity.vertical,
+                  Visibility(
+                    visible: content.isNotEmpty,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal:
+                            16 + Theme.of(context).visualDensity.horizontal,
+                        vertical: 16 + Theme.of(context).visualDensity.vertical,
+                      ),
+                      child: _SeparatedColumn(
+                        children: content,
+                        separator: SizedBox(
+                          height: 4 + Theme.of(context).visualDensity.vertical,
+                        ),
+                      ),
                     ),
-                    child: _SeparatedColumn(
-                      children: content,
-                      separator: SizedBox(
-                        height: 4 + Theme.of(context).visualDensity.vertical,
+                  ),
+                  LayoutBuilder(
+                    builder: (context, constraints) => SizedBox(
+                      width: constraints.maxWidth,
+                      child: NoteViewStatusbar(
+                        note: widget.note,
+                        width: constraints.maxWidth,
+                        padding: content.isEmpty
+                            ? EdgeInsets.symmetric(
+                                horizontal: 16 +
+                                    Theme.of(context).visualDensity.horizontal,
+                                vertical: 16 +
+                                    Theme.of(context).visualDensity.vertical,
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: AnimatedOpacity(
+                  opacity:
+                      (_hovered || widget.selected) && widget.allowSelection
+                          ? 1
+                          : 0,
+                  duration: Duration(milliseconds: 200),
+                  child: Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(top: 8, right: 8),
+                    height: 64,
+                    width: 64,
+                    clipBehavior: Clip.none,
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.topRight,
+                        colors: [
+                          Colors.grey[900].withOpacity(
+                            widget.note.images.isNotEmpty ? 0.6 : 0.2,
+                          ),
+                          Colors.grey[900].withOpacity(0),
+                        ],
+                        radius: 1,
+                      ),
+                    ),
+                    child: IgnorePointer(
+                      ignoring: !((_hovered || widget.selected) &&
+                          widget.allowSelection),
+                      child: NoteViewCheckbox(
+                        value: widget.selected,
+                        onChanged: widget.onCheckboxChanged,
+                        width: 20,
+                        splashRadius: 18,
+                        inactiveColor: checkBoxColor,
+                        activeColor: checkBoxColor,
+                        checkColor: checkColor,
+                        shapeRadius: Radius.circular(4),
                       ),
                     ),
                   ),
                 ),
-                LayoutBuilder(
-                  builder: (context, constraints) => SizedBox(
-                    width: constraints.maxWidth,
-                    child: NoteViewStatusbar(
-                      note: widget.note,
-                      width: constraints.maxWidth,
-                      padding: content.isEmpty
-                          ? EdgeInsets.symmetric(
-                              horizontal: 16 +
-                                  Theme.of(context).visualDensity.horizontal,
-                              vertical:
-                                  16 + Theme.of(context).visualDensity.vertical,
-                            )
-                          : null,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: AnimatedOpacity(
-                opacity: _hovered || widget.selected ? 1 : 0,
-                duration: Duration(milliseconds: 200),
-                child: Container(
-                  alignment: Alignment.topRight,
-                  padding: EdgeInsets.only(top: 8, right: 8),
-                  height: 64,
-                  width: 64,
-                  clipBehavior: Clip.none,
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      center: Alignment.topRight,
-                      colors: [
-                        Colors.grey[900].withOpacity(
-                          widget.note.images.isNotEmpty ? 0.6 : 0.2,
-                        ),
-                        Colors.grey[900].withOpacity(0),
-                      ],
-                      radius: 1,
-                    ),
-                  ),
-                  child: IgnorePointer(
-                    ignoring: !((_hovered || widget.selected) &&
-                        widget.allowSelection),
-                    child: NoteViewCheckbox(
-                      value: widget.selected,
-                      onChanged: widget.onCheckboxChanged,
-                      width: 20,
-                      splashRadius: 18,
-                      inactiveColor: checkBoxColor,
-                      activeColor: checkBoxColor,
-                      checkColor: checkColor,
-                      shapeRadius: Radius.circular(4),
-                    ),
-                  ),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -289,13 +298,9 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         widget.note.listContent.isNotEmpty &&
         !widget.note.hideContent) {
       items.add(
-        ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.all(0),
-          itemBuilder: (context, index) => listContentWidgets[index],
-          itemCount: listContentWidgets.length,
-          separatorBuilder: (context, index) => SizedBox(height: 4),
+        _SeparatedColumn(
+          children: listContentWidgets,
+          separator: SizedBox(height: 4),
         ),
       );
     }
@@ -376,6 +381,46 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           );
         },
       );
+
+  void showOptionsMenu(TapDownDetails details) async {
+    final selectionOptions = SelectionState.of(context).selectionOptions;
+    final everyOption = selectionOptions.options(context, [widget.note]);
+    final options = everyOption.where((e) => !e.oneNoteOnly).toList();
+    final oneNoteOptions = everyOption.where((e) => e.oneNoteOnly).toList();
+
+    final value = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        details.globalPosition.dx,
+        details.globalPosition.dy,
+        details.globalPosition.dx,
+        details.globalPosition.dy,
+      ),
+      items: <PopupMenuEntry>[
+        ...options
+            .map<PopupMenuEntry>(
+              (e) => PopupMenuItemWithIcon(
+                icon: Icon(e.icon),
+                child: Text(e.title),
+                value: e.value,
+              ),
+            )
+            .toList(),
+        if (oneNoteOptions.isNotEmpty) PopupMenuDivider(),
+        ...oneNoteOptions
+            .map<PopupMenuEntry>(
+              (e) => PopupMenuItemWithIcon(
+                icon: Icon(e.icon),
+                child: Text(e.title),
+                value: e.value,
+              ),
+            )
+            .toList(),
+      ],
+    );
+
+    selectionOptions.onSelected(context, [widget.note], value);
+  }
 }
 
 class _SeparatedColumn extends StatelessWidget {

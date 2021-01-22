@@ -49,10 +49,12 @@ class _BasePageState extends State<BasePage>
     NoteListPage(
       key: PageStorageKey(ReturnMode.NORMAL),
       noteKind: ReturnMode.NORMAL,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.NORMAL),
     ),
     NoteListPage(
       key: PageStorageKey(ReturnMode.ARCHIVE),
       noteKind: ReturnMode.ARCHIVE,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.ARCHIVE),
     ),
     SearchPage(
       key: PageStorageKey('search'),
@@ -61,6 +63,7 @@ class _BasePageState extends State<BasePage>
     NoteListPage(
       key: PageStorageKey(ReturnMode.TRASH),
       noteKind: ReturnMode.TRASH,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.TRASH),
     ),
     SettingsPage(key: PageStorageKey('settings')),
   ];

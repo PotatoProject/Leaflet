@@ -10,6 +10,7 @@ import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
+import 'package:potato_notes/widget/fake_appbar.dart';
 import 'package:potato_notes/widget/fake_fab.dart';
 import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
@@ -20,11 +21,13 @@ import 'package:potato_notes/widget/tag_editor.dart';
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
   final int tagIndex;
+  final SelectionOptions selectionOptions;
 
   NoteListPage({
     Key key,
     @required this.noteKind,
     this.tagIndex,
+    @required this.selectionOptions,
   }) : super(key: key);
 
   @override
@@ -34,6 +37,8 @@ class NoteListPage extends StatefulWidget {
 class _NoteListPageState extends State<NoteListPage> {
   bool _selecting = false;
   List<Note> _selectionList = [];
+
+  SelectionOptions get selectionOptions => widget.selectionOptions;
 
   bool get selecting => _selecting;
   set selecting(bool value) {
@@ -63,21 +68,20 @@ class _NoteListPageState extends State<NoteListPage> {
 
   @override
   Widget build(BuildContext context) {
-    PreferredSizeWidget appBar = (selecting
-        ? SelectionBar(
-            selectionList: _selectionList,
-            onCloseSelection: closeSelection,
-            currentMode: widget.noteKind,
-          )
-        : DefaultAppBar(
-            extraActions: appBarButtons,
-            title: Text(Utils.getNameFromMode(widget.noteKind)),
-          )) as PreferredSizeWidget;
-
     return SelectionState(
       state: this,
       child: DependentScaffold(
-        appBar: appBar,
+        appBar: FakeAppbar(
+          child: SelectionState(
+            state: this,
+            child: selecting
+                ? SelectionBar()
+                : DefaultAppBar(
+                    extraActions: appBarButtons,
+                    title: Text(Utils.getNameFromMode(widget.noteKind)),
+                  ),
+          ),
+        ),
         useAppBarAsSecondary: selecting,
         secondaryAppBar: widget.noteKind == ReturnMode.NORMAL && !selecting
             ? NewNoteBar()
@@ -106,8 +110,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 );
               },
-              itemBuilder: (context, index) =>
-                  _buildNoteList(context, notes, index),
+              itemBuilder: (_, index) => _buildNoteList(context, notes, index),
               noteCount: notes.length,
               noteKind: widget.noteKind,
             );
@@ -251,6 +254,7 @@ class _NoteListPageState extends State<NoteListPage> {
           _state.selecting = true;
           _state.addSelectedNote(note);
         }
+        BasePage.of(context).setBottomBarEnabled(!_state.selecting);
       },
       allowSelection: true,
     );

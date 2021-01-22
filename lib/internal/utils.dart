@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -15,17 +16,21 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
-import 'package:potato_notes/widget/list_tile_popup_menu_item.dart';
+import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:recase/recase.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 const int kMaxImageCount = 4;
@@ -90,25 +95,6 @@ class Utils {
         clipBehavior: clipBehavior,
       ),
     );
-  }
-
-  static List<ListTilePopupMenuItem<String>> popupItems(
-      BuildContext context, Note note) {
-    bool showUnpin = note.pinned;
-
-    return [
-      ListTilePopupMenuItem(
-        leading: Icon(showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline),
-        title:
-            Text(showUnpin ? "Unpin" : LocaleStrings.mainPage.selectionBarPin),
-        value: 'pin',
-      ),
-      ListTilePopupMenuItem(
-        leading: Icon(Icons.share_outlined),
-        title: Text(LocaleStrings.mainPage.selectionBarShare),
-        value: 'share',
-      ),
-    ];
   }
 
   static void showFabMenu(
@@ -188,6 +174,214 @@ class Utils {
     return Uuid().v4();
   }
 
+  static SelectionOptions getSelectionOptionsForMode(ReturnMode mode) {
+    return SelectionOptions(
+      options: (context, notes) {
+        bool anyStarred = notes.any((item) => item.starred);
+        bool showUnpin = notes.first.pinned;
+
+        return [
+          SelectionOptionEntry(
+            title: "Select",
+            icon: Icons.check,
+            value: 'select',
+            showOnlyOnRightClickMenu: true,
+          ),
+          if (mode == ReturnMode.NORMAL)
+            SelectionOptionEntry(
+              title: anyStarred
+                  ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                  : LocaleStrings.mainPage.selectionBarAddFavourites,
+              icon: anyStarred ? Icons.favorite : Icons.favorite_border,
+              value: 'favourites',
+            ),
+          if (mode == ReturnMode.NORMAL)
+            SelectionOptionEntry(
+              title: LocaleStrings.mainPage.selectionBarChangeColor,
+              icon: Icons.color_lens_outlined,
+              value: 'color',
+            ),
+          if (mode != ReturnMode.ARCHIVE)
+            SelectionOptionEntry(
+              title: LocaleStrings.mainPage.selectionBarArchive,
+              icon: MdiIcons.archiveOutline,
+              value: 'archive',
+            ),
+          SelectionOptionEntry(
+            title: LocaleStrings.mainPage.selectionBarDelete,
+            icon: Icons.delete_outline,
+            value: 'delete',
+          ),
+          if (mode != ReturnMode.NORMAL)
+            SelectionOptionEntry(
+              icon: Icons.settings_backup_restore,
+              title: LocaleStrings.common.restore,
+              value: 'restore',
+            ),
+          if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS)
+            SelectionOptionEntry(
+              icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
+              title:
+                  showUnpin ? "Unpin" : LocaleStrings.mainPage.selectionBarPin,
+              value: 'pin',
+              oneNoteOnly: true,
+            ),
+          SelectionOptionEntry(
+            icon: Icons.share_outlined,
+            title: LocaleStrings.mainPage.selectionBarShare,
+            value: 'share',
+            oneNoteOnly: true,
+          ),
+        ];
+      },
+      onSelected: _onSelected,
+    );
+  }
+
+  static Future<void> _onSelected(
+      BuildContext context, List<Note> notes, String value) async {
+    final state = SelectionState.of(context);
+
+    switch (value) {
+      case 'select':
+        state.selecting = true;
+        state.addSelectedNote(notes.first);
+        break;
+      case 'favourites':
+        bool anyStarred = notes.any((item) => item.starred);
+
+        for (Note note in notes) {
+          if (anyStarred)
+            await helper.saveNote(
+              note.markChanged().copyWith(starred: false),
+            );
+          else
+            await helper.saveNote(
+              note.markChanged().copyWith(starred: true),
+            );
+        }
+
+        state.closeSelection();
+        break;
+      case 'color':
+        int selectedColor;
+
+        if (notes.length > 1) {
+          int color = notes.first.color;
+
+          if (notes.every((item) => item.color == color))
+            selectedColor = color;
+          else
+            selectedColor = 0;
+        } else
+          selectedColor = notes.first.color;
+
+        selectedColor = await Utils.showNotesModalBottomSheet(
+          context: context,
+          builder: (context) => NoteColorSelector(
+            selectedColor: selectedColor,
+            onColorSelect: (color) {
+              Navigator.pop(context, color);
+            },
+          ),
+        );
+
+        if (selectedColor != null) {
+          for (Note note in notes)
+            await helper.saveNote(note.copyWith(color: selectedColor));
+
+          state.closeSelection();
+        }
+        break;
+      case 'archive':
+        await Utils.deleteNotes(
+          context: context,
+          notes: notes,
+          reason: LocaleStrings.mainPage.notesArchived(notes.length),
+          archive: true,
+        );
+
+        state.closeSelection();
+        break;
+      case 'delete':
+        final notesToTrash = notes.where((n) => !n.deleted);
+        final notesToBeDeleted = notes.where((n) => n.deleted);
+
+        notesToBeDeleted.forEach((n) => Utils.deleteNoteSafely(n));
+
+        await Utils.deleteNotes(
+          context: context,
+          notes: notesToTrash.toList(),
+          reason: LocaleStrings.mainPage.notesDeleted(notes.length),
+        );
+        break;
+      case 'restore':
+        await Utils.restoreNotes(
+          context: context,
+          notes: notes,
+          reason: LocaleStrings.mainPage.notesRestored(notes.length),
+        );
+
+        state.closeSelection();
+        break;
+      case 'pin':
+        handlePinNotes(context, notes.first);
+
+        state.closeSelection();
+        break;
+      case 'share':
+        bool status = notes.first.lockNote
+            ? await Utils.showPassChallengeSheet(context)
+            : true;
+        if (status ?? false) {
+          Share.share(
+            (notes.first.title.isNotEmpty ? notes.first.title + "\n\n" : "") +
+                notes.first.content,
+          );
+        }
+
+        state.closeSelection();
+        break;
+    }
+  }
+
+  static void handlePinNotes(BuildContext context, Note note) {
+    if (note.pinned) {
+      appInfo.notifications.cancel(note.notificationId);
+    } else {
+      appInfo.notifications.show(
+        note.notificationId,
+        note.title.isEmpty
+            ? LocaleStrings.common.notificationDefaultTitle
+            : note.title,
+        note.content,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'pinned_notifications',
+            LocaleStrings.common.notificationDetailsTitle,
+            LocaleStrings.common.notificationDetailsDesc,
+            color: Utils.defaultAccent,
+            ongoing: true,
+            priority: Priority.max,
+          ),
+          iOS: IOSNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+          macOS: MacOSNotificationDetails(),
+        ),
+        payload: json.encode(
+          NotificationPayload(
+            action: NotificationAction.PIN,
+            id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
+            noteId: note.id,
+          ).toJson(),
+        ),
+      );
+    }
+  }
+
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
       case ReturnMode.NORMAL:
@@ -242,8 +436,7 @@ class Utils {
           label: LocaleStrings.common.undo,
           onPressed: () async {
             for (Note note in backupNotes) {
-              await helper
-                  .saveNote(note.copyWith(deleted: false, archived: false));
+              await helper.saveNote(note);
             }
           },
         ),
@@ -275,13 +468,7 @@ class Utils {
           label: LocaleStrings.common.undo,
           onPressed: () async {
             for (Note note in backupNotes) {
-              if (archive) {
-                await helper
-                    .saveNote(note.copyWith(deleted: false, archived: true));
-              } else {
-                await helper
-                    .saveNote(note.copyWith(deleted: true, archived: false));
-              }
+              await helper.saveNote(note);
             }
           },
         ),
