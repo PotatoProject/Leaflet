@@ -314,6 +314,8 @@ class Utils {
           notes: notesToTrash.toList(),
           reason: LocaleStrings.mainPage.notesDeleted(notes.length),
         );
+
+        state.closeSelection();
         break;
       case 'restore':
         await Utils.restoreNotes(
