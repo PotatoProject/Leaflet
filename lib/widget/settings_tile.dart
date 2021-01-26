@@ -27,7 +27,7 @@ class SettingsTile extends StatelessWidget {
     ValueChanged<bool> onChanged,
     Color activeColor,
     this.enabled = true,
-  })  : this.trailing = Switch(
+  })  : this.trailing = Switch.adaptive(
           value: value,
           onChanged: enabled ? onChanged : null,
           activeColor: activeColor,
