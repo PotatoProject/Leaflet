@@ -1,9 +1,6 @@
 package com.potatoproject.notes
 
 import android.graphics.drawable.Drawable
-import android.graphics.Color
-import android.os.Build
-import android.view.View
 import android.widget.ImageView.ScaleType
 
 import io.flutter.embedding.android.DrawableSplashScreen
@@ -19,7 +16,7 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     override fun provideSplashScreen(): SplashScreen? {
-        var manifestSplashDrawable: Drawable = getResources().getDrawable(R.drawable.launch_background, getTheme())
+        var manifestSplashDrawable: Drawable = resources.getDrawable(R.drawable.launch_background, theme)
         
         return DrawableSplashScreen(manifestSplashDrawable, ScaleType.FIT_XY, 700)
     }

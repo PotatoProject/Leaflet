@@ -47,7 +47,6 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: lightColor,
         ),
-        textTheme: ThemeData.light().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: lightColor,
           shape: RoundedRectangleBorder(),
@@ -60,12 +59,17 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.black.withOpacity(0.7)),
         disabledColor: Colors.black.withOpacity(0.4),
-        platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
           ),
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          elevation: 4,
         ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -112,7 +116,6 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: darkColor,
         ),
-        textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: darkColor,
           shape: RoundedRectangleBorder(),
@@ -125,12 +128,17 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
-        platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
           ),
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          elevation: 4,
         ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -177,7 +185,6 @@ class Themes {
         snackBarTheme: SnackBarThemeData(
           actionTextColor: blackColor,
         ),
-        textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Manrope"),
         bottomSheetTheme: BottomSheetThemeData(
           modalBackgroundColor: blackColor,
           shape: RoundedRectangleBorder(),
@@ -190,12 +197,17 @@ class Themes {
         backgroundColor: mainColor,
         iconTheme: IconThemeData(color: Colors.white.withOpacity(0.7)),
         disabledColor: Colors.white.withOpacity(0.4),
-        platform: defaultTargetPlatform,
         shadowColor: Colors.black.withOpacity(0.5),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
           ),
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          elevation: 4,
         ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{

@@ -20,6 +20,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_toolbar.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
@@ -175,6 +176,15 @@ class _NotePageState extends State<NotePage> {
         toggleableActiveColor: note.color != 0
             ? Theme.of(context).textTheme.caption.color
             : Theme.of(context).accentColor,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: note.color != 0
+              ? Theme.of(context).textTheme.caption.color
+              : Theme.of(context).accentColor,
+          selectionColor: note.color != 0
+              ? Theme.of(context).textTheme.caption.color.withOpacity(0.3)
+              : Theme.of(context).accentColor,
+          selectionHandleColor: Theme.of(context).textTheme.caption.color,
+        ),
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -349,7 +359,7 @@ class _NotePageState extends State<NotePage> {
                             color: Theme.of(context).iconTheme.color,
                           ),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
                         onTap: note.listContent.isNotEmpty &&
                                 note.listContent.last.text.isNotEmpty
                             ? () => addListContentItem()
@@ -649,6 +659,7 @@ class _NoteListEntryItem extends StatefulWidget {
   final Color checkColor;
 
   _NoteListEntryItem({
+    Key key,
     @required this.item,
     this.controller,
     this.focusNode,
@@ -657,7 +668,7 @@ class _NoteListEntryItem extends StatefulWidget {
     this.onSubmitted,
     this.onCheckChanged,
     this.checkColor,
-  });
+  }) : super(key: key);
 
   @override
   _NoteListEntryItemState createState() => _NoteListEntryItemState();
@@ -676,7 +687,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
         color: Theme.of(context).brightness == Brightness.dark
             ? Colors.red[400]
             : Colors.red[600],
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.centerRight,
         child: Icon(
           Icons.delete_outline,
@@ -690,11 +701,17 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
         onEnter: (_) => setState(() => showDeleteButton = true),
         onExit: (_) => setState(() => showDeleteButton = false),
         child: ListTile(
-          leading: Checkbox(
-            value: widget.item.status,
-            onChanged: widget.onCheckChanged,
-            checkColor:
-                widget.checkColor ?? Theme.of(context).scaffoldBackgroundColor,
+          leading: Container(
+            width: 24,
+            height: 24,
+            alignment: Alignment.center,
+            child: NoteViewCheckbox(
+              value: widget.item.status,
+              onChanged: widget.onCheckChanged,
+              checkColor: widget.checkColor ??
+                  Theme.of(context).scaffoldBackgroundColor,
+              width: 18,
+            ),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16),
           title: TextField(
