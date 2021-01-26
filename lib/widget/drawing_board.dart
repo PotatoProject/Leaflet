@@ -145,7 +145,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
         image,
       ),
       foregroundPainter: DrawPainter(
-        _objects,
+        List.from(_objects.map((e) => e.copy)),
       ),
       isComplex: true,
     );
