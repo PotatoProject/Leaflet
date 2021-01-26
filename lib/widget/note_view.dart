@@ -95,9 +95,10 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       margin: kCardPadding,
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
+        onLongPressStart:
+            !widget.selectorOpen && !isMouseConnected ? showOptionsMenu : null,
         child: InkWell(
           onTap: widget.onTap,
-          onLongPress: !isMouseConnected ? widget.onLongPress : null,
           onHover: (value) => setState(() {
             _hovered = value;
           }),
@@ -382,7 +383,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         },
       );
 
-  void showOptionsMenu(TapDownDetails details) async {
+  void showOptionsMenu(details) async {
     final selectionOptions = SelectionState.of(context).selectionOptions;
     final everyOption = selectionOptions.options(context, [widget.note]);
     final options = everyOption.where((e) => !e.oneNoteOnly).toList();
