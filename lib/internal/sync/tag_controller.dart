@@ -57,8 +57,7 @@ class TagController {
     try {
       String token = await prefs.getToken();
       var url =
-          "${prefs.apiUrl}${NoteController
-          .NOTES_PREFIX}/tag/list?last_updated=$lastUpdated";
+          "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
 
       Response listResult = await dio.get(
@@ -67,11 +66,10 @@ class TagController {
       );
       Loggy.d(
           message:
-          "(tag-list) Server responded with (${listResult.statusCode}): " +
-              listResult.data);
+              "(tag-list) Server responded with (${listResult.statusCode}): " +
+                  listResult.data.toString());
       var body = NoteController.handleResponse(listResult);
-      final data = jsonDecode(body);
-      List<dynamic> tags = data.map((map) {
+      List<dynamic> tags = body.map((map) {
         var tag = fromSync(map);
         return tag;
       }).toList();
@@ -122,10 +120,9 @@ class TagController {
           message:
           "(tag-listDeleted) Server responded with (${listResult
               .statusCode})}: " +
-              listResult.data);
+              listResult.data.toString());
       NoteController.handleResponse(listResult);
-      List<dynamic> response = json.decode(listResult.data);
-      return response.map((id) => id.toString()).toList();
+      return listResult.data.map((id) => id.toString()).toList();
     } on SocketException {
       throw ("Could not connect to server");
     } catch (e) {

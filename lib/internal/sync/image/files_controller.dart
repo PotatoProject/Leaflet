@@ -83,7 +83,7 @@ class FilesController {
         message:
         "Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
-      final jsonBody = json.decode(getResult.data);
+      final jsonBody = getResult.data;
       return FilesApiStats(jsonBody["used"], jsonBody["limit"]);
     } else {
       throw ("Cant get stats " + getResult.data);

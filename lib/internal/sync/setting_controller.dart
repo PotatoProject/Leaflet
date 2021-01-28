@@ -57,18 +57,16 @@ class SettingController {
     try {
       String token = await prefs.getToken();
       String url =
-          "${prefs
-          .apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
+          "${prefs.apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
       Response getResult = await dio.get(url,
           options: Options(headers: {"Authorization": "Bearer " + token}));
       Loggy.d(
           message:
-          "(getChanged) Server responded with (${getResult.statusCode}): " +
-              getResult.data);
+              "(getChanged) Server responded with (${getResult.statusCode}): " +
+                  getResult.data.toString());
       var body = NoteController.handleResponse(getResult);
-      Map<String, dynamic> listChanged = json.decode(body);
-      return listChanged.map((key, value) => MapEntry(key, value.toString()));
+      return body.map((key, value) => MapEntry(key, value.toString()));
     } on SocketException {
       throw ("Could not connect to server");
     }

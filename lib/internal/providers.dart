@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';

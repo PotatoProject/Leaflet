@@ -89,11 +89,10 @@ class NoteController {
       );
       Loggy.d(
           message: "(list) Server responded with (${listResult.statusCode}): " +
-              listResult.data);
+              listResult.data.toString());
       var body = handleResponse(listResult);
-      final data = jsonDecode(body);
+      final data = listResult.data;
       for (Map i in data["notes"]) {
-        print(i);
         var note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
@@ -107,7 +106,6 @@ class NoteController {
       String id, Map<String, dynamic> noteDelta) async {
     try {
       String deltaJson = jsonEncode(noteDelta);
-      print(deltaJson);
       String token = await prefs.getToken();
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
@@ -141,12 +139,12 @@ class NoteController {
       );
       Loggy.d(
           message:
-          "(listDeleted) Server responded with (${listResult.statusCode})}: " +
-              listResult.data);
+              "(listDeleted) Server responded with (${listResult.statusCode})}: " +
+                  listResult.data.toString());
       handleResponse(listResult);
-      Map<String, dynamic> response = json.decode(listResult.data);
-      List<String> idList =
-      (response["deleted"] as List).map((e) => e.toString()).toList();
+      List<String> idList = (listResult.data["deleted"] as List)
+          .map((e) => e.toString())
+          .toList();
       return idList;
     } on SocketException {
       throw ("Could not connect to server");
@@ -155,7 +153,7 @@ class NoteController {
     }
   }
 
-  static String handleResponse(Response response) {
+  static dynamic handleResponse(Response response) {
     switch (response.statusCode) {
       case 401:
         throw ("Token is not valid");

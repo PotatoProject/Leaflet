@@ -52,19 +52,19 @@ class UploadQueueItem extends QueueItem {
   }) async {
     var file = File(localPath);
     status = QueueItemStatus.ONGOING;
+    var length = await file.length();
     var response = await Dio().request(
-      await getUploadUrl(),
+      (await getUploadUrl()).toString(),
       data: file.openRead(),
       onSendProgress: (count, total) {
         progress = count / total;
       },
       options: Options(
+        contentType: "image/jpg",
         method:
             savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
         headers: headers
-          ..putIfAbsent(Headers.contentLengthHeader, () async {
-            return (await file.length()).toString();
-          }),
+          ..putIfAbsent(Headers.contentLengthHeader, () => length),
       ),
     );
     status = QueueItemStatus.COMPLETE;
@@ -79,14 +79,15 @@ class UploadQueueItem extends QueueItem {
       case StorageLocation.SYNC:
         String token = await prefs.getToken();
         var url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
+        print(url);
         Response presign = await dio.get(url,
             options: Options(
               headers: {"Authorization": "Bearer $token"},
             ));
         if (presign.statusCode == 200) {
-          return presign.data;
+          return presign.data.toString();
         } else {
-          throw presign.data;
+          throw presign.data.toString();
         }
         break;
       case StorageLocation.LOCAL:

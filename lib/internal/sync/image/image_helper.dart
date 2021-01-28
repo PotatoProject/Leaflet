@@ -45,7 +45,10 @@ class ImageHelper {
     var blake2b = Blake2b();
     blake2b.update(rawBytes);
     var rawDigest = blake2b.digest();
-    return rawDigest.map((int) => int.toRadixString(16)).join('');
+    var hash =
+        rawDigest.map((int) => int.toRadixString(16).toString()).join('');
+    print(hash);
+    return hash;
   }
 
   static String generateBlurHash(Image image) {
