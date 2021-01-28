@@ -103,7 +103,6 @@ class _NoteListPageState extends State<NoteListPage> {
                   child: child,
                   onRefresh: sync,
                   displacement: MediaQuery.of(context).padding.top + 40,
-                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 );
               },
               itemBuilder: (context, index) =>

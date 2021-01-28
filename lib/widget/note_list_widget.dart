@@ -45,6 +45,7 @@ class NoteListWidget extends StatelessWidget {
           itemCount: noteCount,
           padding: padding,
           controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
         );
       } else {
         child = ListView.builder(
@@ -52,6 +53,7 @@ class NoteListWidget extends StatelessWidget {
           itemCount: noteCount,
           padding: padding,
           controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
         );
       }
     } else {

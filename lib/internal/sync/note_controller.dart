@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -17,12 +16,15 @@ class NoteController {
       String noteJson = json.encode(note.toSyncMap());
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note";
       Loggy.v(message: "Going to send POST to " + url);
-      Response addResult = await http.post(url,
-          body: noteJson, headers: {"Authorization": "Bearer " + token});
+      Response addResult = await dio.post(
+        url,
+        data: noteJson,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message:
               "(${note.id} add) Server responded with {${addResult.statusCode}): " +
-                  addResult.body);
+                  addResult.data);
       return handleResponse(addResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -36,12 +38,15 @@ class NoteController {
       String token = await prefs.getToken();
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Goind to send DELETE to " + url);
-      Response deleteResponse =
-          await http.delete(url, headers: {"Authorization": "Bearer " + token});
+      Response deleteResponse = await dio.delete(
+        url,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message:
-              "($id delete) Server responded with (${deleteResponse.statusCode}}: " +
-                  deleteResponse.body);
+          "($id delete) Server responded with (${deleteResponse
+              .statusCode}}: " +
+              deleteResponse.data);
       return handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
@@ -55,12 +60,14 @@ class NoteController {
       String token = await prefs.getToken();
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note/all";
       Loggy.v(message: "Going to send DELETE to " + url);
-      Response deleteResult =
-          await http.delete(url, headers: {"Authorization": "Bearer " + token});
+      Response deleteResult = await dio.delete(
+        url,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message:
-              "(delete-all) Server responded with (${deleteResult.statusCode}: " +
-                  deleteResult.body);
+          "(delete-all) Server responded with (${deleteResult.statusCode}: " +
+              deleteResult.data);
       return handleResponse(deleteResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -76,11 +83,13 @@ class NoteController {
       var url =
           "${prefs.apiUrl}$NOTES_PREFIX/note/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
-      Response listResult =
-          await http.get(url, headers: {"Authorization": "Bearer " + token});
+      Response listResult = await dio.get(
+        url,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message: "(list) Server responded with (${listResult.statusCode}): " +
-              listResult.body);
+              listResult.data);
       var body = handleResponse(listResult);
       final data = jsonDecode(body);
       for (Map i in data["notes"]) {
@@ -102,12 +111,15 @@ class NoteController {
       String token = await prefs.getToken();
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
-      Response updateResult = await http.patch(url,
-          body: deltaJson, headers: {"Authorization": "Bearer " + token});
+      Response updateResult = await dio.patch(
+        url,
+        data: deltaJson,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message:
-              "($id update) Server responded with (${updateResult.statusCode}): " +
-                  updateResult.body);
+          "($id update) Server responded with (${updateResult.statusCode}): " +
+              updateResult.data);
       return handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -122,16 +134,19 @@ class NoteController {
       String token = await prefs.getToken();
       var url = "${prefs.apiUrl}$NOTES_PREFIX/note/deleted";
       Loggy.v(message: "Going to send POST to " + url);
-      Response listResult = await http.post(url,
-          body: idListJson, headers: {"Authorization": "Bearer " + token});
+      Response listResult = await dio.post(
+        url,
+        data: idListJson,
+        options: Options(headers: {"Authorization": "Bearer " + token}),
+      );
       Loggy.d(
           message:
-              "(listDeleted) Server responded with (${listResult.statusCode})}: " +
-                  listResult.body);
+          "(listDeleted) Server responded with (${listResult.statusCode})}: " +
+              listResult.data);
       handleResponse(listResult);
-      Map<String, dynamic> response = json.decode(listResult.body);
+      Map<String, dynamic> response = json.decode(listResult.data);
       List<String> idList =
-          (response["deleted"] as List).map((e) => e.toString()).toList();
+      (response["deleted"] as List).map((e) => e.toString()).toList();
       return idList;
     } on SocketException {
       throw ("Could not connect to server");
@@ -145,9 +160,9 @@ class NoteController {
       case 401:
         throw ("Token is not valid");
       case 200:
-        return response.body;
+        return response.data;
       default:
-        throw (response.body);
+        throw (response.data);
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -81,18 +82,25 @@ class ImageQueue extends ChangeNotifier {
   }
 
   Future<void> processDownloads() async {
+    Loggy.d(message: "DownloadQueue has ${downloadQueue.length} items queued");
+    Loggy.d(message: "Started processing downloads");
     await Future.wait(downloadQueue.map((item) => item.downloadImage()));
     for (var item in downloadQueue) {
       if (item.status == QueueItemStatus.COMPLETE) await updateItem(item);
     }
     downloadQueue
         .removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
-    print("DownloadQueue " + downloadQueue.length.toString());
+    Loggy.d(
+        message: "DownloadQueue now contains " +
+            downloadQueue.length.toString() +
+            " items");
   }
 
   Future<void> process() async {
     String tempDirectory = appInfo.tempDirectory.path;
 
+    Loggy.d(message: "UploadQueue has ${uploadQueue.length} items queued");
+    Loggy.d(message: "Started processing uploads");
     await Future.wait(
         uploadQueue.map((item) => uploadItem(item, tempDirectory)));
 
@@ -102,6 +110,8 @@ class ImageQueue extends ChangeNotifier {
       await updateItem(item);
     }
 
+    Loggy.d(message: "DeleteQueue has ${downloadQueue.length} items queued");
+    Loggy.d(message: "Started processing uploads");
     await Future.wait(deleteQueue.map((item) async {
       if (await hasDuplicates(item.savedImage)) {
         item.status = QueueItemStatus.COMPLETE;
@@ -110,22 +120,12 @@ class ImageQueue extends ChangeNotifier {
       }
     }));
 
-    /*for(var item in deleteQueue){
-      await item.deleteImage();
-    }*/
-
-    //Upload all items in upload queue
-    /*for(var item in uploadQueue) {
-
-      await uploadItem(item, tempDirectory);
-    }*/
-
     //Remove the items from the queue
     uploadQueue.removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
     deleteQueue.removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
 
-    print("Queue " + uploadQueue.length.toString());
-    print("Delete Queue " + deleteQueue.length.toString());
+    Loggy.d(message: "UploadQueue now contains ${uploadQueue.length} items");
+    Loggy.d(message: "DeleteQueue now contains ${deleteQueue.length} items");
   }
 
   Future<void> deleteItem(DeleteQueueItem item) async {
@@ -159,8 +159,6 @@ class ImageQueue extends ChangeNotifier {
   Future<void> updateItem(QueueItem item) async {
     var notes = await helper.listNotes(ReturnMode.LOCAL);
     for (var note in notes) {
-      /*if(note.id != item.noteId)
-        continue;*/
       for (int i = 0; i < note.images.length; i++) {
         if (note.images[i].id != item.savedImage.id) continue;
         note.images[i] = item.savedImage;
@@ -176,12 +174,9 @@ class ImageQueue extends ChangeNotifier {
 
   List<DeleteQueueItem> deleteQueueFromPrefs() {
     if (prefs.deleteQueue == null || prefs.deleteQueue.length == 0) return [];
-    print(prefs.deleteQueue);
     List<DeleteQueueItem> queue = (json.decode(prefs.deleteQueue) as List)
         .map((i) => DeleteQueueItem.fromJson(i))
         .toList();
-    print(queue.length);
-    print(queue);
     return queue;
   }
 }

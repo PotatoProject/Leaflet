@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:animations/animations.dart';
@@ -27,6 +28,27 @@ class _LoginPageState extends State<LoginPage> {
   bool obscurePass = true;
   bool register = false;
   bool showLoadingOverlay = false;
+
+  String usernameError;
+  String emailError;
+  String passwordError;
+
+  String getString(int statusCode) {
+    switch (statusCode) {
+      case 0:
+        return null;
+      case 1:
+        return "Too short";
+      case 2:
+        return "Too long";
+      case 3:
+        return "Invalid format";
+      case 4:
+        return "Already exists";
+      case 5:
+        return "Missing";
+    }
+  }
 
   @override
   void initState() {
@@ -63,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: register ? "Email" : "Email or username",
+          errorText: register ? emailError : (emailError ?? usernameError),
         ),
         autofillHints: [
           AutofillHints.email,
@@ -84,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: "Username",
+            errorText: usernameError,
           ),
           autofillHints: [
             AutofillHints.username,
@@ -100,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: "Password",
+          errorText: passwordError,
           suffixIcon: IconButton(
             icon: Icon(
               obscurePass
@@ -264,8 +289,12 @@ class _LoginPageState extends State<LoginPage> {
   void onSubmit() async {
     AuthResponse response;
 
-    setState(() => showLoadingOverlay = true);
-
+    setState(() {
+      usernameError = null;
+      emailError = null;
+      passwordError = null;
+      showLoadingOverlay = true;
+    });
     if (register) {
       response = await AccountController.register(
         usernameController.text,
@@ -284,16 +313,28 @@ class _LoginPageState extends State<LoginPage> {
     if (response.status && !register) {
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          width: min(640, MediaQuery.of(context).size.width - 32),
-          content: Text(
-            register ? response.message ?? "Registered!" : response.message,
+      if (response.message.startsWith("{")) {
+        var validation = json.decode(response.message);
+        setState(() {
+          usernameError = getString(validation["username"]);
+          emailError = getString(validation["email"]);
+          passwordError = getString(validation["password"]);
+        });
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            width: min(640, MediaQuery
+                .of(context)
+                .size
+                .width - 32),
+            content: Text(
+              register ? response.message ?? "Registered!" : response.message,
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 }

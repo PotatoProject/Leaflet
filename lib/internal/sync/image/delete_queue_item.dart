@@ -25,7 +25,7 @@ class DeleteQueueItem extends QueueItem {
     status = QueueItemStatus.ONGOING;
     var url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
     String token = await prefs.getToken();
-    var response = await Dio().delete(url,
+    var response = await dio.delete(url,
         options: Options(headers: {"Authorization": "Bearer $token"}));
     if (response.statusCode != 200) {
       return;

@@ -18,17 +18,14 @@ class DownloadQueueItem extends QueueItem {
 
   @action
   Future<void> downloadImage() async {
-    print('Downloading!');
     status = QueueItemStatus.ONGOING;
     await Dio().download(
       await getDownloadUrl(),
       localPath,
       onReceiveProgress: (count, total) {
         progress = count / total;
-        print(progress);
       },
     );
-    print('Downloaded!');
     status = QueueItemStatus.COMPLETE;
   }
 
@@ -39,7 +36,7 @@ class DownloadQueueItem extends QueueItem {
       case StorageLocation.SYNC:
         String token = await prefs.getToken();
         var url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
-        Response presign = await Dio().get(url,
+        Response presign = await dio.get(url,
             options: Options(
               headers: {"Authorization": "Bearer $token"},
             ));

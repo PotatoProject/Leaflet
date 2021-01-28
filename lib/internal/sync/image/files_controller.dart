@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart' as dio;
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
 
@@ -12,14 +10,13 @@ class FilesController {
 
   static Future<void> uploadImageToSync(String hash, File file) async {
     String url = await getUploadUrlFromSync(hash);
-    dio.Response uploadResponse = await dio.Dio().put(
+    Response uploadResponse = await Dio().put(
       url,
       data: file.openRead(),
-      options: dio.Options(contentType: 'image/jpg', headers: {
-        dio.Headers.contentLengthHeader: await file.length(),
+      options: Options(contentType: 'image/jpg', headers: {
+        Headers.contentLengthHeader: await file.length(),
       }),
     );
-    print(uploadResponse.data.toString());
     return;
   }
 
@@ -27,15 +24,17 @@ class FilesController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult =
-        await http.get(url, headers: {"Authorization": "Bearer $token"});
+    Response getResult = await dio.get(
+      url,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
+    );
     Loggy.d(
         message:
-            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.body}");
+            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
-      return getResult.body;
+      return getResult.data;
     } else {
-      throw ("Cant get imageurl ${getResult.body}");
+      throw ("Cant get imageurl ${getResult.data}");
     }
   }
 
@@ -44,14 +43,16 @@ class FilesController {
     var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
     Response getResult =
-        await http.get(url, headers: {"Authorization": "Bearer $token"});
+    await dio.get(
+      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
     Loggy.d(
         message:
-            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.body}");
+        "($hash getImageUrl) Server responded with (${getResult
+            .statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
-      return getResult.body;
+      return getResult.data;
     } else {
-      throw ("Cant get imageurl " + getResult.body);
+      throw ("Cant get imageurl " + getResult.data);
     }
   }
 
@@ -60,12 +61,14 @@ class FilesController {
     var url = "${prefs.apiUrl}$FILES_PREFIX/delete/$hash.jpg";
     Loggy.v(message: "Going to send DELETE to $url");
     Response deleteResult =
-        await http.delete(url, headers: {"Authorization": "Bearer $token"});
+    await dio.delete(
+      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
     Loggy.d(
         message:
-            "($hash deleteImage) Server responded with (${deleteResult.statusCode}): ${deleteResult.body}");
+        "($hash deleteImage) Server responded with (${deleteResult
+            .statusCode}): ${deleteResult.data}");
     if (deleteResult.statusCode != 200) {
-      throw ("Cant delete image ${deleteResult.body}");
+      throw ("Cant delete image ${deleteResult.data}");
     }
   }
 
@@ -74,15 +77,16 @@ class FilesController {
     var url = "${prefs.apiUrl}$FILES_PREFIX/limit";
     Loggy.v(message: "Going to send GET to " + url);
     Response getResult =
-        await http.get(url, headers: {"Authorization": "Bearer $token"});
+    await dio.get(
+      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
     Loggy.d(
         message:
-            "Server responded with (${getResult.statusCode}): ${getResult.body}");
+        "Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
-      final jsonBody = json.decode(getResult.body);
+      final jsonBody = json.decode(getResult.data);
       return FilesApiStats(jsonBody["used"], jsonBody["limit"]);
     } else {
-      throw ("Cant get stats " + getResult.body);
+      throw ("Cant get stats " + getResult.data);
     }
   }
 }
