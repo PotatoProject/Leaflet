@@ -43,8 +43,8 @@ class SettingController {
       );
       Loggy.d(
           message:
-          "($key set) Server responded with (${setResult.statusCode}): " +
-              setResult.data);
+              "($key set) Server responded with (${setResult.statusCode}): " +
+                  setResult.data);
       return NoteController.handleResponse(setResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -57,16 +57,23 @@ class SettingController {
     try {
       String token = await prefs.getToken();
       String url =
-          "${prefs.apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
+          "${prefs
+          .apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
-      Response getResult = await dio.get(url,
-          options: Options(headers: {"Authorization": "Bearer " + token}));
+      Response getResult = await dio.get(
+        url,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+          responseType: ResponseType.json,
+        ),
+      );
       Loggy.d(
           message:
-              "(getChanged) Server responded with (${getResult.statusCode}): " +
-                  getResult.data.toString());
+          "(getChanged) Server responded with (${getResult.statusCode}): " +
+              getResult.data.toString());
       var body = NoteController.handleResponse(getResult);
-      return body.map((key, value) => MapEntry(key, value.toString()));
+      Map<String, dynamic> listChanged = json.decode(body);
+      return listChanged.map((key, value) => MapEntry(key, value.toString()));
     } on SocketException {
       throw ("Could not connect to server");
     }

@@ -91,8 +91,7 @@ class NoteController {
           message: "(list) Server responded with (${listResult.statusCode}): " +
               listResult.data.toString());
       var body = handleResponse(listResult);
-      final data = listResult.data;
-      for (Map i in data["notes"]) {
+      for (Map i in listResult.data["notes"]) {
         var note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
