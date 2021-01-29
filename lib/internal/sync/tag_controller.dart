@@ -69,8 +69,7 @@ class TagController {
               "(tag-list) Server responded with (${listResult.statusCode}): " +
                   listResult.data.toString());
       var body = NoteController.handleResponse(listResult);
-      final data = jsonDecode(body);
-      List<dynamic> tags = data.map((map) {
+      List<dynamic> tags = body.map((map) {
         var tag = fromSync(map);
         return tag;
       }).toList();
@@ -119,11 +118,10 @@ class TagController {
       );
       Loggy.d(
           message:
-          "(tag-listDeleted) Server responded with (${listResult
-              .statusCode})}: " +
-              listResult.data.toString());
+              "(tag-listDeleted) Server responded with (${listResult.statusCode})}: " +
+                  listResult.data.toString());
       NoteController.handleResponse(listResult);
-      List<dynamic> data = json.decode(listResult.data);
+      List<dynamic> data = listResult.data;
       return data.map((id) => id.toString()).toList();
     } on SocketException {
       throw ("Could not connect to server");
