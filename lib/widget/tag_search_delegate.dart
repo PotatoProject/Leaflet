@@ -72,7 +72,6 @@ class TagSearchDelegate extends CustomSearchDelegate {
               title: Text(LocaleStrings.searchPage.tagCreateHint(query)),
               onTap: () => Utils.showNotesModalBottomSheet(
                 context: context,
-                isScrollControlled: true,
                 builder: (context) => TagEditor(
                   initialInput: query,
                   onSave: (tag) {

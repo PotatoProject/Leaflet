@@ -362,7 +362,6 @@ class _BasePageState extends State<BasePage>
                                 if (loggedIn) {
                                   Utils.showNotesModalBottomSheet(
                                     context: context,
-                                    isScrollControlled: true,
                                     builder: (context) => AccountInfo(),
                                   );
                                 } else {

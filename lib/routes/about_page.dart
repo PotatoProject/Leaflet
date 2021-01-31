@@ -85,7 +85,6 @@ class AboutPage extends StatelessWidget {
   void openLinkBottomSheet(BuildContext context, List<SocialLink> links) {
     Utils.showNotesModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

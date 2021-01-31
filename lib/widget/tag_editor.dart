@@ -20,9 +20,11 @@ class TagEditor extends StatefulWidget {
 }
 
 class _NewTagState extends State<TagEditor> {
-  // ignore: missing_required_param
   Tag tag = Tag(
+    id: null,
+    name: null,
     color: 0,
+    lastModifyDate: null,
   );
   TextEditingController controller;
 

@@ -63,7 +63,6 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
                 if (loggedIn) {
                   Utils.showNotesModalBottomSheet(
                     context: context,
-                    isScrollControlled: true,
                     builder: (context) => AccountInfo(),
                   );
                 } else {

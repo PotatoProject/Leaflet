@@ -41,7 +41,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
-    // Don't perform outgoing animation if the next route is a fullscreen dialog.
     return nextRoute is MaterialPageRoute ||
         nextRoute is CupertinoPageRoute ||
         nextRoute is DismissiblePageRoute;
@@ -49,7 +48,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> nextRoute) {
-    // Don't perform outgoing animation if the next route is a fullscreen dialog.
     return nextRoute is MaterialPageRoute ||
         nextRoute is CupertinoPageRoute ||
         nextRoute is DismissiblePageRoute;

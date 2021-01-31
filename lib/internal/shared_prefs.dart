@@ -107,7 +107,6 @@ class SharedPrefs {
   }
 
   Future<String> getApiUrl() async {
-    // http://stats.corbellum.nl/api/v2
     return prefs.getString("api_url") ?? Utils.defaultApiUrl;
   }
 

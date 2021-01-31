@@ -52,7 +52,6 @@ class Utils {
   static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
     return await showNotesModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       builder: (context) => PassChallenge(
         editMode: false,
         onChallengeSuccess: () => Navigator.pop(context, true),
@@ -80,9 +79,6 @@ class Utils {
     ShapeBorder shape,
     Clip clipBehavior,
     Color barrierColor,
-
-    /// deprecated, doesn't actually do anything
-    bool isScrollControlled = false,
   }) async {
     return await Navigator.push(
       context,

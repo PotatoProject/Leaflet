@@ -245,7 +245,6 @@ class _NoteListPageState extends State<NoteListPage> {
             onPressed: () {
               Utils.showNotesModalBottomSheet(
                 context: context,
-                isScrollControlled: true,
                 builder: (context) => TagEditor(
                   tag: prefs.tags[widget.tagIndex],
                   onSave: (tag) {

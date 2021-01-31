@@ -239,7 +239,6 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () async {
                 int result = await Utils.showNotesModalBottomSheet(
                   context: context,
-                  isScrollControlled: true,
                   builder: (context) => RGBColorPicker(
                     initialColor: Theme.of(context).accentColor,
                   ),
@@ -303,7 +302,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (status)
                   Utils.showNotesModalBottomSheet(
                     context: context,
-                    isScrollControlled: true,
                     builder: (context) => SyncUrlEditor(),
                   );
               },
@@ -372,7 +370,6 @@ class _SettingsPageState extends State<SettingsPage> {
       {String content, String buttonAction}) async {
     return await Utils.showNotesModalBottomSheet(
           context: context,
-          isScrollControlled: true,
           builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -450,7 +447,6 @@ class _SettingsPageState extends State<SettingsPage> {
       [bool editMode = true]) async {
     return await Utils.showNotesModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       builder: (context) => PassChallenge(
         editMode: editMode,
         onChallengeSuccess: () => Navigator.pop(context, true),

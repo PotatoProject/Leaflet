@@ -24,7 +24,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         padding: EdgeInsets.all(0),
         onPressed: () => Utils.showNotesModalBottomSheet(
           context: context,
-          isScrollControlled: true,
           builder: (context) => QueryFilters(
             query: searchQuery,
             filterChangedCallback: () => setState(() {}),

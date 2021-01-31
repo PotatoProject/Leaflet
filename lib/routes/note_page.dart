@@ -51,8 +51,6 @@ class _NotePageState extends State<NotePage> {
   TextEditingController contentController;
   FocusNode contentFocusNode = FocusNode();
 
-  //SpannableTextEditingController contentController;
-
   List<TextEditingController> listContentControllers = [];
   List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
@@ -84,15 +82,6 @@ class _NotePageState extends State<NotePage> {
     titleController = TextEditingController(text: note.title);
     contentController = TextEditingController(text: note.content);
 
-    /*String parsedStyleJson =
-        utf8.decode(gzip.decode(note.styleJson?.data ?? []));
-    contentController = SpannableTextEditingController(
-      text: note.content,
-      styleList: note.styleJson != null
-          ? SpannableList.fromJson(parsedStyleJson)
-          : null,
-    );*/
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
         if (widget.focusTitle) {
@@ -119,7 +108,6 @@ class _NotePageState extends State<NotePage> {
     setState(() => note.images.add(savedImage));
     imageQueue.addUpload(savedImage, note.id);
     await helper.saveNote(note.markChanged());
-    //await handleImageUpload();
   }
 
   @override
@@ -277,13 +265,8 @@ class _NotePageState extends State<NotePage> {
                       controller: contentController,
                       focusNode: contentFocusNode,
                       onChanged: (text) {
-                        //List<int> styleJson = gzip.encode(utf8.encode(
-                        //    SpannableList(contentController.styleList.list)
-                        //        .toJson()));
-
                         note = note.copyWith(
                           content: text,
-                          //styleJson: ContentStyle(styleJson),
                         );
 
                         notifyNoteChanged();
@@ -431,7 +414,6 @@ class _NotePageState extends State<NotePage> {
           onPressed: () => Utils.showNotesModalBottomSheet(
             context: context,
             backgroundColor: Theme.of(context).cardColor,
-            isScrollControlled: true,
             builder: (context) => NoteColorSelector(
               selectedColor: note.color,
               onColorSelect: (color) {
@@ -480,7 +462,6 @@ class _NotePageState extends State<NotePage> {
     Utils.showNotesModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-      isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => Column(
           mainAxisSize: MainAxisSize.min,
@@ -556,7 +537,6 @@ class _NotePageState extends State<NotePage> {
     Utils.showNotesModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-      isScrollControlled: true,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [

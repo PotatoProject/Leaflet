@@ -39,7 +39,6 @@ class LocaleGenerator {
     localesBuffer.writeln();
     localesBuffer.writeln("  static List<Locale> get supported => [");
     locales.forEach((e) {
-      //print(e);
       final splittedLocale = e.split("-");
       localesBuffer.writeln(
           '    Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');

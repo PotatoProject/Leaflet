@@ -137,7 +137,6 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
       Icons.visibility_off_outlined,
       widget.note.usesBiometrics ? Icons.fingerprint : Icons.lock_outlined,
       Icons.alarm_outlined,
-      Icons.cloud_outlined,
       Icons.favorite_border,
       Icons.push_pin_outlined,
     ];
@@ -151,11 +150,9 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
     if (widget.note.reminders.isNotEmpty) iconDataIndexes.add(2);
 
-    //if (widget.note.synced) iconDataIndexes.add(3);
+    if (widget.note.starred) iconDataIndexes.add(3);
 
-    if (widget.note.starred) iconDataIndexes.add(4);
-
-    if (widget.note.pinned) iconDataIndexes.add(5);
+    if (widget.note.pinned) iconDataIndexes.add(4);
 
     for (int i = 0; i < iconDataIndexes.length; i++) {
       icons.add(
