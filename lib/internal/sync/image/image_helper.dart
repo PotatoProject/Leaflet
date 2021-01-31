@@ -3,66 +3,32 @@ import 'dart:typed_data';
 
 import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
+import 'package:dio/dio.dart';
 import 'package:image/image.dart';
+import 'package:loggy/loggy.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 
+import 'download_queue_item.dart';
+
 class ImageHelper {
   static const JPEG_QUALITY = 90;
   static const maxHeight = 2048;
-
-  /*static Future<void> downloadImage(SavedImage savedImage) async {
-    switch (savedImage.storageLocation) {
-      case StorageLocation.LOCAL:
-        break;
-      case StorageLocation.IMGUR:
-        String url = savedImage.uri.toString();
-        await downloadImageToCache(url, savedImage, savedImage.path);
-        break;
-      case StorageLocation.SYNC:
-        String url =
-            await FilesController.getDownloadUrlFromSync(savedImage.hash!);
-        await downloadImageToCache(url, savedImage, savedImage.path);
-        break;
-    }
-    return;
-  }*/
-
-  /*static Future<void> downloadImageToCache(
-      String url, SavedImage image, String path) async {
-    Response response = await http.get(url);
-    Loggy.v(
-        message:
-            "(${image.hash} downloadImage) Server responded with (${response.statusCode}): ${response.contentLength}");
-    if (response.statusCode == 200) {
-      File file = new File(path);
-      await file.create();
-      file.writeAsBytesSync(response.bodyBytes);
-      return;
-    } else if (response.statusCode == 404) {
-      throw ("File doesnt exist on server");
-    } else if (response.statusCode == 403) {
-      throw ("Not allowed to access file");
-    }
-    return;
-  }*/
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
     imageQueue.downloadQueue.clear();
     for (Note note in changedNotes) {
       if (note.images.length > 0) {
         for (SavedImage image in note.images) {
-          print(image.existsLocally);
           if (!image.existsLocally) {
             imageQueue.addDownload(image, note.id);
-            //downloadImage(image);
           }
         }
       }
     }
-    print(imageQueue.downloadQueue.length);
     await imageQueue.processDownloads();
   }
 
@@ -79,7 +45,10 @@ class ImageHelper {
     var blake2b = Blake2b();
     blake2b.update(rawBytes);
     var rawDigest = blake2b.digest();
-    return rawDigest.map((int) => int.toRadixString(16)).join('');
+    var hash =
+        rawDigest.map((int) => int.toRadixString(16).toString()).join('');
+    print(hash);
+    return hash;
   }
 
   static String generateBlurHash(Image image) {
@@ -119,6 +88,34 @@ class ImageHelper {
     File imageFile = File(path);
     await imageFile.writeAsBytes(encodeJpg(image, quality: JPEG_QUALITY));
     return imageFile;
+  }
+
+  static DownloadQueueItem getDownloadItem(SavedImage savedimage) {
+    var index = imageQueue.downloadQueue
+        .indexWhere((e) => e.savedImage.id == savedimage.id);
+    if (index == -1) {
+      return null;
+    } else {
+      return imageQueue.downloadQueue[index];
+    }
+  }
+
+  static Future<String> getAvatar() async {
+    String token = await prefs.getToken();
+    var url = "${prefs.apiUrl}/files/get/avatar.jpg";
+    Loggy.v(message: "Going to send GET to :" + url);
+    Response presign = await dio.get(url,
+        options: Options(
+          headers: {"Authorization": "Bearer $token"},
+        ));
+    Loggy.v(
+        message:
+            "Server responded with (${presign.statusCode}): ${presign.data}");
+    if (presign.statusCode != 200) {
+      return null;
+    } else {
+      return presign.data;
+    }
   }
 
   static handleNoteDeletion(Note note) {

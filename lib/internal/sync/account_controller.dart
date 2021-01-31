@@ -33,11 +33,6 @@ class AccountController {
       switch (registerResponse.statusCode) {
         case 200:
           return AuthResponse(status: true);
-        case 400:
-          return AuthResponse(
-            status: false,
-            message: json.decode(registerResponse.body).toString(),
-          );
         default:
           return AuthResponse(
             status: false,
@@ -92,18 +87,10 @@ class AccountController {
           await getUserInfo();
           return AuthResponse(status: true);
         case 400:
-          if (loginResponse.body.startsWith("[")) {
-            return AuthResponse(
-              status: false,
-              message: json.decode(loginResponse.body)[0]["constraints"]
-                  ["length"],
-            );
-          } else {
             return AuthResponse(
               status: false,
               message: loginResponse.body,
             );
-          }
           break;
         default:
           Loggy.d(message: loginResponse.body);

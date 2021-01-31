@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
@@ -43,12 +43,12 @@ class SyncRoutine {
     try {
       var url = prefs.apiUrl + "/notes/ping";
       Loggy.d(message: "Going to send GET to " + url);
-      Response pingResponse = await get(url);
+      Response pingResponse = await dio.get(url);
       if (pingResponse.statusCode != 200) {
         Loggy.e(message: "Server did not respond with 200 on ping");
         return false;
       }
-      if (pingResponse.body != "Pong!") {
+      if (pingResponse.data != "Pong!") {
         Loggy.e(message: "Server did not respond with Pong!");
         return false;
       }
@@ -68,8 +68,8 @@ class SyncRoutine {
     try {
       var url = prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
-      Response securePingResponse =
-          await get(url, headers: {"Authorization": prefs.accessToken});
+      Response securePingResponse = await dio.get(url,
+          options: Options(headers: {"Authorization": prefs.accessToken}));
       if (securePingResponse.statusCode == 401) {
         Loggy.e(message: "Token is not valid");
         return false;
@@ -78,7 +78,7 @@ class SyncRoutine {
         Loggy.e(message: "Server did not respond with 200 on ping");
         return false;
       }
-      if (securePingResponse.body != "Pong!") {
+      if (securePingResponse.data != "Pong!") {
         Loggy.e(message: "Server did not respond with Pong!");
         return false;
       }
@@ -94,16 +94,12 @@ class SyncRoutine {
     if (status != true) throw ("Could not connect to server");
     bool secureStatus = await checkLoginStatus();
     if (secureStatus != true) {
-      await AccountController.refreshToken();
-      bool secureStatusRetry = await checkLoginStatus();
-      if (secureStatusRetry != true) {
-        throw ("Not logged in!");
-      }
+      throw ("Not logged in!");
     }
     imageQueue.uploadQueue.clear();
     await imageQueue.fillUploadQueue();
     await imageQueue.process();
-    // Recieve and send changes from API
+    // Receive and send changes from API
     await sendSettingUpdates();
 
     // Fill the list of added, deleted and updated notes to create a local cache
