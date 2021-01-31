@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:image/image.dart';
 import 'package:loggy/loggy.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';

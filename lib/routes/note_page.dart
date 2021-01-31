@@ -19,7 +19,6 @@ import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:potato_notes/widget/note_toolbar.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_images.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
@@ -186,225 +185,222 @@ class _NotePageState extends State<NotePage> {
           selectionHandleColor: Theme.of(context).textTheme.caption.color,
         ),
       ),
-      child: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            ...getToolbarButtons(!deviceInfo.isLandscape),
-            IconButton(
-              icon: Icon(Icons.remove_red_eye_outlined),
-              padding: EdgeInsets.all(0),
-              tooltip: LocaleStrings.notePage.privacyTitle,
-              onPressed: showPrivacyOptionSheet,
-            ),
-            Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: Icon(
-                      note.starred ? Icons.favorite : Icons.favorite_border),
-                  padding: EdgeInsets.all(0),
-                  tooltip: note.starred
-                      ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                      : LocaleStrings.mainPage.selectionBarAddFavourites,
-                  onPressed: () {
-                    setState(
-                        () => note = note.copyWith(starred: !note.starred));
-                    notifyNoteChanged();
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          note.starred
-                              ? LocaleStrings.notePage.addedFavourites
-                              : LocaleStrings.notePage.removedFavourites,
-                        ),
-                        width: min(640, MediaQuery.of(context).size.width - 32),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-        extendBodyBehindAppBar: true,
-        body: Row(
-          children: <Widget>[
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 56,
-                  bottom: 16,
-                ),
-                children: [
-                  if (note.images.isNotEmpty && !deviceInfo.isLandscape)
-                    imagesWidget,
-                  if (note.tags.isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: List.generate(
-                          note.tags.length,
-                          (index) {
-                            Tag tag = prefs.tags.firstWhere(
-                              (tag) => tag.id == note.tags[index],
-                            );
-
-                            return TagChip(
-                              title: tag.name,
-                              color: tag.color,
-                              shrink: !(Platform.isAndroid || Platform.isIOS),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  _NotePageTextFormField(
-                    hintText: LocaleStrings.notePage.titleHint,
-                    controller: titleController,
-                    focusNode: titleFocusNode,
-                    onChanged: (text) {
-                      note = note.copyWith(title: text);
+      child: Builder(builder: (context) {
+        return Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              ...getToolbarButtons(!deviceInfo.isLandscape),
+              IconButton(
+                icon: Icon(Icons.remove_red_eye_outlined),
+                padding: EdgeInsets.all(0),
+                tooltip: LocaleStrings.notePage.privacyTitle,
+                onPressed: showPrivacyOptionSheet,
+              ),
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: Icon(
+                        note.starred ? Icons.favorite : Icons.favorite_border),
+                    padding: EdgeInsets.all(0),
+                    tooltip: note.starred
+                        ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                        : LocaleStrings.mainPage.selectionBarAddFavourites,
+                    onPressed: () {
+                      setState(
+                          () => note = note.copyWith(starred: !note.starred));
                       notifyNoteChanged();
-                    },
-                    onSubmitted: (value) =>
-                        FocusScope.of(context).requestFocus(contentFocusNode),
-                  ),
-                  _NotePageTextFormField(
-                    contentField: true,
-                    hintText: LocaleStrings.notePage.contentHint,
-                    controller: contentController,
-                    focusNode: contentFocusNode,
-                    onChanged: (text) {
-                      //List<int> styleJson = gzip.encode(utf8.encode(
-                      //    SpannableList(contentController.styleList.list)
-                      //        .toJson()));
-
-                      note = note.copyWith(
-                        content: text,
-                        //styleJson: ContentStyle(styleJson),
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            note.starred
+                                ? LocaleStrings.notePage.addedFavourites
+                                : LocaleStrings.notePage.removedFavourites,
+                          ),
+                          width:
+                              min(640, MediaQuery.of(context).size.width - 32),
+                          behavior: SnackBarBehavior.floating,
+                        ),
                       );
-
-                      notifyNoteChanged();
                     },
+                  );
+                },
+              ),
+            ],
+          ),
+          extendBodyBehindAppBar: true,
+          body: Row(
+            children: <Widget>[
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 56,
+                    bottom: 16,
                   ),
-                  if (note.list)
-                    ...List.generate(note.listContent.length, (index) {
-                      ListItem currentItem = note.listContent[index];
+                  children: [
+                    if (note.images.isNotEmpty && !deviceInfo.isLandscape)
+                      imagesWidget,
+                    if (note.tags.isNotEmpty)
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: List.generate(
+                            note.tags.length,
+                            (index) {
+                              Tag tag = prefs.tags.firstWhere(
+                                (tag) => tag.id == note.tags[index],
+                              );
 
-                      if (needsFocus && index == note.listContent.length - 1) {
-                        needsFocus = false;
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => FocusScope.of(context)
-                              .requestFocus(listContentNodes.last),
-                        );
-                      }
-
-                      return _NoteListEntryItem(
-                        item: currentItem,
-                        controller: listContentControllers[index],
-                        focusNode: listContentNodes[index],
-                        onDismissed: (_) => setState(() {
-                          note.listContent.removeAt(index);
-                          listContentControllers.removeAt(index);
-                          listContentNodes.removeAt(index);
-                          notifyNoteChanged();
-                        }),
-                        onTextChanged: (text) {
-                          setState(() => note.listContent[index].text = text);
-                          notifyNoteChanged();
-                        },
-                        onSubmitted: (_) {
-                          if (index == note.listContent.length - 1) {
-                            if (note.listContent.last.text != "") {
-                              addListContentItem();
-                            } else {
-                              FocusScope.of(context)
-                                  .requestFocus(listContentNodes[index]);
-                            }
-                          } else {
-                            FocusScope.of(context)
-                                .requestFocus(listContentNodes[index + 1]);
-                          }
-                        },
-                        onCheckChanged: (value) {
-                          setState(
-                              () => note.listContent[index].status = value);
-                          notifyNoteChanged();
-                        },
-                        checkColor: note.color != 0
-                            ? Color(NoteColors.colorList[note.color]
-                                .dynamicColor(context))
-                            : Theme.of(context).scaffoldBackgroundColor,
-                      );
-                    }),
-                  if (note.list)
-                    AnimatedOpacity(
-                      opacity: note.listContent.isNotEmpty &&
-                              note.listContent.last.text.isNotEmpty
-                          ? 1
-                          : 0,
-                      duration: note.listContent.isNotEmpty &&
-                              note.listContent.last.text.isNotEmpty
-                          ? Duration(milliseconds: 300)
-                          : Duration(milliseconds: 0),
-                      child: ListTile(
-                        leading: Icon(Icons.add),
-                        title: Text(
-                          LocaleStrings.notePage.addEntryHint,
-                          style: TextStyle(
-                            color: Theme.of(context).iconTheme.color,
+                              return TagChip(
+                                title: tag.name,
+                                color: tag.color,
+                                shrink: !(Platform.isAndroid || Platform.isIOS),
+                              );
+                            },
                           ),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        onTap: note.listContent.isNotEmpty &&
-                                note.listContent.last.text.isNotEmpty
-                            ? () => addListContentItem()
-                            : null,
                       ),
+                    _NotePageTextFormField(
+                      hintText: LocaleStrings.notePage.titleHint,
+                      controller: titleController,
+                      focusNode: titleFocusNode,
+                      onChanged: (text) {
+                        note = note.copyWith(title: text);
+                        notifyNoteChanged();
+                      },
+                      onSubmitted: (value) =>
+                          FocusScope.of(context).requestFocus(contentFocusNode),
                     ),
-                ],
-              ),
-            ),
-            if (note.images.isNotEmpty && deviceInfo.isLandscape)
-              Container(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 56,
-                ),
-                width: 360,
-                child: imagesWidget,
-              ),
-          ],
-        ),
-        bottomNavigationBar: !deviceInfo.isLandscape
-            ? Material(
-                color: Theme.of(context).cardColor,
-                elevation: 8,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom +
-                        MediaQuery.of(context).padding.bottom,
-                  ),
-                  child: NoteToolbar(
-                    //controller: contentController,
-                    /*onButtonTap: () {
-                        List<int> styleJson = gzip.encode(utf8.encode(
-                            SpannableList(contentController.styleList.list).toJson()));
+                    _NotePageTextFormField(
+                      contentField: true,
+                      hintText: LocaleStrings.notePage.contentHint,
+                      controller: contentController,
+                      focusNode: contentFocusNode,
+                      onChanged: (text) {
+                        //List<int> styleJson = gzip.encode(utf8.encode(
+                        //    SpannableList(contentController.styleList.list)
+                        //        .toJson()));
 
                         note = note.copyWith(
-                          styleJson: ContentStyle(styleJson),
+                          content: text,
+                          //styleJson: ContentStyle(styleJson),
                         );
+
                         notifyNoteChanged();
-                      },*/
-                    rightActions: getToolbarButtons(),
-                  ),
+                      },
+                    ),
+                    if (note.list)
+                      ...List.generate(note.listContent.length, (index) {
+                        ListItem currentItem = note.listContent[index];
+
+                        if (needsFocus &&
+                            index == note.listContent.length - 1) {
+                          needsFocus = false;
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => FocusScope.of(context)
+                                .requestFocus(listContentNodes.last),
+                          );
+                        }
+
+                        return _NoteListEntryItem(
+                          item: currentItem,
+                          controller: listContentControllers[index],
+                          focusNode: listContentNodes[index],
+                          onDismissed: (_) => setState(() {
+                            note.listContent.removeAt(index);
+                            listContentControllers.removeAt(index);
+                            listContentNodes.removeAt(index);
+                            notifyNoteChanged();
+                          }),
+                          onTextChanged: (text) {
+                            setState(() => note.listContent[index].text = text);
+                            notifyNoteChanged();
+                          },
+                          onSubmitted: (_) {
+                            if (index == note.listContent.length - 1) {
+                              if (note.listContent.last.text != "") {
+                                addListContentItem();
+                              } else {
+                                FocusScope.of(context)
+                                    .requestFocus(listContentNodes[index]);
+                              }
+                            } else {
+                              FocusScope.of(context)
+                                  .requestFocus(listContentNodes[index + 1]);
+                            }
+                          },
+                          onCheckChanged: (value) {
+                            setState(
+                                () => note.listContent[index].status = value);
+                            notifyNoteChanged();
+                          },
+                          checkColor: note.color != 0
+                              ? Color(NoteColors.colorList[note.color]
+                                  .dynamicColor(context))
+                              : Theme.of(context).scaffoldBackgroundColor,
+                        );
+                      }),
+                    if (note.list)
+                      AnimatedOpacity(
+                        opacity: note.listContent.isNotEmpty &&
+                                note.listContent.last.text.isNotEmpty
+                            ? 1
+                            : 0,
+                        duration: note.listContent.isNotEmpty &&
+                                note.listContent.last.text.isNotEmpty
+                            ? Duration(milliseconds: 300)
+                            : Duration(milliseconds: 0),
+                        child: ListTile(
+                          leading: Icon(Icons.add),
+                          title: Text(
+                            LocaleStrings.notePage.addEntryHint,
+                            style: TextStyle(
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          onTap: note.listContent.isNotEmpty &&
+                                  note.listContent.last.text.isNotEmpty
+                              ? () => addListContentItem()
+                              : null,
+                        ),
+                      ),
+                  ],
                 ),
-              )
-            : null,
-      ),
+              ),
+              if (note.images.isNotEmpty && deviceInfo.isLandscape)
+                Container(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 56,
+                  ),
+                  width: 360,
+                  child: imagesWidget,
+                ),
+            ],
+          ),
+          bottomNavigationBar: !deviceInfo.isLandscape
+              ? Material(
+                  color: Theme.of(context).cardColor,
+                  elevation: 8,
+                  child: Container(
+                    height: 48,
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: getToolbarButtons(),
+                    ),
+                  ),
+                )
+              : null,
+        );
+      }),
     );
   }
 

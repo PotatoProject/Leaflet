@@ -800,15 +800,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  rich_text_editor:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "00160e1e2f2d3dfa9fd4531c0681878df24a4cf4"
-      url: "https://github.com/namhyun-gu/flutter_rich_text_editor"
-    source: git
-    version: "0.0.1"
   rxdart:
     dependency: transitive
     description:

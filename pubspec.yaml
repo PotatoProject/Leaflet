@@ -57,8 +57,6 @@ dependencies:
   file_selector_linux:
   file_selector_windows:
 
-  rich_text_editor:
-    git: https://github.com/namhyun-gu/flutter_rich_text_editor
   loggy:
     git: https://github.com/HrX03/loggy
 

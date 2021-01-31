@@ -44,9 +44,8 @@ class NoteController {
       );
       Loggy.d(
           message:
-          "($id delete) Server responded with (${deleteResponse
-              .statusCode}}: " +
-              deleteResponse.data);
+              "($id delete) Server responded with (${deleteResponse.statusCode}}: " +
+                  deleteResponse.data);
       return handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
@@ -66,8 +65,8 @@ class NoteController {
       );
       Loggy.d(
           message:
-          "(delete-all) Server responded with (${deleteResult.statusCode}: " +
-              deleteResult.data);
+              "(delete-all) Server responded with (${deleteResult.statusCode}: " +
+                  deleteResult.data);
       return handleResponse(deleteResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -90,7 +89,7 @@ class NoteController {
       Loggy.d(
           message: "(list) Server responded with (${listResult.statusCode}): " +
               listResult.data.toString());
-      var body = handleResponse(listResult);
+      handleResponse(listResult);
       for (Map i in listResult.data["notes"]) {
         var note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
@@ -115,8 +114,8 @@ class NoteController {
       );
       Loggy.d(
           message:
-          "($id update) Server responded with (${updateResult.statusCode}): " +
-              updateResult.data);
+              "($id update) Server responded with (${updateResult.statusCode}): " +
+                  updateResult.data);
       return handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");

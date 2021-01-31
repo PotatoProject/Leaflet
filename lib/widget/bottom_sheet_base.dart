@@ -133,6 +133,8 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                           widget.route.navigator?.pop();
                         else
                           widget.route.controller.fling(velocity: 1);
+
+                        return;
                       }
 
                       if (widget.route.controller.value > 0.5) {

@@ -35,8 +35,6 @@ class _LoginPageState extends State<LoginPage> {
 
   String getString(int statusCode) {
     switch (statusCode) {
-      case 0:
-        return null;
       case 1:
         return "Too short";
       case 2:
@@ -47,6 +45,9 @@ class _LoginPageState extends State<LoginPage> {
         return "Already exists";
       case 5:
         return "Missing";
+      case 0:
+      default:
+        return null;
     }
   }
 
@@ -229,6 +230,9 @@ class _LoginPageState extends State<LoginPage> {
                           emailController.clear();
                           usernameController.clear();
                           passwordController.clear();
+                          usernameError = null;
+                          emailError = null;
+                          passwordError = null;
                           setState(() => register = !register);
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (register) {
@@ -325,10 +329,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            width: min(640, MediaQuery
-                .of(context)
-                .size
-                .width - 32),
+            width: min(640, MediaQuery.of(context).size.width - 32),
             content: Text(
               register ? response.message ?? "Registered!" : response.message,
             ),

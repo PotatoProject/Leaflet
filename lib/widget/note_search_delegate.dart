@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -12,7 +10,6 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
-import 'package:rich_text_editor/rich_text_editor.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
   SearchQuery searchQuery = SearchQuery();
@@ -55,60 +52,14 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                 LocaleStrings.searchPage.noteNothingFound,
               );
         return NoteListWidget(
-          itemBuilder: (context, index) => noteView(
-            context,
-            snapshot.data[index],
+          itemBuilder: (context, index) => NoteView(
+            note: snapshot.data[index],
+            onTap: () => openNote(context, snapshot.data[index]),
           ),
           noteCount: snapshot.data.length,
           customIllustration: illustration,
         );
       },
-    );
-  }
-
-  Widget noteView(BuildContext context, Note note) {
-    SpannableList titleList = SpannableList.generate(note.title.length);
-    SpannableList contentList = SpannableList.generate(note.content.length);
-
-    Color noteColor =
-        Color(NoteColors.colorList[note.color].dynamicColor(context));
-    Color bgColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white
-        : Colors.grey[900];
-
-    int titleIndex = searchQuery.caseSensitive
-        ? note.title.indexOf(query)
-        : note.title.toLowerCase().indexOf(query.toLowerCase());
-
-    int contentIndex = searchQuery.caseSensitive
-        ? note.content.indexOf(query)
-        : note.content.toLowerCase().indexOf(query.toLowerCase());
-
-    if (titleIndex != -1) {
-      for (int i = titleIndex; i < query.length + titleIndex; i++) {
-        titleList.list[i] = SpannableStyle(value: 0)
-          ..setBackgroundColor(
-              note.color != 0 ? bgColor : Theme.of(context).accentColor)
-          ..setForegroundColor(
-              note.color != 0 ? noteColor : Theme.of(context).cardColor);
-      }
-    }
-
-    if (contentIndex != -1) {
-      for (int i = contentIndex; i < query.length + contentIndex; i++) {
-        contentList.list[i] = SpannableStyle(value: 0)
-          ..setBackgroundColor(
-              note.color != 0 ? bgColor : Theme.of(context).accentColor)
-          ..setForegroundColor(
-              note.color != 0 ? noteColor : Theme.of(context).cardColor);
-      }
-    }
-
-    return NoteView(
-      note: note,
-      onTap: () => openNote(context, note),
-      providedTitleList: titleList,
-      providedContentList: contentList,
     );
   }
 

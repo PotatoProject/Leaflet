@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -10,7 +9,7 @@ class FilesController {
 
   static Future<void> uploadImageToSync(String hash, File file) async {
     String url = await getUploadUrlFromSync(hash);
-    Response uploadResponse = await Dio().put(
+    await Dio().put(
       url,
       data: file.openRead(),
       options: Options(contentType: 'image/jpg', headers: {
@@ -42,13 +41,13 @@ class FilesController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult =
-    await dio.get(
-      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
+    Response getResult = await dio.get(
+      url,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
+    );
     Loggy.d(
         message:
-        "($hash getImageUrl) Server responded with (${getResult
-            .statusCode}): ${getResult.data}");
+            "($hash getImageUrl) Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
       return getResult.data;
     } else {
@@ -60,13 +59,13 @@ class FilesController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/delete/$hash.jpg";
     Loggy.v(message: "Going to send DELETE to $url");
-    Response deleteResult =
-    await dio.delete(
-      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
+    Response deleteResult = await dio.delete(
+      url,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
+    );
     Loggy.d(
         message:
-        "($hash deleteImage) Server responded with (${deleteResult
-            .statusCode}): ${deleteResult.data}");
+            "($hash deleteImage) Server responded with (${deleteResult.statusCode}): ${deleteResult.data}");
     if (deleteResult.statusCode != 200) {
       throw ("Cant delete image ${deleteResult.data}");
     }
@@ -76,12 +75,13 @@ class FilesController {
     String token = await prefs.getToken();
     var url = "${prefs.apiUrl}$FILES_PREFIX/limit";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult =
-    await dio.get(
-      url, options: Options(headers: {"Authorization": "Bearer $token"}),);
+    Response getResult = await dio.get(
+      url,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
+    );
     Loggy.d(
         message:
-        "Server responded with (${getResult.statusCode}): ${getResult.data}");
+            "Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
       final jsonBody = getResult.data;
       return FilesApiStats(jsonBody["used"], jsonBody["limit"]);

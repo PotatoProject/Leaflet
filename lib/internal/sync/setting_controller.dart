@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -65,7 +64,7 @@ class SettingController {
           message:
               "(getChanged) Server responded with (${getResult.statusCode}): " +
                   getResult.data.toString());
-      var body = NoteController.handleResponse(getResult);
+      NoteController.handleResponse(getResult);
       Map<String, dynamic> data = getResult.data;
       return data
           .map((key, value) => MapEntry(key.toString(), value.toString()));
