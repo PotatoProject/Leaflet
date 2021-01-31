@@ -27,10 +27,8 @@ main() async {
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  helper = _db.noteHelper;
-  tagHelper = _db.tagHelper;
+  initProviders(_db);
   Loggy.generateAppLabel();
-  initProviders();
 
   final sharedPrefs = SharedPrefs.instance;
   final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
