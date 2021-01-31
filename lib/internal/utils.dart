@@ -33,8 +33,7 @@ import 'package:recase/recase.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
-const int kMaxImageCount = 4;
-const double kCardBorderRadius = 6;
+const double kCardBorderRadius = 4;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
@@ -598,8 +597,7 @@ class Utils {
     }
   }
 
-  static void newImage(BuildContext context, ImageSource source,
-      {bool shouldPop = false}) async {
+  static void newImage(BuildContext context, ImageSource source) async {
     Note note = NoteX.emptyNote;
     File image = await pickImage();
 
@@ -607,7 +605,6 @@ class Utils {
       SavedImage savedImage = await ImageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
-      if (shouldPop) Navigator.pop(context);
       note = note.copyWith(id: Utils.generateId());
 
       Utils.showSecondaryRoute(
@@ -823,6 +820,22 @@ extension UriX on Uri {
     } else {
       return FileImage(File(path));
     }
+  }
+}
+
+extension SafeGetList<T> on List<T> {
+  T get(int index) {
+    if (index >= length) {
+      return last;
+    } else
+      return this[index];
+  }
+
+  T maybeGet(int index) {
+    if (index >= length) {
+      return null;
+    } else
+      return this[index];
   }
 }
 

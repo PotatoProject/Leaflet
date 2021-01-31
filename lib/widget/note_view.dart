@@ -116,10 +116,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                       child: NoteViewImages(
                         images: widget.note.images,
                         showPlusImages: true,
-                        numPlusImages:
-                            widget.note.images.length < kMaxImageCount
-                                ? 0
-                                : widget.note.images.length - kMaxImageCount,
                       ),
                     ),
                   ),

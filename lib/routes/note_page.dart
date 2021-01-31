@@ -133,9 +133,6 @@ class _NotePageState extends State<NotePage> {
     final Widget imagesWidget = NoteViewImages(
       images: note.images,
       showPlusImages: true,
-      numPlusImages: note.images.length < kMaxImageCount
-          ? 0
-          : note.images.length - kMaxImageCount,
       useSmallFont: false,
       onImageTap: (index) async {
         await Utils.showSecondaryRoute(

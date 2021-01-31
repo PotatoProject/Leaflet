@@ -74,8 +74,6 @@ class UploadQueueItem extends QueueItem {
 
   Future<String> getUploadUrl() async {
     switch (savedImage.storageLocation) {
-      case StorageLocation.IMGUR:
-        return 'https://api.imgur.com/3/image';
       case StorageLocation.SYNC:
         String token = await prefs.getToken();
         var url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";

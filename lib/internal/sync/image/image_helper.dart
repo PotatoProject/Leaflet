@@ -34,9 +34,8 @@ class ImageHelper {
   static Future<SavedImage> copyToCache(File file) async {
     SavedImage savedImage = SavedImage.empty();
     String path =
-        appInfo.tempDirectory.path + "/" + savedImage.id + extension(file.path);
+        join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
-    savedImage.uri = Uri.file(path);
     return savedImage;
   }
 

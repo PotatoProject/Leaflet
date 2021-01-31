@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
@@ -11,13 +10,13 @@ class DrawingBoard extends StatefulWidget {
   final Key repaintKey;
   final DrawingBoardController controller;
   final Color color;
-  final Uri uri;
+  final String path;
 
   DrawingBoard({
     this.repaintKey,
     this.controller,
     this.color,
-    this.uri,
+    this.path,
   });
 
   @override
@@ -78,14 +77,8 @@ class _DrawingBoardState extends State<DrawingBoard> {
     ImageProvider image;
     Completer<ui.Image> completer = Completer<ui.Image>();
 
-    if (widget.uri != null) {
-      String scheme = widget.uri.scheme;
-
-      if (scheme.startsWith("http")) {
-        image = CachedNetworkImageProvider(widget.uri.toString());
-      } else {
-        image = FileImage(File(widget.uri.path));
-      }
+    if (widget.path != null) {
+      image = FileImage(File(widget.path));
 
       image?.resolve(ImageConfiguration())?.addListener(
         ImageStreamListener(

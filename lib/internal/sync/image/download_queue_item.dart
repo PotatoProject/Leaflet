@@ -31,8 +31,6 @@ class DownloadQueueItem extends QueueItem {
 
   Future<String> getDownloadUrl() async {
     switch (savedImage.storageLocation) {
-      case StorageLocation.IMGUR:
-        return savedImage.uri.toString();
       case StorageLocation.SYNC:
         String token = await prefs.getToken();
         var url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";

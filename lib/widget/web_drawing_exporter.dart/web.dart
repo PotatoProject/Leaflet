@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 
 class WebDrawingExporter {
   static Future<String> export(
-      Uri uri, List<DrawObject> objects, Size size) async {
+      String path, List<DrawObject> objects, Size size) async {
     ImageProvider image;
     Completer<ui.Image> completer = Completer<ui.Image>();
 
@@ -57,8 +57,8 @@ class WebDrawingExporter {
 
     canvas.globalCompositeOperation = "destination-over";
 
-    if (uri != null) {
-      image = uri.toImageProvider();
+    if (path != null) {
+      image = FileImage(File(path));
 
       image?.resolve(ImageConfiguration())?.addListener(
         ImageStreamListener(

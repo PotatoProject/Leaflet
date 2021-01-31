@@ -9,7 +9,6 @@ part of 'saved_image.dart';
 SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
   return SavedImage(
     json['id'] as String,
-    json['uri'] == null ? null : Uri.parse(json['uri'] as String),
     _$enumDecodeNullable(_$StorageLocationEnumMap, json['storageLocation']),
     json['hash'] as String,
     json['encrypted'] as bool,
@@ -21,7 +20,6 @@ SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$SavedImageToJson(SavedImage instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'uri': instance.uri?.toString(),
       'storageLocation': _$StorageLocationEnumMap[instance.storageLocation],
       'hash': instance.hash,
       'blurHash': instance.blurHash,
@@ -63,6 +61,5 @@ T _$enumDecodeNullable<T>(
 
 const _$StorageLocationEnumMap = {
   StorageLocation.LOCAL: 'LOCAL',
-  StorageLocation.IMGUR: 'IMGUR',
   StorageLocation.SYNC: 'SYNC',
 };

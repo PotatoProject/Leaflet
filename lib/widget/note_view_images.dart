@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_view_image.dart';
 
 class NoteViewImages extends StatefulWidget {
   final List<SavedImage> images;
   final double borderRadius;
   final bool showPlusImages;
-  final int numPlusImages;
   final Function(int) onImageTap;
   final bool useSmallFont;
 
@@ -14,7 +14,6 @@ class NoteViewImages extends StatefulWidget {
     @required this.images,
     this.borderRadius = 0,
     this.showPlusImages = true,
-    this.numPlusImages = 0,
     this.onImageTap,
     this.useSmallFont = true,
   });
@@ -26,11 +25,13 @@ class NoteViewImages extends StatefulWidget {
 class _NoteViewImagesState extends State<NoteViewImages> {
   @override
   Widget build(BuildContext context) {
+    final _numPlusImages = widget.images.length - 4;
+
     return _ImageGrid(
       itemCount: widget.images.length,
       itemBuilder: (context, index) {
         final showPlus =
-            index == 3 && widget.numPlusImages > 0 && widget.showPlusImages;
+            index == 3 && _numPlusImages > 0 && widget.showPlusImages;
 
         return Container(
           decoration: BoxDecoration(
@@ -49,7 +50,7 @@ class _NoteViewImagesState extends State<NoteViewImages> {
                   alignment: Alignment.center,
                   child: showPlus
                       ? Text(
-                          "+" + widget.numPlusImages.toString(),
+                          "+" + _numPlusImages.toString(),
                           style: TextStyle(
                             fontSize: widget.useSmallFont ? 24.0 : 36.0,
                             color: Colors.white,
@@ -99,15 +100,11 @@ class _ImageGrid extends StatelessWidget {
     Widget firstRow;
     Widget secondRow;
 
-    for (int i = 0; i < 4; i++) {
-      try {
-        imageWidgets.add(itemBuilder(context, i));
-      } catch (e) {
-        imageWidgets.add(null);
-      }
+    for (int i = 0; i < itemCount.clamp(0, 4); i++) {
+      imageWidgets.add(itemBuilder(context, i));
     }
 
-    if (imageWidgets[0] != null) {
+    if (imageWidgets.maybeGet(0) != null) {
       firstRow = SizedBox(
         height: constraints.maxWidth / 2,
         child: Row(
@@ -115,7 +112,7 @@ class _ImageGrid extends StatelessWidget {
             Expanded(
               child: imageWidgets[0],
             ),
-            if (imageWidgets[1] != null)
+            if (imageWidgets.maybeGet(1) != null)
               Expanded(
                 child: imageWidgets[1],
               ),
@@ -123,7 +120,7 @@ class _ImageGrid extends StatelessWidget {
         ),
       );
 
-      if (imageWidgets[2] != null) {
+      if (imageWidgets.maybeGet(2) != null) {
         secondRow = SizedBox(
           height: constraints.maxWidth / 2,
           child: Row(
@@ -131,7 +128,7 @@ class _ImageGrid extends StatelessWidget {
               Expanded(
                 child: imageWidgets[2],
               ),
-              if (imageWidgets[3] != null)
+              if (imageWidgets.maybeGet(3) != null)
                 Expanded(
                   child: imageWidgets[3],
                 ),

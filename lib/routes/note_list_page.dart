@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -11,7 +12,7 @@ import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/fake_appbar.dart';
-import 'package:potato_notes/widget/fake_fab.dart';
+import 'package:potato_notes/widget/menu_fab.dart';
 import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
@@ -123,11 +124,35 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   Widget get fab {
-    return FakeFab(
-      heroTag: "fabMenu",
-      shape: StadiumBorder(),
-      onTap: () => Utils.newNote(context),
-      child: Icon(Icons.edit_outlined),
+    return MenuFab(
+      backgroundColor: Theme.of(context).accentColor,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      fabShape: CircleBorder(),
+      menuShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+      mainEntry: MenuFabEntry(
+        icon: Icon(Icons.edit_outlined),
+        label: LocaleStrings.common.newNote,
+        onTap: () => Utils.newNote(context),
+      ),
+      entries: [
+        MenuFabEntry(
+          icon: Icon(Icons.check_box_outlined),
+          label: LocaleStrings.common.newList,
+          onTap: () => Utils.newList(context),
+        ),
+        MenuFabEntry(
+          icon: Icon(Icons.image_outlined),
+          label: LocaleStrings.common.newImage,
+          onTap: () => Utils.newImage(context, ImageSource.gallery),
+        ),
+        MenuFabEntry(
+          icon: Icon(Icons.brush_outlined),
+          label: LocaleStrings.common.newDrawing,
+          onTap: () => Utils.newDrawing(context),
+        ),
+      ],
     );
   }
 

@@ -146,7 +146,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           child: DrawingBoard(
             repaintKey: _drawingKey,
             controller: _controller,
-            uri: widget.savedImage != null ? widget.savedImage.uri : null,
+            path: widget.savedImage != null ? widget.savedImage.path : null,
             color: Colors.grey[50],
           ),
         ),
@@ -342,7 +342,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
     if (kIsWeb) {
       drawing = await WebDrawingExporter.export(
-        widget.savedImage?.uri,
+        widget.savedImage?.path,
         _controller.objects,
         box.size,
       );

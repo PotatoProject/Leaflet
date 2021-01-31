@@ -275,6 +275,22 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$deleteQueueValueAtom =
+      Atom(name: '_PreferencesBase.deleteQueueValue');
+
+  @override
+  String get deleteQueueValue {
+    _$deleteQueueValueAtom.reportRead();
+    return super.deleteQueueValue;
+  }
+
+  @override
+  set deleteQueueValue(String value) {
+    _$deleteQueueValueAtom.reportWrite(value, super.deleteQueueValue, () {
+      super.deleteQueueValue = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
@@ -294,7 +310,8 @@ logLevelValue: ${logLevelValue},
 tagsValue: ${tagsValue},
 downloadedImagesValue: ${downloadedImagesValue},
 deletedImagesValue: ${deletedImagesValue},
-lastUpdatedValue: ${lastUpdatedValue}
+lastUpdatedValue: ${lastUpdatedValue},
+deleteQueueValue: ${deleteQueueValue}
     ''';
   }
 }

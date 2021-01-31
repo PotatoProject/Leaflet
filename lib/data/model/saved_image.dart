@@ -12,7 +12,6 @@ part 'saved_image.g.dart';
 @JsonSerializable(nullable: true)
 class SavedImage {
   String id = Utils.generateId();
-  Uri uri;
   StorageLocation storageLocation = StorageLocation.SYNC;
   String hash;
   String blurHash;
@@ -22,10 +21,9 @@ class SavedImage {
 
   @observable
   bool get existsLocally => File(path).existsSync();
-  get path => join(appInfo.tempDirectory.path, "$hash.jpg");
+  get path => join(appInfo.tempDirectory.path, "$id.png");
 
-  SavedImage(
-      this.id, this.uri, this.storageLocation, this.hash, this.encrypted);
+  SavedImage(this.id, this.storageLocation, this.hash, this.encrypted);
   SavedImage.empty();
 
   factory SavedImage.fromJson(Map<String, dynamic> json) =>
@@ -41,4 +39,4 @@ class SavedImage {
   String toString() => json.encode(toJson());
 }
 
-enum StorageLocation { LOCAL, IMGUR, SYNC }
+enum StorageLocation { LOCAL, SYNC }

@@ -29,11 +29,8 @@ class ImageQueue extends ChangeNotifier {
   }
 
   void addUpload(SavedImage data, String noteId) {
-    if (data.uri == null) {
-      throw "Uri is null, cant derive localpath from savedImage";
-    }
     var item = UploadQueueItem(
-        localPath: data.uri.path,
+        localPath: data.path,
         noteId: noteId,
         savedImage: data,
         storageLocation: data.storageLocation);
@@ -143,16 +140,6 @@ class ImageQueue extends ChangeNotifier {
       item.savedImage.uploaded = true;
       item.status = QueueItemStatus.COMPLETE;
       return;
-    } else {
-      Map<String, dynamic> headers = {};
-      if (item.storageLocation == StorageLocation.IMGUR) {
-        headers.putIfAbsent("Authorization", () => "Client-ID f856a5e4fd5b2af");
-      }
-      var response = await item.uploadImage(headers: headers);
-      if (item.storageLocation == StorageLocation.IMGUR) {
-        String url = response.data["data"]["link"];
-        item.savedImage.uri = Uri.parse(url);
-      }
     }
   }
 

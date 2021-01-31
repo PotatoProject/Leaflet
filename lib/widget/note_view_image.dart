@@ -26,7 +26,7 @@ class NoteViewImage extends StatefulWidget {
     } else if (savedImage.hash != null) {
       image = BlurHashImage(savedImage.blurHash);
     } else {
-      image = FileImage(File(savedImage.uri.path));
+      image = FileImage(File(savedImage.path));
     }
 
     return image;

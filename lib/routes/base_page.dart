@@ -197,7 +197,7 @@ class _BasePageState extends State<BasePage>
   }
 
   void _updateDrawer() {
-    if (deviceInfo.uiSizeFactor > 5) {
+    if (deviceInfo.uiSizeFactor > 4) {
       _collapsedDrawer = false;
       _defaultDrawerMode = DefaultDrawerMode.EXPANDED;
     } else {
@@ -211,8 +211,8 @@ class _BasePageState extends State<BasePage>
     return Observer(
       builder: (context) {
         bool useDesktopLayout =
-            deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 4;
-        bool useDynamicDrawer = deviceInfo.uiSizeFactor > 4;
+            deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
+        bool useDynamicDrawer = deviceInfo.uiSizeFactor > 3;
 
         return BasePageInheritedWidget(
           state: this,
@@ -414,15 +414,6 @@ class BasePageInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(BasePageInheritedWidget oldWidget) {
     return oldWidget.state != state;
-  }
-}
-
-extension SafeGetList<T> on List<T> {
-  T get(int index) {
-    if (index >= length) {
-      return last;
-    } else
-      return this[index];
   }
 }
 
