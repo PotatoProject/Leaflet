@@ -17,10 +17,8 @@ class Notes extends Table {
   TextColumn get styleJson =>
       text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(Constant(false))();
-  DateTimeColumn get creationDate =>
-      dateTime()();
-  DateTimeColumn get lastModifyDate =>
-      dateTime()();
+  DateTimeColumn get creationDate => dateTime()();
+  DateTimeColumn get lastModifyDate => dateTime()();
   IntColumn get color => integer().withDefault(Constant(0))();
   TextColumn get images => text().map(const ImageListConverter())();
   BoolColumn get list => boolean().withDefault(Constant(false))();
@@ -41,9 +39,7 @@ class Notes extends Table {
 class Tags extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
-  IntColumn get color => integer().withDefault(Constant(0))();
-  DateTimeColumn get lastModifyDate =>
-      dateTime()();
+  DateTimeColumn get lastModifyDate => dateTime()();
   @override
   Set<Column> get primaryKey => {id};
 }

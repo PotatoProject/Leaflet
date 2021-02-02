@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class TagEditor extends StatefulWidget {
   final Tag tag;
   final String initialInput;
-  final void Function(Tag) onSave;
+  final ValueChanged<Tag> onSave;
+  final ValueChanged<Tag> onDelete;
 
   TagEditor({
     this.tag,
     this.initialInput = "",
     this.onSave,
+    this.onDelete,
   });
 
   @override
@@ -23,7 +24,6 @@ class _NewTagState extends State<TagEditor> {
   Tag tag = Tag(
     id: null,
     name: null,
-    color: 0,
     lastModifyDate: null,
   );
   TextEditingController controller;
@@ -74,54 +74,21 @@ class _NewTagState extends State<TagEditor> {
                   setState(() => tag = tag.copyWith(name: text)),
             ),
           ),
-          Container(
-            height: 66,
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-              scrollDirection: Axis.horizontal,
-              itemCount: NoteColors.colorList.length,
-              itemBuilder: (context, index) {
-                return IconButton(
-                  visualDensity: VisualDensity.standard,
-                  icon: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: index == 0
-                              ? Theme.of(context).iconTheme.color
-                              : Colors.transparent,
-                          width: 1.5,
-                        ),
-                        color: index != 0
-                            ? Color(NoteColors.colorList[index].color)
-                            : Colors.transparent),
-                    width: 32,
-                    height: 32,
-                    child: tag.color == index
-                        ? Icon(
-                            Icons.check,
-                            color: index != 0
-                                ? Theme.of(context).colorScheme.surface
-                                : null,
-                          )
-                        : Container(),
-                  ),
-                  tooltip: NoteColors.colorList[index].label,
-                  onPressed: () {
-                    setState(() => tag = tag.copyWith(color: index));
-                  },
-                );
-              },
-            ),
-          ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                if (widget.tag != null)
+                  TextButton(
+                    onPressed: () => widget.onDelete?.call(tag),
+                    child: Text(LocaleStrings.common.delete),
+                  ),
                 TextButton(
                   onPressed: tag.name.trim().isNotEmpty
-                      ? () => widget.onSave(tag.copyWith(name: tag.name.trim()))
+                      ? () => widget.onSave?.call(
+                            tag.copyWith(name: tag.name.trim()),
+                          )
                       : null,
                   child: Text(LocaleStrings.common.save),
                 ),

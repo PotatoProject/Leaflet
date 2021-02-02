@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/colors.dart';
 
 class TagChip extends StatelessWidget {
   final String title;
-  final int color;
   final bool showIcon;
   final bool shrink;
 
   TagChip({
     @required this.title,
-    this.color,
     this.showIcon = true,
     this.shrink = true,
   });
@@ -17,10 +14,6 @@ class TagChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
-
-    Color _color = color != 0
-        ? Color(NoteColors.colorList[color ?? 0].color)
-        : Theme.of(context).iconTheme.color.withOpacity(1);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -44,14 +37,6 @@ class TagChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Visibility(
-                visible: showIcon,
-                child: Icon(
-                  Icons.brightness_1,
-                  color: _color,
-                  size: shrink ? 10 : 16,
-                ),
-              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: shrink ? 4 : 6),
                 constraints: BoxConstraints(

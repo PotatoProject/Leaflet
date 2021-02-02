@@ -1001,23 +1001,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 class Tag extends DataClass implements Insertable<Tag> {
   final String id;
   final String name;
-  final int color;
   final DateTime lastModifyDate;
-  Tag(
-      {@required this.id,
-      @required this.name,
-      @required this.color,
-      @required this.lastModifyDate});
+  Tag({@required this.id, @required this.name, @required this.lastModifyDate});
   factory Tag.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
-    final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Tag(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color']),
       lastModifyDate: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date']),
     );
@@ -1031,9 +1024,6 @@ class Tag extends DataClass implements Insertable<Tag> {
     if (!nullToAbsent || name != null) {
       map['name'] = Variable<String>(name);
     }
-    if (!nullToAbsent || color != null) {
-      map['color'] = Variable<int>(color);
-    }
     if (!nullToAbsent || lastModifyDate != null) {
       map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
     }
@@ -1044,8 +1034,6 @@ class Tag extends DataClass implements Insertable<Tag> {
     return TagsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      color:
-          color == null && nullToAbsent ? const Value.absent() : Value(color),
       lastModifyDate: lastModifyDate == null && nullToAbsent
           ? const Value.absent()
           : Value(lastModifyDate),
@@ -1058,7 +1046,6 @@ class Tag extends DataClass implements Insertable<Tag> {
     return Tag(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      color: serializer.fromJson<int>(json['color']),
       lastModifyDate: serializer.fromJson<DateTime>(json['lastModifyDate']),
     );
   }
@@ -1068,16 +1055,13 @@ class Tag extends DataClass implements Insertable<Tag> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
-      'color': serializer.toJson<int>(color),
       'lastModifyDate': serializer.toJson<DateTime>(lastModifyDate),
     };
   }
 
-  Tag copyWith({String id, String name, int color, DateTime lastModifyDate}) =>
-      Tag(
+  Tag copyWith({String id, String name, DateTime lastModifyDate}) => Tag(
         id: id ?? this.id,
         name: name ?? this.name,
-        color: color ?? this.color,
         lastModifyDate: lastModifyDate ?? this.lastModifyDate,
       );
   @override
@@ -1085,40 +1069,35 @@ class Tag extends DataClass implements Insertable<Tag> {
     return (StringBuffer('Tag(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('color: $color, ')
           ..write('lastModifyDate: $lastModifyDate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(name.hashCode, $mrjc(color.hashCode, lastModifyDate.hashCode))));
+  int get hashCode =>
+      $mrjf($mrjc(id.hashCode, $mrjc(name.hashCode, lastModifyDate.hashCode)));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Tag &&
           other.id == this.id &&
           other.name == this.name &&
-          other.color == this.color &&
           other.lastModifyDate == this.lastModifyDate);
 }
 
 class TagsCompanion extends UpdateCompanion<Tag> {
   final Value<String> id;
   final Value<String> name;
-  final Value<int> color;
   final Value<DateTime> lastModifyDate;
   const TagsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.color = const Value.absent(),
     this.lastModifyDate = const Value.absent(),
   });
   TagsCompanion.insert({
     @required String id,
     @required String name,
-    this.color = const Value.absent(),
     @required DateTime lastModifyDate,
   })  : id = Value(id),
         name = Value(name),
@@ -1126,26 +1105,20 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   static Insertable<Tag> custom({
     Expression<String> id,
     Expression<String> name,
-    Expression<int> color,
     Expression<DateTime> lastModifyDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (color != null) 'color': color,
       if (lastModifyDate != null) 'last_modify_date': lastModifyDate,
     });
   }
 
   TagsCompanion copyWith(
-      {Value<String> id,
-      Value<String> name,
-      Value<int> color,
-      Value<DateTime> lastModifyDate}) {
+      {Value<String> id, Value<String> name, Value<DateTime> lastModifyDate}) {
     return TagsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      color: color ?? this.color,
       lastModifyDate: lastModifyDate ?? this.lastModifyDate,
     );
   }
@@ -1159,9 +1132,6 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (color.present) {
-      map['color'] = Variable<int>(color.value);
-    }
     if (lastModifyDate.present) {
       map['last_modify_date'] = Variable<DateTime>(lastModifyDate.value);
     }
@@ -1173,7 +1143,6 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     return (StringBuffer('TagsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('color: $color, ')
           ..write('lastModifyDate: $lastModifyDate')
           ..write(')'))
         .toString();
@@ -1208,15 +1177,6 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
     );
   }
 
-  final VerificationMeta _colorMeta = const VerificationMeta('color');
-  GeneratedIntColumn _color;
-  @override
-  GeneratedIntColumn get color => _color ??= _constructColor();
-  GeneratedIntColumn _constructColor() {
-    return GeneratedIntColumn('color', $tableName, false,
-        defaultValue: Constant(0));
-  }
-
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
   GeneratedDateTimeColumn _lastModifyDate;
@@ -1232,7 +1192,7 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, name, color, lastModifyDate];
+  List<GeneratedColumn> get $columns => [id, name, lastModifyDate];
   @override
   $TagsTable get asDslTable => this;
   @override
@@ -1254,10 +1214,6 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
           _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
-    }
-    if (data.containsKey('color')) {
-      context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color'], _colorMeta));
     }
     if (data.containsKey('last_modify_date')) {
       context.handle(

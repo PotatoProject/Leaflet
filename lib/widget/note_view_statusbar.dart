@@ -82,7 +82,6 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
                       return TagChip(
                         title: tag.name,
-                        color: tag.color,
                       );
                     } else {
                       return TagChip(

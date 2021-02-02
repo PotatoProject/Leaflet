@@ -241,7 +241,6 @@ class _NotePageState extends State<NotePage> {
 
                               return TagChip(
                                 title: tag.name,
-                                color: tag.color,
                                 shrink: !(Platform.isAndroid || Platform.isIOS),
                               );
                             },
