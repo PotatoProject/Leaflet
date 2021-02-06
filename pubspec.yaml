@@ -56,6 +56,7 @@ dependencies:
   file_selector_macos:
   file_selector_linux:
   file_selector_windows:
+  image_size_getter:
 
   loggy:
     git: https://github.com/HrX03/loggy

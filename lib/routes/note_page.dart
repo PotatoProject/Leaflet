@@ -20,7 +20,7 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
-import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:potato_notes/widget/note_images.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
@@ -44,6 +44,7 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  static const double imageWidgetSize = 240.0;
   Note note;
 
   TextEditingController titleController;
@@ -118,23 +119,6 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget imagesWidget = NoteViewImages(
-      images: note.images,
-      showPlusImages: true,
-      useSmallFont: false,
-      onImageTap: (index) async {
-        await Utils.showSecondaryRoute(
-          context,
-          NotePageImageGallery(
-            note: note,
-            currentImage: index,
-          ),
-        );
-
-        setState(() {});
-      },
-    );
-
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: note.color != 0
@@ -224,7 +208,10 @@ class _NotePageState extends State<NotePage> {
                   ),
                   children: [
                     if (note.images.isNotEmpty && !deviceInfo.isLandscape)
-                      imagesWidget,
+                      SizedBox(
+                        height: imageWidgetSize,
+                        child: getImageWidget(Axis.horizontal),
+                      ),
                     if (note.tags.isNotEmpty)
                       Container(
                         padding: EdgeInsets.all(8),
@@ -355,8 +342,8 @@ class _NotePageState extends State<NotePage> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 56,
                   ),
-                  width: 360,
-                  child: imagesWidget,
+                  width: imageWidgetSize,
+                  child: getImageWidget(Axis.vertical),
                 ),
             ],
           ),
@@ -380,6 +367,25 @@ class _NotePageState extends State<NotePage> {
               : null,
         );
       }),
+    );
+  }
+
+  Widget getImageWidget(Axis axis) {
+    return NoteImages(
+      images: note.images,
+      onImageTap: (index) async {
+        await Utils.showSecondaryRoute(
+          context,
+          NotePageImageGallery(
+            note: note,
+            currentImage: index,
+          ),
+        );
+
+        setState(() {});
+      },
+      layoutType: ImageLayoutType.STRIP,
+      stripAxis: axis,
     );
   }
 

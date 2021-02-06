@@ -10,7 +10,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
-import 'package:potato_notes/widget/note_view_images.dart';
+import 'package:potato_notes/widget/note_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 
@@ -113,9 +113,9 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     child: Visibility(
                       visible: (widget.note.images?.isNotEmpty ?? false) &&
                           !widget.note.hideContent,
-                      child: NoteViewImages(
+                      child: NoteImages(
                         images: widget.note.images,
-                        showPlusImages: true,
+                        maxGridRows: 2,
                       ),
                     ),
                   ),

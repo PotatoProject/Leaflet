@@ -11,7 +11,10 @@ SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
     json['id'] as String,
     _$enumDecodeNullable(_$StorageLocationEnumMap, json['storageLocation']),
     json['hash'] as String,
+    json['fileExtension'] as String,
     json['encrypted'] as bool,
+    (json['width'] as num)?.toDouble(),
+    (json['height'] as num)?.toDouble(),
   )
     ..blurHash = json['blurHash'] as String
     ..uploaded = json['uploaded'] as bool;
@@ -23,7 +26,10 @@ Map<String, dynamic> _$SavedImageToJson(SavedImage instance) =>
       'storageLocation': _$StorageLocationEnumMap[instance.storageLocation],
       'hash': instance.hash,
       'blurHash': instance.blurHash,
+      'fileExtension': instance.fileExtension,
       'encrypted': instance.encrypted,
+      'width': instance.width,
+      'height': instance.height,
       'uploaded': instance.uploaded,
     };
 

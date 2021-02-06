@@ -8,7 +8,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
-import 'package:potato_notes/widget/note_view_image.dart';
+import 'package:potato_notes/widget/note_image.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -55,7 +55,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
                 child: Padding(
                   padding: EdgeInsets.only(top: 56),
                   child: InteractiveViewer(
-                    child: NoteViewImage(
+                    child: NoteImage(
                       savedImage: widget.note.images[index],
                       fit: BoxFit.contain,
                     ),

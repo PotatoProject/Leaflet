@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:dio/dio.dart';
 import 'package:image/image.dart';
+import 'package:image_size_getter/file_input.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:loggy/loggy.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
@@ -36,6 +39,11 @@ class ImageHelper {
     String path =
         join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
+    final _size = getImageSize(file);
+    savedImage.width = _size.width.toDouble();
+    savedImage.height = _size.height.toDouble();
+    savedImage.fileExtension = extension(file.path);
+
     return savedImage;
   }
 
@@ -47,6 +55,10 @@ class ImageHelper {
         rawDigest.map((int) => int.toRadixString(16).toString()).join('');
     print(hash);
     return hash;
+  }
+
+  static Size getImageSize(File file) {
+    return ImageSizeGetter.getSize(FileInput(file));
   }
 
   static String generateBlurHash(Image image) {

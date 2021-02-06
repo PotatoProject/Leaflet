@@ -6,17 +6,17 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:potato_notes/internal/providers.dart';
 
-class NoteViewImage extends StatefulWidget {
+class NoteImage extends StatefulWidget {
   final SavedImage savedImage;
   final BoxFit fit;
 
-  NoteViewImage({
+  NoteImage({
     @required this.savedImage,
     this.fit = BoxFit.cover,
   });
 
   @override
-  _NoteViewImageState createState() => _NoteViewImageState();
+  _NoteImageState createState() => _NoteImageState();
 
   static ImageProvider getProvider(SavedImage savedImage) {
     ImageProvider image;
@@ -33,7 +33,7 @@ class NoteViewImage extends StatefulWidget {
   }
 }
 
-class _NoteViewImageState extends State<NoteViewImage> {
+class _NoteImageState extends State<NoteImage> {
   QueueItem queueItem;
 
   @override
@@ -53,7 +53,7 @@ class _NoteViewImageState extends State<NoteViewImage> {
   }
 
   @override
-  void didUpdateWidget(NoteViewImage old) {
+  void didUpdateWidget(NoteImage old) {
     super.didUpdateWidget(old);
     if (widget.savedImage.id != old.savedImage.id) {
       _getQueueItem();
@@ -80,7 +80,7 @@ class _NoteViewImageState extends State<NoteViewImage> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NoteViewImage.getProvider(widget.savedImage),
+          image: NoteImage.getProvider(widget.savedImage),
           fit: widget.fit,
           alignment: Alignment.center,
         ),

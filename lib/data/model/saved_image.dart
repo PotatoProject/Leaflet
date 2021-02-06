@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
@@ -15,23 +16,36 @@ class SavedImage {
   StorageLocation storageLocation = StorageLocation.SYNC;
   String hash;
   String blurHash;
+  String fileExtension;
   bool encrypted = false;
+  double width;
+  double height;
   @observable
   bool uploaded = false;
 
   @observable
   bool get existsLocally => File(path).existsSync();
-  get path => join(appInfo.tempDirectory.path, "$id.png");
+  get path => join(appInfo.tempDirectory.path, "$id$fileExtension");
 
-  SavedImage(this.id, this.storageLocation, this.hash, this.encrypted);
+  SavedImage(
+    this.id,
+    this.storageLocation,
+    this.hash,
+    this.fileExtension,
+    this.encrypted,
+    this.width,
+    this.height,
+  );
   SavedImage.empty();
+
+  Size get size => Size(width, height);
 
   factory SavedImage.fromJson(Map<String, dynamic> json) =>
       _$SavedImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$SavedImageToJson(this);
 
-  enableEncryption() {
+  void enableEncryption() {
     encrypted = true;
   }
 
