@@ -422,9 +422,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar(context);
+    BasePage.of(context)?.hideCurrentSnackBar();
     BasePage.of(context)?.showSnackBar(
-      context,
       SnackBar(
         content: Text(reason),
         behavior: SnackBarBehavior.floating,
@@ -454,9 +453,8 @@ class Utils {
 
     List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar(context);
+    BasePage.of(context)?.hideCurrentSnackBar();
     BasePage.of(context)?.showSnackBar(
-      context,
       SnackBar(
         content: Text(reason),
         behavior: SnackBarBehavior.floating,

@@ -43,6 +43,9 @@ class BasePage extends StatefulWidget {
 
 class _BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
+  static const double drawerClosedWidth = 72.0;
+  static const double drawerOpenedWidth = 300.0;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
   final _pages = [
@@ -112,10 +115,9 @@ class _BasePageState extends State<BasePage>
           setState(() => _secondaryAppBar = secondaryAppBar);
         },
       );
-  void hideCurrentSnackBar(BuildContext context) =>
+  void hideCurrentSnackBar() =>
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
-    BuildContext context,
     SnackBar snackBar,
   ) =>
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -197,7 +199,7 @@ class _BasePageState extends State<BasePage>
   }
 
   void _updateDrawer() {
-    if (deviceInfo.uiSizeFactor > 4) {
+    if (deviceInfo.uiSizeFactor > 5) {
       _collapsedDrawer = false;
       _defaultDrawerMode = DefaultDrawerMode.EXPANDED;
     } else {
@@ -226,9 +228,9 @@ class _BasePageState extends State<BasePage>
                       start: useDynamicDrawer
                           ? _defaultDrawerMode == DefaultDrawerMode.EXPANDED
                               ? _collapsedDrawer
-                                  ? 72
-                                  : 300
-                              : 72
+                                  ? drawerClosedWidth
+                                  : drawerOpenedWidth
+                              : drawerClosedWidth
                           : 0,
                     ),
                     duration: Duration(milliseconds: 200),
@@ -320,7 +322,9 @@ class _BasePageState extends State<BasePage>
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 200),
                     curve: decelerateEasing,
-                    width: _collapsedDrawer ? 72 : 300,
+                    width: _collapsedDrawer
+                        ? drawerClosedWidth
+                        : drawerOpenedWidth,
                     child: Material(
                       elevation: 12,
                       child: DrawerList(
