@@ -10,7 +10,8 @@ class TokenInterceptor extends InterceptorsWrapper {
       if (response.status) {
         RequestOptions options = err.request;
         return dio.request(options.path,
-            options: options,
+            options: options
+              ..headers.update("Authorization", (value) => prefs.getToken()),
             onReceiveProgress: err.request.onReceiveProgress,
             onSendProgress: err.request.onSendProgress);
       }
