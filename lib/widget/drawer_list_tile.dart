@@ -116,23 +116,21 @@ class _DrawerListTileState extends State<DrawerListTile>
       ],
     );
 
-    if (!widget.showTitle) {
-      child = Tooltip(
-        message: widget.title.data,
-        child: child,
-      );
-    }
-
     return LayoutBuilder(
-      builder: (context, constraints) => InkWell(
-        onTap: widget.onTap,
-        child: Container(
-          height: height,
-          width: constraints.maxWidth,
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: child,
-        ),
-      ),
+      builder: (context, constraints) {
+        Widget parent = InkWell(
+          onTap: widget.onTap,
+          child: Container(
+            height: height,
+            width: constraints.maxWidth,
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: child,
+          ),
+        );
+        return !widget.showTitle
+            ? Tooltip(message: widget.title.data, child: parent)
+            : parent;
+      },
     );
   }
 }
