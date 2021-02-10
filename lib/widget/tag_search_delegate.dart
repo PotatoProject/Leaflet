@@ -4,6 +4,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
 
 class TagSearchDelegate extends CustomSearchDelegate {
@@ -34,31 +35,25 @@ class TagSearchDelegate extends CustomSearchDelegate {
           .toList();
     }
 
-    return StatefulBuilder(
-      builder: (context, setState) => ListView(
-        children: [
-          ...List.generate(
-            filteredTags.length,
-            (index) => _TapIsolatedListTile(
-              leading: Icon(Icons.label_outlined),
-              title: Text(filteredTags[index].name),
-              trailing: Checkbox(
-                value: tags.contains(filteredTags[index].id),
-                checkColor: Theme.of(context).scaffoldBackgroundColor,
-                activeColor: Theme.of(context).accentColor,
-                onChanged: (value) {
-                  setState(() {
-                    if (value) {
-                      tags.add(filteredTags[index].id);
-                    } else {
-                      tags.remove(filteredTags[index].id);
-                    }
-                  });
-
-                  onChanged?.call();
-                },
-              ),
-              onTap: () => Utils.showNotesModalBottomSheet(
+    return ListView(
+      children: [
+        ...List.generate(
+          filteredTags.length,
+          (index) => _TapIsolatedListTile(
+            leading: NoteViewCheckbox(
+              value: tags.contains(filteredTags[index].id),
+              checkColor: Theme.of(context).scaffoldBackgroundColor,
+              activeColor: Theme.of(context).accentColor,
+              onChanged: (value) =>
+                  _onChangeValue(value, filteredTags[index].id),
+              width: 18,
+            ),
+            title: Text(filteredTags[index].name),
+            trailing: IconButton(
+              icon: Icon(Icons.edit_outlined),
+              padding: EdgeInsets.zero,
+              splashRadius: 24,
+              onPressed: () => Utils.showNotesModalBottomSheet(
                 context: context,
                 builder: (context) => TagEditor(
                   initialInput: query,
@@ -82,28 +77,42 @@ class TagSearchDelegate extends CustomSearchDelegate {
                 ),
               ),
             ),
+            onTap: () => _onChangeValue(
+                !tags.contains(filteredTags[index].id), filteredTags[index].id),
           ),
-          ListTile(
-            leading: Icon(Icons.add),
-            title: Text(LocaleStrings.searchPage.tagCreateHint(query)),
-            onTap: () async {
-              await Utils.showNotesModalBottomSheet(
-                context: context,
-                builder: (context) => TagEditor(
-                  initialInput: query,
-                  onSave: (tag) {
-                    Navigator.pop(context);
-                    tagHelper.saveTag(tag.markChanged());
-                  },
-                ),
-              );
-              query = "";
-              setState(() {});
-            },
-          ),
-        ],
-      ),
+        ),
+        ListTile(
+          leading: Icon(Icons.add),
+          title: Text(LocaleStrings.searchPage.tagCreateHint(query)),
+          onTap: () async {
+            await Utils.showNotesModalBottomSheet(
+              context: context,
+              builder: (context) => TagEditor(
+                initialInput: query,
+                onSave: (tag) {
+                  Navigator.pop(context);
+                  tagHelper.saveTag(tag.markChanged());
+                },
+              ),
+            );
+            query = "";
+            setState(() {});
+          },
+        ),
+      ],
     );
+  }
+
+  void _onChangeValue(bool value, String id) {
+    setState(() {
+      if (value) {
+        tags.add(id);
+      } else {
+        tags.remove(id);
+      }
+    });
+
+    onChanged?.call();
   }
 }
 
