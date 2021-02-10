@@ -21,6 +21,7 @@ import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
+import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
@@ -150,51 +151,47 @@ class _NotePageState extends State<NotePage> {
               : Theme.of(context).accentColor,
           selectionColor: note.color != 0
               ? Theme.of(context).textTheme.caption.color.withOpacity(0.3)
+              : Theme.of(context).accentColor.withOpacity(0.3),
+          selectionHandleColor: note.color != 0
+              ? Theme.of(context).textTheme.caption.color
               : Theme.of(context).accentColor,
-          selectionHandleColor: Theme.of(context).textTheme.caption.color,
         ),
       ),
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: AppBar(
             actions: <Widget>[
-              ...getToolbarButtons(!deviceInfo.isLandscape),
               IconButton(
                 icon: Icon(Icons.remove_red_eye_outlined),
                 padding: EdgeInsets.all(0),
                 tooltip: LocaleStrings.notePage.privacyTitle,
                 onPressed: showPrivacyOptionSheet,
               ),
-              Builder(
-                builder: (context) {
-                  return IconButton(
-                    icon: Icon(
-                        note.starred ? Icons.favorite : Icons.favorite_border),
-                    padding: EdgeInsets.all(0),
-                    tooltip: note.starred
-                        ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                        : LocaleStrings.mainPage.selectionBarAddFavourites,
-                    onPressed: () {
-                      setState(
-                          () => note = note.copyWith(starred: !note.starred));
-                      notifyNoteChanged();
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            note.starred
-                                ? LocaleStrings.notePage.addedFavourites
-                                : LocaleStrings.notePage.removedFavourites,
-                          ),
-                          width:
-                              min(640, MediaQuery.of(context).size.width - 32),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    },
+              IconButton(
+                icon:
+                    Icon(note.starred ? Icons.favorite : Icons.favorite_border),
+                padding: EdgeInsets.all(0),
+                tooltip: note.starred
+                    ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                    : LocaleStrings.mainPage.selectionBarAddFavourites,
+                onPressed: () {
+                  setState(() => note = note.copyWith(starred: !note.starred));
+                  notifyNoteChanged();
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        note.starred
+                            ? LocaleStrings.notePage.addedFavourites
+                            : LocaleStrings.notePage.removedFavourites,
+                      ),
+                      width: min(640, MediaQuery.of(context).size.width - 32),
+                      behavior: SnackBarBehavior.floating,
+                    ),
                   );
                 },
               ),
+              ...getToolbarButtons(!deviceInfo.isLandscape),
             ],
           ),
           extendBodyBehindAppBar: true,
@@ -430,12 +427,56 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
         ),
-        IconButton(
+        PopupMenuButton(
           icon: Icon(Icons.add),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarAddItem,
-          onPressed: showAddElementsSheet,
-        )
+          itemBuilder: (context) => [
+            PopupMenuItemWithIcon(
+              icon: Icon(
+                  note.list ? Icons.check_circle : Icons.check_circle_outline),
+              child: Text(LocaleStrings.notePage.toggleList),
+              value: 'list',
+            ),
+            PopupMenuItemWithIcon(
+              icon: Icon(Icons.photo_outlined),
+              child: Text(LocaleStrings.notePage.imageGallery),
+              value: 'image',
+            ),
+            PopupMenuItemWithIcon(
+              icon: Icon(Icons.camera_outlined),
+              enabled: !DeviceInfo.isDesktop,
+              child: Text(LocaleStrings.notePage.imageCamera),
+              value: 'photo',
+            ),
+            PopupMenuItemWithIcon(
+              icon: Icon(Icons.brush_outlined),
+              child: Text(LocaleStrings.notePage.drawing),
+              value: 'drawing',
+            ),
+          ],
+          onSelected: (value) async {
+            switch (value) {
+              case 'list':
+                toggleList();
+                break;
+              case 'image':
+                final image = await Utils.pickImage();
+
+                if (image != null) await handleImageAdd(image.path);
+                break;
+              case 'photo':
+                PickedFile image =
+                    await ImagePicker().getImage(source: ImageSource.camera);
+
+                if (image != null) handleImageAdd(image.path);
+                break;
+              case 'drawing':
+                addDrawing();
+                break;
+            }
+          },
+        ),
       ];
     }
   }
@@ -534,62 +575,6 @@ class _NotePageState extends State<NotePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void showAddElementsSheet() {
-    Utils.showNotesModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: Icon(
-                note.list ? Icons.check_circle : Icons.check_circle_outline),
-            title: Text(LocaleStrings.notePage.toggleList),
-            onTap: () {
-              Navigator.pop(context);
-
-              toggleList();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.photo_outlined),
-            title: Text(LocaleStrings.notePage.imageGallery),
-            onTap: () async {
-              final image = await Utils.pickImage();
-
-              if (image != null) {
-                Navigator.pop(context);
-                await handleImageAdd(image.path);
-              }
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.camera_outlined),
-            enabled: !DeviceInfo.isDesktop,
-            title: Text(LocaleStrings.notePage.imageCamera),
-            onTap: () async {
-              PickedFile image =
-                  await ImagePicker().getImage(source: ImageSource.camera);
-
-              if (image != null) {
-                Navigator.pop(context);
-                handleImageAdd(image.path);
-              }
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.brush_outlined),
-            title: Text(LocaleStrings.notePage.drawing),
-            onTap: () {
-              Navigator.pop(context);
-              addDrawing();
-            },
-          ),
-        ],
       ),
     );
   }
