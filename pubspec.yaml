@@ -18,14 +18,14 @@ dependencies:
   photo_view:
   image_picker:
   back_button_interceptor:
-  shared_preferences: ^0.5.12+4
+  shared_preferences:
   local_auth:
   flutter_secure_storage:
   http: 
   jwt_decode:
   intl:
   flutter_local_notifications:
-  share_plus: ^1.2.0
+  share_plus:
   animations:
   material_design_icons_flutter:
   path_drawing:
@@ -36,7 +36,6 @@ dependencies:
   path:
   easy_localization:
   xml:
-  flutter_localized_locales: ^1.1.2
   uuid:
   recase:
   in_app_update:
@@ -69,10 +68,9 @@ dev_dependencies:
   mockito:
 
 dependency_overrides:
-  intl: '0.17.0-nullsafety.2'
-  platform: '2.2.1'
-  path: '1.7.0'
-  flutter_localized_locales: '1.1.2'
+  intl: '0.17.0'
+  platform: '3.0.0'
+  path: '1.8.0'
 
 flutter:
   uses-material-design: true

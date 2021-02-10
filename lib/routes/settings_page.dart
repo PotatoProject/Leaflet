@@ -1,12 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/migration_task.dart';
@@ -21,6 +21,7 @@ import 'package:potato_notes/widget/rgb_color_picker.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
+import 'package:recase/recase.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -163,8 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget get commonSettings {
     String currentLocaleName = firstLetterToUppercase(
-      LocaleNamesLocalizationsDelegate
-          .nativeLocaleNames[context.locale.languageCode],
+      localeNativeNames[context.locale.languageCode],
     );
 
     return Column(
@@ -270,8 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   itemBuilder: (context, index) {
                     Locale locale = context.supportedLocales[index];
                     String nativeName = firstLetterToUppercase(
-                      LocaleNamesLocalizationsDelegate
-                          .nativeLocaleNames[locale.languageCode],
+                      localeNativeNames[locale.languageCode],
                     );
                     bool selected = context.locale == locale;
 
@@ -460,10 +459,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   String firstLetterToUppercase(String origin) {
-    String firstLetter = origin.substring(0, 1);
-    String restOfTheString = origin.substring(1);
-
-    return firstLetter.toUpperCase() + restOfTheString;
+    return ReCase(origin).sentenceCase;
   }
 
   List<int> get logEntryValues => [
