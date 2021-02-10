@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -292,15 +294,9 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
     final _enableGesture =
         deviceInfo.uiSizeFactor > 3 ? false : _barrierDismissible;
     final padding = EdgeInsets.symmetric(
-      horizontal: !widget.isFirst && deviceInfo.uiSizeFactor > 3
-          ? MediaQuery.of(context).size.width / 8
-          : 0,
-      vertical: !widget.isFirst && deviceInfo.uiSizeFactor > 3
-          ? MediaQuery.of(context).size.height / 16
-          : 0,
+      horizontal: MediaQuery.of(context).size.width / 8,
+      vertical: MediaQuery.of(context).size.height / 16,
     );
-
-    final EdgeInsets effectivePadding = (padding ?? EdgeInsets.zero);
 
     final Widget content = Material(
       elevation: 16,
@@ -354,15 +350,26 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
         },
         child: AnimatedContainer(
           color: Colors.black45,
-          padding: effectivePadding,
           duration: Duration(milliseconds: 250),
           curve: Curves.easeOut,
-          child: MediaQuery(
-            child: content,
-            data: MediaQuery.of(context).copyWith(
-              padding: deviceInfo.uiSizeFactor > 3
-                  ? EdgeInsets.zero
-                  : MediaQuery.of(context).padding,
+          child: Center(
+            child: SizedBox(
+              width: widget.isFirst || deviceInfo.uiSizeFactor <= 3
+                  ? MediaQuery.of(context).size.width
+                  : (MediaQuery.of(context).size.width - padding.horizontal)
+                      .clamp(0.0, 720.0),
+              height: widget.isFirst || deviceInfo.uiSizeFactor <= 3
+                  ? MediaQuery.of(context).size.height
+                  : (MediaQuery.of(context).size.height - padding.vertical)
+                      .clamp(0.0, 580.0),
+              child: MediaQuery(
+                child: content,
+                data: MediaQuery.of(context).copyWith(
+                  padding: deviceInfo.uiSizeFactor > 3
+                      ? EdgeInsets.zero
+                      : MediaQuery.of(context).padding,
+                ),
+              ),
             ),
           ),
         ),
