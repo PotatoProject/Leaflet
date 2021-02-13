@@ -71,6 +71,9 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     }
 
     List<Widget> content = getItems(context);
+    final bool showCheckbox =
+        (_hovered || widget.selected || widget.selectorOpen) &&
+            widget.allowSelection;
 
     return Card(
       color: backgroundColor,
@@ -105,6 +108,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           child: Stack(
             fit: StackFit.passthrough,
             children: [
+              //Text(widget.note.toJson().toString()),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -158,10 +162,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                 right: 0,
                 top: 0,
                 child: AnimatedOpacity(
-                  opacity:
-                      (_hovered || widget.selected) && widget.allowSelection
-                          ? 1
-                          : 0,
+                  opacity: showCheckbox ? 1 : 0,
                   duration: Duration(milliseconds: 200),
                   child: Container(
                     alignment: Alignment.topRight,
@@ -182,8 +183,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                       ),
                     ),
                     child: IgnorePointer(
-                      ignoring: !((_hovered || widget.selected) &&
-                          widget.allowSelection),
+                      ignoring: !showCheckbox,
                       child: NoteViewCheckbox(
                         value: widget.selected,
                         onChanged: widget.onCheckboxChanged,

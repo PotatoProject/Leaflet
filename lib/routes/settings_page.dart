@@ -9,12 +9,12 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
-import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/routes/backup_and_restore/import_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -53,6 +53,54 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             commonSettings,
             SettingsCategory(
+              header: "Backup & Restore",
+              children: [
+                SettingsTile(
+                  icon: Icon(MdiIcons.contentSaveOutline),
+                  title: Text("Backup"),
+                  description: Text("Create a local copy of your notes"),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "This feature is not yet available on this version."),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                ),
+                SettingsTile(
+                  icon: Icon(MdiIcons.restore),
+                  title: Text("Restore"),
+                  description: Text(
+                      "Restore a backup created from a version of Leaflet"),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "This feature is not yet available on this version."),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                ),
+                SettingsTile(
+                  icon: Icon(MdiIcons.fileImportOutline),
+                  title: Text("Migrate"),
+                  description:
+                      Text("Import notes from a version of PotatoNotes"),
+                  onTap: () async {
+                    return Utils.showSecondaryRoute(
+                      context,
+                      ImportPage(),
+                    );
+                  },
+                ),
+              ],
+            ),
+            SettingsCategory(
               header: LocaleStrings.settingsPage.infoTitle,
               children: <Widget>[
                 SettingsTile(
@@ -90,41 +138,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(MdiIcons.databaseRemove),
+                    icon: Icon(MdiIcons.databaseRemoveOutline),
                     title: Text(LocaleStrings.settingsPage.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
                       await NoteController.deleteAll();
-                    },
-                  ),
-                  SettingsTile(
-                    icon: Icon(MdiIcons.databaseImport),
-                    title:
-                        Text(LocaleStrings.settingsPage.debugMigrateDatabase),
-                    onTap: () async {
-                      bool canMigrate = await MigrationTask.migrationAvailable;
-
-                      if (canMigrate) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => StatefulBuilder(
-                            builder: (context, setState) {
-                              return AlertDialog(
-                                title: Text("Migrating..."),
-                                content: StreamBuilder<double>(
-                                  stream: MigrationTask.migrate(),
-                                  initialData: 0.0,
-                                  builder: (context, snapshot) {
-                                    return LinearProgressIndicator(
-                                      value: snapshot.data,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      }
                     },
                   ),
                   SettingsTile(

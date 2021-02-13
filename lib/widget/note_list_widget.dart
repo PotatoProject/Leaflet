@@ -12,6 +12,7 @@ class NoteListWidget extends StatelessWidget {
   final ReturnMode noteKind;
   final ScrollController scrollController;
   final Widget customIllustration;
+  final int gridColumns;
 
   const NoteListWidget({
     Key key,
@@ -21,6 +22,7 @@ class NoteListWidget extends StatelessWidget {
     this.noteKind,
     this.scrollController,
     this.customIllustration,
+    this.gridColumns,
   }) : super(key: key);
 
   @override
@@ -39,7 +41,7 @@ class NoteListWidget extends StatelessWidget {
       if (prefs.useGrid) {
         child = WaterfallFlow.builder(
           gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-            crossAxisCount: deviceInfo.uiSizeFactor,
+            crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,
           ),
           itemBuilder: itemBuilder,
           itemCount: noteCount,

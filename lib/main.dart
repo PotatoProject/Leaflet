@@ -19,11 +19,15 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:worker_manager/worker_manager.dart';
 
-main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Executor().warmUp();
+  if (DeviceInfo.isDesktop) {
+    sqfliteFfiInit();
+  }
+  Executor().warmUp(log: kDebugMode);
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
@@ -81,7 +85,7 @@ class PotatoNotes extends StatelessWidget {
           accentColor = Color(appInfo.accentData);
         }
 
-        Themes themes = Themes(accentColor.withOpacity(1));
+        final Themes themes = Themes(accentColor.withOpacity(1));
 
         return NotesApp(
           title: "Leaflet",

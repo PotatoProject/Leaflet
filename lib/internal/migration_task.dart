@@ -5,22 +5,33 @@ import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class MigrationTask {
-  static Future<String> get v1DatabasePath async =>
-      join(await getDatabasesPath(), 'notes_database.db');
+  static Future<String> get v1DatabasePath async => join(
+        DeviceInfo.isDesktop
+            ? await databaseFactoryFfi.getDatabasesPath()
+            : await databaseFactory.getDatabasesPath(),
+        'notes_database.db',
+      );
 
-  static Future<bool> get migrationAvailable async =>
-      await File(await v1DatabasePath).exists();
+  static Future<bool> isMigrationAvailable(String path) async =>
+      await File(path).exists();
 
-  static Stream<double> migrate() async* {
-    Database db = await openDatabase(await v1DatabasePath);
+  static Future<List<Note>> migrate(String path) async {
+    if (path == null) return null;
+
+    Database db = DeviceInfo.isDesktop
+        ? await databaseFactoryFfi.openDatabase(path)
+        : await databaseFactory.openDatabase(path);
 
     List<Map<String, dynamic>> rawV1Notes = await db.query('notes');
+    final List<Note> notes = [];
 
     List<NoteV1Model> v1Notes = List.generate(rawV1Notes.length, (index) {
       return NoteV1Model(
@@ -44,12 +55,11 @@ class MigrationTask {
       );
     });
 
-    int notesAmount = v1Notes.length;
-
-    for (int index = 0; index < v1Notes.length; index++) {
-      NoteV1Model v1Note = v1Notes[index];
-      List<ListItem> listItems = [];
-      List<String> rawListItems = v1Note.listParseString?.split("\'..\'") ?? [];
+    for (final NoteV1Model v1Note in v1Notes) {
+      final List<ListItem> listItems = [];
+      final List<String> rawListItems =
+          v1Note.listParseString?.split("\'..\'") ?? [];
+      final String id = Utils.generateId();
 
       for (int i = 0; i < rawListItems.length; i++) {
         String rawListItem = rawListItems[i];
@@ -70,10 +80,11 @@ class MigrationTask {
         final file = File(join(appInfo.tempDirectory.path, "id.jpg"))..create();
         await file.writeAsBytes(response.bodyBytes);
         savedImage = await ImageHelper.copyToCache(file);
+        imageQueue.addUpload(savedImage, id);
       }
 
       Note note = Note(
-        id: Utils.generateId(),
+        id: id,
         title: v1Note.title ?? "",
         content:
             v1Note.content != null && v1Note.isList == 0 ? v1Note.content : "",
@@ -94,12 +105,12 @@ class MigrationTask {
         synced: false,
       );
 
-      await helper.saveNote(note);
-
-      yield index / notesAmount;
+      notes.add(note);
     }
 
     db.close();
+
+    return notes;
   }
 }
 

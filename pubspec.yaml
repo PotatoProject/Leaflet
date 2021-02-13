@@ -56,6 +56,8 @@ dependencies:
   file_selector_linux:
   file_selector_windows:
   image_size_getter:
+  sqflite_common_ffi:
+  file_picker:
 
   loggy:
     git: https://github.com/HrX03/loggy
@@ -77,9 +79,9 @@ flutter:
   assets:
     - assets/images/
   fonts:
-    - family:  CustomIcons
+    - family: CustomIcons
       fonts:
         - asset: fonts/CustomIcons.ttf
-    - family:  ValeraRound
+    - family: ValeraRound
       fonts:
         - asset: fonts/ValeraRound.ttf

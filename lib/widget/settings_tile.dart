@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class SettingsTile extends StatelessWidget {
   final Widget title;
+  final Widget description;
   final Widget icon;
   final Widget subtitle;
   final Widget trailing;
@@ -11,6 +12,7 @@ class SettingsTile extends StatelessWidget {
   const SettingsTile({
     Key key,
     @required this.title,
+    this.description,
     this.icon,
     this.subtitle,
     this.trailing,
@@ -21,6 +23,7 @@ class SettingsTile extends StatelessWidget {
   SettingsTile.withSwitch({
     Key key,
     @required this.title,
+    this.description,
     this.icon,
     this.subtitle,
     bool value,
@@ -51,13 +54,14 @@ class SettingsTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(
         16 + MediaQuery.of(context).viewPadding.left,
-        4,
+        description == null ? 4 : 0,
         16 + MediaQuery.of(context).viewPadding.right,
-        4,
+        description == null ? 4 : 0,
       ),
       leading: icon,
       title: title,
       trailing: trailing ?? _subtitle,
+      subtitle: description,
       enabled: enabled,
       onTap: onTap,
     );

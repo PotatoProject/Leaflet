@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
 class Themes {
-  Color mainColor = Colors.blueAccent;
+  final Color _mainColor;
 
-  Themes(this.mainColor);
+  const Themes(this._mainColor);
+
+  Color get mainColor => _mainColor ?? Colors.blueAccent;
 
   static final Color lightColor = Colors.white;
   static final Color lightSecondaryColor = Color(0xFFFAFAFA);
@@ -63,6 +65,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
+            padding: EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(
@@ -132,6 +135,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
+            padding: EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(
@@ -201,6 +205,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
+            padding: EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(

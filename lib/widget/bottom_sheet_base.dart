@@ -94,7 +94,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
       builder: (context, _) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            double shortestSide = 600;
+            double shortestSide = 480;
             int roundedShortestSide = (shortestSide / 10).round() * 10;
 
             final _constraints = BoxConstraints(

@@ -260,7 +260,7 @@ class SyncRoutine {
         Loggy.i(message: "Deleted note: " + localNoteId);
       } catch (e) {
         Loggy.e(message: e.toString());
-        throw ("Failed to delete notes: " + e);
+        throw ("Failed to delete notes: $e");
       }
     });
     return true;
