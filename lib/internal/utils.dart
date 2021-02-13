@@ -182,6 +182,12 @@ class Utils {
             value: 'select',
             showOnlyOnRightClickMenu: true,
           ),
+          SelectionOptionEntry(
+            title: "Select all",
+            icon: Icons.select_all_outlined,
+            value: 'selectall',
+            showOnlyOnRightClickMenu: true,
+          ),
           if (mode == ReturnMode.NORMAL)
             SelectionOptionEntry(
               title: anyStarred
@@ -241,6 +247,13 @@ class Utils {
       case 'select':
         state.selecting = true;
         state.addSelectedNote(notes.first);
+        break;
+      case 'selectall':
+        state.selecting = true;
+        final List<Note> notes = await helper.listNotes(state.widget.noteKind);
+        for (final Note note in notes) {
+          state.addSelectedNote(note);
+        }
         break;
       case 'favourites':
         bool anyStarred = notes.any((item) => item.starred);
@@ -566,6 +579,14 @@ class Utils {
       ),
     );
 
+    deleteLastNoteIfEmpty(context, currentLength, id);
+  }
+
+  static void deleteLastNoteIfEmpty(
+    BuildContext context,
+    int currentLength,
+    String id,
+  ) async {
     List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
     int newLength = notes.length;
 
@@ -577,11 +598,7 @@ class Utils {
       if (lastNote == null) return;
       Utils.handleNotePagePop(lastNote);
 
-      if (lastNote.title.isEmpty &&
-          lastNote.content.isEmpty &&
-          lastNote.listContent.isEmpty &&
-          lastNote.images.isEmpty &&
-          lastNote.reminders.isEmpty) {
+      if (lastNote.isEmpty) {
         Utils.deleteNotes(
           context: context,
           notes: [lastNote],
@@ -599,9 +616,12 @@ class Utils {
       SavedImage savedImage = await ImageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
-      note = note.copyWith(id: Utils.generateId());
+      int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+      String id = generateId();
 
-      Utils.showSecondaryRoute(
+      note = note.copyWith(id: id);
+
+      await Utils.showSecondaryRoute(
         context,
         NotePage(
           note: note,
@@ -609,25 +629,39 @@ class Utils {
       );
 
       helper.saveNote(note.markChanged());
+
+      deleteLastNoteIfEmpty(context, currentLength, id);
     }
   }
 
-  static void newList(BuildContext context) {
-    Utils.showSecondaryRoute(
+  static void newList(BuildContext context) async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+    String id = generateId();
+
+    await Utils.showSecondaryRoute(
       context,
       NotePage(
+        note: NoteX.emptyNote.copyWith(id: id),
         openWithList: true,
       ),
     );
+
+    deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static void newDrawing(BuildContext context) {
-    Utils.showSecondaryRoute(
+  static void newDrawing(BuildContext context) async {
+    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
+    String id = generateId();
+
+    await Utils.showSecondaryRoute(
       context,
       NotePage(
+        note: NoteX.emptyNote.copyWith(id: id),
         openWithDrawing: true,
       ),
     );
+
+    deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
   static Future<File> pickImage() async {
@@ -737,6 +771,21 @@ extension NoteX on Note {
       newMap.putIfAbsent(newKey, () => newValue);
     });
     return Note.fromJson(newMap);
+  }
+
+  bool get isEmpty {
+    final bool titleEmpty = title.isEmpty;
+    final bool contentEmpty = content.isEmpty;
+    final bool imagesEmpty = images.isEmpty;
+    final bool listContentEmpty = listContent.isEmpty;
+    final bool listContentItemsEmpty = listContent.every(
+      (element) => element.text.trim().isEmpty,
+    );
+
+    return titleEmpty &&
+        contentEmpty &&
+        imagesEmpty &&
+        (listContentEmpty || listContentItemsEmpty);
   }
 
   Map<String, dynamic> toSyncMap() {

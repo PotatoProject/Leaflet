@@ -731,7 +731,10 @@ class _NotePageTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(
+        left: 16 + MediaQuery.of(context).viewPadding.left,
+        right: 16 + MediaQuery.of(context).viewPadding.right,
+      ),
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,

@@ -1,3 +1,4 @@
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -65,6 +66,29 @@ class _NoteListPageState extends State<NoteListPage> {
       selecting = false;
       _selectionList.clear();
     });
+  }
+
+  bool _backButtonSelectionClosingInterceptor(
+    bool stopDefaultEvent,
+    RouteInfo info,
+  ) {
+    if (selecting) {
+      closeSelection();
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(_backButtonSelectionClosingInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(_backButtonSelectionClosingInterceptor);
+    super.dispose();
   }
 
   @override
