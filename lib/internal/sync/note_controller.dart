@@ -12,11 +12,11 @@ class NoteController {
 
   static Future<String> add(Note note) async {
     try {
-      String token = await prefs.getToken();
-      String noteJson = json.encode(note.toSyncMap());
-      var url = "${prefs.apiUrl}$NOTES_PREFIX/note";
+      final String token = await prefs.getToken();
+      final String noteJson = json.encode(note.toSyncMap());
+      final String url = "${prefs.apiUrl}$NOTES_PREFIX/note";
       Loggy.v(message: "Going to send POST to " + url);
-      Response addResult = await dio.post(
+      final Response addResult = await dio.post(
         url,
         data: noteJson,
         options: Options(headers: {"Authorization": "Bearer " + token}),
@@ -35,10 +35,10 @@ class NoteController {
 
   static Future<String> delete(String id) async {
     try {
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Goind to send DELETE to " + url);
-      Response deleteResponse = await dio.delete(
+      final Response deleteResponse = await dio.delete(
         url,
         options: Options(headers: {"Authorization": "Bearer " + token}),
       );
@@ -56,10 +56,10 @@ class NoteController {
 
   static Future<String> deleteAll() async {
     try {
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$NOTES_PREFIX/note/all";
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/all";
       Loggy.v(message: "Going to send DELETE to " + url);
-      Response deleteResult = await dio.delete(
+      final Response deleteResult = await dio.delete(
         url,
         options: Options(headers: {"Authorization": "Bearer " + token}),
       );
@@ -76,13 +76,13 @@ class NoteController {
   }
 
   static Future<List<Note>> list(int lastUpdated) async {
-    List<Note> notes = [];
+    final List<Note> notes = [];
     try {
-      String token = await prefs.getToken();
-      var url =
+      final String token = await prefs.getToken();
+      final String url =
           "${prefs.apiUrl}$NOTES_PREFIX/note/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
-      Response listResult = await dio.get(
+      final Response listResult = await dio.get(
         url,
         options: Options(headers: {"Authorization": "Bearer " + token}),
       );
@@ -91,7 +91,7 @@ class NoteController {
               listResult.data.toString());
       handleResponse(listResult);
       for (Map i in listResult.data["notes"]) {
-        var note = NoteX.fromSyncMap(i);
+        final Note note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
       return notes;
@@ -103,11 +103,11 @@ class NoteController {
   static Future<String> update(
       String id, Map<String, dynamic> noteDelta) async {
     try {
-      String deltaJson = jsonEncode(noteDelta);
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
+      final String deltaJson = jsonEncode(noteDelta);
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
-      Response updateResult = await dio.patch(
+      final Response updateResult = await dio.patch(
         url,
         data: deltaJson,
         options: Options(headers: {"Authorization": "Bearer " + token}),
@@ -126,11 +126,11 @@ class NoteController {
 
   static Future<List<String>> listDeleted(List<String> localIdList) async {
     try {
-      String idListJson = jsonEncode(localIdList);
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$NOTES_PREFIX/note/deleted";
+      final String idListJson = jsonEncode(localIdList);
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/deleted";
       Loggy.v(message: "Going to send POST to " + url);
-      Response listResult = await dio.post(
+      final Response listResult = await dio.post(
         url,
         data: idListJson,
         options: Options(headers: {"Authorization": "Bearer " + token}),
@@ -140,7 +140,7 @@ class NoteController {
               "(listDeleted) Server responded with (${listResult.statusCode})}: " +
                   listResult.data.toString());
       handleResponse(listResult);
-      List<String> idList = (listResult.data["deleted"] as List)
+      final List<String> idList = (listResult.data["deleted"] as List)
           .map((e) => e.toString())
           .toList();
       return idList;

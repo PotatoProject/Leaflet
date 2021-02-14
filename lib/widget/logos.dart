@@ -38,9 +38,9 @@ class _LeafletLogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < _leafletLogoPaths.length; i++) {
-      final pathData = _leafletLogoPaths[i];
-      final path = _PathCache.instance.getPath(pathData);
-      final paint = Paint()..color = pathData.color;
+      final PathData pathData = _leafletLogoPaths[i];
+      final Path path = _PathCache.instance.getPath(pathData);
+      final Paint paint = Paint()..color = pathData.color;
 
       if (i == 0) {
         Rect rect = path.getBounds();
@@ -94,9 +94,9 @@ class _PospLogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < _pospLogoPaths.length; i++) {
-      final pathData = _pospLogoPaths[i];
-      final path = _PathCache.instance.getPath(pathData);
-      final paint = Paint()..color = color ?? Colors.transparent;
+      final PathData pathData = _pospLogoPaths[i];
+      final Path path = _PathCache.instance.getPath(pathData);
+      final Paint paint = Paint()..color = color ?? Colors.transparent;
 
       if (i == 0) {
         Rect rect = path.getBounds();

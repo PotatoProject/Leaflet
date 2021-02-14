@@ -13,6 +13,7 @@ import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
+import 'package:potato_notes/widget/selection_bar.dart';
 
 class NoteView extends StatefulWidget {
   final Note note;
@@ -46,16 +47,16 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = widget.note.color != 0
+    final Color backgroundColor = widget.note.color != 0
         ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
         : Theme.of(context).cardColor;
-    Color borderColor = widget.selected
+    final Color borderColor = widget.selected
         ? Theme.of(context).iconTheme.color
         : Colors.transparent;
-    Color checkBoxColor = widget.note.images.isNotEmpty
+    final Color checkBoxColor = widget.note.images.isNotEmpty
         ? Colors.white
         : Theme.of(context).iconTheme.color.withOpacity(1);
-    Color checkColor =
+    final Color checkColor =
         widget.note.images.isNotEmpty ? Colors.black : backgroundColor;
 
     if (widget.selected) {
@@ -70,7 +71,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       _elevation = 2;
     }
 
-    List<Widget> content = getItems(context);
+    final List<Widget> content = getItems(context);
     final bool showCheckbox =
         (_hovered || widget.selected || widget.selectorOpen) &&
             widget.allowSelection;
@@ -206,7 +207,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   }
 
   List<Widget> getItems(BuildContext context) {
-    List<Widget> items = [];
+    final List<Widget> items = [];
 
     if (widget.note.title != "") {
       items.add(
@@ -259,13 +260,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   List<Widget> get listContentWidgets => List.generate(
         min(widget.note.listContent?.length ?? 0, 6),
         (index) {
-          ListItem item = widget.note.listContent[index];
-          Color backgroundColor = widget.note.color != 0
+          final ListItem item = widget.note.listContent[index];
+          final Color backgroundColor = widget.note.color != 0
               ? Color(
                   NoteColors.colorList[widget.note.color].dynamicColor(context))
               : Theme.of(context).cardColor;
-          bool showMoreItem = index == 5;
-          final icon = showMoreItem
+          final bool showMoreItem = index == 5;
+          final Widget icon = showMoreItem
               ? Icon(
                   Icons.add,
                   size: 20,
@@ -284,7 +285,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   },
                   splashRadius: 14,
                 );
-          final text = showMoreItem
+          final String text = showMoreItem
               ? "${(widget.note.listContent?.length ?? 0) - 5} more items"
               : item.text;
 
@@ -331,10 +332,14 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       );
 
   void showOptionsMenu(details) async {
-    final selectionOptions = SelectionState.of(context).selectionOptions;
-    final everyOption = selectionOptions.options(context, [widget.note]);
-    final options = everyOption.where((e) => !e.oneNoteOnly).toList();
-    final oneNoteOptions = everyOption.where((e) => e.oneNoteOnly).toList();
+    final SelectionOptions selectionOptions =
+        SelectionState.of(context).selectionOptions;
+    final List<SelectionOptionEntry> everyOption =
+        selectionOptions.options(context, [widget.note]);
+    final List<SelectionOptionEntry> options =
+        everyOption.where((e) => !e.oneNoteOnly).toList();
+    final List<SelectionOptionEntry> oneNoteOptions =
+        everyOption.where((e) => e.oneNoteOnly).toList();
 
     final value = await showMenu(
       context: context,

@@ -32,11 +32,11 @@ class InAppUpdater {
         return await InAppUpdate.checkForUpdate();
       case BuildType.GITHUB:
       default:
-        http.Response githubRelease = await http.get(
+        final http.Response githubRelease = await http.get(
           "https://api.github.com/repos/HrX03/PotatoNotes/releases/latest",
         );
-        Map<dynamic, dynamic> body = json.decode(githubRelease.body);
-        int versionCode = int.parse(body["tag_name"].split("+")[1]);
+        final Map<dynamic, dynamic> body = json.decode(githubRelease.body);
+        final int versionCode = int.parse(body["tag_name"].split("+")[1]);
         return AppUpdateInfo(
           versionCode > int.parse(appInfo.packageInfo.buildNumber),
           false,
@@ -49,7 +49,8 @@ class InAppUpdater {
   static void checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
     if (DeviceInfo.isDesktopOrWeb) return;
-    final updateInfo = await InAppUpdater._internalCheckForUpdate();
+    final AppUpdateInfo updateInfo =
+        await InAppUpdater._internalCheckForUpdate();
     if (updateInfo.updateAvailable) {
       InAppUpdater.update(
         context,
@@ -89,7 +90,7 @@ class InAppUpdater {
         break;
       case BuildType.GITHUB:
       default:
-        bool shouldUpdate = await _showUpdateDialog(context);
+        final bool shouldUpdate = await _showUpdateDialog(context);
 
         if (!shouldUpdate) return;
 
@@ -99,7 +100,7 @@ class InAppUpdater {
   }
 
   static Future<bool> _showUpdateDialog(BuildContext context) async {
-    final status = await showDialog(
+    final bool status = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) {

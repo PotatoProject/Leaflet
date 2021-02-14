@@ -4,11 +4,11 @@ part 'notification_payload.g.dart';
 
 @JsonSerializable()
 class NotificationPayload {
-  int id;
-  String noteId;
-  NotificationAction action;
+  final int id;
+  final String noteId;
+  final NotificationAction action;
 
-  NotificationPayload({
+  const NotificationPayload({
     this.id,
     this.noteId,
     this.action,

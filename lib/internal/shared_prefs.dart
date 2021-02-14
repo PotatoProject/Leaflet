@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
   static SharedPrefs _instance;
-  SharedPreferences prefs;
+  final SharedPreferences prefs;
 
   SharedPrefs._(this.prefs) {
     _warmup();
@@ -49,7 +49,7 @@ class SharedPrefs {
   }
 
   Future<ThemeMode> getThemeMode() async {
-    int value = prefs.getInt("theme_mode");
+    final int value = prefs.getInt("theme_mode");
     switch (value) {
       case 0:
         return ThemeMode.system;
@@ -80,7 +80,7 @@ class SharedPrefs {
   }
 
   Future<Color> getCustomAccent() async {
-    int colorValue = prefs.getInt("custom_accent");
+    final int colorValue = prefs.getInt("custom_accent");
     if (colorValue != null)
       return Color(colorValue);
     else

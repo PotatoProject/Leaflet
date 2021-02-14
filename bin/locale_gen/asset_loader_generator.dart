@@ -6,7 +6,7 @@ class AssetLoaderGenerator {
   AssetLoaderGenerator(this.outputDir);
 
   Future<void> generate() async {
-    final file = File("$outputDir/generated_asset_loader.g.dart");
+    final File file = File("$outputDir/generated_asset_loader.g.dart");
     await file.writeAsString(_class);
   }
 }

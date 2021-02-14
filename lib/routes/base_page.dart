@@ -48,7 +48,7 @@ class _BasePageState extends State<BasePage>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
-  final _pages = [
+  final List<Widget> _pages = [
     NoteListPage(
       key: PageStorageKey(ReturnMode.NORMAL),
       noteKind: ReturnMode.NORMAL,
@@ -218,9 +218,9 @@ class _BasePageState extends State<BasePage>
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        bool useDesktopLayout =
+        final bool useDesktopLayout =
             deviceInfo.isLandscape || deviceInfo.uiSizeFactor > 3;
-        bool useDynamicDrawer = deviceInfo.uiSizeFactor > 3;
+        final bool useDynamicDrawer = deviceInfo.uiSizeFactor > 3;
 
         return BasePageInheritedWidget(
           state: this,
@@ -367,7 +367,7 @@ class _BasePageState extends State<BasePage>
                                     : LocaleStrings.mainPage.account,
                               ),
                               onTap: () async {
-                                bool loggedIn = prefs.accessToken != null;
+                                final bool loggedIn = prefs.accessToken != null;
 
                                 if (loggedIn) {
                                   Utils.showNotesModalBottomSheet(

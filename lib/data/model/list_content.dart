@@ -29,7 +29,7 @@ class ListContentConverter extends TypeConverter<List<ListItem>, String> {
     if (fromDb == null) {
       return null;
     }
-    List<dynamic> decoded = json.decode(fromDb);
+    final List<dynamic> decoded = json.decode(fromDb);
     return List.generate(
       decoded.length,
       (index) => ListItem.fromJson(

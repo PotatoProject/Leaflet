@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
@@ -26,14 +27,14 @@ class MigrationTask {
   static Future<List<Note>> migrate(String path) async {
     if (path == null) return null;
 
-    Database db = DeviceInfo.isDesktop
+    final Database db = DeviceInfo.isDesktop
         ? await databaseFactoryFfi.openDatabase(path)
         : await databaseFactory.openDatabase(path);
 
-    List<Map<String, dynamic>> rawV1Notes = await db.query('notes');
+    final List<Map<String, dynamic>> rawV1Notes = await db.query('notes');
     final List<Note> notes = [];
 
-    List<NoteV1Model> v1Notes = List.generate(rawV1Notes.length, (index) {
+    final List<NoteV1Model> v1Notes = List.generate(rawV1Notes.length, (index) {
       return NoteV1Model(
         id: rawV1Notes[index]['id'],
         title: rawV1Notes[index]['title'],
@@ -76,14 +77,15 @@ class MigrationTask {
 
       SavedImage savedImage;
       if (v1Note.imagePath != null) {
-        final response = await get(v1Note.imagePath);
-        final file = File(join(appInfo.tempDirectory.path, "id.jpg"))..create();
+        final Response response = await get(v1Note.imagePath);
+        final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
+          ..create();
         await file.writeAsBytes(response.bodyBytes);
         savedImage = await ImageHelper.copyToCache(file);
         imageQueue.addUpload(savedImage, id);
       }
 
-      Note note = Note(
+      final Note note = Note(
         id: id,
         title: v1Note.title ?? "",
         content:
@@ -114,6 +116,7 @@ class MigrationTask {
   }
 }
 
+@immutable
 class NoteV1Model {
   final int id;
   final String title;
@@ -131,7 +134,7 @@ class NoteV1Model {
   final int isDeleted;
   final int isArchived;
 
-  NoteV1Model({
+  const NoteV1Model({
     this.id,
     this.title,
     this.content,

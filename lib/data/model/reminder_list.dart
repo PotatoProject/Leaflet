@@ -9,7 +9,7 @@ class ReminderListConverter extends TypeConverter<List<DateTime>, String> {
     if (fromDb == null) {
       return null;
     }
-    List<dynamic> decoded = json.decode(fromDb);
+    final List<dynamic> decoded = json.decode(fromDb);
     return List.generate(
       decoded.length,
       (index) => DateTime.fromMillisecondsSinceEpoch(

@@ -14,13 +14,13 @@ class AccountController {
   // When there is an error it throws an exception which needs to be catched
   static Future<AuthResponse> register(
       String username, String email, String password) async {
-    Map<String, String> body = {
+    final Map<String, String> body = {
       "username": username,
       "email": email,
       "password": password,
     };
     try {
-      Response registerResponse = await post(
+      final Response registerResponse = await post(
         "${prefs.apiUrl}/login/user/register",
         body: json.encode(body),
         headers: {"Content-Type": "application/json"},
@@ -70,7 +70,7 @@ class AccountController {
     }
 
     try {
-      Response loginResponse = await post(
+      final Response loginResponse = await post(
         "${prefs.apiUrl}/login/user/login",
         body: json.encode(body),
         headers: {"Content-Type": "application/json"},
@@ -81,16 +81,16 @@ class AccountController {
           secure: true);
       switch (loginResponse.statusCode) {
         case 200:
-          Map<String, dynamic> response = json.decode(loginResponse.body);
+          final Map<String, dynamic> response = json.decode(loginResponse.body);
           prefs.accessToken = response["token"];
           prefs.refreshToken = response["refresh_token"];
           await getUserInfo();
           return AuthResponse(status: true);
         case 400:
-            return AuthResponse(
-              status: false,
-              message: loginResponse.body,
-            );
+          return AuthResponse(
+            status: false,
+            message: loginResponse.body,
+          );
           break;
         default:
           Loggy.d(message: loginResponse.body);
@@ -104,18 +104,19 @@ class AccountController {
   }
 
   static Future<AuthResponse> getUserInfo() async {
-    bool loggedIn = await SyncRoutine.checkLoginStatus();
+    final bool loggedIn = await SyncRoutine.checkLoginStatus();
 
     if (loggedIn) {
-      String token = await prefs.getToken();
+      final String token = await prefs.getToken();
 
       try {
-        Response profileRequest = await get(
+        final Response profileRequest = await get(
             "${prefs.apiUrl}/login/user/profile",
             headers: {"Authorization": "Bearer " + token});
         switch (profileRequest.statusCode) {
           case 200:
-            Map<String, dynamic> response = json.decode(profileRequest.body);
+            final Map<String, dynamic> response =
+                json.decode(profileRequest.body);
             prefs.username = response["username"];
             prefs.email = response["email"];
             return AuthResponse(status: true);
@@ -159,7 +160,7 @@ class AccountController {
       return AuthResponse(status: false, message: "Not logged in");
 
     try {
-      var url = "${prefs.apiUrl}/login/user/refresh";
+      final String url = "${prefs.apiUrl}/login/user/refresh";
       Loggy.v(message: "Going to send GET to " + url);
       refresh = await get(
         url,

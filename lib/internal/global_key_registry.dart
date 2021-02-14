@@ -4,7 +4,7 @@ class GlobalKeyRegistry {
   static Map<dynamic, GlobalKey> _registry = {};
 
   static GlobalKey get(dynamic id) {
-    GlobalKey key = _registry[id];
+    final GlobalKey key = _registry[id];
 
     if (key == null) {
       _registry[id] = GlobalKey();

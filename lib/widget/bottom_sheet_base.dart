@@ -79,11 +79,11 @@ class _BottomSheetBase extends StatefulWidget {
 }
 
 class _BottomSheetBaseState extends State<_BottomSheetBase> {
-  GlobalKey _childKey = GlobalKey();
+  final GlobalKey _childKey = GlobalKey();
   Curve _curve = decelerateEasing;
 
   double get _childHeight {
-    RenderBox box = _childKey.currentContext.findRenderObject();
+    final RenderBox box = _childKey.currentContext.findRenderObject();
     return box.size.height;
   }
 
@@ -94,16 +94,16 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
       builder: (context, _) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            double shortestSide = 480;
-            int roundedShortestSide = (shortestSide / 10).round() * 10;
+            final double shortestSide = 480;
+            final int roundedShortestSide = (shortestSide / 10).round() * 10;
 
-            final _constraints = BoxConstraints(
+            final BoxConstraints _constraints = BoxConstraints(
               minWidth: 0,
               maxWidth: roundedShortestSide.toDouble(),
               minHeight: 0.0,
               maxHeight: deviceInfo.isLandscape ? 600 : constraints.maxHeight,
             );
-            bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
+            final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
 
             return GestureDetector(
               onVerticalDragStart: !_useDesktopLayout
@@ -125,10 +125,11 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                       );
 
                       if (details.primaryVelocity > 350) {
-                        final _animForward = widget.route.controller.status ==
-                                AnimationStatus.forward ||
+                        final bool _animForward =
                             widget.route.controller.status ==
-                                AnimationStatus.completed;
+                                    AnimationStatus.forward ||
+                                widget.route.controller.status ==
+                                    AnimationStatus.completed;
                         if (!_animForward)
                           widget.route.navigator?.pop();
                         else

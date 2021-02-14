@@ -31,22 +31,9 @@ void main() async {
   Executor().warmUp(log: kDebugMode);
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
-  AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
+  final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   initProviders(_db);
   Loggy.generateAppLabel();
-
-  final sharedPrefs = SharedPrefs.instance;
-  final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-  final isDarkSystemTheme = data.platformBrightness == Brightness.dark;
-  final themeMode = await sharedPrefs.getThemeMode();
-  final useAmoled = await sharedPrefs.getUseAmoled();
-
-  Color color = Themes.lightSecondaryColor;
-
-  if (themeMode == ThemeMode.system && isDarkSystemTheme ||
-      themeMode == ThemeMode.dark) {
-    color = useAmoled ? Themes.blackSecondaryColor : Themes.darkSecondaryColor;
-  }
 
   runApp(
     SplashPage(
@@ -56,7 +43,7 @@ void main() async {
         fallbackLocale: Locale("en", "US"),
         assetLoader: GeneratedAssetLoader(),
         path: "assets/locales",
-        preloaderColor: color,
+        preloaderColor: Colors.white,
       ),
     ),
   );

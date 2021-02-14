@@ -181,7 +181,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget get commonSettings {
-    String currentLocaleName = firstLetterToUppercase(
+    final String currentLocaleName = firstLetterToUppercase(
       localeNativeNames[context.locale.languageCode],
     );
 
@@ -255,7 +255,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () async {
-                int result = await Utils.showNotesModalBottomSheet(
+                final int result = await Utils.showNotesModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
                     initialColor: Theme.of(context).accentColor,
@@ -286,11 +286,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   scrollable: true,
                   itemBuilder: (context, index) {
-                    Locale locale = context.supportedLocales[index];
-                    String nativeName = firstLetterToUppercase(
+                    final Locale locale = context.supportedLocales[index];
+                    final String nativeName = firstLetterToUppercase(
                       localeNativeNames[locale.languageCode],
                     );
-                    bool selected = context.locale == locale;
+                    final bool selected = context.locale == locale;
 
                     return dropDownTile(
                       title: Text(nativeName),
@@ -310,7 +310,7 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icon(Icons.autorenew),
               title: Text("Change sync API url"),
               onTap: () async {
-                bool status = await showInfoSheet(
+                final bool status = await showInfoSheet(
                   context,
                   content:
                       "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
@@ -332,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.masterPass != "",
               onChanged: (value) async {
                 if (prefs.masterPass == "") {
-                  bool status = await showInfoSheet(
+                  final bool status = await showInfoSheet(
                     context,
                     content: LocaleStrings
                         .settingsPage.privacyUseMasterPassDisclaimer,
@@ -340,18 +340,19 @@ class _SettingsPageState extends State<SettingsPage> {
                   );
                   if (status) showPassChallengeSheet(context);
                 } else {
-                  bool confirm =
+                  final bool confirm =
                       await showPassChallengeSheet(context, false) ?? false;
 
                   if (confirm) {
                     prefs.masterPass = "";
 
-                    List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
+                    final List<Note> notes =
+                        await helper.listNotes(ReturnMode.LOCAL);
 
                     setState(() => removingMasterPass = true);
                     BasePage.of(context).setBottomBarEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
-                      final note = notes[i];
+                      final Note note = notes[i];
                       if (note.lockNote) {
                         await helper.saveNote(
                           note.markChanged().copyWith(lockNote: false),
@@ -372,7 +373,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
-                bool confirm =
+                final bool confirm =
                     await showPassChallengeSheet(context, false) ?? false;
                 if (confirm) showPassChallengeSheet(context);
               },
@@ -413,7 +414,7 @@ class _SettingsPageState extends State<SettingsPage> {
     int itemCount,
     bool scrollable = false,
   }) async {
-    final list = ListView.builder(
+    final Widget list = ListView.builder(
       shrinkWrap: true,
       physics: scrollable ? null : NeverScrollableScrollPhysics(),
       itemBuilder: itemBuilder,

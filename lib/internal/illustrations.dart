@@ -4,7 +4,7 @@ class Illustrations {
   Illustrations();
 
   Future<Widget> noNotesIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(
@@ -21,7 +21,7 @@ class Illustrations {
   }
 
   Future<Widget> emptyArchiveIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(
@@ -38,7 +38,7 @@ class Illustrations {
   }
 
   Future<Widget> emptyTrashIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(
@@ -55,7 +55,7 @@ class Illustrations {
   }
 
   Future<Widget> noFavouritesIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(
@@ -72,7 +72,7 @@ class Illustrations {
   }
 
   Future<Widget> nothingFoundIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(
@@ -89,7 +89,7 @@ class Illustrations {
   }
 
   Future<Widget> typeToSearchIllustration(Brightness themeMode) async {
-    bool isDark = themeMode == Brightness.dark;
+    final bool isDark = themeMode == Brightness.dark;
 
     if (isDark)
       return Image.asset(

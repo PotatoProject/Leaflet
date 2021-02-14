@@ -27,7 +27,7 @@ class NoteListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final padding = EdgeInsets.fromLTRB(
+    final EdgeInsets padding = EdgeInsets.fromLTRB(
       4 + MediaQuery.of(context).viewPadding.left,
       4 + MediaQuery.of(context).padding.top,
       4 + MediaQuery.of(context).viewPadding.right,
@@ -35,7 +35,8 @@ class NoteListWidget extends StatelessWidget {
     );
     Widget child;
 
-    final _scrollController = scrollController ?? ScrollController();
+    final ScrollController _scrollController =
+        scrollController ?? ScrollController();
 
     if (noteCount > 0) {
       if (prefs.useGrid) {

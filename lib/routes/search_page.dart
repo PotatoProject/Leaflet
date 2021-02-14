@@ -17,7 +17,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState<T> extends State<SearchPage> {
   // This node is owned, but not hosted by, the search page. Hosting is done by
   // the text field.
-  FocusNode focusNode = FocusNode();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _SearchPageState<T> extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body = widget.delegate.buildResults(context);
+    final Widget body = widget.delegate.buildResults(context);
 
     return DependentScaffold(
       appBar: AppBar(

@@ -10,20 +10,20 @@ class LocaleGenerator {
   LocaleGenerator(this.localeDir, this.outputDir);
 
   Future<void> generate() async {
-    List<String> locales = [];
-    List<Directory> paths = [];
+    final List<String> locales = [];
+    final List<Directory> paths = [];
     final Directory providedDir = Directory(localeDir);
     final Directory absoluteOutputDir = Directory(outputDir).absolute;
-    final folders = providedDir.listSync();
-    final localesBuffer = StringBuffer();
+    final List<FileSystemEntity> folders = providedDir.listSync();
+    final StringBuffer localesBuffer = StringBuffer();
 
-    final localesFile = File("${absoluteOutputDir.path}/locales.g.dart");
-    final buffer = StringBuffer(_baseLocaleClass);
+    final File localesFile = File("${absoluteOutputDir.path}/locales.g.dart");
+    final StringBuffer buffer = StringBuffer(_baseLocaleClass);
 
     for (var element in folders) {
       if (element is Directory) {
         print(element);
-        final locale = getNameFromPath(element.path);
+        final String locale = getNameFromPath(element.path);
         locales.add(locale);
         paths.add(element);
       }
@@ -39,7 +39,7 @@ class LocaleGenerator {
     localesBuffer.writeln();
     localesBuffer.writeln("  static List<Locale> get supported => [");
     locales.forEach((e) {
-      final splittedLocale = e.split("-");
+      final List<String> splittedLocale = e.split("-");
       localesBuffer.writeln(
           '    Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');
     });
@@ -49,13 +49,13 @@ class LocaleGenerator {
       "  static Map<String, Map<String, String>> get data => {",
     );
     for (int i = 0; i < locales.length; i++) {
-      final locale = locales[i];
-      final path = paths[i];
+      final String locale = locales[i];
+      final Directory path = paths[i];
       Map<String, String> result = await XmlFileParser.load(path, locale);
 
       buffer.writeln();
       buffer.writeln(getLocaleClass(result, locale));
-      final classInstance = "${getClassNameFromLocale(locale)}()";
+      final String classInstance = "${getClassNameFromLocale(locale)}()";
       localesBuffer.writeln('    $classInstance.locale: $classInstance.data,');
     }
     localesBuffer.writeln("  };");
@@ -75,9 +75,9 @@ String getNameFromPath(String path) {
 }
 
 String getClassNameFromLocale(String locale) {
-  final sanifiedName = locale.replaceAll("-", "");
-  final initial = sanifiedName[0].toUpperCase();
-  final capitalizedName = initial + sanifiedName.substring(1);
+  final String sanifiedName = locale.replaceAll("-", "");
+  final String initial = sanifiedName[0].toUpperCase();
+  final String capitalizedName = initial + sanifiedName.substring(1);
   return "_\$Locale$capitalizedName";
 }
 
@@ -89,7 +89,7 @@ abstract class _\$LocaleBase {
 """;
 
 String getLocaleClass(Map<String, String> data, String locale) {
-  StringBuffer buffer = StringBuffer();
+  final StringBuffer buffer = StringBuffer();
   buffer.writeln(
       "class ${getClassNameFromLocale(locale)} extends _\$LocaleBase {");
   buffer.writeln("  @override");
@@ -98,8 +98,8 @@ String getLocaleClass(Map<String, String> data, String locale) {
   buffer.writeln("  @override");
   buffer.writeln("  Map<String, String> get data => {");
   data.forEach((key, value) {
-    final encodedKey = json.encode(key);
-    final encodedValue = json.encode(value);
+    final String encodedKey = json.encode(key);
+    final String encodedValue = json.encode(value);
     buffer.writeln('    $encodedKey: $encodedValue,');
   });
   buffer.writeln("  };");

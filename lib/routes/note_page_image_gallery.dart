@@ -26,7 +26,7 @@ class NotePageImageGallery extends StatefulWidget {
 class _NotePageImageGalleryState extends State<NotePageImageGallery>
     with MouseListenerMixin {
   PageController pageController;
-  TransformationController transformationController =
+  final TransformationController transformationController =
       TransformationController();
   int currentPage;
 

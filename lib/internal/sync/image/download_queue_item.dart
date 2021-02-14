@@ -32,9 +32,9 @@ class DownloadQueueItem extends QueueItem {
   Future<String> getDownloadUrl() async {
     switch (savedImage.storageLocation) {
       case StorageLocation.SYNC:
-        String token = await prefs.getToken();
-        var url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
-        Response presign = await dio.get(url,
+        final String token = await prefs.getToken();
+        final String url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
+        final Response presign = await dio.get(url,
             options: Options(
               headers: {"Authorization": "Bearer $token"},
             ));

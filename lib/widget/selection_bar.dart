@@ -16,13 +16,14 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final state = SelectionState.of(context);
-    final selectionList = state.selectionList;
-    final selectionOptions = state.selectionOptions;
-    final everyOption = selectionOptions.options(context, selectionList);
-    final options = everyOption
+    final List<Note> selectionList = state.selectionList;
+    final SelectionOptions selectionOptions = state.selectionOptions;
+    final List<SelectionOptionEntry> everyOption =
+        selectionOptions.options(context, selectionList);
+    final List<SelectionOptionEntry> options = everyOption
         .where((e) => !e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
         .toList();
-    final oneNoteOptions = everyOption
+    final List<SelectionOptionEntry> oneNoteOptions = everyOption
         .where((e) => e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
         .toList();
 

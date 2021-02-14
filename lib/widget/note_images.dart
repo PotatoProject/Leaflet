@@ -50,13 +50,13 @@ class _ImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _groupedImages = images.group(3);
+    final List<List<SavedImage>> _groupedImages = images.group(3);
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final _rows = <Widget>[];
+        final List<Widget> _rows = <Widget>[];
 
-        final _forLength = maxGridRows != null
+        final int _forLength = maxGridRows != null
             ? _groupedImages.length.clamp(0, maxGridRows)
             : _groupedImages.length;
         for (int i = 0; i < _forLength; i++) {
@@ -78,25 +78,26 @@ class _ImageGrid extends StatelessWidget {
       List<SavedImage> images, double baseWidth, int forLoopIndex) {
     assert(images.length > 0 && images.length <= 3);
 
-    final _sizes = images
+    final List<Size> _sizes = images
         .map(
           (image) => Size(image.width, image.height),
         )
         .toList();
 
-    final _height = _getMinHeight(_sizes);
-    final _transformedWidths =
+    final double _height = _getMinHeight(_sizes);
+    final List<double> _transformedWidths =
         _sizes.map((s) => s.aspectRatio * _height).toList();
 
-    final _widthSum = _sumWidths(_transformedWidths);
-    final _newHeight = baseWidth * _height / _widthSum;
+    final double _widthSum = _sumWidths(_transformedWidths);
+    final double _newHeight = baseWidth * _height / _widthSum;
 
-    final _newWidths = _sizes.map((s) => s.aspectRatio * _newHeight).toList();
-    final _children = <Widget>[];
+    final List<double> _newWidths =
+        _sizes.map((s) => s.aspectRatio * _newHeight).toList();
+    final List<Widget> _children = <Widget>[];
 
     for (int i = 0; i < images.length; i++) {
-      final _savedImage = images[i];
-      final _width = _newWidths[i];
+      final SavedImage _savedImage = images[i];
+      final double _width = _newWidths[i];
 
       _children.add(
         SizedBox(
@@ -156,7 +157,7 @@ class _ImageStrip extends StatelessWidget {
       builder: (context, constraints) {
         return ListView.builder(
           itemBuilder: (context, index) {
-            final _image = images[index];
+            final SavedImage _image = images[index];
             Size _imageWidgetSize;
 
             if (axis == Axis.horizontal) {

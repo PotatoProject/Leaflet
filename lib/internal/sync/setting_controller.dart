@@ -11,10 +11,10 @@ class SettingController {
 
   static Future<String> get(String key) async {
     try {
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
       Loggy.v(message: "Going to send GET to " + url);
-      Response getResult = await dio.get(
+      final Response getResult = await dio.get(
         url,
         options: Options(headers: {"Authorization": "Bearer " + token}),
       );
@@ -32,10 +32,10 @@ class SettingController {
 
   static Future<String> set(String key, String value) async {
     try {
-      String token = await prefs.getToken();
-      var url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
+      final String token = await prefs.getToken();
+      final String url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
       Loggy.v(message: "Going to send PUT to " + url);
-      Response setResult = await dio.put(
+      final Response setResult = await dio.put(
         url,
         data: value,
         options: Options(headers: {"Authorization": "Bearer " + token}),
@@ -54,18 +54,18 @@ class SettingController {
 
   static Future<Map<String, String>> getChanged(int lastUpdated) async {
     try {
-      String token = await prefs.getToken();
-      String url =
+      final String token = await prefs.getToken();
+      final String url =
           "${prefs.apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
-      Response getResult = await dio.get(url,
+      final Response getResult = await dio.get(url,
           options: Options(headers: {"Authorization": "Bearer " + token}));
       Loggy.d(
           message:
               "(getChanged) Server responded with (${getResult.statusCode}): " +
                   getResult.data.toString());
       NoteController.handleResponse(getResult);
-      Map<String, dynamic> data = getResult.data;
+      final Map<String, dynamic> data = getResult.data;
       return data
           .map((key, value) => MapEntry(key.toString(), value.toString()));
     } on SocketException {

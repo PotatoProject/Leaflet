@@ -175,13 +175,14 @@ class AboutPage extends StatelessWidget {
   }
 }
 
+@immutable
 class ContributorInfo {
-  String name;
-  String role;
-  String avatarUrl;
-  List<SocialLink> socialLinks;
+  final String name;
+  final String role;
+  final String avatarUrl;
+  final List<SocialLink> socialLinks;
 
-  ContributorInfo({
+  const ContributorInfo({
     this.name,
     this.role,
     this.avatarUrl,
@@ -189,11 +190,12 @@ class ContributorInfo {
   });
 }
 
+@immutable
 class SocialLink {
-  SocialLinkType type;
-  String username;
+  final SocialLinkType type;
+  final String username;
 
-  SocialLink(this.type, this.username);
+  const SocialLink(this.type, this.username);
 }
 
 enum SocialLinkType {

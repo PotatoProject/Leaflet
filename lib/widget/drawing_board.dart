@@ -129,8 +129,8 @@ class DrawPainter extends CustomPainter {
     if (objects.length != old.objects.length) return true;
 
     for (int i = 0; i < objects.length; i++) {
-      final object = objects[i];
-      final oldObject = old.objects[i];
+      final DrawObject object = objects[i];
+      final DrawObject oldObject = old.objects[i];
 
       if (!listEquals(object.points, oldObject.points)) return true;
     }
@@ -207,7 +207,7 @@ class DrawObject {
 
   void render(Canvas canvas) {
     if (points.length > 1) {
-      Path path = Path();
+      final Path path = Path();
 
       path.addPolygon(points, false);
 

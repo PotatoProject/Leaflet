@@ -74,11 +74,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 
   void _loadColors() async {
-    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-    final isDarkSystemTheme = data.platformBrightness == Brightness.dark;
-    final themeModeInt = prefs.getFromCache('theme_mode');
+    final MediaQueryData data =
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
+    final int themeModeInt = prefs.getFromCache('theme_mode');
     ThemeMode themeMode;
-    final useAmoled = prefs.getFromCache('use_amoled');
+    final bool useAmoled = prefs.getFromCache('use_amoled');
 
     switch (themeModeInt) {
       case 0:
@@ -112,7 +113,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final _colorTween = ColorTween(
+    final ColorTween _colorTween = ColorTween(
       // As of now we don't have proper system theme detection on flutter
       // for linux and windows so just use the same color for begin and end.
       begin: Platform.isLinux || Platform.isWindows ? finalColor : initialColor,

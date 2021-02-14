@@ -8,17 +8,17 @@ class XmlFileParser {
   const XmlFileParser._();
 
   static Future<Map<String, String>> load(Directory dir, String locale) async {
-    Map<String, String> returnMap = {};
+    final Map<String, String> returnMap = {};
 
-    List<FileSystemEntity> files = dir.listSync();
+    final List<FileSystemEntity> files = dir.listSync();
 
-    for (FileSystemEntity file in files) {
+    for (final FileSystemEntity file in files) {
       if (!(file is File)) continue;
 
-      final routeFile =
+      final String routeFile =
           getNameFromPath(file.absolute.path).replaceAll(".xml", "");
-      final fileContent = await (file as File).readAsString();
-      var document = XmlDocument.parse(fileContent);
+      final String fileContent = await (file as File).readAsString();
+      final XmlDocument document = XmlDocument.parse(fileContent);
       document.normalize();
 
       XmlElement base = document.lastElementChild;
@@ -54,27 +54,27 @@ class XmlFileParser {
 
   static Future<Map<String, Map<String, StringInfo>>> loadWithStringInfo(
       Directory dir, String locale) async {
-    Map<String, Map<String, StringInfo>> returnMap = {};
+    final Map<String, Map<String, StringInfo>> returnMap = {};
 
-    List<FileSystemEntity> files = dir.listSync();
+    final List<FileSystemEntity> files = dir.listSync();
 
-    for (FileSystemEntity file in files) {
+    for (final FileSystemEntity file in files) {
       if (!(file is File)) continue;
 
-      final routeFile =
+      final String routeFile =
           getNameFromPath(file.absolute.path).replaceAll(".xml", "");
       returnMap[routeFile] = {};
-      final fileContent = await (file as File).readAsString();
-      var document = XmlDocument.parse(fileContent);
+      final String fileContent = await (file as File).readAsString();
+      final XmlDocument document = XmlDocument.parse(fileContent);
       document.normalize();
 
-      XmlElement base = document.lastElementChild;
+      final XmlElement base = document.lastElementChild;
 
       for (XmlNode item in base.children) {
         if (item is XmlElement) {
-          XmlElement element = item;
+          final XmlElement element = item;
 
-          String name = element.getAttribute("name");
+          final String name = element.getAttribute("name");
           if (name == null) continue;
 
           if (element.name.toString() == "string") {
@@ -108,7 +108,7 @@ class XmlFileParser {
     int i;
 
     for (i = 0; _workBase.contains("%s"); i++) {
-      final indexOf = _workBase.indexOf("%s");
+      final int indexOf = _workBase.indexOf("%s");
       _workBase = _workBase.substring(indexOf + 2);
     }
 

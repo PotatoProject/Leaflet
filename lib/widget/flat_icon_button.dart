@@ -13,9 +13,9 @@ class FlatIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color highlightColor = Theme.of(context).accentColor.withOpacity(0.1);
-    ThemeData theme = Theme.of(context);
-    Color accent = Theme.of(context).accentColor;
+    final Color highlightColor = Theme.of(context).accentColor.withOpacity(0.1);
+    final ThemeData theme = Theme.of(context);
+    final Color accent = Theme.of(context).accentColor;
 
     return InkResponse(
       onTap: onPressed,

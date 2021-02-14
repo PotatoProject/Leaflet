@@ -21,9 +21,9 @@ class DeleteQueueItem extends QueueItem {
 
   Future<void> deleteImage() async {
     status = QueueItemStatus.ONGOING;
-    var url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
-    String token = await prefs.getToken();
-    var response = await dio.delete(url,
+    final String url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
+    final String token = await prefs.getToken();
+    final Response response = await dio.delete(url,
         options: Options(headers: {"Authorization": "Bearer $token"}));
     if (response.statusCode != 200) {
       return;

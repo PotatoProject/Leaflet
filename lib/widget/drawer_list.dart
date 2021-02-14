@@ -54,7 +54,7 @@ class DrawerList extends StatelessWidget {
   }
 
   List<Widget> get drawerSections {
-    List<Widget> list = [];
+    final List<Widget> list = [];
 
     if (header != null) {
       list.add(header);
@@ -105,6 +105,7 @@ class DrawerList extends StatelessWidget {
       );
 }
 
+@immutable
 class DrawerListItem {
   final Widget icon;
   final Widget selectedIcon;

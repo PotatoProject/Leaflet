@@ -287,11 +287,11 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
   @override
   Widget build(BuildContext context) {
     final TextDirection textDirection = Directionality.of(context);
-    final _barrierDismissible =
+    final bool _barrierDismissible =
         _requestDisableGestures ? false : widget.enableGesture;
-    final _enableGesture =
+    final bool _enableGesture =
         deviceInfo.uiSizeFactor > 3 ? false : _barrierDismissible;
-    final padding = EdgeInsets.symmetric(
+    final EdgeInsets padding = EdgeInsets.symmetric(
       horizontal: MediaQuery.of(context).size.width / 8,
       vertical: MediaQuery.of(context).size.height / 16,
     );

@@ -37,7 +37,7 @@ class _SetupPagetate extends State<SetupPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextDirection textDirection = Directionality.of(context);
+    final TextDirection textDirection = Directionality.of(context);
     String buttonText;
 
     if (pageIndex == 0) {

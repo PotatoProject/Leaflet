@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/upload_queue_item.dart';
@@ -18,18 +19,15 @@ class ImageQueue extends ChangeNotifier {
       new List.from(downloadQueue)..addAll(uploadQueue);
 
   @observable
-  List<UploadQueueItem> uploadQueue = [];
-  List<DeleteQueueItem> deleteQueue = [];
+  final List<UploadQueueItem> uploadQueue = [];
+  final List<DeleteQueueItem> deleteQueue;
   @observable
-  List<DownloadQueueItem> downloadQueue = [];
+  final List<DownloadQueueItem> downloadQueue = [];
 
-  ImageQueue() {
-    //Will make sure to resume from prefs
-    deleteQueue = deleteQueueFromPrefs();
-  }
+  ImageQueue() : deleteQueue = deleteQueueFromPrefs();
 
   void addUpload(SavedImage data, String noteId) {
-    var item = UploadQueueItem(
+    final UploadQueueItem item = UploadQueueItem(
         localPath: data.path,
         noteId: noteId,
         savedImage: data,
@@ -40,7 +38,7 @@ class ImageQueue extends ChangeNotifier {
 
   void addDelete(SavedImage data) {
     if (data.storageLocation != StorageLocation.SYNC || !data.uploaded) return;
-    var item = DeleteQueueItem(
+    final DeleteQueueItem item = DeleteQueueItem(
       localPath: data.path,
       savedImage: data,
       storageLocation: data.storageLocation,
@@ -50,7 +48,7 @@ class ImageQueue extends ChangeNotifier {
   }
 
   void addDownload(SavedImage data, String noteId) {
-    var item = DownloadQueueItem(
+    final DownloadQueueItem item = DownloadQueueItem(
         savedImage: data, noteId: noteId, localPath: data.path);
     downloadQueue.add(item);
     notifyListeners();
@@ -60,8 +58,8 @@ class ImageQueue extends ChangeNotifier {
   Future<bool> hasDuplicates(SavedImage data, {NoteHelper noteHelper}) async {
     if (noteHelper == null) noteHelper = helper;
 
-    var notes = await noteHelper.listNotes(ReturnMode.LOCAL);
-    for (var note in notes) {
+    final List<Note> notes = await noteHelper.listNotes(ReturnMode.LOCAL);
+    for (final Note note in notes) {
       if (note.images.indexWhere(
               (e) => e.id != data.id && e.uploaded && e.hash == data.hash) !=
           -1) return true;
@@ -70,7 +68,7 @@ class ImageQueue extends ChangeNotifier {
   }
 
   Future<void> fillUploadQueue() async {
-    var notes = await helper.listNotes(ReturnMode.LOCAL);
+    final List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
     notes.forEach((note) {
       note.images
           .where((image) => !image.uploaded)
@@ -82,7 +80,7 @@ class ImageQueue extends ChangeNotifier {
     Loggy.d(message: "DownloadQueue has ${downloadQueue.length} items queued");
     Loggy.d(message: "Started processing downloads");
     await Future.wait(downloadQueue.map((item) => item.downloadImage()));
-    for (var item in downloadQueue) {
+    for (final DownloadQueueItem item in downloadQueue) {
       if (item.status == QueueItemStatus.COMPLETE) await updateItem(item);
     }
     downloadQueue
@@ -94,7 +92,7 @@ class ImageQueue extends ChangeNotifier {
   }
 
   Future<void> process() async {
-    String tempDirectory = appInfo.tempDirectory.path;
+    final String tempDirectory = appInfo.tempDirectory.path;
 
     Loggy.d(message: "UploadQueue has ${uploadQueue.length} items queued");
     Loggy.d(message: "Started processing uploads");
@@ -102,7 +100,7 @@ class ImageQueue extends ChangeNotifier {
         uploadQueue.map((item) => uploadItem(item, tempDirectory)));
 
     //Update items that are uploaded in notes
-    for (var item in uploadQueue) {
+    for (final UploadQueueItem item in uploadQueue) {
       if (item.status != QueueItemStatus.COMPLETE) continue;
       await updateItem(item);
     }
@@ -144,8 +142,8 @@ class ImageQueue extends ChangeNotifier {
   }
 
   Future<void> updateItem(QueueItem item) async {
-    var notes = await helper.listNotes(ReturnMode.LOCAL);
-    for (var note in notes) {
+    final List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
+    for (final Note note in notes) {
       for (int i = 0; i < note.images.length; i++) {
         if (note.images[i].id != item.savedImage.id) continue;
         note.images[i] = item.savedImage;
@@ -155,13 +153,12 @@ class ImageQueue extends ChangeNotifier {
   }
 
   void saveToPrefs() {
-    String delete = jsonEncode(deleteQueue);
-    prefs.deleteQueue = delete;
+    prefs.deleteQueue = jsonEncode(deleteQueue);
   }
 
-  List<DeleteQueueItem> deleteQueueFromPrefs() {
+  static List<DeleteQueueItem> deleteQueueFromPrefs() {
     if (prefs.deleteQueue == null || prefs.deleteQueue.length == 0) return [];
-    List<DeleteQueueItem> queue = (json.decode(prefs.deleteQueue) as List)
+    final List<DeleteQueueItem> queue = (json.decode(prefs.deleteQueue) as List)
         .map((i) => DeleteQueueItem.fromJson(i))
         .toList();
     return queue;

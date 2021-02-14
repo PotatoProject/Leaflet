@@ -202,7 +202,7 @@ abstract class _PreferencesBase with Store {
     prefs.setDeleteQueue(value);
   }
 
-  dynamic getFromCache(String key) {
+  Object getFromCache(String key) {
     return prefs.prefs.get(key);
   }
 
@@ -240,7 +240,7 @@ abstract class _PreferencesBase with Store {
         DateTime.fromMillisecondsSinceEpoch(
                 Jwt.parseJwt(accessToken)["exp"] * 1000)
             .isBefore(DateTime.now())) {
-      final response = await AccountController.refreshToken();
+      final AuthResponse response = await AccountController.refreshToken();
 
       if (!response.status) {
         Loggy.w(message: response.message);

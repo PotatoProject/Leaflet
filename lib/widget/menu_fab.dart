@@ -59,7 +59,7 @@ class MenuFab extends StatefulWidget {
 }
 
 class _MenuFabState extends State<MenuFab> {
-  final heroTag = _DefaultHeroTag();
+  final Object heroTag = _DefaultHeroTag();
 
   Color foregroundColor;
   Color backgroundColor;
@@ -166,7 +166,7 @@ class _MenuFabState extends State<MenuFab> {
       _elevation = elevation;
     }
 
-    final _child = ConstrainedBox(
+    final Widget _child = ConstrainedBox(
       constraints: BoxConstraints(
         minWidth: 56.0,
         minHeight: 56.0,
@@ -295,12 +295,12 @@ class _MenuFabRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size fabSize = box.size;
-    Offset fabTopLeftPosition = box.localToGlobal(
+    final Size fabSize = box.size;
+    final Offset fabTopLeftPosition = box.localToGlobal(
       Offset.zero,
     );
 
-    final entries = _buildEntries(context)
+    final List<Widget> entries = _buildEntries(context)
       ..add(
         _MenuEntryListTile(
           leading: IconTheme.merge(
@@ -337,7 +337,7 @@ class _MenuFabRoute extends StatelessWidget {
           fromHeroContext,
           toHeroContext,
         ) {
-          Animation<ShapeBorder> shapeAnim = ShapeBorderTween(
+          final Animation<ShapeBorder> shapeAnim = ShapeBorderTween(
             begin: beginShape,
             end: endShape,
           ).animate(animation);
@@ -355,7 +355,7 @@ class _MenuFabRoute extends StatelessWidget {
                     : child,
               );
 
-          final children = [
+          final List<Widget> children = [
             optionallyAnimate(
               fromHeroContext.widget,
               flightDirection == HeroFlightDirection.pop,
@@ -440,12 +440,13 @@ class _FabMenuLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    final isOnTop = fabRect.top < size.height / 2;
-    final isOnLeft = fabRect.left < size.width / 2;
-    final isHorizontallyCentered =
+    final bool isOnTop = fabRect.top < size.height / 2;
+    final bool isOnLeft = fabRect.left < size.width / 2;
+    final bool isHorizontallyCentered =
         fabRect.left < size.width / 2 && fabRect.right > size.width / 2;
 
-    double top = isOnTop ? fabRect.top : fabRect.bottom - childSize.height;
+    final double top =
+        isOnTop ? fabRect.top : fabRect.bottom - childSize.height;
     double left = isOnLeft ? fabRect.left : fabRect.right - childSize.width;
 
     if (isHorizontallyCentered) {
@@ -539,6 +540,7 @@ class MenuFabEntry {
 
 class _DefaultHeroTag {
   const _DefaultHeroTag();
+
   @override
   String toString() => '<default FloatingActionButton tag>';
 }
@@ -556,14 +558,14 @@ class _AnimatedShapeShadowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Rect rect = Rect.fromLTWH(
+    final Rect rect = Rect.fromLTWH(
       0,
       0,
       size.width,
       size.height,
     );
 
-    final path = shape.getOuterPath(rect);
+    final Path path = shape.getOuterPath(rect);
 
     canvas.drawShadow(
         path, Colors.black.withOpacity(elevationOpacity), elevation, true);

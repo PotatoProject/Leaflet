@@ -123,7 +123,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<void> deleteAllNotes() async {
-    List<Note> notes = await listNotes(ReturnMode.ALL);
+    final List<Note> notes = await listNotes(ReturnMode.ALL);
 
     notes.forEach((note) async {
       await deleteNote(note);

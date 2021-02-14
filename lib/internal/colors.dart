@@ -84,13 +84,14 @@ class NoteColors {
       );
 }
 
+@immutable
 class ColorInfo {
   final String label;
   final int color;
   final int lightColor;
   final int darkColor;
 
-  ColorInfo({
+  const ColorInfo({
     @required this.label,
     @required this.color,
     this.lightColor,
@@ -98,7 +99,7 @@ class ColorInfo {
   });
 
   int dynamicColor(BuildContext context) {
-    Brightness brightness = Theme.of(context).brightness;
+    final Brightness brightness = Theme.of(context).brightness;
 
     return brightness == Brightness.light
         ? lightColor ?? color

@@ -49,12 +49,12 @@ class _NotePageState extends State<NotePage> {
   Note note;
 
   TextEditingController titleController;
-  FocusNode titleFocusNode = FocusNode();
+  final FocusNode titleFocusNode = FocusNode();
   TextEditingController contentController;
-  FocusNode contentFocusNode = FocusNode();
+  final FocusNode contentFocusNode = FocusNode();
 
-  List<TextEditingController> listContentControllers = [];
-  List<FocusNode> listContentNodes = [];
+  final List<TextEditingController> listContentControllers = [];
+  final List<FocusNode> listContentNodes = [];
   bool needsFocus = false;
 
   @override
@@ -106,7 +106,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> handleImageAdd(String path) async {
-    SavedImage savedImage = await ImageHelper.copyToCache(File(path));
+    final SavedImage savedImage = await ImageHelper.copyToCache(File(path));
     setState(() => note.images.add(savedImage));
     imageQueue.addUpload(savedImage, note.id);
     await helper.saveNote(note.markChanged());
@@ -461,12 +461,12 @@ class _NotePageState extends State<NotePage> {
                 toggleList();
                 break;
               case 'image':
-                final image = await Utils.pickImage();
+                final File image = await Utils.pickImage();
 
                 if (image != null) await handleImageAdd(image.path);
                 break;
               case 'photo':
-                PickedFile image =
+                final PickedFile image =
                     await ImagePicker().getImage(source: ImageSource.camera);
 
                 if (image != null) handleImageAdd(image.path);
@@ -482,10 +482,10 @@ class _NotePageState extends State<NotePage> {
   }
 
   void addListContentItem() {
-    List<ListItem> sortedList = note.listContent;
+    final List<ListItem> sortedList = note.listContent;
     sortedList.sort((a, b) => a.id.compareTo(b.id));
 
-    int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
+    final int id = sortedList.isNotEmpty ? sortedList.last.id + 1 : 1;
 
     note.listContent.add(
       ListItem(
@@ -498,7 +498,7 @@ class _NotePageState extends State<NotePage> {
 
     setState(() => listContentControllers.add(TextEditingController()));
 
-    FocusNode node = FocusNode();
+    final FocusNode node = FocusNode();
     listContentNodes.add(node);
 
     needsFocus = true;
@@ -527,7 +527,7 @@ class _NotePageState extends State<NotePage> {
               value: note.lockNote,
               onChanged: prefs.masterPass != ""
                   ? (value) async {
-                      bool confirm =
+                      final bool confirm =
                           await Utils.showPassChallengeSheet(context) ?? false;
 
                       if (confirm) {
@@ -605,7 +605,7 @@ class _NotePageState extends State<NotePage> {
       listContentControllers
           .add(TextEditingController(text: note.listContent[i].text));
 
-      FocusNode node = FocusNode();
+      final FocusNode node = FocusNode();
       listContentNodes.add(node);
     }
   }

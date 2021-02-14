@@ -40,13 +40,14 @@ class DrawPage extends StatefulWidget {
 
 class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   BuildContext _globalContext;
-  DrawingBoardController _controller = DrawingBoardController();
-  DrawingToolbarController _toolbarController = DrawingToolbarController();
+  final DrawingBoardController _controller = DrawingBoardController();
+  final DrawingToolbarController _toolbarController =
+      DrawingToolbarController();
 
   AnimationController _appbarAc;
   AnimationController _toolbarAc;
 
-  List<DrawingTool> _tools = [
+  final List<DrawingTool> _tools = [
     DrawingTool(
       icon: Icons.brush_outlined,
       title: LocaleStrings.drawPage.toolsBrush,
@@ -103,11 +104,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     _globalContext ??= context;
 
-    final _curvedAppbarAc = CurvedAnimation(
+    final Animation<double> _curvedAppbarAc = CurvedAnimation(
       parent: _appbarAc,
       curve: decelerateEasing,
     );
-    final _curvedToolbarAc = CurvedAnimation(
+    final Animation<double> _curvedToolbarAc = CurvedAnimation(
       parent: _toolbarAc,
       curve: decelerateEasing,
     );
@@ -251,10 +252,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     _controller.currentIndex = _controller.objects.length - 1;
     _controller.actionQueueIndex = _controller.currentIndex;
 
-    RenderBox box = context.findRenderObject() as RenderBox;
-    Offset topLeft = box.localToGlobal(Offset.zero);
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final Offset topLeft = box.localToGlobal(Offset.zero);
 
-    final point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
+    final Offset point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
     _controller.addPointToObject(_controller.currentIndex, point);
   }
@@ -270,12 +271,12 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     Rect toolbarRect =
         (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
 
-    RenderBox box = context.findRenderObject() as RenderBox;
-    Offset topLeft = box.localToGlobal(Offset.zero);
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final Offset topLeft = box.localToGlobal(Offset.zero);
 
     appbarRect = appbarRect.shift(topLeft * -1);
     toolbarRect = toolbarRect.shift(topLeft * -1);
-    final point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
+    final Offset point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
     if (!_appbarAc.isAnimating) {
       if (appbarRect.contains(point))
@@ -302,7 +303,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   bool exitPrompt(bool _, RouteInfo __) {
-    Uri uri = _filePath != null ? Uri.file(_filePath) : null;
+    final Uri uri = _filePath != null ? Uri.file(_filePath) : null;
 
     void _internal() async {
       if (!_controller.saved) {
@@ -339,7 +340,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   void _saveImage() async {
     String drawing;
-    final box =
+    final RenderRepaintBoundary box =
         _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
 
     if (kIsWeb) {
@@ -349,18 +350,18 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         box.size,
       );
     } else {
-      ui.Image image = await box.toImage();
-      ByteData byteData = await image.toByteData(
+      final ui.Image image = await box.toImage();
+      final ByteData byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
-      Uint8List pngBytes = byteData.buffer.asUint8List();
-      DateTime now = DateTime.now();
-      String timestamp = DateFormat(
+      final Uint8List pngBytes = byteData.buffer.asUint8List();
+      final DateTime now = DateTime.now();
+      final String timestamp = DateFormat(
         "HH_mm_ss-MM_dd_yyyy",
         context.locale.toLanguageTag(),
       ).format(now);
 
-      final drawingsDirectory = DeviceInfo.isDesktopOrWeb
+      final Directory drawingsDirectory = DeviceInfo.isDesktopOrWeb
           ? await getApplicationSupportDirectory()
           : await getApplicationDocumentsDirectory();
 
@@ -373,11 +374,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         drawing = _filePath;
       }
 
-      File imgFile = File(drawing);
+      final File imgFile = File(drawing);
       await imgFile.writeAsBytes(pngBytes, flush: true);
       Loggy.d(message: drawing);
 
-      SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
+      final SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
       if (widget.savedImage != null) {
         widget.note.images
             .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);

@@ -35,11 +35,11 @@ class ImageHelper {
   }
 
   static Future<SavedImage> copyToCache(File file) async {
-    SavedImage savedImage = SavedImage.empty();
-    String path =
+    final SavedImage savedImage = SavedImage.empty();
+    final String path =
         join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
-    final _size = getImageSize(file);
+    final Size _size = getImageSize(file);
     savedImage.width = _size.width.toDouble();
     savedImage.height = _size.height.toDouble();
     savedImage.fileExtension = extension(file.path);
@@ -48,10 +48,10 @@ class ImageHelper {
   }
 
   static String generateImageHash(Uint8List rawBytes) {
-    var blake2b = Blake2b();
+    final Blake2b blake2b = Blake2b();
     blake2b.update(rawBytes);
-    var rawDigest = blake2b.digest();
-    var hash =
+    final Uint8List rawDigest = blake2b.digest();
+    final String hash =
         rawDigest.map((int) => int.toRadixString(16).toString()).join('');
     print(hash);
     return hash;
@@ -62,15 +62,15 @@ class ImageHelper {
   }
 
   static String generateBlurHash(Image image) {
-    String hash = encodeBlurHash(
+    final String hash = encodeBlurHash(
         image.getBytes(format: Format.rgba), image.width, image.height);
     return hash;
   }
 
   static Image compressImage(Uint8List rawBytes) {
-    Image image = decodeImage(rawBytes);
+    final Image image = decodeImage(rawBytes);
     // Default height of compressed images
-    int height = maxHeight;
+    final int height = maxHeight;
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
     if (image.height > height) {
@@ -83,7 +83,7 @@ class ImageHelper {
 
   static Image compressForBlur(Image image) {
     // Default height of compressed images
-    int height = 100;
+    final int height = 100;
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
     if (image.height > height) {
@@ -95,13 +95,13 @@ class ImageHelper {
   }
 
   static Future<File> saveImage(Image image, String path) async {
-    File imageFile = File(path);
+    final File imageFile = File(path);
     await imageFile.writeAsBytes(encodeJpg(image, quality: JPEG_QUALITY));
     return imageFile;
   }
 
   static DownloadQueueItem getDownloadItem(SavedImage savedimage) {
-    var index = imageQueue.downloadQueue
+    final int index = imageQueue.downloadQueue
         .indexWhere((e) => e.savedImage.id == savedimage.id);
     if (index == -1) {
       return null;
@@ -111,10 +111,10 @@ class ImageHelper {
   }
 
   static Future<String> getAvatar() async {
-    String token = await prefs.getToken();
-    var url = "${prefs.apiUrl}/files/get/avatar.jpg";
+    final String token = await prefs.getToken();
+    final String url = "${prefs.apiUrl}/files/get/avatar.jpg";
     Loggy.v(message: "Going to send GET to :" + url);
-    Response presign = await dio.get(url,
+    final Response presign = await dio.get(url,
         options: Options(
           headers: {"Authorization": "Bearer $token"},
         ));

@@ -48,7 +48,7 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
   Future<void> deleteTag(Tag tag) => delete(tags).delete(tag);
 
   Future<void> deleteAllTags() async {
-    List<Tag> tags = await listTags(TagReturnMode.ALL);
+    final List<Tag> tags = await listTags(TagReturnMode.ALL);
     tags.forEach((tag) async {
       await deleteTag(tag);
     });

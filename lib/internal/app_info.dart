@@ -67,11 +67,14 @@ abstract class _AppInfoBase with Store {
 
   void _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
-    var initializationSettingsAndroid =
+    final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
-    var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettingsMacOS = MacOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
+    final IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings();
+    final MacOSInitializationSettings initializationSettingsMacOS =
+        MacOSInitializationSettings();
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
@@ -81,7 +84,7 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<dynamic> _handleNotificationTap(String payload) async {
-    NotificationPayload nPayload =
+    final NotificationPayload nPayload =
         NotificationPayload.fromJson(json.decode(payload));
 
     switch (nPayload.action) {

@@ -83,8 +83,8 @@ class _NavigationButtonState extends State<_NavigationButton>
 
   @override
   Widget build(BuildContext context) {
-    final alignment = AlignmentDirectional(-1.0, -1.0);
-    final _curvedAnim = CurvedAnimation(
+    final AlignmentGeometry alignment = AlignmentDirectional(-1.0, -1.0);
+    final Animation<double> _curvedAnim = CurvedAnimation(
       parent: _ac,
       curve: Curves.linear,
       reverseCurve: Curves.easeIn,

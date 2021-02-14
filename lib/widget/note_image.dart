@@ -74,7 +74,7 @@ class _NoteImageState extends State<NoteImage> {
 
   @override
   Widget build(BuildContext context) {
-    final displayLoadingIndicator =
+    final bool displayLoadingIndicator =
         queueItem != null && queueItem.status == QueueItemStatus.ONGOING;
 
     return Container(

@@ -11,7 +11,7 @@ class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
       return null;
     }
 
-    List<dynamic> decoded = json.decode(fromDb);
+    final List<dynamic> decoded = json.decode(fromDb);
     return List.generate(
       decoded.length,
       (index) => SavedImage.fromJson(

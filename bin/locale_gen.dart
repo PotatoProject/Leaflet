@@ -8,11 +8,11 @@ void main(List<String> args) async {
     return;
   }
 
-  final _localeGen = LocaleGenerator(args[0], args[1]);
+  final LocaleGenerator _localeGen = LocaleGenerator(args[0], args[1]);
   await _localeGen.generate();
-  final _assetLoaderGen = AssetLoaderGenerator(args[1]);
+  final AssetLoaderGenerator _assetLoaderGen = AssetLoaderGenerator(args[1]);
   await _assetLoaderGen.generate();
-  final _keyGen = KeyGenerator(args[0], args[1]);
+  final KeyGenerator _keyGen = KeyGenerator(args[0], args[1]);
   await _keyGen.generate();
 
   print("Files generated inside ${args[1]}");

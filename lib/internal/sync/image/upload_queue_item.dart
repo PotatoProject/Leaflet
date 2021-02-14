@@ -29,15 +29,15 @@ class UploadQueueItem extends QueueItem {
   @action
   Future<void> process(String tempDirectory) async {
     status = QueueItemStatus.ONGOING;
-    Uint8List rawBytes = await File(localPath).readAsBytes();
+    final Uint8List rawBytes = await File(localPath).readAsBytes();
     Loggy.d(message: "Hashing image");
     savedImage.hash = await Executor()
         .execute(fun1: ImageHelper.generateImageHash, arg1: rawBytes);
     Loggy.d(message: "Resizing image");
-    Image compressedImage = await Executor()
+    final Image compressedImage = await Executor()
         .execute(fun1: ImageHelper.compressImage, arg1: rawBytes);
     Loggy.d(message: "generating blurhash");
-    String blurHash = ImageHelper.generateBlurHash(await Executor()
+    final String blurHash = ImageHelper.generateBlurHash(await Executor()
         .execute(fun1: ImageHelper.compressForBlur, arg1: compressedImage));
     savedImage.blurHash = blurHash;
     Loggy.d(message: "Saving image");
@@ -50,10 +50,10 @@ class UploadQueueItem extends QueueItem {
   Future<Response> uploadImage({
     Map<String, dynamic> headers = const {},
   }) async {
-    var file = File(localPath);
+    final File file = File(localPath);
     status = QueueItemStatus.ONGOING;
-    var length = await file.length();
-    var response = await Dio().request(
+    final int length = await file.length();
+    final Response response = await Dio().request(
       (await getUploadUrl()).toString(),
       data: file.openRead(),
       onSendProgress: (count, total) {
@@ -75,10 +75,10 @@ class UploadQueueItem extends QueueItem {
   Future<String> getUploadUrl() async {
     switch (savedImage.storageLocation) {
       case StorageLocation.SYNC:
-        String token = await prefs.getToken();
-        var url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
+        final String token = await prefs.getToken();
+        final String url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
         print(url);
-        Response presign = await dio.get(url,
+        final Response presign = await dio.get(url,
             options: Options(
               headers: {"Authorization": "Bearer $token"},
             ));

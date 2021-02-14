@@ -6,9 +6,9 @@ class TokenInterceptor extends InterceptorsWrapper {
   @override
   Future onError(DioError err) async {
     if (err.response?.statusCode == 401) {
-      final response = await AccountController.refreshToken();
+      final AuthResponse response = await AccountController.refreshToken();
       if (response.status) {
-        RequestOptions options = err.request;
+        final RequestOptions options = err.request;
         return dio.request(options.path,
             options: options
               ..headers.update("Authorization", (value) => prefs.getToken()),

@@ -8,7 +8,7 @@ class FilesController {
   static const FILES_PREFIX = "/files";
 
   static Future<void> uploadImageToSync(String hash, File file) async {
-    String url = await getUploadUrlFromSync(hash);
+    final String url = await getUploadUrlFromSync(hash);
     await Dio().put(
       url,
       data: file.openRead(),
@@ -20,10 +20,10 @@ class FilesController {
   }
 
   static Future<String> getUploadUrlFromSync(String hash) async {
-    String token = await prefs.getToken();
-    var url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
+    final String token = await prefs.getToken();
+    final String url = "${prefs.apiUrl}$FILES_PREFIX/put/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult = await dio.get(
+    final Response getResult = await dio.get(
       url,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );
@@ -38,10 +38,10 @@ class FilesController {
   }
 
   static Future<String> getDownloadUrlFromSync(String hash) async {
-    String token = await prefs.getToken();
-    var url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
+    final String token = await prefs.getToken();
+    final String url = "${prefs.apiUrl}$FILES_PREFIX/get/$hash.jpg";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult = await dio.get(
+    final Response getResult = await dio.get(
       url,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );
@@ -56,10 +56,10 @@ class FilesController {
   }
 
   static Future<void> deleteImage(String hash) async {
-    String token = await prefs.getToken();
-    var url = "${prefs.apiUrl}$FILES_PREFIX/delete/$hash.jpg";
+    final String token = await prefs.getToken();
+    final String url = "${prefs.apiUrl}$FILES_PREFIX/delete/$hash.jpg";
     Loggy.v(message: "Going to send DELETE to $url");
-    Response deleteResult = await dio.delete(
+    final Response deleteResult = await dio.delete(
       url,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );
@@ -72,10 +72,10 @@ class FilesController {
   }
 
   static Future<FilesApiStats> getStats() async {
-    String token = await prefs.getToken();
-    var url = "${prefs.apiUrl}$FILES_PREFIX/limit";
+    final String token = await prefs.getToken();
+    final String url = "${prefs.apiUrl}$FILES_PREFIX/limit";
     Loggy.v(message: "Going to send GET to " + url);
-    Response getResult = await dio.get(
+    final Response getResult = await dio.get(
       url,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );
@@ -83,7 +83,7 @@ class FilesController {
         message:
             "Server responded with (${getResult.statusCode}): ${getResult.data}");
     if (getResult.statusCode == 200) {
-      final jsonBody = getResult.data;
+      final Map<String, dynamic> jsonBody = getResult.data;
       return FilesApiStats(jsonBody["used"], jsonBody["limit"]);
     } else {
       throw ("Cant get stats " + getResult.data);

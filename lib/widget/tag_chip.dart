@@ -13,7 +13,7 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
+    final Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
 
     return LayoutBuilder(
       builder: (context, constraints) {

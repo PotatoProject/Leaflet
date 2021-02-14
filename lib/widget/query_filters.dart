@@ -61,7 +61,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                 NoteColors.colorList[widget.query.color].dynamicColor(context)),
           ),
           onTap: () async {
-            int queryColor = await Utils.showNotesModalBottomSheet(
+            final int queryColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
                 selectedColor: widget.query.color ?? 0,
@@ -91,27 +91,28 @@ class _QueryFiltersState extends State<QueryFilters> {
               : null,
           onTap: () async {
             await Utils.showNotesModalBottomSheet(
-                context: context,
-                builder: (context) => DateFilterSelector(
-                      date: widget.query.date,
-                      mode: widget.query.dateMode,
-                      onConfirm: (date, mode) {
-                        setState(() {
-                          widget.query.date = date;
-                          widget.query.dateMode = mode;
-                        });
-                        if (widget.filterChangedCallback != null)
-                          widget.filterChangedCallback();
-                      },
-                      onReset: () {
-                        setState(() {
-                          widget.query.date = null;
-                          widget.query.dateMode = DateFilterMode.ONLY;
-                        });
-                        if (widget.filterChangedCallback != null)
-                          widget.filterChangedCallback();
-                      },
-                    ));
+              context: context,
+              builder: (context) => DateFilterSelector(
+                date: widget.query.date,
+                mode: widget.query.dateMode,
+                onConfirm: (date, mode) {
+                  setState(() {
+                    widget.query.date = date;
+                    widget.query.dateMode = mode;
+                  });
+                  if (widget.filterChangedCallback != null)
+                    widget.filterChangedCallback();
+                },
+                onReset: () {
+                  setState(() {
+                    widget.query.date = null;
+                    widget.query.dateMode = DateFilterMode.ONLY;
+                  });
+                  if (widget.filterChangedCallback != null)
+                    widget.filterChangedCallback();
+                },
+              ),
+            );
           },
         ),
         ListTile(

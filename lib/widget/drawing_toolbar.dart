@@ -62,7 +62,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
 
   @override
   Widget build(BuildContext context) {
-    final currentTool = widget.tools[widget.toolIndex];
+    final DrawingTool currentTool = widget.tools[widget.toolIndex];
 
     _panelHeight = 56;
     if (currentTool.allowColor) {
@@ -92,8 +92,9 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                     SuspendedCurve(_ac.value, curve: decelerateEasing));
 
                 if (details.primaryVelocity > 350) {
-                  final _animForward = _ac.status == AnimationStatus.forward ||
-                      _ac.status == AnimationStatus.completed;
+                  final bool _animForward =
+                      _ac.status == AnimationStatus.forward ||
+                          _ac.status == AnimationStatus.completed;
                   if (!_animForward)
                     _ac.animateTo(1);
                   else
@@ -138,7 +139,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                         endIndent: 8,
                       ),
                       ...List.generate(widget.tools.length, (i) {
-                        final e = widget.tools[i];
+                        final DrawingTool e = widget.tools[i];
 
                         return IconButton(
                           icon: Icon(e.icon),
@@ -150,7 +151,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           onPressed: widget.toolIndex == i
                               ? () {
                                   _curve = decelerateEasing;
-                                  final _animForward = _ac.status ==
+                                  final bool _animForward = _ac.status ==
                                           AnimationStatus.forward ||
                                       _ac.status == AnimationStatus.completed;
                                   if (!_animForward)
@@ -388,7 +389,8 @@ class _ColorStrip extends StatelessWidget {
                 }
               }
 
-              final padding = 34 - (currentTool.color == color ? 30 : 20);
+              final double padding =
+                  34.0 - (currentTool.color == color ? 30.0 : 20.0);
 
               return SizedBox.fromSize(
                 size: Size.square(34),
@@ -499,7 +501,7 @@ class _ToolSizeButtonPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
+    final Paint paint = Paint()
       ..strokeWidth = 1.5
       ..color = color;
 

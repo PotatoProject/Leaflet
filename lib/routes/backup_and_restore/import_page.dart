@@ -26,7 +26,7 @@ class _ImportPageState extends State<ImportPage> {
 
   @override
   Widget build(BuildContext context) {
-    final page = loadedNotes == null
+    final Widget page = loadedNotes == null
         ? _FileSelectionPage(
             key: PageStorageKey('file'),
             onNextTapped: (notes) => setState(() => loadedNotes = notes),
@@ -233,7 +233,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
         builder: (context) {
           return NoteListWidget(
             itemBuilder: (context, index) {
-              final note = widget.notes[index];
+              final Note note = widget.notes[index];
 
               return NoteView(
                 note: note,
@@ -241,7 +241,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 allowSelection: true,
                 selectorOpen: true,
                 onTap: () {
-                  final value = selectedNotes.contains(note.id);
+                  final bool value = selectedNotes.contains(note.id);
 
                   if (!value) {
                     selectedNotes.add(note.id);
@@ -305,7 +305,8 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                       if (replaceExistingNotes) helper.deleteAllNotes();
 
                       for (final String id in selectedNotes) {
-                        final note = widget.notes.firstWhere((n) => n.id == id);
+                        final Note note =
+                            widget.notes.firstWhere((n) => n.id == id);
                         await helper.saveNote(note);
                       }
 

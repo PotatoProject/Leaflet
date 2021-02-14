@@ -13,17 +13,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailOrUserController = TextEditingController();
-  final emailController = TextEditingController();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController emailOrUserController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final emailOrUserFocusNode = FocusNode();
-  final emailFocusNode = FocusNode();
-  final usernameFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
+  final FocusNode emailOrUserFocusNode = FocusNode();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode usernameFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool obscurePass = true;
   bool register = false;
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
 
     DismissibleRoute.of(context).requestDisableGestures = showLoadingOverlay;
 
-    final items = [
+    final List<Widget> items = [
       TextFormField(
         decoration: InputDecoration(
           border: OutlineInputBorder(),
@@ -318,7 +318,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
     } else {
       if (response.message.startsWith("{")) {
-        var validation = json.decode(response.message);
+        final Map<String, dynamic> validation = json.decode(response.message);
         setState(() {
           usernameError = getString(validation["username"]);
           emailError = getString(validation["email"]);

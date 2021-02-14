@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -13,13 +14,13 @@ class WebDrawingExporter {
   static Future<String> export(
       String path, List<DrawObject> objects, Size size) async {
     ImageProvider image;
-    Completer<ui.Image> completer = Completer<ui.Image>();
+    final Completer<ui.Image> completer = Completer<ui.Image>();
 
-    final canvasElement = html.CanvasElement(
+    final html.CanvasElement canvasElement = html.CanvasElement(
       width: size.width.round(),
       height: size.height.round(),
     );
-    final canvas = canvasElement.context2D;
+    final html.CanvasRenderingContext2D canvas = canvasElement.context2D;
 
     objects.forEach((object) {
       if (object.points.length > 1) {
@@ -30,7 +31,7 @@ class WebDrawingExporter {
         canvas.lineCap = _strokeCapToString(object.paint.strokeCap);
 
         for (int i = 0; i < object.points.length; i++) {
-          final point = object.points[i];
+          final Offset point = object.points[i];
 
           if (i == 0) {
             canvas.moveTo(point.dx, point.dy);
@@ -68,10 +69,11 @@ class WebDrawingExporter {
         ),
       );
 
-      final parsedImage = await completer.future;
-      final bytes = (await parsedImage.toByteData()).buffer.asUint8List();
-      final imageData = base64.encode(bytes);
-      final imageElement = html.ImageElement(
+      final ui.Image parsedImage = await completer.future;
+      final Uint8List bytes =
+          (await parsedImage.toByteData()).buffer.asUint8List();
+      final String imageData = base64.encode(bytes);
+      final html.ImageElement imageElement = html.ImageElement(
         src: imageData,
         width: size.width.round(),
         height: size.height.round(),

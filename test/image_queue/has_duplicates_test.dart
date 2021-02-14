@@ -39,7 +39,7 @@ main() {
 }
 
 Future<bool> hasDuplicatesWith(SavedImage fakeImage, SavedImage otherImage) {
-  final helper = MockNoteHelper();
+  final MockNoteHelper helper = MockNoteHelper();
   var fakeNote = EmptyNote.get();
   fakeNote = fakeNote.copyWith(images: [otherImage]);
   when(helper.listNotes(ReturnMode.LOCAL))

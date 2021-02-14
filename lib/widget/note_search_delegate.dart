@@ -12,7 +12,7 @@ import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
 
 class NoteSearchDelegate extends CustomSearchDelegate {
-  SearchQuery searchQuery = SearchQuery();
+  final SearchQuery searchQuery = SearchQuery();
 
   NoteSearchDelegate();
 
@@ -39,7 +39,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
-        final illustration = query.isEmpty
+        final Widget illustration = query.isEmpty
             ? Illustrations.quickIllustration(
                 context,
                 appInfo.typeToSearchIllustration,
@@ -65,7 +65,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   void openNote(BuildContext context, Note note) async {
     bool status = false;
     if (note.lockNote && note.usesBiometrics) {
-      bool bioAuth = await Utils.showBiometricPrompt();
+      final bool bioAuth = await Utils.showBiometricPrompt();
 
       if (bioAuth)
         status = bioAuth;
@@ -88,8 +88,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   }
 
   Future<List<Note>> getNotesForQuery() async {
-    List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
-    List<Note> results = [];
+    final List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
+    final List<Note> results = [];
 
     if (query.trim().isEmpty &&
         !searchQuery.onlyFavourites &&
@@ -131,10 +131,10 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     bool _getTextBool(String text) {
-      String sanitizedQuery =
+      final String sanitizedQuery =
           searchQuery.caseSensitive ? query : query.toLowerCase();
 
-      String sanitizedText =
+      final String sanitizedText =
           searchQuery.caseSensitive ? text : text.toLowerCase();
 
       return sanitizedText.contains(sanitizedQuery);
@@ -155,16 +155,17 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
 
     for (Note note in notes) {
-      bool titleMatch = _getTextBool(note.title);
-      bool contentMatch =
+      final bool titleMatch = _getTextBool(note.title);
+      final bool contentMatch =
           !note.hideContent ? _getTextBool(note.content) : false;
-      bool dateMatch =
+      final bool dateMatch =
           searchQuery.date != null ? _getDateBool(note.creationDate) : true;
-      bool colorMatch =
+      final bool colorMatch =
           searchQuery.color != null ? _getColorBool(note.color) : true;
-      bool tagMatch =
+      final bool tagMatch =
           searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
-      bool favouriteMatch = searchQuery.onlyFavourites ? note.starred : true;
+      final bool favouriteMatch =
+          searchQuery.onlyFavourites ? note.starred : true;
 
       if (tagMatch &&
           colorMatch &&

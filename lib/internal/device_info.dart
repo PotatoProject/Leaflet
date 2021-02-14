@@ -93,7 +93,7 @@ abstract class _DeviceInfoBase with Store {
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
     canUseSystemAccentValue = canUseSystemAccent;
     isLandscapeValue = mq.orientation == Orientation.landscape;
-    double width = mq.size.width;
+    final double width = mq.size.width;
 
     if (width >= 1920) {
       uiSizeFactorValue = 8;

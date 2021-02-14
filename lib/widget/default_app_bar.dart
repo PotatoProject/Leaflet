@@ -24,14 +24,14 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final state = BasePage.of(context);
-    final _leading = state != null
+    final Widget _leading = state != null
         ? Center(
             child: LeafletLogo(
               height: 28,
             ),
           )
         : null;
-    final _title = state != null
+    final Widget _title = state != null
         ? Text(
             "leaflet",
             style: TextStyle(fontFamily: "ValeraRound"),
@@ -58,9 +58,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
               splashRadius: 28,
               tooltip: LocaleStrings.mainPage.account,
               onPressed: () async {
-                bool loggedIn = prefs.accessToken != null;
-
-                if (loggedIn) {
+                if (prefs.accessToken != null) {
                   Utils.showNotesModalBottomSheet(
                     context: context,
                     builder: (context) => AccountInfo(),

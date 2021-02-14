@@ -22,7 +22,7 @@ class NoteViewStatusbar extends StatefulWidget {
 }
 
 class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
-  List<Widget> icons = [];
+  final List<Widget> icons = [];
 
   @override
   void initState() {
@@ -46,7 +46,8 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
   }
 
   void _updateIcons() {
-    icons = getIcons(context);
+    icons.clear();
+    icons.addAll(getIcons(context));
     setState(() {});
   }
 
@@ -132,7 +133,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
   List<Widget> getIcons(
     BuildContext context,
   ) {
-    List<IconData> iconData = [
+    final List<IconData> iconData = [
       Icons.visibility_off_outlined,
       widget.note.usesBiometrics ? Icons.fingerprint : Icons.lock_outlined,
       Icons.alarm_outlined,
@@ -140,8 +141,8 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
       Icons.push_pin_outlined,
     ];
 
-    List<int> iconDataIndexes = [];
-    List<Widget> icons = [];
+    final List<int> iconDataIndexes = [];
+    final List<Widget> icons = [];
 
     if (widget.note.hideContent) iconDataIndexes.add(0);
 

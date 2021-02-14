@@ -92,79 +92,6 @@ class Utils {
     );
   }
 
-  static void showFabMenu(
-      BuildContext context, RenderBox fabBox, List<Widget> items) {
-    Size fabSize = fabBox.size;
-    Offset fabPosition = fabBox.localToGlobal(Offset(0, 0));
-    Size screenSize = MediaQuery.of(context).size;
-
-    bool isOnTop = fabPosition.dy < screenSize.height / 2;
-    bool isOnLeft = fabPosition.dx < screenSize.width / 2;
-
-    double top = isOnTop ? fabPosition.dy : null;
-    double left = isOnLeft ? fabPosition.dx : null;
-    double right =
-        !isOnTop ? screenSize.width - (fabPosition.dx + fabSize.width) : null;
-    double bottom = !isOnLeft
-        ? screenSize.height - (fabPosition.dy + fabSize.height)
-        : null;
-
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, anim, secAnim) {
-          return Stack(
-            children: <Widget>[
-              GestureDetector(
-                onTapDown: (details) => Navigator.pop(context),
-                child: SizedBox.expand(
-                  child: AnimatedBuilder(
-                    animation: anim,
-                    builder: (context, _) => DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: ColorTween(
-                          begin: Colors.transparent,
-                          end: Colors.black38,
-                        ).animate(anim).value,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: top,
-                left: left,
-                right: right,
-                bottom: bottom,
-                child: Hero(
-                  tag: "fabMenu",
-                  child: Material(
-                    elevation: 6,
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(kCardBorderRadius),
-                    ),
-                    child: SizedBox(
-                      width: 250,
-                      child: ListView(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.all(0),
-                        reverse: true,
-                        children: isOnTop ? items.reversed.toList() : items,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-        opaque: false,
-        barrierDismissible: true,
-      ),
-    );
-  }
-
   static String generateId() {
     return Uuid().v4();
   }
@@ -172,8 +99,8 @@ class Utils {
   static SelectionOptions getSelectionOptionsForMode(ReturnMode mode) {
     return SelectionOptions(
       options: (context, notes) {
-        bool anyStarred = notes.any((item) => item.starred);
-        bool showUnpin = notes.first.pinned;
+        final bool anyStarred = notes.any((item) => item.starred);
+        final bool showUnpin = notes.first.pinned;
 
         return [
           SelectionOptionEntry(
@@ -256,7 +183,7 @@ class Utils {
         }
         break;
       case 'favourites':
-        bool anyStarred = notes.any((item) => item.starred);
+        final bool anyStarred = notes.any((item) => item.starred);
 
         for (Note note in notes) {
           if (anyStarred)
@@ -312,8 +239,8 @@ class Utils {
         state.closeSelection();
         break;
       case 'delete':
-        final notesToTrash = notes.where((n) => !n.deleted);
-        final notesToBeDeleted = notes.where((n) => n.deleted);
+        final List<Note> notesToTrash = notes.where((n) => !n.deleted);
+        final List<Note> notesToBeDeleted = notes.where((n) => n.deleted);
 
         notesToBeDeleted.forEach((n) => Utils.deleteNoteSafely(n));
 
@@ -340,7 +267,7 @@ class Utils {
         state.closeSelection();
         break;
       case 'share':
-        bool status = notes.first.lockNote
+        final bool status = notes.first.lockNote
             ? await Utils.showPassChallengeSheet(context)
             : true;
         if (status ?? false) {
@@ -423,7 +350,7 @@ class Utils {
     @required String reason,
     bool archive = false,
   }) async {
-    for (Note note in notes) {
+    for (final Note note in notes) {
       if (archive) {
         await helper.saveNote(
             note.markChanged().copyWith(deleted: false, archived: true));
@@ -433,7 +360,7 @@ class Utils {
       }
     }
 
-    List<Note> backupNotes = List.from(notes);
+    final List<Note> backupNotes = List.from(notes);
 
     BasePage.of(context)?.hideCurrentSnackBar();
     BasePage.of(context)?.showSnackBar(
@@ -444,7 +371,7 @@ class Utils {
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
-            for (Note note in backupNotes) {
+            for (final Note note in backupNotes) {
               await helper.saveNote(note);
             }
           },
@@ -459,12 +386,12 @@ class Utils {
     @required String reason,
     bool archive = false,
   }) async {
-    for (Note note in notes) {
+    for (final Note note in notes) {
       await helper.saveNote(
           note.markChanged().copyWith(deleted: false, archived: false));
     }
 
-    List<Note> backupNotes = List.from(notes);
+    final List<Note> backupNotes = List.from(notes);
 
     BasePage.of(context)?.hideCurrentSnackBar();
     BasePage.of(context)?.showSnackBar(
@@ -568,8 +495,9 @@ class Utils {
   }
 
   static void newNote(BuildContext context) async {
-    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
-    String id = generateId();
+    final int currentLength =
+        (await helper.listNotes(ReturnMode.NORMAL)).length;
+    final String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
@@ -587,11 +515,11 @@ class Utils {
     int currentLength,
     String id,
   ) async {
-    List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
-    int newLength = notes.length;
+    final List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    final int newLength = notes.length;
 
     if (newLength > currentLength) {
-      Note lastNote = notes.firstWhere(
+      final Note lastNote = notes.firstWhere(
         (element) => element.id == id,
         orElse: () => null,
       );
@@ -610,14 +538,16 @@ class Utils {
 
   static void newImage(BuildContext context, ImageSource source) async {
     Note note = NoteX.emptyNote;
-    File image = await pickImage();
+    final File image = await pickImage();
 
     if (image != null) {
-      SavedImage savedImage = await ImageHelper.copyToCache(File(image.path));
+      final SavedImage savedImage =
+          await ImageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
-      int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
-      String id = generateId();
+      final int currentLength =
+          (await helper.listNotes(ReturnMode.NORMAL)).length;
+      final String id = generateId();
 
       note = note.copyWith(id: id);
 
@@ -635,8 +565,9 @@ class Utils {
   }
 
   static void newList(BuildContext context) async {
-    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
-    String id = generateId();
+    final int currentLength =
+        (await helper.listNotes(ReturnMode.NORMAL)).length;
+    final String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
@@ -650,8 +581,9 @@ class Utils {
   }
 
   static void newDrawing(BuildContext context) async {
-    int currentLength = (await helper.listNotes(ReturnMode.NORMAL)).length;
-    String id = generateId();
+    final int currentLength =
+        (await helper.listNotes(ReturnMode.NORMAL)).length;
+    final String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
@@ -669,7 +601,7 @@ class Utils {
 
     try {
       if (DeviceInfo.isDesktop) {
-        final image = await openFile(
+        final XFile image = await openFile(
           acceptedTypeGroups: [
             XTypeGroup(
               label: 'images',
@@ -685,7 +617,8 @@ class Utils {
 
         path = image.path;
       } else {
-        final image = await ImagePicker().getImage(source: ImageSource.gallery);
+        final PickedFile image =
+            await ImagePicker().getImage(source: ImageSource.gallery);
 
         path = image.path;
       }
@@ -723,28 +656,29 @@ extension NoteX on Note {
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
     Map<String, dynamic> newMap = Map();
     syncMap.forEach((key, value) {
-      var newValue = value;
-      var newKey = ReCase(key).camelCase;
+      Object newValue = value;
+      String newKey = ReCase(key).camelCase;
       switch (key) {
         case "style_json":
           {
-            var map = json.decode(value);
-            List<int> data = List<int>.from(map.map((i) => i as int)).toList();
+            final List<dynamic> map = json.decode(value);
+            final List<int> data =
+                List<int>.from(map.map((i) => i as int)).toList();
             newValue = data;
             break;
           }
         case "images":
           {
-            List<dynamic> list = json.decode(value);
-            List<SavedImage> images =
+            final List<dynamic> list = json.decode(value);
+            final List<SavedImage> images =
                 list.map((i) => SavedImage.fromJson(i)).toList();
             newValue = images;
             break;
           }
         case "list_content":
           {
-            var map = json.decode(value);
-            List<ListItem> content =
+            final List<dynamic> map = json.decode(value);
+            final List<ListItem> content =
                 List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
                     .toList();
             newValue = content;
@@ -752,8 +686,8 @@ extension NoteX on Note {
           }
         case "reminders":
           {
-            var map = json.decode(value);
-            List<DateTime> reminders =
+            final List<dynamic> map = json.decode(value);
+            final List<DateTime> reminders =
                 List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
             newValue = reminders;
             break;
@@ -789,39 +723,39 @@ extension NoteX on Note {
   }
 
   Map<String, dynamic> toSyncMap() {
-    var originalMap = this.toJson();
-    Map<String, dynamic> newMap = Map();
+    final Map<String, dynamic> originalMap = this.toJson();
+    final Map<String, dynamic> newMap = Map();
     originalMap.forEach((key, value) {
-      var newValue = value;
-      var newKey = ReCase(key).snakeCase;
+      Object newValue = value;
+      String newKey = ReCase(key).snakeCase;
       switch (key) {
         case "styleJson":
           {
-            var style = value as List<int>;
+            final List<int> style = value;
             newValue = json.encode(style);
             break;
           }
         case "images":
           {
-            var images = value as List<SavedImage>;
+            final List<SavedImage> images = value;
             newValue = json.encode(images);
             break;
           }
         case "listContent":
           {
-            var listContent = value as List<ListItem>;
+            final List<ListItem> listContent = value;
             newValue = json.encode(listContent);
             break;
           }
         case "reminders":
           {
-            var reminders = value as List<DateTime>;
+            final List<DateTime> reminders = value;
             newValue = json.encode(reminders);
             break;
           }
         case "tags":
           {
-            var tags = value as List<String>;
+            final List<String> tags = value;
             newValue = json.encode(tags);
             break;
           }

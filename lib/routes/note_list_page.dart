@@ -38,7 +38,7 @@ class NoteListPage extends StatefulWidget {
 
 class _NoteListPageState extends State<NoteListPage> {
   bool _selecting = false;
-  List<Note> _selectionList = [];
+  final List<Note> _selectionList = [];
 
   SelectionOptions get selectionOptions => widget.selectionOptions;
 
@@ -115,7 +115,7 @@ class _NoteListPageState extends State<NoteListPage> {
           stream: helper.noteStream(widget.noteKind),
           initialData: [],
           builder: (context, snapshot) {
-            List<Note> notes = widget.noteKind == ReturnMode.TAG
+            final List<Note> notes = widget.noteKind == ReturnMode.TAG
                 ? snapshot.data
                     .where(
                       (note) =>
@@ -189,8 +189,9 @@ class _NoteListPageState extends State<NoteListPage> {
               return IconButton(
                 icon: Icon(Icons.settings_backup_restore),
                 onPressed: () async {
-                  List<Note> notes = await helper.listNotes(widget.noteKind);
-                  bool result = await showDialog(
+                  final List<Note> notes =
+                      await helper.listNotes(widget.noteKind);
+                  final bool result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(LocaleStrings.common.areYouSure),
@@ -231,7 +232,7 @@ class _NoteListPageState extends State<NoteListPage> {
           child: IconButton(
             icon: Icon(Icons.label_off_outlined),
             onPressed: () async {
-              bool result = await showDialog(
+              final bool result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(LocaleStrings.common.areYouSure),
@@ -251,7 +252,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   false;
 
               if (result) {
-                List<Note> notes = await helper.listNotes(ReturnMode.ALL);
+                final List<Note> notes = await helper.listNotes(ReturnMode.ALL);
                 for (Note note in notes) {
                   note.tags.remove(prefs.tags[widget.tagIndex].id);
                   await helper.saveNote(note.markChanged());
@@ -284,7 +285,7 @@ class _NoteListPageState extends State<NoteListPage> {
 
   Widget _buildNoteList(BuildContext context, List<Note> notes, int index) {
     final _state = SelectionState.of(context);
-    final note = notes[index];
+    final Note note = notes[index];
 
     return NoteView(
       key: GlobalKeyRegistry.get(note.id),
@@ -320,7 +321,7 @@ class _NoteListPageState extends State<NoteListPage> {
     } else {
       bool status = false;
       if (note.lockNote && note.usesBiometrics) {
-        bool bioAuth = await Utils.showBiometricPrompt();
+        final bool bioAuth = await Utils.showBiometricPrompt();
 
         if (bioAuth)
           status = bioAuth;
@@ -353,7 +354,7 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   Future<void> sync() async {
-    await SyncRoutine().syncNotes();
+    await SyncRoutine.instance.syncNotes();
   }
 }
 

@@ -51,23 +51,23 @@ class _DrawerListTileState extends State<DrawerListTile>
 
   @override
   Widget build(BuildContext context) {
-    Color contrast = Theme.of(context).brightness == Brightness.dark
+    final Color contrast = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.black;
 
-    TextTheme textTheme = Theme.of(context).textTheme;
-    IconThemeData iconTheme = Theme.of(context).iconTheme;
-    Color _activeColor = Theme.of(context).accentColor;
-    final visualDensity = Theme.of(context).visualDensity;
-    final baseDensity = visualDensity.baseSizeAdjustment;
-    final height = 56 + baseDensity.dy;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final IconThemeData iconTheme = Theme.of(context).iconTheme;
+    final Color _activeColor = Theme.of(context).accentColor;
+    final VisualDensity visualDensity = Theme.of(context).visualDensity;
+    final Offset baseDensity = visualDensity.baseSizeAdjustment;
+    final double height = 56 + baseDensity.dy;
 
-    final _curvedAc = CurvedAnimation(
+    final Animation<double> _curvedAc = CurvedAnimation(
       parent: _ac,
       curve: decelerateEasing,
     );
 
-    Widget child = Row(
+    final Widget child = Row(
       children: [
         Theme(
           data: Theme.of(context).copyWith(
@@ -135,12 +135,13 @@ class _DrawerListTileState extends State<DrawerListTile>
   }
 }
 
+@immutable
 class DrawerListTileData {
   final Widget icon;
   final Widget activeIcon;
   final Widget title;
 
-  DrawerListTileData({
+  const DrawerListTileData({
     this.icon,
     this.activeIcon,
     this.title,

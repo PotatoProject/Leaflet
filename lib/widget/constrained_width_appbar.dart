@@ -13,10 +13,10 @@ class ConstrainedWidthAppbar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double parentWidth = constraints.maxWidth == double.infinity
+        final double parentWidth = constraints.maxWidth == double.infinity
             ? MediaQuery.of(context).size.width
             : constraints.maxWidth;
-        final _padding = (parentWidth - width) / 2;
+        final double _padding = (parentWidth - width) / 2;
 
         return Container(
           width: parentWidth,

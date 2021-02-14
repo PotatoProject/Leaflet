@@ -23,16 +23,18 @@ class TagSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<Tag> filteredTags;
+    final List<Tag> filteredTags = [];
 
     if (query.isEmpty) {
-      filteredTags = prefs.tags;
+      filteredTags.addAll(prefs.tags as List<Tag>);
     } else {
-      filteredTags = prefs.tags
-          .where(
-            (tag) => tag.name.toLowerCase().contains(query.toLowerCase()),
-          )
-          .toList();
+      filteredTags.addAll(
+        (prefs.tags as List<Tag>)
+            .where(
+              (tag) => tag.name.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList(),
+      );
     }
 
     return ListView(
@@ -131,8 +133,8 @@ class _TapIsolatedListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final _height = 56 + theme.visualDensity.baseSizeAdjustment.dy;
+    final ThemeData theme = Theme.of(context);
+    final double _height = 56 + theme.visualDensity.baseSizeAdjustment.dy;
 
     return SizedBox.fromSize(
       size: Size.fromHeight(_height),

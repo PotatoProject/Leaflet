@@ -83,7 +83,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                             ],
                             onChanged: (text) {
                               if (text.length == 6) {
-                                Color newColor =
+                                final Color newColor =
                                     Color(int.parse(text, radix: 16));
                                 setState(() =>
                                     currentColor = newColor.withAlpha(0xFF));
@@ -180,7 +180,7 @@ class ColorSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color widgetColor =
+    final Color widgetColor =
         color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
     return Row(
