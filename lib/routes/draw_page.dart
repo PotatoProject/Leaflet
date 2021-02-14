@@ -93,6 +93,8 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _appbarAc.dispose();
+    _toolbarAc.dispose();
     BackButtonInterceptor.remove(exitPrompt);
     super.dispose();
   }

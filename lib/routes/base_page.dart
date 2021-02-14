@@ -209,6 +209,12 @@ class _BasePageState extends State<BasePage>
   }
 
   @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {

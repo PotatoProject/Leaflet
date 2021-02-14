@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
 
 class DrawingBoard extends StatefulWidget {
   final Key repaintKey;
@@ -29,23 +27,11 @@ class _DrawingBoardState extends State<DrawingBoard> {
   int _currentIndex;
   int _actionQueueIndex = 0;
   bool _saved = true;
+  ui.Image _image;
 
   bool get saved => _saved;
-  @action
   set saved(bool value) {
     _saved = value;
-    setState(() {});
-  }
-
-  int get currentIndex => _currentIndex;
-  set currentIndex(int value) {
-    _currentIndex = value;
-    setState(() {});
-  }
-
-  int get actionQueueIndex => _actionQueueIndex;
-  set actionQueueIndex(int value) {
-    _actionQueueIndex = value;
     setState(() {});
   }
 
@@ -70,35 +56,29 @@ class _DrawingBoardState extends State<DrawingBoard> {
     super.initState();
 
     widget.controller?._provideState(this);
+
+    if (widget.path != null) {
+      final ImageProvider image = FileImage(File(widget.path));
+
+      image?.resolve(ImageConfiguration())?.addListener(
+        ImageStreamListener((image, synchronousCall) {
+          _image = image.image;
+          setState(() {});
+        }),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider image;
-    Completer<ui.Image> completer = Completer<ui.Image>();
-
-    if (widget.path != null) {
-      image = FileImage(File(widget.path));
-
-      image?.resolve(ImageConfiguration())?.addListener(
-        ImageStreamListener(
-          (image, synchronousCall) {
-            completer.complete(image.image);
-          },
-        ),
-      );
-    }
-
     return RepaintBoundary(
-      key: widget.repaintKey,
-      child: image != null
-          ? FutureBuilder<ui.Image>(
-              future: completer.future,
-              builder: (context, snapshot) {
-                return getCommonChild(snapshot.data);
-              },
-            )
-          : getCommonChild(null),
+      key: widget.key,
+      child: CustomPaint(
+        painter: BackgroundPainter(_image),
+        foregroundPainter: DrawPainter(List.from(_objects.map((e) => e.copy))),
+        willChange: true,
+        isComplex: true,
+      ),
     );
   }
 
@@ -128,21 +108,8 @@ class _DrawingBoardState extends State<DrawingBoard> {
     });
   }
 
-  bool get canUndo => _objects.isNotEmpty;
-  bool get canRedo => _actionQueueIndex < _backupObjects.length - 1;
-
-  Widget getCommonChild(ui.Image image) {
-    return CustomPaint(
-      willChange: true,
-      painter: BackgroundPainter(
-        image,
-      ),
-      foregroundPainter: DrawPainter(
-        List.from(_objects.map((e) => e.copy)),
-      ),
-      isComplex: true,
-    );
-  }
+  bool get _canUndo => _objects.isNotEmpty;
+  bool get _canRedo => _actionQueueIndex < _backupObjects.length - 1;
 }
 
 class DrawPainter extends CustomPainter {
@@ -194,8 +161,9 @@ class BackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BackgroundPainter oldDelegate) =>
-      oldDelegate.image != this.image;
+  bool shouldRepaint(BackgroundPainter oldDelegate) {
+    return oldDelegate.image != this.image;
+  }
 }
 
 class DrawingBoardController extends ChangeNotifier {
@@ -213,20 +181,20 @@ class DrawingBoardController extends ChangeNotifier {
   void addPointToObject(int objectIndex, Offset point) =>
       _state.addPointToObject(objectIndex, point);
 
-  bool get saved => _state?.saved ?? true;
-  set saved(bool value) => _state.saved = value;
+  bool get saved => _state?._saved ?? true;
+  set saved(bool value) => _state._saved = value;
 
-  int get currentIndex => _state.currentIndex;
-  set currentIndex(int value) => _state.currentIndex = value;
+  int get currentIndex => _state._currentIndex;
+  set currentIndex(int value) => _state._currentIndex = value;
 
-  int get actionQueueIndex => _state.actionQueueIndex;
-  set actionQueueIndex(int value) => _state.actionQueueIndex = value;
+  int get actionQueueIndex => _state._actionQueueIndex;
+  set actionQueueIndex(int value) => _state._actionQueueIndex = value;
 
   List<DrawObject> get objects => _state._objects;
   set backupObjects(List<DrawObject> value) => _state.backupObjects = value;
 
-  bool get canUndo => _state?.canUndo ?? false;
-  bool get canRedo => _state?.canRedo ?? false;
+  bool get canUndo => _state?._canUndo ?? false;
+  bool get canRedo => _state?._canRedo ?? false;
 
   void _notifyListeners() => notifyListeners();
 }

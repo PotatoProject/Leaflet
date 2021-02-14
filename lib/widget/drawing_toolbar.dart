@@ -49,6 +49,13 @@ class _DrawingToolbarState extends State<DrawingToolbar>
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _ac.dispose();
+    _colorPanelAc.dispose();
+    super.dispose();
+  }
+
   void closePanel() {
     _ac.animateBack(0);
   }
@@ -59,7 +66,8 @@ class _DrawingToolbarState extends State<DrawingToolbar>
 
     _panelHeight = 56;
     if (currentTool.allowColor) {
-      _panelHeight += 48 + ((48 * 2) * _colorPanelAc.value) + 1;
+      _panelHeight += Tween<double>(begin: 48.0 + 1, end: 48.0 * 3 + 1)
+          .evaluate(_colorPanelAc);
     }
 
     return ConstrainedBox(
@@ -175,100 +183,117 @@ class _DrawingToolbarState extends State<DrawingToolbar>
               ),
               axis: Axis.vertical,
               axisAlignment: 1,
-              child: AnimatedBuilder(
-                animation: _colorPanelAc,
-                builder: (context, _) {
-                  return ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Container(
-                        height: 56,
-                        padding: EdgeInsets.only(left: 4),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ...List.generate(
-                                ToolSize.values.length,
-                                (index) => InkWell(
-                                  child: SizedBox.fromSize(
-                                    size: Size.square(42),
-                                    child: CustomPaint(
-                                      size: Size.square(48),
-                                      painter: _ToolSizeButtonPainter(
-                                        ToolSize.values[index] / 2,
-                                        currentTool.size ==
-                                            ToolSize.values[index],
-                                        Theme.of(context)
-                                            .disabledColor
-                                            .withOpacity(1),
-                                      ),
-                                    ),
+              child: Column(
+                children: [
+                  Container(
+                    height: 56,
+                    padding: EdgeInsets.only(left: 4),
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...List.generate(
+                            ToolSize.values.length,
+                            (index) => InkWell(
+                              child: SizedBox.fromSize(
+                                size: Size.square(42),
+                                child: CustomPaint(
+                                  size: Size.square(48),
+                                  painter: _ToolSizeButtonPainter(
+                                    ToolSize.values[index] / 2,
+                                    currentTool.size == ToolSize.values[index],
+                                    Theme.of(context)
+                                        .disabledColor
+                                        .withOpacity(1),
                                   ),
-                                  radius: 24,
-                                  customBorder: CircleBorder(),
-                                  onTap: () {
-                                    currentTool.size = ToolSize.values[index];
+                                ),
+                              ),
+                              radius: 24,
+                              customBorder: CircleBorder(),
+                              onTap: () {
+                                currentTool.size = ToolSize.values[index];
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            icon: RotationTransition(
+                              turns: Tween<double>(begin: 0, end: 0.5)
+                                  .animate(_colorPanelAc),
+                              child: Icon(Icons.expand_less),
+                            ),
+                            onPressed: currentTool.allowColor
+                                ? () {
+                                    if (_colorPanelAc.value > 0.5)
+                                      _colorPanelAc.animateBack(0);
+                                    else
+                                      _colorPanelAc.animateTo(1);
                                     setState(() {});
-                                  },
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                icon: RotationTransition(
-                                  turns: Tween<double>(begin: 0, end: 0.5)
-                                      .animate(_colorPanelAc),
-                                  child: Icon(Icons.expand_less),
-                                ),
-                                onPressed: currentTool.allowColor
-                                    ? () {
-                                        if (_colorPanelAc.value > 0.5)
-                                          _colorPanelAc.animateBack(0);
-                                        else
-                                          _colorPanelAc.animateTo(1);
-                                        setState(() {});
-                                      }
-                                    : null,
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                              ),
-                            ],
+                                  }
+                                : null,
+                            padding: EdgeInsets.symmetric(horizontal: 16),
                           ),
-                        ),
+                        ],
                       ),
-                      Visibility(
-                        visible: widget.tools[widget.toolIndex].allowColor,
-                        child: Divider(
-                          height: 1,
-                        ),
-                      ),
-                      Visibility(
-                        visible: widget.tools[widget.toolIndex].allowColor,
-                        child: Container(
-                          height: 48 + ((48 * 2) * _colorPanelAc.value),
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.tools[widget.toolIndex].allowColor,
+                    child: Divider(
+                      height: 1,
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.tools[widget.toolIndex].allowColor,
+                    child: AnimatedBuilder(
+                      animation: _colorPanelAc,
+                      builder: (context, child) {
+                        return Container(
+                          height: Tween<double>(begin: 48, end: 48.0 * 3)
+                              .evaluate(_colorPanelAc),
                           alignment: Alignment.center,
-                          child: ListView(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            children: [
-                              _animatedVisibility(
-                                controller: _colorPanelAc,
-                                child: _buildColorStrip(ColorType.LIGHT),
-                              ),
-                              _buildColorStrip(ColorType.NORMAL),
-                              _animatedVisibility(
-                                controller: _colorPanelAc,
-                                child: _buildColorStrip(ColorType.DARK),
-                              ),
-                            ],
+                          child: child,
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          _CollapsableWidget(
+                            collapseStatus: _colorPanelAc,
+                            child: _ColorStrip(
+                              type: ColorType.LIGHT,
+                              currentTool: widget.tools[widget.toolIndex],
+                              onTap: (color) {
+                                widget.tools[widget.toolIndex].color = color;
+                                setState(() {});
+                              },
+                            ),
                           ),
-                        ),
+                          _ColorStrip(
+                            type: ColorType.NORMAL,
+                            currentTool: widget.tools[widget.toolIndex],
+                            onTap: (color) {
+                              widget.tools[widget.toolIndex].color = color;
+                              setState(() {});
+                            },
+                          ),
+                          _CollapsableWidget(
+                            collapseStatus: _colorPanelAc,
+                            child: _ColorStrip(
+                              type: ColorType.DARK,
+                              currentTool: widget.tools[widget.toolIndex],
+                              onTap: (color) {
+                                widget.tools[widget.toolIndex].color = color;
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  );
-                },
+                    ),
+                  ),
+                ],
               ),
             ),
             Material(
@@ -283,18 +308,46 @@ class _DrawingToolbarState extends State<DrawingToolbar>
       ),
     );
   }
+}
 
-  Widget _animatedVisibility({Widget child, AnimationController controller}) {
-    return Align(
-      heightFactor: controller.value,
-      child: FadeTransition(
-        opacity: controller,
-        child: child,
+class _CollapsableWidget extends StatelessWidget {
+  final Widget child;
+  final Animation<double> collapseStatus;
+
+  _CollapsableWidget({
+    this.child,
+    @required this.collapseStatus,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: collapseStatus,
+      builder: (context, child) => Align(
+        heightFactor: collapseStatus.value,
+        child: FadeTransition(
+          opacity: collapseStatus,
+          child: child,
+        ),
       ),
+      child: child,
     );
   }
+}
 
-  Widget _buildColorStrip(ColorType type) {
+class _ColorStrip extends StatelessWidget {
+  final ColorType type;
+  final DrawingTool currentTool;
+  final ValueChanged<Color> onTap;
+
+  _ColorStrip({
+    @required this.type,
+    this.currentTool,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -335,14 +388,14 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 }
               }
 
-              final padding = 34 -
-                  (widget.tools[widget.toolIndex].color == color ? 30 : 20);
+              final padding = 34 - (currentTool.color == color ? 30 : 20);
 
               return SizedBox.fromSize(
                 size: Size.square(34),
                 child: InkWell(
-                  child: Padding(
+                  child: AnimatedPadding(
                     padding: EdgeInsets.all(padding / 2),
+                    duration: Duration(milliseconds: 150),
                     child: DecoratedBox(
                       decoration: ShapeDecoration(
                         shape: CircleBorder(
@@ -360,10 +413,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                   ),
                   radius: 20,
                   customBorder: CircleBorder(),
-                  onTap: () {
-                    widget.tools[widget.toolIndex].color = color;
-                    setState(() {});
-                  },
+                  onTap: () => onTap?.call(color),
                 ),
               );
             },
