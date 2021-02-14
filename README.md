@@ -18,13 +18,13 @@ POSP official notes application, written in flutter, beautiful, fast and secure.
 - Trash and archive for notes
 
 ## Planned features
-[x] Note tags
-[ ] Launcher widget
-[ ] Quick note QS tile
-[ ] Partial markdown support
-[x] Multiple image loading
-[ ] Voice notes
-[x] Drawings
+- [x] Note tags
+- [ ] Launcher widget
+- [ ] Quick note QS tile
+- [ ] Partial markdown support
+- [x] Multiple image loading
+- [ ] Voice notes
+- [x] Drawings
 
 ## Compiling the app
 Before anything, be sure to have a working flutter sdk setup.
