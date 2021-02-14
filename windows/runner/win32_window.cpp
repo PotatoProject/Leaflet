@@ -187,9 +187,23 @@ Win32Window::MessageHandler(HWND hwnd,
         SetFocus(child_content_);
       }
       return 0;
+    case WM_GETMINMAXINFO:
+      auto info = reinterpret_cast<MINMAXINFO *>(lparam);
+      Size minSize = Size(400, 600);
+      getSizeOnScreen(hwnd, &minSize);
+      info->ptMinTrackSize.x = minSize.width;
+      info->ptMinTrackSize.y = minSize.height;
+      return 0;
   }
 
   return DefWindowProc(window_handle_, message, wparam, lparam);
+}
+
+void Win32Window::getSizeOnScreen(HWND window, Win32Window::Size *size) {
+    UINT dpi = GetDpiForWindow(window);
+    double scale_factor = dpi / 96.0;
+    size->width = static_cast<int>(size->width * scale_factor);
+    size->height = static_cast<int>(size->height * scale_factor);
 }
 
 void Win32Window::Destroy() {

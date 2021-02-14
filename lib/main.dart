@@ -17,6 +17,7 @@ import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
+import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -48,13 +49,15 @@ void main() async {
   }
 
   runApp(
-    EasyLocalization(
-      child: PotatoNotes(),
-      supportedLocales: Locales.supported,
-      fallbackLocale: Locale("en", "US"),
-      assetLoader: GeneratedAssetLoader(),
-      path: "assets/locales",
-      preloaderColor: color,
+    SplashPage(
+      child: EasyLocalization(
+        child: PotatoNotes(),
+        supportedLocales: Locales.supported,
+        fallbackLocale: Locale("en", "US"),
+        assetLoader: GeneratedAssetLoader(),
+        path: "assets/locales",
+        preloaderColor: color,
+      ),
     ),
   );
 }

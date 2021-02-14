@@ -93,6 +93,8 @@ class Win32Window {
 
   // window handle for hosted content.
   HWND child_content_ = nullptr;
+
+  void getSizeOnScreen(HWND window, Size *size);
 };
 
 #endif  // RUNNER_WIN32_WINDOW_H_

@@ -8,7 +8,9 @@ class SharedPrefs {
   static SharedPrefs _instance;
   SharedPreferences prefs;
 
-  SharedPrefs._(this.prefs);
+  SharedPrefs._(this.prefs) {
+    _warmup();
+  }
 
   static Future<void> init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -16,6 +18,25 @@ class SharedPrefs {
   }
 
   static SharedPrefs get instance => _instance;
+
+  void _warmup() async {
+    getAccessToken();
+    getApiUrl();
+    getCustomAccent();
+    getDeleteQueue();
+    getDeletedImages();
+    getDownloadedImages();
+    getEmail();
+    getLastUpdated();
+    getLogLevel();
+    getMasterPass();
+    getRefreshToken();
+    getThemeMode();
+    getUseAmoled();
+    getUseCustomAccent();
+    getUseGrid();
+    getUsername();
+  }
 
   Future<String> getMasterPass() async {
     return prefs.getString("master_pass") ?? "";

@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/widget/notes_logo.dart';
+import 'package:potato_notes/widget/logos.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
                     CircleAvatar(
                       radius: 48,
                       backgroundColor: Color(0xFF212C21),
-                      child: IconLogo(
+                      child: LeafletLogo(
                         height: 48,
                       ),
                     ),

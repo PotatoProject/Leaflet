@@ -18,6 +18,6 @@ class MainActivity : FlutterFragmentActivity() {
     override fun provideSplashScreen(): SplashScreen? {
         var manifestSplashDrawable: Drawable = resources.getDrawable(R.drawable.launch_background, theme)
         
-        return DrawableSplashScreen(manifestSplashDrawable, ScaleType.FIT_XY, 700)
+        return DrawableSplashScreen(manifestSplashDrawable, ScaleType.FIT_XY, 0)
     }
 }

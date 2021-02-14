@@ -328,7 +328,7 @@ class SyncRoutine {
     }
 
     changedSettings.forEach((key, value) {
-      var original = prefs.prefs.prefs.get(key);
+      var original = prefs.getFromCache(key);
       switch (original.runtimeType) {
         case String:
           {
@@ -365,7 +365,7 @@ class SyncRoutine {
       if (settingsToSync.contains(key) && !changedSettings.keys.contains(key)) {
         try {
           Loggy.v(message: "Preparing to save $key");
-          var value = prefs.prefs.prefs.get(key);
+          var value = prefs.getFromCache(key);
           if (key == "tags") {
             value = json.encode(value);
           }

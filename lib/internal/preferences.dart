@@ -202,12 +202,16 @@ abstract class _PreferencesBase with Store {
     prefs.setDeleteQueue(value);
   }
 
+  dynamic getFromCache(String key) {
+    return prefs.prefs.get(key);
+  }
+
   void loadData() async {
     welcomePageSeenValue = await prefs.getWelcomePageSeen();
     themeModeValue = await prefs.getThemeMode();
+    useAmoledValue = await prefs.getUseAmoled();
     useCustomAccentValue = await prefs.getUseCustomAccent();
     customAccentValue = await prefs.getCustomAccent();
-    useAmoledValue = await prefs.getUseAmoled();
     useGridValue = await prefs.getUseGrid();
 
     if (DeviceInfo.isDesktopOrWeb) {

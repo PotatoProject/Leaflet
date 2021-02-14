@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/widget/notes_logo.dart';
+import 'package:potato_notes/widget/logos.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InAppUpdater {
@@ -106,7 +106,7 @@ class InAppUpdater {
         return AlertDialog(
           title: Row(
             children: [
-              IconLogo(
+              LeafletLogo(
                 height: 24,
               ),
               SizedBox(width: 16),
