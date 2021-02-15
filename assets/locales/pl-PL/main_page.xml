@@ -3,14 +3,14 @@
     <string name="settings">Ustawienia</string>
     <string name="search">Szukaj</string>
     <string name="account">Konto</string>
-    <string name="restore_prompt.archive">Czy chcesz przywrócić każdą notatkę w archiwum?</string>
-    <string name="restore_prompt.trash">Czy chcesz przywrócić każdą notatkę w koszu?</string>
+    <string name="restore_prompt.archive">Czy chcesz przywrócić wszystkie notatki w archiwum?</string>
+    <string name="restore_prompt.trash">Czy chcesz przywrócić wszystkie notatki w koszu?</string>
     <string name="tag_delete_prompt">Ta etykieta zostanie utracona na zawsze po jej usunięciu</string>
     <string name="deleted_empty_note">Usunięto pustą notatkę</string>
     <string name="empty_state.home">Nie dodano jeszcze żadnych notatek</string>
     <string name="empty_state.archive">Archiwum jest puste</string>
     <string name="empty_state.trash">Kosz jest pusty</string>
-    <string name="empty_state.favourites">Brak ulubionych na razie</string>
+    <string name="empty_state.favourites">Brak ulubionych notatek</string>
     <string name="empty_state.tag">Brak notatek z tą etykietą</string>
     <string name="title.home">Strona główna</string>
     <string name="title.archive">Archiwum</string>
@@ -22,7 +22,7 @@
     <string name="selection_bar.add_favourites">Dodaj do ulubionych</string>
     <string name="selection_bar.remove_favourites">Usuń z ulubionych</string>
     <string name="selection_bar.change_color">Zmień kolor</string>
-    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiwum</string>
+    <string name="selection_bar.archive" comment="Verb not noun, to archive">Archiwizuj</string>
     <string name="selection_bar.delete">Przenieś do kosza</string>
     <string name="selection_bar.pin" comment="Pin to notifications shade">Przypnij</string>
     <string name="selection_bar.share">Udostępnij</string>

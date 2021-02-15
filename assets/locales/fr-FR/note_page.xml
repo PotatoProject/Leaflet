@@ -5,7 +5,7 @@
     <string name="list_item_hint">Entrée</string>
     <string name="add_entry_hint">Ajouter une entrée</string>
     <string name="toolbar.tags">Gérer les tags</string>
-    <string name="toolbar.color">Changer de couleur</string>
+    <string name="toolbar.color">Changer la couleur</string>
     <string name="toolbar.add_item">Ajouter objet</string>
     <string name="privacy.title">Options de confidentialité</string>
     <string name="privacy.hide_content">Masquer les contenus sur la page d\'accueil</string>

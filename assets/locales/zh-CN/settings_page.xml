@@ -14,7 +14,7 @@
     <string name="privacy.title">隐私</string>
     <string name="privacy.use_master_pass">使用主密码</string>
     <string name="privacy.use_master_pass.disclaimer">警告：如果你忘记了密码，你将不能重置密码，你必须重置这个软件，这将会丢失所有的笔记。请务必记牢密码！</string>
-    <string name="privacy.modify_master_pass">修改主密码</string>
+    <string name="privacy.modify_master_pass">输入密码</string>
     <string name="info.title">信息</string>
     <string name="info.about_app">关于PotatoNotes</string>
     <string name="debug.title">调试</string>

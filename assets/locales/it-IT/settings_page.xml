@@ -15,7 +15,7 @@
     <string name="privacy.use_master_pass">Usa pass principale</string>
     <string name="privacy.use_master_pass.disclaimer">Attenzione: se mai dovessi dimenticare il pass non potrai reimpostarlo. Avrai bisogno di disinstallare l\'app, di conseguenza perdendo tutti gli appunti, e reinstallarla. Per favore, annota il pass da qualche parte.</string>
     <string name="privacy.modify_master_pass">Modifica pass principale</string>
-    <string name="info.title">Info</string>
+    <string name="info.title">Informazioni</string>
     <string name="info.about_app">Informazioni su PotatoNotes</string>
     <string name="debug.title">Debug</string>
     <string name="debug.show_setup_screen">Mostra la schermata iniziale al prossimo avvio</string>

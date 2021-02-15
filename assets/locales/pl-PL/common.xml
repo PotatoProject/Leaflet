@@ -39,7 +39,7 @@
     <string name="color.pink">Różowy</string>
     <string name="notification.default_title">Przypięte powiadomienie</string>
     <string name="notification.details_title">Przypięte powiadomienia</string>
-    <string name="notification.details_desc">Przypięte powiadomienia przez użytkownika</string>
+    <string name="notification.details_desc">Powiadomienia przypięte przez użytkownika</string>
     <string name="tag.new">Nowa etykieta</string>
     <string name="tag.modify">Modyfikuj etykietę</string>
     <string name="tag.textbox_hint">Nazwa</string>
