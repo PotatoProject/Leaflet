@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
 class LoginPage extends StatefulWidget {
@@ -159,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                   "Forgot password",
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () {},
+                onPressed: () => Utils.launchUrl(
+                    "${prefs.apiUrl}/account/password-forgotten"),
               ),
             ),
           ),

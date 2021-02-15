@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
 
 class AccountController {
@@ -119,6 +120,7 @@ class AccountController {
                 json.decode(profileRequest.body);
             prefs.username = response["username"];
             prefs.email = response["email"];
+            prefs.avatarUrl = await ImageHelper.getAvatar();
             return AuthResponse(status: true);
           case 400:
             return AuthResponse(
@@ -144,6 +146,7 @@ class AccountController {
     prefs.username = null;
     prefs.email = null;
     prefs.lastUpdated = 0;
+    prefs.avatarUrl = null;
 
     await tagHelper.deleteAllTags();
     await helper.deleteAllNotes();

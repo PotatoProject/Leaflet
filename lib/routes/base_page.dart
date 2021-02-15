@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -20,6 +21,7 @@ import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 import 'package:potato_notes/routes/setup/setup_page.dart';
+import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/account_info.dart';
 import 'package:potato_notes/widget/appbar_navigation.dart';
 import 'package:potato_notes/widget/base_page_navigation_bar.dart';
@@ -358,28 +360,17 @@ class _BasePageState extends State<BasePage>
                               ),
                             ),
                             DrawerListTile(
-                              icon: Icon(
-                                Icons.person_outline,
-                              ),
+                              icon: AccountAvatar(),
                               title: Text(
                                 prefs.accessToken != null
                                     ? prefs.username ?? "Guest"
                                     : LocaleStrings.mainPage.account,
                               ),
-                              onTap: () async {
-                                final bool loggedIn = prefs.accessToken != null;
-
-                                if (loggedIn) {
-                                  Utils.showNotesModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => AccountInfo(),
-                                  );
-                                } else {
-                                  Utils.showSecondaryRoute(
-                                    context,
-                                    LoginPage(),
-                                  );
-                                }
+                              onTap: () {
+                                Utils.showNotesModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => AccountInfo(),
+                                );
                               },
                               showTitle: !_collapsedDrawer,
                             ),

@@ -15,7 +15,6 @@ import 'package:potato_notes/internal/utils.dart';
 
 class SyncRoutine {
   static const Set<String> settingsToSync = {
-    "theme_mode",
     "custom_accent",
     "use_amoled",
     "use_grid",

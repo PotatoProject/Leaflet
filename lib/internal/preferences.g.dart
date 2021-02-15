@@ -9,309 +9,308 @@ part of 'preferences.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Preferences on _PreferencesBase, Store {
-  final _$masterPassValueAtom = Atom(name: '_PreferencesBase.masterPassValue');
+  final _$_masterPassValueAtom =
+      Atom(name: '_PreferencesBase._masterPassValue');
 
   @override
-  String get masterPassValue {
-    _$masterPassValueAtom.reportRead();
-    return super.masterPassValue;
+  String get _masterPassValue {
+    _$_masterPassValueAtom.reportRead();
+    return super._masterPassValue;
   }
 
   @override
-  set masterPassValue(String value) {
-    _$masterPassValueAtom.reportWrite(value, super.masterPassValue, () {
-      super.masterPassValue = value;
+  set _masterPassValue(String value) {
+    _$_masterPassValueAtom.reportWrite(value, super._masterPassValue, () {
+      super._masterPassValue = value;
     });
   }
 
-  final _$themeModeValueAtom = Atom(name: '_PreferencesBase.themeModeValue');
+  final _$_themeModeValueAtom = Atom(name: '_PreferencesBase._themeModeValue');
 
   @override
-  ThemeMode get themeModeValue {
-    _$themeModeValueAtom.reportRead();
-    return super.themeModeValue;
+  ThemeMode get _themeModeValue {
+    _$_themeModeValueAtom.reportRead();
+    return super._themeModeValue;
   }
 
   @override
-  set themeModeValue(ThemeMode value) {
-    _$themeModeValueAtom.reportWrite(value, super.themeModeValue, () {
-      super.themeModeValue = value;
+  set _themeModeValue(ThemeMode value) {
+    _$_themeModeValueAtom.reportWrite(value, super._themeModeValue, () {
+      super._themeModeValue = value;
     });
   }
 
-  final _$customAccentValueAtom =
-      Atom(name: '_PreferencesBase.customAccentValue');
+  final _$_customAccentValueAtom =
+      Atom(name: '_PreferencesBase._customAccentValue');
 
   @override
-  Color get customAccentValue {
-    _$customAccentValueAtom.reportRead();
-    return super.customAccentValue;
+  Color get _customAccentValue {
+    _$_customAccentValueAtom.reportRead();
+    return super._customAccentValue;
   }
 
   @override
-  set customAccentValue(Color value) {
-    _$customAccentValueAtom.reportWrite(value, super.customAccentValue, () {
-      super.customAccentValue = value;
+  set _customAccentValue(Color value) {
+    _$_customAccentValueAtom.reportWrite(value, super._customAccentValue, () {
+      super._customAccentValue = value;
     });
   }
 
-  final _$useAmoledValueAtom = Atom(name: '_PreferencesBase.useAmoledValue');
+  final _$_useAmoledValueAtom = Atom(name: '_PreferencesBase._useAmoledValue');
 
   @override
-  bool get useAmoledValue {
-    _$useAmoledValueAtom.reportRead();
-    return super.useAmoledValue;
+  bool get _useAmoledValue {
+    _$_useAmoledValueAtom.reportRead();
+    return super._useAmoledValue;
   }
 
   @override
-  set useAmoledValue(bool value) {
-    _$useAmoledValueAtom.reportWrite(value, super.useAmoledValue, () {
-      super.useAmoledValue = value;
+  set _useAmoledValue(bool value) {
+    _$_useAmoledValueAtom.reportWrite(value, super._useAmoledValue, () {
+      super._useAmoledValue = value;
     });
   }
 
-  final _$useGridValueAtom = Atom(name: '_PreferencesBase.useGridValue');
+  final _$_useGridValueAtom = Atom(name: '_PreferencesBase._useGridValue');
 
   @override
-  bool get useGridValue {
-    _$useGridValueAtom.reportRead();
-    return super.useGridValue;
+  bool get _useGridValue {
+    _$_useGridValueAtom.reportRead();
+    return super._useGridValue;
   }
 
   @override
-  set useGridValue(bool value) {
-    _$useGridValueAtom.reportWrite(value, super.useGridValue, () {
-      super.useGridValue = value;
+  set _useGridValue(bool value) {
+    _$_useGridValueAtom.reportWrite(value, super._useGridValue, () {
+      super._useGridValue = value;
     });
   }
 
-  final _$useCustomAccentValueAtom =
-      Atom(name: '_PreferencesBase.useCustomAccentValue');
+  final _$_useCustomAccentValueAtom =
+      Atom(name: '_PreferencesBase._useCustomAccentValue');
 
   @override
-  bool get useCustomAccentValue {
-    _$useCustomAccentValueAtom.reportRead();
-    return super.useCustomAccentValue;
+  bool get _useCustomAccentValue {
+    _$_useCustomAccentValueAtom.reportRead();
+    return super._useCustomAccentValue;
   }
 
   @override
-  set useCustomAccentValue(bool value) {
-    _$useCustomAccentValueAtom.reportWrite(value, super.useCustomAccentValue,
+  set _useCustomAccentValue(bool value) {
+    _$_useCustomAccentValueAtom.reportWrite(value, super._useCustomAccentValue,
         () {
-      super.useCustomAccentValue = value;
+      super._useCustomAccentValue = value;
     });
   }
 
-  final _$welcomePageSeenValueAtom =
-      Atom(name: '_PreferencesBase.welcomePageSeenValue');
+  final _$_welcomePageSeenValueAtom =
+      Atom(name: '_PreferencesBase._welcomePageSeenValue');
 
   @override
-  bool get welcomePageSeenValue {
-    _$welcomePageSeenValueAtom.reportRead();
-    return super.welcomePageSeenValue;
+  bool get _welcomePageSeenValue {
+    _$_welcomePageSeenValueAtom.reportRead();
+    return super._welcomePageSeenValue;
   }
 
   @override
-  set welcomePageSeenValue(bool value) {
-    _$welcomePageSeenValueAtom.reportWrite(value, super.welcomePageSeenValue,
+  set _welcomePageSeenValue(bool value) {
+    _$_welcomePageSeenValueAtom.reportWrite(value, super._welcomePageSeenValue,
         () {
-      super.welcomePageSeenValue = value;
+      super._welcomePageSeenValue = value;
     });
   }
 
-  final _$apiUrlValueAtom = Atom(name: '_PreferencesBase.apiUrlValue');
+  final _$_apiUrlValueAtom = Atom(name: '_PreferencesBase._apiUrlValue');
 
   @override
-  String get apiUrlValue {
-    _$apiUrlValueAtom.reportRead();
-    return super.apiUrlValue;
+  String get _apiUrlValue {
+    _$_apiUrlValueAtom.reportRead();
+    return super._apiUrlValue;
   }
 
   @override
-  set apiUrlValue(String value) {
-    _$apiUrlValueAtom.reportWrite(value, super.apiUrlValue, () {
-      super.apiUrlValue = value;
+  set _apiUrlValue(String value) {
+    _$_apiUrlValueAtom.reportWrite(value, super._apiUrlValue, () {
+      super._apiUrlValue = value;
     });
   }
 
-  final _$accessTokenValueAtom =
-      Atom(name: '_PreferencesBase.accessTokenValue');
+  final _$_accessTokenValueAtom =
+      Atom(name: '_PreferencesBase._accessTokenValue');
 
   @override
-  String get accessTokenValue {
-    _$accessTokenValueAtom.reportRead();
-    return super.accessTokenValue;
+  String get _accessTokenValue {
+    _$_accessTokenValueAtom.reportRead();
+    return super._accessTokenValue;
   }
 
   @override
-  set accessTokenValue(String value) {
-    _$accessTokenValueAtom.reportWrite(value, super.accessTokenValue, () {
-      super.accessTokenValue = value;
+  set _accessTokenValue(String value) {
+    _$_accessTokenValueAtom.reportWrite(value, super._accessTokenValue, () {
+      super._accessTokenValue = value;
     });
   }
 
-  final _$refreshTokenValueAtom =
-      Atom(name: '_PreferencesBase.refreshTokenValue');
+  final _$_refreshTokenValueAtom =
+      Atom(name: '_PreferencesBase._refreshTokenValue');
 
   @override
-  String get refreshTokenValue {
-    _$refreshTokenValueAtom.reportRead();
-    return super.refreshTokenValue;
+  String get _refreshTokenValue {
+    _$_refreshTokenValueAtom.reportRead();
+    return super._refreshTokenValue;
   }
 
   @override
-  set refreshTokenValue(String value) {
-    _$refreshTokenValueAtom.reportWrite(value, super.refreshTokenValue, () {
-      super.refreshTokenValue = value;
+  set _refreshTokenValue(String value) {
+    _$_refreshTokenValueAtom.reportWrite(value, super._refreshTokenValue, () {
+      super._refreshTokenValue = value;
     });
   }
 
-  final _$usernameValueAtom = Atom(name: '_PreferencesBase.usernameValue');
+  final _$_usernameValueAtom = Atom(name: '_PreferencesBase._usernameValue');
 
   @override
-  String get usernameValue {
-    _$usernameValueAtom.reportRead();
-    return super.usernameValue;
+  String get _usernameValue {
+    _$_usernameValueAtom.reportRead();
+    return super._usernameValue;
   }
 
   @override
-  set usernameValue(String value) {
-    _$usernameValueAtom.reportWrite(value, super.usernameValue, () {
-      super.usernameValue = value;
+  set _usernameValue(String value) {
+    _$_usernameValueAtom.reportWrite(value, super._usernameValue, () {
+      super._usernameValue = value;
     });
   }
 
-  final _$emailValueAtom = Atom(name: '_PreferencesBase.emailValue');
+  final _$_emailValueAtom = Atom(name: '_PreferencesBase._emailValue');
 
   @override
-  String get emailValue {
-    _$emailValueAtom.reportRead();
-    return super.emailValue;
+  String get _emailValue {
+    _$_emailValueAtom.reportRead();
+    return super._emailValue;
   }
 
   @override
-  set emailValue(String value) {
-    _$emailValueAtom.reportWrite(value, super.emailValue, () {
-      super.emailValue = value;
+  set _emailValue(String value) {
+    _$_emailValueAtom.reportWrite(value, super._emailValue, () {
+      super._emailValue = value;
     });
   }
 
-  final _$logLevelValueAtom = Atom(name: '_PreferencesBase.logLevelValue');
+  final _$_avatarUrlValueAtom = Atom(name: '_PreferencesBase._avatarUrlValue');
 
   @override
-  int get logLevelValue {
-    _$logLevelValueAtom.reportRead();
-    return super.logLevelValue;
+  String get _avatarUrlValue {
+    _$_avatarUrlValueAtom.reportRead();
+    return super._avatarUrlValue;
   }
 
   @override
-  set logLevelValue(int value) {
-    _$logLevelValueAtom.reportWrite(value, super.logLevelValue, () {
-      super.logLevelValue = value;
+  set _avatarUrlValue(String value) {
+    _$_avatarUrlValueAtom.reportWrite(value, super._avatarUrlValue, () {
+      super._avatarUrlValue = value;
     });
   }
 
-  final _$tagsValueAtom = Atom(name: '_PreferencesBase.tagsValue');
+  final _$_logLevelValueAtom = Atom(name: '_PreferencesBase._logLevelValue');
 
   @override
-  List<dynamic> get tagsValue {
-    _$tagsValueAtom.reportRead();
-    return super.tagsValue;
+  int get _logLevelValue {
+    _$_logLevelValueAtom.reportRead();
+    return super._logLevelValue;
   }
 
   @override
-  set tagsValue(List<dynamic> value) {
-    _$tagsValueAtom.reportWrite(value, super.tagsValue, () {
-      super.tagsValue = value;
+  set _logLevelValue(int value) {
+    _$_logLevelValueAtom.reportWrite(value, super._logLevelValue, () {
+      super._logLevelValue = value;
     });
   }
 
-  final _$downloadedImagesValueAtom =
-      Atom(name: '_PreferencesBase.downloadedImagesValue');
+  final _$_tagsValueAtom = Atom(name: '_PreferencesBase._tagsValue');
 
   @override
-  List<String> get downloadedImagesValue {
-    _$downloadedImagesValueAtom.reportRead();
-    return super.downloadedImagesValue;
+  List<dynamic> get _tagsValue {
+    _$_tagsValueAtom.reportRead();
+    return super._tagsValue;
   }
 
   @override
-  set downloadedImagesValue(List<String> value) {
-    _$downloadedImagesValueAtom.reportWrite(value, super.downloadedImagesValue,
-        () {
-      super.downloadedImagesValue = value;
+  set _tagsValue(List<dynamic> value) {
+    _$_tagsValueAtom.reportWrite(value, super._tagsValue, () {
+      super._tagsValue = value;
     });
   }
 
-  final _$deletedImagesValueAtom =
-      Atom(name: '_PreferencesBase.deletedImagesValue');
+  final _$_downloadedImagesValueAtom =
+      Atom(name: '_PreferencesBase._downloadedImagesValue');
 
   @override
-  List<String> get deletedImagesValue {
-    _$deletedImagesValueAtom.reportRead();
-    return super.deletedImagesValue;
+  List<String> get _downloadedImagesValue {
+    _$_downloadedImagesValueAtom.reportRead();
+    return super._downloadedImagesValue;
   }
 
   @override
-  set deletedImagesValue(List<String> value) {
-    _$deletedImagesValueAtom.reportWrite(value, super.deletedImagesValue, () {
-      super.deletedImagesValue = value;
+  set _downloadedImagesValue(List<String> value) {
+    _$_downloadedImagesValueAtom
+        .reportWrite(value, super._downloadedImagesValue, () {
+      super._downloadedImagesValue = value;
     });
   }
 
-  final _$lastUpdatedValueAtom =
-      Atom(name: '_PreferencesBase.lastUpdatedValue');
+  final _$_deletedImagesValueAtom =
+      Atom(name: '_PreferencesBase._deletedImagesValue');
 
   @override
-  int get lastUpdatedValue {
-    _$lastUpdatedValueAtom.reportRead();
-    return super.lastUpdatedValue;
+  List<String> get _deletedImagesValue {
+    _$_deletedImagesValueAtom.reportRead();
+    return super._deletedImagesValue;
   }
 
   @override
-  set lastUpdatedValue(int value) {
-    _$lastUpdatedValueAtom.reportWrite(value, super.lastUpdatedValue, () {
-      super.lastUpdatedValue = value;
+  set _deletedImagesValue(List<String> value) {
+    _$_deletedImagesValueAtom.reportWrite(value, super._deletedImagesValue, () {
+      super._deletedImagesValue = value;
     });
   }
 
-  final _$deleteQueueValueAtom =
-      Atom(name: '_PreferencesBase.deleteQueueValue');
+  final _$_lastUpdatedValueAtom =
+      Atom(name: '_PreferencesBase._lastUpdatedValue');
 
   @override
-  String get deleteQueueValue {
-    _$deleteQueueValueAtom.reportRead();
-    return super.deleteQueueValue;
+  int get _lastUpdatedValue {
+    _$_lastUpdatedValueAtom.reportRead();
+    return super._lastUpdatedValue;
   }
 
   @override
-  set deleteQueueValue(String value) {
-    _$deleteQueueValueAtom.reportWrite(value, super.deleteQueueValue, () {
-      super.deleteQueueValue = value;
+  set _lastUpdatedValue(int value) {
+    _$_lastUpdatedValueAtom.reportWrite(value, super._lastUpdatedValue, () {
+      super._lastUpdatedValue = value;
+    });
+  }
+
+  final _$_deleteQueueValueAtom =
+      Atom(name: '_PreferencesBase._deleteQueueValue');
+
+  @override
+  String get _deleteQueueValue {
+    _$_deleteQueueValueAtom.reportRead();
+    return super._deleteQueueValue;
+  }
+
+  @override
+  set _deleteQueueValue(String value) {
+    _$_deleteQueueValueAtom.reportWrite(value, super._deleteQueueValue, () {
+      super._deleteQueueValue = value;
     });
   }
 
   @override
   String toString() {
     return '''
-masterPassValue: ${masterPassValue},
-themeModeValue: ${themeModeValue},
-customAccentValue: ${customAccentValue},
-useAmoledValue: ${useAmoledValue},
-useGridValue: ${useGridValue},
-useCustomAccentValue: ${useCustomAccentValue},
-welcomePageSeenValue: ${welcomePageSeenValue},
-apiUrlValue: ${apiUrlValue},
-accessTokenValue: ${accessTokenValue},
-refreshTokenValue: ${refreshTokenValue},
-usernameValue: ${usernameValue},
-emailValue: ${emailValue},
-logLevelValue: ${logLevelValue},
-tagsValue: ${tagsValue},
-downloadedImagesValue: ${downloadedImagesValue},
-deletedImagesValue: ${deletedImagesValue},
-lastUpdatedValue: ${lastUpdatedValue},
-deleteQueueValue: ${deleteQueueValue}
+
     ''';
   }
 }

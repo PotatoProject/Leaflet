@@ -125,12 +125,9 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                       );
 
                       if (details.primaryVelocity > 350) {
-                        final bool _animForward =
-                            widget.route.controller.status ==
-                                    AnimationStatus.forward ||
-                                widget.route.controller.status ==
-                                    AnimationStatus.completed;
-                        if (!_animForward)
+                        final bool _closeSheet =
+                            details.velocity.pixelsPerSecond.dy > 0;
+                        if (_closeSheet)
                           widget.route.navigator?.pop();
                         else
                           widget.route.controller.fling(velocity: 1);

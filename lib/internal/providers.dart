@@ -22,14 +22,14 @@ class _ProvidersSingleton {
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
 
   void initProviders(AppDatabase _db) {
-    _helper = _db.noteHelper;
-    _tagHelper = _db.tagHelper;
-    _appInfo = AppInfo();
-    _deviceInfo = DeviceInfo();
-    _prefs = Preferences();
-    _imageQueue = ImageQueue();
     _dio = new Dio();
     _dio.interceptors.add(TokenInterceptor());
+    _helper = _db.noteHelper;
+    _tagHelper = _db.tagHelper;
+    _prefs = Preferences();
+    _deviceInfo = DeviceInfo();
+    _imageQueue = ImageQueue();
+    _appInfo = AppInfo();
   }
 }
 

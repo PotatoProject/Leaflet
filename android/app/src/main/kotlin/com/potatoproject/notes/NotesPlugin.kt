@@ -6,6 +6,8 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Handler
+import android.util.Log
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.EventChannel
@@ -21,7 +23,7 @@ class NotesPlugin : FlutterPlugin {
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {}
 
     class AccentStreamHandler(private val mContext: Context) : EventChannel.StreamHandler {
-        private val handler = Handler()
+        private val handler = Handler(mContext.mainLooper)
         private var eventSink: EventSink? = null
         private var themeMode: Boolean? = null
         private var accentColor: Int? = null

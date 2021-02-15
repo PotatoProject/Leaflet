@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 part 'app_info.g.dart';

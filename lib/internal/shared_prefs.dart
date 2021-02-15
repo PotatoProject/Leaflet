@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +28,7 @@ class SharedPrefs {
     getDeletedImages();
     getDownloadedImages();
     getEmail();
+    getAvatarUrl();
     getLastUpdated();
     getLogLevel();
     getMasterPass();
@@ -165,6 +167,14 @@ class SharedPrefs {
 
   void setEmail(String value) async {
     await prefs.setString("email", value);
+  }
+
+  Future<String> getAvatarUrl() async {
+    return prefs.getString("avatar_url");
+  }
+
+  void setAvatarUrl(String value) async {
+    await prefs.setString("avatar_url", value);
   }
 
   Future<int> getLogLevel() async {

@@ -31,6 +31,7 @@ import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:recase/recase.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 const double kCardBorderRadius = 4;
@@ -239,8 +240,9 @@ class Utils {
         state.closeSelection();
         break;
       case 'delete':
-        final List<Note> notesToTrash = notes.where((n) => !n.deleted);
-        final List<Note> notesToBeDeleted = notes.where((n) => n.deleted);
+        final List<Note> notesToTrash = notes.where((n) => !n.deleted).toList();
+        final List<Note> notesToBeDeleted =
+            notes.where((n) => n.deleted).toList();
 
         notesToBeDeleted.forEach((n) => Utils.deleteNoteSafely(n));
 
@@ -625,6 +627,19 @@ class Utils {
     } catch (e) {}
 
     return path != null ? File(path) : null;
+  }
+
+  static Future<bool> launchUrl(
+    String url, {
+    Map<String, String> headers,
+  }) async {
+    bool canLaunchLink = await canLaunch(url);
+
+    if (canLaunchLink) {
+      return await launch(url, headers: headers);
+    }
+
+    return false;
   }
 
   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";

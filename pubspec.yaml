@@ -15,7 +15,6 @@ dependencies:
   json_serializable:
   sqflite:
   path_provider:
-  photo_view:
   image_picker:
   back_button_interceptor:
   shared_preferences:

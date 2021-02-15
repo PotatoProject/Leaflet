@@ -8,6 +8,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/image/image_helper.dart';
 
 part 'preferences.g.dart';
 
@@ -23,97 +24,103 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  String masterPassValue;
+  String _masterPassValue;
 
   @observable
   @protected
-  ThemeMode themeModeValue = ThemeMode.system;
+  ThemeMode _themeModeValue = ThemeMode.system;
 
   @observable
   @protected
-  Color customAccentValue;
+  Color _customAccentValue;
 
   @observable
   @protected
-  bool useAmoledValue = false;
+  bool _useAmoledValue = false;
 
   @observable
   @protected
-  bool useGridValue = false;
+  bool _useGridValue = false;
 
   @observable
   @protected
-  bool useCustomAccentValue = false;
+  bool _useCustomAccentValue = false;
 
   @observable
   @protected
-  bool welcomePageSeenValue = false;
+  bool _welcomePageSeenValue = false;
 
   @observable
   @protected
-  String apiUrlValue;
+  String _apiUrlValue;
 
   @observable
   @protected
-  String accessTokenValue;
+  String _accessTokenValue;
 
   @observable
   @protected
-  String refreshTokenValue;
+  String _refreshTokenValue;
 
   @observable
   @protected
-  String usernameValue;
+  String _usernameValue;
 
   @observable
   @protected
-  String emailValue;
+  String _emailValue;
 
   @observable
   @protected
-  int logLevelValue = LogEntry.VERBOSE;
+  String _avatarUrlValue;
 
   @observable
   @protected
-  List<dynamic> tagsValue = [];
+  int _logLevelValue = LogEntry.VERBOSE;
 
   @observable
   @protected
-  List<String> downloadedImagesValue = [];
+  List<dynamic> _tagsValue = [];
 
   @observable
   @protected
-  List<String> deletedImagesValue = [];
+  List<String> _downloadedImagesValue = [];
 
   @observable
   @protected
-  int lastUpdatedValue;
+  List<String> _deletedImagesValue = [];
 
   @observable
   @protected
-  String deleteQueueValue;
+  int _lastUpdatedValue;
 
-  String get masterPass => masterPassValue;
-  ThemeMode get themeMode => themeModeValue;
-  Color get customAccent => customAccentValue;
-  bool get useAmoled => useAmoledValue;
-  bool get useGrid => useGridValue;
-  bool get useCustomAccent => useCustomAccentValue;
-  bool get welcomePageSeen => welcomePageSeenValue;
-  String get apiUrl => apiUrlValue;
-  String get accessToken => accessTokenValue;
-  String get refreshToken => refreshTokenValue;
-  String get username => usernameValue;
-  String get email => emailValue;
-  int get logLevel => logLevelValue;
-  List<dynamic> get tags => tagsValue;
-  List<String> get downloadedImages => downloadedImagesValue;
-  List<String> get deletedImages => deletedImagesValue;
-  int get lastUpdated => lastUpdatedValue;
-  String get deleteQueue => deleteQueueValue;
+  @observable
+  @protected
+  String _deleteQueueValue;
+
+  String get masterPass => _masterPassValue;
+  ThemeMode get themeMode => _themeModeValue;
+  Color get customAccent => _customAccentValue;
+  bool get useAmoled => _useAmoledValue;
+  bool get useGrid => _useGridValue;
+  bool get useCustomAccent => _useCustomAccentValue;
+  bool get welcomePageSeen => _welcomePageSeenValue;
+  String get apiUrl => _apiUrlValue;
+  String get accessToken => _accessTokenValue;
+  String get refreshToken => _refreshTokenValue;
+  String get username => _usernameValue;
+  String get email => _emailValue;
+  String get avatarUrl => _avatarUrlValue;
+  String get avatarUrlAsKey => _avatarUrlValue.split("?").first;
+  int get logLevel => _logLevelValue;
+  List<dynamic> get tags => _tagsValue;
+  List<String> get downloadedImages => _downloadedImagesValue;
+  List<String> get deletedImages => _deletedImagesValue;
+  int get lastUpdated => _lastUpdatedValue;
+  String get deleteQueue => _deleteQueueValue;
 
   set masterPass(String value) {
-    masterPassValue = value;
+    _masterPassValue = value;
 
     if (DeviceInfo.isDesktopOrWeb) {
       prefs.setMasterPass(value);
@@ -123,82 +130,87 @@ abstract class _PreferencesBase with Store {
   }
 
   set themeMode(ThemeMode value) {
-    themeModeValue = value;
+    _themeModeValue = value;
     prefs.setThemeMode(value);
   }
 
   set customAccent(Color value) {
-    customAccentValue = value;
+    _customAccentValue = value;
     prefs.setCustomAccent(value);
   }
 
   set useAmoled(bool value) {
-    useAmoledValue = value;
+    _useAmoledValue = value;
     prefs.setUseAmoled(value);
   }
 
   set useGrid(bool value) {
-    useGridValue = value;
+    _useGridValue = value;
     prefs.setUseGrid(value);
   }
 
   set useCustomAccent(bool value) {
-    useCustomAccentValue = value;
+    _useCustomAccentValue = value;
     prefs.setUseCustomAccent(value);
   }
 
   set welcomePageSeen(bool value) {
-    welcomePageSeenValue = value;
+    _welcomePageSeenValue = value;
     prefs.setWelcomePageSeen(value);
   }
 
   set apiUrl(String value) {
-    apiUrlValue = value;
+    _apiUrlValue = value;
     prefs.setApiUrl(value);
   }
 
   set accessToken(String value) {
-    accessTokenValue = value;
+    _accessTokenValue = value;
     prefs.setAccessToken(value);
   }
 
   set refreshToken(String value) {
-    refreshTokenValue = value;
+    _refreshTokenValue = value;
     prefs.setRefreshToken(value);
   }
 
   set username(String value) {
-    usernameValue = value;
+    _usernameValue = value;
     prefs.setUsername(value);
   }
 
   set email(String value) {
-    emailValue = value;
+    _emailValue = value;
     prefs.setEmail(value);
   }
 
+  set avatarUrl(String value) {
+    _avatarUrlValue = value;
+    prefs.setAvatarUrl(value);
+  }
+
   set logLevel(int value) {
-    logLevelValue = value;
+    _logLevelValue = value;
     prefs.setLogLevel(value);
   }
 
   set downloadedImages(List<String> value) {
-    downloadedImagesValue = value;
+    _downloadedImagesValue = value;
     prefs.setDownloadedImages(value);
   }
 
   set deletedImages(List<String> value) {
-    deletedImagesValue = value;
+    _deletedImagesValue = value;
     prefs.setDeletedImages(value);
   }
 
   set lastUpdated(int value) {
-    lastUpdatedValue = value;
+    _lastUpdatedValue = value;
     prefs.setLastUpdated(value);
   }
 
   set deleteQueue(String value) {
-    deleteQueueValue = value;
+    _deleteQueueValue = value;
     prefs.setDeleteQueue(value);
   }
 
@@ -207,32 +219,40 @@ abstract class _PreferencesBase with Store {
   }
 
   void loadData() async {
-    welcomePageSeenValue = await prefs.getWelcomePageSeen();
-    themeModeValue = await prefs.getThemeMode();
-    useAmoledValue = await prefs.getUseAmoled();
-    useCustomAccentValue = await prefs.getUseCustomAccent();
-    customAccentValue = await prefs.getCustomAccent();
-    useGridValue = await prefs.getUseGrid();
+    _apiUrlValue = await prefs.getApiUrl();
+    _accessTokenValue = await prefs.getAccessToken();
+    _refreshTokenValue = await prefs.getRefreshToken();
+    _welcomePageSeenValue = await prefs.getWelcomePageSeen();
+    _themeModeValue = await prefs.getThemeMode();
+    _useAmoledValue = await prefs.getUseAmoled();
+    _useCustomAccentValue = await prefs.getUseCustomAccent();
+    _customAccentValue = await prefs.getCustomAccent();
+    _useGridValue = await prefs.getUseGrid();
 
     if (DeviceInfo.isDesktopOrWeb) {
-      masterPassValue = await prefs.getMasterPass();
+      _masterPassValue = await prefs.getMasterPass();
     } else {
-      masterPassValue = await keystore.getMasterPass();
+      _masterPassValue = await keystore.getMasterPass();
     }
 
-    apiUrlValue = await prefs.getApiUrl();
-    accessTokenValue = await prefs.getAccessToken();
-    refreshTokenValue = await prefs.getRefreshToken();
-    usernameValue = await prefs.getUsername();
-    emailValue = await prefs.getEmail();
-    logLevelValue = await prefs.getLogLevel();
-    downloadedImagesValue = await prefs.getDownloadedImages();
-    deletedImagesValue = await prefs.getDeletedImages();
-    lastUpdatedValue = await prefs.getLastUpdated();
-    deleteQueueValue = await prefs.getDeleteQueue();
+    _usernameValue = await prefs.getUsername();
+    _emailValue = await prefs.getEmail();
+    _avatarUrlValue = await prefs.getAvatarUrl();
+    _logLevelValue = await prefs.getLogLevel();
+    _downloadedImagesValue = await prefs.getDownloadedImages();
+    _deletedImagesValue = await prefs.getDeletedImages();
+    _lastUpdatedValue = await prefs.getLastUpdated();
+    _deleteQueueValue = await prefs.getDeleteQueue();
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
-      tagsValue = newTags;
+      _tagsValue = newTags;
     });
+
+    try {
+      final String netAvatarUrl = await ImageHelper.getAvatar();
+      if (netAvatarUrl != _avatarUrlValue) {
+        avatarUrl = netAvatarUrl;
+      }
+    } catch (e) {}
   }
 
   Future<String> getToken() async {

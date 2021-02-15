@@ -6,7 +6,6 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/logos.dart';
 import 'package:potato_notes/widget/settings_category.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
   @override
@@ -114,11 +113,10 @@ class AboutPage extends StatelessWidget {
                 getSocialNameForSocialLink(links[index].type),
               ),
               onTap: () async {
-                String link = getLinkForSocialLink(links[index]);
-                bool canLaunchLink = await canLaunch(link);
+                final String link = getLinkForSocialLink(links[index]);
+                final bool result = await Utils.launchUrl(link);
 
-                if (canLaunchLink) {
-                  await launch(link);
+                if (result) {
                   Navigator.pop(context);
                 }
               },

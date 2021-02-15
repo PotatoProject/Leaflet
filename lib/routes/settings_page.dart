@@ -222,18 +222,18 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icon(Icons.brightness_2_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
-            SettingsTile.withSwitch(
-              value: !deviceInfo.canUseSystemAccent
-                  ? false
-                  : !prefs.useCustomAccent,
-              onChanged: (value) => prefs.useCustomAccent = !value,
-              title: Text(
-                LocaleStrings.settingsPage.personalizationUseCustomAccent,
+            if (deviceInfo.canUseSystemAccent)
+              SettingsTile.withSwitch(
+                value: !deviceInfo.canUseSystemAccent
+                    ? false
+                    : !prefs.useCustomAccent,
+                onChanged: (value) => prefs.useCustomAccent = !value,
+                title: Text(
+                  LocaleStrings.settingsPage.personalizationUseCustomAccent,
+                ),
+                icon: Icon(Icons.color_lens_outlined),
+                activeColor: Theme.of(context).accentColor,
               ),
-              icon: Icon(Icons.color_lens_outlined),
-              activeColor: Theme.of(context).accentColor,
-              enabled: deviceInfo.canUseSystemAccent,
-            ),
             SettingsTile(
               title: Text(
                 LocaleStrings.settingsPage.personalizationCustomAccent,
