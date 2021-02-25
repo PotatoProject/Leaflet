@@ -1,5 +1,6 @@
+// @dart=2.12
+
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
@@ -14,8 +15,8 @@ class DeleteQueueItem extends QueueItem {
   final StorageLocation storageLocation;
 
   DeleteQueueItem({
-    @required this.localPath,
-    @required this.savedImage,
+    required this.localPath,
+    required this.savedImage,
     this.storageLocation = StorageLocation.LOCAL,
   }) : super(localPath: localPath, savedImage: savedImage);
 

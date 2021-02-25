@@ -44,81 +44,81 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
 abstract class _DeviceInfoBase with Store {
   @observable
   @protected
-  bool canCheckBiometricsValue;
+  bool _canCheckBiometricsValue;
 
   @observable
   @protected
-  List<BiometricType> availableBiometricsValue;
+  List<BiometricType> _availableBiometricsValue;
 
   @observable
   @protected
-  bool canUseSystemAccentValue = true;
+  bool _canUseSystemAccentValue = true;
 
   @observable
   @protected
-  bool isLandscapeValue = false;
+  bool _isLandscapeValue = false;
 
   @observable
   @protected
-  int uiSizeFactorValue = 2;
+  int _uiSizeFactorValue = 2;
 
   @observable
   @protected
-  UiType uiTypeValue;
+  UiType _uiTypeValue;
 
   _DeviceInfoBase() {
     _loadInitialData();
   }
 
-  bool get canCheckBiometrics => canCheckBiometricsValue;
-  List<BiometricType> get availableBiometrics => availableBiometricsValue;
-  bool get canUseSystemAccent => canUseSystemAccentValue;
-  bool get isLandscape => isLandscapeValue;
-  int get uiSizeFactor => uiSizeFactorValue;
-  UiType get uiType => uiTypeValue;
+  bool get canCheckBiometrics => _canCheckBiometricsValue;
+  List<BiometricType> get availableBiometrics => _availableBiometricsValue;
+  bool get canUseSystemAccent => _canUseSystemAccentValue;
+  bool get isLandscape => _isLandscapeValue;
+  int get uiSizeFactor => _uiSizeFactorValue;
+  UiType get uiType => _uiTypeValue;
 
   @action
   Future<void> _loadInitialData() async {
     if (!DeviceInfo.isDesktopOrWeb) {
-      canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
-      availableBiometricsValue =
+      _canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
+      _availableBiometricsValue =
           await LocalAuthentication().getAvailableBiometrics();
     } else {
-      canCheckBiometricsValue = false;
-      availableBiometricsValue = [];
+      _canCheckBiometricsValue = false;
+      _availableBiometricsValue = [];
     }
   }
 
   @action
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
-    canUseSystemAccentValue = canUseSystemAccent;
-    isLandscapeValue = mq.orientation == Orientation.landscape;
+    _canUseSystemAccentValue = canUseSystemAccent;
+    _isLandscapeValue = mq.orientation == Orientation.landscape;
     final double width = mq.size.width;
 
     if (width >= 1920) {
-      uiSizeFactorValue = 8;
-      uiTypeValue = UiType.DESKTOP;
+      _uiSizeFactorValue = 8;
+      _uiTypeValue = UiType.DESKTOP;
     } else if (width >= 1600) {
-      uiSizeFactorValue = 7;
-      uiTypeValue = UiType.DESKTOP;
+      _uiSizeFactorValue = 7;
+      _uiTypeValue = UiType.DESKTOP;
     } else if (width >= 1460) {
-      uiSizeFactorValue = 6;
-      uiTypeValue = UiType.DESKTOP;
+      _uiSizeFactorValue = 6;
+      _uiTypeValue = UiType.DESKTOP;
     } else if (width >= 1280) {
-      uiSizeFactorValue = 5;
-      uiTypeValue = UiType.DESKTOP;
+      _uiSizeFactorValue = 5;
+      _uiTypeValue = UiType.DESKTOP;
     } else if (width >= 900) {
-      uiSizeFactorValue = 4;
-      uiTypeValue = UiType.LARGE_TABLET;
+      _uiSizeFactorValue = 4;
+      _uiTypeValue = UiType.LARGE_TABLET;
     } else if (width >= 600) {
-      uiSizeFactorValue = 3;
-      uiTypeValue = UiType.TABLET;
+      _uiSizeFactorValue = 3;
+      _uiTypeValue = UiType.TABLET;
     } else if (width >= 360) {
-      uiSizeFactorValue = 2;
-      uiTypeValue = UiType.PHONE;
+      _uiSizeFactorValue = 2;
+      _uiTypeValue = UiType.PHONE;
     } else {
-      uiSizeFactorValue = 1;
-      uiTypeValue = UiType.PHONE;
+      _uiSizeFactorValue = 1;
+      _uiTypeValue = UiType.PHONE;
     }
   }
 }

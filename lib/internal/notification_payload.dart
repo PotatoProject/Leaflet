@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'notification_payload.g.dart';
@@ -9,9 +11,9 @@ class NotificationPayload {
   final NotificationAction action;
 
   const NotificationPayload({
-    this.id,
-    this.noteId,
-    this.action,
+    required this.id,
+    required this.noteId,
+    required this.action,
   });
 
   factory NotificationPayload.fromJson(Map<String, dynamic> json) =>

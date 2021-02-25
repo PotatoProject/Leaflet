@@ -9,35 +9,35 @@ part of 'app_info.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AppInfo on _AppInfoBase, Store {
-  final _$accentDataValueAtom = Atom(name: '_AppInfoBase.accentDataValue');
+  final _$_accentDataValueAtom = Atom(name: '_AppInfoBase._accentDataValue');
 
   @override
-  int get accentDataValue {
-    _$accentDataValueAtom.reportRead();
-    return super.accentDataValue;
+  int get _accentDataValue {
+    _$_accentDataValueAtom.reportRead();
+    return super._accentDataValue;
   }
 
   @override
-  set accentDataValue(int value) {
-    _$accentDataValueAtom.reportWrite(value, super.accentDataValue, () {
-      super.accentDataValue = value;
+  set _accentDataValue(int value) {
+    _$_accentDataValueAtom.reportWrite(value, super._accentDataValue, () {
+      super._accentDataValue = value;
     });
   }
 
-  final _$activeNotificationsValueAtom =
-      Atom(name: '_AppInfoBase.activeNotificationsValue');
+  final _$_activeNotificationsValueAtom =
+      Atom(name: '_AppInfoBase._activeNotificationsValue');
 
   @override
-  List<ActiveNotification> get activeNotificationsValue {
-    _$activeNotificationsValueAtom.reportRead();
-    return super.activeNotificationsValue;
+  List<ActiveNotification> get _activeNotificationsValue {
+    _$_activeNotificationsValueAtom.reportRead();
+    return super._activeNotificationsValue;
   }
 
   @override
-  set activeNotificationsValue(List<ActiveNotification> value) {
-    _$activeNotificationsValueAtom
-        .reportWrite(value, super.activeNotificationsValue, () {
-      super.activeNotificationsValue = value;
+  set _activeNotificationsValue(List<ActiveNotification> value) {
+    _$_activeNotificationsValueAtom
+        .reportWrite(value, super._activeNotificationsValue, () {
+      super._activeNotificationsValue = value;
     });
   }
 
@@ -68,8 +68,7 @@ mixin _$AppInfo on _AppInfoBase, Store {
   @override
   String toString() {
     return '''
-accentDataValue: ${accentDataValue},
-activeNotificationsValue: ${activeNotificationsValue}
+
     ''';
   }
 }

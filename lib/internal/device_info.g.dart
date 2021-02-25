@@ -9,100 +9,101 @@ part of 'device_info.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$DeviceInfo on _DeviceInfoBase, Store {
-  final _$canCheckBiometricsValueAtom =
-      Atom(name: '_DeviceInfoBase.canCheckBiometricsValue');
+  final _$_canCheckBiometricsValueAtom =
+      Atom(name: '_DeviceInfoBase._canCheckBiometricsValue');
 
   @override
-  bool get canCheckBiometricsValue {
-    _$canCheckBiometricsValueAtom.reportRead();
-    return super.canCheckBiometricsValue;
+  bool get _canCheckBiometricsValue {
+    _$_canCheckBiometricsValueAtom.reportRead();
+    return super._canCheckBiometricsValue;
   }
 
   @override
-  set canCheckBiometricsValue(bool value) {
-    _$canCheckBiometricsValueAtom
-        .reportWrite(value, super.canCheckBiometricsValue, () {
-      super.canCheckBiometricsValue = value;
+  set _canCheckBiometricsValue(bool value) {
+    _$_canCheckBiometricsValueAtom
+        .reportWrite(value, super._canCheckBiometricsValue, () {
+      super._canCheckBiometricsValue = value;
     });
   }
 
-  final _$availableBiometricsValueAtom =
-      Atom(name: '_DeviceInfoBase.availableBiometricsValue');
+  final _$_availableBiometricsValueAtom =
+      Atom(name: '_DeviceInfoBase._availableBiometricsValue');
 
   @override
-  List<BiometricType> get availableBiometricsValue {
-    _$availableBiometricsValueAtom.reportRead();
-    return super.availableBiometricsValue;
+  List<BiometricType> get _availableBiometricsValue {
+    _$_availableBiometricsValueAtom.reportRead();
+    return super._availableBiometricsValue;
   }
 
   @override
-  set availableBiometricsValue(List<BiometricType> value) {
-    _$availableBiometricsValueAtom
-        .reportWrite(value, super.availableBiometricsValue, () {
-      super.availableBiometricsValue = value;
+  set _availableBiometricsValue(List<BiometricType> value) {
+    _$_availableBiometricsValueAtom
+        .reportWrite(value, super._availableBiometricsValue, () {
+      super._availableBiometricsValue = value;
     });
   }
 
-  final _$canUseSystemAccentValueAtom =
-      Atom(name: '_DeviceInfoBase.canUseSystemAccentValue');
+  final _$_canUseSystemAccentValueAtom =
+      Atom(name: '_DeviceInfoBase._canUseSystemAccentValue');
 
   @override
-  bool get canUseSystemAccentValue {
-    _$canUseSystemAccentValueAtom.reportRead();
-    return super.canUseSystemAccentValue;
+  bool get _canUseSystemAccentValue {
+    _$_canUseSystemAccentValueAtom.reportRead();
+    return super._canUseSystemAccentValue;
   }
 
   @override
-  set canUseSystemAccentValue(bool value) {
-    _$canUseSystemAccentValueAtom
-        .reportWrite(value, super.canUseSystemAccentValue, () {
-      super.canUseSystemAccentValue = value;
+  set _canUseSystemAccentValue(bool value) {
+    _$_canUseSystemAccentValueAtom
+        .reportWrite(value, super._canUseSystemAccentValue, () {
+      super._canUseSystemAccentValue = value;
     });
   }
 
-  final _$isLandscapeValueAtom = Atom(name: '_DeviceInfoBase.isLandscapeValue');
+  final _$_isLandscapeValueAtom =
+      Atom(name: '_DeviceInfoBase._isLandscapeValue');
 
   @override
-  bool get isLandscapeValue {
-    _$isLandscapeValueAtom.reportRead();
-    return super.isLandscapeValue;
+  bool get _isLandscapeValue {
+    _$_isLandscapeValueAtom.reportRead();
+    return super._isLandscapeValue;
   }
 
   @override
-  set isLandscapeValue(bool value) {
-    _$isLandscapeValueAtom.reportWrite(value, super.isLandscapeValue, () {
-      super.isLandscapeValue = value;
+  set _isLandscapeValue(bool value) {
+    _$_isLandscapeValueAtom.reportWrite(value, super._isLandscapeValue, () {
+      super._isLandscapeValue = value;
     });
   }
 
-  final _$uiSizeFactorValueAtom =
-      Atom(name: '_DeviceInfoBase.uiSizeFactorValue');
+  final _$_uiSizeFactorValueAtom =
+      Atom(name: '_DeviceInfoBase._uiSizeFactorValue');
 
   @override
-  int get uiSizeFactorValue {
-    _$uiSizeFactorValueAtom.reportRead();
-    return super.uiSizeFactorValue;
+  int get _uiSizeFactorValue {
+    _$_uiSizeFactorValueAtom.reportRead();
+    return super._uiSizeFactorValue;
   }
 
   @override
-  set uiSizeFactorValue(int value) {
-    _$uiSizeFactorValueAtom.reportWrite(value, super.uiSizeFactorValue, () {
-      super.uiSizeFactorValue = value;
+  set _uiSizeFactorValue(int value) {
+    _$_uiSizeFactorValueAtom.reportWrite(value, super._uiSizeFactorValue, () {
+      super._uiSizeFactorValue = value;
     });
   }
 
-  final _$uiTypeValueAtom = Atom(name: '_DeviceInfoBase.uiTypeValue');
+  final _$_uiTypeValueAtom = Atom(name: '_DeviceInfoBase._uiTypeValue');
 
   @override
-  UiType get uiTypeValue {
-    _$uiTypeValueAtom.reportRead();
-    return super.uiTypeValue;
+  UiType get _uiTypeValue {
+    _$_uiTypeValueAtom.reportRead();
+    return super._uiTypeValue;
   }
 
   @override
-  set uiTypeValue(UiType value) {
-    _$uiTypeValueAtom.reportWrite(value, super.uiTypeValue, () {
-      super.uiTypeValue = value;
+  set _uiTypeValue(UiType value) {
+    _$_uiTypeValueAtom.reportWrite(value, super._uiTypeValue, () {
+      super._uiTypeValue = value;
     });
   }
 
@@ -131,12 +132,7 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
   @override
   String toString() {
     return '''
-canCheckBiometricsValue: ${canCheckBiometricsValue},
-availableBiometricsValue: ${availableBiometricsValue},
-canUseSystemAccentValue: ${canUseSystemAccentValue},
-isLandscapeValue: ${isLandscapeValue},
-uiSizeFactorValue: ${uiSizeFactorValue},
-uiTypeValue: ${uiTypeValue}
+
     ''';
   }
 }

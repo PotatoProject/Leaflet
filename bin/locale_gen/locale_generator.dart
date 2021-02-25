@@ -32,6 +32,8 @@ class LocaleGenerator {
     locales.sort((a, b) => a.compareTo(b));
     paths.sort((a, b) => a.path.compareTo(b.path));
 
+    localesBuffer.writeln("// @dart=2.12");
+    localesBuffer.writeln();
     localesBuffer.writeln("import 'dart:ui';");
     localesBuffer.writeln();
     localesBuffer.writeln("class Locales {");
@@ -83,8 +85,8 @@ String getClassNameFromLocale(String locale) {
 
 String _baseLocaleClass = """
 abstract class _\$LocaleBase {
-  String locale;
-  Map<String, String> data;
+  String? locale;
+  Map<String, String>? data;
 }
 """;
 

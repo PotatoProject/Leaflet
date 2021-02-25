@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -14,12 +16,12 @@ part 'saved_image.g.dart';
 class SavedImage {
   String id = Utils.generateId();
   StorageLocation storageLocation = StorageLocation.SYNC;
-  String hash;
-  String blurHash;
-  String fileExtension;
+  String? hash;
+  String? blurHash;
+  String? fileExtension;
   bool encrypted = false;
-  double width;
-  double height;
+  double? width;
+  double? height;
   @observable
   bool uploaded = false;
 
@@ -38,7 +40,7 @@ class SavedImage {
   );
   SavedImage.empty();
 
-  Size get size => Size(width, height);
+  Size get size => Size(width!, height!);
 
   factory SavedImage.fromJson(Map<String, dynamic> json) =>
       _$SavedImageFromJson(json);

@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'dart:ui';
 
 class Locales {
@@ -13,8 +15,8 @@ class Locales {
 }
 
 abstract class _$LocaleBase {
-  String locale;
-  Map<String, String> data;
+  String? locale;
+  Map<String, String>? data;
 }
 
 class _$LocaleEnUS extends _$LocaleBase {

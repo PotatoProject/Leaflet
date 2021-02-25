@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
@@ -25,10 +27,11 @@ class ListItem {
 class ListContentConverter extends TypeConverter<List<ListItem>, String> {
   const ListContentConverter();
   @override
-  List<ListItem> mapToDart(String fromDb) {
+  List<ListItem>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
+
     final List<dynamic> decoded = json.decode(fromDb);
     return List.generate(
       decoded.length,
@@ -39,7 +42,7 @@ class ListContentConverter extends TypeConverter<List<ListItem>, String> {
   }
 
   @override
-  String mapToSql(List<ListItem> value) {
+  String? mapToSql(List<ListItem>? value) {
     if (value == null) {
       return null;
     }

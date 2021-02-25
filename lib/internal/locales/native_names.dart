@@ -1,3 +1,5 @@
+// @dart=2.12
+
 const Map<String, String> localeNativeNames = {
   "af": "Afrikaans",
   "af_NA": "Afrikaans (Namibië)",

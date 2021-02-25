@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'package:easy_localization/easy_localization.dart';
 
 class LocaleStrings {
@@ -38,7 +40,7 @@ class _$CommonLocaleStrings {
   final String edit = "common.edit".tr();
   final String goOn = "common.go_on".tr();
   final String exit = "common.exit".tr();
-  String xOfY(dynamic arg1, dynamic arg2) => "common.x_of_y".tr(args: [arg1.toString(), arg2.toString()]);
+  String xOfY(Object arg1, Object arg2) => "common.x_of_y".tr(args: [arg1.toString(), arg2.toString()]);
   final String newNote = "common.new_note".tr();
   final String newList = "common.new_list".tr();
   final String newImage = "common.new_image".tr();
@@ -137,7 +139,7 @@ class _$NotePageLocaleStrings {
 
 class _$SearchPageLocaleStrings {
   final String textboxHint = "search_page.textbox_hint".tr();
-  String tagCreateHint(dynamic arg1) => "search_page.tag_create_hint".tr(args: [arg1.toString()]);
+  String tagCreateHint(Object arg1) => "search_page.tag_create_hint".tr(args: [arg1.toString()]);
   final String noteTypeToSearch = "search_page.note.type_to_search".tr();
   final String noteNothingFound = "search_page.note.nothing_found".tr();
 }

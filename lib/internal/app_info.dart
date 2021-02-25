@@ -31,15 +31,15 @@ abstract class _AppInfoBase with Store {
 
   @observable
   @protected
-  int accentDataValue = Colors.blue.value;
+  int _accentDataValue = Colors.blue.value;
 
-  int get accentData => accentDataValue;
+  int get accentData => _accentDataValue;
 
   @observable
   @protected
-  List<ActiveNotification> activeNotificationsValue = [];
+  List<ActiveNotification> _activeNotificationsValue = [];
 
-  List<ActiveNotification> get activeNotifications => activeNotificationsValue;
+  List<ActiveNotification> get activeNotifications => _activeNotificationsValue;
 
   void _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
@@ -85,7 +85,7 @@ abstract class _AppInfoBase with Store {
     if (DeviceInfo.isAndroid) {
       accentStreamChannel.receiveBroadcastStream().listen(updateAccent);
     } else {
-      accentDataValue = -1;
+      _accentDataValue = -1;
     }
 
     if (DeviceInfo.isAndroid) {
@@ -95,13 +95,13 @@ abstract class _AppInfoBase with Store {
 
   @action
   void updateAccent(dynamic event) {
-    accentDataValue = event as int;
+    _accentDataValue = event as int;
   }
 
   @action
   void pollForActiveNotifications() {
     Timer.periodic(Duration(milliseconds: 500), (timer) async {
-      activeNotificationsValue = await notifications
+      _activeNotificationsValue = await notifications
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           .getActiveNotifications();

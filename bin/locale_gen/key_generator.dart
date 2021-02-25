@@ -35,6 +35,8 @@ class KeyGenerator {
     final Map<String, Map<String, StringInfo>> result =
         await XmlFileParser.loadWithStringInfo(path, locale);
 
+    commonBuffer.writeln("// @dart=2.12");
+    commonBuffer.writeln();
     commonBuffer
         .writeln("import 'package:easy_localization/easy_localization.dart';");
     commonBuffer.writeln();
@@ -66,9 +68,9 @@ class KeyGenerator {
           for (int i = 0; i < argNum; i++) {
             args.add("arg${i + 1}.toString()");
             if (i == argNum - 1) {
-              string += "dynamic arg${i + 1}) => ";
+              string += "Object arg${i + 1}) => ";
             } else {
-              string += "dynamic arg${i + 1}, ";
+              string += "Object arg${i + 1}, ";
             }
           }
           string += "\"$routeFile.$key\".tr(args: [${args.join(", ")}]);";
