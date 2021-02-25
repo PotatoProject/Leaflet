@@ -296,7 +296,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: Text(nativeName),
                       selected: selected,
                       onTap: () {
-                        context.locale = locale;
+                        context.setLocale(locale);
                         Navigator.pop(context);
                       },
                     );

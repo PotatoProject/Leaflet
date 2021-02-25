@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="textbox_hint">Caută</string>
-    <string name="tag_create_hint">Creează eticheta \"%s\"</string>
-    <string name="note.type_to_search">Tastați pentru a începe căutarea</string>
-    <string name="note.nothing_found">Nimic găsit...</string>
-</resources>

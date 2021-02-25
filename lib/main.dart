@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/database/shared.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -25,25 +24,28 @@ import 'package:worker_manager/worker_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   if (DeviceInfo.isDesktop) {
     sqfliteFfiInit();
   }
-  Executor().warmUp(log: kDebugMode);
+  //Executor().warmUp(log: kDebugMode);
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
-  final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
+  final AppDatabase _db = AppDatabase(
+    AppDatabase.constructDb(logStatements: kDebugMode),
+  );
   initProviders(_db);
   Loggy.generateAppLabel();
 
   runApp(
-    SplashPage(
-      child: EasyLocalization(
+    EasyLocalization(
+      supportedLocales: Locales.supported,
+      fallbackLocale: Locale("en", "US"),
+      useFallbackTranslations: true,
+      assetLoader: GeneratedAssetLoader(),
+      path: "assets/locales",
+      child: SplashPage(
         child: PotatoNotes(),
-        supportedLocales: Locales.supported,
-        fallbackLocale: Locale("en", "US"),
-        assetLoader: GeneratedAssetLoader(),
-        path: "assets/locales",
-        preloaderColor: Colors.white,
       ),
     ),
   );

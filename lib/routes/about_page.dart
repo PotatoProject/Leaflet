@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -72,9 +71,7 @@ class AboutPage extends StatelessWidget {
 
   Widget contributorTile(BuildContext context, ContributorInfo info) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(info.avatarUrl),
-      ),
+      leading: CircleAvatar(backgroundImage: NetworkImage(info.avatarUrl)),
       title: Text(info.name),
       subtitle: Text(info.role),
       onTap: () => openLinkBottomSheet(context, info.socialLinks),

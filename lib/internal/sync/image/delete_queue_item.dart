@@ -7,7 +7,7 @@ import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'delete_queue_item.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class DeleteQueueItem extends QueueItem {
   final String localPath;
   final SavedImage savedImage;

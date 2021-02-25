@@ -108,8 +108,8 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                         ),
                       ],
                     )
-                  : await FilePicker.platform.pickFiles(
-                      type: FileType.any,
+                  : await FilePicker.getFile(
+                      type: FileType.ANY,
                     );
 
               final dynamic file =

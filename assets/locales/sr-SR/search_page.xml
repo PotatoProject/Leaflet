@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="textbox_hint">Претрага</string>
-    <string name="tag_create_hint">Креирај ознаку \"%s\"</string>
-    <string name="note.type_to_search">Откуцај за претрагу</string>
-    <string name="note.nothing_found">Ништа није пронађено...</string>
-</resources>

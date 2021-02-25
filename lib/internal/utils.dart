@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -62,8 +61,9 @@ class Utils {
   }
 
   static Future<bool> showBiometricPrompt() async {
-    return await LocalAuthentication().authenticateWithBiometrics(
+    return await LocalAuthentication().authenticate(
       localizedReason: "",
+      biometricOnly: true,
       stickyAuth: true,
       androidAuthStrings: AndroidAuthMessages(
         signInTitle: LocaleStrings.common.biometricsPrompt,
@@ -619,8 +619,8 @@ class Utils {
 
         path = image.path;
       } else {
-        final PickedFile image =
-            await ImagePicker().getImage(source: ImageSource.gallery);
+        final File image =
+            await ImagePicker.pickImage(source: ImageSource.gallery);
 
         path = image.path;
       }
@@ -808,7 +808,7 @@ extension UriX on Uri {
     if (data != null) {
       return MemoryImage(data.contentAsBytes());
     } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
-      return CachedNetworkImageProvider(toString());
+      return NetworkImage(toString());
     } else {
       return FileImage(File(path));
     }

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -25,12 +24,7 @@ class AccountAvatar extends StatelessWidget {
             Icons.person_outline,
             color: Theme.of(context).iconTheme.color,
           ),
-          foregroundImage: avatarUrl != null
-              ? CachedNetworkImageProvider(
-                  avatarUrl,
-                  cacheKey: prefs.avatarUrlAsKey,
-                )
-              : null,
+          foregroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
         );
       },
     );

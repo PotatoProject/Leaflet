@@ -10,56 +10,70 @@ dependencies:
   flutter:
     sdk: flutter
 
-  sqlite3_flutter_libs:
-  moor:
-  json_serializable:
-  sqflite:
-  path_provider:
-  image_picker:
-  back_button_interceptor:
-  shared_preferences:
-  local_auth:
-  flutter_secure_storage:
-  http: 
-  jwt_decode:
-  intl:
-  flutter_local_notifications:
-  share_plus:
   animations:
-  material_design_icons_flutter:
-  path_drawing:
-  quick_actions:
-  package_info_plus:
-  url_launcher:
-  cached_network_image:
-  path:
-  easy_localization:
-  xml:
-  uuid:
-  recase:
-  in_app_update:
-  flutter_downloader:
-  dio:
-  image:
-  blurhash_dart:
-  flutter_blurhash:
-  mobx:
-  flutter_mobx:
-  mobx_codegen:
-  waterfall_flow:
-  worker_manager:
-  crayola:
+
+  back_button_interceptor:
   blake2:
+  blurhash_dart:
+
+  crayola:
+
+  dio:
+
+  easy_localization:
+
+  file_picker:
   file_selector:
   file_selector_macos:
   file_selector_linux:
   file_selector_windows:
-  image_size_getter:
-  sqflite_common_ffi:
-  file_picker:
+  flutter_blurhash:
+  flutter_downloader:
+  flutter_local_notifications:
+  flutter_mobx:
+  flutter_secure_storage:
 
+  http:
+
+  image:
+  image_picker:
+  image_size_getter:
+  in_app_update:
+  intl:
+
+  json_serializable:
+  jwt_decode:
+
+  local_auth:
   loggy:
     git: https://github.com/HrX03/loggy
+
+  material_design_icons_flutter:
+  mobx:
+  mobx_codegen:
+  moor:
+
+  package_info_plus: ^0.6.4
+  path:
+  path_drawing:
+  path_provider: ^2.0.0
+
+  quick_actions:
+
+  recase:
+
+  share_plus:
+  shared_preferences:
+  sqflite:
+  sqflite_common_ffi:
+  sqlite3_flutter_libs:
+
+  url_launcher:
+  uuid:
+
+  waterfall_flow:
+  worker_manager:
+  xml:
 
 dev_dependencies:
   moor_generator:
@@ -69,9 +83,8 @@ dev_dependencies:
   mockito:
 
 dependency_overrides:
-  intl: '0.17.0'
-  platform: '3.0.0'
-  path: '1.8.0'
+  ffi: '1.0.0'
+  win32: '2.0.0'
 
 flutter:
   uses-material-design: true

@@ -10,7 +10,7 @@ import 'package:potato_notes/internal/utils.dart';
 
 part 'saved_image.g.dart';
 
-@JsonSerializable(nullable: true)
+@JsonSerializable()
 class SavedImage {
   String id = Utils.generateId();
   StorageLocation storageLocation = StorageLocation.SYNC;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
