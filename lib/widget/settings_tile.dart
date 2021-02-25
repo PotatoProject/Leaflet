@@ -54,9 +54,9 @@ class SettingsTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(
         16 + MediaQuery.of(context).viewPadding.left,
-        description == null ? 4 : 0,
+        0,
         16 + MediaQuery.of(context).viewPadding.right,
-        description == null ? 4 : 0,
+        0,
       ),
       leading: icon,
       title: title,

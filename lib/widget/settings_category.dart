@@ -17,9 +17,9 @@ class SettingsCategory extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(
             MediaQuery.of(context).viewPadding.left + 16,
+            8,
             16,
-            16,
-            0,
+            8,
           ),
           child: headerWidget(header),
         ),

@@ -181,10 +181,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget get commonSettings {
-    final String currentLocaleName = firstLetterToUppercase(
-      localeNativeNames[context.locale.languageCode],
-    );
-
     return Column(
       children: <Widget>[
         SettingsCategory(
@@ -296,7 +292,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: Text(nativeName),
                       selected: selected,
                       onTap: () {
-                        context.setLocale(locale);
+                        if (locale == context.deviceLocale) {
+                          context.deleteSaveLocale();
+                          context.resetLocale();
+                        } else {
+                          context.setLocale(locale);
+                        }
                         Navigator.pop(context);
                       },
                     );
@@ -304,7 +305,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   itemCount: context.supportedLocales.length,
                 );
               },
-              subtitle: Text(currentLocaleName),
+              subtitle: Text(
+                firstLetterToUppercase(
+                  localeNativeNames[context.locale.languageCode],
+                ),
+              ),
             ),
             SettingsTile(
               icon: Icon(Icons.autorenew),
