@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
-import 'package:potato_notes/widget/logos.dart';
+import 'package:potato_notes/widget/illustrations.dart';
 
 class SplashPage extends StatefulWidget {
   final Widget child;
@@ -179,8 +179,8 @@ class _ForegroundLayer extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 32),
               child: AnimatedBuilder(
                 animation: elementsAnimation,
-                builder: (context, _) => PospLogo(
-                  color: textColorTween.evaluate(elementsAnimation),
+                builder: (context, _) => Illustration.posp(
+                  tint: textColorTween.evaluate(elementsAnimation),
                 ),
               ),
             ),
@@ -213,7 +213,7 @@ class _LogoAnimationLayer extends StatelessWidget {
         SizedBox.fromSize(
           size: Size.square(64),
           child: Center(
-            child: LeafletLogo(height: 64),
+            child: Illustration.leaflet(height: 64),
           ),
         ),
         AnimatedBuilder(

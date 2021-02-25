@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/illustrations.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListWidget extends StatelessWidget {
@@ -62,20 +63,17 @@ class NoteListWidget extends StatelessWidget {
     } else {
       child = LayoutBuilder(
         builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Container(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              height: constraints.maxHeight,
-              child: customIllustration ??
-                  Illustrations.quickIllustration(
-                    context,
-                    getInfoOnCurrentMode.key,
-                    getInfoOnCurrentMode.value,
-                  ),
+          return Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
+            height: constraints.maxHeight,
+            child: customIllustration ??
+                Utils.quickIllustration(
+                  context,
+                  getInfoOnCurrentMode(Theme.of(context).brightness).key,
+                  getInfoOnCurrentMode(Theme.of(context).brightness).value,
+                ),
           );
         },
       );
@@ -84,33 +82,23 @@ class NoteListWidget extends StatelessWidget {
     return builder?.call(context, child) ?? child;
   }
 
-  MapEntry<Widget, String> get getInfoOnCurrentMode {
+  MapEntry<Widget, String> getInfoOnCurrentMode(Brightness themeBrightness) {
     switch (noteKind) {
       case ReturnMode.ARCHIVE:
         return MapEntry(
-          appInfo.emptyArchiveIllustration,
+          Illustration.archive(brightness: themeBrightness),
           LocaleStrings.mainPage.emptyStateArchive,
         );
       case ReturnMode.TRASH:
         return MapEntry(
-          appInfo.emptyTrashIllustration,
+          Illustration.trash(brightness: themeBrightness),
           LocaleStrings.mainPage.emptyStateTrash,
-        );
-      case ReturnMode.FAVOURITES:
-        return MapEntry(
-          appInfo.noFavouritesIllustration,
-          LocaleStrings.mainPage.emptyStateFavourites,
-        );
-      case ReturnMode.TAG:
-        return MapEntry(
-          appInfo.noNotesIllustration,
-          LocaleStrings.mainPage.emptyStateTag,
         );
       case ReturnMode.ALL:
       case ReturnMode.NORMAL:
       default:
         return MapEntry(
-          appInfo.noNotesIllustration,
+          Illustration.noNotes(brightness: themeBrightness),
           LocaleStrings.mainPage.emptyStateHome,
         );
     }

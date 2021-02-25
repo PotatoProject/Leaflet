@@ -118,8 +118,6 @@ class PotatoNotes extends StatelessWidget {
               ]);
             }
 
-            appInfo.updateIllustrations(Theme.of(context).brightness);
-
             deviceInfo.updateDeviceInfo(
               MediaQuery.of(context),
               canUseSystemAccent,

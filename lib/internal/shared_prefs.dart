@@ -24,7 +24,7 @@ class SharedPrefs {
   set masterPass(String value) {
     //TODO Only remove comment chars after master_pass is hashed before saving
     //addChangedKey("master_pass");
-    prefs.setString("master_pass", value);
+    setString("master_pass", value);
   }
 
   ThemeMode get themeMode {
@@ -55,7 +55,7 @@ class SharedPrefs {
         newValue = 2;
         break;
     }
-    prefs.setInt("theme_mode", newValue);
+    setInt("theme_mode", newValue);
   }
 
   Color get customAccent {
@@ -68,7 +68,7 @@ class SharedPrefs {
 
   set customAccent(Color value) {
     addChangedKey("custom_accent");
-    prefs.setInt("custom_accent", value?.value);
+    setInt("custom_accent", value?.value);
   }
 
   bool get useAmoled {
@@ -77,7 +77,7 @@ class SharedPrefs {
 
   set useAmoled(bool value) {
     addChangedKey("use_amoled");
-    prefs.setBool("use_amoled", value);
+    setBool("use_amoled", value);
   }
 
   bool get useGrid {
@@ -86,7 +86,7 @@ class SharedPrefs {
 
   set useGrid(bool value) {
     addChangedKey("use_grid");
-    prefs.setBool("use_grid", value);
+    setBool("use_grid", value);
   }
 
   bool get useCustomAccent {
@@ -95,7 +95,7 @@ class SharedPrefs {
 
   set useCustomAccent(bool value) {
     addChangedKey("use_custom_accent");
-    prefs.setBool("use_custom_accent", value);
+    setBool("use_custom_accent", value);
   }
 
   bool get welcomePageSeen {
@@ -103,7 +103,7 @@ class SharedPrefs {
   }
 
   set welcomePageSeen(bool value) {
-    prefs.setBool("welcome_page_seen_v2", value);
+    setBool("welcome_page_seen_v2", value);
   }
 
   String get apiUrl {
@@ -111,7 +111,7 @@ class SharedPrefs {
   }
 
   set apiUrl(String value) {
-    prefs.setString("api_url", value);
+    setString("api_url", value);
   }
 
   String get accessToken {
@@ -119,7 +119,7 @@ class SharedPrefs {
   }
 
   set accessToken(String value) {
-    prefs.setString("access_token", value);
+    setString("access_token", value);
   }
 
   String get refreshToken {
@@ -127,7 +127,7 @@ class SharedPrefs {
   }
 
   set refreshToken(String value) {
-    prefs.setString("refresh_token", value);
+    setString("refresh_token", value);
   }
 
   String get username {
@@ -135,7 +135,7 @@ class SharedPrefs {
   }
 
   set username(String value) {
-    prefs.setString("username", value);
+    setString("username", value);
   }
 
   String get email {
@@ -143,7 +143,7 @@ class SharedPrefs {
   }
 
   set email(String value) {
-    prefs.setString("email", value);
+    setString("email", value);
   }
 
   String get avatarUrl {
@@ -151,7 +151,7 @@ class SharedPrefs {
   }
 
   set avatarUrl(String value) {
-    prefs.setString("avatar_url", value);
+    setString("avatar_url", value);
   }
 
   int get logLevel {
@@ -159,7 +159,7 @@ class SharedPrefs {
   }
 
   set logLevel(int value) {
-    prefs.setInt("log_level", value);
+    setInt("log_level", value);
   }
 
   List<String> get downloadedImages {
@@ -167,7 +167,7 @@ class SharedPrefs {
   }
 
   set downloadedImages(List<String> value) {
-    prefs.setStringList("downloaded_images", value);
+    setStringList("downloaded_images", value);
   }
 
   List<String> get deletedImages {
@@ -175,7 +175,7 @@ class SharedPrefs {
   }
 
   set deletedImages(List<String> value) {
-    prefs.setStringList("deleted_images", value);
+    setStringList("deleted_images", value);
   }
 
   int get lastUpdated {
@@ -183,7 +183,7 @@ class SharedPrefs {
   }
 
   set lastUpdated(int value) {
-    prefs.setInt("last_updated", value);
+    setInt("last_updated", value);
   }
 
   void addChangedKey(String key) {
@@ -191,7 +191,7 @@ class SharedPrefs {
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
-    prefs.setStringList("updated_keys", changedKeys);
+    setStringList("updated_keys", changedKeys);
   }
 
   void clearChangedKeys() {
@@ -207,6 +207,46 @@ class SharedPrefs {
   }
 
   set deleteQueue(String value) {
-    prefs.setString("delete_queue", value);
+    setString("delete_queue", value);
+  }
+
+  void setBool(String key, bool value) {
+    if (value == null) {
+      prefs.remove(key);
+    } else {
+      prefs.setBool(key, value);
+    }
+  }
+
+  void setDouble(String key, double value) {
+    if (value == null) {
+      prefs.remove(key);
+    } else {
+      prefs.setDouble(key, value);
+    }
+  }
+
+  void setInt(String key, int value) {
+    if (value == null) {
+      prefs.remove(key);
+    } else {
+      prefs.setInt(key, value);
+    }
+  }
+
+  void setString(String key, String value) {
+    if (value == null) {
+      prefs.remove(key);
+    } else {
+      prefs.setString(key, value);
+    }
+  }
+
+  void setStringList(String key, List<String> value) {
+    if (value == null) {
+      prefs.remove(key);
+    } else {
+      prefs.setStringList(key, value);
+    }
   }
 }

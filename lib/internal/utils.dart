@@ -496,6 +496,33 @@ class Utils {
     );
   }
 
+  static Widget quickIllustration(
+      BuildContext context, Widget illustration, String text) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 148,
+          child: Center(
+            child: illustration,
+          ),
+        ),
+        SizedBox(height: 24),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+
   static void newNote(BuildContext context) async {
     final int currentLength =
         (await helper.listNotes(ReturnMode.NORMAL)).length;

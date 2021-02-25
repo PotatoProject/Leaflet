@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
+import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
@@ -39,15 +39,16 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
+        final Brightness brightness = Theme.of(context).brightness;
         final Widget illustration = query.isEmpty
-            ? Illustrations.quickIllustration(
+            ? Utils.quickIllustration(
                 context,
-                appInfo.typeToSearchIllustration,
+                Illustration.typeToSearch(brightness: brightness),
                 LocaleStrings.searchPage.noteTypeToSearch,
               )
-            : Illustrations.quickIllustration(
+            : Utils.quickIllustration(
                 context,
-                appInfo.nothingFoundIllustration,
+                Illustration.nothingFound(brightness: brightness),
                 LocaleStrings.searchPage.noteNothingFound,
               );
         return NoteListWidget(

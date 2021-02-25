@@ -9,7 +9,6 @@ import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/illustrations.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -22,22 +21,13 @@ abstract class _AppInfoBase with Store {
       EventChannel('potato_notes_accents');
 
   _AppInfoBase() {
-    illustrations = Illustrations();
     loadData();
   }
 
   Directory tempDirectory;
-  Illustrations illustrations;
   FlutterLocalNotificationsPlugin notifications;
   QuickActions quickActions;
   PackageInfo packageInfo;
-
-  Widget noNotesIllustration;
-  Widget emptyArchiveIllustration;
-  Widget emptyTrashIllustration;
-  Widget noFavouritesIllustration;
-  Widget nothingFoundIllustration;
-  Widget typeToSearchIllustration;
 
   @observable
   @protected
@@ -50,20 +40,6 @@ abstract class _AppInfoBase with Store {
   List<ActiveNotification> activeNotificationsValue = [];
 
   List<ActiveNotification> get activeNotifications => activeNotificationsValue;
-
-  void updateIllustrations(Brightness systemTheme) async {
-    noNotesIllustration = await illustrations.noNotesIllustration(systemTheme);
-    emptyArchiveIllustration =
-        await illustrations.emptyArchiveIllustration(systemTheme);
-    emptyTrashIllustration =
-        await illustrations.emptyTrashIllustration(systemTheme);
-    noFavouritesIllustration =
-        await illustrations.noFavouritesIllustration(systemTheme);
-    nothingFoundIllustration =
-        await illustrations.nothingFoundIllustration(systemTheme);
-    typeToSearchIllustration =
-        await illustrations.typeToSearchIllustration(systemTheme);
-  }
 
   void _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();

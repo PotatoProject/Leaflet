@@ -27,8 +27,8 @@ import 'package:potato_notes/widget/constrained_width_appbar.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
+import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_search_delegate.dart';
-import 'package:potato_notes/widget/logos.dart';
 
 class BasePage extends StatefulWidget {
   static _BasePageState of(BuildContext context) {
@@ -344,7 +344,7 @@ class _BasePageState extends State<BasePage>
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: DrawerListTile(
-                                icon: LeafletLogo(
+                                icon: Illustration.leaflet(
                                   height: 32,
                                 ),
                                 title: Text(

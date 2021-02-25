@@ -4,7 +4,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/account_info.dart';
-import 'package:potato_notes/widget/logos.dart';
+import 'package:potato_notes/widget/illustrations.dart';
 
 class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> extraActions;
@@ -25,7 +25,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
     final state = BasePage.of(context);
     final Widget _leading = state != null
         ? Center(
-            child: LeafletLogo(
+            child: Illustration.leaflet(
               height: 28,
             ),
           )
