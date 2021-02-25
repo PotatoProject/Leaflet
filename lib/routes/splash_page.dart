@@ -77,24 +77,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     final MediaQueryData data =
         MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
-    final int themeModeInt = prefs.getFromCache('theme_mode');
-    ThemeMode themeMode;
-    final bool useAmoled = prefs.getFromCache('use_amoled');
-
-    switch (themeModeInt) {
-      case 0:
-        themeMode = ThemeMode.system;
-        break;
-      case 1:
-        themeMode = ThemeMode.light;
-        break;
-      case 2:
-        themeMode = ThemeMode.dark;
-        break;
-      default:
-        themeMode = ThemeMode.system;
-        break;
-    }
+    final ThemeMode themeMode = prefs.themeMode;
+    final bool useAmoled = prefs.useAmoled;
 
     Color color = Themes.lightColor;
 

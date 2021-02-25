@@ -356,7 +356,7 @@ class SyncRoutine {
       }
     });
 
-    final List<String> keys = prefs.prefs.getChangedKeys();
+    final List<String> keys = prefs.prefs.changedKeys;
 
     for (final String key in keys) {
       if (settingsToSync.contains(key) && !changedSettings.keys.contains(key)) {

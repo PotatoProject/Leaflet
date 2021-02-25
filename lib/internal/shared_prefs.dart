@@ -8,9 +8,7 @@ class SharedPrefs {
   static SharedPrefs _instance;
   final SharedPreferences prefs;
 
-  SharedPrefs._(this.prefs) {
-    _warmup();
-  }
+  SharedPrefs._(this.prefs);
 
   static Future<void> init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -19,37 +17,17 @@ class SharedPrefs {
 
   static SharedPrefs get instance => _instance;
 
-  void _warmup() async {
-    getAccessToken();
-    getApiUrl();
-    getCustomAccent();
-    getDeleteQueue();
-    getDeletedImages();
-    getDownloadedImages();
-    getEmail();
-    getAvatarUrl();
-    getLastUpdated();
-    getLogLevel();
-    getMasterPass();
-    getRefreshToken();
-    getThemeMode();
-    getUseAmoled();
-    getUseCustomAccent();
-    getUseGrid();
-    getUsername();
-  }
-
-  Future<String> getMasterPass() async {
+  String get masterPass {
     return prefs.getString("master_pass") ?? "";
   }
 
-  void setMasterPass(String value) async {
+  set masterPass(String value) {
     //TODO Only remove comment chars after master_pass is hashed before saving
     //addChangedKey("master_pass");
-    await prefs.setString("master_pass", value);
+    prefs.setString("master_pass", value);
   }
 
-  Future<ThemeMode> getThemeMode() async {
+  ThemeMode get themeMode {
     final int value = prefs.getInt("theme_mode");
     switch (value) {
       case 0:
@@ -63,7 +41,7 @@ class SharedPrefs {
     }
   }
 
-  void setThemeMode(ThemeMode value) async {
+  set themeMode(ThemeMode value) {
     addChangedKey("theme_mode");
     int newValue;
     switch (value) {
@@ -77,10 +55,10 @@ class SharedPrefs {
         newValue = 2;
         break;
     }
-    await prefs.setInt("theme_mode", newValue);
+    prefs.setInt("theme_mode", newValue);
   }
 
-  Future<Color> getCustomAccent() async {
+  Color get customAccent {
     final int colorValue = prefs.getInt("custom_accent");
     if (colorValue != null)
       return Color(colorValue);
@@ -88,147 +66,147 @@ class SharedPrefs {
       return null;
   }
 
-  void setCustomAccent(Color value) async {
+  set customAccent(Color value) {
     addChangedKey("custom_accent");
-    await prefs.setInt("custom_accent", value?.value);
+    prefs.setInt("custom_accent", value?.value);
   }
 
-  Future<bool> getUseAmoled() async {
+  bool get useAmoled {
     return prefs.getBool("use_amoled") ?? false;
   }
 
-  void setUseAmoled(bool value) async {
+  set useAmoled(bool value) {
     addChangedKey("use_amoled");
-    await prefs.setBool("use_amoled", value);
+    prefs.setBool("use_amoled", value);
   }
 
-  Future<bool> getUseGrid() async {
+  bool get useGrid {
     return prefs.getBool("use_grid") ?? DeviceInfo.isDesktop;
   }
 
-  void setUseGrid(bool value) async {
+  set useGrid(bool value) {
     addChangedKey("use_grid");
-    await prefs.setBool("use_grid", value);
+    prefs.setBool("use_grid", value);
   }
 
-  Future<bool> getUseCustomAccent() async {
+  bool get useCustomAccent {
     return prefs.getBool("use_custom_accent") ?? false;
   }
 
-  void setUseCustomAccent(bool value) async {
+  set useCustomAccent(bool value) {
     addChangedKey("use_custom_accent");
-    await prefs.setBool("use_custom_accent", value);
+    prefs.setBool("use_custom_accent", value);
   }
 
-  Future<bool> getWelcomePageSeen() async {
+  bool get welcomePageSeen {
     return prefs.getBool("welcome_page_seen_v2") ?? false;
   }
 
-  void setWelcomePageSeen(bool value) async {
-    await prefs.setBool("welcome_page_seen_v2", value);
+  set welcomePageSeen(bool value) {
+    prefs.setBool("welcome_page_seen_v2", value);
   }
 
-  Future<String> getApiUrl() async {
+  String get apiUrl {
     return prefs.getString("api_url") ?? Utils.defaultApiUrl;
   }
 
-  void setApiUrl(String value) async {
-    await prefs.setString("api_url", value);
+  set apiUrl(String value) {
+    prefs.setString("api_url", value);
   }
 
-  Future<String> getAccessToken() async {
+  String get accessToken {
     return prefs.getString("access_token");
   }
 
-  void setAccessToken(String value) async {
-    await prefs.setString("access_token", value);
+  set accessToken(String value) {
+    prefs.setString("access_token", value);
   }
 
-  Future<String> getRefreshToken() async {
+  String get refreshToken {
     return prefs.getString("refresh_token");
   }
 
-  void setRefreshToken(String value) async {
-    await prefs.setString("refresh_token", value);
+  set refreshToken(String value) {
+    prefs.setString("refresh_token", value);
   }
 
-  Future<String> getUsername() async {
+  String get username {
     return prefs.getString("username");
   }
 
-  void setUsername(String value) async {
-    await prefs.setString("username", value);
+  set username(String value) {
+    prefs.setString("username", value);
   }
 
-  Future<String> getEmail() async {
+  String get email {
     return prefs.getString("email");
   }
 
-  void setEmail(String value) async {
-    await prefs.setString("email", value);
+  set email(String value) {
+    prefs.setString("email", value);
   }
 
-  Future<String> getAvatarUrl() async {
+  String get avatarUrl {
     return prefs.getString("avatar_url");
   }
 
-  void setAvatarUrl(String value) async {
-    await prefs.setString("avatar_url", value);
+  set avatarUrl(String value) {
+    prefs.setString("avatar_url", value);
   }
 
-  Future<int> getLogLevel() async {
+  int get logLevel {
     return prefs.getInt("log_level") ?? LogEntry.VERBOSE;
   }
 
-  void setLogLevel(int value) async {
-    await prefs.setInt("log_level", value);
+  set logLevel(int value) {
+    prefs.setInt("log_level", value);
   }
 
-  Future<List<String>> getDownloadedImages() async {
+  List<String> get downloadedImages {
     return prefs.getStringList("downloaded_images") ?? [];
   }
 
-  void setDownloadedImages(List<String> value) async {
-    await prefs.setStringList("downloaded_images", value);
+  set downloadedImages(List<String> value) {
+    prefs.setStringList("downloaded_images", value);
   }
 
-  Future<List<String>> getDeletedImages() async {
+  List<String> get deletedImages {
     return prefs.getStringList("deleted_images") ?? [];
   }
 
-  void setDeletedImages(List<String> value) async {
-    await prefs.setStringList("deleted_images", value);
+  set deletedImages(List<String> value) {
+    prefs.setStringList("deleted_images", value);
   }
 
-  Future<int> getLastUpdated() async {
+  int get lastUpdated {
     return prefs.getInt("last_updated") ?? 0;
   }
 
-  void setLastUpdated(int value) async {
-    await prefs.setInt("last_updated", value);
+  set lastUpdated(int value) {
+    prefs.setInt("last_updated", value);
   }
 
-  void addChangedKey(String key) async {
+  void addChangedKey(String key) {
     var changedKeys = prefs.getStringList("updated_keys") ?? [];
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
-    await prefs.setStringList("updated_keys", changedKeys);
+    prefs.setStringList("updated_keys", changedKeys);
   }
 
-  void clearChangedKeys() async {
-    await prefs.setStringList("updated_keys", null);
+  void clearChangedKeys() {
+    prefs.remove("updated_keys");
   }
 
-  List<String> getChangedKeys() {
+  List<String> get changedKeys {
     return prefs.getStringList("updated_keys") ?? [];
   }
 
-  Future<String> getDeleteQueue() async {
+  String get deleteQueue {
     return prefs.getString("delete_queue");
   }
 
-  void setDeleteQueue(String value) async {
-    await prefs.setString("delete_queue", value);
+  set deleteQueue(String value) {
+    prefs.setString("delete_queue", value);
   }
 }

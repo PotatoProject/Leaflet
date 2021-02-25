@@ -28,55 +28,55 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  ThemeMode _themeModeValue = ThemeMode.system;
+  ThemeMode _themeModeValue = SharedPrefs.instance.themeMode;
 
   @observable
   @protected
-  Color _customAccentValue;
+  Color _customAccentValue = SharedPrefs.instance.customAccent;
 
   @observable
   @protected
-  bool _useAmoledValue = false;
+  bool _useAmoledValue = SharedPrefs.instance.useAmoled;
 
   @observable
   @protected
-  bool _useGridValue = false;
+  bool _useGridValue = SharedPrefs.instance.useGrid;
 
   @observable
   @protected
-  bool _useCustomAccentValue = false;
+  bool _useCustomAccentValue = SharedPrefs.instance.useCustomAccent;
 
   @observable
   @protected
-  bool _welcomePageSeenValue = false;
+  bool _welcomePageSeenValue = SharedPrefs.instance.welcomePageSeen;
 
   @observable
   @protected
-  String _apiUrlValue;
+  String _apiUrlValue = SharedPrefs.instance.apiUrl;
 
   @observable
   @protected
-  String _accessTokenValue;
+  String _accessTokenValue = SharedPrefs.instance.accessToken;
 
   @observable
   @protected
-  String _refreshTokenValue;
+  String _refreshTokenValue = SharedPrefs.instance.refreshToken;
 
   @observable
   @protected
-  String _usernameValue;
+  String _usernameValue = SharedPrefs.instance.username;
 
   @observable
   @protected
-  String _emailValue;
+  String _emailValue = SharedPrefs.instance.email;
 
   @observable
   @protected
-  String _avatarUrlValue;
+  String _avatarUrlValue = SharedPrefs.instance.avatarUrl;
 
   @observable
   @protected
-  int _logLevelValue = LogEntry.VERBOSE;
+  int _logLevelValue = SharedPrefs.instance.logLevel;
 
   @observable
   @protected
@@ -84,19 +84,19 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  List<String> _downloadedImagesValue = [];
+  List<String> _downloadedImagesValue = SharedPrefs.instance.downloadedImages;
 
   @observable
   @protected
-  List<String> _deletedImagesValue = [];
+  List<String> _deletedImagesValue = SharedPrefs.instance.deletedImages;
 
   @observable
   @protected
-  int _lastUpdatedValue;
+  int _lastUpdatedValue = SharedPrefs.instance.lastUpdated;
 
   @observable
   @protected
-  String _deleteQueueValue;
+  String _deleteQueueValue = SharedPrefs.instance.deleteQueue;
 
   String get masterPass => _masterPassValue;
   ThemeMode get themeMode => _themeModeValue;
@@ -123,7 +123,7 @@ abstract class _PreferencesBase with Store {
     _masterPassValue = value;
 
     if (DeviceInfo.isDesktopOrWeb) {
-      prefs.setMasterPass(value);
+      prefs.masterPass = value;
     } else {
       keystore.setMasterPass(value);
     }
@@ -131,87 +131,87 @@ abstract class _PreferencesBase with Store {
 
   set themeMode(ThemeMode value) {
     _themeModeValue = value;
-    prefs.setThemeMode(value);
+    prefs.themeMode = value;
   }
 
   set customAccent(Color value) {
     _customAccentValue = value;
-    prefs.setCustomAccent(value);
+    prefs.customAccent = value;
   }
 
   set useAmoled(bool value) {
     _useAmoledValue = value;
-    prefs.setUseAmoled(value);
+    prefs.useAmoled = value;
   }
 
   set useGrid(bool value) {
     _useGridValue = value;
-    prefs.setUseGrid(value);
+    prefs.useGrid = value;
   }
 
   set useCustomAccent(bool value) {
     _useCustomAccentValue = value;
-    prefs.setUseCustomAccent(value);
+    prefs.useCustomAccent = value;
   }
 
   set welcomePageSeen(bool value) {
     _welcomePageSeenValue = value;
-    prefs.setWelcomePageSeen(value);
+    prefs.welcomePageSeen = value;
   }
 
   set apiUrl(String value) {
     _apiUrlValue = value;
-    prefs.setApiUrl(value);
+    prefs.apiUrl = value;
   }
 
   set accessToken(String value) {
     _accessTokenValue = value;
-    prefs.setAccessToken(value);
+    prefs.accessToken = value;
   }
 
   set refreshToken(String value) {
     _refreshTokenValue = value;
-    prefs.setRefreshToken(value);
+    prefs.refreshToken = value;
   }
 
   set username(String value) {
     _usernameValue = value;
-    prefs.setUsername(value);
+    prefs.username = value;
   }
 
   set email(String value) {
     _emailValue = value;
-    prefs.setEmail(value);
+    prefs.email = value;
   }
 
   set avatarUrl(String value) {
     _avatarUrlValue = value;
-    prefs.setAvatarUrl(value);
+    prefs.avatarUrl = value;
   }
 
   set logLevel(int value) {
     _logLevelValue = value;
-    prefs.setLogLevel(value);
+    prefs.logLevel = value;
   }
 
   set downloadedImages(List<String> value) {
     _downloadedImagesValue = value;
-    prefs.setDownloadedImages(value);
+    prefs.downloadedImages = value;
   }
 
   set deletedImages(List<String> value) {
     _deletedImagesValue = value;
-    prefs.setDeletedImages(value);
+    prefs.deletedImages = value;
   }
 
   set lastUpdated(int value) {
     _lastUpdatedValue = value;
-    prefs.setLastUpdated(value);
+    prefs.lastUpdated = value;
   }
 
   set deleteQueue(String value) {
     _deleteQueueValue = value;
-    prefs.setDeleteQueue(value);
+    prefs.deleteQueue = value;
   }
 
   Object getFromCache(String key) {
@@ -219,30 +219,12 @@ abstract class _PreferencesBase with Store {
   }
 
   void loadData() async {
-    _apiUrlValue = await prefs.getApiUrl();
-    _accessTokenValue = await prefs.getAccessToken();
-    _refreshTokenValue = await prefs.getRefreshToken();
-    _welcomePageSeenValue = await prefs.getWelcomePageSeen();
-    _themeModeValue = await prefs.getThemeMode();
-    _useAmoledValue = await prefs.getUseAmoled();
-    _useCustomAccentValue = await prefs.getUseCustomAccent();
-    _customAccentValue = await prefs.getCustomAccent();
-    _useGridValue = await prefs.getUseGrid();
-
     if (DeviceInfo.isDesktopOrWeb) {
-      _masterPassValue = await prefs.getMasterPass();
+      _masterPassValue = prefs.masterPass;
     } else {
       _masterPassValue = await keystore.getMasterPass();
     }
 
-    _usernameValue = await prefs.getUsername();
-    _emailValue = await prefs.getEmail();
-    _avatarUrlValue = await prefs.getAvatarUrl();
-    _logLevelValue = await prefs.getLogLevel();
-    _downloadedImagesValue = await prefs.getDownloadedImages();
-    _deletedImagesValue = await prefs.getDeletedImages();
-    _lastUpdatedValue = await prefs.getLastUpdated();
-    _deleteQueueValue = await prefs.getDeleteQueue();
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       _tagsValue = newTags;
     });

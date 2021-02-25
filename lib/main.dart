@@ -34,8 +34,8 @@ void main() async {
   final AppDatabase _db = AppDatabase(
     AppDatabase.constructDb(logStatements: kDebugMode),
   );
-  initProviders(_db);
   Loggy.generateAppLabel();
+  initProviders(_db);
 
   runApp(
     EasyLocalization(
