@@ -21,7 +21,7 @@ class AccountController {
       "password": password,
     };
     try {
-      final Response registerResponse = await post(
+      final Response registerResponse = await httpClient.post(
         "${prefs.apiUrl}/login/user/register",
         body: json.encode(body),
         headers: {"Content-Type": "application/json"},
@@ -71,7 +71,7 @@ class AccountController {
     }
 
     try {
-      final Response loginResponse = await post(
+      final Response loginResponse = await httpClient.post(
         "${prefs.apiUrl}/login/user/login",
         body: json.encode(body),
         headers: {"Content-Type": "application/json"},
@@ -111,7 +111,7 @@ class AccountController {
       final String token = await prefs.getToken();
 
       try {
-        final Response profileRequest = await get(
+        final Response profileRequest = await httpClient.get(
             "${prefs.apiUrl}/login/user/profile",
             headers: {"Authorization": "Bearer " + token});
         switch (profileRequest.statusCode) {
@@ -165,7 +165,7 @@ class AccountController {
     try {
       final String url = "${prefs.apiUrl}/login/user/refresh";
       Loggy.v(message: "Going to send GET to " + url);
-      refresh = await get(
+      refresh = await httpClient.get(
         url,
         headers: {
           "Authorization": "Bearer ${prefs.refreshToken}",

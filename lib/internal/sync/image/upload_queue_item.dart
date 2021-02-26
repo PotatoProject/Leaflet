@@ -1,17 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:image/image.dart';
-import 'package:loggy/loggy.dart';
+import 'package:http/http.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
-import 'package:worker_manager/worker_manager.dart';
 
 import 'image_helper.dart';
 
@@ -48,7 +43,7 @@ class UploadQueueItem extends QueueItem {
   }
 
   @action
-  Future<Response> uploadImage({
+  Future<void> uploadImage({
     Map<String, dynamic> headers = const {},
   }) async {
     final File file = File(localPath);
@@ -56,27 +51,26 @@ class UploadQueueItem extends QueueItem {
     notifyListeners();
     imageQueue.notifyListeners();
     final int length = await file.length();
-    final Response response = await Dio().request(
-      (await getUploadUrl()).toString(),
-      data: file.openRead(),
-      onSendProgress: (count, total) {
+    await httpClient.upload(
+      url: await getUploadUrl(),
+      file: file,
+      onProgressChanged: (count, total) {
         progress = count / total;
         imageQueue.notifyListeners();
         notifyListeners();
       },
-      options: Options(
-        contentType: "image/jpg",
-        method:
-        savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
-        headers: new Map.from(headers)
-          ..putIfAbsent(Headers.contentLengthHeader, () => length),
-      ),
+      method:
+          savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
+      headers: Map.from(headers)
+        ..addAll({
+          'content-length': length.toString(),
+          'content-type': 'image/jpg',
+        }),
     );
     status = QueueItemStatus.COMPLETE;
     notifyListeners();
     imageQueue.notifyListeners();
     savedImage.uploaded = true;
-    return response;
   }
 
   Future<String> getUploadUrl() async {
@@ -85,14 +79,14 @@ class UploadQueueItem extends QueueItem {
         final String token = await prefs.getToken();
         final String url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
         print(url);
-        final Response presign = await dio.get(url,
-            options: Options(
-              headers: {"Authorization": "Bearer $token"},
-            ));
+        final Response presign = await httpClient.get(
+          url,
+          headers: {"Authorization": "Bearer $token"},
+        );
         if (presign.statusCode == 200) {
-          return presign.data.toString();
+          return presign.body;
         } else {
-          throw presign.data.toString();
+          throw presign.body;
         }
         break;
       case StorageLocation.LOCAL:

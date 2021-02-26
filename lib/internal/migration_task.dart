@@ -77,7 +77,7 @@ class MigrationTask {
 
       SavedImage savedImage;
       if (v1Note.imagePath != null) {
-        final Response response = await get(v1Note.imagePath);
+        final Response response = await httpClient.get(v1Note.imagePath);
         final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
           ..create();
         await file.writeAsBytes(response.bodyBytes);

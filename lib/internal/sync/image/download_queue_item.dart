@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -19,10 +19,10 @@ class DownloadQueueItem extends QueueItem {
   @action
   Future<void> downloadImage() async {
     status = QueueItemStatus.ONGOING;
-    await Dio().download(
-      await getDownloadUrl(),
-      localPath,
-      onReceiveProgress: (count, total) {
+    await httpClient.download(
+      url: await getDownloadUrl(),
+      fileName: localPath,
+      onProgressChanged: (count, total) {
         progress = count / total;
         notifyListeners();
         imageQueue.notifyListeners();
@@ -36,14 +36,14 @@ class DownloadQueueItem extends QueueItem {
       case StorageLocation.SYNC:
         final String token = await prefs.getToken();
         final String url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
-        final Response presign = await dio.get(url,
-            options: Options(
-              headers: {"Authorization": "Bearer $token"},
-            ));
+        final Response presign = await httpClient.get(
+          url,
+          headers: {"Authorization": "Bearer $token"},
+        );
         if (presign.statusCode == 200) {
-          return presign.data;
+          return presign.body;
         } else {
-          throw presign.data;
+          throw presign.body;
         }
         break;
       case StorageLocation.LOCAL:

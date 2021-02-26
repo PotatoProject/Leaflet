@@ -32,6 +32,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
         (_) => appInfo.activeNotifications,
         (msg) => _updateIcons(),
       );
+      _updateIcons();
     } else {
       _updateIcons();
     }

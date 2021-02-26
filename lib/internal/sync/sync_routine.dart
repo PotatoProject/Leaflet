@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
@@ -37,12 +37,12 @@ class SyncRoutine {
     try {
       final String url = prefs.apiUrl + "/notes/ping";
       Loggy.d(message: "Going to send GET to " + url);
-      final Response pingResponse = await dio.get(url);
+      final Response pingResponse = await httpClient.get(url);
       if (pingResponse.statusCode != 200) {
         Loggy.e(message: "Server did not respond with 200 on ping");
         return false;
       }
-      if (pingResponse.data != "Pong!") {
+      if (pingResponse.body != "Pong!") {
         Loggy.e(message: "Server did not respond with Pong!");
         return false;
       }
@@ -63,8 +63,10 @@ class SyncRoutine {
       final String url =
           prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
-      final Response securePingResponse = await dio.get(url,
-          options: Options(headers: {"Authorization": prefs.accessToken}));
+      final Response securePingResponse = await httpClient.get(
+        url,
+        headers: {"Authorization": prefs.accessToken},
+      );
       if (securePingResponse.statusCode == 401) {
         Loggy.e(message: "Token is not valid");
         return false;
@@ -73,7 +75,7 @@ class SyncRoutine {
         Loggy.e(message: "Server did not respond with 200 on ping");
         return false;
       }
-      if (securePingResponse.data != "Pong!") {
+      if (securePingResponse.body != "Pong!") {
         Loggy.e(message: "Server did not respond with Pong!");
         return false;
       }
@@ -317,12 +319,7 @@ class SyncRoutine {
 
   static Future<void> sendSettingUpdates() async {
     Map<String, String> changedSettings;
-    try {
-      changedSettings = await SettingController.getChanged(prefs.lastUpdated);
-    } catch (e) {
-      Loggy.e(message: e);
-      throw ("Failed to get changed settings: " + e);
-    }
+    changedSettings = await SettingController.getChanged(prefs.lastUpdated);
 
     changedSettings.forEach((key, value) {
       final Object original = prefs.getFromCache(key);

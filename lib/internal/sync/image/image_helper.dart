@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart';
 import 'package:image/image.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
@@ -38,7 +38,7 @@ class ImageHelper {
   static Future<SavedImage> copyToCache(File file) async {
     final SavedImage savedImage = SavedImage.empty();
     final String path =
-    join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
+        join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
     final Size _size = getImageSize(file);
     savedImage.width = _size.width.toDouble();
@@ -53,7 +53,7 @@ class ImageHelper {
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
     final String hash =
-    rawDigest.map((int) => int.toRadixString(16).toString()).join('');
+        rawDigest.map((int) => int.toRadixString(16).toString()).join('');
     print(hash);
     return hash;
   }
@@ -115,17 +115,17 @@ class ImageHelper {
     final String token = await prefs.getToken();
     final String url = "${prefs.getFromCache("api_url")}/files/get/avatar.jpg";
     Loggy.v(message: "Going to send GET to :" + url);
-    final Response presign = await dio.get(url,
-        options: Options(
-          headers: {"Authorization": "Bearer $token"},
-        ));
+    final Response presign = await httpClient.get(
+      url,
+      headers: {"Authorization": "Bearer $token"},
+    );
     Loggy.v(
         message:
-        "Server responded with (${presign.statusCode}): ${presign.data}");
+            "Server responded with (${presign.statusCode}): ${presign.body}");
     if (presign.statusCode != 200) {
       return null;
     } else {
-      return presign.data;
+      return presign.body;
     }
   }
 

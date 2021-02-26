@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -646,8 +647,8 @@ class Utils {
 
         path = image.path;
       } else {
-        final File image =
-            await ImagePicker.pickImage(source: ImageSource.gallery);
+        final PickedFile image =
+            await ImagePicker().getImage(source: ImageSource.gallery);
 
         path = image.path;
       }
@@ -838,6 +839,16 @@ extension UriX on Uri {
       return NetworkImage(toString());
     } else {
       return FileImage(File(path));
+    }
+  }
+}
+
+extension ResponseX on Response {
+  dynamic get bodyJson {
+    try {
+      return json.decode(body);
+    } on FormatException {
+      return body;
     }
   }
 }

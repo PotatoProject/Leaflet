@@ -466,8 +466,8 @@ class _NotePageState extends State<NotePage> {
                 if (image != null) await handleImageAdd(image.path);
                 break;
               case 'photo':
-                final File image =
-                    await ImagePicker.pickImage(source: ImageSource.camera);
+                final PickedFile image =
+                    await ImagePicker().getImage(source: ImageSource.camera);
 
                 if (image != null) handleImageAdd(image.path);
                 break;
