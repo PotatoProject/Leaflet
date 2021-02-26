@@ -11,7 +11,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocaleStrings.aboutPage.title),
+        title: Text(LocaleStrings.about.title),
         textTheme: Theme.of(context).textTheme,
       ),
       extendBodyBehindAppBar: true,
@@ -55,7 +55,7 @@ class AboutPage extends StatelessWidget {
               ),
               Divider(height: 1),
               SettingsCategory(
-                header: LocaleStrings.aboutPage.contributors,
+                header: LocaleStrings.about.contributors,
                 children: List.generate(
                   Utils.contributors.length,
                   (index) =>
@@ -91,7 +91,7 @@ class AboutPage extends StatelessWidget {
               vertical: 16,
             ),
             child: Text(
-              LocaleStrings.aboutPage.links,
+              LocaleStrings.about.links,
               style: TextStyle(
                 fontSize: 18,
               ),

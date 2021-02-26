@@ -101,11 +101,11 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             SettingsCategory(
-              header: LocaleStrings.settingsPage.infoTitle,
+              header: LocaleStrings.settings.infoTitle,
               children: <Widget>[
                 SettingsTile(
                   icon: Icon(Icons.info_outline),
-                  title: Text(LocaleStrings.settingsPage.infoAboutApp),
+                  title: Text(LocaleStrings.settings.infoAboutApp),
                   onTap: () => Utils.showSecondaryRoute(
                     context,
                     AboutPage(),
@@ -124,12 +124,12 @@ class _SettingsPageState extends State<SettingsPage> {
             Visibility(
               visible: kDebugMode,
               child: SettingsCategory(
-                header: LocaleStrings.settingsPage.debugTitle,
+                header: LocaleStrings.settings.debugTitle,
                 children: [
                   SettingsTile.withSwitch(
                     icon: Icon(MdiIcons.humanGreeting),
                     title: Text(
-                      LocaleStrings.settingsPage.debugShowSetupScreen,
+                      LocaleStrings.settings.debugShowSetupScreen,
                     ),
                     value: !prefs.welcomePageSeen,
                     activeColor: Theme.of(context).accentColor,
@@ -139,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: Icon(MdiIcons.databaseRemoveOutline),
-                    title: Text(LocaleStrings.settingsPage.debugClearDatabase),
+                    title: Text(LocaleStrings.settings.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
                       await NoteController.deleteAll();
@@ -147,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: Icon(Icons.text_snippet_outlined),
-                    title: Text(LocaleStrings.settingsPage.debugLogLevel),
+                    title: Text(LocaleStrings.settings.debugLogLevel),
                     onTap: () {
                       showDropdownSheet(
                         context: context,
@@ -184,11 +184,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       children: <Widget>[
         SettingsCategory(
-          header: LocaleStrings.settingsPage.personalizationTitle,
+          header: LocaleStrings.settings.personalizationTitle,
           children: [
             SettingsTile(
               icon: Icon(Icons.brightness_medium_outlined),
-              title: Text(LocaleStrings.settingsPage.personalizationThemeMode),
+              title: Text(LocaleStrings.settings.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
                   context: context,
@@ -214,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsTile.withSwitch(
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
-              title: Text(LocaleStrings.settingsPage.personalizationUseAmoled),
+              title: Text(LocaleStrings.settings.personalizationUseAmoled),
               icon: Icon(Icons.brightness_2_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
@@ -225,14 +225,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     : !prefs.useCustomAccent,
                 onChanged: (value) => prefs.useCustomAccent = !value,
                 title: Text(
-                  LocaleStrings.settingsPage.personalizationUseCustomAccent,
+                  LocaleStrings.settings.personalizationUseCustomAccent,
                 ),
                 icon: Icon(Icons.color_lens_outlined),
                 activeColor: Theme.of(context).accentColor,
               ),
             SettingsTile(
               title: Text(
-                LocaleStrings.settingsPage.personalizationCustomAccent,
+                LocaleStrings.settings.personalizationCustomAccent,
               ),
               icon: Icon(Icons.colorize_outlined),
               enabled: !deviceInfo.canUseSystemAccent || prefs.useCustomAccent,
@@ -270,13 +270,13 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsTile.withSwitch(
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
-              title: Text(LocaleStrings.settingsPage.personalizationUseGrid),
+              title: Text(LocaleStrings.settings.personalizationUseGrid),
               icon: Icon(Icons.dashboard_outlined),
               activeColor: Theme.of(context).accentColor,
             ),
             SettingsTile(
               icon: Icon(Icons.translate),
-              title: Text(LocaleStrings.settingsPage.personalizationLocale),
+              title: Text(LocaleStrings.settings.personalizationLocale),
               onTap: () {
                 showDropdownSheet(
                   context: context,
@@ -331,7 +331,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         SettingsCategory(
-          header: LocaleStrings.settingsPage.privacyTitle,
+          header: LocaleStrings.settings.privacyTitle,
           children: [
             SettingsTile.withSwitch(
               value: prefs.masterPass != "",
@@ -339,8 +339,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (prefs.masterPass == "") {
                   final bool status = await showInfoSheet(
                     context,
-                    content: LocaleStrings
-                        .settingsPage.privacyUseMasterPassDisclaimer,
+                    content:
+                        LocaleStrings.settings.privacyUseMasterPassDisclaimer,
                     buttonAction: LocaleStrings.common.goOn,
                   );
                   if (status) showPassChallengeSheet(context);
@@ -369,13 +369,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
               icon: Icon(Icons.vpn_key_outlined),
-              title: Text(LocaleStrings.settingsPage.privacyUseMasterPass),
+              title: Text(LocaleStrings.settings.privacyUseMasterPass),
               activeColor: Theme.of(context).accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
             ),
             SettingsTile(
               icon: Icon(MdiIcons.formTextboxPassword),
-              title: Text(LocaleStrings.settingsPage.privacyModifyMasterPass),
+              title: Text(LocaleStrings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
                 final bool confirm =
@@ -457,12 +457,12 @@ class _SettingsPageState extends State<SettingsPage> {
   String getThemeModeName(ThemeMode themeMode) {
     switch (themeMode) {
       case ThemeMode.light:
-        return LocaleStrings.settingsPage.personalizationThemeModeLight;
+        return LocaleStrings.settings.personalizationThemeModeLight;
       case ThemeMode.dark:
-        return LocaleStrings.settingsPage.personalizationThemeModeDark;
+        return LocaleStrings.settings.personalizationThemeModeDark;
       case ThemeMode.system:
       default:
-        return LocaleStrings.settingsPage.personalizationThemeModeSystem;
+        return LocaleStrings.settings.personalizationThemeModeSystem;
     }
   }
 

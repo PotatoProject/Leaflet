@@ -417,7 +417,7 @@ class Utils {
   static List<ContributorInfo> get contributors => [
         ContributorInfo(
           name: "Davide Bianco",
-          role: LocaleStrings.aboutPage.contributorsHrx,
+          role: LocaleStrings.about.contributorsHrx,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "HrX03"),
@@ -427,7 +427,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Bas Wieringa (broodrooster)",
-          role: LocaleStrings.aboutPage.contributorsBas,
+          role: LocaleStrings.about.contributorsBas,
           avatarUrl: "https://avatars.githubusercontent.com/u/31385368",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "broodroosterdev"),
@@ -435,7 +435,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Nico Franke",
-          role: LocaleStrings.aboutPage.contributorsNico,
+          role: LocaleStrings.about.contributorsNico,
           avatarUrl: "https://avatars.githubusercontent.com/u/23036430",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "ZerNico"),
@@ -445,7 +445,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "SphericalKat",
-          role: LocaleStrings.aboutPage.contributorsKat,
+          role: LocaleStrings.about.contributorsKat,
           avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
           socialLinks: [
             SocialLink(SocialLinkType.GITHUB, "ATechnoHazard"),
@@ -453,7 +453,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "Rohit K.Parida",
-          role: LocaleStrings.aboutPage.contributorsRohit,
+          role: LocaleStrings.about.contributorsRohit,
           avatarUrl: "https://avatars.githubusercontent.com/u/18437518",
           socialLinks: [
             SocialLink(SocialLinkType.TWITTER, "paridadesigns"),
@@ -461,7 +461,7 @@ class Utils {
         ),
         ContributorInfo(
           name: "RshBfn",
-          role: LocaleStrings.aboutPage.contributorsRshbfn,
+          role: LocaleStrings.about.contributorsRshbfn,
           avatarUrl:
               "https://pbs.twimg.com/profile_images/1306121394241953792/G0zeUpRb.jpg",
           socialLinks: [

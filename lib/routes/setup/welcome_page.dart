@@ -44,7 +44,7 @@ class WelcomePage extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          LocaleStrings.setupPage.welcomeCatchphrase,
+                          LocaleStrings.setup.welcomeCatchphrase,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,

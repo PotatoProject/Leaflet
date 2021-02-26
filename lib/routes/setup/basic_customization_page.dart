@@ -9,7 +9,7 @@ class BasicCustomizationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(CustomIcons.settings_outline),
-        title: Text(LocaleStrings.setupPage.basicCustomizationTitle),
+        title: Text(LocaleStrings.setup.basicCustomizationTitle),
         textTheme: Theme.of(context).textTheme,
       ),
       extendBodyBehindAppBar: true,

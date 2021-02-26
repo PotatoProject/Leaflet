@@ -50,21 +50,21 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   final List<DrawingTool> _tools = [
     DrawingTool(
       icon: Icons.brush_outlined,
-      title: LocaleStrings.drawPage.toolsBrush,
+      title: LocaleStrings.drawing.toolsBrush,
       toolType: DrawTool.PEN,
       color: Colors.black,
       size: ToolSize.FOUR,
     ),
     DrawingTool(
       icon: MdiIcons.marker,
-      title: LocaleStrings.drawPage.toolsMarker,
+      title: LocaleStrings.drawing.toolsMarker,
       toolType: DrawTool.MARKER,
       color: Color(NoteColors.yellow.color),
       size: ToolSize.TWELVE,
     ),
     DrawingTool(
       icon: MdiIcons.eraserVariant,
-      title: LocaleStrings.drawPage.toolsEraser,
+      title: LocaleStrings.drawing.toolsEraser,
       toolType: DrawTool.ERASER,
       size: ToolSize.THIRTYTWO,
       allowColor: false,
@@ -311,7 +311,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           context: _globalContext,
           builder: (context) => AlertDialog(
             title: Text(LocaleStrings.common.areYouSure),
-            content: Text(LocaleStrings.drawPage.exitPrompt),
+            content: Text(LocaleStrings.drawing.exitPrompt),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),

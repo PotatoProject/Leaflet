@@ -11,17 +11,17 @@ class LocaleGenerator {
 
   Future<void> generate() async {
     final List<String> locales = [];
-    final List<Directory> paths = [];
+    final List<File> paths = [];
     final Directory providedDir = Directory(localeDir);
     final Directory absoluteOutputDir = Directory(outputDir).absolute;
-    final List<FileSystemEntity> folders = providedDir.listSync();
+    final List<FileSystemEntity> files = providedDir.listSync();
     final StringBuffer localesBuffer = StringBuffer();
 
     final File localesFile = File("${absoluteOutputDir.path}/locales.g.dart");
     final StringBuffer buffer = StringBuffer(_baseLocaleClass);
 
-    for (var element in folders) {
-      if (element is Directory) {
+    for (var element in files) {
+      if (element is File) {
         print(element);
         final String locale = getNameFromPath(element.path);
         locales.add(locale);
@@ -52,7 +52,7 @@ class LocaleGenerator {
     );
     for (int i = 0; i < locales.length; i++) {
       final String locale = locales[i];
-      final Directory path = paths[i];
+      final File path = paths[i];
       Map<String, String> result = await XmlFileParser.load(path, locale);
 
       buffer.writeln();
@@ -69,11 +69,9 @@ class LocaleGenerator {
 }
 
 String getNameFromPath(String path) {
-  if (Platform.isWindows) {
-    return path.split("\\").last;
-  } else {
-    return path.split("/").last;
-  }
+  final List<String> splitPath =
+      Platform.isWindows ? path.split("\\") : path.split("/");
+  return splitPath.last.split(".").first;
 }
 
 String getClassNameFromLocale(String locale) {

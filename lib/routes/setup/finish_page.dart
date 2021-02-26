@@ -7,14 +7,14 @@ class FinishPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.check),
-        title: Text(LocaleStrings.setupPage.finishTitle),
+        title: Text(LocaleStrings.setup.finishTitle),
         textTheme: Theme.of(context).textTheme,
       ),
       body: ListView(
         padding: EdgeInsets.all(16),
         children: <Widget>[
           Text(
-            LocaleStrings.setupPage.finishLastWords,
+            LocaleStrings.setup.finishLastWords,
           ),
         ],
       ),

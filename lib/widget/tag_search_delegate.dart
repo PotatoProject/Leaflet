@@ -85,7 +85,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
         ),
         ListTile(
           leading: Icon(Icons.add),
-          title: Text(LocaleStrings.searchPage.tagCreateHint(query)),
+          title: Text(LocaleStrings.search.tagCreateHint(query)),
           onTap: () async {
             await Utils.showNotesModalBottomSheet(
               context: context,

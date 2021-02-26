@@ -12,18 +12,18 @@ class KeyGenerator {
 
   Future<void> generate() async {
     final List<String> locales = [];
-    final List<Directory> paths = [];
+    final List<File> paths = [];
     final Directory providedDir = Directory(localeDir);
     final Directory absoluteOutputDir = Directory(outputDir).absolute;
-    final List<FileSystemEntity> folders = providedDir.listSync();
+    final List<FileSystemEntity> files = providedDir.listSync();
     final StringBuffer commonBuffer = StringBuffer();
     final StringBuffer stringClassesBuffer = StringBuffer();
 
     final File localeStringsFile =
         File("${absoluteOutputDir.path}/locale_strings.g.dart");
 
-    for (var element in folders) {
-      if (element is Directory) {
+    for (var element in files) {
+      if (element is File) {
         final String locale = getNameFromPath(element.path);
         locales.add(locale);
         paths.add(element);
@@ -31,7 +31,7 @@ class KeyGenerator {
     }
 
     final String locale = locales[0];
-    final Directory path = paths[0];
+    final File path = paths[0];
     final Map<String, Map<String, StringInfo>> result =
         await XmlFileParser.loadWithStringInfo(path, locale);
 

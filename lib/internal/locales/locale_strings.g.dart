@@ -5,27 +5,14 @@ import 'package:easy_localization/easy_localization.dart';
 class LocaleStrings {
   LocaleStrings._();
 
-  static _$AboutPageLocaleStrings get aboutPage => _$AboutPageLocaleStrings();
   static _$CommonLocaleStrings get common => _$CommonLocaleStrings();
-  static _$DrawPageLocaleStrings get drawPage => _$DrawPageLocaleStrings();
   static _$MainPageLocaleStrings get mainPage => _$MainPageLocaleStrings();
   static _$NotePageLocaleStrings get notePage => _$NotePageLocaleStrings();
-  static _$SearchPageLocaleStrings get searchPage => _$SearchPageLocaleStrings();
-  static _$SettingsPageLocaleStrings get settingsPage => _$SettingsPageLocaleStrings();
-  static _$SetupPageLocaleStrings get setupPage => _$SetupPageLocaleStrings();
-}
-
-class _$AboutPageLocaleStrings {
-  final String title = "about_page.title".tr();
-  final String pwaVersion = "about_page.pwa_version".tr();
-  final String links = "about_page.links".tr();
-  final String contributors = "about_page.contributors".tr();
-  final String contributorsHrx = "about_page.contributors.hrx".tr();
-  final String contributorsBas = "about_page.contributors.bas".tr();
-  final String contributorsNico = "about_page.contributors.nico".tr();
-  final String contributorsKat = "about_page.contributors.kat".tr();
-  final String contributorsRohit = "about_page.contributors.rohit".tr();
-  final String contributorsRshbfn = "about_page.contributors.rshbfn".tr();
+  static _$SettingsLocaleStrings get settings => _$SettingsLocaleStrings();
+  static _$AboutLocaleStrings get about => _$AboutLocaleStrings();
+  static _$SearchLocaleStrings get search => _$SearchLocaleStrings();
+  static _$DrawingLocaleStrings get drawing => _$DrawingLocaleStrings();
+  static _$SetupLocaleStrings get setup => _$SetupLocaleStrings();
 }
 
 class _$CommonLocaleStrings {
@@ -72,16 +59,6 @@ class _$CommonLocaleStrings {
   final String tagNew = "common.tag.new".tr();
   final String tagModify = "common.tag.modify".tr();
   final String tagTextboxHint = "common.tag.textbox_hint".tr();
-}
-
-class _$DrawPageLocaleStrings {
-  final String colorBlack = "draw_page.color_black".tr();
-  final String exitPrompt = "draw_page.exit_prompt".tr();
-  final String toolsBrush = "draw_page.tools.brush".tr();
-  final String toolsEraser = "draw_page.tools.eraser".tr();
-  final String toolsMarker = "draw_page.tools.marker".tr();
-  final String toolsColorPicker = "draw_page.tools.color_picker".tr();
-  final String toolsRadiusPicker = "draw_page.tools.radius_picker".tr();
 }
 
 class _$MainPageLocaleStrings {
@@ -137,46 +114,69 @@ class _$NotePageLocaleStrings {
   final String removedFavourites = "note_page.removed_favourites".tr();
 }
 
-class _$SearchPageLocaleStrings {
-  final String textboxHint = "search_page.textbox_hint".tr();
-  String tagCreateHint(Object arg1) => "search_page.tag_create_hint".tr(args: [arg1.toString()]);
-  final String noteTypeToSearch = "search_page.note.type_to_search".tr();
-  final String noteNothingFound = "search_page.note.nothing_found".tr();
+class _$SettingsLocaleStrings {
+  final String title = "settings.title".tr();
+  final String personalizationTitle = "settings.personalization.title".tr();
+  final String personalizationThemeMode = "settings.personalization.theme_mode".tr();
+  final String personalizationThemeModeSystem = "settings.personalization.theme_mode.system".tr();
+  final String personalizationThemeModeLight = "settings.personalization.theme_mode.light".tr();
+  final String personalizationThemeModeDark = "settings.personalization.theme_mode.dark".tr();
+  final String personalizationUseAmoled = "settings.personalization.use_amoled".tr();
+  final String personalizationUseCustomAccent = "settings.personalization.use_custom_accent".tr();
+  final String personalizationCustomAccent = "settings.personalization.custom_accent".tr();
+  final String personalizationUseGrid = "settings.personalization.use_grid".tr();
+  final String personalizationLocale = "settings.personalization.locale".tr();
+  final String privacyTitle = "settings.privacy.title".tr();
+  final String privacyUseMasterPass = "settings.privacy.use_master_pass".tr();
+  final String privacyUseMasterPassDisclaimer = "settings.privacy.use_master_pass.disclaimer".tr();
+  final String privacyModifyMasterPass = "settings.privacy.modify_master_pass".tr();
+  final String infoTitle = "settings.info.title".tr();
+  final String infoAboutApp = "settings.info.about_app".tr();
+  final String debugTitle = "settings.debug.title".tr();
+  final String debugShowSetupScreen = "settings.debug.show_setup_screen".tr();
+  final String debugClearDatabase = "settings.debug.clear_database".tr();
+  final String debugMigrateDatabase = "settings.debug.migrate_database".tr();
+  final String debugLogLevel = "settings.debug.log_level".tr();
 }
 
-class _$SettingsPageLocaleStrings {
-  final String title = "settings_page.title".tr();
-  final String personalizationTitle = "settings_page.personalization.title".tr();
-  final String personalizationThemeMode = "settings_page.personalization.theme_mode".tr();
-  final String personalizationThemeModeSystem = "settings_page.personalization.theme_mode.system".tr();
-  final String personalizationThemeModeLight = "settings_page.personalization.theme_mode.light".tr();
-  final String personalizationThemeModeDark = "settings_page.personalization.theme_mode.dark".tr();
-  final String personalizationUseAmoled = "settings_page.personalization.use_amoled".tr();
-  final String personalizationUseCustomAccent = "settings_page.personalization.use_custom_accent".tr();
-  final String personalizationCustomAccent = "settings_page.personalization.custom_accent".tr();
-  final String personalizationUseGrid = "settings_page.personalization.use_grid".tr();
-  final String personalizationLocale = "settings_page.personalization.locale".tr();
-  final String privacyTitle = "settings_page.privacy.title".tr();
-  final String privacyUseMasterPass = "settings_page.privacy.use_master_pass".tr();
-  final String privacyUseMasterPassDisclaimer = "settings_page.privacy.use_master_pass.disclaimer".tr();
-  final String privacyModifyMasterPass = "settings_page.privacy.modify_master_pass".tr();
-  final String infoTitle = "settings_page.info.title".tr();
-  final String infoAboutApp = "settings_page.info.about_app".tr();
-  final String debugTitle = "settings_page.debug.title".tr();
-  final String debugShowSetupScreen = "settings_page.debug.show_setup_screen".tr();
-  final String debugClearDatabase = "settings_page.debug.clear_database".tr();
-  final String debugMigrateDatabase = "settings_page.debug.migrate_database".tr();
-  final String debugLogLevel = "settings_page.debug.log_level".tr();
+class _$AboutLocaleStrings {
+  final String title = "about.title".tr();
+  final String pwaVersion = "about.pwa_version".tr();
+  final String links = "about.links".tr();
+  final String contributors = "about.contributors".tr();
+  final String contributorsHrx = "about.contributors.hrx".tr();
+  final String contributorsBas = "about.contributors.bas".tr();
+  final String contributorsNico = "about.contributors.nico".tr();
+  final String contributorsKat = "about.contributors.kat".tr();
+  final String contributorsRohit = "about.contributors.rohit".tr();
+  final String contributorsRshbfn = "about.contributors.rshbfn".tr();
 }
 
-class _$SetupPageLocaleStrings {
-  final String buttonGetStarted = "setup_page.button.get_started".tr();
-  final String buttonFinish = "setup_page.button.finish".tr();
-  final String buttonNext = "setup_page.button.next".tr();
-  final String buttonBack = "setup_page.button.back".tr();
-  final String basicCustomizationTitle = "setup_page.basic_customization.title".tr();
-  final String welcomeCatchphrase = "setup_page.welcome.catchphrase".tr();
-  final String finishTitle = "setup_page.finish.title".tr();
-  final String finishLastWords = "setup_page.finish.last_words".tr();
+class _$SearchLocaleStrings {
+  final String textboxHint = "search.textbox_hint".tr();
+  String tagCreateHint(Object arg1) => "search.tag_create_hint".tr(args: [arg1.toString()]);
+  final String notePageTypeToSearch = "search.note_page.type_to_search".tr();
+  final String notePageNothingFound = "search.note_page.nothing_found".tr();
+}
+
+class _$DrawingLocaleStrings {
+  final String colorBlack = "drawing.color_black".tr();
+  final String exitPrompt = "drawing.exit_prompt".tr();
+  final String toolsBrush = "drawing.tools.brush".tr();
+  final String toolsEraser = "drawing.tools.eraser".tr();
+  final String toolsMarker = "drawing.tools.marker".tr();
+  final String toolsColorPicker = "drawing.tools.color_picker".tr();
+  final String toolsRadiusPicker = "drawing.tools.radius_picker".tr();
+}
+
+class _$SetupLocaleStrings {
+  final String buttonGetStarted = "setup.button.get_started".tr();
+  final String buttonFinish = "setup.button.finish".tr();
+  final String buttonNext = "setup.button.next".tr();
+  final String buttonBack = "setup.button.back".tr();
+  final String basicCustomizationTitle = "setup.basic_customization.title".tr();
+  final String welcomeCatchphrase = "setup.welcome.catchphrase".tr();
+  final String finishTitle = "setup.finish.title".tr();
+  final String finishLastWords = "setup.finish.last_words".tr();
 }
 

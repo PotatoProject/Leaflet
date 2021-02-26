@@ -63,7 +63,7 @@ class _SearchPageState<T> extends State<SearchPage> {
             controller: widget.delegate._queryTextController,
             focusNode: focusNode,
             decoration: InputDecoration.collapsed(
-              hintText: LocaleStrings.searchPage.textboxHint,
+              hintText: LocaleStrings.search.textboxHint,
             ),
             autofocus: true,
             onChanged: (value) => _onSearchBodyChanged(),

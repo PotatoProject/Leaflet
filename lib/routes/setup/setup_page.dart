@@ -41,11 +41,11 @@ class _SetupPagetate extends State<SetupPage> {
     String buttonText;
 
     if (pageIndex == 0) {
-      buttonText = LocaleStrings.setupPage.buttonGetStarted;
+      buttonText = LocaleStrings.setup.buttonGetStarted;
     } else if (pageIndex == (pages.length - 1)) {
-      buttonText = LocaleStrings.setupPage.buttonFinish;
+      buttonText = LocaleStrings.setup.buttonFinish;
     } else {
-      buttonText = LocaleStrings.setupPage.buttonNext;
+      buttonText = LocaleStrings.setup.buttonNext;
     }
     return WillPopScope(
       child: Scaffold(
@@ -97,7 +97,7 @@ class _SetupPagetate extends State<SetupPage> {
               children: [
                 IconButton(
                   icon: Icon(Icons.arrow_back),
-                  tooltip: LocaleStrings.setupPage.buttonBack,
+                  tooltip: LocaleStrings.setup.buttonBack,
                   onPressed: pageIndex != 0 ? prevPage : null,
                 ),
                 Spacer(),

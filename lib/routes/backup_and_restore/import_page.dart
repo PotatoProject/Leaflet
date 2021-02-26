@@ -178,7 +178,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                     }
                   : null,
               child: Text(
-                LocaleStrings.setupPage.buttonNext.toUpperCase(),
+                LocaleStrings.setup.buttonNext.toUpperCase(),
                 style: TextStyle(
                   letterSpacing: 1,
                   fontWeight: FontWeight.w500,
@@ -315,7 +315,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                   : null,
               icon: Icon(Icons.check),
               label: Text(
-                LocaleStrings.setupPage.buttonFinish.toUpperCase(),
+                LocaleStrings.setup.buttonFinish.toUpperCase(),
                 style: TextStyle(
                   letterSpacing: 1,
                   fontWeight: FontWeight.w500,
