@@ -15,7 +15,7 @@ DeleteQueueItem _$DeleteQueueItemFromJson(Map<String, dynamic> json) {
         _$enumDecode(_$StorageLocationEnumMap, json['storageLocation']),
   )
     ..status = _$enumDecode(_$QueueItemStatusEnumMap, json['status'])
-    ..progress = (json['progress'] as num).toDouble();
+    ..progress = (json['progress'] as num?)?.toDouble();
 }
 
 Map<String, dynamic> _$DeleteQueueItemToJson(DeleteQueueItem instance) =>

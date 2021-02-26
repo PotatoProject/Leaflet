@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -37,7 +38,7 @@ class ImageHelper {
   static Future<SavedImage> copyToCache(File file) async {
     final SavedImage savedImage = SavedImage.empty();
     final String path =
-        join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
+    join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
     final Size _size = getImageSize(file);
     savedImage.width = _size.width.toDouble();
@@ -52,7 +53,7 @@ class ImageHelper {
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
     final String hash =
-        rawDigest.map((int) => int.toRadixString(16).toString()).join('');
+    rawDigest.map((int) => int.toRadixString(16).toString()).join('');
     print(hash);
     return hash;
   }
@@ -94,9 +95,9 @@ class ImageHelper {
     return resized;
   }
 
-  static Future<File> saveImage(Image image, String path) async {
+  static File saveImage(Image image, String path) {
     final File imageFile = File(path);
-    await imageFile.writeAsBytes(encodeJpg(image, quality: JPEG_QUALITY));
+    imageFile.writeAsBytesSync(encodeJpg(image, quality: JPEG_QUALITY));
     return imageFile;
   }
 
@@ -120,7 +121,7 @@ class ImageHelper {
         ));
     Loggy.v(
         message:
-            "Server responded with (${presign.statusCode}): ${presign.data}");
+        "Server responded with (${presign.statusCode}): ${presign.data}");
     if (presign.statusCode != 200) {
       return null;
     } else {
@@ -132,5 +133,25 @@ class ImageHelper {
     for (SavedImage image in note.images) {
       imageQueue.addDelete(image);
     }
+  }
+
+  static String processImage(String jsonParameters) {
+    Map<String, dynamic> parameters = json.decode(jsonParameters);
+    Map<String, String> data = Map();
+    final Uint8List rawBytes = File(parameters["original"]).readAsBytesSync();
+    print("Hashing image");
+    data["hash"] = ImageHelper.generateImageHash(rawBytes);
+    print("Resizing image");
+    final Image compressedImage = ImageHelper.compressImage(rawBytes);
+    data["width"] = compressedImage.width.toString();
+    data["height"] = compressedImage.height.toString();
+    print("generating blurhash");
+    final String blurHash = ImageHelper.generateBlurHash(
+        ImageHelper.compressForBlur(compressedImage));
+    data["blurhash"] = blurHash;
+    print("Saving image");
+    ImageHelper.saveImage(
+        compressedImage, parameters["tempDirectory"] + "/${data["hash"]}.jpg");
+    return jsonEncode(data);
   }
 }

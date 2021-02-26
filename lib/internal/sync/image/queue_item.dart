@@ -17,16 +17,16 @@ abstract class QueueItem extends ChangeNotifier {
   QueueItemStatus get status => _status;
   set status(QueueItemStatus value) {
     _status = value;
-    notifyListeners();
-    imageQueue.notifyListeners();
+    //notifyListeners();
+    //imageQueue.notifyListeners();
   }
 
   double? _progress;
   double? get progress => _progress;
   set progress(double? value) {
     _progress = value;
-    notifyListeners();
-    imageQueue.notifyListeners();
+    //notifyListeners();
+    //imageQueue.notifyListeners();
   }
 }
 

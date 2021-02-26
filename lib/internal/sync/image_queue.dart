@@ -138,6 +138,8 @@ class ImageQueue extends ChangeNotifier {
       item.savedImage.uploaded = true;
       item.status = QueueItemStatus.COMPLETE;
       return;
+    } else {
+      await item.uploadImage();
     }
   }
 
@@ -158,6 +160,7 @@ class ImageQueue extends ChangeNotifier {
 
   static List<DeleteQueueItem> deleteQueueFromPrefs() {
     if (prefs.deleteQueue == null || prefs.deleteQueue.length == 0) return [];
+    print(prefs.deleteQueue);
     final List<DeleteQueueItem> queue = (json.decode(prefs.deleteQueue) as List)
         .map((i) => DeleteQueueItem.fromJson(i))
         .toList();

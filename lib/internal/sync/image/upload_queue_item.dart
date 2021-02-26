@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:image/image.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
@@ -29,20 +31,19 @@ class UploadQueueItem extends QueueItem {
   @action
   Future<void> process(String tempDirectory) async {
     status = QueueItemStatus.ONGOING;
-    final Uint8List rawBytes = await File(localPath).readAsBytes();
-    Loggy.d(message: "Hashing image");
-    savedImage.hash = await Executor()
-        .execute(fun1: ImageHelper.generateImageHash, arg1: rawBytes);
-    Loggy.d(message: "Resizing image");
-    final Image compressedImage = await Executor()
-        .execute(fun1: ImageHelper.compressImage, arg1: rawBytes);
-    Loggy.d(message: "generating blurhash");
-    final String blurHash = ImageHelper.generateBlurHash(await Executor()
-        .execute(fun1: ImageHelper.compressForBlur, arg1: compressedImage));
-    savedImage.blurHash = blurHash;
-    Loggy.d(message: "Saving image");
-    await ImageHelper.saveImage(
-        compressedImage, tempDirectory + "/${savedImage.hash}.jpg");
+    notifyListeners();
+    imageQueue.notifyListeners();
+    Map<String, String> data = {
+      "original": localPath,
+      "tempDirectory": tempDirectory
+    };
+    String resultJson =
+        await compute(ImageHelper.processImage, jsonEncode(data));
+    final Map<String, dynamic> result = json.decode(resultJson);
+    savedImage.hash = result["hash"];
+    savedImage.blurHash = result["blurhash"];
+    savedImage.width = double.parse(result["width"]);
+    savedImage.height = double.parse(result["height"]);
     return;
   }
 
@@ -52,22 +53,28 @@ class UploadQueueItem extends QueueItem {
   }) async {
     final File file = File(localPath);
     status = QueueItemStatus.ONGOING;
+    notifyListeners();
+    imageQueue.notifyListeners();
     final int length = await file.length();
     final Response response = await Dio().request(
       (await getUploadUrl()).toString(),
       data: file.openRead(),
       onSendProgress: (count, total) {
         progress = count / total;
+        imageQueue.notifyListeners();
+        notifyListeners();
       },
       options: Options(
         contentType: "image/jpg",
         method:
-            savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
-        headers: headers
+        savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
+        headers: new Map.from(headers)
           ..putIfAbsent(Headers.contentLengthHeader, () => length),
       ),
     );
     status = QueueItemStatus.COMPLETE;
+    notifyListeners();
+    imageQueue.notifyListeners();
     savedImage.uploaded = true;
     return response;
   }

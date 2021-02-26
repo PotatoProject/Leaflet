@@ -4,6 +4,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/sync/image/files_controller.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/login_page.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
@@ -73,6 +74,14 @@ class AccountInfo extends StatelessWidget {
               );
             },
           ),
+        Divider(),
+        ListTile(
+          leading: Icon(MdiIcons.syncIcon),
+          title: Text("Start syncing"),
+          onTap: () async {
+            await SyncRoutine.instance.syncNotes();
+          },
+        ),
         Divider(),
         if (loggedIn)
           ListTile(

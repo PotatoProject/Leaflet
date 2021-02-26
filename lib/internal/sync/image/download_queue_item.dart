@@ -24,6 +24,8 @@ class DownloadQueueItem extends QueueItem {
       localPath,
       onReceiveProgress: (count, total) {
         progress = count / total;
+        notifyListeners();
+        imageQueue.notifyListeners();
       },
     );
     status = QueueItemStatus.COMPLETE;
