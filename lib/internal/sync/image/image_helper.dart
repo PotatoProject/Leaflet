@@ -111,8 +111,7 @@ class ImageHelper {
     }
   }
 
-  static Future<String> getAvatar() async {
-    final String token = await prefs.getToken();
+  static Future<String> getAvatar(String token) async {
     final String url = "${prefs.getFromCache("api_url")}/files/get/avatar.jpg";
     Loggy.v(message: "Going to send GET to :" + url);
     final Response presign = await httpClient.get(

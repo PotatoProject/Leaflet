@@ -27,7 +27,6 @@ void main() async {
   if (DeviceInfo.isDesktop) {
     sqfliteFfiInit();
   }
-  //Executor().warmUp(log: kDebugMode);
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
   final AppDatabase _db = AppDatabase(

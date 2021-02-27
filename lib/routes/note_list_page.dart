@@ -6,7 +6,6 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
@@ -127,13 +126,6 @@ class _NoteListPageState extends State<NoteListPage> {
                 : snapshot.data ?? [];
 
             return NoteListWidget(
-              builder: (context, child) {
-                return RefreshIndicator(
-                  child: child,
-                  onRefresh: sync,
-                  displacement: MediaQuery.of(context).padding.top + 40,
-                );
-              },
               itemBuilder: (_, index) => _buildNoteList(context, notes, index),
               noteCount: notes.length,
               noteKind: widget.noteKind,
@@ -351,10 +343,6 @@ class _NoteListPageState extends State<NoteListPage> {
 
     _state.selecting = true;
     _state.addSelectedNote(note);
-  }
-
-  Future<void> sync() async {
-    await SyncRoutine.instance.syncNotes();
   }
 }
 

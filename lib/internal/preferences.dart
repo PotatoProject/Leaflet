@@ -225,16 +225,16 @@ abstract class _PreferencesBase with Store {
       _masterPassValue = await keystore.getMasterPass();
     }
 
-    tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
-      _tagsValue = newTags;
-    });
-
     try {
-      final String netAvatarUrl = await ImageHelper.getAvatar();
+      final String netAvatarUrl = await ImageHelper.getAvatar(await getToken());
       if (netAvatarUrl != _avatarUrlValue) {
         avatarUrl = netAvatarUrl;
       }
     } catch (e) {}
+
+    tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
+      _tagsValue = newTags;
+    });
   }
 
   Future<String> getToken() async {

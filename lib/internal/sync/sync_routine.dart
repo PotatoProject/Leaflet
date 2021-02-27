@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
@@ -33,7 +34,10 @@ class SyncRoutine {
 
   SyncRoutine._();
 
-  static Future<bool> checkOnlineStatus() async {
+  ValueNotifier<bool> _syncing = ValueNotifier(false);
+  ValueNotifier<bool> get syncing => _syncing;
+
+  static Future<bool> _checkOnlineStatus() async {
     try {
       final String url = prefs.apiUrl + "/notes/ping";
       Loggy.d(message: "Going to send GET to " + url);
@@ -85,9 +89,20 @@ class SyncRoutine {
     }
   }
 
-  Future<bool> syncNotes() async {
+  void sync() async {
+    _syncing.value = true;
+    try {
+      await _syncNotes();
+    } catch (e) {
+      Loggy.e(message: e);
+    }
+    _syncing.value = false;
+    prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  Future<bool> _syncNotes() async {
     // Check if the app is able to access the remote server
-    final bool status = await checkOnlineStatus();
+    final bool status = await _checkOnlineStatus();
     if (status != true) throw ("Could not connect to server");
     final bool secureStatus = await checkLoginStatus();
     if (secureStatus != true) {
@@ -97,10 +112,10 @@ class SyncRoutine {
     await imageQueue.fillUploadQueue();
     await imageQueue.process();
     // Receive and send changes from API
-    await sendSettingUpdates();
+    await _sendSettingUpdates();
 
     // Fill the list of added, deleted and updated notes to create a local cache
-    await updateLists();
+    await _updateLists();
 
     addedNotes.clear();
     updatedNotes.clear();
@@ -111,18 +126,18 @@ class SyncRoutine {
     deletedTags.clear();
     localTags.clear();
 
-    await updateLists();
+    await _updateLists();
 
     // Send all of the note-related requests to the remote server
     try {
-      await sendNoteUpdates();
+      await _sendNoteUpdates();
     } catch (e) {
       return false;
     }
 
     // Send all of the tag-related requests to the remote server
     try {
-      await sendTagUpdates();
+      await _sendTagUpdates();
     } catch (e) {
       return false;
     }
@@ -146,7 +161,7 @@ class SyncRoutine {
           message: "Got these tags: " + tags.map((tag) => tag.id).join(","));
       for (Tag tag in tags) {
         Loggy.i(message: "Saving tag:" + tag.id);
-        await saveSyncedTag(tag);
+        await _saveSyncedTag(tag);
       }
     } catch (e) {
       Loggy.e(message: e.toString());
@@ -164,53 +179,17 @@ class SyncRoutine {
       /*for (SavedImage savedImage in note.images.data) {
           await ImageService.downloadImage(savedImage);
         }*/
-      await saveSyncedNote(note);
+      await _saveSyncedNote(note);
     }
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
     await ImageHelper.handleDownloads(await helper.listNotes(ReturnMode.LOCAL));
     return true;
   }
 
-  static Future<bool> syncNote(Note note) async {
-    final List<Note> synced = await helper.listNotes(ReturnMode.SYNCED);
-    try {
-      if (synced.indexWhere(
-              (syncedNote) => syncedNote.id == note.id + "-synced") !=
-          -1) {
-        final List<String> deletedIdList =
-            await NoteController.listDeleted([note.id]);
-        if (deletedIdList.length > 0) {
-          Loggy.d(
-              message:
-                  "Since note is deleted on remote, we should safely remove it");
-          Utils.deleteNoteSafely(note);
-          return true;
-        } else {
-          final Note syncedNote =
-              synced.firstWhere((synced) => synced.id == note.id + "-synced");
-          if (syncedNote.lastModifyDate == note.lastModifyDate) {
-            Loggy.v(message: "Dont need to sync note, it hasnt been updated");
-            return true;
-          } else {
-            final Map<String, dynamic> delta = getNoteDelta(note, syncedNote);
-            await NoteController.update(note.id, delta);
-            await saveSyncedNote(note);
-            return true;
-          }
-        }
-      } else {
-        return await addNote(note);
-      }
-    } catch (e) {
-      Loggy.e(message: "Could not sync note in background: ${e.toString()}");
-      return false;
-    }
-  }
-
-  static Future<bool> addNote(Note note) async {
+  static Future<bool> _addNote(Note note) async {
     try {
       await NoteController.add(note);
-      await saveSyncedNote(note);
+      await _saveSyncedNote(note);
       Loggy.i(message: "Added note: " + note.id);
       return true;
     } catch (e) {
@@ -219,10 +198,10 @@ class SyncRoutine {
     }
   }
 
-  Future<bool> sendNoteUpdates() async {
+  Future<bool> _sendNoteUpdates() async {
     // Send the post requests to add new notes
     for (Note note in addedNotes) {
-      if (await addNote(note) == false) {
+      if (await _addNote(note) == false) {
         return false;
       }
     }
@@ -245,7 +224,7 @@ class SyncRoutine {
     updatedNotes.forEach((note, delta) async {
       try {
         await NoteController.update(note.id, delta);
-        await saveSyncedNote(note);
+        await _saveSyncedNote(note);
         Loggy.i(message: "Updated note:" + note.id);
       } catch (e) {
         Loggy.e(message: e);
@@ -255,7 +234,7 @@ class SyncRoutine {
       final String localNoteId = note.id.replaceFirst("-synced", "");
       try {
         await NoteController.delete(localNoteId);
-        await deleteSyncedNote(note);
+        await _deleteSyncedNote(note);
         Loggy.i(message: "Deleted note: " + localNoteId);
       } catch (e) {
         Loggy.e(message: e.toString());
@@ -265,12 +244,12 @@ class SyncRoutine {
     return true;
   }
 
-  Future<bool> sendTagUpdates() async {
+  Future<bool> _sendTagUpdates() async {
     // Send the post requests to add new tags
     for (Tag tag in addedTags) {
       try {
         await TagController.add(tag);
-        await saveSyncedTag(tag);
+        await _saveSyncedTag(tag);
         Loggy.i(message: "Added tag: " + tag.id);
       } catch (e) {
         Loggy.e(message: e.toString());
@@ -296,7 +275,7 @@ class SyncRoutine {
     updatedTags.forEach((tag, delta) async {
       try {
         await TagController.update(tag.id, delta);
-        await saveSyncedTag(tag);
+        await _saveSyncedTag(tag);
         Loggy.i(message: "Updated tag:" + tag.id);
       } catch (e) {
         Loggy.e(message: e);
@@ -307,7 +286,7 @@ class SyncRoutine {
       final String localTagId = tag.id.replaceFirst("-synced", "");
       try {
         await TagController.delete(localTagId);
-        await deleteSyncedTag(tag);
+        await _deleteSyncedTag(tag);
         Loggy.i(message: "Deleted tag: " + localTagId);
       } catch (e) {
         Loggy.e(message: e.toString());
@@ -317,7 +296,7 @@ class SyncRoutine {
     return true;
   }
 
-  static Future<void> sendSettingUpdates() async {
+  static Future<void> _sendSettingUpdates() async {
     Map<String, String> changedSettings;
     changedSettings = await SettingController.getChanged(prefs.lastUpdated);
 
@@ -374,27 +353,27 @@ class SyncRoutine {
     prefs.prefs.clearChangedKeys();
   }
 
-  static Future<void> saveSyncedNote(Note note) async {
+  static Future<void> _saveSyncedNote(Note note) async {
     await helper.saveNote(note.copyWith(synced: true));
     final Note syncedNote = note.copyWith(id: note.id + "-synced");
     await helper.saveNote(syncedNote);
   }
 
-  static Future<void> deleteSyncedNote(Note note) async {
+  static Future<void> _deleteSyncedNote(Note note) async {
     await helper.deleteNote(note);
   }
 
-  static Future<void> saveSyncedTag(Tag tag) async {
+  static Future<void> _saveSyncedTag(Tag tag) async {
     await tagHelper.saveTag(tag);
     final Tag syncedTag = tag.copyWith(id: tag.id + "-synced");
     await tagHelper.saveTag(syncedTag);
   }
 
-  static Future<void> deleteSyncedTag(Tag tag) async {
+  static Future<void> _deleteSyncedTag(Tag tag) async {
     await tagHelper.deleteTag(tag);
   }
 
-  Future<void> updateLists() async {
+  Future<void> _updateLists() async {
     localNotes.clear();
     localNotes.addAll(await helper.listNotes(ReturnMode.LOCAL));
     final List<Note> syncedNotes = await helper.listNotes(ReturnMode.SYNCED);
@@ -407,7 +386,7 @@ class SyncRoutine {
         final Note syncedNote = syncedNotes.elementAt(syncedIndex);
         if (!localNote.synced) {
           updatedNotes.putIfAbsent(
-              localNote, () => getNoteDelta(localNote, syncedNote));
+              localNote, () => _getNoteDelta(localNote, syncedNote));
         }
       }
     });
@@ -434,7 +413,7 @@ class SyncRoutine {
         if (syncedTag.lastModifyDate.millisecondsSinceEpoch <
             localTag.lastModifyDate.millisecondsSinceEpoch) {
           updatedTags.putIfAbsent(
-              localTag, () => getTagDelta(localTag, syncedTag));
+              localTag, () => _getTagDelta(localTag, syncedTag));
         }
       }
     });
@@ -449,7 +428,7 @@ class SyncRoutine {
     }
   }
 
-  static Map<String, dynamic> getNoteDelta(Note localNote, Note syncedNote) {
+  static Map<String, dynamic> _getNoteDelta(Note localNote, Note syncedNote) {
     final Map<String, dynamic> localMap = localNote.toSyncMap();
     final Map<String, dynamic> syncedMap = syncedNote.toSyncMap();
     final Map<String, dynamic> noteDelta = {};
@@ -463,7 +442,7 @@ class SyncRoutine {
     return noteDelta;
   }
 
-  static Map<String, dynamic> getTagDelta(Tag localTag, Tag syncedTag) {
+  static Map<String, dynamic> _getTagDelta(Tag localTag, Tag syncedTag) {
     final Map<String, dynamic> localMap = TagController.toSync(localTag);
     final Map<String, dynamic> syncedMap = TagController.toSync(syncedTag);
     final Map<String, dynamic> tagDelta = {};

@@ -22,12 +22,12 @@ class _ProvidersSingleton {
 
   void initProviders(AppDatabase _db) {
     _httpClient = HttpClient();
-    _helper = _db.noteHelper;
-    _tagHelper = _db.tagHelper;
     _prefs = Preferences();
     _deviceInfo = DeviceInfo();
     _imageQueue = ImageQueue();
     _appInfo = AppInfo();
+    _helper = _db.noteHelper;
+    _tagHelper = _db.tagHelper;
   }
 }
 

@@ -120,7 +120,7 @@ class AccountController {
                 json.decode(profileRequest.body);
             prefs.username = response["username"];
             prefs.email = response["email"];
-            prefs.avatarUrl = await ImageHelper.getAvatar();
+            prefs.avatarUrl = await ImageHelper.getAvatar(token);
             return AuthResponse(status: true);
           case 400:
             return AuthResponse(
