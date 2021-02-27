@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
-    <string name="common.cancel">Cancel</string>
-    <string name="common.reset">Reset</string>
-    <string name="common.restore">Restore</string>
-    <string name="common.confirm">Confirm</string>
-    <string name="common.save">Save</string>
-    <string name="common.delete">Delete</string>
-    <string name="common.undo">Undo</string>
-    <string name="common.redo">Redo</string>
-    <string name="common.edit">Edit</string>
-    <string name="common.go_on">Go on</string>
-    <string name="common.exit">Exit</string>
-    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s of %s</string>
-    <string name="common.new_note">New note</string>
-    <string name="common.new_list">New list</string>
-    <string name="common.new_image">New image</string>
-    <string name="common.new_drawing">New drawing</string>
+    <string name="common.cancel">Vazgeç</string>
+    <string name="common.reset">Sıfırla</string>
+    <string name="common.restore">Geri yükle</string>
+    <string name="common.confirm">Onayla</string>
+    <string name="common.save">Kaydet</string>
+    <string name="common.delete">Sil</string>
+    <string name="common.undo">Geri al</string>
+    <string name="common.redo">Yinele</string>
+    <string name="common.edit">Düzenle</string>
+    <string name="common.go_on">Devam Et</string>
+    <string name="common.exit">Çık</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s/%s</string>
+    <string name="common.new_note">Yeni not</string>
+    <string name="common.new_list">Yeni liste</string>
+    <string name="common.new_image">Yeni resim</string>
+    <string name="common.new_drawing">Yeni çizim</string>
     <string name="common.biometrics_prompt">Confirm biometrics</string>
     <string name="common.master_pass.modify">Modify master pass</string>
     <string name="common.master_pass.confirm">Confirm master pass</string>
