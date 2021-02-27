@@ -1,0 +1,167 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Abbrechen</string>
+    <string name="common.reset">Zurücksetzen</string>
+    <string name="common.restore">Wiederherstellen</string>
+    <string name="common.confirm">Bestätigen</string>
+    <string name="common.save">Sichern</string>
+    <string name="common.delete">Löschen</string>
+    <string name="common.undo">Rückgängig</string>
+    <string name="common.redo">Wiederholen</string>
+    <string name="common.edit">Bearbeiten</string>
+    <string name="common.go_on">Weiter</string>
+    <string name="common.exit">Beenden</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s von %s</string>
+    <string name="common.new_note">Neue Notiz</string>
+    <string name="common.new_list">Neue Liste</string>
+    <string name="common.new_image">Neues Bild</string>
+    <string name="common.new_drawing">Neue Zeichnung</string>
+    <string name="common.biometrics_prompt">Biometrie bestätigen</string>
+    <string name="common.master_pass.modify">Master-Pass ändern</string>
+    <string name="common.master_pass.confirm">Master-Pass bestätigen</string>
+    <string name="common.are_you_sure">Bist du sicher?</string>
+    <string name="common.case_sensitive">Groß-/Kleinschreibung beachten</string>
+    <string name="common.color_filter">Farbfilter</string>
+    <string name="common.date_filter">Datumsfilter</string>
+    <string name="common.date_filter_mode">Filtermodus</string>
+    <string name="common.date_filter_mode.after">Nach diesem Datum</string>
+    <string name="common.date_filter_mode.exact">An diesem Datum</string>
+    <string name="common.date_filter_mode.before">Vor diesem Datum</string>
+    <string name="common.color.none">Keine</string>
+    <string name="common.color.red">Rot</string>
+    <string name="common.color.orange">Orange</string>
+    <string name="common.color.yellow">Gelb</string>
+    <string name="common.color.green">Grün</string>
+    <string name="common.color.cyan">Blaugrün</string>
+    <string name="common.color.light_blue">Hellblau</string>
+    <string name="common.color.blue">Blau</string>
+    <string name="common.color.purple">Lila</string>
+    <string name="common.color.pink">Rosa</string>
+    <string name="common.notification.default_title">Angeheftete Benachrichtigung</string>
+    <string name="common.notification.details_title">Angeheftete Benachrichtigungen</string>
+    <string name="common.notification.details_desc">Vom Benutzer angeheftete Benachrichtigungen</string>
+    <string name="common.tag.new">Neues Etikett</string>
+    <string name="common.tag.modify">Stichwort bearbeiten</string>
+    <string name="common.tag.textbox_hint">Name</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Einstellungen</string>
+    <string name="main_page.search">Suche</string>
+    <string name="main_page.account">Konto</string>
+    <string name="main_page.restore_prompt.archive">Möchten Sie alle Notizen im Archiv wiederherstellen?</string>
+    <string name="main_page.restore_prompt.trash">Möchtest du alle Notizen im Papierkorb wiederherstellen?</string>
+    <string name="main_page.tag_delete_prompt">Dieses Etikett kann nach dem Löschen nicht wiederhergestellt werden</string>
+    <string name="main_page.deleted_empty_note">Leere Notiz gelöscht</string>
+    <string name="main_page.empty_state.home">Noch keine Notizen hinzugefügt</string>
+    <string name="main_page.empty_state.archive">Das Archiv ist leer</string>
+    <string name="main_page.empty_state.trash">Der Papierkorb ist leer</string>
+    <string name="main_page.empty_state.favourites">Momentan keine Favoriten</string>
+    <string name="main_page.empty_state.tag">Keine Notizen mit diesem Etikett</string>
+    <string name="main_page.title.home">Hauptseite</string>
+    <string name="main_page.title.archive">Archiv</string>
+    <string name="main_page.title.trash">Papierkorb</string>
+    <string name="main_page.title.favourites">Favoriten</string>
+    <string name="main_page.title.tag">Etikett</string>
+    <string name="main_page.title.all">Alles</string>
+    <string name="main_page.selection_bar.close">Schließen</string>
+    <string name="main_page.selection_bar.add_favourites">Zu Favoriten hinzufügen</string>
+    <string name="main_page.selection_bar.remove_favourites">Aus Favoriten entfernen</string>
+    <string name="main_page.selection_bar.change_color">Farbe ändern</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archiv</string>
+    <string name="main_page.selection_bar.delete">In Papierkorb verschieben</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Anheften</string>
+    <string name="main_page.selection_bar.share">Teilen</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s Element in den Papierkorb verschoben</item>
+        <item quantity="other">%s Elemente in den Papierkorb verschoben</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">%s Notiz archiviert</item>
+        <item quantity="other">%s Notizen archiviert</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">%s Notiz wiederhergestellt</item>
+        <item quantity="other">%s Notizen wiederhergestellt</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Titel</string>
+    <string name="note_page.content_hint">Inhalt</string>
+    <string name="note_page.list_item_hint">Eingabe</string>
+    <string name="note_page.add_entry_hint">Eintrag hinzufügen</string>
+    <string name="note_page.toolbar.tags">Etiketten verwalten</string>
+    <string name="note_page.toolbar.color">Farbe ändern</string>
+    <string name="note_page.toolbar.add_item">Element hinzufügen</string>
+    <string name="note_page.privacy.title">Privatsphäre-Einstellungen</string>
+    <string name="note_page.privacy.hide_content">Inhalte auf Hauptseite verbergen</string>
+    <string name="note_page.privacy.lock_note">Notiz schützen</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Sie müssen einen Master-Pass in den Einstellungen festlegen</string>
+    <string name="note_page.privacy.use_biometrics">Benutze Biometrie zum Entsperren</string>
+    <string name="note_page.toggle_list">Checkliste anzeigen</string>
+    <string name="note_page.image_gallery">Bild aus Galerie</string>
+    <string name="note_page.image_camera">Foto aufnehmen</string>
+    <string name="note_page.drawing">Zeichnung hinzufügen</string>
+    <string name="note_page.added_favourites">Notiz zu Favoriten hinzugefügt</string>
+    <string name="note_page.removed_favourites">Notiz aus Favoriten entfernt</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Einstellungen</string>
+    <string name="settings.personalization.title">Personalisierung</string>
+    <string name="settings.personalization.theme_mode">Farbthema</string>
+    <string name="settings.personalization.theme_mode.system">System</string>
+    <string name="settings.personalization.theme_mode.light">Hell</string>
+    <string name="settings.personalization.theme_mode.dark">Dunkel</string>
+    <string name="settings.personalization.use_amoled">Schwarz AMOLED</string>
+    <string name="settings.personalization.use_custom_accent">System-Akzentfarben folgen</string>
+    <string name="settings.personalization.custom_accent">Eigene Akzentfarbe wählen</string>
+    <string name="settings.personalization.use_grid">Rasteransicht für Notizen</string>
+    <string name="settings.personalization.locale">Lokalisierung</string>
+    <string name="settings.privacy.title">Datenschutz</string>
+    <string name="settings.privacy.use_master_pass">Master-Pass verwenden</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Warnung: Falls sie den Master-Pass vergessen, können sie ihn NICHT zurücksetzen. Nur wenn sie die App löschen und neu installieren. Dabei werden alle Daten gelöscht. Bitte schreiben Sie ihn auf und bewahren sie ihn sicher auf.</string>
+    <string name="settings.privacy.modify_master_pass">Master-Pass ändern</string>
+    <string name="settings.info.title">Info</string>
+    <string name="settings.info.about_app">Über PotatoNotes</string>
+    <string name="settings.debug.title">Fehlerbeseitigung</string>
+    <string name="settings.debug.show_setup_screen">Erststartmenü bei nächstem Start</string>
+    <string name="settings.debug.clear_database">Datenbank leeren</string>
+    <string name="settings.debug.migrate_database">Datenbank integrieren</string>
+    <string name="settings.debug.log_level">Log-Level</string>
+
+    <!-- About page -->
+    <string name="about.title">Einstellungen</string>
+    <string name="about.pwa_version">PWA-Version</string>
+    <string name="about.links">Links</string>
+    <string name="about.contributors">Mitwirkende</string>
+    <string name="about.contributors.hrx">Lead Entwickler und App-Design</string>
+    <string name="about.contributors.bas">Sync API und Anwendung</string>
+    <string name="about.contributors.nico">Sync API</string>
+    <string name="about.contributors.kat">Alte Sync API</string>
+    <string name="about.contributors.rohit">Abbildungen und Notiz-Farben</string>
+    <string name="about.contributors.rshbfn">Icon und Haupt Akzent</string>
+
+    <!-- Search page-->
+    <string name="search.textbox_hint">Suche</string>
+    <string name="search.tag_create_hint">Erstelle Etikett \"%s\"</string>
+    <string name="search.type_to_search">Tippen um Suche zu Starten</string>
+    <string name="search.nothing_found">Nichts gefunden...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Schwarz</string>
+    <string name="drawing.exit_prompt">Alle nicht gespeicherten Änderungen gehen verloren. Wollen Sie fortfahren?</string>
+    <string name="drawing.tools.brush">Pinsel</string>
+    <string name="drawing.tools.eraser">Radierer</string>
+    <string name="drawing.tools.marker">Filzstift</string>
+    <string name="drawing.tools.color_picker">Farbe</string>
+    <string name="drawing.tools.radius_picker">Radius</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Los geht\'s</string>
+    <string name="setup.button.finish">Abschließen</string>
+    <string name="setup.button.next">Weiter</string>
+    <string name="setup.button.back">Zurück</string>
+    <string name="setup.basic_customization.title">Grundlegende Anpassungen</string>
+    <string name="setup.welcome.catchphrase">Ihre neue Lieblings-Notiz-App</string>
+    <string name="setup.finish.title">Alles erledigt!</string>
+    <string name="setup.finish.last_words">Jetzt bist du bereit, PotatoNotes im vollen Umfang zu genießen. \nWeitere Einstellungen gibt es in der Seitenleiste unter Einstellungen. Zum Verwalten des PotatoSync-Accounts einfach den Avatar in der oberen Leiste klicken.</string>
+</resources>

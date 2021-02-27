@@ -1,0 +1,164 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">取消</string>
+    <string name="common.reset">重置</string>
+    <string name="common.restore">还原</string>
+    <string name="common.confirm">确认</string>
+    <string name="common.save">保存</string>
+    <string name="common.delete">删除</string>
+    <string name="common.undo">撤销</string>
+    <string name="common.redo">恢复</string>
+    <string name="common.edit">编辑</string>
+    <string name="common.go_on">继续</string>
+    <string name="common.exit">退出</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s 共 %s</string>
+    <string name="common.new_note">新建笔记</string>
+    <string name="common.new_list">新建列表</string>
+    <string name="common.new_image">新建图像</string>
+    <string name="common.new_drawing">新建绘画</string>
+    <string name="common.biometrics_prompt">确定生物识别</string>
+    <string name="common.master_pass.modify">输入密码</string>
+    <string name="common.master_pass.confirm">确认密码</string>
+    <string name="common.are_you_sure">您确定吗？</string>
+    <string name="common.case_sensitive">区分大小写</string>
+    <string name="common.color_filter">滤镜</string>
+    <string name="common.date_filter">选择日期</string>
+    <string name="common.date_filter_mode">筛选模式</string>
+    <string name="common.date_filter_mode.after">推迟</string>
+    <string name="common.date_filter_mode.exact">具体日期</string>
+    <string name="common.date_filter_mode.before">提前</string>
+    <string name="common.color.none">透明</string>
+    <string name="common.color.red">红色</string>
+    <string name="common.color.orange">橙色</string>
+    <string name="common.color.yellow">黄色</string>
+    <string name="common.color.green">绿色</string>
+    <string name="common.color.cyan">青色</string>
+    <string name="common.color.light_blue">浅蓝色</string>
+    <string name="common.color.blue">蓝色</string>
+    <string name="common.color.purple">紫色</string>
+    <string name="common.color.pink">粉色</string>
+    <string name="common.notification.default_title">将笔记固定到通知栏</string>
+    <string name="common.notification.details_title">将笔记固定到通知栏</string>
+    <string name="common.notification.details_desc">用户置頂了通知</string>
+    <string name="common.tag.new">新建标签</string>
+    <string name="common.tag.modify">修改标签</string>
+    <string name="common.tag.textbox_hint">名称</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">设置</string>
+    <string name="main_page.search">搜索</string>
+    <string name="main_page.account">账户</string>
+    <string name="main_page.restore_prompt.archive">你想要还原归档中的全部笔记吗？</string>
+    <string name="main_page.restore_prompt.trash">你想要还原回收站里的全部笔记嘛？</string>
+    <string name="main_page.tag_delete_prompt">如果您删除此标签，此标签将永远丢失</string>
+    <string name="main_page.deleted_empty_note">删除空笔记</string>
+    <string name="main_page.empty_state.home">未添加任何笔记</string>
+    <string name="main_page.empty_state.archive">文件为空</string>
+    <string name="main_page.empty_state.trash">回收站为空</string>
+    <string name="main_page.empty_state.favourites">现在没有收藏夹呢</string>
+    <string name="main_page.empty_state.tag">没有带这个标签的注释</string>
+    <string name="main_page.title.home">主页</string>
+    <string name="main_page.title.archive">存档</string>
+    <string name="main_page.title.trash">回收站</string>
+    <string name="main_page.title.favourites">收藏夹</string>
+    <string name="main_page.title.tag">标签</string>
+    <string name="main_page.title.all">全部</string>
+    <string name="main_page.selection_bar.close">关闭</string>
+    <string name="main_page.selection_bar.add_favourites">添加到收藏夹</string>
+    <string name="main_page.selection_bar.remove_favourites">从收藏夹中删除</string>
+    <string name="main_page.selection_bar.change_color">更改颜色</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">存档</string>
+    <string name="main_page.selection_bar.delete">移动到回收站</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">置顶</string>
+    <string name="main_page.selection_bar.share">分享</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="other">已将 %s 个项目移至回收站。</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="other">已归档 %s 笔记</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="other">已恢复 %s 笔记</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">标题</string>
+    <string name="note_page.content_hint">内容</string>
+    <string name="note_page.list_item_hint">输入</string>
+    <string name="note_page.add_entry_hint">添加</string>
+    <string name="note_page.toolbar.tags">管理标签</string>
+    <string name="note_page.toolbar.color">更改颜色</string>
+    <string name="note_page.toolbar.add_item">新增项目</string>
+    <string name="note_page.privacy.title">隐私选项</string>
+    <string name="note_page.privacy.hide_content">在主页面隐藏便签内容</string>
+    <string name="note_page.privacy.lock_note">锁定便签</string>
+    <string name="note_page.privacy.lock_note.missing_pass">您必须设置一个主密码</string>
+    <string name="note_page.privacy.use_biometrics">使用生物识别解锁</string>
+    <string name="note_page.toggle_list">切换列表</string>
+    <string name="note_page.image_gallery">图库中的图像</string>
+    <string name="note_page.image_camera">拍照</string>
+    <string name="note_page.drawing">添加一张图片</string>
+    <string name="note_page.added_favourites">笔记已添加到收藏夹</string>
+    <string name="note_page.removed_favourites">便签已从存档中删除</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">设置</string>
+    <string name="settings.personalization.title">个性化</string>
+    <string name="settings.personalization.theme_mode">主题模式</string>
+    <string name="settings.personalization.theme_mode.system">系统</string>
+    <string name="settings.personalization.theme_mode.light">浅色</string>
+    <string name="settings.personalization.theme_mode.dark">深色</string>
+    <string name="settings.personalization.use_amoled">使用暗色主题</string>
+    <string name="settings.personalization.use_custom_accent">跟随系统选择</string>
+    <string name="settings.personalization.custom_accent">选择一个自定义爱好</string>
+    <string name="settings.personalization.use_grid">便签的网格视图</string>
+    <string name="settings.personalization.locale">应用区域设置</string>
+    <string name="settings.privacy.title">隐私</string>
+    <string name="settings.privacy.use_master_pass">使用主密码</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">警告：如果你忘记了密码，你将不能重置密码，你必须重置这个软件，这将会丢失所有的笔记。请务必记牢密码！</string>
+    <string name="settings.privacy.modify_master_pass">输入密码</string>
+    <string name="settings.info.title">信息</string>
+    <string name="settings.info.about_app">关于PotatoNotes</string>
+    <string name="settings.debug.title">调试</string>
+    <string name="settings.debug.show_setup_screen">下次启动时显示设置</string>
+    <string name="settings.debug.clear_database">清空数据库</string>
+    <string name="settings.debug.migrate_database">迁移数据库</string>
+    <string name="settings.debug.log_level">日志等级</string>
+
+    <!-- About page -->
+    <string name="about.title">设置</string>
+    <string name="about.pwa_version">PWA版本</string>
+    <string name="about.links">网址</string>
+    <string name="about.contributors">贡献者</string>
+    <string name="about.contributors.hrx">主要开发者和应用设计者</string>
+    <string name="about.contributors.bas">同步 API 和应用</string>
+    <string name="about.contributors.nico">同步API</string>
+    <string name="about.contributors.kat">旧的同步 API</string>
+    <string name="about.contributors.rohit">说明和笔记颜色</string>
+    <string name="about.contributors.rshbfn">应用图标和主音效</string>
+
+    <!-- Search page-->
+    <string name="search.textbox_hint">搜索</string>
+    <string name="search.tag_create_hint">创建标签“%s”</string>
+    <string name="search.type_to_search">输入以开始搜索</string>
+    <string name="search.nothing_found">什么都没找到</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">黑色</string>
+    <string name="drawing.exit_prompt">未保存的更改将会丢失，你确定要继续嘛?</string>
+    <string name="drawing.tools.brush">画笔</string>
+    <string name="drawing.tools.eraser">橡皮擦</string>
+    <string name="drawing.tools.marker">记号笔</string>
+    <string name="drawing.tools.color_picker">颜色</string>
+    <string name="drawing.tools.radius_picker">半径</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">开始</string>
+    <string name="setup.button.finish">完成</string>
+    <string name="setup.button.next">下一个</string>
+    <string name="setup.button.back">返回</string>
+    <string name="setup.basic_customization.title">基本自定义</string>
+    <string name="setup.welcome.catchphrase">您最新喜爱的便签应用</string>
+    <string name="setup.finish.title">一切就绪！</string>
+    <string name="setup.finish.last_words">现在你将充分享用PotatoNotes。\n如果你想自定义更多的选项，请进入侧边栏的设置界面。此外，如果你想要管理你的Potato同步账户，请点击顶栏的头像</string>
+</resources>

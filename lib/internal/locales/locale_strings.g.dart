@@ -155,8 +155,8 @@ class _$AboutLocaleStrings {
 class _$SearchLocaleStrings {
   final String textboxHint = "search.textbox_hint".tr();
   String tagCreateHint(Object arg1) => "search.tag_create_hint".tr(args: [arg1.toString()]);
-  final String notePageTypeToSearch = "search.note_page.type_to_search".tr();
-  final String notePageNothingFound = "search.note_page.nothing_found".tr();
+  final String typeToSearch = "search.type_to_search".tr();
+  final String nothingFound = "search.nothing_found".tr();
 }
 
 class _$DrawingLocaleStrings {

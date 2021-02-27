@@ -1,0 +1,167 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Cancelar</string>
+    <string name="common.reset">Redefinir</string>
+    <string name="common.restore">Restaurar</string>
+    <string name="common.confirm">Confirmar</string>
+    <string name="common.save">Salvar</string>
+    <string name="common.delete">Excluir</string>
+    <string name="common.undo">Desfazer</string>
+    <string name="common.redo">Refazer</string>
+    <string name="common.edit">Editar</string>
+    <string name="common.go_on">Continuar</string>
+    <string name="common.exit">Sair</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s de %s</string>
+    <string name="common.new_note">Nova anotação</string>
+    <string name="common.new_list">Nova lista</string>
+    <string name="common.new_image">Nova imagem</string>
+    <string name="common.new_drawing">Novo desenho</string>
+    <string name="common.biometrics_prompt">Confirmar com a digital</string>
+    <string name="common.master_pass.modify">Modificar palavra passe</string>
+    <string name="common.master_pass.confirm">Confirmar palavra passe</string>
+    <string name="common.are_you_sure">Você tem certeza?</string>
+    <string name="common.case_sensitive">Maiúsculas e minúsculas</string>
+    <string name="common.color_filter">Filtro de Cor</string>
+    <string name="common.date_filter">Filtro de data</string>
+    <string name="common.date_filter_mode">Modo de filtro</string>
+    <string name="common.date_filter_mode.after">Data posterior</string>
+    <string name="common.date_filter_mode.exact">Data exata</string>
+    <string name="common.date_filter_mode.before">Data posterior</string>
+    <string name="common.color.none">Nada</string>
+    <string name="common.color.red">Vermelho</string>
+    <string name="common.color.orange">Laranja</string>
+    <string name="common.color.yellow">Amarelo</string>
+    <string name="common.color.green">Verde</string>
+    <string name="common.color.cyan">Ciano</string>
+    <string name="common.color.light_blue">Azul claro</string>
+    <string name="common.color.blue">Azul</string>
+    <string name="common.color.purple">Roxo</string>
+    <string name="common.color.pink">Rosa</string>
+    <string name="common.notification.default_title">Fixar nas notificações</string>
+    <string name="common.notification.details_title">Fixar nas notificações</string>
+    <string name="common.notification.details_desc">Notificações fixadas pelo usuário</string>
+    <string name="common.tag.new">Novo marcador</string>
+    <string name="common.tag.modify">Modificar marcador</string>
+    <string name="common.tag.textbox_hint">Nome</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Beállítások</string>
+    <string name="main_page.search">Pesquisar</string>
+    <string name="main_page.account">Conta</string>
+    <string name="main_page.restore_prompt.archive">Você deseja restaurar todas as notas do arquivo?</string>
+    <string name="main_page.restore_prompt.trash">Você quer restaurar todas as notas na lixeira?</string>
+    <string name="main_page.tag_delete_prompt">Essa marcação será perdida para sempre se você excluí-la</string>
+    <string name="main_page.deleted_empty_note">Nota vazia excluída</string>
+    <string name="main_page.empty_state.home">Nenhuma nota foi adicionada ainda</string>
+    <string name="main_page.empty_state.archive">O arquivo está vazio</string>
+    <string name="main_page.empty_state.trash">Sua lixeira está vazia</string>
+    <string name="main_page.empty_state.favourites">Nenhum favorito no momento</string>
+    <string name="main_page.empty_state.tag">Sem notas com esta tag</string>
+    <string name="main_page.title.home">Inicio</string>
+    <string name="main_page.title.archive">Arquivar</string>
+    <string name="main_page.title.trash">Lixeira</string>
+    <string name="main_page.title.favourites">Favoritos</string>
+    <string name="main_page.title.tag">Marcação</string>
+    <string name="main_page.title.all">Tudo</string>
+    <string name="main_page.selection_bar.close">Fechar</string>
+    <string name="main_page.selection_bar.add_favourites">Adicionar aos favoritos</string>
+    <string name="main_page.selection_bar.remove_favourites">Remover dos favoritos</string>
+    <string name="main_page.selection_bar.change_color">Szín változtatása</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Arquivar</string>
+    <string name="main_page.selection_bar.delete">Mover para lixeira</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fixar</string>
+    <string name="main_page.selection_bar.share">Compartilhar</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s nota movida para a lixeira</item>
+        <item quantity="other">%s notas movidas para a lixeira</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">Arquivado %s notas</item>
+        <item quantity="other">%s notas arquivadas</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">%s nota restaurada</item>
+        <item quantity="other">%s notas restauradas</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Cím</string>
+    <string name="note_page.content_hint">Tartalom</string>
+    <string name="note_page.list_item_hint">Bemenet</string>
+    <string name="note_page.add_entry_hint">Bejegyzés hozzáadása</string>
+    <string name="note_page.toolbar.tags">Címkék kezelése</string>
+    <string name="note_page.toolbar.color">Szín változtatása</string>
+    <string name="note_page.toolbar.add_item">Elem hozzáadása</string>
+    <string name="note_page.privacy.title">Adatvédelmi beállítások</string>
+    <string name="note_page.privacy.hide_content">Tartalom elrejtése a kezdőlapon</string>
+    <string name="note_page.privacy.lock_note">Jegyzet zárolása</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Elsőnek adj meg egy mesterjelszavat a beállításokban</string>
+    <string name="note_page.privacy.use_biometrics">Biometrikus ellenőrzés használata</string>
+    <string name="note_page.toggle_list">Lista kapcsolása</string>
+    <string name="note_page.image_gallery">Kép a gallériából</string>
+    <string name="note_page.image_camera">Fotó készítése</string>
+    <string name="note_page.drawing">Rajz hozzáadása</string>
+    <string name="note_page.added_favourites">Feljegyzés hozzáadva a kedvencekhez</string>
+    <string name="note_page.removed_favourites">Feljegyzés eltávolítva a kedvencek közül</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Beállítások</string>
+    <string name="settings.personalization.title">Testreszabás</string>
+    <string name="settings.personalization.theme_mode">Téma mód</string>
+    <string name="settings.personalization.theme_mode.system">Rendszer</string>
+    <string name="settings.personalization.theme_mode.light">Világos</string>
+    <string name="settings.personalization.theme_mode.dark">Sötét</string>
+    <string name="settings.personalization.use_amoled">Sötét téma használata</string>
+    <string name="settings.personalization.use_custom_accent">Rendszertéma alapján</string>
+    <string name="settings.personalization.custom_accent">Egyéni szín választása</string>
+    <string name="settings.personalization.use_grid">Rács megjelenítes a feljegyzésekhez</string>
+    <string name="settings.personalization.locale">Helyszín</string>
+    <string name="settings.privacy.title">Adatvédelem</string>
+    <string name="settings.privacy.use_master_pass">Mesterjelszó használata</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Figyelmeztetés : Ha a jövőben elfelejted a jelszavadat nem tudod visszaállítani , újra kell telepítened az alkalmazást , a biztonság kedvéért írja fel jelszavát valahova.</string>
+    <string name="settings.privacy.modify_master_pass">Modificar palavra passe</string>
+    <string name="settings.info.title">Tudnivaló</string>
+    <string name="settings.info.about_app">A PotatoNotes - ről</string>
+    <string name="settings.debug.title">Hibakeresés</string>
+    <string name="settings.debug.show_setup_screen">A beállítás menü megjelenítése következő indításkor</string>
+    <string name="settings.debug.clear_database">Databázis kitisztítása</string>
+    <string name="settings.debug.migrate_database">Databázis költöztetése</string>
+    <string name="settings.debug.log_level">Naplózási szint</string>
+
+    <!-- About page -->
+    <string name="about.title">Configurações</string>
+    <string name="about.pwa_version">Versão do PWA</string>
+    <string name="about.links">Links</string>
+    <string name="about.contributors">Colaboradores</string>
+    <string name="about.contributors.hrx">Desenvolvedor chefe e designer do aplicativo</string>
+    <string name="about.contributors.bas">Sincronizar API e app</string>
+    <string name="about.contributors.nico">Sincronizar API</string>
+    <string name="about.contributors.kat">API de sincronização antiga</string>
+    <string name="about.contributors.rohit">Ilustrações e cores de notas</string>
+    <string name="about.contributors.rshbfn">Ícone do aplicativo e cor de destaque</string>
+
+    <!-- Search page -->
+    <string name="search.textbox_hint">Pesquisar</string>
+    <string name="search.tag_create_hint">Criar etiqueta \"%s\"</string>
+    <string name="search.note.type_to_search">Digite para iniciar a pesquisa</string>
+    <string name="search.note.nothing_found">Nada encontrado...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Preto</string>
+    <string name="drawing.exit_prompt">Qualquer alteração não salva será perdida, tem certeza que quer sair?</string>
+    <string name="drawing.tools.brush">Pincel</string>
+    <string name="drawing.tools.eraser">Borracha</string>
+    <string name="drawing.tools.marker">Marcador</string>
+    <string name="drawing.tools.color_picker">Cor</string>
+    <string name="drawing.tools.radius_picker">Raio</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Comece agora! :)</string>
+    <string name="setup.button.finish">Finalizar</string>
+    <string name="setup.button.next">Próxima</string>
+    <string name="setup.button.back">Voltar</string>
+    <string name="setup.basic_customization.title">Personalizações Básicas</string>
+    <string name="setup.welcome.catchphrase">O seu novo app de notas favorito</string>
+    <string name="setup.finish.title">Tudo pronto!</string>
+    <string name="setup.finish.last_words">Agora você está pronto para desfrutar do PotatoNotes ao máximo. \nSe você deseja customizar mais, vá para a página de configurações na gaveta lateral, ao invés disso, se você quiser gerenciar sua conta do PotatoSync, clique em seu avatar na barra superior.</string>
+</resources>

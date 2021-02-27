@@ -1,0 +1,170 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Откажи</string>
+    <string name="common.reset">Ресет</string>
+    <string name="common.restore">Враћање</string>
+    <string name="common.confirm">Потврди</string>
+    <string name="common.save">Сними</string>
+    <string name="common.delete">Избриши</string>
+    <string name="common.undo">Опозови</string>
+    <string name="common.redo">Понови</string>
+    <string name="common.edit">Измени</string>
+    <string name="common.go_on">Настави даље</string>
+    <string name="common.exit">Излаз</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s од %s</string>
+    <string name="common.new_note">Нова белешка</string>
+    <string name="common.new_list">Нова листа</string>
+    <string name="common.new_image">Нова слика</string>
+    <string name="common.new_drawing">Нови цртеж</string>
+    <string name="common.biometrics_prompt">Потврди биометрију</string>
+    <string name="common.master_pass.modify">Измени матичну шифру</string>
+    <string name="common.master_pass.confirm">Потврди матичну шифру</string>
+    <string name="common.are_you_sure">Да ли сте сигурни?</string>
+    <string name="common.case_sensitive">Разликовање малих/великих слова</string>
+    <string name="common.color_filter">Филтер боје</string>
+    <string name="common.date_filter">Филтер датума</string>
+    <string name="common.date_filter_mode">Начин филтрирања</string>
+    <string name="common.date_filter_mode.after">После датума</string>
+    <string name="common.date_filter_mode.exact">Тачан датум</string>
+    <string name="common.date_filter_mode.before">Пре датума</string>
+    <string name="common.color.none">Ниједна</string>
+    <string name="common.color.red">Црвена</string>
+    <string name="common.color.orange">Наранџаста</string>
+    <string name="common.color.yellow">Жута</string>
+    <string name="common.color.green">Зелена</string>
+    <string name="common.color.cyan">Тиркизна</string>
+    <string name="common.color.light_blue">Светло плава</string>
+    <string name="common.color.blue">Плава</string>
+    <string name="common.color.purple">Љубичаста</string>
+    <string name="common.color.pink">Розе</string>
+    <string name="common.notification.default_title">Закачено обавештење</string>
+    <string name="common.notification.details_title">Закачена обавештења</string>
+    <string name="common.notification.details_desc">Закачена обавештења од стране корисника</string>
+    <string name="common.tag.new">Нова ознака</string>
+    <string name="common.tag.modify">Измени ознаку</string>
+    <string name="common.tag.textbox_hint">Назив</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Подешавања</string>
+    <string name="main_page.search">Претрага</string>
+    <string name="main_page.account">Налог</string>
+    <string name="main_page.restore_prompt.archive">Да ли желите да повратите све белешке из архиве?</string>
+    <string name="main_page.restore_prompt.trash">Да ли желите да повратите све белешке из отпада?</string>
+    <string name="main_page.tag_delete_prompt">Ако обришете ову ознаку биће трајно изгубљена</string>
+    <string name="main_page.deleted_empty_note">Празна белешка је обрисана</string>
+    <string name="main_page.empty_state.home">Још нема белешки</string>
+    <string name="main_page.empty_state.archive">Архива је празна</string>
+    <string name="main_page.empty_state.trash">Отпад је празан</string>
+    <string name="main_page.empty_state.favourites">Тренутно нема омиљених</string>
+    <string name="main_page.empty_state.tag">Нема белешки са овом ознаком</string>
+    <string name="main_page.title.home">Почетна</string>
+    <string name="main_page.title.archive">Архива</string>
+    <string name="main_page.title.trash">Отпад</string>
+    <string name="main_page.title.favourites">Омиљени</string>
+    <string name="main_page.title.tag">Ознака</string>
+    <string name="main_page.title.all">Све</string>
+    <string name="main_page.selection_bar.close">Затвори</string>
+    <string name="main_page.selection_bar.add_favourites">Додај у омиљене</string>
+    <string name="main_page.selection_bar.remove_favourites">Избаци из омиљених</string>
+    <string name="main_page.selection_bar.change_color">Промени боју</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Архива</string>
+    <string name="main_page.selection_bar.delete">Премести у отпад</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Закачи</string>
+    <string name="main_page.selection_bar.share">Подели</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s белешка је премештена у отпад</item>
+        <item quantity="few">%s белешке су премештене у отпад</item>
+        <item quantity="other">%s белешке су премештене у отпад</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">Архивирана %s белешка</item>
+        <item quantity="few">Архивирано %s белешки</item>
+        <item quantity="other">Архивиране %s белешке</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">Враћена %s белешка</item>
+        <item quantity="few">Враћено %s белешки</item>
+        <item quantity="other">Враћене %s белешке</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Наслов</string>
+    <string name="note_page.content_hint">Садржај</string>
+    <string name="note_page.list_item_hint">Унос</string>
+    <string name="note_page.add_entry_hint">Додај унос</string>
+    <string name="note_page.toolbar.tags">Управљање ознакама</string>
+    <string name="note_page.toolbar.color">Промени боју</string>
+    <string name="note_page.toolbar.add_item">Додај ставку</string>
+    <string name="note_page.privacy.title">Опције поверљивости</string>
+    <string name="note_page.privacy.hide_content">Сакриј садржај на почетној страни</string>
+    <string name="note_page.privacy.lock_note">Закључај белешку</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Потребно је поставити матичну шифру</string>
+    <string name="note_page.privacy.use_biometrics">Користи биометријско откључавање</string>
+    <string name="note_page.toggle_list">Прекидач листе</string>
+    <string name="note_page.image_gallery">Слика из галерије</string>
+    <string name="note_page.image_camera">Додај слику</string>
+    <string name="note_page.drawing">Додај цртеж</string>
+    <string name="note_page.added_favourites">Белешка додата у омиљене</string>
+    <string name="note_page.removed_favourites">Белешка уклоњена из омиљених</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Подешавања</string>
+    <string name="settings.personalization.title">Прилагођавање</string>
+    <string name="settings.personalization.theme_mode">Мод теме</string>
+    <string name="settings.personalization.theme_mode.system">Систем</string>
+    <string name="settings.personalization.theme_mode.light">Светла</string>
+    <string name="settings.personalization.theme_mode.dark">Тамна</string>
+    <string name="settings.personalization.use_amoled">Користи црну тему</string>
+    <string name="settings.personalization.use_custom_accent">Прати системску тему</string>
+    <string name="settings.personalization.custom_accent">Одабери своју тему</string>
+    <string name="settings.personalization.use_grid">Мрежна листа белешки</string>
+    <string name="settings.personalization.locale">Локални језик апликације</string>
+    <string name="settings.privacy.title">Приватност</string>
+    <string name="settings.privacy.use_master_pass">Користи матичну шифру</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Упозорење: Уколико заборавите шифру, није могуће ресетовати је. Мораћете да деинсталирате апликацију, што ће обрисати све ваше белешке. Молимо вас запишите шифру негде.</string>
+    <string name="settings.privacy.modify_master_pass">Измени матичну шифру</string>
+    <string name="settings.info.title">Инфо</string>
+    <string name="settings.info.about_app">О апликацији PotatoNotes</string>
+    <string name="settings.debug.title">Отклањање грешака</string>
+    <string name="settings.debug.show_setup_screen">Прикажи екран за поставке при следећем укључивању</string>
+    <string name="settings.debug.clear_database">Очисти базу података</string>
+    <string name="settings.debug.migrate_database">Миграција базе података</string>
+    <string name="settings.debug.log_level">Ниво бележења</string>
+
+    <!-- About page -->
+    <string name="about.title">Подешавања</string>
+    <string name="about.pwa_version">Верзија PWA</string>
+    <string name="about.links">Линкови</string>
+    <string name="about.contributors">Допринели развоју</string>
+    <string name="about.contributors.hrx">Главни програмер и дизајнер апликације</string>
+    <string name="about.contributors.bas">API синхронизације и апликације</string>
+    <string name="about.contributors.nico">API синхронизације</string>
+    <string name="about.contributors.kat">Стари API синхронизације</string>
+    <string name="about.contributors.rohit">Илустрације и боје нотеса</string>
+    <string name="about.contributors.rshbfn">Икона апликације и главни акценат</string>
+
+    <!-- Search page -->
+    <string name="search.textbox_hint">Претрага</string>
+    <string name="search.tag_create_hint">Креирај ознаку \"%s\"</string>
+    <string name="search.note.type_to_search">Откуцај за претрагу</string>
+    <string name="search.note.nothing_found">Ништа није пронађено...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Црна</string>
+    <string name="drawing.exit_prompt">Несачуване промене ће бити изгубљене. Да ли желите да изађете?</string>
+    <string name="drawing.tools.brush">Четкица</string>
+    <string name="drawing.tools.eraser">Гумица</string>
+    <string name="drawing.tools.marker">Маркер</string>
+    <string name="drawing.tools.color_picker">Боја</string>
+    <string name="drawing.tools.radius_picker">Полупречник</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Први кораци</string>
+    <string name="setup.button.finish">Крај</string>
+    <string name="setup.button.next">Даље</string>
+    <string name="setup.button.back">Назад</string>
+    <string name="setup.basic_customization.title">Основно прилагођавање</string>
+    <string name="setup.welcome.catchphrase">Ваша нова омиљена апликација за белешке</string>
+    <string name="setup.finish.title">Све је спремно!</string>
+    <string name="setup.finish.last_words">Сада сте у потпуности спремни да користите PotatoNotes апликацију. \nУколико желите да прилагодите апликацију вашим потребама, можете наћи страницу са подешавањима у бочном менију, а вашим PotatoSync налогом можете управљати притиском на вашу слику у горњем делу.</string>
+</resources>

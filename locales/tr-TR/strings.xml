@@ -1,0 +1,167 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Vazgeç</string>
+    <string name="common.reset">Sıfırla</string>
+    <string name="common.restore">Geri yükle</string>
+    <string name="common.confirm">Onayla</string>
+    <string name="common.save">Kaydet</string>
+    <string name="common.delete">Sil</string>
+    <string name="common.undo">Geri al</string>
+    <string name="common.redo">Yinele</string>
+    <string name="common.edit">Düzenle</string>
+    <string name="common.go_on">Devam Et</string>
+    <string name="common.exit">Çık</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s/%s</string>
+    <string name="common.new_note">Yeni not</string>
+    <string name="common.new_list">Yeni liste</string>
+    <string name="common.new_image">Yeni resim</string>
+    <string name="common.new_drawing">Yeni çizim</string>
+    <string name="common.biometrics_prompt">Biyometrik verileri doğrula</string>
+    <string name="common.master_pass.modify">Ana parolayı düzenle</string>
+    <string name="common.master_pass.confirm">Ana parolayı onayla</string>
+    <string name="common.are_you_sure">Emin misin?</string>
+    <string name="common.case_sensitive">Büyük/küçük harf duyarlı</string>
+    <string name="common.color_filter">Renk filtresi</string>
+    <string name="common.date_filter">Tarih filtresi</string>
+    <string name="common.date_filter_mode">Filtre modu</string>
+    <string name="common.date_filter_mode.after">Tarihten sonra</string>
+    <string name="common.date_filter_mode.exact">Tam tarih</string>
+    <string name="common.date_filter_mode.before">Tarihinden önce</string>
+    <string name="common.color.none">Hiçbiri</string>
+    <string name="common.color.red">Kırmızı</string>
+    <string name="common.color.orange">Turuncu</string>
+    <string name="common.color.yellow">Sarı</string>
+    <string name="common.color.green">Yeşil</string>
+    <string name="common.color.cyan">Camgöbeği</string>
+    <string name="common.color.light_blue">Açık mavi</string>
+    <string name="common.color.blue">Mavi</string>
+    <string name="common.color.purple">Mor</string>
+    <string name="common.color.pink">Pembe</string>
+    <string name="common.notification.default_title">Sabitlenmiş bildirim</string>
+    <string name="common.notification.details_title">Sabitlenmiş bildirimler</string>
+    <string name="common.notification.details_desc">Kullanıcı tarafından sabitlenmiş bildirimler</string>
+    <string name="common.tag.new">Yeni etiket</string>
+    <string name="common.tag.modify">Etiketi düzenle</string>
+    <string name="common.tag.textbox_hint">İsim</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Ayarlar</string>
+    <string name="main_page.search">Ara</string>
+    <string name="main_page.account">Hesap</string>
+    <string name="main_page.restore_prompt.archive">Arşivdeki her bir notu geri yüklemek istiyor musun?</string>
+    <string name="main_page.restore_prompt.trash">Çöpteki her bir notu geri yüklemek istiyor musun?</string>
+    <string name="main_page.tag_delete_prompt">Silersen bu etiket sonsuza kadar kaybolacak</string>
+    <string name="main_page.deleted_empty_note">Boş not silindi</string>
+    <string name="main_page.empty_state.home">Henüz hiçbir not eklenmedi</string>
+    <string name="main_page.empty_state.archive">Arşiv boş</string>
+    <string name="main_page.empty_state.trash">Çöp kutusu boş</string>
+    <string name="main_page.empty_state.favourites">Şimdilik favori yok</string>
+    <string name="main_page.empty_state.tag">Bu etiketle not yok</string>
+    <string name="main_page.title.home">Ana Sayfa</string>
+    <string name="main_page.title.archive">Arşiv</string>
+    <string name="main_page.title.trash">Çöp Kutusu</string>
+    <string name="main_page.title.favourites">Favoriler</string>
+    <string name="main_page.title.tag">Etiket</string>
+    <string name="main_page.title.all">Tümü</string>
+    <string name="main_page.selection_bar.close">Kapat</string>
+    <string name="main_page.selection_bar.add_favourites">Favorilere ekle</string>
+    <string name="main_page.selection_bar.remove_favourites">Favorilerden kaldır</string>
+    <string name="main_page.selection_bar.change_color">Rengi değiştir</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Arşiv</string>
+    <string name="main_page.selection_bar.delete">Çöp kutusuna taşı</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Sabitle</string>
+    <string name="main_page.selection_bar.share">Paylaş</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s not çöpe taşındı</item>
+        <item quantity="other">%s not çöpe taşındı</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">%s not arşivlendi</item>
+        <item quantity="other">%s not arşivlendi</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">%s not geri yüklendi</item>
+        <item quantity="other">%s not geri yüklendi</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Başlık</string>
+    <string name="note_page.content_hint">İçerik</string>
+    <string name="note_page.list_item_hint">Girdi</string>
+    <string name="note_page.add_entry_hint">Girdi ekle</string>
+    <string name="note_page.toolbar.tags">Etiketleri yönet</string>
+    <string name="note_page.toolbar.color">Rengi değiştir</string>
+    <string name="note_page.toolbar.add_item">Öğe ekle</string>
+    <string name="note_page.privacy.title">Gizlilik seçenekleri</string>
+    <string name="note_page.privacy.hide_content">Ana sayfada içeriği gizle</string>
+    <string name="note_page.privacy.lock_note">Notu kilitle</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Ayarlardan ana parola ayarlaman gerekiyor</string>
+    <string name="note_page.privacy.use_biometrics">Kilidi açmak için biyometrik verileri Kullan</string>
+    <string name="note_page.toggle_list">Listeyi aç/kapat</string>
+    <string name="note_page.image_gallery">Galeriden resim</string>
+    <string name="note_page.image_camera">Fotoğraf çek</string>
+    <string name="note_page.drawing">Çizim ekle</string>
+    <string name="note_page.added_favourites">Not favorilere eklendi</string>
+    <string name="note_page.removed_favourites">Not favorilerden kaldırıldı</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Ayarlar</string>
+    <string name="settings.personalization.title">Kişiselleştirme</string>
+    <string name="settings.personalization.theme_mode">Tema modu</string>
+    <string name="settings.personalization.theme_mode.system">Sistem</string>
+    <string name="settings.personalization.theme_mode.light">Açık</string>
+    <string name="settings.personalization.theme_mode.dark">Koyu</string>
+    <string name="settings.personalization.use_amoled">Siyah temayı kullan</string>
+    <string name="settings.personalization.use_custom_accent">Sistem vurgu rengini kullan</string>
+    <string name="settings.personalization.custom_accent">Özel vurgu rengi seç</string>
+    <string name="settings.personalization.use_grid">Notlar için ızgara görünümü</string>
+    <string name="settings.personalization.locale">Uygulama dili</string>
+    <string name="settings.privacy.title">Gizlilik</string>
+    <string name="settings.privacy.use_master_pass">Ana parola kullan</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Uyarı: Eğer parolayı unutursan sıfırlayamazsın, uygulamayı kaldırman, dolayısıyla tüm notları silinmiş olarak bulman, ve geri yüklemen gerekecek. Lütfen onu bir yerlere yaz.</string>
+    <string name="settings.privacy.modify_master_pass">Ana parolayı düzenle</string>
+    <string name="settings.info.title">Bilgi</string>
+    <string name="settings.info.about_app">PotatoNotes hakkında</string>
+    <string name="settings.debug.title">Hata ayıklama</string>
+    <string name="settings.debug.show_setup_screen">Bir sonraki açılışta kurulum ekranını göster</string>
+    <string name="settings.debug.clear_database">Veritabanını Temizle</string>
+    <string name="settings.debug.migrate_database">Veritabanını transfer et</string>
+    <string name="settings.debug.log_level">Kayıt düzeyi</string>
+
+    <!-- About page -->
+    <string name="about.title">Ayarlar</string>
+    <string name="about.pwa_version">PWA sürümü</string>
+    <string name="about.links">Bağlantılar</string>
+    <string name="about.contributors">Katkıda Bulunanlar</string>
+    <string name="about.contributors.hrx">Baş geliştirici ve uygulama tasarımı</string>
+    <string name="about.contributors.bas">Senkronizasyon API\'si ve uygulaması</string>
+    <string name="about.contributors.nico">Senkronizasyon API\'si</string>
+    <string name="about.contributors.kat">Eski senkronizasyon API\'si</string>
+    <string name="about.contributors.rohit">Çizimler ve not renkleri</string>
+    <string name="about.contributors.rshbfn">Uygulama simgesi ve ana vurgu</string>
+
+    <!-- Search page -->
+    <string name="search.textbox_hint">Ara</string>
+    <string name="search.tag_create_hint">\"%s\" isimli etiket oluşturuldu</string>
+    <string name="search.note.type_to_search">Aramaya başlamak için yazın</string>
+    <string name="search.note.nothing_found">Hiçbir şey bulunamadı...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Siyah</string>
+    <string name="drawing.exit_prompt">Kaydedilmeyen tüm değişikler kaybolacak. Çıkmak istiyor musun?</string>
+    <string name="drawing.tools.brush">Fırça</string>
+    <string name="drawing.tools.eraser">Silgi</string>
+    <string name="drawing.tools.marker">Fosforlu kalem</string>
+    <string name="drawing.tools.color_picker">Renk</string>
+    <string name="drawing.tools.radius_picker">Çap</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Başlarken</string>
+    <string name="setup.button.finish">Bitir</string>
+    <string name="setup.button.next">Sonraki</string>
+    <string name="setup.button.back">Geri</string>
+    <string name="setup.basic_customization.title">Temel kişiselleştirme</string>
+    <string name="setup.welcome.catchphrase">Yeni favori notlar uygulaman</string>
+    <string name="setup.finish.title">Her şey tamam!</string>
+    <string name="setup.finish.last_words">Şimdi PotatoNotes\'un tadını tamamen çıkarabilirsin. \nEğer daha fazla kişiselleştirmek istiyorsan yan panelden ayarlar sayfasına başvur, onun yerine PotatoSync hesabını yönetmek istiyorsan üst çubuktaki profil resmine tıkla.</string>
+</resources>

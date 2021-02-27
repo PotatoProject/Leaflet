@@ -155,8 +155,8 @@
     <!-- Search page-->
     <string name="search.textbox_hint">Search</string>
     <string name="search.tag_create_hint">Create tag \"%s\"</string>
-    <string name="search.note_page.type_to_search">Type to start searching</string>
-    <string name="search.note_page.nothing_found">Nothing found...</string>
+    <string name="search.type_to_search">Type to start searching</string>
+    <string name="search.nothing_found">Nothing found...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Black</string>

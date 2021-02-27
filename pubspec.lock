@@ -221,9 +221,11 @@ packages:
   easy_localization:
     dependency: "direct main"
     description:
-      path: "../easy_localization"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: e335c64539e6f08b665be9c047936ebb74813abf
+      url: "https://github.com/HrX03/easy_localization"
+    source: git
     version: "3.0.0"
   easy_logger:
     dependency: transitive

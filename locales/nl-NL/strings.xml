@@ -1,0 +1,167 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Annuleer</string>
+    <string name="common.reset">Reset</string>
+    <string name="common.restore">Herstel</string>
+    <string name="common.confirm">Bevestig</string>
+    <string name="common.save">Opslaan</string>
+    <string name="common.delete">Verwijder</string>
+    <string name="common.undo">Herstel</string>
+    <string name="common.redo">Opnieuw</string>
+    <string name="common.edit">Bewerken</string>
+    <string name="common.go_on">Ga verder</string>
+    <string name="common.exit">Afsluiten</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s van %s</string>
+    <string name="common.new_note">Nieuwe notitie</string>
+    <string name="common.new_list">Nieuwe lijst</string>
+    <string name="common.new_image">Nieuwe afbeelding</string>
+    <string name="common.new_drawing">Nieuwe tekening</string>
+    <string name="common.biometrics_prompt">Biometrische gegevens bevestigen</string>
+    <string name="common.master_pass.modify">Wijzig hoofdwachtwoord</string>
+    <string name="common.master_pass.confirm">Bevestig het hoofdwachtwoord</string>
+    <string name="common.are_you_sure">Weet je het zeker?</string>
+    <string name="common.case_sensitive">Hoofdlettergevoelig</string>
+    <string name="common.color_filter">Kleur filter</string>
+    <string name="common.date_filter">Datum filter</string>
+    <string name="common.date_filter_mode">Filter modus</string>
+    <string name="common.date_filter_mode.after">Na datum</string>
+    <string name="common.date_filter_mode.exact">Exacte datum</string>
+    <string name="common.date_filter_mode.before">Voor datum</string>
+    <string name="common.color.none">Geen</string>
+    <string name="common.color.red">Rood</string>
+    <string name="common.color.orange">Oranje</string>
+    <string name="common.color.yellow">Geel</string>
+    <string name="common.color.green">Groen</string>
+    <string name="common.color.cyan">Cyaan</string>
+    <string name="common.color.light_blue">Lichtblauw</string>
+    <string name="common.color.blue">Blauw</string>
+    <string name="common.color.purple">Paars</string>
+    <string name="common.color.pink">Roze</string>
+    <string name="common.notification.default_title">Vastgezette melding</string>
+    <string name="common.notification.details_title">Vastgezette meldingen</string>
+    <string name="common.notification.details_desc">Door de gebruiker vastgezette meldingen</string>
+    <string name="common.tag.new">Nieuw label</string>
+    <string name="common.tag.modify">Wijzig label</string>
+    <string name="common.tag.textbox_hint">Naam</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Instellingen</string>
+    <string name="main_page.search">Zoeken</string>
+    <string name="main_page.account">Account</string>
+    <string name="main_page.restore_prompt.archive">Wil je alle notities in het archief terugzetten?</string>
+    <string name="main_page.restore_prompt.trash">Wil je alle notities in de prullenbak herstellen?</string>
+    <string name="main_page.tag_delete_prompt">Dit label zal voor altijd verloren gaan als je het verwijdert</string>
+    <string name="main_page.deleted_empty_note">Lege notitie verwijderd</string>
+    <string name="main_page.empty_state.home">Er zijn nog geen notities toegevoegd</string>
+    <string name="main_page.empty_state.archive">Het archief is leeg</string>
+    <string name="main_page.empty_state.trash">De prullenbak is leeg</string>
+    <string name="main_page.empty_state.favourites">Nog geen favorieten</string>
+    <string name="main_page.empty_state.tag">Geen notities met dit label</string>
+    <string name="main_page.title.home">Home</string>
+    <string name="main_page.title.archive">Archief</string>
+    <string name="main_page.title.trash">Prullenbak</string>
+    <string name="main_page.title.favourites">Favorieten</string>
+    <string name="main_page.title.tag">Label</string>
+    <string name="main_page.title.all">Alles</string>
+    <string name="main_page.selection_bar.close">Sluiten</string>
+    <string name="main_page.selection_bar.add_favourites">Voeg toe aan favorieten</string>
+    <string name="main_page.selection_bar.remove_favourites">Verwijder uit favorieten</string>
+    <string name="main_page.selection_bar.change_color">Kleur wijzigen</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archief</string>
+    <string name="main_page.selection_bar.delete">Naar prullenbak verplaatsen</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Vastzetten</string>
+    <string name="main_page.selection_bar.share">Deel</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s notitie verplaatst naar de prullenbak</item>
+        <item quantity="other">%s notities verplaatst naar de prullenbak</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">%s notitie gearchiveerd</item>
+        <item quantity="other">%s notities gearchiveerd</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">%s notitie hersteld</item>
+        <item quantity="other">%s notities hersteld</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Titel</string>
+    <string name="note_page.content_hint">Inhoud</string>
+    <string name="note_page.list_item_hint">Inhoud</string>
+    <string name="note_page.add_entry_hint">Voeg item toe</string>
+    <string name="note_page.toolbar.tags">Labels beheren</string>
+    <string name="note_page.toolbar.color">Kleur wijzigen</string>
+    <string name="note_page.toolbar.add_item">Item toevoegen</string>
+    <string name="note_page.privacy.title">Privacy opties</string>
+    <string name="note_page.privacy.hide_content">Verberg inhoud op hoofdpagina</string>
+    <string name="note_page.privacy.lock_note">Notitie vergrendelen</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Je moet een hoofdwachtwoord instellen vanuit instellingen</string>
+    <string name="note_page.privacy.use_biometrics">Biometrie gebruiken om te ontgrendelen</string>
+    <string name="note_page.toggle_list">Checklist</string>
+    <string name="note_page.image_gallery">Afbeelding uit galerij</string>
+    <string name="note_page.image_camera">Maak een foto</string>
+    <string name="note_page.drawing">Voeg tekening toe</string>
+    <string name="note_page.added_favourites">Notitie toegevoegd aan favorieten</string>
+    <string name="note_page.removed_favourites">Notitie verwijderd uit favorieten</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Instellingen</string>
+    <string name="settings.personalization.title">Personalisatie</string>
+    <string name="settings.personalization.theme_mode">Thema modus</string>
+    <string name="settings.personalization.theme_mode.system">Systeem</string>
+    <string name="settings.personalization.theme_mode.light">Licht</string>
+    <string name="settings.personalization.theme_mode.dark">Donker</string>
+    <string name="settings.personalization.use_amoled">Gebruik zwart thema</string>
+    <string name="settings.personalization.use_custom_accent">Volg systeemaccent</string>
+    <string name="settings.personalization.custom_accent">Kies een aangepast accent</string>
+    <string name="settings.personalization.use_grid">Rasterweergave voor notities</string>
+    <string name="settings.personalization.locale">App lokalisatie</string>
+    <string name="settings.privacy.title">Privacy</string>
+    <string name="settings.privacy.use_master_pass">Gebruik hoofdwachtwoord</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Waarschuwing: als je ooit het hoofdwacthwoord vergeet kun je deze niet opnieuw instellen, je moet de app verwijderen, zodat alle notities worden gewist, en opnieuw installeren. Schrijf het alstublieft ergens op.</string>
+    <string name="settings.privacy.modify_master_pass">Wijzig hoofdwachtwoord</string>
+    <string name="settings.info.title">Informatie</string>
+    <string name="settings.info.about_app">Over PotatoNotes</string>
+    <string name="settings.debug.title">Foutopsporing</string>
+    <string name="settings.debug.show_setup_screen">Configuratiescherm bij volgende start weergeven</string>
+    <string name="settings.debug.clear_database">Database wissen</string>
+    <string name="settings.debug.migrate_database">Database migreren</string>
+    <string name="settings.debug.log_level">Log niveau</string>
+
+    <!-- About page -->
+    <string name="about.title">Instellingen</string>
+    <string name="about.pwa_version">PWA versie</string>
+    <string name="about.links">Koppelingen</string>
+    <string name="about.contributors">Bijdragers</string>
+    <string name="about.contributors.hrx">Hoofdontwikkelaar en app ontwerp</string>
+    <string name="about.contributors.bas">Sync API en app</string>
+    <string name="about.contributors.nico">Sync API</string>
+    <string name="about.contributors.kat">Oude sync API</string>
+    <string name="about.contributors.rohit">Illustraties en notitie-kleuren</string>
+    <string name="about.contributors.rshbfn">App icoon en hoofdaccent</string>
+
+    <!-- Search page -->
+    <string name="search.textbox_hint">Zoeken</string>
+    <string name="search.tag_create_hint">Maak label \"%s\"</string>
+    <string name="search.note.type_to_search">Typ om te beginnen met zoeken</string>
+    <string name="search.note.nothing_found">Niets gevonden...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Zwart</string>
+    <string name="drawing.exit_prompt">Niet-opgeslagen wijzigingen zullen verloren gaan. Weet je zeker dat je wil afsluiten?</string>
+    <string name="drawing.tools.brush">Kwast</string>
+    <string name="drawing.tools.eraser">Gum</string>
+    <string name="drawing.tools.marker">Markeerstift</string>
+    <string name="drawing.tools.color_picker">Kleur</string>
+    <string name="drawing.tools.radius_picker">Straal</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Aan de slag</string>
+    <string name="setup.button.finish">Voltooi</string>
+    <string name="setup.button.next">Volgende</string>
+    <string name="setup.button.back">Terug</string>
+    <string name="setup.basic_customization.title">Basis personalisatie</string>
+    <string name="setup.welcome.catchphrase">Je nieuwe favoriete app voor notities</string>
+    <string name="setup.finish.title">Klaar!</string>
+    <string name="setup.finish.last_words">Nu ben je klaar om maximaal van PotatoNotes te genieten. \nAls je verdere aanpassingen wilt doen ga dan naar de instellingen in het zijmenu, en als je jouw PotatoSync-account wilt beheren, klik je op jouw avatar in de bovenste balk.</string>
+</resources>

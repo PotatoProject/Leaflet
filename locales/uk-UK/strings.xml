@@ -1,0 +1,173 @@
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Скасувати</string>
+    <string name="common.reset">Скинути</string>
+    <string name="common.restore">Відновити</string>
+    <string name="common.confirm">Підтвердити</string>
+    <string name="common.save">Зберегти</string>
+    <string name="common.delete">Видалити</string>
+    <string name="common.undo">Відмінити</string>
+    <string name="common.redo">Повторити</string>
+    <string name="common.edit">Редагувати</string>
+    <string name="common.go_on">Продовжити</string>
+    <string name="common.exit">Вихід</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s із %s</string>
+    <string name="common.new_note">Нова нотатка</string>
+    <string name="common.new_list">Новий список</string>
+    <string name="common.new_image">Нове зображення</string>
+    <string name="common.new_drawing">Новий малюнок</string>
+    <string name="common.biometrics_prompt">Підтвердити біометрію</string>
+    <string name="common.master_pass.modify">Змінити майстер-пароль</string>
+    <string name="common.master_pass.confirm">Підтвердити майстер-пароль</string>
+    <string name="common.are_you_sure">Ви впевнені?</string>
+    <string name="common.case_sensitive">З урахуванням регістру</string>
+    <string name="common.color_filter">Колірний фільтр</string>
+    <string name="common.date_filter">По даті</string>
+    <string name="common.date_filter_mode">Режим фільтру</string>
+    <string name="common.date_filter_mode.after">Після дати</string>
+    <string name="common.date_filter_mode.exact">Точна дата</string>
+    <string name="common.date_filter_mode.before">До дати</string>
+    <string name="common.color.none">Ніякий</string>
+    <string name="common.color.red">Червоний</string>
+    <string name="common.color.orange">Помаранчевий</string>
+    <string name="common.color.yellow">Жовтий</string>
+    <string name="common.color.green">Зелений</string>
+    <string name="common.color.cyan">Блакитний</string>
+    <string name="common.color.light_blue">Cвітло-блакитний</string>
+    <string name="common.color.blue">Синій</string>
+    <string name="common.color.purple">Фіолетовий</string>
+    <string name="common.color.pink">Розовий</string>
+    <string name="common.notification.default_title">Закріплене сповіщення</string>
+    <string name="common.notification.details_title">Закріплені сповіщення</string>
+    <string name="common.notification.details_desc">Сповіщення закріплені користувачем</string>
+    <string name="common.tag.new">Новий тег</string>
+    <string name="common.tag.modify">Змінити тег</string>
+    <string name="common.tag.textbox_hint">Назва</string>
+
+    <!-- Main page -->
+    <string name="main_page.settings">Налаштування</string>
+    <string name="main_page.search">Пошук</string>
+    <string name="main_page.account">Профіль</string>
+    <string name="main_page.restore_prompt.archive">Бажаєте відновити всі нотатки в архіві?</string>
+    <string name="main_page.restore_prompt.trash">Бажаєте відновити всі нотатки в кошику?</string>
+    <string name="main_page.tag_delete_prompt">Цей тег буде втрачено назавжди при його видаленні</string>
+    <string name="main_page.deleted_empty_note">Пуста нотатка видалена</string>
+    <string name="main_page.empty_state.home">Поки що немає нотаток</string>
+    <string name="main_page.empty_state.archive">Архів порожній</string>
+    <string name="main_page.empty_state.trash">Кошик пустий</string>
+    <string name="main_page.empty_state.favourites">Поки що немає обраних</string>
+    <string name="main_page.empty_state.tag">Немає нотаток з цим тегом</string>
+    <string name="main_page.title.home">Головна</string>
+    <string name="main_page.title.archive">Архів</string>
+    <string name="main_page.title.trash">Кошик</string>
+    <string name="main_page.title.favourites">Обране</string>
+    <string name="main_page.title.tag">Тег</string>
+    <string name="main_page.title.all">Всі</string>
+    <string name="main_page.selection_bar.close">Закрити</string>
+    <string name="main_page.selection_bar.add_favourites">Додати до обраного</string>
+    <string name="main_page.selection_bar.remove_favourites">Видалити з обраного</string>
+    <string name="main_page.selection_bar.change_color">Змінити колір</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Архів</string>
+    <string name="main_page.selection_bar.delete">Перемістити у кошик</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Закріпити</string>
+    <string name="main_page.selection_bar.share">Поділитись</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s нотатка перенесена до кошику</item>
+        <item quantity="few">%s нотатки перенесено у кошик</item>
+        <item quantity="many">%s нотаток перенесено у кошик</item>
+        <item quantity="other">%s нотатки перенесено до кошику</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">Архівована %s нотатка</item>
+        <item quantity="few">Архівовано %s нотатки</item>
+        <item quantity="many">Архівовано %s нотаток</item>
+        <item quantity="other">Архівовано %s нотатки</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">Відновлена %s нотатка</item>
+        <item quantity="few">Відновлено %s нотатки</item>
+        <item quantity="many">Відновлено %s нотаток</item>
+        <item quantity="other">Відновлено %s нотатки</item>
+    </plurals>
+
+    <!-- Note page -->
+    <string name="note_page.title_hint">Заголовок</string>
+    <string name="note_page.content_hint">Вміст</string>
+    <string name="note_page.list_item_hint">Ввід</string>
+    <string name="note_page.add_entry_hint">Додати запис</string>
+    <string name="note_page.toolbar.tags">Керування тегами</string>
+    <string name="note_page.toolbar.color">Змінити колір</string>
+    <string name="note_page.toolbar.add_item">Додати елемент</string>
+    <string name="note_page.privacy.title">Налаштування приватності</string>
+    <string name="note_page.privacy.hide_content">Приховати вміст на головній сторінці</string>
+    <string name="note_page.privacy.lock_note">Заблокувати нотатку</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Ви повинні встановити головний пароль з налаштувань</string>
+    <string name="note_page.privacy.use_biometrics">Використовувати біометрику для розблокування</string>
+    <string name="note_page.toggle_list">Список</string>
+    <string name="note_page.image_gallery">Зображення з галереї</string>
+    <string name="note_page.image_camera">Зробити знімок</string>
+    <string name="note_page.drawing">Додати малюнок</string>
+    <string name="note_page.added_favourites">Нотатку додано до обраного</string>
+    <string name="note_page.removed_favourites">Нотатку видалено з обраного</string>
+
+    <!-- Settings page -->
+    <string name="settings.title">Налаштування</string>
+    <string name="settings.personalization.title">Персоналізація</string>
+    <string name="settings.personalization.theme_mode">Тема</string>
+    <string name="settings.personalization.theme_mode.system">Системна</string>
+    <string name="settings.personalization.theme_mode.light">Світла</string>
+    <string name="settings.personalization.theme_mode.dark">Темна</string>
+    <string name="settings.personalization.use_amoled">Використовувати чорну тему</string>
+    <string name="settings.personalization.use_custom_accent">Використовувати системний акцент</string>
+    <string name="settings.personalization.custom_accent">Вибрати свій акцент</string>
+    <string name="settings.personalization.use_grid">Сітка для нотаток</string>
+    <string name="settings.personalization.locale">Мова додатку</string>
+    <string name="settings.privacy.title">Приватність</string>
+    <string name="settings.privacy.use_master_pass">Використовувати головний пароль</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Увага: якщо ви забудете пароль, ви не зможете його скинути. Вам потрібно буде перевстановити додаток, що призведе до втрати даних. Будь ласка, запишіть його де-небудь.</string>
+    <string name="settings.privacy.modify_master_pass">Змінити майстер-пароль</string>
+    <string name="settings.info.title">Інформація</string>
+    <string name="settings.info.about_app">Про PotatoNotes</string>
+    <string name="settings.debug.title">Відладка</string>
+    <string name="settings.debug.show_setup_screen">Показати екран налаштувань при наступному запуску</string>
+    <string name="settings.debug.clear_database">Очистити базу даних</string>
+    <string name="settings.debug.migrate_database">Мігрувати базу даних</string>
+    <string name="settings.debug.log_level">Рівень логування</string>
+
+    <!-- About page -->
+    <string name="about.title">Налаштування</string>
+    <string name="about.pwa_version">Версія PWA</string>
+    <string name="about.links">Посилання</string>
+    <string name="about.contributors">Розробники</string>
+    <string name="about.contributors.hrx">Головний розробник та дизайнер</string>
+    <string name="about.contributors.bas">Синхронізація API з додатком</string>
+    <string name="about.contributors.nico">Синхронізація з API</string>
+    <string name="about.contributors.kat">Стара синхронізація з API</string>
+    <string name="about.contributors.rohit">Колір ілюстрацій та заміток</string>
+    <string name="about.contributors.rshbfn">Іконка додатка і головний акцент</string>
+
+    <!-- Search page -->
+    <string name="search.textbox_hint">Пошук</string>
+    <string name="search.tag_create_hint">Створити тег \"%s\"</string>
+    <string name="search.note.type_to_search">Наберіть, щоб розпочати пошук</string>
+    <string name="search.note.nothing_found">Нічого не знайдено...</string>
+
+    <!-- Draw page -->
+    <string name="drawing.color_black">Чорний</string>
+    <string name="drawing.exit_prompt">Всі незбережені зміни буде втрачено. Бажаєте вийти?</string>
+    <string name="drawing.tools.brush">Кисть</string>
+    <string name="drawing.tools.eraser">Гумка</string>
+    <string name="drawing.tools.marker">Маркер</string>
+    <string name="drawing.tools.color_picker">Колір</string>
+    <string name="drawing.tools.radius_picker">Радіус</string>
+
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Розпочати</string>
+    <string name="setup.button.finish">Закінчити</string>
+    <string name="setup.button.next">Далі</string>
+    <string name="setup.button.back">Назад</string>
+    <string name="setup.basic_customization.title">Базове налаштування</string>
+    <string name="setup.welcome.catchphrase">Ваша нова улюблена програма для нотаток</string>
+    <string name="setup.finish.title">Готово!</string>
+    <string name="setup.finish.last_words">Тепер ви можете використовувати PotatoNotes на повну. \nЯкщо ви хочете ще щось налаштувати, то перейдіть в налаштування через бічне меню. А якщо хочете налаштувати PotatoSync, то наміть на аватар зверху головного меню.</string>
+</resources>

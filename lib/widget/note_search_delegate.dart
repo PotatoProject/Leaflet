@@ -44,12 +44,12 @@ class NoteSearchDelegate extends CustomSearchDelegate {
             ? Utils.quickIllustration(
                 context,
                 Illustration.typeToSearch(brightness: brightness),
-                LocaleStrings.search.notePageTypeToSearch,
+                LocaleStrings.search.typeToSearch,
               )
             : Utils.quickIllustration(
                 context,
                 Illustration.nothingFound(brightness: brightness),
-                LocaleStrings.search.notePageNothingFound,
+                LocaleStrings.search.nothingFound,
               );
         return NoteListWidget(
           itemBuilder: (context, index) => NoteView(
