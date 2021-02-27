@@ -23,7 +23,6 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_toolbar.dart';
 import 'package:potato_notes/widget/fake_appbar.dart';
-import 'package:potato_notes/widget/web_drawing_exporter.dart/shared.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
@@ -343,49 +342,41 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     final RenderRepaintBoundary box =
         _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
 
-    if (kIsWeb) {
-      drawing = await WebDrawingExporter.export(
-        widget.savedImage?.path,
-        _controller.objects,
-        box.size,
-      );
+    final ui.Image image = await box.toImage();
+    final ByteData byteData = await image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
+    final Uint8List pngBytes = byteData.buffer.asUint8List();
+    final DateTime now = DateTime.now();
+    final String timestamp = DateFormat(
+      "HH_mm_ss-MM_dd_yyyy",
+      context.locale.toLanguageTag(),
+    ).format(now);
+
+    final Directory drawingsDirectory = DeviceInfo.isDesktop
+        ? await getApplicationSupportDirectory()
+        : await getApplicationDocumentsDirectory();
+
+    print(drawingsDirectory);
+
+    drawing = "${drawingsDirectory.path}/drawing-$timestamp.png";
+    if (_filePath == null) {
+      _filePath = drawing;
     } else {
-      final ui.Image image = await box.toImage();
-      final ByteData byteData = await image.toByteData(
-        format: ui.ImageByteFormat.png,
-      );
-      final Uint8List pngBytes = byteData.buffer.asUint8List();
-      final DateTime now = DateTime.now();
-      final String timestamp = DateFormat(
-        "HH_mm_ss-MM_dd_yyyy",
-        context.locale.toLanguageTag(),
-      ).format(now);
-
-      final Directory drawingsDirectory = DeviceInfo.isDesktopOrWeb
-          ? await getApplicationSupportDirectory()
-          : await getApplicationDocumentsDirectory();
-
-      print(drawingsDirectory);
-
-      drawing = "${drawingsDirectory.path}/drawing-$timestamp.png";
-      if (_filePath == null) {
-        _filePath = drawing;
-      } else {
-        drawing = _filePath;
-      }
-
-      final File imgFile = File(drawing);
-      await imgFile.writeAsBytes(pngBytes, flush: true);
-      Loggy.d(message: drawing);
-
-      final SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
-      if (widget.savedImage != null) {
-        widget.note.images
-            .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);
-        savedImage.id = widget.savedImage.id;
-      }
-      widget.note.images.add(savedImage);
+      drawing = _filePath;
     }
+
+    final File imgFile = File(drawing);
+    await imgFile.writeAsBytes(pngBytes, flush: true);
+    Loggy.d(message: drawing);
+
+    final SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
+    if (widget.savedImage != null) {
+      widget.note.images
+          .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);
+      savedImage.id = widget.savedImage.id;
+    }
+    widget.note.images.add(savedImage);
     helper.saveNote(widget.note.markChanged());
 
     _controller.saved = true;

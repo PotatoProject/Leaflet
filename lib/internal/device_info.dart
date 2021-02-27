@@ -8,33 +8,19 @@ import 'package:mobx/mobx.dart';
 part 'device_info.g.dart';
 
 class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
-  static bool get isDesktopOrWeb {
-    if (kIsWeb) return true;
-
-    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) return true;
-
-    return false;
-  }
-
   static bool get isDesktop {
-    if (kIsWeb) return false;
-
     if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) return true;
 
     return false;
   }
 
   static bool get isAndroid {
-    if (kIsWeb) return false;
-
     if (Platform.isAndroid) return true;
 
     return false;
   }
 
   static bool get isMacOS {
-    if (kIsWeb) return false;
-
     if (Platform.isMacOS) return true;
 
     return false;
@@ -79,7 +65,7 @@ abstract class _DeviceInfoBase with Store {
 
   @action
   Future<void> _loadInitialData() async {
-    if (!DeviceInfo.isDesktopOrWeb) {
+    if (!DeviceInfo.isDesktop) {
       _canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
       _availableBiometricsValue =
           await LocalAuthentication().getAvailableBiometrics();

@@ -23,10 +23,10 @@ class KeyGenerator {
         File("${absoluteOutputDir.path}/locale_strings.g.dart");
 
     for (var element in files) {
-      if (element is File) {
+      if (element is Directory) {
         final String locale = getNameFromPath(element.path);
         locales.add(locale);
-        paths.add(element);
+        paths.add(File(element.path + "/strings.xml"));
       }
     }
 

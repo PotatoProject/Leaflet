@@ -15,7 +15,7 @@ import 'package:potato_notes/internal/sync/tag_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class SyncRoutine {
-  static const Set<String> settingsToSync = {
+  static const Set<String> _settingsToSync = {
     "custom_accent",
     "use_amoled",
     "use_grid",
@@ -23,14 +23,14 @@ class SyncRoutine {
   };
   static final SyncRoutine instance = SyncRoutine._();
 
-  final List<Note> localNotes = [];
-  final List<Note> addedNotes = [];
-  final List<Note> deletedNotes = [];
-  final Map<Note, Map<String, dynamic>> updatedNotes = {};
+  final List<Note> _localNotes = [];
+  final List<Note> _addedNotes = [];
+  final List<Note> _deletedNotes = [];
+  final Map<Note, Map<String, dynamic>> _updatedNotes = {};
   final List<Tag> localTags = [];
-  final List<Tag> addedTags = [];
-  final List<Tag> deletedTags = [];
-  final Map<Tag, Map<String, dynamic>> updatedTags = {};
+  final List<Tag> _addedTags = [];
+  final List<Tag> _deletedTags = [];
+  final Map<Tag, Map<String, dynamic>> _updatedTags = {};
 
   SyncRoutine._();
 
@@ -117,13 +117,13 @@ class SyncRoutine {
     // Fill the list of added, deleted and updated notes to create a local cache
     await _updateLists();
 
-    addedNotes.clear();
-    updatedNotes.clear();
-    deletedNotes.clear();
-    localNotes.clear();
-    addedTags.clear();
-    updatedTags.clear();
-    deletedTags.clear();
+    _addedNotes.clear();
+    _updatedNotes.clear();
+    _deletedNotes.clear();
+    _localNotes.clear();
+    _addedTags.clear();
+    _updatedTags.clear();
+    _deletedTags.clear();
     localTags.clear();
 
     await _updateLists();
@@ -142,13 +142,13 @@ class SyncRoutine {
       return false;
     }
 
-    addedNotes.clear();
-    updatedNotes.clear();
-    deletedNotes.clear();
-    localNotes.clear();
-    addedTags.clear();
-    updatedTags.clear();
-    deletedTags.clear();
+    _addedNotes.clear();
+    _updatedNotes.clear();
+    _deletedNotes.clear();
+    _localNotes.clear();
+    _addedTags.clear();
+    _updatedTags.clear();
+    _deletedTags.clear();
     localTags.clear();
 
     // Get the last time the client has updated
@@ -200,7 +200,7 @@ class SyncRoutine {
 
   Future<bool> _sendNoteUpdates() async {
     // Send the post requests to add new notes
-    for (Note note in addedNotes) {
+    for (Note note in _addedNotes) {
       if (await _addNote(note) == false) {
         return false;
       }
@@ -208,20 +208,20 @@ class SyncRoutine {
     // Get list of notes which should be deleted on the client since they are deleted on the remote server
     try {
       final List<String> deletedIdList = await NoteController.listDeleted(
-          localNotes.map((note) => note.id).toList());
+          _localNotes.map((note) => note.id).toList());
       deletedIdList.forEach((id) async {
-        final Note localNote = localNotes.firstWhere((note) => note.id == id);
+        final Note localNote = _localNotes.firstWhere((note) => note.id == id);
         await helper.deleteNote(localNote);
         await helper
             .deleteNote(localNote.copyWith(id: localNote.id + "-synced"));
-        updatedNotes.removeWhere((note, _delta) => note.id == localNote.id);
-        deletedNotes.removeWhere((note) => note.id == localNote.id);
+        _updatedNotes.removeWhere((note, _delta) => note.id == localNote.id);
+        _deletedNotes.removeWhere((note) => note.id == localNote.id);
       });
     } catch (e) {
       Loggy.e(message: e.toString());
       throw ("Failed to list deleted notes: " + e.toString());
     }
-    updatedNotes.forEach((note, delta) async {
+    _updatedNotes.forEach((note, delta) async {
       try {
         await NoteController.update(note.id, delta);
         await _saveSyncedNote(note);
@@ -230,7 +230,7 @@ class SyncRoutine {
         Loggy.e(message: e);
       }
     });
-    deletedNotes.forEach((note) async {
+    _deletedNotes.forEach((note) async {
       final String localNoteId = note.id.replaceFirst("-synced", "");
       try {
         await NoteController.delete(localNoteId);
@@ -246,7 +246,7 @@ class SyncRoutine {
 
   Future<bool> _sendTagUpdates() async {
     // Send the post requests to add new tags
-    for (Tag tag in addedTags) {
+    for (Tag tag in _addedTags) {
       try {
         await TagController.add(tag);
         await _saveSyncedTag(tag);
@@ -265,14 +265,14 @@ class SyncRoutine {
         await tagHelper.deleteTag(localTag);
         await tagHelper
             .deleteTag(localTag.copyWith(id: localTag.id + "-synced"));
-        updatedTags.removeWhere((tag, _delta) => tag.id == localTag.id);
-        deletedTags.removeWhere((tag) => tag.id == localTag.id);
+        _updatedTags.removeWhere((tag, _delta) => tag.id == localTag.id);
+        _deletedTags.removeWhere((tag) => tag.id == localTag.id);
       });
     } catch (e) {
       Loggy.e(message: e.toString());
       throw ("Failed to list deleted tags: " + e.toString());
     }
-    updatedTags.forEach((tag, delta) async {
+    _updatedTags.forEach((tag, delta) async {
       try {
         await TagController.update(tag.id, delta);
         await _saveSyncedTag(tag);
@@ -282,7 +282,7 @@ class SyncRoutine {
         throw ("Failed to update tags: " + e);
       }
     });
-    deletedTags.forEach((tag) async {
+    _deletedTags.forEach((tag) async {
       final String localTagId = tag.id.replaceFirst("-synced", "");
       try {
         await TagController.delete(localTagId);
@@ -335,7 +335,8 @@ class SyncRoutine {
     final List<String> keys = prefs.prefs.changedKeys;
 
     for (final String key in keys) {
-      if (settingsToSync.contains(key) && !changedSettings.keys.contains(key)) {
+      if (_settingsToSync.contains(key) &&
+          !changedSettings.keys.contains(key)) {
         try {
           Loggy.v(message: "Preparing to save $key");
           Object value = prefs.getFromCache(key);
@@ -374,28 +375,28 @@ class SyncRoutine {
   }
 
   Future<void> _updateLists() async {
-    localNotes.clear();
-    localNotes.addAll(await helper.listNotes(ReturnMode.LOCAL));
+    _localNotes.clear();
+    _localNotes.addAll(await helper.listNotes(ReturnMode.LOCAL));
     final List<Note> syncedNotes = await helper.listNotes(ReturnMode.SYNCED);
-    localNotes.forEach((localNote) {
+    _localNotes.forEach((localNote) {
       final int syncedIndex = syncedNotes.indexWhere(
           (syncedNote) => syncedNote.id == localNote.id + "-synced");
       if (syncedIndex == -1) {
-        addedNotes.add(localNote);
+        _addedNotes.add(localNote);
       } else {
         final Note syncedNote = syncedNotes.elementAt(syncedIndex);
         if (!localNote.synced) {
-          updatedNotes.putIfAbsent(
+          _updatedNotes.putIfAbsent(
               localNote, () => _getNoteDelta(localNote, syncedNote));
         }
       }
     });
     if (syncedNotes.length > 0) {
       syncedNotes.forEach((syncedNote) {
-        final int localIndex = localNotes.indexWhere(
+        final int localIndex = _localNotes.indexWhere(
             (localNote) => localNote.id + "-synced" == syncedNote.id);
         if (localIndex == -1) {
-          deletedNotes.add(syncedNote);
+          _deletedNotes.add(syncedNote);
         }
       });
     }
@@ -407,12 +408,12 @@ class SyncRoutine {
       final int syncedIndex = syncedTags
           .indexWhere((syncedTag) => syncedTag.id == (localTag.id + "-synced"));
       if (syncedIndex == -1) {
-        addedTags.add(localTag);
+        _addedTags.add(localTag);
       } else {
         final Tag syncedTag = syncedTags.elementAt(syncedIndex);
         if (syncedTag.lastModifyDate.millisecondsSinceEpoch <
             localTag.lastModifyDate.millisecondsSinceEpoch) {
-          updatedTags.putIfAbsent(
+          _updatedTags.putIfAbsent(
               localTag, () => _getTagDelta(localTag, syncedTag));
         }
       }
@@ -422,7 +423,7 @@ class SyncRoutine {
         final int localIndex = localTags
             .indexWhere((localTag) => localTag.id + "-synced" == syncedTag.id);
         if (localIndex == -1) {
-          deletedTags.add(syncedTag);
+          _deletedTags.add(syncedTag);
         }
       });
     }

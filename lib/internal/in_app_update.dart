@@ -48,7 +48,7 @@ class InAppUpdater {
 
   static void checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
-    if (DeviceInfo.isDesktopOrWeb) return;
+    if (DeviceInfo.isDesktop) return;
     final AppUpdateInfo updateInfo =
         await InAppUpdater._internalCheckForUpdate();
     if (updateInfo.updateAvailable) {

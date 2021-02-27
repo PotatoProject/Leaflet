@@ -89,7 +89,7 @@ class PotatoNotes extends StatelessWidget {
               Crayola.setTitleVisibility(false);
             }
 
-            if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
+            if (appInfo.quickActions == null && !DeviceInfo.isDesktop) {
               appInfo.quickActions = QuickActions();
 
               appInfo.quickActions.setShortcutItems([

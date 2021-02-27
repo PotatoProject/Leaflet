@@ -107,20 +107,18 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             icon: Icon(Icons.edit_outlined),
             padding: EdgeInsets.all(0),
             tooltip: LocaleStrings.common.edit,
-            onPressed: !kIsWeb
-                ? () async {
-                    await Utils.showSecondaryRoute(
-                      context,
-                      DrawPage(
-                        note: widget.note,
-                        savedImage: widget.note.images[currentPage],
-                      ),
-                      allowGestures: false,
-                    );
+            onPressed: () async {
+              await Utils.showSecondaryRoute(
+                context,
+                DrawPage(
+                  note: widget.note,
+                  savedImage: widget.note.images[currentPage],
+                ),
+                allowGestures: false,
+              );
 
-                    setState(() {});
-                  }
-                : null,
+              setState(() {});
+            },
           ),
           IconButton(
             icon: Icon(Icons.delete_outline),
