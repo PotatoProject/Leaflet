@@ -48,7 +48,7 @@ After that, building is simple as this:
 ## Generating locales
 After adding or updating the locales, run the following command from Leaflet root dir:
 ```
-dart bin/locale_gen.dart locales lib/internal/locales
+dart bin/locale_gen.dart
 ```
 
 This will generate and update the required files
