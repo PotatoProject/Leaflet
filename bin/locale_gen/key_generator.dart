@@ -7,12 +7,13 @@ import 'xml_file_parser.dart';
 class KeyGenerator {
   final String localeDir;
   final String outputDir;
+  final String defaultLocale;
 
-  KeyGenerator(this.localeDir, this.outputDir);
+  KeyGenerator(this.localeDir, this.outputDir, this.defaultLocale);
 
   Future<void> generate() async {
-    final List<String> locales = [];
-    final List<File> paths = [];
+    String locale;
+    File path;
     final Directory providedDir = Directory(localeDir);
     final Directory absoluteOutputDir = Directory(outputDir).absolute;
     final List<FileSystemEntity> files = providedDir.listSync();
@@ -24,14 +25,14 @@ class KeyGenerator {
 
     for (var element in files) {
       if (element is Directory) {
-        final String locale = getNameFromPath(element.path);
-        locales.add(locale);
-        paths.add(File(element.path + "/strings.xml"));
+        final String _locale = getNameFromPath(element.path);
+        if (_locale == defaultLocale) {
+          locale = _locale;
+          path = File(element.path + "/strings.xml");
+        }
       }
     }
 
-    final String locale = locales[0];
-    final File path = paths[0];
     final Map<String, Map<String, StringInfo>> result =
         await XmlFileParser.loadWithStringInfo(path, locale);
 
@@ -92,7 +93,9 @@ class KeyGenerator {
 }
 
 String getNameFromPath(String path) {
-  return path.split("/").last;
+  final List<String> splitPath =
+      Platform.isWindows ? path.split("\\") : path.split("/");
+  return splitPath.last.split(".").first;
 }
 
 String getClassNameFromLocale(String locale) {
