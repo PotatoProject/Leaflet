@@ -109,7 +109,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           child: Stack(
             fit: StackFit.passthrough,
             children: [
-              //Text(widget.note.toJson().toString()),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -159,15 +158,15 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   ),
                 ],
               ),
-              Positioned(
-                right: 0,
+              PositionedDirectional(
+                end: 0,
                 top: 0,
                 child: AnimatedOpacity(
                   opacity: showCheckbox ? 1 : 0,
                   duration: Duration(milliseconds: 200),
                   child: Container(
-                    alignment: Alignment.topRight,
-                    padding: EdgeInsets.only(top: 8, right: 8),
+                    alignment: AlignmentDirectional.topEnd,
+                    padding: EdgeInsetsDirectional.only(top: 8, end: 8),
                     height: 64,
                     width: 64,
                     clipBehavior: Clip.none,
@@ -176,7 +175,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         center: Alignment.topRight,
                         colors: [
                           Colors.grey[900].withOpacity(
-                            widget.note.images.isNotEmpty ? 0.6 : 0.2,
+                            widget.note.images.isNotEmpty ? 0.6 : 0,
                           ),
                           Colors.grey[900].withOpacity(0),
                         ],
@@ -188,12 +187,14 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                       child: NoteViewCheckbox(
                         value: widget.selected,
                         onChanged: widget.onCheckboxChanged,
-                        width: 20,
+                        width: 18,
                         splashRadius: 18,
-                        inactiveColor: checkBoxColor,
+                        inactiveColor: checkBoxColor.withOpacity(
+                          _hovered || widget.note.images.isNotEmpty ? 1.0 : 0.5,
+                        ),
                         activeColor: checkBoxColor,
                         checkColor: checkColor,
-                        shapeRadius: Radius.circular(4),
+                        shapeRadius: Radius.circular(2),
                       ),
                     ),
                   ),
