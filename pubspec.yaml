@@ -18,7 +18,8 @@ dependencies:
 
   crayola:
 
-  easy_localization: ^3.0.0
+  easy_localization:
+    path: https://github.com/HrX03/easy_localization
 
   file_picker:
   file_selector:

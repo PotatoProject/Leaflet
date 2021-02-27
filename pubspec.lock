@@ -221,9 +221,9 @@ packages:
   easy_localization:
     dependency: "direct main"
     description:
-      name: easy_localization
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../easy_localization"
+      relative: true
+    source: path
     version: "3.0.0"
   easy_logger:
     dependency: transitive

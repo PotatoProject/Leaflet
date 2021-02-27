@@ -282,33 +282,38 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   scrollable: true,
                   itemBuilder: (context, index) {
-                    final Locale locale = context.supportedLocales[index];
-                    final String nativeName = firstLetterToUppercase(
-                      localeNativeNames[locale.languageCode],
-                    );
-                    final bool selected = context.locale == locale;
+                    final Locale locale =
+                        index == 0 ? null : context.supportedLocales[index - 1];
+                    final String nativeName = locale != null
+                        ? firstLetterToUppercase(
+                            localeNativeNames[locale.languageCode],
+                          )
+                        : "Device default";
+                    final bool selected = context.savedLocale == locale;
 
                     return dropDownTile(
                       title: Text(nativeName),
                       selected: selected,
                       onTap: () {
-                        if (locale == context.deviceLocale) {
+                        if (locale == null) {
                           context.deleteSaveLocale();
-                          context.resetLocale();
                         } else {
                           context.setLocale(locale);
                         }
+                        setState(() {});
                         Navigator.pop(context);
                       },
                     );
                   },
-                  itemCount: context.supportedLocales.length,
+                  itemCount: context.supportedLocales.length + 1,
                 );
               },
               subtitle: Text(
-                firstLetterToUppercase(
-                  localeNativeNames[context.locale.languageCode],
-                ),
+                context.savedLocale != null
+                    ? firstLetterToUppercase(
+                        localeNativeNames[context.savedLocale.languageCode],
+                      )
+                    : "Device default",
               ),
             ),
             SettingsTile(
