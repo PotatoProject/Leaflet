@@ -51,6 +51,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
   @override
   Widget build(BuildContext context) {
     final Widget list = ListView(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       children: <Widget>[
         _DateFilterSelectorHeader(
@@ -93,51 +94,50 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
         ),
       ],
     );
-    final Widget base = Column(
-      mainAxisSize: MainAxisSize.min,
+    final Widget base = Stack(
       children: [
-        deviceInfo.isLandscape ? Expanded(child: list) : list,
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                child: Text(LocaleStrings.common.cancel),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Spacer(),
-              SizedBox(
-                width: 8,
-              ),
-              TextButton(
-                child: Text(LocaleStrings.common.confirm),
-                onPressed: () {
-                  widget.onConfirm(selectedDate, selectedMode);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+        Positioned(
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 48,
+          child: list,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            height: 48,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  child: Text(LocaleStrings.common.cancel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 8,
+                ),
+                TextButton(
+                  child: Text(LocaleStrings.common.confirm),
+                  onPressed: () {
+                    widget.onConfirm(selectedDate, selectedMode);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ],
     );
 
-    if (deviceInfo.isLandscape) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.shortestSide,
-        ),
-        child: base,
-      );
-    } else {
-      return base;
-    }
+    return base;
   }
 }
 
@@ -156,7 +156,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.symmetric(
           horizontal: 24,
-          vertical: 32,
+          vertical: 16,
         ),
         child: Row(
           children: <Widget>[

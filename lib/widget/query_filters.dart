@@ -92,6 +92,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           onTap: () async {
             await Utils.showNotesModalBottomSheet(
               context: context,
+              childHandlesScroll: true,
               builder: (context) => DateFilterSelector(
                 date: widget.query.date,
                 mode: widget.query.dateMode,

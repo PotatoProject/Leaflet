@@ -31,17 +31,17 @@ import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_search_delegate.dart';
 
 class BasePage extends StatefulWidget {
-  static _BasePageState of(BuildContext context) {
+  static BasePageState of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<BasePageInheritedWidget>()
         ?.state;
   }
 
   @override
-  _BasePageState createState() => _BasePageState();
+  BasePageState createState() => BasePageState();
 }
 
-class _BasePageState extends State<BasePage>
+class BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
   static const double drawerClosedWidth = 72.0;
   static const double drawerOpenedWidth = 300.0;
@@ -407,7 +407,7 @@ class BasePageInheritedWidget extends InheritedWidget {
     this.state,
   }) : super(key: key, child: child);
 
-  final _BasePageState state;
+  final BasePageState state;
 
   @override
   bool updateShouldNotify(BasePageInheritedWidget oldWidget) {

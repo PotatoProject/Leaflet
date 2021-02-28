@@ -91,8 +91,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       margin: kCardPadding,
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
-        onLongPressStart:
-            !widget.selectorOpen && !isMouseConnected ? showOptionsMenu : null,
         child: InkWell(
           onTap: widget.onTap,
           onHover: (value) => setState(() {
@@ -104,6 +102,9 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           onHighlightChanged: (value) => setState(() {
             _highlighted = value;
           }),
+          onLongPress: !widget.selectorOpen && !isMouseConnected
+              ? widget.onLongPress
+              : null,
           splashFactory: InkRipple.splashFactory,
           borderRadius: BorderRadius.circular(kCardBorderRadius),
           child: Stack(

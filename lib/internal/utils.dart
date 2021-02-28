@@ -38,6 +38,8 @@ const double kCardBorderRadius = 4;
 const EdgeInsets kCardPadding = const EdgeInsets.all(4);
 
 class Utils {
+  Utils._();
+
   static deleteNoteSafely(Note note) {
     ImageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
@@ -81,6 +83,7 @@ class Utils {
     ShapeBorder shape,
     Clip clipBehavior,
     Color barrierColor,
+    bool childHandlesScroll = false,
   }) async {
     return await Navigator.push(
       context,
@@ -90,6 +93,7 @@ class Utils {
         elevation: elevation,
         shape: shape,
         clipBehavior: clipBehavior,
+        childHandlesScroll: childHandlesScroll,
       ),
     );
   }
@@ -867,6 +871,23 @@ extension SafeGetList<T> on List<T> {
     } else
       return this[index];
   }
+}
+
+extension ContextProviders on BuildContext {
+  ThemeData get theme => Theme.of(this);
+
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
+  Size get size => mediaQuery.size;
+  EdgeInsets get padding => mediaQuery.padding;
+  EdgeInsets get viewInsets => mediaQuery.viewInsets;
+  EdgeInsets get viewPadding => mediaQuery.viewPadding;
+
+  BasePageState get basePage => BasePage.of(this);
+  TextDirection get directionality => Directionality.of(this);
+
+  NavigatorState get navigator => Navigator.of(this);
+  void pop<T extends Object>(T result) => navigator.pop<T>(result);
+  Future<T> push<T extends Object>(Route<T> route) => navigator.push<T>(route);
 }
 
 class SuspendedCurve extends Curve {

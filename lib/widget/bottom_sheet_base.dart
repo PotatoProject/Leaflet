@@ -14,6 +14,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
     this.shape = const RoundedRectangleBorder(),
     this.clipBehavior = Clip.none,
     this.maintainState = true,
+    this.childHandlesScroll = false,
   });
 
   final Widget child;
@@ -21,6 +22,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final double elevation;
   final ShapeBorder shape;
   final Clip clipBehavior;
+  final bool childHandlesScroll;
 
   @override
   Color get barrierColor => Colors.black54;
@@ -38,6 +40,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
+      childHandlesScroll: childHandlesScroll,
     );
   }
 
@@ -64,6 +67,7 @@ class _BottomSheetBase extends StatefulWidget {
   final double elevation;
   final ShapeBorder shape;
   final Clip clipBehavior;
+  final bool childHandlesScroll;
 
   _BottomSheetBase({
     @required this.child,
@@ -72,6 +76,7 @@ class _BottomSheetBase extends StatefulWidget {
     this.elevation,
     this.shape,
     this.clipBehavior,
+    this.childHandlesScroll,
   });
 
   @override
@@ -148,7 +153,12 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                 alignment: _useDesktopLayout
                     ? Alignment.center
                     : Alignment.bottomCenter,
-                child: ConstrainedBox(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: _useDesktopLayout ? 16 : 0,
+                    bottom:
+                        _useDesktopLayout ? context.viewInsets.bottom + 16 : 0,
+                  ),
                   constraints: _constraints,
                   child: Builder(
                     builder: (context) {
@@ -166,15 +176,25 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                           duration: Duration(milliseconds: 300),
                           curve: decelerateEasing,
                           padding: EdgeInsets.only(
-                            bottom: !_useDesktopLayout
-                                ? MediaQuery.of(context).padding.bottom
-                                : 0,
+                            bottom:
+                                !_useDesktopLayout ? context.padding.bottom : 0,
                           ),
                           child: MediaQuery.removeViewPadding(
                             context: context,
                             removeLeft: _useDesktopLayout,
                             removeRight: _useDesktopLayout,
-                            child: widget.child,
+                            child: MediaQuery(
+                              data: context.mediaQuery.copyWith(
+                                viewInsets: context.viewInsets.copyWith(
+                                  bottom: 0,
+                                ),
+                              ),
+                              child: !widget.childHandlesScroll
+                                  ? SingleChildScrollView(
+                                      child: widget.child,
+                                    )
+                                  : widget.child,
+                            ),
                           ),
                         ),
                       );

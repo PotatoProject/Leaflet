@@ -21,7 +21,6 @@ import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
-import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
@@ -427,58 +426,73 @@ class _NotePageState extends State<NotePage> {
             ),
           ),
         ),
-        PopupMenuButton(
+        IconButton(
           icon: Icon(Icons.add),
           padding: EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarAddItem,
-          itemBuilder: (context) => [
-            PopupMenuItemWithIcon(
-              icon: Icon(
-                  note.list ? Icons.check_circle : Icons.check_circle_outline),
-              child: Text(LocaleStrings.notePage.toggleList),
-              value: 'list',
-            ),
-            PopupMenuItemWithIcon(
-              icon: Icon(Icons.photo_outlined),
-              child: Text(LocaleStrings.notePage.imageGallery),
-              value: 'image',
-            ),
-            PopupMenuItemWithIcon(
-              icon: Icon(Icons.camera_outlined),
-              enabled: !DeviceInfo.isDesktop,
-              child: Text(LocaleStrings.notePage.imageCamera),
-              value: 'photo',
-            ),
-            PopupMenuItemWithIcon(
-              icon: Icon(Icons.brush_outlined),
-              child: Text(LocaleStrings.notePage.drawing),
-              value: 'drawing',
-            ),
-          ],
-          onSelected: (value) async {
-            switch (value) {
-              case 'list':
-                toggleList();
-                break;
-              case 'image':
-                final File image = await Utils.pickImage();
-
-                if (image != null) await handleImageAdd(image.path);
-                break;
-              case 'photo':
-                final PickedFile image =
-                    await ImagePicker().getImage(source: ImageSource.camera);
-
-                if (image != null) handleImageAdd(image.path);
-                break;
-              case 'drawing':
-                addDrawing();
-                break;
-            }
+          onPressed: () async {
+            Utils.showNotesModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        note.list
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
+                      ),
+                      title: Text(LocaleStrings.notePage.toggleList),
+                      onTap: () => handleAddItemTap(context, 'list'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.photo_outlined),
+                      title: Text(LocaleStrings.notePage.imageGallery),
+                      onTap: () => handleAddItemTap(context, 'image'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.camera_outlined),
+                      enabled: !DeviceInfo.isDesktop,
+                      title: Text(LocaleStrings.notePage.imageCamera),
+                      onTap: () => handleAddItemTap(context, 'camera'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.brush_outlined),
+                      title: Text(LocaleStrings.notePage.drawing),
+                      onTap: () => handleAddItemTap(context, 'drawing'),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ];
     }
+  }
+
+  void handleAddItemTap(BuildContext context, String value) async {
+    switch (value) {
+      case 'list':
+        toggleList();
+        break;
+      case 'image':
+        final File image = await Utils.pickImage();
+
+        if (image != null) await handleImageAdd(image.path);
+        break;
+      case 'camera':
+        final PickedFile image =
+            await ImagePicker().getImage(source: ImageSource.camera);
+
+        if (image != null) handleImageAdd(image.path);
+        break;
+      case 'drawing':
+        addDrawing();
+        break;
+    }
+    Navigator.pop(context);
   }
 
   void addListContentItem() {

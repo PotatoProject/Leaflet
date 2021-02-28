@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 bool _gestureStartAllowed = false;
 
@@ -286,21 +287,28 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final TextDirection textDirection = Directionality.of(context);
     final bool _barrierDismissible =
         _requestDisableGestures ? false : widget.enableGesture;
     final bool _enableGesture =
         deviceInfo.uiSizeFactor > 3 ? false : _barrierDismissible;
     final EdgeInsets padding = EdgeInsets.symmetric(
-      horizontal: MediaQuery.of(context).size.width / 8,
-      vertical: MediaQuery.of(context).size.height / 16,
+      horizontal: context.mediaQuery.size.width / 8,
+      vertical: context.mediaQuery.size.height / 16,
     );
+
+    final double width = widget.isFirst || deviceInfo.uiSizeFactor <= 3
+        ? context.mediaQuery.size.width
+        : (context.mediaQuery.size.width - padding.horizontal)
+            .clamp(0.0, 720.0);
+    final double height = widget.isFirst || deviceInfo.uiSizeFactor <= 3
+        ? context.mediaQuery.size.height
+        : (context.mediaQuery.size.height - padding.vertical).clamp(0.0, 580.0);
 
     final Widget content = Material(
       elevation: 16,
       shape: !widget.isFirst
           ? deviceInfo.uiSizeFactor > 3
-              ? Theme.of(context).dialogTheme.shape
+              ? context.theme.dialogTheme.shape
               : RoundedRectangleBorder()
           : RoundedRectangleBorder(),
       clipBehavior: Clip.antiAlias,
@@ -316,10 +324,11 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
         onHorizontalDragUpdate: _gestureStartAllowed
             ? (details) {
                 SystemChannels.textInput.invokeMethod('TextInput.hide');
-                widget.controller.value -= (textDirection == TextDirection.rtl
-                        ? -details.primaryDelta
-                        : details.primaryDelta) /
-                    widget.maxWidth;
+                widget.controller.value -=
+                    (context.directionality == TextDirection.rtl
+                            ? -details.primaryDelta
+                            : details.primaryDelta) /
+                        widget.maxWidth;
               }
             : null,
         onHorizontalDragEnd: _gestureStartAllowed
@@ -352,20 +361,18 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
           curve: Curves.easeOut,
           child: Center(
             child: SizedBox(
-              width: widget.isFirst || deviceInfo.uiSizeFactor <= 3
-                  ? MediaQuery.of(context).size.width
-                  : (MediaQuery.of(context).size.width - padding.horizontal)
-                      .clamp(0.0, 720.0),
-              height: widget.isFirst || deviceInfo.uiSizeFactor <= 3
-                  ? MediaQuery.of(context).size.height
-                  : (MediaQuery.of(context).size.height - padding.vertical)
-                      .clamp(0.0, 580.0),
+              width: width,
+              height: height,
               child: MediaQuery(
                 child: content,
-                data: MediaQuery.of(context).copyWith(
-                  padding: deviceInfo.uiSizeFactor > 3
+                data: context.mediaQuery.copyWith(
+                  padding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
                       ? EdgeInsets.zero
-                      : MediaQuery.of(context).padding,
+                      : context.mediaQuery.padding,
+                  viewInsets: context.mediaQuery.viewInsets.copyWith(
+                    bottom: context.mediaQuery.viewInsets.bottom -
+                        ((context.mediaQuery.size.height - height) / 2),
+                  ),
                 ),
               ),
             ),
