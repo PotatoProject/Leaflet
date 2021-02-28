@@ -140,8 +140,8 @@
     <!-- Search page -->
     <string name="search.textbox_hint">Tìm kiếm</string>
     <string name="search.tag_create_hint">Tạo nhãn “%s”</string>
-    <string name="search.note.type_to_search">Gõ để bắt đầu tìm kiếm</string>
-    <string name="search.note.nothing_found">Không tìm thấy kết quả phù hợp...</string>
+    <string name="search.type_to_search">Gõ để bắt đầu tìm kiếm</string>
+    <string name="search.nothing_found">Không tìm thấy kết quả phù hợp...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Đen</string>

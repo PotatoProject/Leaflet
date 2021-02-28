@@ -143,8 +143,8 @@
     <!-- Search page -->
     <string name="search.textbox_hint">Pesquisar</string>
     <string name="search.tag_create_hint">Criar etiqueta \"%s\"</string>
-    <string name="search.note.type_to_search">Digite para iniciar a pesquisa</string>
-    <string name="search.note.nothing_found">Nada encontrado...</string>
+    <string name="search.type_to_search">Digite para iniciar a pesquisa</string>
+    <string name="search.nothing_found">Nada encontrado...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Preto</string>

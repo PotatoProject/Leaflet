@@ -143,8 +143,8 @@
     <!-- Search page -->
     <string name="search.textbox_hint">Zoeken</string>
     <string name="search.tag_create_hint">Maak label \"%s\"</string>
-    <string name="search.note.type_to_search">Typ om te beginnen met zoeken</string>
-    <string name="search.note.nothing_found">Niets gevonden...</string>
+    <string name="search.type_to_search">Typ om te beginnen met zoeken</string>
+    <string name="search.nothing_found">Niets gevonden...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Zwart</string>

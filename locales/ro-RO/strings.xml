@@ -146,8 +146,8 @@
     <!-- Search page -->
     <string name="search.textbox_hint">Caută</string>
     <string name="search.tag_create_hint">Creează eticheta \"%s\"</string>
-    <string name="search.note.type_to_search">Tastați pentru a începe căutarea</string>
-    <string name="search.note.nothing_found">Nimic găsit...</string>
+    <string name="search.type_to_search">Tastați pentru a începe căutarea</string>
+    <string name="search.nothing_found">Nimic găsit...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Negru</string>

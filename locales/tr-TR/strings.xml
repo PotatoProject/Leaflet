@@ -143,8 +143,8 @@
     <!-- Search page -->
     <string name="search.textbox_hint">Ara</string>
     <string name="search.tag_create_hint">\"%s\" isimli etiket oluşturuldu</string>
-    <string name="search.note.type_to_search">Aramaya başlamak için yazın</string>
-    <string name="search.note.nothing_found">Hiçbir şey bulunamadı...</string>
+    <string name="search.type_to_search">Aramaya başlamak için yazın</string>
+    <string name="search.nothing_found">Hiçbir şey bulunamadı...</string>
 
     <!-- Draw page -->
     <string name="drawing.color_black">Siyah</string>
