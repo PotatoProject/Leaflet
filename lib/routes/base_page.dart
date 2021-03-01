@@ -92,29 +92,34 @@ class BasePageState extends State<BasePage>
     setState(() {});
   }
 
-  void setBottomBarEnabled(bool enabled) =>
-      setState(() => _bottomBarEnabled = enabled);
-  void setFAB(Widget fab) => WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() => _floatingActionButton = fab),
-      );
-  void setAppBar(Widget appBar) => WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() => _appBar = appBar),
-      );
-  void setSecondaryAppBar(Widget secondaryAppBar) =>
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) async {
-          if (secondaryAppBar.runtimeType != _secondaryAppBar.runtimeType) {
-            if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null)
-              await _ac.animateBack(0);
-            else {
-              await _ac.animateBack(0);
-              _ac.animateTo(1);
-            }
-          }
+  void setBottomBarEnabled(bool enabled) {
+    setState(() => _bottomBarEnabled = enabled);
+  }
 
-          setState(() => _secondaryAppBar = secondaryAppBar);
-        },
-      );
+  void setFAB(Widget fab) {
+    _floatingActionButton = fab;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  void setAppBar(Widget appBar) {
+    _appBar = appBar;
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  void setSecondaryAppBar(Widget secondaryAppBar) async {
+    if (secondaryAppBar.runtimeType != _secondaryAppBar.runtimeType) {
+      if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null)
+        await _ac.animateBack(0);
+      else {
+        await _ac.animateBack(0);
+        _ac.animateTo(1);
+      }
+    }
+    _secondaryAppBar = secondaryAppBar;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
   void hideCurrentSnackBar() =>
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(

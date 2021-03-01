@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Handler
+import android.provider.Settings
 import android.util.Log
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -25,24 +26,40 @@ class NotesPlugin : FlutterPlugin {
     class AccentStreamHandler(private val mContext: Context) : EventChannel.StreamHandler {
         private val handler = Handler(mContext.mainLooper)
         private var eventSink: EventSink? = null
-        private var themeMode: Boolean? = null
+        private var isThemeDark: Boolean? = null
+        private var savedThemeMode: Long? = null
         private var accentColor: Int? = null
 
         private val runnable: Runnable = object: Runnable {
             override fun run() {
                 val sharedPref = mContext.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-                val savedThemeMode = sharedPref.getLong("flutter.theme_mode", 0)
-                val currentThemeMode = isCurrentThemeDark()
+                val currentSavedThemeMode = sharedPref.getLong("flutter.theme_mode", 0)
+                val isCurrentlyThemeDark = isCurrentThemeDark()
                 val lightAccent = getColorRes("accent_device_default_light")
                 val darkAccent = getColorRes("accent_device_default_dark")
 
-                if (savedThemeMode == 0L) {
+                if(currentSavedThemeMode != savedThemeMode) {
+                    savedThemeMode = currentSavedThemeMode
+                    isThemeDark = isCurrentlyThemeDark
+                    when(savedThemeMode) {
+                        0L -> accentColor = if (isThemeDark == true) darkAccent else lightAccent
+                        1L -> accentColor = lightAccent
+                        2L -> accentColor = darkAccent
+                    }
+                    eventSink?.success(accentColor)
+                } else if(currentSavedThemeMode == 0L && isThemeDark != isCurrentlyThemeDark) {
+                    isThemeDark = isCurrentlyThemeDark
+                    accentColor = if (isThemeDark == true) darkAccent else lightAccent
+                    eventSink?.success(accentColor)
+                }
+
+                /*if (savedThemeMode == 0L) {
                     if (currentThemeMode != themeMode) {
                         themeMode = currentThemeMode
-                        accentColor = if (themeMode ?: true) lightAccent else darkAccent
+                        accentColor = if (themeMode != false) lightAccent else darkAccent
                         eventSink?.success(accentColor)
                     } else {
-                        if (themeMode ?: false) {
+                        if (themeMode == true) {
                             if (darkAccent != accentColor) {
                                 accentColor = darkAccent
                                 eventSink?.success(accentColor)
@@ -66,8 +83,8 @@ class NotesPlugin : FlutterPlugin {
                             eventSink?.success(accentColor)
                         }
                     }
-                }
-                handler.postDelayed(this, 50)
+                }*/
+                handler.postDelayed(this, 125)
             }
         }
 
@@ -80,30 +97,31 @@ class NotesPlugin : FlutterPlugin {
             if (o != null) {
                 handler.removeCallbacks(runnable)
             }
-            themeMode = null
+            isThemeDark = null
+            savedThemeMode = null
             accentColor = null
         }
 
         fun getColorRes(resName: String): Int {
-            var resId: Int = 0
-            var res: Resources? = null
-            var colorInt: Int? = null
+            var resId: Int
+            var res: Resources?
+            var colorInt: Int?
 
             if(android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.M) {
                 return -1;
             }
 
             try {
-                res = mContext.getPackageManager().getResourcesForApplication("android")
+                res = mContext.packageManager.getResourcesForApplication("android")
                 resId = res.getIdentifier(resName, "color", "android")
             } catch (e: PackageManager.NameNotFoundException) {
                 return -1
             }
 
-            try {
-                colorInt = res?.getColor(resId) ?: 0
+            colorInt = try {
+                res.getColor(resId) ?: 0
             } catch (e: Resources.NotFoundException) {
-                colorInt = -1
+                -1
             }
 
             return colorInt ?: 0
@@ -114,6 +132,21 @@ class NotesPlugin : FlutterPlugin {
                 Configuration.UI_MODE_NIGHT_YES -> true
                 Configuration.UI_MODE_NIGHT_NO -> false
                 else -> false
+            }
+        }
+
+        enum class ThemeMode(val value: Long) {
+            SYSTEM(0L),
+            LIGHT(1L),
+            DARK(2L);
+
+            fun fromValue(value: Long): ThemeMode {
+                return when(value) {
+                    0L -> ThemeMode.SYSTEM
+                    1L -> ThemeMode.LIGHT
+                    2L -> ThemeMode.DARK
+                    else -> ThemeMode.SYSTEM
+                }
             }
         }
     }
