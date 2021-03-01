@@ -22,6 +22,7 @@ import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
 import 'package:recase/recase.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -280,6 +281,8 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () {
                 showDropdownSheet(
                   context: context,
+                  initialIndex:
+                      context.supportedLocales.indexOf(context.savedLocale) + 1,
                   scrollable: true,
                   itemBuilder: (context, index) {
                     final Locale locale =
@@ -422,16 +425,25 @@ class _SettingsPageState extends State<SettingsPage> {
     @required BuildContext context,
     @required IndexedWidgetBuilder itemBuilder,
     int itemCount,
+    int initialIndex = 0,
     bool scrollable = false,
   }) async {
     return await Utils.showNotesModalBottomSheet(
       context: context,
-      builder: (context) => Column(
-        children: List.generate(
-          itemCount,
-          (index) => itemBuilder(context, index),
-        ),
-      ),
+      childHandlesScroll: scrollable,
+      builder: (context) => scrollable
+          ? ScrollablePositionedList.builder(
+              itemBuilder: itemBuilder,
+              itemCount: itemCount,
+              initialScrollIndex: initialIndex,
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                itemCount,
+                (index) => itemBuilder(context, index),
+              ),
+            ),
     );
   }
 

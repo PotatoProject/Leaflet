@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -106,7 +107,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
               minWidth: 0,
               maxWidth: roundedShortestSide.toDouble(),
               minHeight: 0.0,
-              maxHeight: deviceInfo.isLandscape ? 600 : constraints.maxHeight,
+              maxHeight: min(600.0, MediaQuery.of(context).size.height),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
 
@@ -155,7 +156,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                     : Alignment.bottomCenter,
                 child: Container(
                   padding: EdgeInsets.only(
-                    top: _useDesktopLayout ? 16 : 0,
+                    top: _useDesktopLayout ? 16 : 48,
                     bottom:
                         _useDesktopLayout ? context.viewInsets.bottom + 16 : 0,
                   ),
