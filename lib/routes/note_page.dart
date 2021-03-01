@@ -119,6 +119,10 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool showNewItemButton =
+        note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
+            note.listContent.isEmpty;
+
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: note.color != 0
@@ -281,7 +285,7 @@ class _NotePageState extends State<NotePage> {
                             setState(() => note.listContent[index].text = text);
                             notifyNoteChanged();
                           },
-                          onSubmitted: (_) {
+                          onEditingComplete: () {
                             if (index == note.listContent.length - 1) {
                               if (note.listContent.last.text != "") {
                                 addListContentItem();
@@ -307,12 +311,8 @@ class _NotePageState extends State<NotePage> {
                       }),
                     if (note.list)
                       AnimatedOpacity(
-                        opacity: note.listContent.isNotEmpty &&
-                                note.listContent.last.text.isNotEmpty
-                            ? 1
-                            : 0,
-                        duration: note.listContent.isNotEmpty &&
-                                note.listContent.last.text.isNotEmpty
+                        opacity: showNewItemButton ? 1 : 0,
+                        duration: showNewItemButton
                             ? Duration(milliseconds: 300)
                             : Duration(milliseconds: 0),
                         child: ListTile(
@@ -324,8 +324,7 @@ class _NotePageState extends State<NotePage> {
                             ),
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                          onTap: note.listContent.isNotEmpty &&
-                                  note.listContent.last.text.isNotEmpty
+                          onTap: showNewItemButton
                               ? () => addListContentItem()
                               : null,
                         ),
@@ -631,7 +630,7 @@ class _NoteListEntryItem extends StatefulWidget {
   final FocusNode focusNode;
   final DismissDirectionCallback onDismissed;
   final ValueChanged<String> onTextChanged;
-  final ValueChanged<String> onSubmitted;
+  final VoidCallback onEditingComplete;
   final ValueChanged<bool> onCheckChanged;
   final Color checkColor;
 
@@ -642,7 +641,7 @@ class _NoteListEntryItem extends StatefulWidget {
     this.focusNode,
     this.onDismissed,
     this.onTextChanged,
-    this.onSubmitted,
+    this.onEditingComplete,
     this.onCheckChanged,
     this.checkColor,
   }) : super(key: key);
@@ -704,9 +703,10 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
               decoration:
                   widget.item.status ? TextDecoration.lineThrough : null,
             ),
+            onEditingComplete: widget.onEditingComplete,
             onChanged: widget.onTextChanged,
-            onSubmitted: widget.onSubmitted,
             focusNode: widget.focusNode,
+            textInputAction: TextInputAction.next,
           ),
           trailing: AnimatedOpacity(
             opacity: showDeleteButton ? 1 : 0,
