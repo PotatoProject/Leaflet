@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/jwt_decode.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';

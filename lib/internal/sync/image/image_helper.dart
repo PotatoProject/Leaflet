@@ -63,8 +63,7 @@ class ImageHelper {
   }
 
   static String generateBlurHash(Image image) {
-    final String hash = encodeBlurHash(
-        image.getBytes(format: Format.rgba), image.width, image.height);
+    final String hash = BlurHash.encode(image).hash;
     return hash;
   }
 

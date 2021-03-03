@@ -10,11 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  animations:
+  animations: ^2.0.0
 
-  back_button_interceptor:
+  back_button_interceptor: ^5.0.0-nullsafety.1
   blake2:
-  blurhash_dart:
+  blurhash_dart: ^1.0.0-nullsafety.0
 
   crayola:
 
@@ -22,28 +22,26 @@ dependencies:
     git: https://github.com/HrX03/easy_localization
 
   file_picker: ^3.0.0-nullsafety.2
-  file_selector:
-  file_selector_macos:
-  file_selector_linux:
-  file_selector_windows:
-  flutter_blurhash:
-  flutter_downloader:
-  flutter_local_notifications:
+  file_selector: ^0.8.2
+  file_selector_macos: ^0.0.4
+  file_selector_linux: ^0.0.2
+  file_selector_windows: ^0.0.2
+  flutter_blurhash: ^0.5.2-nullsafety.0
+  flutter_local_notifications: ^5.0.0-nullsafety.0
   flutter_mobx:
-  flutter_secure_storage:
+  flutter_secure_storage: ^4.0.0
 
   http: ^0.13.0
 
-  image:
-  image_picker:
+  image: ^3.0.1
+  image_picker: ^0.7.2
   image_size_getter:
   in_app_update:
-  intl:
+  intl: ^0.17.0
 
-  json_serializable:
-  jwt_decode:
+  json_serializable: ^4.0.2
 
-  local_auth:
+  local_auth: ^1.1.0
   loggy:
     git: https://github.com/HrX03/loggy
 
@@ -51,28 +49,28 @@ dependencies:
   mobx:
   moor: ^4.1.0
 
-  package_info_plus: ^0.5.0
-  path:
+  package_info_plus: ^1.0.0
+  path: ^1.8.0
   path_drawing: ^0.5.0-nullsafety.0
   path_provider: ^2.0.0
 
-  quick_actions:
+  quick_actions: ^0.5.0
 
-  recase:
+  recase: ^4.0.0-nullsafety.0
 
   scrollable_positioned_list: ^0.2.0-nullsafety.0
   share_plus: ^2.0.0
-  shared_preferences:
-  sqflite:
-  sqflite_common_ffi:
-  sqlite3_flutter_libs:
+  shared_preferences: ^2.0.3
+  sqflite: ^2.0.0
+  sqflite_common_ffi: ^2.0.0
+  sqlite3_flutter_libs: ^0.4.0+1
 
-  url_launcher:
-  uuid:
+  url_launcher: ^6.0.2
+  uuid: ^3.0.1
 
   waterfall_flow:
 
-  xml:
+  xml: ^5.0.2
 
 dev_dependencies:
   moor_generator:
@@ -83,7 +81,7 @@ dev_dependencies:
   mobx_codegen:
 
 dependency_overrides:
-  http: ^0.13.0
+  plugin_platform_interface: ^2.0.0
 
 flutter:
   uses-material-design: true
