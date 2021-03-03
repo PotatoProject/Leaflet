@@ -160,12 +160,12 @@ class Utils {
               value: 'pin',
               oneNoteOnly: true,
             ),
-          SelectionOptionEntry(
+          /* SelectionOptionEntry(
             icon: Icons.share_outlined,
             title: LocaleStrings.mainPage.selectionBarShare,
             value: 'share',
             oneNoteOnly: true,
-          ),
+          ), */
         ];
       },
       onSelected: _onSelected,
