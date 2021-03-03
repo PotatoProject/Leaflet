@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
@@ -107,7 +108,8 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
             children: [
               Expanded(
                 child: Text(
-                  DateFormat("d MMM yyyy").format(widget.note.creationDate),
+                  DateFormat("d MMMM y", context.locale.toString())
+                      .format(widget.note.creationDate),
                   style: TextStyle(
                     color: Theme.of(context).iconTheme.color.withOpacity(0.5),
                     fontSize: 12,

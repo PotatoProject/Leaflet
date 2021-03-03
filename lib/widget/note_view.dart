@@ -54,11 +54,14 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     final Color borderColor = widget.selected
         ? Theme.of(context).iconTheme.color
         : Colors.transparent;
-    final Color checkBoxColor = widget.note.images.isNotEmpty
-        ? Colors.white
-        : Theme.of(context).iconTheme.color.withOpacity(1);
+    final Color checkBoxColor =
+        widget.note.images.isNotEmpty && !widget.note.hideContent
+            ? Colors.white
+            : Theme.of(context).iconTheme.color.withOpacity(1);
     final Color checkColor =
-        widget.note.images.isNotEmpty ? Colors.black : backgroundColor;
+        widget.note.images.isNotEmpty && !widget.note.hideContent
+            ? Colors.black
+            : backgroundColor;
 
     if (widget.selected) {
       _elevation = 8;
@@ -177,7 +180,10 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         center: Alignment.topRight,
                         colors: [
                           Colors.grey[900].withOpacity(
-                            widget.note.images.isNotEmpty ? 0.6 : 0,
+                            widget.note.images.isNotEmpty &&
+                                    !widget.note.hideContent
+                                ? 0.6
+                                : 0,
                           ),
                           Colors.grey[900].withOpacity(0),
                         ],
@@ -192,7 +198,11 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         width: 18,
                         splashRadius: 18,
                         inactiveColor: checkBoxColor.withOpacity(
-                          _hovered || widget.note.images.isNotEmpty ? 1.0 : 0.5,
+                          _hovered ||
+                                  widget.note.images.isNotEmpty &&
+                                      !widget.note.hideContent
+                              ? 1.0
+                              : 0.5,
                         ),
                         activeColor: checkBoxColor,
                         checkColor: checkColor,
