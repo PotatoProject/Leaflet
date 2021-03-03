@@ -311,27 +311,20 @@ class _NoteListPageState extends State<NoteListPage> {
         _state.addSelectedNote(note);
       }
     } else {
-      bool status = false;
-      if (note.lockNote && note.usesBiometrics) {
-        final bool bioAuth = await Utils.showBiometricPrompt();
-
-        if (bioAuth)
-          status = bioAuth;
-        else
-          status = await Utils.showPassChallengeSheet(context) ?? false;
-      } else if (note.lockNote && !note.usesBiometrics) {
-        status = await Utils.showPassChallengeSheet(context) ?? false;
-      } else {
-        status = true;
-      }
+      final bool status = await Utils.showNoteLockDialog(
+        context: context,
+        showLock: note.lockNote,
+        showBiometrics: note.usesBiometrics,
+      );
 
       if (status) {
-        Utils.showSecondaryRoute(
+        await Utils.showSecondaryRoute(
           context,
           NotePage(
             note: note,
           ),
-        ).then((_) => Utils.handleNotePagePop(note));
+        );
+        Utils.handleNotePagePop(note);
       }
     }
   }

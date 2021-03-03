@@ -45,7 +45,7 @@ class Utils {
     helper.deleteNote(note);
   }
 
-  static handleNotePagePop(Note note) {
+  static void handleNotePagePop(Note note) {
     //ImageService.handleDeletes();
     //helper.listNotes(ReturnMode.LOCAL).then((notes) => {
     //      SyncRoutine.syncNote(notes.firstWhere((local) => local.id == note.id))
@@ -73,6 +73,28 @@ class Utils {
         cancelButton: LocaleStrings.common.cancel,
       ),
     );
+  }
+
+  static Future<bool> showNoteLockDialog({
+    @required BuildContext context,
+    @required bool showLock,
+    bool showBiometrics = false,
+  }) async {
+    if (showLock) {
+      bool status;
+
+      final bool bioAuth =
+          showBiometrics ? await Utils.showBiometricPrompt() : false;
+
+      if (bioAuth)
+        status = bioAuth;
+      else
+        status = await Utils.showPassChallengeSheet(context) ?? false;
+
+      return status;
+    }
+
+    return true;
   }
 
   static Future<dynamic> showNotesModalBottomSheet<T>({
@@ -144,7 +166,7 @@ class Utils {
           SelectionOptionEntry(
             title: LocaleStrings.mainPage.selectionBarDelete,
             icon: Icons.delete_outline,
-            value: 'delete',
+            value: mode == ReturnMode.TRASH ? 'perma_delete' : 'delete',
           ),
           if (mode != ReturnMode.NORMAL)
             SelectionOptionEntry(
@@ -189,102 +211,138 @@ class Utils {
         }
         break;
       case 'favourites':
-        final bool anyStarred = notes.any((item) => item.starred);
-
-        for (Note note in notes) {
-          if (anyStarred)
-            await helper.saveNote(
-              note.markChanged().copyWith(starred: false),
-            );
-          else
-            await helper.saveNote(
-              note.markChanged().copyWith(starred: true),
-            );
-        }
-
-        state.closeSelection();
-        break;
-      case 'color':
-        int selectedColor;
-
-        if (notes.length > 1) {
-          int color = notes.first.color;
-
-          if (notes.every((item) => item.color == color))
-            selectedColor = color;
-          else
-            selectedColor = 0;
-        } else
-          selectedColor = notes.first.color;
-
-        selectedColor = await Utils.showNotesModalBottomSheet(
+        final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          builder: (context) => NoteColorSelector(
-            selectedColor: selectedColor,
-            onColorSelect: (color) {
-              Navigator.pop(context, color);
-            },
-          ),
+          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
+          showBiometrics: notes.any((n) => n.usesBiometrics),
         );
 
-        if (selectedColor != null) {
-          for (Note note in notes)
-            await helper.saveNote(note.copyWith(color: selectedColor));
+        if (unlocked) {
+          final bool anyStarred = notes.any((item) => item.starred);
+
+          for (Note note in notes) {
+            if (anyStarred)
+              await helper.saveNote(
+                note.markChanged().copyWith(starred: false),
+              );
+            else
+              await helper.saveNote(
+                note.markChanged().copyWith(starred: true),
+              );
+          }
 
           state.closeSelection();
         }
         break;
+      case 'color':
+        final bool unlocked = await Utils.showNoteLockDialog(
+          context: context,
+          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
+          showBiometrics: notes.any((n) => n.usesBiometrics),
+        );
+
+        if (unlocked) {
+          int selectedColor;
+
+          if (notes.length > 1) {
+            int color = notes.first.color;
+
+            if (notes.every((item) => item.color == color))
+              selectedColor = color;
+            else
+              selectedColor = 0;
+          } else
+            selectedColor = notes.first.color;
+
+          selectedColor = await Utils.showNotesModalBottomSheet(
+            context: context,
+            builder: (context) => NoteColorSelector(
+              selectedColor: selectedColor,
+              onColorSelect: (color) {
+                Navigator.pop(context, color);
+              },
+            ),
+          );
+
+          if (selectedColor != null) {
+            for (Note note in notes)
+              await helper.saveNote(note.copyWith(color: selectedColor));
+
+            state.closeSelection();
+          }
+        }
+        break;
       case 'archive':
-        await Utils.deleteNotes(
+        final bool archived = await Utils.deleteNotes(
           context: context,
           notes: notes,
           reason: LocaleStrings.mainPage.notesArchived(notes.length),
           archive: true,
         );
 
-        state.closeSelection();
+        if (archived) state.closeSelection();
         break;
       case 'delete':
         final List<Note> notesToTrash = notes.where((n) => !n.deleted).toList();
-        final List<Note> notesToBeDeleted =
-            notes.where((n) => n.deleted).toList();
 
-        notesToBeDeleted.forEach((n) => Utils.deleteNoteSafely(n));
-
-        await Utils.deleteNotes(
+        final bool deleted = await Utils.deleteNotes(
           context: context,
-          notes: notesToTrash.toList(),
+          notes: List.from(notesToTrash),
           reason: LocaleStrings.mainPage.notesDeleted(notes.length),
         );
 
-        state.closeSelection();
+        if (deleted) state.closeSelection();
+        break;
+      case 'perma_delete':
+        final List<Note> notesToBeDeleted =
+            notes.where((n) => n.deleted).toList();
+
+        final bool deleted = await Utils.deleteNotes(
+          context: context,
+          notes: List.from(notesToBeDeleted),
+          reason: LocaleStrings.mainPage.notesDeleted(notes.length),
+          permaDelete: true,
+        );
+
+        if (deleted) state.closeSelection();
         break;
       case 'restore':
-        await Utils.restoreNotes(
+        final bool restored = await Utils.restoreNotes(
           context: context,
           notes: notes,
           reason: LocaleStrings.mainPage.notesRestored(notes.length),
         );
 
-        state.closeSelection();
+        if (restored) state.closeSelection();
         break;
       case 'pin':
-        handlePinNotes(context, notes.first);
+        final bool unlocked = await Utils.showNoteLockDialog(
+          context: context,
+          showLock: notes.first.lockNote && !notes.first.pinned,
+          showBiometrics: notes.first.usesBiometrics,
+        );
 
-        state.closeSelection();
+        if (unlocked) {
+          handlePinNotes(context, notes.first);
+
+          state.closeSelection();
+        }
         break;
       case 'share':
-        final bool status = notes.first.lockNote
-            ? await Utils.showPassChallengeSheet(context)
-            : true;
-        if (status ?? false) {
+        final bool unlocked = await Utils.showNoteLockDialog(
+          context: context,
+          showLock: notes.first.lockNote,
+          showBiometrics: notes.first.usesBiometrics,
+        );
+
+        if (unlocked) {
           Share.share(
             (notes.first.title.isNotEmpty ? notes.first.title + "\n\n" : "") +
                 notes.first.content,
           );
-        }
 
-        state.closeSelection();
+          state.closeSelection();
+        }
         break;
     }
   }
@@ -351,19 +409,40 @@ class Utils {
 
   static get defaultAccent => Color(0xFF66BB6A);
 
-  static Future<void> deleteNotes({
+  static Future<bool> deleteNotes({
     @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
+    bool showAuthDialog = true,
+    bool permaDelete = false,
   }) async {
+    if (notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog) {
+      bool status;
+
+      final bool bioAuth = notes.any((n) => n.usesBiometrics)
+          ? await Utils.showBiometricPrompt()
+          : false;
+
+      if (bioAuth)
+        status = bioAuth;
+      else
+        status = await Utils.showPassChallengeSheet(context) ?? false;
+
+      if (!status) return false;
+    }
+
     for (final Note note in notes) {
       if (archive) {
         await helper.saveNote(
             note.markChanged().copyWith(deleted: false, archived: true));
       } else {
-        await helper.saveNote(
-            note.markChanged().copyWith(deleted: true, archived: false));
+        if (permaDelete) {
+          await Utils.deleteNoteSafely(note);
+        } else {
+          await helper.saveNote(
+              note.markChanged().copyWith(deleted: true, archived: false));
+        }
       }
     }
 
@@ -385,14 +464,24 @@ class Utils {
         ),
       ),
     );
+
+    return true;
   }
 
-  static Future<void> restoreNotes({
+  static Future<bool> restoreNotes({
     @required BuildContext context,
     @required List<Note> notes,
     @required String reason,
     bool archive = false,
+    bool showAuthDialog = true,
   }) async {
+    final bool lockSuccess = await Utils.showNoteLockDialog(
+      context: context,
+      showLock: notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog,
+      showBiometrics: notes.any((n) => n.usesBiometrics),
+    );
+    if (!lockSuccess) return false;
+
     for (final Note note in notes) {
       await helper.saveNote(
           note.markChanged().copyWith(deleted: false, archived: false));
@@ -416,6 +505,8 @@ class Utils {
         ),
       ),
     );
+
+    return true;
   }
 
   static List<ContributorInfo> get contributors => [
