@@ -13,7 +13,7 @@ class Themes {
   static final Color lightSecondaryColor = Color(0xFFFAFAFA);
   static final Color darkColor = Color(0xFF212121);
   static final Color darkSecondaryColor = Color(0xFF161616);
-  static final Color blackColor = Color(0xFF0E0E0E);
+  static final Color blackColor = Color(0xFF121212);
   static final Color blackSecondaryColor = Colors.black;
 
   ThemeData get light => ThemeData.light().copyWith(

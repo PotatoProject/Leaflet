@@ -20,19 +20,15 @@ class ImportPage extends StatefulWidget {
 }
 
 class _ImportPageState extends State<ImportPage> {
-  final PageStorageBucket _bucket = PageStorageBucket();
-
   List<Note> loadedNotes;
 
   @override
   Widget build(BuildContext context) {
     final Widget page = loadedNotes == null
         ? _FileSelectionPage(
-            key: PageStorageKey('file'),
             onNextTapped: (notes) => setState(() => loadedNotes = notes),
           )
         : _NoteSelectionPage(
-            key: PageStorageKey('selection'),
             notes: loadedNotes,
           );
 
@@ -48,11 +44,7 @@ class _ImportPageState extends State<ImportPage> {
             fillColor: Colors.transparent,
           );
         },
-        child: PageStorage(
-          key: page.key,
-          bucket: _bucket,
-          child: page,
-        ),
+        child: page,
       ),
     );
   }
@@ -216,15 +208,17 @@ class _NoteSelectionPage extends StatefulWidget {
 }
 
 class _NoteSelectionPageState extends State<_NoteSelectionPage> {
-  List<String> selectedNotes;
+  final List<String> selectedNotes = [];
   bool replaceExistingNotes = false;
 
   @override
   void initState() {
     super.initState();
-    selectedNotes = List.generate(
-      widget.notes.length,
-      (index) => widget.notes[index].id,
+    selectedNotes.addAll(
+      List.generate(
+        widget.notes.length,
+        (index) => widget.notes[index].id,
+      ),
     );
   }
 
