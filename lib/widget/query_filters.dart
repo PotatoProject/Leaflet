@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -36,8 +37,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           activeColor: Theme.of(context).accentColor,
           onChanged: (value) {
             setState(() => widget.query.caseSensitive = value);
-            if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+            widget.filterChangedCallback?.call();
           },
         ),
         SwitchListTile(
@@ -47,8 +47,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           activeColor: Theme.of(context).accentColor,
           onChanged: (value) {
             setState(() => widget.query.onlyFavourites = value);
-            if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+            widget.filterChangedCallback?.call();
           },
         ),
         ListTile(
@@ -77,8 +76,7 @@ class _QueryFiltersState extends State<QueryFilters> {
             if (queryColor != null) {
               setState(() => widget.query.color = queryColor);
             }
-            if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+            widget.filterChangedCallback?.call();
           },
         ),
         ListTile(
@@ -101,16 +99,14 @@ class _QueryFiltersState extends State<QueryFilters> {
                     widget.query.date = date;
                     widget.query.dateMode = mode;
                   });
-                  if (widget.filterChangedCallback != null)
-                    widget.filterChangedCallback();
+                  widget.filterChangedCallback?.call();
                 },
                 onReset: () {
                   setState(() {
                     widget.query.date = null;
                     widget.query.dateMode = DateFilterMode.ONLY;
                   });
-                  if (widget.filterChangedCallback != null)
-                    widget.filterChangedCallback();
+                  widget.filterChangedCallback?.call();
                 },
               ),
             );
@@ -135,8 +131,18 @@ class _QueryFiltersState extends State<QueryFilters> {
               ),
             );
 
-            if (widget.filterChangedCallback != null)
-              widget.filterChangedCallback();
+            widget.filterChangedCallback?.call();
+          },
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(MdiIcons.filterRemoveOutline),
+          title: Text("Clear filters"),
+          onTap: () async {
+            widget.query.reset();
+            setState(() {});
+
+            widget.filterChangedCallback?.call();
           },
         ),
       ],

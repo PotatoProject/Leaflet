@@ -151,11 +151,19 @@ class SearchQuery {
 
   SearchQuery({
     this.caseSensitive = false,
-    int color,
+    int color = 0,
     this.date,
     this.dateMode = DateFilterMode.ONLY,
     this.onlyFavourites = false,
   }) : _color = color;
+
+  void reset() {
+    caseSensitive = false;
+    _color = 0;
+    date = null;
+    dateMode = DateFilterMode.ONLY;
+    onlyFavourites = false;
+  }
 }
 
 enum DateFilterMode {
