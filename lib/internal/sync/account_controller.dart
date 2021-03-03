@@ -87,15 +87,13 @@ class AccountController {
           prefs.refreshToken = response["refresh_token"];
           await getUserInfo();
           return AuthResponse(status: true);
-        case 400:
+        default:
+          Loggy.d(message: loginResponse.body);
           return AuthResponse(
             status: false,
             message: loginResponse.body,
           );
           break;
-        default:
-          Loggy.d(message: loginResponse.body);
-          throw ("Unexpected response from auth server");
       }
     } on SocketException {
       throw ("Could not connect to server");

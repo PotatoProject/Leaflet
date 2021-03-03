@@ -614,7 +614,7 @@ class Utils {
             color: Theme.of(context).iconTheme.color,
           ),
           textAlign: TextAlign.center,
-        )
+        ),
       ],
     );
   }
@@ -977,7 +977,7 @@ extension ContextProviders on BuildContext {
   TextDirection get directionality => Directionality.of(this);
 
   NavigatorState get navigator => Navigator.of(this);
-  void pop<T extends Object>(T result) => navigator.pop<T>(result);
+  void pop<T extends Object>([T result]) => navigator.pop<T>(result);
   Future<T> push<T extends Object>(Route<T> route) => navigator.push<T>(route);
 }
 

@@ -123,32 +123,34 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       SizedBox(height: 16),
-      TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: "Password",
-          errorText: passwordError,
-          suffixIcon: IconButton(
-            icon: Icon(
-              obscurePass
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
+      Builder(builder: (context) {
+        return TextFormField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: "Password",
+            errorText: passwordError,
+            suffixIcon: IconButton(
+              icon: Icon(
+                obscurePass
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+              ),
+              onPressed: () => setState(() => obscurePass = !obscurePass),
             ),
-            onPressed: () => setState(() => obscurePass = !obscurePass),
           ),
-        ),
-        focusNode: passwordFocusNode,
-        onFieldSubmitted: enabledCondition
-            ? (text) => onSubmit()
-            : (text) => FocusScope.of(context).unfocus(),
-        autofillHints: [
-          AutofillHints.password,
-        ],
-        controller: passwordController,
-        keyboardType: TextInputType.visiblePassword,
-        obscureText: obscurePass,
-        onChanged: (_) => setState(() {}),
-      ),
+          focusNode: passwordFocusNode,
+          onFieldSubmitted: enabledCondition
+              ? (text) => onSubmit(context)
+              : (text) => FocusScope.of(context).unfocus(),
+          autofillHints: [
+            AutofillHints.password,
+          ],
+          controller: passwordController,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: obscurePass,
+          onChanged: (_) => setState(() {}),
+        );
+      }),
       SizedBox(height: 16),
       Row(
         children: <Widget>[
@@ -174,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             flex: 12,
             child: ElevatedButton(
               child: Text(register ? "Register" : "Login"),
-              onPressed: enabledCondition ? onSubmit : null,
+              onPressed: enabledCondition ? () => onSubmit(context) : null,
             ),
           ),
         ],
@@ -293,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onSubmit() async {
+  void onSubmit(BuildContext context) async {
     AuthResponse response;
 
     setState(() {
@@ -334,7 +336,9 @@ class _LoginPageState extends State<LoginPage> {
             behavior: SnackBarBehavior.floating,
             width: min(640, MediaQuery.of(context).size.width - 32),
             content: Text(
-              register ? response.message ?? "Registered!" : response.message,
+              register
+                  ? response.message.trim() ?? "Registered!"
+                  : response.message.trim(),
             ),
           ),
         );
