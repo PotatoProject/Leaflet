@@ -8,7 +8,6 @@ import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/fake_appbar.dart';
@@ -32,10 +31,10 @@ class NoteListPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _NoteListPageState createState() => _NoteListPageState();
+  NoteListPageState createState() => NoteListPageState();
 }
 
-class _NoteListPageState extends State<NoteListPage> {
+class NoteListPageState extends State<NoteListPage> {
   bool _selecting = false;
   final List<Note> _selectionList = [];
 
@@ -44,7 +43,7 @@ class _NoteListPageState extends State<NoteListPage> {
   bool get selecting => _selecting;
   set selecting(bool value) {
     _selecting = value;
-    BasePage.of(context).setBottomBarEnabled(!value);
+    context.basePage.setBottomBarEnabled(!value);
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -141,8 +140,8 @@ class _NoteListPageState extends State<NoteListPage> {
 
   Widget get fab {
     return MenuFab(
-      backgroundColor: Theme.of(context).accentColor,
-      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      backgroundColor: context.theme.accentColor,
+      foregroundColor: context.theme.colorScheme.onPrimary,
       fabShape: CircleBorder(),
       menuShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
@@ -194,11 +193,11 @@ class _NoteListPageState extends State<NoteListPage> {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => context.pop(),
                           child: Text(LocaleStrings.common.cancel),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => context.pop(true),
                           child: Text(LocaleStrings.common.restore),
                         ),
                       ],
@@ -231,11 +230,11 @@ class _NoteListPageState extends State<NoteListPage> {
                       content: Text(LocaleStrings.mainPage.tagDeletePrompt),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => context.pop(),
                           child: Text(LocaleStrings.common.cancel),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => context.pop(true),
                           child: Text(LocaleStrings.common.delete),
                         ),
                       ],
@@ -250,7 +249,7 @@ class _NoteListPageState extends State<NoteListPage> {
                   await helper.saveNote(note.markChanged());
                 }
                 tagHelper.deleteTag(prefs.tags[widget.tagIndex]);
-                Navigator.pop(context);
+                context.pop();
               }
             },
           ),
@@ -265,7 +264,7 @@ class _NoteListPageState extends State<NoteListPage> {
                 builder: (context) => TagEditor(
                   tag: prefs.tags[widget.tagIndex],
                   onSave: (tag) {
-                    Navigator.pop(context);
+                    context.pop();
                     tagHelper.saveTag(tag.markChanged());
                   },
                 ),
@@ -276,7 +275,7 @@ class _NoteListPageState extends State<NoteListPage> {
       ];
 
   Widget _buildNoteList(BuildContext context, List<Note> notes, int index) {
-    final _state = SelectionState.of(context);
+    final _state = context.selectionState;
     final Note note = notes[index];
 
     return NoteView(
@@ -294,14 +293,14 @@ class _NoteListPageState extends State<NoteListPage> {
           _state.selecting = true;
           _state.addSelectedNote(note);
         }
-        BasePage.of(context).setBottomBarEnabled(!_state.selecting);
+        context.basePage.setBottomBarEnabled(!_state.selecting);
       },
       allowSelection: true,
     );
   }
 
   void _onNoteTap(BuildContext context, Note note) async {
-    final _state = SelectionState.of(context);
+    final _state = context.selectionState;
 
     if (_state.selecting) {
       if (_state.selectionList.any((item) => item.id == note.id)) {
@@ -330,7 +329,7 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   void _onNoteLongPress(BuildContext context, Note note) {
-    final _state = SelectionState.of(context);
+    final _state = context.selectionState;
 
     if (_state.selecting) return;
 
@@ -341,7 +340,7 @@ class _NoteListPageState extends State<NoteListPage> {
 
 class SelectionState extends InheritedWidget {
   @protected
-  final _NoteListPageState state;
+  final NoteListPageState state;
 
   SelectionState({
     @required this.state,
@@ -353,7 +352,7 @@ class SelectionState extends InheritedWidget {
     return old.state != this.state;
   }
 
-  static _NoteListPageState of(BuildContext context) {
+  static NoteListPageState of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SelectionState>().state;
   }
 }

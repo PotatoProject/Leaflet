@@ -20,8 +20,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -52,7 +51,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => context.pop(),
                   child: Text(LocaleStrings.common.cancel),
                 ),
                 Spacer(),
@@ -60,7 +59,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
                   onPressed: () async {
                     prefs.apiUrl = Utils.defaultApiUrl;
                     await helper.deleteAllNotes();
-                    Navigator.pop(context);
+                    context.pop();
                   },
                   child: Text(LocaleStrings.common.reset),
                 ),
@@ -69,7 +68,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
                       ? () async {
                           prefs.apiUrl = controller.text;
                           await helper.deleteAllNotes();
-                          Navigator.pop(context);
+                          context.pop();
                         }
                       : null,
                   child: Text(LocaleStrings.common.save),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class PopupMenuItemWithIcon<T> extends PopupMenuEntry<T> {
   final T value;
@@ -48,8 +49,8 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
+    final ThemeData theme = context.theme;
+    final PopupMenuThemeData popupMenuTheme = context.theme.popupMenuTheme;
     TextStyle style = widget.textStyle ??
         popupMenuTheme.textStyle ??
         theme.textTheme.subtitle1;
@@ -70,7 +71,7 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
     final bool isDark = theme.brightness == Brightness.dark;
     item = IconTheme.merge(
       data: IconThemeData(
-        color: Theme.of(context).iconTheme.color,
+        color: context.theme.iconTheme.color,
         opacity: widget.enabled
             ? 1.0
             : isDark

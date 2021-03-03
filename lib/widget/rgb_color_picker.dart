@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class RGBColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -36,7 +37,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
+      data: context.theme.copyWith(
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: currentColor.computeLuminance() > 0.5
               ? Colors.black
@@ -56,7 +57,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
 
           return Padding(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
+              bottom: context.viewInsets.bottom,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -144,16 +145,15 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                   alignment: MainAxisAlignment.end,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () => Navigator.pop(context, -1),
+                      onPressed: () => context.pop(-1),
                       child: Text(LocaleStrings.common.reset),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.pop(),
                       child: Text(LocaleStrings.common.cancel),
                     ),
                     TextButton(
-                      onPressed: () =>
-                          Navigator.pop(context, currentColor.value),
+                      onPressed: () => context.pop(currentColor.value),
                       child: Text(LocaleStrings.common.confirm),
                     ),
                   ],

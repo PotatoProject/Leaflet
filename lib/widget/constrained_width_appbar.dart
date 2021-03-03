@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class ConstrainedWidthAppbar extends StatelessWidget with PreferredSizeWidget {
   final Widget child;
@@ -14,7 +15,7 @@ class ConstrainedWidthAppbar extends StatelessWidget with PreferredSizeWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double parentWidth = constraints.maxWidth == double.infinity
-            ? MediaQuery.of(context).size.width
+            ? context.mSize.width
             : constraints.maxWidth;
         final double _padding = (parentWidth - width) / 2;
 

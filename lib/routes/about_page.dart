@@ -12,14 +12,14 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleStrings.about.title),
-        textTheme: Theme.of(context).textTheme,
+        textTheme: context.theme.textTheme,
       ),
       extendBodyBehindAppBar: true,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return ListView(
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
+              top: context.padding.top,
             ),
             children: <Widget>[
               Container(
@@ -114,7 +114,7 @@ class AboutPage extends StatelessWidget {
                 final bool result = await Utils.launchUrl(link);
 
                 if (result) {
-                  Navigator.pop(context);
+                  context.pop();
                 }
               },
             ),

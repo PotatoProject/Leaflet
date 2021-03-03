@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/badge_icon.dart';
 
 class AccountAvatar extends StatelessWidget {
@@ -31,7 +32,7 @@ class AccountAvatar extends StatelessWidget {
                 backgroundColor: backgroundColor ?? Colors.transparent,
                 child: Icon(
                   Icons.person_outline,
-                  color: Theme.of(context).iconTheme.color,
+                  color: context.theme.iconTheme.color,
                 ),
                 foregroundImage:
                     avatarUrl != null ? NetworkImage(avatarUrl) : null,

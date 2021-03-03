@@ -3,6 +3,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/setup/finish_page.dart';
 import 'package:potato_notes/routes/setup/basic_customization_page.dart';
 import 'package:potato_notes/routes/setup/welcome_page.dart';
@@ -37,7 +38,7 @@ class _SetupPagetate extends State<SetupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextDirection textDirection = Directionality.of(context);
+    final TextDirection textDirection = context.directionality;
     String buttonText;
 
     if (pageIndex == 0) {
@@ -91,7 +92,7 @@ class _SetupPagetate extends State<SetupPage> {
               horizontal: 16,
             ),
             margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom,
+              bottom: context.padding.bottom,
             ),
             child: Row(
               children: [
@@ -106,7 +107,7 @@ class _SetupPagetate extends State<SetupPage> {
                       ? nextPage
                       : () {
                           prefs.welcomePageSeen = true;
-                          Navigator.pop(context);
+                          context.pop();
                         },
                   text: Text(
                     buttonText.toUpperCase(),

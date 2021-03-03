@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/routes/note_list_page.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,7 +15,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = SelectionState.of(context);
+    final state = context.selectionState;
     final List<Note> selectionList = state.selectionList;
     final SelectionOptions selectionOptions = state.selectionOptions;
     final List<SelectionOptionEntry> everyOption =
@@ -37,7 +37,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         selectionList.length.toString(),
         style: TextStyle(
-          color: Theme.of(context).iconTheme.color,
+          color: context.theme.iconTheme.color,
           fontSize: 18,
           fontWeight: FontWeight.w500,
         ),

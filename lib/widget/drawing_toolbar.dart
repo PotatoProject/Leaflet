@@ -75,7 +75,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
         maxWidth: 360,
       ),
       child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: context.theme.scaffoldBackgroundColor,
         elevation: 8,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -108,7 +108,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 }
               },
               child: Material(
-                color: Theme.of(context).cardColor,
+                color: context.theme.cardColor,
                 elevation: 4,
                 child: Container(
                   height: 48,
@@ -145,7 +145,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           icon: Icon(e.icon),
                           tooltip: e.title,
                           color: widget.toolIndex == i
-                              ? Theme.of(context).accentColor
+                              ? context.theme.accentColor
                               : null,
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           onPressed: widget.toolIndex == i
@@ -204,9 +204,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                                   painter: _ToolSizeButtonPainter(
                                     ToolSize.values[index] / 2,
                                     currentTool.size == ToolSize.values[index],
-                                    Theme.of(context)
-                                        .disabledColor
-                                        .withOpacity(1),
+                                    context.theme.disabledColor.withOpacity(1),
                                   ),
                                 ),
                               ),
@@ -298,10 +296,10 @@ class _DrawingToolbarState extends State<DrawingToolbar>
               ),
             ),
             Material(
-              color: Theme.of(context).cardColor,
+              color: context.theme.cardColor,
               elevation: 4,
               child: Container(
-                height: MediaQuery.of(context).padding.bottom,
+                height: context.padding.bottom,
               ),
             ),
           ],
@@ -404,7 +402,7 @@ class _ColorStrip extends StatelessWidget {
                           side: color.value == Colors.white.value ||
                                   color.value == Colors.black.value
                               ? BorderSide(
-                                  color: Theme.of(context).disabledColor,
+                                  color: context.theme.disabledColor,
                                   width: 2,
                                 )
                               : BorderSide.none,

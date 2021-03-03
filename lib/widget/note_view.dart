@@ -7,7 +7,6 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
@@ -50,14 +49,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   Widget build(BuildContext context) {
     final Color backgroundColor = widget.note.color != 0
         ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
-        : Theme.of(context).cardColor;
-    final Color borderColor = widget.selected
-        ? Theme.of(context).iconTheme.color
-        : Colors.transparent;
+        : context.theme.cardColor;
+    final Color borderColor =
+        widget.selected ? context.theme.iconTheme.color : Colors.transparent;
     final Color checkBoxColor =
         widget.note.images.isNotEmpty && !widget.note.hideContent
             ? Colors.white
-            : Theme.of(context).iconTheme.color.withOpacity(1);
+            : context.theme.iconTheme.color.withOpacity(1);
     final Color checkColor =
         widget.note.images.isNotEmpty && !widget.note.hideContent
             ? Colors.black
@@ -132,14 +130,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     visible: content.isNotEmpty,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal:
-                            16 + Theme.of(context).visualDensity.horizontal,
-                        vertical: 16 + Theme.of(context).visualDensity.vertical,
+                        horizontal: 16 + context.theme.visualDensity.horizontal,
+                        vertical: 16 + context.theme.visualDensity.vertical,
                       ),
                       child: SeparatedList(
                         children: content,
                         separator: SizedBox(
-                          height: 4 + Theme.of(context).visualDensity.vertical,
+                          height: 4 + context.theme.visualDensity.vertical,
                         ),
                       ),
                     ),
@@ -152,10 +149,10 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         width: constraints.maxWidth,
                         padding: content.isEmpty
                             ? EdgeInsets.symmetric(
-                                horizontal: 16 +
-                                    Theme.of(context).visualDensity.horizontal,
-                                vertical: 16 +
-                                    Theme.of(context).visualDensity.vertical,
+                                horizontal:
+                                    16 + context.theme.visualDensity.horizontal,
+                                vertical:
+                                    16 + context.theme.visualDensity.vertical,
                               )
                             : null,
                       ),
@@ -229,7 +226,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).textTheme.caption.color.withOpacity(0.7),
+            color: context.theme.textTheme.caption.color.withOpacity(0.7),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -248,7 +245,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           widget.note.content,
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).textTheme.caption.color.withOpacity(0.5),
+            color: context.theme.textTheme.caption.color.withOpacity(0.5),
           ),
           maxLines: 8,
           overflow: TextOverflow.ellipsis,
@@ -277,7 +274,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           final Color backgroundColor = widget.note.color != 0
               ? Color(
                   NoteColors.colorList[widget.note.color].dynamicColor(context))
-              : Theme.of(context).cardColor;
+              : context.theme.cardColor;
           final bool showMoreItem = index == 5;
           final Widget icon = showMoreItem
               ? Icon(
@@ -287,8 +284,8 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
               : NoteViewCheckbox(
                   value: item.status,
                   activeColor: widget.note.color != 0
-                      ? Theme.of(context).textTheme.caption.color
-                      : Theme.of(context).accentColor,
+                      ? context.theme.textTheme.caption.color
+                      : context.theme.accentColor,
                   checkColor: backgroundColor,
                   onChanged: (value) {
                     widget.note.listContent[index].status = value;
@@ -324,13 +321,10 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                       text,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .textTheme
-                            .caption
-                            .color
-                            .withOpacity(
-                              item.status && !showMoreItem ? 0.5 : 0.7,
-                            ),
+                        color:
+                            context.theme.textTheme.caption.color.withOpacity(
+                          item.status && !showMoreItem ? 0.5 : 0.7,
+                        ),
                         decoration: item.status && !showMoreItem
                             ? TextDecoration.lineThrough
                             : null,
@@ -346,7 +340,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
 
   void showOptionsMenu(details) async {
     final SelectionOptions selectionOptions =
-        SelectionState.of(context).selectionOptions;
+        context.selectionState.selectionOptions;
     final List<SelectionOptionEntry> everyOption =
         selectionOptions.options(context, [widget.note]);
     final List<SelectionOptionEntry> options =

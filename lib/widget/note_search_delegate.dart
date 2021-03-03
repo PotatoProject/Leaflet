@@ -39,7 +39,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
-        final Brightness brightness = Theme.of(context).brightness;
+        final Brightness brightness = context.theme.brightness;
         final Widget illustration = query.isEmpty
             ? Utils.quickIllustration(
                 context,

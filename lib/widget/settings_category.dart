@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class SettingsCategory extends StatelessWidget {
   final String header;
@@ -16,7 +17,7 @@ class SettingsCategory extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).viewPadding.left + 16,
+            context.viewPadding.left + 16,
             8,
             16,
             8,
@@ -31,7 +32,7 @@ class SettingsCategory extends StatelessWidget {
   Widget headerWidget(String text) => Builder(
         builder: (context) {
           TextStyle heading = TextStyle(
-            color: Theme.of(context).accentColor,
+            color: context.theme.accentColor,
             fontWeight: FontWeight.bold,
             fontSize: 12,
             letterSpacing: 2,

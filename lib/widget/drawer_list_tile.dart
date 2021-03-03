@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class DrawerListTile extends StatefulWidget {
   final Widget icon;
@@ -51,14 +52,14 @@ class _DrawerListTileState extends State<DrawerListTile>
 
   @override
   Widget build(BuildContext context) {
-    final Color contrast = Theme.of(context).brightness == Brightness.dark
+    final Color contrast = context.theme.brightness == Brightness.dark
         ? Colors.white
         : Colors.black;
 
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final IconThemeData iconTheme = Theme.of(context).iconTheme;
-    final Color _activeColor = Theme.of(context).accentColor;
-    final VisualDensity visualDensity = Theme.of(context).visualDensity;
+    final TextTheme textTheme = context.theme.textTheme;
+    final IconThemeData iconTheme = context.theme.iconTheme;
+    final Color _activeColor = context.theme.accentColor;
+    final VisualDensity visualDensity = context.theme.visualDensity;
     final Offset baseDensity = visualDensity.baseSizeAdjustment;
     final double height = 56 + baseDensity.dy;
 
@@ -70,7 +71,7 @@ class _DrawerListTileState extends State<DrawerListTile>
     final Widget child = Row(
       children: [
         Theme(
-          data: Theme.of(context).copyWith(
+          data: context.theme.copyWith(
             iconTheme: iconTheme.copyWith(
               color: widget.active ? _activeColor : contrast.withOpacity(0.7),
               size: 24,

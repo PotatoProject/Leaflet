@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class NoteColors {
   static List<ColorInfo> get colorList => [
@@ -99,7 +100,7 @@ class ColorInfo {
   });
 
   int dynamicColor(BuildContext context) {
-    final Brightness brightness = Theme.of(context).brightness;
+    final Brightness brightness = context.theme.brightness;
 
     return brightness == Brightness.light
         ? lightColor ?? color

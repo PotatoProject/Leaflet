@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class FlatIconButton extends StatelessWidget {
   final Widget icon;
@@ -13,9 +14,9 @@ class FlatIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color highlightColor = Theme.of(context).accentColor.withOpacity(0.1);
-    final ThemeData theme = Theme.of(context);
-    final Color accent = Theme.of(context).accentColor;
+    final Color highlightColor = context.theme.accentColor.withOpacity(0.1);
+    final ThemeData theme = context.theme;
+    final Color accent = context.theme.accentColor;
 
     return InkResponse(
       onTap: onPressed,

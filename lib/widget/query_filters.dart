@@ -34,7 +34,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           secondary: Icon(Icons.format_size),
           title: Text(LocaleStrings.common.caseSensitive),
           value: widget.query.caseSensitive,
-          activeColor: Theme.of(context).accentColor,
+          activeColor: context.theme.accentColor,
           onChanged: (value) {
             setState(() => widget.query.caseSensitive = value);
             widget.filterChangedCallback?.call();
@@ -44,7 +44,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           secondary: Icon(Icons.favorite_border),
           title: Text("Favourites only"),
           value: widget.query.onlyFavourites,
-          activeColor: Theme.of(context).accentColor,
+          activeColor: context.theme.accentColor,
           onChanged: (value) {
             setState(() => widget.query.onlyFavourites = value);
             widget.filterChangedCallback?.call();
@@ -66,9 +66,9 @@ class _QueryFiltersState extends State<QueryFilters> {
                 selectedColor: widget.query.color ?? 0,
                 onColorSelect: (color) {
                   if (color == 0)
-                    Navigator.pop(context, -1);
+                    context.pop(-1);
                   else
-                    Navigator.pop(context, color);
+                    context.pop(color);
                 },
               ),
             );

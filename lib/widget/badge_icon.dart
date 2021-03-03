@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class BadgeIcon extends StatelessWidget {
   final Widget icon;
@@ -26,7 +27,7 @@ class BadgeIcon extends StatelessWidget {
                   clipper: _BadgeClipper(
                     badgeAlignment ?? AlignmentDirectional.topEnd,
                     badgeSize,
-                    Directionality.of(context),
+                    context.directionality,
                   ),
                   child: IconTheme.merge(
                     data: IconThemeData(size: size),
@@ -36,7 +37,7 @@ class BadgeIcon extends StatelessWidget {
                 CustomSingleChildLayout(
                   delegate: _BadgeLayoutDelegate(
                     badgeAlignment ?? AlignmentDirectional.topEnd,
-                    Directionality.of(context),
+                    context.directionality,
                   ),
                   child: SizedBox.fromSize(
                     size: Size.square(badgeSize),

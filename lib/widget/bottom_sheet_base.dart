@@ -109,7 +109,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
               minHeight: 0.0,
               maxHeight: min(
                 600.0 + context.viewInsets.bottom,
-                MediaQuery.of(context).size.height,
+                context.mSize.height,
               ),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;

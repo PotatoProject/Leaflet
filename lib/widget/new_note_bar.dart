@@ -12,11 +12,11 @@ class NewNoteBar extends StatelessWidget {
           "Write a note",
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
+            color: context.theme.textTheme.bodyText1.color.withOpacity(0.7),
           ),
         ),
       ),
-      textTheme: Theme.of(context).textTheme,
+      textTheme: context.theme.textTheme,
       flexibleSpace: InkWell(
         onTap: () => Utils.newNote(context),
       ),

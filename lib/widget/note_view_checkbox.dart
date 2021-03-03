@@ -6,6 +6,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 /// A material design checkbox.
 ///
@@ -221,7 +222,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
-    final ThemeData themeData = Theme.of(context);
+    final ThemeData themeData = context.theme;
     Size size = Size.square(24);
     final BoxConstraints additionalConstraints = BoxConstraints.tight(size);
     final MouseCursor effectiveMouseCursor =

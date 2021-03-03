@@ -6,7 +6,6 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_image.dart';
 
@@ -39,10 +38,10 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
 
   @override
   Widget build(BuildContext context) {
-    DismissibleRoute.of(context).requestDisableGestures = currentScale > 1;
+    context.dismissibleRoute.requestDisableGestures = currentScale > 1;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -92,7 +91,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
         ],
       ),
       appBar: AppBar(
-        textTheme: Theme.of(context).textTheme,
+        textTheme: context.theme.textTheme,
         title: Text(
           LocaleStrings.common.xOfY(
             (currentPage + 1),
@@ -129,7 +128,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
               widget.note.images.removeWhere((savedImage) =>
                   widget.note.images[currentPage].id == savedImage.id);
               helper.saveNote(widget.note.markChanged());
-              Navigator.pop(context);
+              context.pop();
             },
           ),
         ],

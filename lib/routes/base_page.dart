@@ -120,12 +120,11 @@ class BasePageState extends State<BasePage>
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
-  void hideCurrentSnackBar() =>
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  void hideCurrentSnackBar() => context.scaffoldMessenger.hideCurrentSnackBar();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     SnackBar snackBar,
   ) =>
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      context.scaffoldMessenger.showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
         BottomNavigationBarItem(
@@ -230,7 +229,7 @@ class BasePageState extends State<BasePage>
         return BasePageInheritedWidget(
           state: this,
           child: Material(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: context.theme.scaffoldBackgroundColor,
             child: Stack(
               children: [
                 Positioned.fill(
@@ -280,13 +279,12 @@ class BasePageState extends State<BasePage>
                           secondaryAnimation: secondaryAnimation,
                           fillColor: Colors.transparent,
                           child: MediaQuery(
-                            data: MediaQuery.of(context).copyWith(
-                              padding: MediaQuery.of(context).padding.copyWith(
-                                    top: useDynamicDrawer
-                                        ? MediaQuery.of(context).padding.top
-                                        : MediaQuery.of(context).padding.top +
-                                            56,
-                                  ),
+                            data: context.mediaQuery.copyWith(
+                              padding: context.padding.copyWith(
+                                top: useDynamicDrawer
+                                    ? context.padding.top
+                                    : context.padding.top + 56,
+                              ),
                             ),
                             child: PageStorage(
                               bucket: _bucket,
@@ -438,7 +436,7 @@ class _SecondaryAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: context.viewInsets.bottom,
       ),
       child: SlideTransition(
         position: Tween<Offset>(
@@ -461,14 +459,14 @@ class _SecondaryAppBar extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
               ),
-              color: Theme.of(context).cardColor,
+              color: context.theme.cardColor,
               child: SizedBox(
                 height: 48,
                 child: Theme(
-                  data: Theme.of(context).copyWith(
-                    appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                          color: Theme.of(context).cardColor,
-                        ),
+                  data: context.theme.copyWith(
+                    appBarTheme: context.theme.appBarTheme.copyWith(
+                      color: context.theme.cardColor,
+                    ),
                   ),
                   child: child ?? Container(),
                 ),
@@ -476,7 +474,7 @@ class _SecondaryAppBar extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               elevation: 8,
             ),
-            width: min(640, MediaQuery.of(context).size.width - 32),
+            width: min(640, context.mSize.width - 32),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class AppbarNavigation extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
@@ -29,7 +30,7 @@ class AppbarNavigation extends StatelessWidget {
             (index) => _NavigationButton(
               item: items[index],
               selected: this.index == index,
-              selectedColor: Theme.of(context).accentColor,
+              selectedColor: context.theme.accentColor,
               onTap: () => onPageChanged(index),
             ),
           ),
@@ -102,7 +103,7 @@ class _NavigationButtonState extends State<_NavigationButton>
                 size: 24,
                 color: widget.selected
                     ? widget.selectedColor
-                    : Theme.of(context).iconTheme.color,
+                    : context.theme.iconTheme.color,
                 opacity: 1,
               ),
               child: widget.item.icon,

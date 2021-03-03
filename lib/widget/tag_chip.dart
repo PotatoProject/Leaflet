@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class TagChip extends StatelessWidget {
   final String title;
@@ -13,7 +14,7 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color contrast = Theme.of(context).iconTheme.color.withOpacity(0.2);
+    final Color contrast = context.theme.iconTheme.color.withOpacity(0.2);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -49,7 +50,7 @@ class TagChip extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: shrink ? 12 : 14,
-                    color: Theme.of(context).iconTheme.color.withOpacity(1),
+                    color: context.theme.iconTheme.color.withOpacity(1),
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,

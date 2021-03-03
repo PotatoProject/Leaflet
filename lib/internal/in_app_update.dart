@@ -66,7 +66,7 @@ class InAppUpdater {
             actions: [
               TextButton(
                 child: Text("Close"),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => context.pop(),
               ),
             ],
           ),
@@ -120,11 +120,11 @@ class InAppUpdater {
           actions: [
             TextButton(
               child: Text("Not now".toUpperCase()),
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () => context.pop(false),
             ),
             TextButton(
               child: Text("Update".toUpperCase()),
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => context.pop(true),
             ),
           ],
         );

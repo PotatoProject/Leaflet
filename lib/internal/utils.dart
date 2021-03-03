@@ -57,7 +57,7 @@ class Utils {
       context: context,
       builder: (context) => PassChallenge(
         editMode: false,
-        onChallengeSuccess: () => Navigator.pop(context, true),
+        onChallengeSuccess: () => context.pop(true),
         onSave: null,
       ),
     );
@@ -107,8 +107,7 @@ class Utils {
     Color barrierColor,
     bool childHandlesScroll = false,
   }) async {
-    return await Navigator.push<T>(
-      context,
+    return await context.push<T>(
       BottomSheetRoute(
         child: builder(context),
         backgroundColor: backgroundColor,
@@ -196,7 +195,7 @@ class Utils {
 
   static Future<void> _onSelected(
       BuildContext context, List<Note> notes, String value) async {
-    final state = SelectionState.of(context);
+    final state = context.selectionState;
 
     switch (value) {
       case 'select':
@@ -259,7 +258,7 @@ class Utils {
             builder: (context) => NoteColorSelector(
               selectedColor: selectedColor,
               onColorSelect: (color) {
-                Navigator.pop(context, color);
+                context.pop(color);
               },
             ),
           );
@@ -448,12 +447,12 @@ class Utils {
 
     final List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar();
-    BasePage.of(context)?.showSnackBar(
+    context.basePage?.hideCurrentSnackBar();
+    context.basePage?.showSnackBar(
       SnackBar(
         content: Text(reason),
         behavior: SnackBarBehavior.floating,
-        width: min(640, MediaQuery.of(context).size.width - 32),
+        width: min(640, context.mSize.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -489,12 +488,12 @@ class Utils {
 
     final List<Note> backupNotes = List.from(notes);
 
-    BasePage.of(context)?.hideCurrentSnackBar();
-    BasePage.of(context)?.showSnackBar(
+    context.basePage?.hideCurrentSnackBar();
+    context.basePage?.showSnackBar(
       SnackBar(
         content: Text(reason),
         behavior: SnackBarBehavior.floating,
-        width: min(640, MediaQuery.of(context).size.width - 32),
+        width: min(640, context.mSize.width - 32),
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
@@ -581,7 +580,7 @@ class Utils {
     bool allowGestures = true,
     bool pushImmediate = false,
   }) async {
-    return Navigator.of(context).push(
+    return context.push(
       DismissiblePageRoute(
         builder: (context) => ScaffoldMessenger(
           child: route,
@@ -611,7 +610,7 @@ class Utils {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).iconTheme.color,
+            color: context.theme.iconTheme.color,
           ),
           textAlign: TextAlign.center,
         ),
@@ -968,7 +967,7 @@ extension ContextProviders on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
-  Size get size => mediaQuery.size;
+  Size get mSize => mediaQuery.size;
   EdgeInsets get padding => mediaQuery.padding;
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
   EdgeInsets get viewPadding => mediaQuery.viewPadding;
@@ -979,6 +978,14 @@ extension ContextProviders on BuildContext {
   NavigatorState get navigator => Navigator.of(this);
   void pop<T extends Object>([T result]) => navigator.pop<T>(result);
   Future<T> push<T extends Object>(Route<T> route) => navigator.push<T>(route);
+
+  NoteListPageState get selectionState => SelectionState.of(this);
+
+  ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+
+  FocusScopeNode get focusScope => FocusScope.of(this);
+
+  DismissibleRouteState get dismissibleRoute => DismissibleRoute.of(this);
 }
 
 class SuspendedCurve extends Curve {

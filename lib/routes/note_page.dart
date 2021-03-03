@@ -86,7 +86,7 @@ class _NotePageState extends State<NotePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
         if (widget.focusTitle) {
-          FocusScope.of(context).requestFocus(titleFocusNode);
+          context.focusScope.requestFocus(titleFocusNode);
         }
       } else {
         if (widget.openWithList) toggleList();
@@ -126,7 +126,7 @@ class _NotePageState extends State<NotePage> {
             note.listContent.isEmpty;
 
     return Theme(
-      data: Theme.of(context).copyWith(
+      data: context.theme.copyWith(
         scaffoldBackgroundColor: note.color != 0
             ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
@@ -134,32 +134,30 @@ class _NotePageState extends State<NotePage> {
             ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
         accentColor:
-            note.color != 0 ? Theme.of(context).textTheme.caption.color : null,
+            note.color != 0 ? context.theme.textTheme.caption.color : null,
         bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: note.color != 0
-              ? Theme.of(context).textTheme.caption.color
+          backgroundColor:
+              note.color != 0 ? context.theme.textTheme.caption.color : null,
+        ),
+        appBarTheme: context.theme.appBarTheme.copyWith(
+          color: note.color != 0
+              ? Color(NoteColors.colorList[note.color].dynamicColor(context))
+                  .withOpacity(0.9)
               : null,
         ),
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              color: note.color != 0
-                  ? Color(NoteColors.colorList[note.color]
-                          .dynamicColor(context))
-                      .withOpacity(0.9)
-                  : null,
-            ),
         toggleableActiveColor: note.color != 0
-            ? Theme.of(context).textTheme.caption.color
-            : Theme.of(context).accentColor,
+            ? context.theme.textTheme.caption.color
+            : context.theme.accentColor,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: note.color != 0
-              ? Theme.of(context).textTheme.caption.color
-              : Theme.of(context).accentColor,
+              ? context.theme.textTheme.caption.color
+              : context.theme.accentColor,
           selectionColor: note.color != 0
-              ? Theme.of(context).textTheme.caption.color.withOpacity(0.3)
-              : Theme.of(context).accentColor.withOpacity(0.3),
+              ? context.theme.textTheme.caption.color.withOpacity(0.3)
+              : context.theme.accentColor.withOpacity(0.3),
           selectionHandleColor: note.color != 0
-              ? Theme.of(context).textTheme.caption.color
-              : Theme.of(context).accentColor,
+              ? context.theme.textTheme.caption.color
+              : context.theme.accentColor,
         ),
       ),
       child: Builder(builder: (context) {
@@ -182,15 +180,15 @@ class _NotePageState extends State<NotePage> {
                 onPressed: () {
                   setState(() => note = note.copyWith(starred: !note.starred));
                   notifyNoteChanged();
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  context.scaffoldMessenger.removeCurrentSnackBar();
+                  context.scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: Text(
                         note.starred
                             ? LocaleStrings.notePage.addedFavourites
                             : LocaleStrings.notePage.removedFavourites,
                       ),
-                      width: min(640, MediaQuery.of(context).size.width - 32),
+                      width: min(640, context.mSize.width - 32),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -205,7 +203,7 @@ class _NotePageState extends State<NotePage> {
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 56,
+                    top: context.padding.top + 56,
                     bottom: 16,
                   ),
                   children: [
@@ -217,7 +215,7 @@ class _NotePageState extends State<NotePage> {
                     if (note.tags.isNotEmpty)
                       Container(
                         padding: EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width,
+                        width: context.mSize.width,
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
@@ -245,7 +243,7 @@ class _NotePageState extends State<NotePage> {
                         notifyNoteChanged();
                       },
                       onSubmitted: (value) =>
-                          FocusScope.of(context).requestFocus(contentFocusNode),
+                          context.focusScope.requestFocus(contentFocusNode),
                     ),
                     _NotePageTextFormField(
                       contentField: true,
@@ -268,7 +266,7 @@ class _NotePageState extends State<NotePage> {
                             index == note.listContent.length - 1) {
                           needsFocus = false;
                           WidgetsBinding.instance.addPostFrameCallback(
-                            (_) => FocusScope.of(context)
+                            (_) => context.focusScope
                                 .requestFocus(listContentNodes.last),
                           );
                         }
@@ -292,11 +290,11 @@ class _NotePageState extends State<NotePage> {
                               if (note.listContent.last.text != "") {
                                 addListContentItem();
                               } else {
-                                FocusScope.of(context)
+                                context.focusScope
                                     .requestFocus(listContentNodes[index]);
                               }
                             } else {
-                              FocusScope.of(context)
+                              context.focusScope
                                   .requestFocus(listContentNodes[index + 1]);
                             }
                           },
@@ -308,7 +306,7 @@ class _NotePageState extends State<NotePage> {
                           checkColor: note.color != 0
                               ? Color(NoteColors.colorList[note.color]
                                   .dynamicColor(context))
-                              : Theme.of(context).scaffoldBackgroundColor,
+                              : context.theme.scaffoldBackgroundColor,
                         );
                       }),
                     if (note.list)
@@ -322,7 +320,7 @@ class _NotePageState extends State<NotePage> {
                           title: Text(
                             LocaleStrings.notePage.addEntryHint,
                             style: TextStyle(
-                              color: Theme.of(context).iconTheme.color,
+                              color: context.theme.iconTheme.color,
                             ),
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 16),
@@ -337,7 +335,7 @@ class _NotePageState extends State<NotePage> {
               if (note.images.isNotEmpty && deviceInfo.isLandscape)
                 Container(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 56,
+                    top: context.padding.top + 56,
                   ),
                   width: imageWidgetSize,
                   child: getImageWidget(Axis.vertical),
@@ -346,13 +344,13 @@ class _NotePageState extends State<NotePage> {
           ),
           bottomNavigationBar: !deviceInfo.isLandscape
               ? Material(
-                  color: Theme.of(context).cardColor,
+                  color: context.theme.cardColor,
                   elevation: 8,
                   child: Container(
                     height: 48,
                     margin: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom +
-                          MediaQuery.of(context).padding.bottom,
+                      bottom:
+                          context.viewInsets.bottom + context.padding.bottom,
                     ),
                     padding: EdgeInsets.all(8),
                     child: Row(
@@ -415,14 +413,14 @@ class _NotePageState extends State<NotePage> {
           tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showNotesModalBottomSheet(
             context: context,
-            backgroundColor: Theme.of(context).cardColor,
+            backgroundColor: context.theme.cardColor,
             builder: (context) => NoteColorSelector(
               selectedColor: note.color,
               onColorSelect: (color) {
                 setState(() => note = note.copyWith(color: color));
                 notifyNoteChanged();
 
-                Navigator.pop(context);
+                context.pop();
               },
             ),
           ),
@@ -476,7 +474,7 @@ class _NotePageState extends State<NotePage> {
   void handleAddItemTap(BuildContext context, String value) async {
     switch (value) {
       case 'list':
-        Navigator.pop(context);
+        context.pop();
         toggleList();
         break;
       case 'image':
@@ -484,7 +482,7 @@ class _NotePageState extends State<NotePage> {
 
         if (image != null) {
           await handleImageAdd(image.path);
-          Navigator.pop(context);
+          context.pop();
         }
         break;
       case 'camera':
@@ -493,11 +491,11 @@ class _NotePageState extends State<NotePage> {
 
         if (image != null) {
           handleImageAdd(image.path);
-          Navigator.pop(context);
+          context.pop();
         }
         break;
       case 'drawing':
-        Navigator.pop(context);
+        context.pop();
         addDrawing();
         break;
     }
@@ -529,7 +527,7 @@ class _NotePageState extends State<NotePage> {
   void showPrivacyOptionSheet() {
     Utils.showNotesModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
+      backgroundColor: context.theme.bottomSheetTheme.backgroundColor,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => Column(
           mainAxisSize: MainAxisSize.min,
@@ -541,7 +539,7 @@ class _NotePageState extends State<NotePage> {
                     () => note = note.copyWith(hideContent: !note.hideContent));
                 notifyNoteChanged();
               },
-              activeColor: Theme.of(context).accentColor,
+              activeColor: context.theme.accentColor,
               secondary: Icon(Icons.remove_red_eye_outlined),
               title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
@@ -559,7 +557,7 @@ class _NotePageState extends State<NotePage> {
                       }
                     }
                   : null,
-              activeColor: Theme.of(context).accentColor,
+              activeColor: context.theme.accentColor,
               secondary: Icon(Icons.lock_outlined),
               title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
@@ -590,7 +588,7 @@ class _NotePageState extends State<NotePage> {
                         }
                       }
                     : null,
-                activeColor: Theme.of(context).accentColor,
+                activeColor: context.theme.accentColor,
                 secondary: Icon(Icons.fingerprint_outlined),
                 title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),
@@ -669,14 +667,14 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
       key: ValueKey(widget.item.id),
       onDismissed: widget.onDismissed,
       background: Container(
-        color: Theme.of(context).brightness == Brightness.dark
+        color: context.theme.brightness == Brightness.dark
             ? Colors.red[400]
             : Colors.red[600],
         padding: EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.centerRight,
         child: Icon(
           Icons.delete_outline,
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: context.theme.scaffoldBackgroundColor,
         ),
       ),
       direction: isMouseConnected
@@ -693,8 +691,8 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
             child: NoteViewCheckbox(
               value: widget.item.status,
               onChanged: widget.onCheckChanged,
-              checkColor: widget.checkColor ??
-                  Theme.of(context).scaffoldBackgroundColor,
+              checkColor:
+                  widget.checkColor ?? context.theme.scaffoldBackgroundColor,
               width: 18,
             ),
           ),
@@ -706,9 +704,9 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
             ),
             textCapitalization: TextCapitalization.sentences,
             style: TextStyle(
-              color: Theme.of(context).iconTheme.color.withOpacity(
-                    widget.item.status ? 0.3 : 0.7,
-                  ),
+              color: context.theme.iconTheme.color.withOpacity(
+                widget.item.status ? 0.3 : 0.7,
+              ),
               decoration:
                   widget.item.status ? TextDecoration.lineThrough : null,
             ),
@@ -755,8 +753,8 @@ class _NotePageTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: 16 + MediaQuery.of(context).viewPadding.left,
-        right: 16 + MediaQuery.of(context).viewPadding.right,
+        left: 16 + context.viewPadding.left,
+        right: 16 + context.viewPadding.right,
       ),
       child: TextFormField(
         controller: controller,
@@ -765,10 +763,7 @@ class _NotePageTextFormField extends StatelessWidget {
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(
-            color: Theme.of(context)
-                .textTheme
-                .caption
-                .color
+            color: context.theme.textTheme.caption.color
                 .withOpacity(contentField ? 0.3 : 0.5),
           ),
           isDense: contentField,
@@ -778,10 +773,7 @@ class _NotePageTextFormField extends StatelessWidget {
         style: TextStyle(
           fontSize: contentField ? 16 : 18,
           fontWeight: contentField ? FontWeight.normal : FontWeight.w500,
-          color: Theme.of(context)
-              .textTheme
-              .caption
-              .color
+          color: context.theme.textTheme.caption.color
               .withOpacity(contentField ? 0.5 : 0.7),
         ),
         onChanged: onChanged,

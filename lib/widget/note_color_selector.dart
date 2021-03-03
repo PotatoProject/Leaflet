@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
@@ -34,7 +35,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
   Widget noteColorItem(int index, double size, bool selected) {
     Color getIconColor() {
       if (index == 0) {
-        Brightness themeBrightness = Theme.of(context).brightness;
+        Brightness themeBrightness = context.theme.brightness;
 
         if (themeBrightness == Brightness.light)
           return ThemeData.light().iconTheme.color;

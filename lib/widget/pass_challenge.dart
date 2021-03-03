@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
@@ -39,8 +40,7 @@ class _PassChallengeState extends State<PassChallenge> {
         !widget.editMode ? int.tryParse(prefs.masterPass) != null : false;
 
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

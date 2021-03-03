@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class BasePageNavigationBar extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
@@ -32,7 +33,7 @@ class BasePageNavigationBar extends StatelessWidget {
       ),
       child: Material(
         elevation: 0,
-        color: Theme.of(context).canvasColor,
+        color: context.theme.canvasColor,
         child: IgnorePointer(
           ignoring: !enabled,
           child: AnimatedOpacity(
@@ -54,8 +55,8 @@ class BasePageNavigationBar extends StatelessWidget {
               currentIndex: index,
               onTap: onPageChanged,
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: Theme.of(context).accentColor,
-              unselectedItemColor: Theme.of(context).textTheme.caption.color,
+              selectedItemColor: context.theme.accentColor,
+              unselectedItemColor: context.theme.textTheme.caption.color,
               elevation: 0,
             ),
           ),

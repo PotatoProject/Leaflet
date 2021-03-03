@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/account_info.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -22,7 +21,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = BasePage.of(context);
+    final state = context.basePage;
     final Widget _leading = state != null
         ? Center(
             child: Illustration.leaflet(
@@ -39,14 +38,14 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: MediaQuery.of(context).viewPadding.left,
-        right: MediaQuery.of(context).viewPadding.right,
+        left: context.viewPadding.left,
+        right: context.viewPadding.right,
       ),
       child: AppBar(
         leading: _leading,
         titleSpacing: 0,
         title: _title,
-        textTheme: Theme.of(context).textTheme,
+        textTheme: context.theme.textTheme,
         centerTitle: false,
         actions: [
           Visibility(

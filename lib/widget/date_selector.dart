@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class DateFilterSelector extends StatefulWidget {
   final DateTime date;
@@ -115,7 +116,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                 TextButton(
                   child: Text(LocaleStrings.common.cancel),
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop();
                   },
                 ),
                 Spacer(),
@@ -126,7 +127,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                   child: Text(LocaleStrings.common.confirm),
                   onPressed: () {
                     widget.onConfirm(selectedDate, selectedMode);
-                    Navigator.pop(context);
+                    context.pop();
                   },
                 ),
               ],
@@ -149,9 +150,9 @@ class _DateFilterSelectorHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.surface,
+      color: context.theme.colorScheme.surface,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: context.mSize.width,
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.symmetric(
           horizontal: 24,
@@ -162,16 +163,16 @@ class _DateFilterSelectorHeader extends StatelessWidget {
             Text(
               DateFormat("EEE, MMM d", context.locale.toLanguageTag())
                   .format(date),
-              style: Theme.of(context).textTheme.headline5.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+              style: context.theme.textTheme.headline5.copyWith(
+                color: context.theme.colorScheme.onSurface,
+              ),
             ),
             Spacer(),
             TextButton(
               child: Text(LocaleStrings.common.reset),
               onPressed: () {
                 onReset?.call();
-                Navigator.pop(context);
+                context.pop();
               },
             ),
           ],

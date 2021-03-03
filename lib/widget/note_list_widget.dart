@@ -29,10 +29,10 @@ class NoteListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EdgeInsets padding = EdgeInsets.fromLTRB(
-      4 + MediaQuery.of(context).viewPadding.left,
-      4 + MediaQuery.of(context).padding.top,
-      4 + MediaQuery.of(context).viewPadding.right,
-      4 + 80.0 + MediaQuery.of(context).viewInsets.bottom,
+      4 + context.viewPadding.left,
+      4 + context.padding.top,
+      4 + context.viewPadding.right,
+      4 + 80.0 + context.viewInsets.bottom,
     );
     Widget child;
 
@@ -65,14 +65,14 @@ class NoteListWidget extends StatelessWidget {
         builder: (context, constraints) {
           return Container(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
+              bottom: context.viewInsets.bottom,
             ),
             height: constraints.maxHeight,
             child: customIllustration ??
                 Utils.quickIllustration(
                   context,
-                  getInfoOnCurrentMode(Theme.of(context).brightness).key,
-                  getInfoOnCurrentMode(Theme.of(context).brightness).value,
+                  getInfoOnCurrentMode(context.theme.brightness).key,
+                  getInfoOnCurrentMode(context.theme.brightness).value,
                 ),
           );
         },

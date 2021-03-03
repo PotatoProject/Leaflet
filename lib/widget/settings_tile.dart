@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class SettingsTile extends StatelessWidget {
   final Widget title;
@@ -44,18 +45,18 @@ class SettingsTile extends StatelessWidget {
 
     if (subtitle != null) {
       _subtitle = DefaultTextStyle(
-        style: Theme.of(context).textTheme.subtitle2.copyWith(
-              color: Theme.of(context).textTheme.caption.color,
-            ),
+        style: context.theme.textTheme.subtitle2.copyWith(
+          color: context.theme.textTheme.caption.color,
+        ),
         child: subtitle,
       );
     }
 
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(
-        16 + MediaQuery.of(context).viewPadding.left,
+        16 + context.viewPadding.left,
         0,
-        16 + MediaQuery.of(context).viewPadding.right,
+        16 + context.viewPadding.right,
         0,
       ),
       leading: icon,

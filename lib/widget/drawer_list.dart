@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {
@@ -39,13 +40,13 @@ class DrawerList extends StatelessWidget {
             itemBuilder: (context, index) => drawerSections[index],
             itemCount: drawerSections.length,
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
+              top: context.padding.top,
             ),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: context.viewInsets.bottom,
           ),
           child: footer ?? Container(),
         ),

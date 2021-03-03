@@ -127,7 +127,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
     return DismissiblePageTransition(
       child: DismissibleRoute(
         child: child,
-        maxWidth: MediaQuery.of(context).size.width,
+        maxWidth: context.mSize.width,
         enableGesture: allowGestures && _isPopGestureEnabled(route),
         controller: route.controller,
         navigator: route.navigator,
@@ -190,7 +190,7 @@ class _DismissiblePageTransitionState extends State<DismissiblePageTransition> {
 
   @override
   Widget build(BuildContext context) {
-    final TextDirection textDirection = Directionality.of(context);
+    final TextDirection textDirection = context.directionality;
 
     Animation<Offset> fgAnimation = CurvedAnimation(
       parent: widget.animation,
@@ -267,16 +267,16 @@ class DismissibleRoute extends StatefulWidget {
   });
 
   @override
-  _DismissibleRouteState createState() => _DismissibleRouteState();
+  DismissibleRouteState createState() => DismissibleRouteState();
 
-  static _DismissibleRouteState of(BuildContext context) {
+  static DismissibleRouteState of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<_DismissibleRouteInheritedWidget>()
         ?.state;
   }
 }
 
-class _DismissibleRouteState extends State<DismissibleRoute> {
+class DismissibleRouteState extends State<DismissibleRoute> {
   bool _requestDisableGestures = false;
 
   set requestDisableGestures(bool disable) {
@@ -292,17 +292,16 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
     final bool _enableGesture =
         deviceInfo.uiSizeFactor > 3 ? false : _barrierDismissible;
     final EdgeInsets padding = EdgeInsets.symmetric(
-      horizontal: context.mediaQuery.size.width / 8,
-      vertical: context.mediaQuery.size.height / 16,
+      horizontal: context.mSize.width / 8,
+      vertical: context.mSize.height / 16,
     );
 
     final double width = widget.isFirst || deviceInfo.uiSizeFactor <= 3
-        ? context.mediaQuery.size.width
-        : (context.mediaQuery.size.width - padding.horizontal)
-            .clamp(0.0, 720.0);
+        ? context.mSize.width
+        : (context.mSize.width - padding.horizontal).clamp(0.0, 720.0);
     final double height = widget.isFirst || deviceInfo.uiSizeFactor <= 3
-        ? context.mediaQuery.size.height
-        : (context.mediaQuery.size.height - padding.vertical).clamp(0.0, 580.0);
+        ? context.mSize.height
+        : (context.mSize.height - padding.vertical).clamp(0.0, 580.0);
 
     final Widget content = Material(
       elevation: 16,
@@ -335,10 +334,10 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
             ? (details) async {
                 setState(() => _gestureStartAllowed = false);
                 if (details.primaryVelocity > 345) {
-                  Navigator.pop(context);
+                  context.pop();
                 } else {
                   if (widget.controller.value < 0.5) {
-                    Navigator.pop(context);
+                    context.pop();
                   } else {
                     await widget.controller.animateTo(1);
                   }
@@ -371,7 +370,7 @@ class _DismissibleRouteState extends State<DismissibleRoute> {
                       : context.mediaQuery.padding,
                   viewInsets: context.mediaQuery.viewInsets.copyWith(
                     bottom: context.mediaQuery.viewInsets.bottom -
-                        ((context.mediaQuery.size.height - height) / 2),
+                        ((context.mSize.height - height) / 2),
                   ),
                 ),
               ),
@@ -390,7 +389,7 @@ class _DismissibleRouteInheritedWidget extends InheritedWidget {
     this.state,
   }) : super(key: key, child: child);
 
-  final _DismissibleRouteState state;
+  final DismissibleRouteState state;
 
   @override
   bool updateShouldNotify(_DismissibleRouteInheritedWidget oldWidget) {

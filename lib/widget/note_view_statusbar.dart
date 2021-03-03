@@ -99,9 +99,9 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
           width: widget.width,
           padding: widget.padding ??
               EdgeInsets.only(
-                left: 16 + Theme.of(context).visualDensity.horizontal,
-                right: 16 + Theme.of(context).visualDensity.horizontal,
-                bottom: 16 + Theme.of(context).visualDensity.vertical,
+                left: 16 + context.theme.visualDensity.horizontal,
+                right: 16 + context.theme.visualDensity.horizontal,
+                bottom: 16 + context.theme.visualDensity.vertical,
               ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,7 +111,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                   DateFormat("d MMMM y", context.locale.toString())
                       .format(widget.note.creationDate),
                   style: TextStyle(
-                    color: Theme.of(context).iconTheme.color.withOpacity(0.5),
+                    color: context.theme.iconTheme.color.withOpacity(0.5),
                     fontSize: 12,
                   ),
                 ),
@@ -119,7 +119,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
               Visibility(
                 visible: icons.isNotEmpty,
                 child: IconTheme(
-                  data: Theme.of(context).iconTheme.copyWith(size: 16),
+                  data: context.theme.iconTheme.copyWith(size: 16),
                   child: Wrap(
                     alignment: WrapAlignment.end,
                     children: List.generate(

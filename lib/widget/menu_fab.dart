@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class MenuFab extends StatefulWidget {
   final Key key;
@@ -82,7 +83,7 @@ class _MenuFabState extends State<MenuFab> {
   double _elevation;
 
   void _updateColors() {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final FloatingActionButtonThemeData floatingActionButtonTheme =
         theme.floatingActionButtonTheme;
 
@@ -220,7 +221,7 @@ class _MenuFabState extends State<MenuFab> {
 
   Future<void> _showFabMenu() async {
     setState(() => _disableElevation = true);
-    await Navigator.of(context).push(
+    await context.push(
       PageRouteBuilder(
         pageBuilder: (_, animation, secondaryAnimation) => _MenuFabRoute(
           animation: CurvedAnimation(
@@ -480,13 +481,13 @@ class _MenuEntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseAdjustment = Theme.of(context).visualDensity.baseSizeAdjustment;
+    final baseAdjustment = context.theme.visualDensity.baseSizeAdjustment;
 
     return Material(
       color: tileColor,
       child: InkWell(
         onTap: () {
-          Navigator.pop(context);
+          context.pop();
           onTap?.call();
         },
         child: Container(

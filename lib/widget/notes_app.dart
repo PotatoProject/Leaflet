@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
 /// [MaterialApp] uses this [TextStyle] as its [DefaultTextStyle] to encourage
@@ -640,7 +641,7 @@ class NotesApp extends StatefulWidget {
 class _MaterialScrollBehavior extends ScrollBehavior {
   @override
   TargetPlatform getPlatform(BuildContext context) {
-    return Theme.of(context).platform;
+    return context.theme.platform;
   }
 
   @override
@@ -660,7 +661,7 @@ class _MaterialScrollBehavior extends ScrollBehavior {
         return GlowingOverscrollIndicator(
           child: child,
           axisDirection: axisDirection,
-          color: Theme.of(context).accentColor,
+          color: context.theme.accentColor,
         );
     }
   }
@@ -701,11 +702,10 @@ class _NotesAppState extends State<NotesApp> {
   Widget _materialBuilder(BuildContext context, Widget child) {
     // Resolve which theme to use based on brightness and high contrast.
     final ThemeMode mode = widget.themeMode ?? ThemeMode.system;
-    final Brightness platformBrightness =
-        MediaQuery.platformBrightnessOf(context);
+    final Brightness platformBrightness = context.mediaQuery.platformBrightness;
     final bool useDarkTheme = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == ui.Brightness.dark);
-    final bool highContrast = MediaQuery.highContrastOf(context);
+    final bool highContrast = context.mediaQuery.highContrast;
     ThemeData theme;
 
     if (useDarkTheme && highContrast && widget.highContrastDarkTheme != null) {

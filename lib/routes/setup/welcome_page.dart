@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 
 const double _logoHeight = 64;
@@ -12,7 +13,7 @@ class WelcomePage extends StatelessWidget {
       builder: (context, constraints) {
         final double height = deviceInfo.uiSizeFactor > 3
             ? constraints.maxHeight
-            : MediaQuery.of(context).size.height;
+            : context.mSize.height;
 
         return Scaffold(
           body: SizedBox.expand(

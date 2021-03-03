@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/widget/dismissible_route.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -57,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     BackButtonInterceptor.add((_, __) => showLoadingOverlay, name: "antiPop");
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => FocusScope.of(context).requestFocus(emailOrUserFocusNode),
+      (_) => context.focusScope.requestFocus(emailOrUserFocusNode),
     );
     super.initState();
   }
@@ -81,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
           passwordController.text.isNotEmpty;
     }
 
-    DismissibleRoute.of(context).requestDisableGestures = showLoadingOverlay;
+    context.dismissibleRoute.requestDisableGestures = showLoadingOverlay;
 
     final List<Widget> items = [
       TextFormField(
@@ -93,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
         autofillHints: [
           AutofillHints.email,
         ],
-        onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(
+        onFieldSubmitted: (_) => context.focusScope.requestFocus(
           register ? usernameFocusNode : passwordFocusNode,
         ),
         controller: register ? emailController : emailOrUserController,
@@ -116,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
             AutofillHints.username,
           ],
           onFieldSubmitted: (_) =>
-              FocusScope.of(context).requestFocus(passwordFocusNode),
+              context.focusScope.requestFocus(passwordFocusNode),
           controller: usernameController,
           focusNode: usernameFocusNode,
           onChanged: (_) => setState(() {}),
@@ -141,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
           focusNode: passwordFocusNode,
           onFieldSubmitted: enabledCondition
               ? (text) => onSubmit(context)
-              : (text) => FocusScope.of(context).unfocus(),
+              : (text) => context.focusScope.unfocus(),
           autofillHints: [
             AutofillHints.password,
           ],
@@ -189,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
           key: scaffoldKey,
           appBar: AppBar(
             title: Text(register ? "Register" : "Login"),
-            textTheme: Theme.of(context).textTheme,
+            textTheme: context.theme.textTheme,
           ),
           body: Center(
             child: SingleChildScrollView(
@@ -241,10 +240,9 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() => register = !register);
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (register) {
-                              FocusScope.of(context)
-                                  .requestFocus(emailFocusNode);
+                              context.focusScope.requestFocus(emailFocusNode);
                             } else {
-                              FocusScope.of(context)
+                              context.focusScope
                                   .requestFocus(emailOrUserFocusNode);
                             }
                           });
@@ -254,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: RichText(
                           text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: context.theme.textTheme.bodyText2,
                             children: [
                               TextSpan(
                                 text: register
@@ -264,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                               TextSpan(
                                 text: register ? "Login." : "Register.",
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color: context.theme.accentColor,
                                 ),
                               ),
                             ],
@@ -320,7 +318,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => showLoadingOverlay = false);
 
     if (response.status && !register) {
-      Navigator.pop(context);
+      context.pop();
     } else {
       if (response.message.startsWith("{")) {
         final Map<String, dynamic> validation = json.decode(response.message);
@@ -330,11 +328,11 @@ class _LoginPageState extends State<LoginPage> {
           passwordError = getString(validation["password"]);
         });
       } else {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.scaffoldMessenger.removeCurrentSnackBar();
+        context.scaffoldMessenger.showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            width: min(640, MediaQuery.of(context).size.width - 32),
+            width: min(640, context.mSize.width - 32),
             content: Text(
               register
                   ? response.message.trim() ?? "Registered!"

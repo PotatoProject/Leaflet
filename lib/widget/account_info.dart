@@ -32,7 +32,7 @@ class AccountInfo extends StatelessWidget {
                   AccountAvatar(
                     size: 36,
                     backgroundColor:
-                        Theme.of(context).iconTheme.color.withOpacity(0.1),
+                        context.theme.iconTheme.color.withOpacity(0.1),
                     showBadgeOnSync: false,
                   ),
                   SizedBox(
@@ -51,10 +51,7 @@ class AccountInfo extends StatelessWidget {
                         prefs.email ?? "Not logged in",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context)
-                              .iconTheme
-                              .color
-                              .withOpacity(0.5),
+                          color: context.theme.iconTheme.color.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -74,7 +71,7 @@ class AccountInfo extends StatelessWidget {
                           ? snapshot.data.used / snapshot.data.limit
                           : null,
                       backgroundColor:
-                          Theme.of(context).accentColor.withOpacity(0.2),
+                          context.theme.accentColor.withOpacity(0.2),
                     ),
                     trailing: Text(
                       snapshot.hasData
@@ -128,7 +125,7 @@ class AccountInfo extends StatelessWidget {
                 leading: Icon(Icons.logout),
                 title: Text("Logout"),
                 onTap: () async {
-                  Navigator.pop(context);
+                  context.pop();
                   await AccountController.logout();
                 },
                 contentPadding: EdgeInsets.symmetric(horizontal: 24),
@@ -138,7 +135,7 @@ class AccountInfo extends StatelessWidget {
                 leading: Icon(Icons.login),
                 title: Text("Login"),
                 onTap: () async {
-                  Navigator.pop(context);
+                  context.pop();
                   await Utils.showSecondaryRoute(context, LoginPage());
                 },
                 contentPadding: EdgeInsets.symmetric(horizontal: 24),

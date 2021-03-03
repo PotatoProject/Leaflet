@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 
 class SearchPage extends StatefulWidget {
@@ -97,7 +98,7 @@ abstract class CustomSearchDelegate<T> {
 
   void close(BuildContext context) {
     _focusNode?.unfocus();
-    Navigator.of(context)..pop();
+    context.pop();
   }
 
   final String searchFieldLabel;

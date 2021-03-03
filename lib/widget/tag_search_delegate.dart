@@ -44,8 +44,8 @@ class TagSearchDelegate extends CustomSearchDelegate {
           (index) => _TapIsolatedListTile(
             leading: NoteViewCheckbox(
               value: tags.contains(filteredTags[index].id),
-              checkColor: Theme.of(context).scaffoldBackgroundColor,
-              activeColor: Theme.of(context).accentColor,
+              checkColor: context.theme.scaffoldBackgroundColor,
+              activeColor: context.theme.accentColor,
               onChanged: (value) =>
                   _onChangeValue(value, filteredTags[index].id),
               width: 18,
@@ -61,13 +61,13 @@ class TagSearchDelegate extends CustomSearchDelegate {
                   initialInput: query,
                   tag: filteredTags[index],
                   onSave: (tag) {
-                    Navigator.pop(context);
+                    context.pop();
                     tagHelper.saveTag(tag.markChanged());
 
                     onChanged?.call();
                   },
                   onDelete: (tag) {
-                    Navigator.pop(context);
+                    context.pop();
                     tagHelper.deleteTag(tag.markChanged());
 
                     setState(() {
@@ -92,7 +92,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
               builder: (context) => TagEditor(
                 initialInput: query,
                 onSave: (tag) {
-                  Navigator.pop(context, true);
+                  context.pop(true);
                   tagHelper.saveTag(tag.markChanged());
                 },
               ),
@@ -135,7 +135,7 @@ class _TapIsolatedListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final double _height = 56 + theme.visualDensity.baseSizeAdjustment.dy;
 
     return SizedBox.fromSize(

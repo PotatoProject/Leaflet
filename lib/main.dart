@@ -117,7 +117,7 @@ class PotatoNotes extends StatelessWidget {
             }
 
             deviceInfo.updateDeviceInfo(
-              MediaQuery.of(context),
+              context.mediaQuery,
               canUseSystemAccent,
             );
 

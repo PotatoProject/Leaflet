@@ -10,6 +10,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
@@ -153,13 +154,13 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                 children: [
                   Icon(
                     Icons.check,
-                    color: Theme.of(context).accentColor,
+                    color: context.theme.accentColor,
                   ),
                   SizedBox(width: 8),
                   Text(
                     "Notes loaded successfully",
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: context.theme.accentColor,
                     ),
                   ),
                 ],
@@ -269,7 +270,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
             TextButton.icon(
               style: TextButton.styleFrom(
                 textStyle: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText2.color,
+                  color: context.theme.textTheme.bodyText2.color,
                 ),
                 padding: EdgeInsets.only(
                   left: 10,
@@ -283,14 +284,14 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 child: NoteViewCheckbox(
                   value: replaceExistingNotes,
                   onChanged: (value) {},
-                  checkColor: Theme.of(context).scaffoldBackgroundColor,
-                  activeColor: Theme.of(context).accentColor,
+                  checkColor: context.theme.scaffoldBackgroundColor,
+                  activeColor: context.theme.accentColor,
                 ),
               ),
               label: Text(
                 "Replace existing notes",
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText2.color,
+                  color: context.theme.textTheme.bodyText2.color,
                 ),
               ),
             ),
@@ -306,7 +307,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                         await helper.saveNote(note);
                       }
 
-                      Navigator.pop(context);
+                      context.pop();
                     }
                   : null,
               icon: Icon(Icons.check),

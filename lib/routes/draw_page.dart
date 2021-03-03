@@ -185,13 +185,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                       actions: [
                         TextButton(
                           child: Text(LocaleStrings.common.cancel),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => context.pop(),
                         ),
                         TextButton(
                           child: Text(LocaleStrings.common.confirm),
                           onPressed: () {
                             _controller.clearCanvas();
-                            Navigator.pop(context);
+                            context.pop();
                           },
                         ),
                       ],
@@ -321,11 +321,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
             content: Text(LocaleStrings.drawing.exitPrompt),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => context.pop(),
                 child: Text(LocaleStrings.common.cancel),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
+                onPressed: () => context.pop(true),
                 child: Text(LocaleStrings.common.exit),
               ),
             ],

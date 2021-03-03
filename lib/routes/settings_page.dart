@@ -13,7 +13,6 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/import_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
@@ -48,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Observer(builder: (context) {
         return ListView(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            top: context.padding.top,
+            bottom: context.viewInsets.bottom,
           ),
           children: [
             commonSettings,
@@ -61,8 +60,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text("Backup"),
                   description: Text("Create a local copy of your notes"),
                   onTap: () {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.scaffoldMessenger.removeCurrentSnackBar();
+                    context.scaffoldMessenger.showSnackBar(
                       SnackBar(
                         content: Text(
                             "This feature is not yet available on this version."),
@@ -77,8 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   description: Text(
                       "Restore a backup created from a version of Leaflet"),
                   onTap: () {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    context.scaffoldMessenger.removeCurrentSnackBar();
+                    context.scaffoldMessenger.showSnackBar(
                       SnackBar(
                         content: Text(
                             "This feature is not yet available on this version."),
@@ -133,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       LocaleStrings.settings.debugShowSetupScreen,
                     ),
                     value: !prefs.welcomePageSeen,
-                    activeColor: Theme.of(context).accentColor,
+                    activeColor: context.theme.accentColor,
                     onChanged: (value) async {
                       prefs.welcomePageSeen = !value;
                     },
@@ -163,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             onTap: () {
                               prefs.logLevel = logEntryValues[index];
-                              Navigator.pop(context);
+                              context.pop();
                             },
                           );
                         },
@@ -203,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       onTap: () {
                         prefs.themeMode = ThemeMode.values[index];
-                        Navigator.pop(context);
+                        context.pop();
                       },
                     );
                   },
@@ -217,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settings.personalizationUseAmoled),
               icon: Icon(Icons.brightness_2_outlined),
-              activeColor: Theme.of(context).accentColor,
+              activeColor: context.theme.accentColor,
             ),
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(
@@ -229,7 +228,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   LocaleStrings.settings.personalizationUseCustomAccent,
                 ),
                 icon: Icon(Icons.color_lens_outlined),
-                activeColor: Theme.of(context).accentColor,
+                activeColor: context.theme.accentColor,
               ),
             SettingsTile(
               title: Text(
@@ -255,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 final int result = await Utils.showNotesModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
-                    initialColor: Theme.of(context).accentColor,
+                    initialColor: context.theme.accentColor,
                   ),
                 );
 
@@ -273,7 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settings.personalizationUseGrid),
               icon: Icon(Icons.dashboard_outlined),
-              activeColor: Theme.of(context).accentColor,
+              activeColor: context.theme.accentColor,
             ),
             SettingsTile(
               icon: Icon(Icons.translate),
@@ -304,7 +303,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           context.setLocale(locale);
                         }
                         setState(() {});
-                        Navigator.pop(context);
+                        context.pop();
                       },
                     );
                   },
@@ -363,7 +362,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         await helper.listNotes(ReturnMode.LOCAL);
 
                     setState(() => removingMasterPass = true);
-                    BasePage.of(context).setBottomBarEnabled(false);
+                    context.basePage.setBottomBarEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
                       final Note note = notes[i];
                       if (note.lockNote) {
@@ -372,13 +371,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       }
                     }
-                    BasePage.of(context).setBottomBarEnabled(true);
+                    context.basePage.setBottomBarEnabled(true);
                   }
                 }
               },
               icon: Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settings.privacyUseMasterPass),
-              activeColor: Theme.of(context).accentColor,
+              activeColor: context.theme.accentColor,
               subtitle: removingMasterPass ? LinearProgressIndicator() : null,
             ),
             SettingsTile(
@@ -412,7 +411,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 leading: Icon(Icons.arrow_forward),
                 title: Text(buttonAction),
                 onTap: () {
-                  Navigator.pop(context, true);
+                  context.pop(true);
                 },
               ),
             ],
@@ -481,11 +480,11 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (context) => PassChallenge(
         editMode: editMode,
-        onChallengeSuccess: () => Navigator.pop(context, true),
+        onChallengeSuccess: () => context.pop(true),
         onSave: (text) async {
           prefs.masterPass = text;
 
-          Navigator.pop(context);
+          context.pop();
         },
       ),
     );
