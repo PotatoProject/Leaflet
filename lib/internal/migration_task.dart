@@ -28,8 +28,14 @@ class MigrationTask {
     if (path == null) return null;
 
     final Database db = DeviceInfo.isDesktop
-        ? await databaseFactoryFfi.openDatabase(path)
-        : await databaseFactory.openDatabase(path);
+        ? await databaseFactoryFfi.openDatabase(
+            path,
+            options: OpenDatabaseOptions(readOnly: true),
+          )
+        : await databaseFactory.openDatabase(
+            path,
+            options: OpenDatabaseOptions(readOnly: true),
+          );
 
     final List<Map<String, dynamic>> rawV1Notes = await db.query('notes');
     final List<Note> notes = [];

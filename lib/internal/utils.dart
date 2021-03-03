@@ -75,7 +75,7 @@ class Utils {
     );
   }
 
-  static Future<dynamic> showNotesModalBottomSheet({
+  static Future<dynamic> showNotesModalBottomSheet<T>({
     @required BuildContext context,
     @required WidgetBuilder builder,
     Color backgroundColor,
@@ -85,7 +85,7 @@ class Utils {
     Color barrierColor,
     bool childHandlesScroll = false,
   }) async {
-    return await Navigator.push(
+    return await Navigator.push<T>(
       context,
       BottomSheetRoute(
         child: builder(context),

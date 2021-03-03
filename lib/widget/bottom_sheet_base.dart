@@ -107,7 +107,10 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
               minWidth: 0,
               maxWidth: roundedShortestSide.toDouble(),
               minHeight: 0.0,
-              maxHeight: min(600.0, MediaQuery.of(context).size.height),
+              maxHeight: min(
+                600.0 + context.viewInsets.bottom,
+                MediaQuery.of(context).size.height,
+              ),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
 
@@ -187,7 +190,9 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                             child: MediaQuery(
                               data: context.mediaQuery.copyWith(
                                 viewInsets: context.viewInsets.copyWith(
-                                  bottom: 0,
+                                  bottom: _useDesktopLayout
+                                      ? 0
+                                      : context.viewInsets.bottom,
                                 ),
                               ),
                               child: !widget.childHandlesScroll

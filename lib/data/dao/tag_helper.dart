@@ -16,6 +16,7 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
       case TagReturnMode.SYNCED:
         return (select(tags)..where((table) => table.id.contains("-synced")))
             .get();
+      case TagReturnMode.LOCAL:
       default:
         return (select(tags)
               ..where((table) => table.id.contains("-synced").not()))
@@ -33,6 +34,7 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
         selectQuery = select(tags)
           ..where((table) => table.id.contains("-synced"));
         break;
+      case TagReturnMode.LOCAL:
       default:
         selectQuery = select(tags)
           ..where((table) => table.id.contains("-synced").not());

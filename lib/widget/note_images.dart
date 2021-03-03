@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/widget/note_image.dart';
+import 'package:potato_notes/widget/separated_list.dart';
+
+const double _kImageGridSpacing = 2.0;
+const double _kImageStripSpacing = 8.0;
 
 class NoteImages extends StatelessWidget {
   final List<SavedImage> images;
@@ -69,7 +73,10 @@ class _ImageGrid extends StatelessWidget {
           );
         }
 
-        return Column(children: _rows);
+        return SeparatedList(
+          children: _rows,
+          separator: SizedBox(height: _kImageGridSpacing),
+        );
       },
     );
   }
@@ -89,7 +96,10 @@ class _ImageGrid extends StatelessWidget {
         _sizes.map((s) => s.aspectRatio * _height).toList();
 
     final double _widthSum = _sumWidths(_transformedWidths);
-    final double _newHeight = baseWidth * _height / _widthSum;
+    final double _newHeight =
+        (baseWidth - (images.length - 1) * _kImageGridSpacing) *
+            _height /
+            _widthSum;
 
     final List<double> _newWidths =
         _sizes.map((s) => s.aspectRatio * _newHeight).toList();
@@ -113,7 +123,11 @@ class _ImageGrid extends StatelessWidget {
       );
     }
 
-    return Row(children: _children);
+    return SeparatedList(
+      children: _children,
+      axis: Axis.horizontal,
+      separator: SizedBox(width: _kImageGridSpacing),
+    );
   }
 
   double _sumWidths(List<double> sizes) {
@@ -153,38 +167,62 @@ class _ImageStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return ListView.builder(
-          itemBuilder: (context, index) {
-            final SavedImage _image = images[index];
-            Size _imageWidgetSize;
+    return Padding(
+      padding: const EdgeInsets.all(_kImageStripSpacing),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(_kImageStripSpacing / 2),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return ListView.separated(
+              itemBuilder: (context, index) {
+                final SavedImage _image = images[index];
+                Size _imageWidgetSize;
 
-            if (axis == Axis.horizontal) {
-              _imageWidgetSize = Size(
-                constraints.maxHeight * _image.size.aspectRatio,
-                constraints.maxHeight,
-              );
-            } else {
-              _imageWidgetSize = Size(
-                constraints.maxWidth,
-                constraints.maxWidth / _image.size.aspectRatio,
-              );
-            }
+                if (axis == Axis.horizontal) {
+                  _imageWidgetSize = Size(
+                    constraints.maxHeight * _image.size.aspectRatio,
+                    constraints.maxHeight,
+                  );
+                } else {
+                  _imageWidgetSize = Size(
+                    constraints.maxWidth,
+                    constraints.maxWidth / _image.size.aspectRatio,
+                  );
+                }
 
-            return SizedBox.fromSize(
-              size: _imageWidgetSize,
-              child: InkWell(
-                onTap: () => onImageTap?.call(index),
-                child: NoteImage(savedImage: _image),
+                return SizedBox.fromSize(
+                  size: _imageWidgetSize,
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(_kImageStripSpacing / 2),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: NoteImage(savedImage: _image),
+                        ),
+                        Positioned.fill(
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: InkWell(
+                              onTap: () => onImageTap?.call(index),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) => SizedBox.fromSize(
+                size: Size.square(_kImageStripSpacing),
               ),
+              itemCount: images.length,
+              scrollDirection: axis,
+              padding: EdgeInsets.zero,
             );
           },
-          itemCount: images.length,
-          scrollDirection: axis,
-          padding: EdgeInsets.zero,
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -134,20 +134,5 @@ class NotesPlugin : FlutterPlugin {
                 else -> false
             }
         }
-
-        enum class ThemeMode(val value: Long) {
-            SYSTEM(0L),
-            LIGHT(1L),
-            DARK(2L);
-
-            fun fromValue(value: Long): ThemeMode {
-                return when(value) {
-                    0L -> ThemeMode.SYSTEM
-                    1L -> ThemeMode.LIGHT
-                    2L -> ThemeMode.DARK
-                    else -> ThemeMode.SYSTEM
-                }
-            }
-        }
     }
 }

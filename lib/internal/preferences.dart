@@ -3,6 +3,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
@@ -113,7 +114,7 @@ abstract class _PreferencesBase with Store {
   String get avatarUrl => _avatarUrlValue;
   String get avatarUrlAsKey => _avatarUrlValue.split("?").first;
   int get logLevel => _logLevelValue;
-  List<dynamic> get tags => _tagsValue;
+  List<Tag> get tags => _tagsValue.map((e) => e as Tag).toList();
   List<String> get downloadedImages => _downloadedImagesValue;
   List<String> get deletedImages => _deletedImagesValue;
   int get lastUpdated => _lastUpdatedValue;
@@ -225,14 +226,16 @@ abstract class _PreferencesBase with Store {
       _masterPassValue = await keystore.getMasterPass();
     }
 
-    final String netAvatarUrl = await ImageHelper.getAvatar(await getToken());
-    if (netAvatarUrl != _avatarUrlValue) {
-      avatarUrl = netAvatarUrl;
-    }
+    _tagsValue = await tagHelper.listTags(TagReturnMode.LOCAL);
 
     tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
       _tagsValue = newTags;
     });
+
+    final String netAvatarUrl = await ImageHelper.getAvatar(await getToken());
+    if (netAvatarUrl != _avatarUrlValue) {
+      avatarUrl = netAvatarUrl;
+    }
   }
 
   Future<String> getToken() async {

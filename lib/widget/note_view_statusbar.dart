@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -54,80 +55,90 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: icons.isNotEmpty || widget.note.tags.isNotEmpty,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Visibility(
-            visible: widget.note.tags.isNotEmpty,
-            child: Container(
-              width: widget.width,
-              padding:
-                  widget.padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
-              child: Wrap(
-                spacing: 4,
-                runSpacing: 4,
-                alignment: WrapAlignment.start,
-                children: List.generate(
-                  widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
-                  (index) {
-                    if (index != 3) {
-                      Tag tag;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Visibility(
+          visible: widget.note.tags.isNotEmpty,
+          child: Container(
+            width: widget.width,
+            padding: widget.padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            child: Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              alignment: WrapAlignment.start,
+              children: List.generate(
+                widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
+                (index) {
+                  if (index != 3) {
+                    Tag tag;
 
-                      try {
-                        tag = prefs.tags.firstWhere(
-                            (tag) => tag.id == widget.note.tags[index]);
-                      } on StateError {
-                        return Container();
-                      }
-
-                      return TagChip(
-                        title: tag.name,
-                      );
-                    } else {
-                      return TagChip(
-                        title: "+${widget.note.tags.length - 3}",
-                        showIcon: false,
-                      );
+                    try {
+                      tag = prefs.tags.firstWhere(
+                          (tag) => tag.id == widget.note.tags[index]);
+                    } on StateError {
+                      return Container();
                     }
-                  },
-                ),
+
+                    return TagChip(
+                      title: tag.name,
+                    );
+                  } else {
+                    return TagChip(
+                      title: "+${widget.note.tags.length - 3}",
+                      showIcon: false,
+                    );
+                  }
+                },
               ),
             ),
           ),
-          Visibility(
-            visible: icons.isNotEmpty,
-            child: Container(
-              width: widget.width,
-              padding: widget.padding ??
-                  EdgeInsets.only(
-                    left: 16 + Theme.of(context).visualDensity.horizontal,
-                    right: 16 + Theme.of(context).visualDensity.horizontal,
-                    bottom: 16 + Theme.of(context).visualDensity.vertical,
-                  ),
-              child: IconTheme(
-                data: Theme.of(context).iconTheme.copyWith(size: 16),
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  children: List.generate(
-                    icons.isNotEmpty ? icons.length + icons.length - 1 : 0,
-                    (index) {
-                      if (index % 2 == 0)
-                        return icons[index ~/ 2];
-                      else
-                        return VerticalDivider(
-                          width: 4,
-                          color: Colors.transparent,
-                        );
-                    },
+        ),
+        Container(
+          width: widget.width,
+          padding: widget.padding ??
+              EdgeInsets.only(
+                left: 16 + Theme.of(context).visualDensity.horizontal,
+                right: 16 + Theme.of(context).visualDensity.horizontal,
+                bottom: 16 + Theme.of(context).visualDensity.vertical,
+              ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  DateFormat("d MMM yyyy").format(widget.note.creationDate),
+                  style: TextStyle(
+                    color: Theme.of(context).iconTheme.color.withOpacity(0.5),
+                    fontSize: 12,
                   ),
                 ),
               ),
-            ),
+              Visibility(
+                visible: icons.isNotEmpty,
+                child: IconTheme(
+                  data: Theme.of(context).iconTheme.copyWith(size: 16),
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    children: List.generate(
+                      icons.isNotEmpty ? icons.length + icons.length - 1 : 0,
+                      (index) {
+                        if (index % 2 == 0)
+                          return icons[index ~/ 2];
+                        else
+                          return VerticalDivider(
+                            width: 4,
+                            color: Colors.transparent,
+                          );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -150,7 +150,7 @@ class SearchQuery {
   }
 
   SearchQuery({
-    this.caseSensitive = true,
+    this.caseSensitive = false,
     int color,
     this.date,
     this.dateMode = DateFilterMode.ONLY,

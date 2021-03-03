@@ -101,14 +101,16 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    helper.saveNote(note.markChanged());
+    note = note.markChanged();
+    helper.saveNote(note);
   }
 
   Future<void> handleImageAdd(String path) async {
     final SavedImage savedImage = await ImageHelper.copyToCache(File(path));
     setState(() => note.images.add(savedImage));
     imageQueue.addUpload(savedImage, note.id);
-    await helper.saveNote(note.markChanged());
+    note = note.markChanged();
+    await helper.saveNote(note);
   }
 
   @override
@@ -474,24 +476,31 @@ class _NotePageState extends State<NotePage> {
   void handleAddItemTap(BuildContext context, String value) async {
     switch (value) {
       case 'list':
+        Navigator.pop(context);
         toggleList();
         break;
       case 'image':
         final File image = await Utils.pickImage();
 
-        if (image != null) await handleImageAdd(image.path);
+        if (image != null) {
+          await handleImageAdd(image.path);
+          Navigator.pop(context);
+        }
         break;
       case 'camera':
         final PickedFile image =
             await ImagePicker().getImage(source: ImageSource.camera);
 
-        if (image != null) handleImageAdd(image.path);
+        if (image != null) {
+          handleImageAdd(image.path);
+          Navigator.pop(context);
+        }
         break;
       case 'drawing':
+        Navigator.pop(context);
         addDrawing();
         break;
     }
-    Navigator.pop(context);
   }
 
   void addListContentItem() {

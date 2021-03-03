@@ -14,6 +14,7 @@ import 'package:potato_notes/widget/note_images.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
+import 'package:potato_notes/widget/separated_list.dart';
 
 class NoteView extends StatefulWidget {
   final Note note;
@@ -132,7 +133,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                             16 + Theme.of(context).visualDensity.horizontal,
                         vertical: 16 + Theme.of(context).visualDensity.vertical,
                       ),
-                      child: _SeparatedColumn(
+                      child: SeparatedList(
                         children: content,
                         separator: SizedBox(
                           height: 4 + Theme.of(context).visualDensity.vertical,
@@ -249,7 +250,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         widget.note.listContent.isNotEmpty &&
         !widget.note.hideContent) {
       items.add(
-        _SeparatedColumn(
+        SeparatedList(
           children: listContentWidgets,
           separator: SizedBox(height: 4),
         ),
@@ -375,31 +376,5 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     );
 
     selectionOptions.onSelected(context, [widget.note], value);
-  }
-}
-
-class _SeparatedColumn extends StatelessWidget {
-  final List<Widget> children;
-  final Widget separator;
-
-  _SeparatedColumn({
-    @required this.children,
-    @required this.separator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(children.length * 2 - 1, (index) {
-        if (index.isEven) {
-          return children[index ~/ 2];
-        } else {
-          return separator;
-        }
-      }),
-    );
   }
 }

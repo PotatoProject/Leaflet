@@ -21,7 +21,7 @@ dependencies:
   easy_localization:
     git: https://github.com/HrX03/easy_localization
 
-  file_picker:
+  file_picker: ^3.0.0-nullsafety.2
   file_selector:
   file_selector_macos:
   file_selector_linux:

@@ -32,6 +32,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
   bool get saved => _saved;
   set saved(bool value) {
     _saved = value;
+    widget.controller._notifyListeners();
     setState(() {});
   }
 
@@ -72,7 +73,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      key: widget.key,
+      key: widget.repaintKey,
       child: CustomPaint(
         painter: BackgroundPainter(_image),
         foregroundPainter: DrawPainter(List.from(_objects.map((e) => e.copy))),
@@ -182,7 +183,7 @@ class DrawingBoardController extends ChangeNotifier {
       _state.addPointToObject(objectIndex, point);
 
   bool get saved => _state?._saved ?? true;
-  set saved(bool value) => _state._saved = value;
+  set saved(bool value) => _state.saved = value;
 
   int get currentIndex => _state._currentIndex;
   set currentIndex(int value) => _state._currentIndex = value;

@@ -26,10 +26,10 @@ class TagSearchDelegate extends CustomSearchDelegate {
     final List<Tag> filteredTags = [];
 
     if (query.isEmpty) {
-      filteredTags.addAll(prefs.tags as List<Tag>);
+      filteredTags.addAll(prefs.tags);
     } else {
       filteredTags.addAll(
-        (prefs.tags as List<Tag>)
+        prefs.tags
             .where(
               (tag) => tag.name.toLowerCase().contains(query.toLowerCase()),
             )
@@ -87,18 +87,20 @@ class TagSearchDelegate extends CustomSearchDelegate {
           leading: Icon(Icons.add),
           title: Text(LocaleStrings.search.tagCreateHint(query)),
           onTap: () async {
-            await Utils.showNotesModalBottomSheet(
+            final bool result = await Utils.showNotesModalBottomSheet<bool>(
               context: context,
               builder: (context) => TagEditor(
                 initialInput: query,
                 onSave: (tag) {
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                   tagHelper.saveTag(tag.markChanged());
                 },
               ),
             );
-            query = "";
-            setState(() {});
+            if (result ?? false) {
+              query = "";
+              setState(() {});
+            }
           },
         ),
       ],

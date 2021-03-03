@@ -108,12 +108,14 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                         ),
                       ],
                     )
-                  : await FilePicker.getFile(
-                      type: FileType.ANY,
+                  : await FilePicker.platform.pickFiles(
+                      type: FileType.any,
                     );
 
+              if (asyncFile == null) return;
+
               final dynamic file =
-                  DeviceInfo.isDesktop ? asyncFile : asyncFile?.files?.first;
+                  DeviceInfo.isDesktop ? asyncFile : asyncFile.files.first;
 
               if (file.path != null && p.extension(file.path) == ".db") {
                 bool canMigrate =

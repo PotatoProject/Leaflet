@@ -35,7 +35,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<Note>>(
       future: getNotesForQuery(),
       initialData: [],
       builder: (context, snapshot) {
@@ -51,6 +51,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                 Illustration.nothingFound(brightness: brightness),
                 LocaleStrings.search.nothingFound,
               );
+        snapshot.data.sort((a, b) => b.creationDate.compareTo(a.creationDate));
+
         return NoteListWidget(
           itemBuilder: (context, index) => NoteView(
             note: snapshot.data[index],
@@ -162,7 +164,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       final bool dateMatch =
           searchQuery.date != null ? _getDateBool(note.creationDate) : true;
       final bool colorMatch =
-          searchQuery.color != null ? _getColorBool(note.color) : true;
+          searchQuery.color != 0 ? _getColorBool(note.color) : true;
       final bool tagMatch =
           searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
       final bool favouriteMatch =

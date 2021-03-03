@@ -77,6 +77,8 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   final GlobalKey _appbarKey = GlobalKey();
   final GlobalKey _toolbarKey = GlobalKey();
 
+  SavedImage _savedImage;
+
   @override
   void initState() {
     super.initState();
@@ -89,6 +91,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 150),
     );
+    _savedImage = widget.savedImage;
   }
 
   @override
@@ -125,11 +128,16 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                   onPressed: () => exitPrompt(true, null),
                 ),
                 actions: [
-                  IconButton(
-                    icon: Icon(Icons.save_outlined),
-                    padding: EdgeInsets.all(0),
-                    tooltip: LocaleStrings.common.save,
-                    onPressed: !_controller.saved ? _saveImage : null,
+                  _ChangeNotifierBuilder<DrawingBoardController>(
+                    changeNotifier: _controller,
+                    builder: (context) {
+                      return IconButton(
+                        icon: Icon(Icons.save_outlined),
+                        padding: EdgeInsets.all(0),
+                        tooltip: LocaleStrings.common.save,
+                        onPressed: !_controller.saved ? _saveImage : null,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -357,8 +365,6 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         ? await getApplicationSupportDirectory()
         : await getApplicationDocumentsDirectory();
 
-    print(drawingsDirectory);
-
     drawing = "${drawingsDirectory.path}/drawing-$timestamp.png";
     if (_filePath == null) {
       _filePath = drawing;
@@ -370,13 +376,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     await imgFile.writeAsBytes(pngBytes, flush: true);
     Loggy.d(message: drawing);
 
-    final SavedImage savedImage = await ImageHelper.copyToCache(imgFile);
-    if (widget.savedImage != null) {
+    if (_savedImage != null) {
       widget.note.images
-          .removeWhere((savedImage) => savedImage.id == widget.savedImage.id);
-      savedImage.id = widget.savedImage.id;
+          .removeWhere((savedImage) => savedImage.id == _savedImage.id);
     }
-    widget.note.images.add(savedImage);
+    _savedImage = await ImageHelper.copyToCache(imgFile);
+
+    widget.note.images.add(_savedImage);
     helper.saveNote(widget.note.markChanged());
 
     _controller.saved = true;
@@ -386,4 +392,36 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 enum MenuShowReason {
   COLOR_PICKER,
   RADIUS_PICKER,
+}
+
+class _ChangeNotifierBuilder<T extends ChangeNotifier> extends StatefulWidget {
+  final T changeNotifier;
+  final WidgetBuilder builder;
+
+  _ChangeNotifierBuilder({
+    @required this.changeNotifier,
+    @required this.builder,
+  });
+
+  @override
+  _ChangeNotifierBuilderState createState() => _ChangeNotifierBuilderState();
+}
+
+class _ChangeNotifierBuilderState extends State<_ChangeNotifierBuilder> {
+  @override
+  void initState() {
+    super.initState();
+    widget.changeNotifier.addListener(_update);
+  }
+
+  @override
+  void dispose() {
+    widget.changeNotifier.removeListener(_update);
+    super.dispose();
+  }
+
+  void _update() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) => widget.builder(context);
 }
