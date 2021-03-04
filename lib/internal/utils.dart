@@ -83,8 +83,9 @@ class Utils {
     if (showLock) {
       bool status;
 
-      final bool bioAuth =
-          showBiometrics ? await Utils.showBiometricPrompt() : false;
+      final bool bioAuth = showBiometrics && !DeviceInfo.isDesktop
+          ? await Utils.showBiometricPrompt()
+          : false;
 
       if (bioAuth)
         status = bioAuth;
@@ -416,20 +417,12 @@ class Utils {
     bool showAuthDialog = true,
     bool permaDelete = false,
   }) async {
-    if (notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog) {
-      bool status;
-
-      final bool bioAuth = notes.any((n) => n.usesBiometrics)
-          ? await Utils.showBiometricPrompt()
-          : false;
-
-      if (bioAuth)
-        status = bioAuth;
-      else
-        status = await Utils.showPassChallengeSheet(context) ?? false;
-
-      if (!status) return false;
-    }
+    final bool lockSuccess = await Utils.showNoteLockDialog(
+      context: context,
+      showLock: notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog,
+      showBiometrics: notes.any((n) => n.usesBiometrics),
+    );
+    if (!lockSuccess) return false;
 
     for (final Note note in notes) {
       if (archive) {

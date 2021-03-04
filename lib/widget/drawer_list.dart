@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 
@@ -29,28 +30,33 @@ class DrawerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              indent: 8,
-              endIndent: 8,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: context.theme.brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                indent: 8,
+                endIndent: 8,
+              ),
+              itemBuilder: (context, index) => drawerSections[index],
+              itemCount: drawerSections.length,
+              padding: EdgeInsets.only(
+                top: context.padding.top,
+              ),
             ),
-            itemBuilder: (context, index) => drawerSections[index],
-            itemCount: drawerSections.length,
+          ),
+          Padding(
             padding: EdgeInsets.only(
-              top: context.padding.top,
+              bottom: context.viewInsets.bottom,
             ),
+            child: footer ?? Container(),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            bottom: context.viewInsets.bottom,
-          ),
-          child: footer ?? Container(),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
