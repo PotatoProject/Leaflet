@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -16,14 +16,16 @@ class NoteController {
       final String noteJson = json.encode(note.toSyncMap());
       final String url = "${prefs.apiUrl}$NOTES_PREFIX/note";
       Loggy.v(message: "Going to send POST to " + url);
-      final Response addResult = await httpClient.post(
+      final Response addResult = await dio.post(
         url,
-        body: noteJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: noteJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
         message:
-            "(${note.id} add) Server responded with {${addResult.statusCode}): ${addResult.body}",
+            "(${note.id} add) Server responded with {${addResult.statusCode}): ${addResult.data}",
       );
       return handleResponse(addResult);
     } on SocketException {
@@ -38,14 +40,16 @@ class NoteController {
       final String token = await prefs.getToken();
       final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Goind to send DELETE to " + url);
-      final Response deleteResponse = await httpClient.delete(
+      final Response deleteResponse = await dio.delete(
         url,
-        headers: {"Authorization": "Bearer " + token},
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "($id delete) Server responded with (${deleteResponse.statusCode}}: " +
-                  deleteResponse.body);
+        message:
+            "($id delete) Server responded with (${deleteResponse.statusCode}}: ${deleteResponse.data}",
+      );
       return handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
@@ -59,14 +63,16 @@ class NoteController {
       final String token = await prefs.getToken();
       final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/all";
       Loggy.v(message: "Going to send DELETE to " + url);
-      final Response deleteResult = await httpClient.delete(
+      final Response deleteResult = await dio.delete(
         url,
-        headers: {"Authorization": "Bearer " + token},
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "(delete-all) Server responded with (${deleteResult.statusCode}: " +
-                  deleteResult.body);
+        message:
+            "(delete-all) Server responded with (${deleteResult.statusCode}: ${deleteResult.data}",
+      );
       return handleResponse(deleteResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -82,15 +88,18 @@ class NoteController {
       final String url =
           "${prefs.apiUrl}$NOTES_PREFIX/note/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
-      final Response listResult = await httpClient.get(
+      final Response listResult = await dio.get(
         url,
-        headers: {"Authorization": "Bearer " + token},
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message: "(list) Server responded with (${listResult.statusCode}): " +
-              listResult.body);
+        message:
+            "(list) Server responded with (${listResult.statusCode}): ${listResult.data}",
+      );
       handleResponse(listResult);
-      for (Map i in listResult.bodyJson["notes"]) {
+      for (Map i in listResult.data["notes"]) {
         final Note note = NoteX.fromSyncMap(i);
         notes.add(note.copyWith(synced: true));
       }
@@ -107,15 +116,17 @@ class NoteController {
       final String token = await prefs.getToken();
       final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
-      final Response updateResult = await httpClient.patch(
+      final Response updateResult = await dio.patch(
         url,
-        body: deltaJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: deltaJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "($id update) Server responded with (${updateResult.statusCode}): " +
-                  updateResult.body);
+        message:
+            "($id update) Server responded with (${updateResult.statusCode}): ${updateResult.data}",
+      );
       return handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -130,18 +141,19 @@ class NoteController {
       final String token = await prefs.getToken();
       final String url = "${prefs.apiUrl}$NOTES_PREFIX/note/deleted";
       Loggy.v(message: "Going to send POST to " + url);
-      final Response listResult = await httpClient.post(
+      final Response listResult = await dio.post(
         url,
-        body: idListJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: idListJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
         message:
-            "(listDeleted) Server responded with (${listResult.statusCode})}: " +
-                listResult.body,
+            "(listDeleted) Server responded with (${listResult.statusCode})}: ${listResult.data}",
       );
       handleResponse(listResult);
-      final List<String> idList = (listResult.bodyJson["deleted"] as List)
+      final List<String> idList = (listResult.data["deleted"] as List)
           .map((e) => e.toString())
           .toList();
       return idList;
@@ -157,7 +169,7 @@ class NoteController {
       case 401:
         throw ("Token is not valid");
       case 200:
-        return response.bodyJson;
+        return response.data;
     }
   }
 }

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
@@ -21,15 +21,18 @@ class AccountController {
       "password": password,
     };
     try {
-      final Response registerResponse = await httpClient.post(
+      final Response registerResponse = await dio.post(
         "${prefs.apiUrl}/login/user/register",
-        body: json.encode(body),
-        headers: {"Content-Type": "application/json"},
+        data: json.encode(body),
+        options: Options(
+          headers: {"Content-Type": "application/json"},
+        ),
       );
       Loggy.v(
-          message:
-              "(register) Server responded with (${registerResponse.statusCode}): ${registerResponse.body}",
-          secure: true);
+        message:
+            "(register) Server responded with (${registerResponse.statusCode}): ${registerResponse.data}",
+        secure: true,
+      );
 
       switch (registerResponse.statusCode) {
         case 200:
@@ -37,7 +40,7 @@ class AccountController {
         default:
           return AuthResponse(
             status: false,
-            message: registerResponse.body,
+            message: registerResponse.data,
           );
       }
     } on SocketException {
@@ -71,27 +74,30 @@ class AccountController {
     }
 
     try {
-      final Response loginResponse = await httpClient.post(
+      final Response loginResponse = await dio.post(
         "${prefs.apiUrl}/login/user/login",
-        body: json.encode(body),
-        headers: {"Content-Type": "application/json"},
+        data: json.encode(body),
+        options: Options(
+          headers: {"Content-Type": "application/json"},
+        ),
       );
       Loggy.v(
-          message:
-              "(login) Server responded with (${loginResponse.statusCode}): ${loginResponse.body}",
-          secure: true);
+        message:
+            "(login) Server responded with (${loginResponse.statusCode}): ${loginResponse.data}",
+        secure: true,
+      );
       switch (loginResponse.statusCode) {
         case 200:
-          final Map<String, dynamic> response = json.decode(loginResponse.body);
+          final Map<String, dynamic> response = loginResponse.data;
           prefs.accessToken = response["token"];
           prefs.refreshToken = response["refresh_token"];
           await getUserInfo();
           return AuthResponse(status: true);
         default:
-          Loggy.d(message: loginResponse.body);
+          Loggy.d(message: loginResponse.data);
           return AuthResponse(
             status: false,
-            message: loginResponse.body,
+            message: loginResponse.data,
           );
           break;
       }
@@ -109,13 +115,15 @@ class AccountController {
       final String token = await prefs.getToken();
 
       try {
-        final Response profileRequest = await httpClient.get(
-            "${prefs.apiUrl}/login/user/profile",
-            headers: {"Authorization": "Bearer " + token});
+        final Response profileRequest = await dio.get(
+          "${prefs.apiUrl}/login/user/profile",
+          options: Options(
+            headers: {"Authorization": "Bearer " + token},
+          ),
+        );
         switch (profileRequest.statusCode) {
           case 200:
-            final Map<String, dynamic> response =
-                json.decode(profileRequest.body);
+            final Map<String, dynamic> response = profileRequest.data;
             prefs.username = response["username"];
             prefs.email = response["email"];
             prefs.avatarUrl = await ImageHelper.getAvatar(token);
@@ -123,7 +131,7 @@ class AccountController {
           case 400:
             return AuthResponse(
               status: false,
-              message: profileRequest.body,
+              message: profileRequest.data,
             );
           default:
             throw ("Unexpected response from auth server");
@@ -163,28 +171,28 @@ class AccountController {
     try {
       final String url = "${prefs.apiUrl}/login/user/refresh";
       Loggy.v(message: "Going to send GET to " + url);
-      refresh = await httpClient.get(
+      refresh = await dio.get(
         url,
-        headers: {
-          "Authorization": "Bearer ${prefs.refreshToken}",
-        },
+        options: Options(
+          headers: {"Authorization": "Bearer ${prefs.refreshToken}"},
+        ),
       );
       Loggy.v(
         message:
-            "(refreshToken) Server responded with (${refresh.statusCode}): ${refresh.body}",
+            "(refreshToken) Server responded with (${refresh.statusCode}): ${refresh.data}",
         secure: true,
       );
       switch (refresh.statusCode) {
         case 200:
           {
-            prefs.accessToken = json.decode(refresh.body)["token"];
+            prefs.accessToken = refresh.data["token"];
             Loggy.d(message: "accessToken: " + prefs.accessToken, secure: true);
             return AuthResponse(status: true);
           }
         case 400:
           return AuthResponse(
             status: false,
-            message: refresh.body,
+            message: refresh.data,
           );
         default:
           throw ("Unexpected response from auth server");

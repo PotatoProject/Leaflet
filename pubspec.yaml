@@ -18,6 +18,8 @@ dependencies:
 
   crayola:
 
+  dio: ^4.0.0-beta4
+
   easy_localization:
     git: https://github.com/HrX03/easy_localization
 

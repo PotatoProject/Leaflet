@@ -1,11 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/http_client.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/preferences.dart';
+import 'package:potato_notes/internal/sync/token_interceptor.dart';
 
 class _ProvidersSingleton {
   _ProvidersSingleton._();
@@ -14,7 +15,7 @@ class _ProvidersSingleton {
   DeviceInfo _deviceInfo;
   Preferences _prefs;
   ImageQueue _imageQueue;
-  HttpClient _httpClient;
+  Dio _dio;
   NoteHelper _helper;
   TagHelper _tagHelper;
 
@@ -23,7 +24,8 @@ class _ProvidersSingleton {
   void initProviders(AppDatabase _db) {
     _helper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
-    _httpClient = HttpClient();
+    _dio = Dio();
+    _dio.interceptors.add(TokenInterceptor());
     _prefs = Preferences();
     _deviceInfo = DeviceInfo();
     _imageQueue = ImageQueue();
@@ -42,7 +44,7 @@ Preferences get prefs => _ProvidersSingleton.instance._prefs;
 
 ImageQueue get imageQueue => _ProvidersSingleton.instance._imageQueue;
 
-HttpClient get httpClient => _ProvidersSingleton.instance._httpClient;
+Dio get dio => _ProvidersSingleton.instance._dio;
 
 NoteHelper get helper => _ProvidersSingleton.instance._helper;
 

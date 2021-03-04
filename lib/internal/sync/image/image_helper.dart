@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:image/image.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
@@ -113,17 +113,19 @@ class ImageHelper {
   static Future<String> getAvatar(String token) async {
     final String url = "${prefs.getFromCache("api_url")}/files/get/avatar.jpg";
     Loggy.v(message: "Going to send GET to :" + url);
-    final Response presign = await httpClient.get(
+    final Response presign = await dio.get(
       url,
-      headers: {"Authorization": "Bearer $token"},
+      options: Options(
+        headers: {"Authorization": "Bearer " + token},
+      ),
     );
     Loggy.v(
-        message:
-            "Server responded with (${presign.statusCode}): ${presign.body}");
+      message: "Server responded with (${presign.statusCode}): ${presign.data}",
+    );
     if (presign.statusCode != 200) {
       return null;
     } else {
-      return presign.body;
+      return presign.data;
     }
   }
 

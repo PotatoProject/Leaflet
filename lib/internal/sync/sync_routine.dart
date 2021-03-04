@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
@@ -38,23 +38,18 @@ class SyncRoutine {
   ValueNotifier<bool> get syncing => _syncing;
 
   static Future<bool> _checkOnlineStatus() async {
-    try {
-      final String url = prefs.apiUrl + "/notes/ping";
-      Loggy.d(message: "Going to send GET to " + url);
-      final Response pingResponse = await httpClient.get(url);
-      if (pingResponse.statusCode != 200) {
-        Loggy.e(message: "Server did not respond with 200 on ping");
-        return false;
-      }
-      if (pingResponse.body != "Pong!") {
-        Loggy.e(message: "Server did not respond with Pong!");
-        return false;
-      }
-      return true;
-    } catch (e) {
-      Loggy.e(message: "Error when pinging server: " + e.toString());
+    final String url = prefs.apiUrl + "/notes/ping";
+    Loggy.d(message: "Going to send GET to " + url);
+    final Response pingResponse = await dio.get(url);
+    if (pingResponse.statusCode != 200) {
+      Loggy.e(message: "Server did not respond with 200 on ping");
       return false;
     }
+    if (pingResponse.data != "Pong!") {
+      Loggy.e(message: "Server did not respond with Pong!");
+      return false;
+    }
+    return true;
   }
 
   static Future<bool> checkLoginStatus() async {
@@ -67,9 +62,11 @@ class SyncRoutine {
       final String url =
           prefs.apiUrl + NoteController.NOTES_PREFIX + "/secure-ping";
       Loggy.d(message: "Going to send GET to " + url);
-      final Response securePingResponse = await httpClient.get(
+      final Response securePingResponse = await dio.get(
         url,
-        headers: {"Authorization": prefs.accessToken},
+        options: Options(
+          headers: {"Authorization": prefs.accessToken},
+        ),
       );
       if (securePingResponse.statusCode == 401) {
         Loggy.e(message: "Token is not valid");
@@ -79,7 +76,7 @@ class SyncRoutine {
         Loggy.e(message: "Server did not respond with 200 on ping");
         return false;
       }
-      if (securePingResponse.body != "Pong!") {
+      if (securePingResponse.data != "Pong!") {
         Loggy.e(message: "Server did not respond with Pong!");
         return false;
       }

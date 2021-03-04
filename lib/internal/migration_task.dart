@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -83,10 +83,10 @@ class MigrationTask {
 
       SavedImage savedImage;
       if (v1Note.imagePath != null) {
-        final Response response = await httpClient.get(v1Note.imagePath);
+        final Response response = await dio.get(v1Note.imagePath);
         final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
           ..create();
-        await file.writeAsBytes(response.bodyBytes);
+        await file.writeAsBytes(response.data);
         savedImage = await ImageHelper.copyToCache(file);
         imageQueue.addUpload(savedImage, id);
       }

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -51,21 +51,23 @@ class UploadQueueItem extends QueueItem {
     notifyListeners();
     imageQueue.notifyListeners();
     final int length = await file.length();
-    await httpClient.upload(
-      url: await getUploadUrl(),
-      file: file,
-      onProgressChanged: (count, total) {
+    await dio.request(
+      await getUploadUrl(),
+      data: file.openRead(),
+      onSendProgress: (count, total) {
         progress = count / total;
         imageQueue.notifyListeners();
         notifyListeners();
       },
-      method:
-          savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
-      headers: Map.from(headers)
-        ..addAll({
-          'content-length': length.toString(),
-          'content-type': 'image/jpg',
-        }),
+      options: Options(
+        method:
+            savedImage.storageLocation == StorageLocation.SYNC ? "PUT" : "POST",
+        headers: Map.from(headers)
+          ..addAll({
+            'content-length': length.toString(),
+            'content-type': 'image/jpg',
+          }),
+      ),
     );
     status = QueueItemStatus.COMPLETE;
     notifyListeners();
@@ -79,14 +81,16 @@ class UploadQueueItem extends QueueItem {
         final String token = await prefs.getToken();
         final String url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
         print(url);
-        final Response presign = await httpClient.get(
+        final Response presign = await dio.get(
           url,
-          headers: {"Authorization": "Bearer $token"},
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ),
         );
         if (presign.statusCode == 200) {
-          return presign.body;
+          return presign.data;
         } else {
-          throw presign.body;
+          throw presign.data;
         }
         break;
       case StorageLocation.LOCAL:

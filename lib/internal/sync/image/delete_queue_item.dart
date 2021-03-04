@@ -1,6 +1,6 @@
 // @dart=2.12
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
@@ -24,9 +24,11 @@ class DeleteQueueItem extends QueueItem {
     status = QueueItemStatus.ONGOING;
     final String url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
     final String token = await prefs.getToken();
-    final Response response = await httpClient.delete(
+    final Response response = await dio.delete(
       url,
-      headers: {"Authorization": "Bearer $token"},
+      options: Options(
+        headers: {"Authorization": "Bearer " + token},
+      ),
     );
     if (response.statusCode != 200) {
       return;

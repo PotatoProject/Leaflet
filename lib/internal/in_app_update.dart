@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -32,10 +32,10 @@ class InAppUpdater {
         return await InAppUpdate.checkForUpdate();
       case BuildType.GITHUB:
       default:
-        final Response githubRelease = await httpClient.get(
+        final Response githubRelease = await dio.get(
           "https://api.github.com/repos/HrX03/PotatoNotes/releases/latest",
         );
-        final Map<dynamic, dynamic> body = json.decode(githubRelease.body);
+        final Map<dynamic, dynamic> body = githubRelease.data;
         final int versionCode = int.parse(body["tag_name"].split("+")[1]);
         return AppUpdateInfo(
           versionCode > int.parse(appInfo.packageInfo.buildNumber),

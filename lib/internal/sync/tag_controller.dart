@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:recase/recase.dart';
 
 class TagController {
@@ -16,14 +15,17 @@ class TagController {
       final String tagJson = json.encode(toSync(tag));
       final String url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag";
       Loggy.v(message: "Going to send POST to $url");
-      final Response addResult = await httpClient.post(
+      final Response addResult = await dio.post(
         url,
-        body: tagJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: tagJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "(${tag.id} tag-add) Server responded with (${addResult.statusCode}): ${addResult.body}");
+        message:
+            "(${tag.id} tag-add) Server responded with (${addResult.statusCode}): ${addResult.data}",
+      );
       return NoteController.handleResponse(addResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -38,14 +40,16 @@ class TagController {
       final String url =
           "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
       Loggy.v(message: "Goind to send DELETE to " + url);
-      final Response deleteResponse = await httpClient.delete(
+      final Response deleteResponse = await dio.delete(
         url,
-        headers: {"Authorization": "Bearer " + token},
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "($id tag-delete) Server responded with (${deleteResponse.statusCode}}: " +
-                  deleteResponse.body);
+        message:
+            "($id tag-delete) Server responded with (${deleteResponse.statusCode}}: ${deleteResponse.data}",
+      );
       return NoteController.handleResponse(deleteResponse);
     } on SocketException {
       throw ("Could not connect to server");
@@ -61,14 +65,16 @@ class TagController {
           "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/list?last_updated=$lastUpdated";
       Loggy.v(message: "Going to send GET to " + url);
 
-      final Response listResult = await httpClient.get(
+      final Response listResult = await dio.get(
         url,
-        headers: {"Authorization": "Bearer " + token},
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "(tag-list) Server responded with (${listResult.statusCode}): " +
-                  listResult.body);
+        message:
+            "(tag-list) Server responded with (${listResult.statusCode}): ${listResult.data}",
+      );
       final List<Object> body = NoteController.handleResponse(listResult);
       List<Tag> tags = body.map((map) {
         final Tag tag = fromSync(map);
@@ -89,15 +95,17 @@ class TagController {
       final String url =
           "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
       Loggy.v(message: "Going to send PATCH to " + url);
-      final Response updateResult = await httpClient.patch(
+      final Response updateResult = await dio.patch(
         url,
-        body: deltaJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: deltaJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "($id tag-update) Server responded with (${updateResult.statusCode}): " +
-                  updateResult.body);
+        message:
+            "($id tag-update) Server responded with (${updateResult.statusCode}): ${updateResult.data}",
+      );
       return NoteController.handleResponse(updateResult);
     } on SocketException {
       throw ("Could not connect to server");
@@ -113,17 +121,19 @@ class TagController {
       final String url =
           "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/deleted";
       Loggy.v(message: "Going to send POST to " + url);
-      final Response listResult = await httpClient.post(
+      final Response listResult = await dio.post(
         url,
-        body: idListJson,
-        headers: {"Authorization": "Bearer " + token},
+        data: idListJson,
+        options: Options(
+          headers: {"Authorization": "Bearer " + token},
+        ),
       );
       Loggy.d(
-          message:
-              "(tag-listDeleted) Server responded with (${listResult.statusCode})}: " +
-                  listResult.body);
+        message:
+            "(tag-listDeleted) Server responded with (${listResult.statusCode})}: ${listResult.data}",
+      );
       NoteController.handleResponse(listResult);
-      final List<dynamic> data = listResult.bodyJson;
+      final List<dynamic> data = listResult.data;
       return data.map((id) => id.toString()).toList();
     } on SocketException {
       throw ("Could not connect to server");
