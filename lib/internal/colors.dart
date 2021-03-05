@@ -24,63 +24,63 @@ class NoteColors {
   static ColorInfo get red => ColorInfo(
         label: LocaleStrings.common.colorRed,
         color: 0xFFF44336,
-        lightColor: 0xFFF99B94,
+        lightColor: 0xFFF55D51,
         darkColor: 0xFF5B2925,
       );
 
   static ColorInfo get orange => ColorInfo(
         label: LocaleStrings.common.colorOrange,
         color: 0xFFF57C00,
-        lightColor: 0xFFF9CE94,
+        lightColor: 0xFFF5AF51,
         darkColor: 0xFF5B4325,
       );
 
   static ColorInfo get yellow => ColorInfo(
         label: LocaleStrings.common.colorYellow,
-        color: 0xFFffb300,
-        lightColor: 0xFFF9EF94,
+        color: 0xFFFFB300,
+        lightColor: 0xFFF5E551,
         darkColor: 0xFF5B5525,
       );
 
   static ColorInfo get green => ColorInfo(
         label: LocaleStrings.common.colorGreen,
-        color: 0xFF4CAf50,
-        lightColor: 0xFF94F998,
+        color: 0xFF4CAF50,
+        lightColor: 0xFF51F558,
         darkColor: 0xFF255B27,
       );
 
   static ColorInfo get cyan => ColorInfo(
         label: LocaleStrings.common.colorCyan,
         color: 0xFF00ACC1,
-        lightColor: 0xFF94F9EC,
+        lightColor: 0xFF51F5E0,
         darkColor: 0xFF255B53,
       );
 
   static ColorInfo get lightBlue => ColorInfo(
         label: LocaleStrings.common.colorLightBlue,
         color: 0xFF03A9f4,
-        lightColor: 0xFF94D9F9,
+        lightColor: 0xFF51C1F5,
         darkColor: 0xFF254A5B,
       );
 
   static ColorInfo get blue => ColorInfo(
         label: LocaleStrings.common.colorBlue,
         color: 0xFF1E88E5,
-        lightColor: 0xFF94A5F9,
+        lightColor: 0xFF8195F8,
         darkColor: 0xFF252E5B,
       );
 
   static ColorInfo get purple => ColorInfo(
         label: LocaleStrings.common.colorPurple,
         color: 0xFF9C27B0,
-        lightColor: 0xFFBD94F9,
+        lightColor: 0xFFA064F6,
         darkColor: 0xFF3A255B,
       );
 
   static ColorInfo get pink => ColorInfo(
         label: LocaleStrings.common.colorPink,
         color: 0xFFE91E63,
-        lightColor: 0xFFF994D4,
+        lightColor: 0xFFF664C1,
         darkColor: 0xFF5B2547,
       );
 }
