@@ -74,6 +74,10 @@ class Themes {
           ),
           elevation: 4,
         ),
+        toggleableActiveColor: mainColor,
+        checkboxTheme: CheckboxThemeData(
+          checkColor: MaterialStateProperty.all<Color>(lightSecondaryColor),
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
@@ -144,6 +148,10 @@ class Themes {
           ),
           elevation: 4,
         ),
+        toggleableActiveColor: mainColor,
+        checkboxTheme: CheckboxThemeData(
+          checkColor: MaterialStateProperty.all<Color>(darkSecondaryColor),
+        ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: DismissiblePageTransitionsBuilder(),
@@ -213,6 +221,10 @@ class Themes {
             borderRadius: BorderRadius.circular(6),
           ),
           elevation: 4,
+        ),
+        toggleableActiveColor: mainColor,
+        checkboxTheme: CheckboxThemeData(
+          checkColor: MaterialStateProperty.all<Color>(blackSecondaryColor),
         ),
         pageTransitionsTheme: PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{

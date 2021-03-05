@@ -35,31 +35,37 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<Note>>(
-      future: getNotesForQuery(),
-      initialData: [],
+    return StreamBuilder<Object>(
+      stream: helper.noteStream(ReturnMode.LOCAL),
       builder: (context, snapshot) {
-        final Brightness brightness = context.theme.brightness;
-        final Widget illustration = query.isEmpty
-            ? Utils.quickIllustration(
-                context,
-                Illustration.typeToSearch(brightness: brightness),
-                LocaleStrings.search.typeToSearch,
-              )
-            : Utils.quickIllustration(
-                context,
-                Illustration.nothingFound(brightness: brightness),
-                LocaleStrings.search.nothingFound,
-              );
-        snapshot.data.sort((a, b) => b.creationDate.compareTo(a.creationDate));
+        return FutureBuilder<List<Note>>(
+          future: getNotesForQuery(snapshot.data ?? []),
+          initialData: [],
+          builder: (context, snapshot) {
+            final Brightness brightness = context.theme.brightness;
+            final Widget illustration = query.isEmpty
+                ? Utils.quickIllustration(
+                    context,
+                    Illustration.typeToSearch(brightness: brightness),
+                    LocaleStrings.search.typeToSearch,
+                  )
+                : Utils.quickIllustration(
+                    context,
+                    Illustration.nothingFound(brightness: brightness),
+                    LocaleStrings.search.nothingFound,
+                  );
+            snapshot.data
+                .sort((a, b) => b.creationDate.compareTo(a.creationDate));
 
-        return NoteListWidget(
-          itemBuilder: (context, index) => NoteView(
-            note: snapshot.data[index],
-            onTap: () => openNote(context, snapshot.data[index]),
-          ),
-          noteCount: snapshot.data.length,
-          customIllustration: illustration,
+            return NoteListWidget(
+              itemBuilder: (context, index) => NoteView(
+                note: snapshot.data[index],
+                onTap: () => openNote(context, snapshot.data[index]),
+              ),
+              noteCount: snapshot.data.length,
+              customIllustration: illustration,
+            );
+          },
         );
       },
     );
@@ -83,8 +89,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     }
   }
 
-  Future<List<Note>> getNotesForQuery() async {
-    final List<Note> notes = await helper.listNotes(ReturnMode.LOCAL);
+  Future<List<Note>> getNotesForQuery(List<Note> notes) async {
     final List<Note> results = [];
 
     if (query.trim().isEmpty &&
@@ -93,61 +98,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         searchQuery.tags.isEmpty &&
         searchQuery.color == 0) {
       return [];
-    }
-
-    bool _getColorBool(int noteColor) {
-      if (searchQuery.color == null) return false;
-      return noteColor == searchQuery.color;
-    }
-
-    bool _getDateBool(DateTime noteDate) {
-      if (searchQuery.date == null) return false;
-
-      DateTime sanitizedNoteDate = DateTime(
-        noteDate.year,
-        noteDate.month,
-        noteDate.day,
-      );
-
-      DateTime sanitizedQueryDate = DateTime(
-        searchQuery.date.year,
-        searchQuery.date.month,
-        searchQuery.date.day,
-      );
-
-      switch (searchQuery.dateMode) {
-        case DateFilterMode.AFTER:
-          return sanitizedNoteDate.isAfter(sanitizedQueryDate);
-        case DateFilterMode.BEFORE:
-          return sanitizedNoteDate.isBefore(sanitizedQueryDate);
-        case DateFilterMode.ONLY:
-        default:
-          return sanitizedNoteDate.isAtSameMomentAs(sanitizedQueryDate);
-      }
-    }
-
-    bool _getTextBool(String text) {
-      final String sanitizedQuery =
-          searchQuery.caseSensitive ? query : query.toLowerCase();
-
-      final String sanitizedText =
-          searchQuery.caseSensitive ? text : text.toLowerCase();
-
-      return sanitizedText.contains(sanitizedQuery);
-    }
-
-    bool _getTagBool(List<String> tags) {
-      bool matchResult;
-
-      searchQuery.tags.forEach((tag) {
-        if (matchResult != null) {
-          matchResult = matchResult && tags.any((element) => element == tag);
-        } else {
-          matchResult = tags.any((element) => element == tag);
-        }
-      });
-
-      return matchResult;
     }
 
     for (Note note in notes) {
@@ -162,16 +112,84 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
       final bool favouriteMatch =
           searchQuery.onlyFavourites ? note.starred : true;
+      final bool modesMatch = _getModesBool(note);
 
       if (tagMatch &&
           colorMatch &&
           dateMatch &&
           favouriteMatch &&
-          (titleMatch || contentMatch)) {
+          (titleMatch || contentMatch) &&
+          modesMatch) {
         results.add(note);
       }
     }
 
     return results;
+  }
+
+  bool _getColorBool(int noteColor) {
+    if (searchQuery.color == null) return false;
+    return noteColor == searchQuery.color;
+  }
+
+  bool _getDateBool(DateTime noteDate) {
+    if (searchQuery.date == null) return false;
+
+    DateTime sanitizedNoteDate = DateTime(
+      noteDate.year,
+      noteDate.month,
+      noteDate.day,
+    );
+
+    DateTime sanitizedQueryDate = DateTime(
+      searchQuery.date.year,
+      searchQuery.date.month,
+      searchQuery.date.day,
+    );
+
+    switch (searchQuery.dateMode) {
+      case DateFilterMode.AFTER:
+        return sanitizedNoteDate.isAfter(sanitizedQueryDate);
+      case DateFilterMode.BEFORE:
+        return sanitizedNoteDate.isBefore(sanitizedQueryDate);
+      case DateFilterMode.ONLY:
+      default:
+        return sanitizedNoteDate.isAtSameMomentAs(sanitizedQueryDate);
+    }
+  }
+
+  bool _getTextBool(String text) {
+    final String sanitizedQuery =
+        searchQuery.caseSensitive ? query : query.toLowerCase();
+
+    final String sanitizedText =
+        searchQuery.caseSensitive ? text : text.toLowerCase();
+
+    return sanitizedText.contains(sanitizedQuery);
+  }
+
+  bool _getTagBool(List<String> tags) {
+    bool matchResult;
+
+    searchQuery.tags.forEach((tag) {
+      if (matchResult != null) {
+        matchResult = matchResult && tags.any((element) => element == tag);
+      } else {
+        matchResult = tags.any((element) => element == tag);
+      }
+    });
+
+    return matchResult;
+  }
+
+  bool _getModesBool(Note note) {
+    final bool normal =
+        !note.archived && !note.deleted && searchQuery.returnMode.fromNormal;
+    final bool archived =
+        note.archived && !note.deleted && searchQuery.returnMode.fromArchive;
+    final bool deleted =
+        !note.archived && note.deleted && searchQuery.returnMode.fromTrash;
+
+    return normal || archived || deleted;
   }
 }

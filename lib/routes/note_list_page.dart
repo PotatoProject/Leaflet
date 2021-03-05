@@ -60,10 +60,9 @@ class NoteListPageState extends State<NoteListPage> {
   }
 
   void closeSelection() {
-    setState(() {
-      selecting = false;
-      _selectionList.clear();
-    });
+    selecting = false;
+    _selectionList.clear();
+    setState(() {});
   }
 
   bool _backButtonSelectionClosingInterceptor(

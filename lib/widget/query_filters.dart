@@ -7,6 +7,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/date_selector.dart';
+import 'package:potato_notes/widget/return_mode_sheet.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 import 'note_color_selector.dart';
@@ -51,13 +52,32 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
+          leading: Icon(Icons.folder_outlined),
+          title: Text("Note locations"),
+          subtitle: Text(returnModeToString),
+          onTap: () async {
+            await Utils.showNotesModalBottomSheet(
+              context: context,
+              builder: (context) => ReturnModeSelectionSheet(
+                mode: widget.query.returnMode,
+                onModeChanged: (mode) {
+                  widget.query.returnMode = mode;
+                  setState(() {});
+                  widget.filterChangedCallback?.call();
+                },
+              ),
+            );
+          },
+        ),
+        ListTile(
           leading: Icon(Icons.color_lens_outlined),
           title: Text(LocaleStrings.common.colorFilter),
           trailing: Icon(
             Icons.brightness_1,
             size: 28,
             color: Color(
-                NoteColors.colorList[widget.query.color].dynamicColor(context)),
+              NoteColors.colorList[widget.query.color].dynamicColor(context),
+            ),
           ),
           onTap: () async {
             final int queryColor = await Utils.showNotesModalBottomSheet(
@@ -147,5 +167,15 @@ class _QueryFiltersState extends State<QueryFilters> {
         ),
       ],
     );
+  }
+
+  String get returnModeToString {
+    final List<String> enabled = [];
+
+    if (widget.query.returnMode.fromNormal) enabled.add("Normal");
+    if (widget.query.returnMode.fromArchive) enabled.add("Archive");
+    if (widget.query.returnMode.fromTrash) enabled.add("Trash");
+
+    return enabled.join(", ");
   }
 }

@@ -147,39 +147,36 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
   List<Widget> getIcons(
     BuildContext context,
   ) {
-    final List<IconData> iconData = [
-      Icons.visibility_off_outlined,
-      Icons.lock_outlined,
-      Icons.fingerprint,
-      Icons.alarm_outlined,
-      Icons.favorite_border,
-      Icons.push_pin_outlined,
-    ];
+    final Map<String, IconData> iconData = {
+      'visible': Icons.visibility_off_outlined,
+      'locked': Icons.lock_outlined,
+      'hasBiometrics': Icons.fingerprint,
+      'hasReminders': Icons.alarm_outlined,
+      'starred': Icons.favorite_border,
+      'pinned': Icons.push_pin_outlined,
+    };
 
-    final List<int> iconDataIndexes = [];
-    final List<Widget> icons = [];
+    final List<String> icons = [];
 
-    if (widget.note.hideContent) iconDataIndexes.add(0);
+    if (widget.note.hideContent) icons.add('visible');
 
-    if (widget.note.lockNote) iconDataIndexes.add(1);
+    if (widget.note.lockNote) icons.add('locked');
 
-    if (widget.note.usesBiometrics) iconDataIndexes.add(2);
+    if (widget.note.usesBiometrics) icons.add('hasBiometrics');
 
-    if (widget.note.reminders.isNotEmpty) iconDataIndexes.add(3);
+    if (widget.note.reminders.isNotEmpty) icons.add('hasReminders');
 
-    if (widget.note.starred) iconDataIndexes.add(4);
+    if (widget.note.starred) icons.add('starred');
 
-    if (widget.note.pinned) iconDataIndexes.add(5);
+    if (widget.note.pinned) icons.add('pinned');
 
-    for (int i = 0; i < iconDataIndexes.length; i++) {
-      icons.add(
-        Icon(
-          iconData[iconDataIndexes[i]],
-          size: 14,
-        ),
-      );
-    }
-
-    return icons;
+    return icons
+        .map(
+          (e) => Icon(
+            iconData[e],
+            size: 14,
+          ),
+        )
+        .toList();
   }
 }

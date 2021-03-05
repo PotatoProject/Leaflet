@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:loggy/loggy.dart';
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
@@ -138,6 +139,7 @@ class SearchQuery {
   DateFilterMode dateMode;
   List<String> tags = [];
   bool onlyFavourites;
+  SearchReturnMode returnMode;
 
   int get color => _color ?? 0;
 
@@ -155,6 +157,11 @@ class SearchQuery {
     this.date,
     this.dateMode = DateFilterMode.ONLY,
     this.onlyFavourites = false,
+    this.returnMode = const SearchReturnMode(
+      fromNormal: true,
+      fromArchive: true,
+      fromTrash: true,
+    ),
   }) : _color = color;
 
   void reset() {
@@ -163,7 +170,55 @@ class SearchQuery {
     date = null;
     dateMode = DateFilterMode.ONLY;
     onlyFavourites = false;
+    returnMode = const SearchReturnMode(
+      fromNormal: true,
+      fromArchive: true,
+      fromTrash: true,
+    );
   }
+}
+
+class SearchReturnMode {
+  final bool fromNormal;
+  final bool fromArchive;
+  final bool fromTrash;
+
+  const SearchReturnMode({
+    this.fromNormal = false,
+    this.fromArchive = false,
+    this.fromTrash = false,
+  });
+
+  List<bool> get values => [
+        fromNormal,
+        fromArchive,
+        fromTrash,
+      ];
+
+  SearchReturnMode copyWith({
+    bool fromNormal,
+    bool fromArchive,
+    bool fromTrash,
+  }) {
+    return SearchReturnMode(
+      fromNormal: fromNormal ?? this.fromNormal,
+      fromArchive: fromArchive ?? this.fromArchive,
+      fromTrash: fromTrash ?? this.fromTrash,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is SearchReturnMode) {
+      return this.fromNormal == other.fromNormal &&
+          this.fromArchive == other.fromArchive &&
+          this.fromTrash == other.fromTrash;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => hashValues(fromNormal, fromArchive, fromTrash);
 }
 
 enum DateFilterMode {
