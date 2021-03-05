@@ -7,8 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefs {
   static SharedPrefs _instance;
   final SharedPreferences prefs;
+  final _SharedPreferencesQueue _queue;
 
-  SharedPrefs._(this.prefs);
+  SharedPrefs._(this.prefs) : _queue = _SharedPreferencesQueue(prefs);
 
   static Future<void> init() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -24,7 +25,7 @@ class SharedPrefs {
   set masterPass(String value) {
     //TODO Only remove comment chars after master_pass is hashed before saving
     //addChangedKey("master_pass");
-    setString("master_pass", value);
+    _queue.setString("master_pass", value);
   }
 
   ThemeMode get themeMode {
@@ -55,7 +56,7 @@ class SharedPrefs {
         newValue = 2;
         break;
     }
-    setInt("theme_mode", newValue);
+    _queue.setInt("theme_mode", newValue);
   }
 
   Color get customAccent {
@@ -68,7 +69,7 @@ class SharedPrefs {
 
   set customAccent(Color value) {
     addChangedKey("custom_accent");
-    setInt("custom_accent", value?.value);
+    _queue.setInt("custom_accent", value?.value);
   }
 
   bool get useAmoled {
@@ -77,7 +78,7 @@ class SharedPrefs {
 
   set useAmoled(bool value) {
     addChangedKey("use_amoled");
-    setBool("use_amoled", value);
+    _queue.setBool("use_amoled", value);
   }
 
   bool get useGrid {
@@ -86,7 +87,7 @@ class SharedPrefs {
 
   set useGrid(bool value) {
     addChangedKey("use_grid");
-    setBool("use_grid", value);
+    _queue.setBool("use_grid", value);
   }
 
   bool get useCustomAccent {
@@ -95,7 +96,7 @@ class SharedPrefs {
 
   set useCustomAccent(bool value) {
     addChangedKey("use_custom_accent");
-    setBool("use_custom_accent", value);
+    _queue.setBool("use_custom_accent", value);
   }
 
   bool get welcomePageSeen {
@@ -103,7 +104,7 @@ class SharedPrefs {
   }
 
   set welcomePageSeen(bool value) {
-    setBool("welcome_page_seen_v2", value);
+    _queue.setBool("welcome_page_seen_v2", value);
   }
 
   String get apiUrl {
@@ -111,7 +112,7 @@ class SharedPrefs {
   }
 
   set apiUrl(String value) {
-    setString("api_url", value);
+    _queue.setString("api_url", value);
   }
 
   String get accessToken {
@@ -119,7 +120,7 @@ class SharedPrefs {
   }
 
   set accessToken(String value) {
-    setString("access_token", value);
+    _queue.setString("access_token", value);
   }
 
   String get refreshToken {
@@ -127,7 +128,7 @@ class SharedPrefs {
   }
 
   set refreshToken(String value) {
-    setString("refresh_token", value);
+    _queue.setString("refresh_token", value);
   }
 
   String get username {
@@ -135,7 +136,7 @@ class SharedPrefs {
   }
 
   set username(String value) {
-    setString("username", value);
+    _queue.setString("username", value);
   }
 
   String get email {
@@ -143,7 +144,7 @@ class SharedPrefs {
   }
 
   set email(String value) {
-    setString("email", value);
+    _queue.setString("email", value);
   }
 
   String get avatarUrl {
@@ -151,7 +152,7 @@ class SharedPrefs {
   }
 
   set avatarUrl(String value) {
-    setString("avatar_url", value);
+    _queue.setString("avatar_url", value);
   }
 
   int get logLevel {
@@ -159,7 +160,7 @@ class SharedPrefs {
   }
 
   set logLevel(int value) {
-    setInt("log_level", value);
+    _queue.setInt("log_level", value);
   }
 
   List<String> get downloadedImages {
@@ -167,7 +168,7 @@ class SharedPrefs {
   }
 
   set downloadedImages(List<String> value) {
-    setStringList("downloaded_images", value);
+    _queue.setStringList("downloaded_images", value);
   }
 
   List<String> get deletedImages {
@@ -175,7 +176,7 @@ class SharedPrefs {
   }
 
   set deletedImages(List<String> value) {
-    setStringList("deleted_images", value);
+    _queue.setStringList("deleted_images", value);
   }
 
   int get lastUpdated {
@@ -183,7 +184,7 @@ class SharedPrefs {
   }
 
   set lastUpdated(int value) {
-    setInt("last_updated", value);
+    _queue.setInt("last_updated", value);
   }
 
   void addChangedKey(String key) {
@@ -191,7 +192,7 @@ class SharedPrefs {
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
-    setStringList("updated_keys", changedKeys);
+    _queue.setStringList("updated_keys", changedKeys);
   }
 
   void clearChangedKeys() {
@@ -207,46 +208,148 @@ class SharedPrefs {
   }
 
   set deleteQueue(String value) {
-    setString("delete_queue", value);
+    _queue.setString("delete_queue", value);
+  }
+}
+
+class _SharedPreferencesQueue {
+  final SharedPreferences prefs;
+  final List<_QueueItem> _queue = [];
+
+  _SharedPreferencesQueue(this.prefs);
+
+  void _handleRequest() {
+    final _QueueItem item = _queue.first;
+
+    if (item.requestType == _QueueRequestType.REMOVE) {
+      prefs.remove(item.key);
+    } else {
+      switch (item.type) {
+        case _QueueItemType.BOOL:
+          prefs.setBool(item.key, item.value);
+          break;
+        case _QueueItemType.DOUBLE:
+          prefs.setDouble(item.key, item.value);
+          break;
+        case _QueueItemType.INT:
+          prefs.setInt(item.key, item.value);
+          break;
+        case _QueueItemType.STRING:
+          prefs.setString(item.key, item.value);
+          break;
+        case _QueueItemType.STRING_LIST:
+          prefs.setStringList(item.key, item.value);
+          break;
+      }
+    }
+
+    _queue.remove(item);
+
+    if (_queue.isNotEmpty) _handleRequest();
+  }
+
+  void _set(_QueueItem item) {
+    _queue.add(item);
+    if (_queue.length == 1) _handleRequest();
   }
 
   void setBool(String key, bool value) {
-    if (value == null) {
-      prefs.remove(key);
-    } else {
-      prefs.setBool(key, value);
-    }
+    _set(_QueueItem.bool(
+      key: key,
+      value: value,
+      requestType:
+          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+    ));
   }
 
   void setDouble(String key, double value) {
-    if (value == null) {
-      prefs.remove(key);
-    } else {
-      prefs.setDouble(key, value);
-    }
+    _set(_QueueItem.double(
+      key: key,
+      value: value,
+      requestType:
+          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+    ));
   }
 
   void setInt(String key, int value) {
-    if (value == null) {
-      prefs.remove(key);
-    } else {
-      prefs.setInt(key, value);
-    }
+    _set(_QueueItem.int(
+      key: key,
+      value: value,
+      requestType:
+          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+    ));
   }
 
   void setString(String key, String value) {
-    if (value == null) {
-      prefs.remove(key);
-    } else {
-      prefs.setString(key, value);
-    }
+    _set(_QueueItem.string(
+      key: key,
+      value: value,
+      requestType:
+          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+    ));
   }
 
   void setStringList(String key, List<String> value) {
-    if (value == null) {
-      prefs.remove(key);
-    } else {
-      prefs.setStringList(key, value);
-    }
+    _set(_QueueItem.stringList(
+      key: key,
+      value: value,
+      requestType:
+          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+    ));
   }
+}
+
+class _QueueItem {
+  final String key;
+  final Object value;
+  final _QueueRequestType requestType;
+  final _QueueItemType type;
+
+  const _QueueItem.bool({
+    @required this.key,
+    bool value,
+    this.requestType = _QueueRequestType.SET,
+  })  : value = value,
+        type = _QueueItemType.BOOL;
+
+  const _QueueItem.double({
+    @required this.key,
+    double value,
+    this.requestType = _QueueRequestType.SET,
+  })  : value = value,
+        type = _QueueItemType.DOUBLE;
+
+  const _QueueItem.int({
+    @required this.key,
+    int value,
+    this.requestType = _QueueRequestType.SET,
+  })  : value = value,
+        type = _QueueItemType.INT;
+
+  const _QueueItem.string({
+    @required this.key,
+    String value,
+    this.requestType = _QueueRequestType.SET,
+  })  : value = value,
+        type = _QueueItemType.STRING;
+
+  const _QueueItem.stringList({
+    @required this.key,
+    List<String> value,
+    this.requestType = _QueueRequestType.SET,
+  })  : value = value,
+        type = _QueueItemType.STRING_LIST;
+}
+
+enum _QueueItemType {
+  STRING,
+  INT,
+  DOUBLE,
+  BOOL,
+  STRING_LIST,
+}
+
+enum _QueueRequestType {
+  SET,
+  REMOVE,
 }
