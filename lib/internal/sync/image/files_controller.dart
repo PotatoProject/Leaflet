@@ -90,7 +90,7 @@ class FilesController {
     final Response getResult = await dio.get(
       url,
       options: Options(
-        headers: {"Authorization": "Bearer " + token},
+        headers: {"Authorization": "Bearer $token"},
       ),
     );
     Loggy.d(
@@ -101,7 +101,7 @@ class FilesController {
       final Map<String, dynamic> jsonBody = getResult.data;
       return FilesApiStats(jsonBody["used"], jsonBody["limit"]);
     } else {
-      throw ("Cant get stats " + getResult.data);
+      throw ("Cant get stats ${getResult.data}");
     }
   }
 }
@@ -111,5 +111,5 @@ class FilesApiStats {
   final int used;
   final int limit;
 
-  FilesApiStats(this.used, this.limit);
+  const FilesApiStats(this.used, this.limit);
 }

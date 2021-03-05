@@ -26,6 +26,7 @@ class AccountController {
         data: json.encode(body),
         options: Options(
           headers: {"Content-Type": "application/json"},
+          validateStatus: (status) => true,
         ),
       );
       Loggy.v(
@@ -49,6 +50,12 @@ class AccountController {
         message: "Could not connect to auth server",
       );
     } catch (e) {
+      if (e is DioError) {
+        return AuthResponse(
+          status: false,
+          message: e.error.toString(),
+        );
+      }
       return AuthResponse(
         status: false,
         message: e.toString(),
@@ -79,6 +86,7 @@ class AccountController {
         data: json.encode(body),
         options: Options(
           headers: {"Content-Type": "application/json"},
+          validateStatus: (status) => true,
         ),
       );
       Loggy.v(
@@ -102,9 +110,21 @@ class AccountController {
           break;
       }
     } on SocketException {
-      throw ("Could not connect to server");
+      return AuthResponse(
+        status: false,
+        message: "Could not connect to auth server",
+      );
     } catch (e) {
-      rethrow;
+      if (e is DioError) {
+        return AuthResponse(
+          status: false,
+          message: e.error.toString(),
+        );
+      }
+      return AuthResponse(
+        status: false,
+        message: e.toString(),
+      );
     }
   }
 
@@ -207,7 +227,7 @@ class AccountController {
 
 class AuthResponse {
   final bool status;
-  final String message;
+  final Object message;
 
   AuthResponse({
     @required this.status,

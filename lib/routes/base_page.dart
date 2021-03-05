@@ -13,7 +13,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/files_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -186,8 +185,6 @@ class BasePageState extends State<BasePage>
           pushImmediate: true,
         );
       }
-
-      await FilesController.getStats();
     });
 
     reaction(

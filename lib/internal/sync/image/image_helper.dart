@@ -116,7 +116,7 @@ class ImageHelper {
     final Response presign = await dio.get(
       url,
       options: Options(
-        headers: {"Authorization": "Bearer " + token},
+        headers: {"Authorization": "Bearer $token"},
       ),
     );
     Loggy.v(

@@ -9,6 +9,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
+import 'package:potato_notes/internal/sync/image/files_controller.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 
 part 'preferences.g.dart';
@@ -232,17 +233,21 @@ abstract class _PreferencesBase with Store {
       _tagsValue = newTags;
     });
 
-    final String netAvatarUrl = await ImageHelper.getAvatar(await getToken());
-    if (netAvatarUrl != _avatarUrlValue) {
-      avatarUrl = netAvatarUrl;
+    if (prefs.accessToken != null) {
+      await FilesController.getStats();
+      final String netAvatarUrl = await ImageHelper.getAvatar(await getToken());
+      if (netAvatarUrl != _avatarUrlValue) {
+        avatarUrl = netAvatarUrl;
+      }
     }
   }
 
   Future<String> getToken() async {
-    if (accessToken == null ||
-        DateTime.fromMillisecondsSinceEpoch(
-                Jwt.parseJwt(accessToken)["exp"] * 1000)
-            .isBefore(DateTime.now())) {
+    final bool tokenExpired = DateTime.fromMillisecondsSinceEpoch(
+      Jwt.parseJwt(accessToken)["exp"] * 1000,
+    ).isBefore(DateTime.now());
+
+    if (accessToken == null || tokenExpired) {
       final AuthResponse response = await AccountController.refreshToken();
 
       if (!response.status) {

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:animations/animations.dart';
@@ -43,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       case 3:
         return "Invalid format";
       case 4:
-        return "Already exists";
+        return "Already exists. Try logging in";
       case 5:
         return "Missing";
       case 0:
@@ -320,27 +319,49 @@ class _LoginPageState extends State<LoginPage> {
     if (response.status && !register) {
       context.pop();
     } else {
-      if (response.message.startsWith("{")) {
-        final Map<String, dynamic> validation = json.decode(response.message);
+      if (response.message is Map<String, dynamic>) {
+        final Map<String, dynamic> validation = response.message;
         setState(() {
           usernameError = getString(validation["username"]);
           emailError = getString(validation["email"]);
           passwordError = getString(validation["password"]);
         });
       } else {
+        final bool canBeHandled = _statusMessages.containsKey(
+          response.message.toString(),
+        );
+
+        String message;
+
+        if (register) {
+          message = response.message.toString().trim() ?? "Registered!";
+        } else {
+          if (canBeHandled) {
+            message = _statusMessages[response.message.toString()];
+          } else {
+            message = response.message.toString();
+          }
+        }
+
         context.scaffoldMessenger.removeCurrentSnackBar();
         context.scaffoldMessenger.showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
             width: min(640, context.mSize.width - 32),
-            content: Text(
-              register
-                  ? response.message.trim() ?? "Registered!"
-                  : response.message.trim(),
-            ),
+            content: Text(message),
           ),
         );
       }
     }
   }
+
+  static final Map<String, String> _statusMessages = {
+    'INVALID_CREDENTIALS': 'The username or password is wrong.',
+    'USER_NOT_FOUND': 'No such user exists on the server.',
+    'USER_NOT_VERIFIED':
+        'The user is not verified yet. Please check your inbox.',
+    'LOGGED_OUT': 'The user is already logged out.',
+    'INVALID_TOKEN': 'The token is not valid, login again.',
+    'INVALID_SESSION': 'The current session is not valid, login again.',
+  };
 }
