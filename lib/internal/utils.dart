@@ -64,15 +64,19 @@ class Utils {
   }
 
   static Future<bool> showBiometricPrompt() async {
-    return await LocalAuthentication().authenticate(
-      localizedReason: "",
-      biometricOnly: true,
-      stickyAuth: true,
-      androidAuthStrings: AndroidAuthMessages(
-        signInTitle: LocaleStrings.common.biometricsPrompt,
-        cancelButton: LocaleStrings.common.cancel,
-      ),
-    );
+    try {
+      return await LocalAuthentication().authenticate(
+        localizedReason: "",
+        biometricOnly: true,
+        stickyAuth: true,
+        androidAuthStrings: AndroidAuthMessages(
+          signInTitle: LocaleStrings.common.biometricsPrompt,
+          cancelButton: LocaleStrings.common.cancel,
+        ),
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<bool> showNoteLockDialog({

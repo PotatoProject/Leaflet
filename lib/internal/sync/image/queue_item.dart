@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 
-abstract class QueueItem extends ChangeNotifier {
+abstract class QueueItem {
   final String localPath;
   final SavedImage savedImage;
 
@@ -12,9 +12,10 @@ abstract class QueueItem extends ChangeNotifier {
     required this.savedImage,
   });
 
-  QueueItemStatus status = QueueItemStatus.PENDING;
+  ValueNotifier<QueueItemStatus> status =
+      ValueNotifier<QueueItemStatus>(QueueItemStatus.PENDING);
 
-  double? progress;
+  ValueNotifier<double?> progress = ValueNotifier<double?>(null);
 }
 
 enum QueueItemStatus {

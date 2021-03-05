@@ -25,9 +25,7 @@ class UploadQueueItem extends QueueItem {
 
   @action
   Future<void> process(String tempDirectory) async {
-    status = QueueItemStatus.ONGOING;
-    notifyListeners();
-    imageQueue.notifyListeners();
+    status.value = QueueItemStatus.ONGOING;
     Map<String, String> data = {
       "original": localPath,
       "tempDirectory": tempDirectory
@@ -47,17 +45,13 @@ class UploadQueueItem extends QueueItem {
     Map<String, dynamic> headers = const {},
   }) async {
     final File file = File(localPath);
-    status = QueueItemStatus.ONGOING;
-    notifyListeners();
-    imageQueue.notifyListeners();
+    status.value = QueueItemStatus.ONGOING;
     final int length = await file.length();
     await dio.request(
       await getUploadUrl(),
       data: file.openRead(),
       onSendProgress: (count, total) {
-        progress = count / total;
-        imageQueue.notifyListeners();
-        notifyListeners();
+        progress.value = count / total;
       },
       options: Options(
         method:
@@ -69,9 +63,7 @@ class UploadQueueItem extends QueueItem {
           }),
       ),
     );
-    status = QueueItemStatus.COMPLETE;
-    notifyListeners();
-    imageQueue.notifyListeners();
+    status.value = QueueItemStatus.COMPLETE;
     savedImage.uploaded = true;
   }
 

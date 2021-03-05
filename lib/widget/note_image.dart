@@ -44,12 +44,11 @@ class _NoteImageState extends State<NoteImage> {
   }
 
   void _getQueueItem() {
-    queueItem?.removeListener(refresh);
     queueItem = imageQueue.queue.firstWhere(
       (e) => e.savedImage.id == widget.savedImage.id,
       orElse: () => null,
     );
-    queueItem?.addListener(refresh);
+    if (queueItem != null) setState(() {});
   }
 
   @override
@@ -64,55 +63,57 @@ class _NoteImageState extends State<NoteImage> {
   void dispose() {
     super.dispose();
     imageQueue.removeListener(_getQueueItem);
-    queueItem?.removeListener(refresh);
-  }
-
-  // dummy method so we can dispose of the listener
-  void refresh() {
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool displayLoadingIndicator =
-        queueItem != null && queueItem.status == QueueItemStatus.ONGOING;
-
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NoteImage.getProvider(widget.savedImage),
-          fit: widget.fit,
-          alignment: Alignment.center,
-        ),
-      ),
-      child: SizedBox.expand(
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Visibility(
-            visible: displayLoadingIndicator,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: SizedBox.fromSize(
-                size: Size.square(32),
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  elevation: 4,
-                  shape: CircleBorder(),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        value: queueItem?.progress,
+    return ValueListenableBuilder(
+        valueListenable:
+            queueItem?.status ?? ValueNotifier(QueueItemStatus.COMPLETE),
+        builder: (context, value, _) {
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NoteImage.getProvider(widget.savedImage),
+                fit: widget.fit,
+                alignment: Alignment.center,
+              ),
+            ),
+            child: SizedBox.expand(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Visibility(
+                  visible: value == QueueItemStatus.ONGOING,
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: SizedBox.fromSize(
+                      size: Size.square(32),
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        elevation: 4,
+                        shape: CircleBorder(),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: ValueListenableBuilder(
+                              valueListenable:
+                                  queueItem?.progress ?? ValueNotifier(null),
+                              builder: (context, value, _) {
+                                return CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  value: value,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        });
   }
 }

@@ -80,16 +80,18 @@ class ImageQueue extends ChangeNotifier {
   Future<void> processDownloads() async {
     Loggy.d(message: "DownloadQueue has ${downloadQueue.length} items queued");
     Loggy.d(message: "Started processing downloads");
-    await Future.wait(downloadQueue.map((item) => item.downloadImage()));
+    downloadQueue.forEach((item) async {
+      await item.downloadImage();
+    });
     for (final DownloadQueueItem item in downloadQueue) {
-      if (item.status == QueueItemStatus.COMPLETE) await updateItem(item);
+      if (item.status.value == QueueItemStatus.COMPLETE) await updateItem(item);
     }
-    downloadQueue
-        .removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
+    downloadQueue.removeWhere(
+      (item) => item.status.value == QueueItemStatus.COMPLETE,
+    );
     Loggy.d(
-        message: "DownloadQueue now contains " +
-            downloadQueue.length.toString() +
-            " items");
+      message: "DownloadQueue now contains ${downloadQueue.length} items",
+    );
   }
 
   Future<void> process() async {
@@ -102,7 +104,7 @@ class ImageQueue extends ChangeNotifier {
 
     //Update items that are uploaded in notes
     for (final UploadQueueItem item in uploadQueue) {
-      if (item.status != QueueItemStatus.COMPLETE) continue;
+      if (item.status.value != QueueItemStatus.COMPLETE) continue;
       await updateItem(item);
     }
 
@@ -110,15 +112,17 @@ class ImageQueue extends ChangeNotifier {
     Loggy.d(message: "Started processing uploads");
     await Future.wait(deleteQueue.map((item) async {
       if (await hasDuplicates(item.savedImage)) {
-        item.status = QueueItemStatus.COMPLETE;
+        item.status.value = QueueItemStatus.COMPLETE;
       } else {
         return await item.deleteImage();
       }
     }));
 
     //Remove the items from the queue
-    uploadQueue.removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
-    deleteQueue.removeWhere((item) => item.status == QueueItemStatus.COMPLETE);
+    uploadQueue
+        .removeWhere((item) => item.status.value == QueueItemStatus.COMPLETE);
+    deleteQueue
+        .removeWhere((item) => item.status.value == QueueItemStatus.COMPLETE);
 
     Loggy.d(message: "UploadQueue now contains ${uploadQueue.length} items");
     Loggy.d(message: "DeleteQueue now contains ${deleteQueue.length} items");
@@ -126,7 +130,7 @@ class ImageQueue extends ChangeNotifier {
 
   Future<void> deleteItem(DeleteQueueItem item) async {
     if (await hasDuplicates(item.savedImage)) {
-      item.status = QueueItemStatus.COMPLETE;
+      item.status.value = QueueItemStatus.COMPLETE;
     } else {
       await item.deleteImage();
     }
@@ -137,7 +141,7 @@ class ImageQueue extends ChangeNotifier {
     if (item.storageLocation == StorageLocation.SYNC &&
         await hasDuplicates(item.savedImage)) {
       item.savedImage.uploaded = true;
-      item.status = QueueItemStatus.COMPLETE;
+      item.status.value = QueueItemStatus.COMPLETE;
       return;
     } else {
       await item.uploadImage();

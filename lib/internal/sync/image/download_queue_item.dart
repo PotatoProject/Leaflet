@@ -18,17 +18,15 @@ class DownloadQueueItem extends QueueItem {
 
   @action
   Future<void> downloadImage() async {
-    status = QueueItemStatus.ONGOING;
+    status.value = QueueItemStatus.ONGOING;
     await dio.download(
       await getDownloadUrl(),
       localPath,
       onReceiveProgress: (count, total) {
-        progress = count / total;
-        notifyListeners();
-        imageQueue.notifyListeners();
+        progress.value = count / total;
       },
     );
-    status = QueueItemStatus.COMPLETE;
+    status.value = QueueItemStatus.COMPLETE;
   }
 
   Future<String> getDownloadUrl() async {
