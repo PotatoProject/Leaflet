@@ -1,27 +1,39 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:mobx/mobx.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 part 'device_info.g.dart';
 
 class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
+  static bool get isDesktopOrWeb {
+    if (UniversalPlatform.isLinux ||
+        UniversalPlatform.isWindows ||
+        UniversalPlatform.isMacOS ||
+        UniversalPlatform.isWeb) return true;
+
+    return false;
+  }
+
   static bool get isDesktop {
-    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) return true;
+    if (UniversalPlatform.isLinux ||
+        UniversalPlatform.isWindows ||
+        UniversalPlatform.isMacOS) return true;
 
     return false;
   }
 
   static bool get isAndroid {
-    if (Platform.isAndroid) return true;
+    if (kIsWeb) return false;
+
+    if (UniversalPlatform.isAndroid) return true;
 
     return false;
   }
 
   static bool get isMacOS {
-    if (Platform.isMacOS) return true;
+    if (UniversalPlatform.isMacOS) return true;
 
     return false;
   }
@@ -65,7 +77,7 @@ abstract class _DeviceInfoBase with Store {
 
   @action
   Future<void> _loadInitialData() async {
-    if (!DeviceInfo.isDesktop) {
+    if (!DeviceInfo.isDesktopOrWeb) {
       _canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
       _availableBiometricsValue =
           await LocalAuthentication().getAvailableBiometrics();

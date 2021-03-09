@@ -13,7 +13,6 @@ dependencies:
   animations: ^2.0.0
 
   back_button_interceptor: ^5.0.0-nullsafety.1
-  blake2:
   blurhash_dart: ^1.0.0-nullsafety.0
 
   crayola:
@@ -37,6 +36,7 @@ dependencies:
 
   image: ^3.0.1
   image_picker: ^0.7.2
+  image_picker_for_web: ^2.0.0
   image_size_getter:
   in_app_update:
   intl: ^0.17.0
@@ -47,7 +47,7 @@ dependencies:
   loggy:
     git: https://github.com/HrX03/loggy
 
-  material_design_icons_flutter:
+  material_design_icons_flutter: ^5.0.5955-rc.1
   mobx:
   moor: ^4.1.0
 
@@ -67,6 +67,7 @@ dependencies:
   sqflite_common_ffi: ^2.0.0
   sqlite3_flutter_libs: ^0.4.0+1
 
+  universal_platform: ^1.0.0-nullsafety
   url_launcher: ^6.0.2
   uuid: ^3.0.1
 

@@ -75,7 +75,7 @@ abstract class _AppInfoBase with Store {
   void loadData() async {
     tempDirectory = await getTemporaryDirectory();
 
-    if (!DeviceInfo.isDesktop) {
+    if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();
     }
     packageInfo = await PackageInfo.fromPlatform();

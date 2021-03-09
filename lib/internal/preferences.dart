@@ -124,7 +124,7 @@ abstract class _PreferencesBase with Store {
   set masterPass(String value) {
     _masterPassValue = value;
 
-    if (DeviceInfo.isDesktop) {
+    if (DeviceInfo.isDesktopOrWeb) {
       prefs.masterPass = value;
     } else {
       keystore.setMasterPass(value);
@@ -221,7 +221,7 @@ abstract class _PreferencesBase with Store {
   }
 
   void loadData() async {
-    if (DeviceInfo.isDesktop) {
+    if (DeviceInfo.isDesktopOrWeb) {
       _masterPassValue = prefs.masterPass;
     } else {
       _masterPassValue = await keystore.getMasterPass();

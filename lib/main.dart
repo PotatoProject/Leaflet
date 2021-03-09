@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -29,9 +30,7 @@ void main() async {
   }
   GestureBinding.instance.resamplingEnabled = true;
   await SharedPrefs.init();
-  final AppDatabase _db = AppDatabase(
-    AppDatabase.constructDb(logStatements: kDebugMode),
-  );
+  final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   Loggy.generateAppLabel();
   initProviders(_db);
 
@@ -89,7 +88,7 @@ class PotatoNotes extends StatelessWidget {
               Crayola.setTitleVisibility(false);
             }
 
-            if (appInfo.quickActions == null && !DeviceInfo.isDesktop) {
+            if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = QuickActions();
 
               appInfo.quickActions.setShortcutItems([

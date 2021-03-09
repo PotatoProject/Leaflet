@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:blake2/blake2.dart';
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:dio/dio.dart';
 import 'package:image/image.dart';
@@ -14,6 +13,7 @@ import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 
 import 'download_queue_item.dart';
 
@@ -49,7 +49,7 @@ class ImageHelper {
   }
 
   static String generateImageHash(Uint8List rawBytes) {
-    final Blake2b blake2b = Blake2b();
+    final Blake2 blake2b = Blake2();
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
     final String hash =

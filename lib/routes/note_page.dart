@@ -251,9 +251,7 @@ class _NotePageState extends State<NotePage> {
                       controller: contentController,
                       focusNode: contentFocusNode,
                       onChanged: (text) {
-                        note = note.copyWith(
-                          content: text,
-                        );
+                        note = note.copyWith(content: text);
 
                         notifyNoteChanged();
                       },

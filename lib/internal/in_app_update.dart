@@ -36,20 +36,24 @@ class InAppUpdater {
         final Map<dynamic, dynamic> body = githubRelease.data;
         final int versionCode = int.parse(body["tag_name"].split("+")[1]);
         return AppUpdateInfo(
-          versionCode > int.parse(appInfo.packageInfo.buildNumber),
+          versionCode,
           false,
           true,
           versionCode,
+          0,
+          "com.potatoproject.notes",
+          0,
+          0,
         );
     }
   }
 
   static void checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
-    if (DeviceInfo.isDesktop) return;
+    if (DeviceInfo.isDesktopOrWeb) return;
     final AppUpdateInfo updateInfo =
         await InAppUpdater._internalCheckForUpdate();
-    if (updateInfo.updateAvailable) {
+    if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       InAppUpdater.update(
         context,
         updateInfo.immediateUpdateAllowed,

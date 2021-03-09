@@ -150,7 +150,7 @@ class BasePageState extends State<BasePage>
 
   @override
   void initState() {
-    if (!DeviceInfo.isDesktop) {
+    if (!DeviceInfo.isDesktopOrWeb) {
       appInfo.quickActions.initialize((shortcutType) async {
         switch (shortcutType) {
           case 'new_text':

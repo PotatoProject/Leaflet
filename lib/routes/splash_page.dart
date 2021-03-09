@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/widget/illustrations.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class SplashPage extends StatefulWidget {
   final Widget child;
@@ -100,7 +100,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     final ColorTween _colorTween = ColorTween(
       // As of now we don't have proper system theme detection on flutter
       // for linux and windows so just use the same color for begin and end.
-      begin: Platform.isLinux || Platform.isWindows ? finalColor : initialColor,
+      begin: UniversalPlatform.isLinux || UniversalPlatform.isWindows
+          ? finalColor
+          : initialColor,
       end: finalColor,
     );
 

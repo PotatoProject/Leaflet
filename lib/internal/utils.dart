@@ -31,6 +31,7 @@ import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:recase/recase.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
@@ -87,7 +88,7 @@ class Utils {
     if (showLock) {
       bool status;
 
-      final bool bioAuth = showBiometrics && !DeviceInfo.isDesktop
+      final bool bioAuth = showBiometrics && !DeviceInfo.isDesktopOrWeb
           ? await Utils.showBiometricPrompt()
           : false;
 
@@ -178,7 +179,9 @@ class Utils {
               title: LocaleStrings.common.restore,
               value: 'restore',
             ),
-          if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS)
+          if (UniversalPlatform.isAndroid ||
+              UniversalPlatform.isIOS ||
+              UniversalPlatform.isMacOS)
             SelectionOptionEntry(
               icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
               title:
