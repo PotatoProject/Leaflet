@@ -42,7 +42,7 @@ abstract class BlakeBase {
   void reset() {
     final keyLength = (key == null) ? 0 : key.length;
 
-    final hash = List<int>(8);
+    final hash = List<int>.filled(8, null);
 
     for (var i = 0; i < hash.length; i++) {
       hash[i] = iv[i];
@@ -190,9 +190,9 @@ abstract class BlakeBase {
     assert(data != null);
     assert(index != null);
 
-    return data[index++] ^
-        (data[index++] << 8) ^
-        (data[index++] << 16) ^
+    return data[index + 1] ^
+        (data[index + 1] << 8) ^
+        (data[index + 1] << 16) ^
         (data[index] << 24);
   }
 

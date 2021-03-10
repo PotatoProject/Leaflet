@@ -7,54 +7,54 @@ import 'package:potato_notes/internal/providers.dart';
 import 'note_controller.dart';
 
 class SettingController {
-  static const SETTINGS_PREFIX = NoteController.NOTES_PREFIX;
+  static const settingsPrefix = NoteController.notesPrefix;
+
+  SettingController._();
 
   static Future<String> get(String key) async {
     try {
       final String token = await prefs.getToken();
-      final String url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
-      Loggy.v(message: "Going to send GET to " + url);
+      final String url = "${prefs.apiUrl}$settingsPrefix/setting/$key";
+      Loggy.v(message: "Going to send GET to $url");
       final Response getResult = await dio.get(
         url,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
         message:
-            "($key get) Server responded with (${getResult.statusCode}): " +
-                getResult.data,
+            "($key get) Server responded with (${getResult.statusCode}): ${getResult.data}",
       );
       return NoteController.handleResponse(getResult);
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
   static Future<String> set(String key, String value) async {
     try {
       final String token = await prefs.getToken();
-      final String url = "${prefs.apiUrl}$SETTINGS_PREFIX/setting/$key";
-      Loggy.v(message: "Going to send PUT to " + url);
+      final String url = "${prefs.apiUrl}$settingsPrefix/setting/$key";
+      Loggy.v(message: "Going to send PUT to $url");
       final Response setResult = await dio.put(
         url,
         data: value,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
         message:
-            "($key set) Server responded with (${setResult.statusCode}): " +
-                setResult.data,
+            "($key set) Server responded with (${setResult.statusCode}): ${setResult.data}",
       );
       return NoteController.handleResponse(setResult);
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -62,12 +62,12 @@ class SettingController {
     try {
       final String token = await prefs.getToken();
       final String url =
-          "${prefs.apiUrl}$SETTINGS_PREFIX/setting/changed?last_updated=$lastUpdated";
-      Loggy.v(message: "Going to send GET to " + url);
+          "${prefs.apiUrl}$settingsPrefix/setting/changed?last_updated=$lastUpdated";
+      Loggy.v(message: "Going to send GET to $url");
       final Response getResult = await dio.get(
         url,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
@@ -75,11 +75,11 @@ class SettingController {
             "(getChanged) Server responded with (${getResult.statusCode}): ${getResult.data}",
       );
       NoteController.handleResponse(getResult);
-      final Map<String, dynamic> data = getResult.data;
+      final Map<String, dynamic> data = getResult.data as Map<String, dynamic>;
       return data
           .map((key, value) => MapEntry(key.toString(), value.toString()));
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     }
   }
 }

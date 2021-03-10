@@ -6,6 +6,7 @@ import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:recase/recase.dart';
 
 class TagController {
@@ -13,13 +14,13 @@ class TagController {
     try {
       final String token = await prefs.getToken();
       final String tagJson = json.encode(toSync(tag));
-      final String url = "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag";
+      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag";
       Loggy.v(message: "Going to send POST to $url");
       final Response addResult = await dio.post(
         url,
         data: tagJson,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
@@ -28,22 +29,21 @@ class TagController {
       );
       return NoteController.handleResponse(addResult);
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
   static Future<String> delete(String id) async {
     try {
       final String token = await prefs.getToken();
-      final String url =
-          "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
-      Loggy.v(message: "Goind to send DELETE to " + url);
+      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag/$id";
+      Loggy.v(message: "Goind to send DELETE to $url");
       final Response deleteResponse = await dio.delete(
         url,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
@@ -52,9 +52,9 @@ class TagController {
       );
       return NoteController.handleResponse(deleteResponse);
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -62,29 +62,32 @@ class TagController {
     try {
       final String token = await prefs.getToken();
       final String url =
-          "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/list?last_updated=$lastUpdated";
-      Loggy.v(message: "Going to send GET to " + url);
+          "${prefs.apiUrl}${NoteController.notesPrefix}/tag/list?last_updated=$lastUpdated";
+      Loggy.v(message: "Going to send GET to $url");
 
       final Response listResult = await dio.get(
         url,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
         message:
             "(tag-list) Server responded with (${listResult.statusCode}): ${listResult.data}",
       );
-      final List<Object> body = NoteController.handleResponse(listResult);
-      List<Tag> tags = body.map((map) {
+      final List<Map<String, dynamic>> body =
+          Utils.asList<Map<String, dynamic>>(
+        json.decode(NoteController.handleResponse(listResult)),
+      );
+      final List<Tag> tags = body.map((map) {
         final Tag tag = fromSync(map);
         return tag;
       }).toList();
       return tags.map((tag) => tag).toList();
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -92,14 +95,13 @@ class TagController {
     try {
       final String deltaJson = jsonEncode(tagDelta);
       final String token = await prefs.getToken();
-      final String url =
-          "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/$id";
-      Loggy.v(message: "Going to send PATCH to " + url);
+      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag/$id";
+      Loggy.v(message: "Going to send PATCH to $url");
       final Response updateResult = await dio.patch(
         url,
         data: deltaJson,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
@@ -108,9 +110,9 @@ class TagController {
       );
       return NoteController.handleResponse(updateResult);
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -119,13 +121,13 @@ class TagController {
       final String idListJson = jsonEncode(localIdList);
       final String token = await prefs.getToken();
       final String url =
-          "${prefs.apiUrl}${NoteController.NOTES_PREFIX}/tag/deleted";
-      Loggy.v(message: "Going to send POST to " + url);
+          "${prefs.apiUrl}${NoteController.notesPrefix}/tag/deleted";
+      Loggy.v(message: "Going to send POST to $url");
       final Response listResult = await dio.post(
         url,
         data: idListJson,
         options: Options(
-          headers: {"Authorization": "Bearer " + token},
+          headers: {"Authorization": "Bearer $token"},
         ),
       );
       Loggy.d(
@@ -133,12 +135,12 @@ class TagController {
             "(tag-listDeleted) Server responded with (${listResult.statusCode})}: ${listResult.data}",
       );
       NoteController.handleResponse(listResult);
-      final List<dynamic> data = listResult.data;
+      final List<dynamic> data = listResult.data as List<dynamic>;
       return data.map((id) => id.toString()).toList();
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
-      throw (e);
+      rethrow;
     }
   }
 
@@ -156,8 +158,8 @@ class TagController {
   static Tag fromSync(Map<String, dynamic> jsonMap) {
     final Map<String, dynamic> newMap = {};
     jsonMap.forEach((key, value) {
-      final Object newValue = value;
-      final Object newKey = ReCase(key).camelCase;
+      final String newValue = value as String;
+      final String newKey = ReCase(key).camelCase;
       newMap.putIfAbsent(newKey, () => newValue);
     });
     return Tag.fromJson(newMap);

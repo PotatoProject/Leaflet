@@ -7,30 +7,28 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
 
 class DeleteQueueItem extends QueueItem {
-  final String localPath;
-  final SavedImage savedImage;
   final StorageLocation storageLocation;
 
   DeleteQueueItem({
-    required this.localPath,
-    required this.savedImage,
-    this.storageLocation = StorageLocation.LOCAL,
+    required String localPath,
+    required SavedImage savedImage,
+    this.storageLocation = StorageLocation.local,
   }) : super(localPath: localPath, savedImage: savedImage);
 
   Future<void> deleteImage() async {
-    status.value = QueueItemStatus.ONGOING;
+    status.value = QueueItemStatus.ongoing;
     final String url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
     final String token = await prefs.getToken();
     final Response response = await dio.delete(
       url,
       options: Options(
-        headers: {"Authorization": "Bearer " + token},
+        headers: {"Authorization": "Bearer $token"},
       ),
     );
     if (response.statusCode != 200) {
       return;
     } else {
-      status.value = QueueItemStatus.COMPLETE;
+      status.value = QueueItemStatus.complete;
     }
   }
 

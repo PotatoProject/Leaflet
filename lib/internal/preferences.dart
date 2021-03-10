@@ -220,16 +220,16 @@ abstract class _PreferencesBase with Store {
     return prefs.prefs.get(key);
   }
 
-  void loadData() async {
+  Future<void> loadData() async {
     if (DeviceInfo.isDesktopOrWeb) {
       _masterPassValue = prefs.masterPass;
     } else {
       _masterPassValue = await keystore.getMasterPass();
     }
 
-    _tagsValue = await tagHelper.listTags(TagReturnMode.LOCAL);
+    _tagsValue = await tagHelper.listTags(TagReturnMode.local);
 
-    tagHelper.watchTags(TagReturnMode.LOCAL).listen((newTags) {
+    tagHelper.watchTags(TagReturnMode.local).listen((newTags) {
       _tagsValue = newTags;
     });
 
@@ -244,7 +244,7 @@ abstract class _PreferencesBase with Store {
 
   Future<String> getToken() async {
     final bool tokenExpired = DateTime.fromMillisecondsSinceEpoch(
-      Jwt.parseJwt(accessToken)["exp"] * 1000,
+      (Jwt.parseJwt(accessToken)["exp"] as int) * 1000,
     ).isBefore(DateTime.now());
 
     if (accessToken == null || tokenExpired) {

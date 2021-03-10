@@ -50,6 +50,6 @@ K _$enumDecode<K, V>(
 }
 
 const _$NotificationActionEnumMap = {
-  NotificationAction.PIN: 'PIN',
-  NotificationAction.REMINDER: 'REMINDER',
+  NotificationAction.pin: 'pin',
+  NotificationAction.reminder: 'reminder',
 };

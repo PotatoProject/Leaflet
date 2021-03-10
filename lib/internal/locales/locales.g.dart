@@ -2,27 +2,28 @@
 
 import 'dart:ui';
 
+// ignore_for_file: avoid_escaping_inner_quotes
 class Locales {
   Locales._();
 
   static List<Locale> get supported => [
-    Locale("ar", "AR"),
-    Locale("de", "DE"),
-    Locale("en", "US"),
-    Locale("es", "ES"),
-    Locale("fr", "FR"),
-    Locale("hu", "HU"),
-    Locale("it", "IT"),
-    Locale("nl", "NL"),
-    Locale("pl", "PL"),
-    Locale("pt", "BR"),
-    Locale("ro", "RO"),
-    Locale("ru", "RU"),
-    Locale("sr", "SR"),
-    Locale("tr", "TR"),
-    Locale("uk", "UK"),
-    Locale("vi", "VI"),
-    Locale("zh", "CN"),
+    const Locale("ar", "AR"),
+    const Locale("de", "DE"),
+    const Locale("en", "US"),
+    const Locale("es", "ES"),
+    const Locale("fr", "FR"),
+    const Locale("hu", "HU"),
+    const Locale("it", "IT"),
+    const Locale("nl", "NL"),
+    const Locale("pl", "PL"),
+    const Locale("pt", "BR"),
+    const Locale("ro", "RO"),
+    const Locale("ru", "RU"),
+    const Locale("sr", "SR"),
+    const Locale("tr", "TR"),
+    const Locale("uk", "UK"),
+    const Locale("vi", "VI"),
+    const Locale("zh", "CN"),
   ];
 
   static Map<String, Map<String, String>> get data => {

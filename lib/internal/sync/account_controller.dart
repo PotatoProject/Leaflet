@@ -68,7 +68,7 @@ class AccountController {
   static Future<AuthResponse> login(String emailOrUser, String password) async {
     Map<String, String> body;
 
-    if (emailOrUser.contains(RegExp(".*\..*@.*\..*", dotAll: true))) {
+    if (emailOrUser.contains(RegExp(".*..*@.*..*", dotAll: true))) {
       body = {
         "email": emailOrUser,
         "password": password,
@@ -96,7 +96,8 @@ class AccountController {
       );
       switch (loginResponse.statusCode) {
         case 200:
-          final Map<String, dynamic> response = loginResponse.data;
+          final Map<String, String> response = Map<String, String>.from(
+              loginResponse.data as Map<String, dynamic>);
           prefs.accessToken = response["token"];
           prefs.refreshToken = response["refresh_token"];
           await getUserInfo();
@@ -138,12 +139,13 @@ class AccountController {
         final Response profileRequest = await dio.get(
           "${prefs.apiUrl}/login/user/profile",
           options: Options(
-            headers: {"Authorization": "Bearer " + token},
+            headers: {"Authorization": "Bearer $token"},
           ),
         );
         switch (profileRequest.statusCode) {
           case 200:
-            final Map<String, dynamic> response = profileRequest.data;
+            final Map<String, String> response = Map<String, String>.from(
+                profileRequest.data as Map<String, dynamic>);
             prefs.username = response["username"];
             prefs.email = response["email"];
             prefs.avatarUrl = await ImageHelper.getAvatar(token);
@@ -154,10 +156,10 @@ class AccountController {
               message: profileRequest.data,
             );
           default:
-            throw ("Unexpected response from auth server");
+            throw "Unexpected response from auth server";
         }
       } on SocketException {
-        throw ("Could not connect to server");
+        throw "Could not connect to server";
       } catch (e) {
         rethrow;
       }
@@ -185,12 +187,13 @@ class AccountController {
   static Future<AuthResponse> refreshToken() async {
     Response refresh;
 
-    if (prefs.refreshToken == null)
+    if (prefs.refreshToken == null) {
       return AuthResponse(status: false, message: "Not logged in");
+    }
 
     try {
       final String url = "${prefs.apiUrl}/login/user/refresh";
-      Loggy.v(message: "Going to send GET to " + url);
+      Loggy.v(message: "Going to send GET to $url");
       refresh = await dio.get(
         url,
         options: Options(
@@ -205,8 +208,8 @@ class AccountController {
       switch (refresh.statusCode) {
         case 200:
           {
-            prefs.accessToken = refresh.data["token"];
-            Loggy.d(message: "accessToken: " + prefs.accessToken, secure: true);
+            prefs.accessToken = refresh.data["token"] as String;
+            Loggy.d(message: "accessToken: ${prefs.accessToken}", secure: true);
             return AuthResponse(status: true);
           }
         case 400:
@@ -215,10 +218,10 @@ class AccountController {
             message: refresh.data,
           );
         default:
-          throw ("Unexpected response from auth server");
+          throw "Unexpected response from auth server";
       }
     } on SocketException {
-      throw ("Could not connect to server");
+      throw "Could not connect to server";
     } catch (e) {
       rethrow;
     }

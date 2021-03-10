@@ -3,6 +3,8 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class NoteColors {
+  NoteColors._();
+
   static List<ColorInfo> get colorList => [
         NoteColors.none,
         NoteColors.red,

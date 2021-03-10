@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GlobalKeyRegistry {
-  static Map<dynamic, GlobalKey> _registry = {};
+  GlobalKeyRegistry._();
+
+  static final Map<dynamic, GlobalKey> _registry = {};
 
   static GlobalKey get(dynamic id) {
     final GlobalKey key = _registry[id];

@@ -92,21 +92,6 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_uiTypeValueAtom = Atom(name: '_DeviceInfoBase._uiTypeValue');
-
-  @override
-  UiType get _uiTypeValue {
-    _$_uiTypeValueAtom.reportRead();
-    return super._uiTypeValue;
-  }
-
-  @override
-  set _uiTypeValue(UiType value) {
-    _$_uiTypeValueAtom.reportWrite(value, super._uiTypeValue, () {
-      super._uiTypeValue = value;
-    });
-  }
-
   final _$_loadInitialDataAsyncAction =
       AsyncAction('_DeviceInfoBase._loadInitialData');
 

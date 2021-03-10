@@ -12,8 +12,7 @@ class SharedPrefs {
   SharedPrefs._(this.prefs) : _queue = _SharedPreferencesQueue(prefs);
 
   static Future<void> init() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    _instance = SharedPrefs._(preferences);
+    _instance = SharedPrefs._(await SharedPreferences.getInstance());
   }
 
   static SharedPrefs get instance => _instance;
@@ -61,10 +60,7 @@ class SharedPrefs {
 
   Color get customAccent {
     final int colorValue = prefs.getInt("custom_accent");
-    if (colorValue != null)
-      return Color(colorValue);
-    else
-      return null;
+    return colorValue != null ? Color(colorValue) : null;
   }
 
   set customAccent(Color value) {
@@ -188,7 +184,7 @@ class SharedPrefs {
   }
 
   void addChangedKey(String key) {
-    var changedKeys = prefs.getStringList("updated_keys") ?? [];
+    final List<String> changedKeys = prefs.getStringList("updated_keys") ?? [];
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
@@ -221,24 +217,24 @@ class _SharedPreferencesQueue {
   void _handleRequest() {
     final _QueueItem item = _queue.first;
 
-    if (item.requestType == _QueueRequestType.REMOVE) {
+    if (item.requestType == _QueueRequestType.remove) {
       prefs.remove(item.key);
     } else {
       switch (item.type) {
-        case _QueueItemType.BOOL:
-          prefs.setBool(item.key, item.value);
+        case _QueueItemType.bool:
+          prefs.setBool(item.key, item.value as bool);
           break;
-        case _QueueItemType.DOUBLE:
-          prefs.setDouble(item.key, item.value);
+        case _QueueItemType.double:
+          prefs.setDouble(item.key, item.value as double);
           break;
-        case _QueueItemType.INT:
-          prefs.setInt(item.key, item.value);
+        case _QueueItemType.int:
+          prefs.setInt(item.key, item.value as int);
           break;
-        case _QueueItemType.STRING:
-          prefs.setString(item.key, item.value);
+        case _QueueItemType.string:
+          prefs.setString(item.key, item.value as String);
           break;
-        case _QueueItemType.STRING_LIST:
-          prefs.setStringList(item.key, item.value);
+        case _QueueItemType.stringList:
+          prefs.setStringList(item.key, item.value as List<String>);
           break;
       }
     }
@@ -258,7 +254,7 @@ class _SharedPreferencesQueue {
       key: key,
       value: value,
       requestType:
-          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
     ));
   }
 
@@ -267,7 +263,7 @@ class _SharedPreferencesQueue {
       key: key,
       value: value,
       requestType:
-          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
     ));
   }
 
@@ -276,7 +272,7 @@ class _SharedPreferencesQueue {
       key: key,
       value: value,
       requestType:
-          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
     ));
   }
 
@@ -285,7 +281,7 @@ class _SharedPreferencesQueue {
       key: key,
       value: value,
       requestType:
-          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
     ));
   }
 
@@ -294,62 +290,64 @@ class _SharedPreferencesQueue {
       key: key,
       value: value,
       requestType:
-          value == null ? _QueueRequestType.REMOVE : _QueueRequestType.SET,
+          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
     ));
   }
 }
 
 class _QueueItem {
   final String key;
-  final Object value;
+  final Object _value;
   final _QueueRequestType requestType;
   final _QueueItemType type;
+
+  Object get value => _value;
 
   const _QueueItem.bool({
     @required this.key,
     bool value,
-    this.requestType = _QueueRequestType.SET,
-  })  : value = value,
-        type = _QueueItemType.BOOL;
+    this.requestType = _QueueRequestType.set,
+  })  : _value = value,
+        type = _QueueItemType.bool;
 
   const _QueueItem.double({
     @required this.key,
     double value,
-    this.requestType = _QueueRequestType.SET,
-  })  : value = value,
-        type = _QueueItemType.DOUBLE;
+    this.requestType = _QueueRequestType.set,
+  })  : _value = value,
+        type = _QueueItemType.double;
 
   const _QueueItem.int({
     @required this.key,
     int value,
-    this.requestType = _QueueRequestType.SET,
-  })  : value = value,
-        type = _QueueItemType.INT;
+    this.requestType = _QueueRequestType.set,
+  })  : _value = value,
+        type = _QueueItemType.int;
 
   const _QueueItem.string({
     @required this.key,
     String value,
-    this.requestType = _QueueRequestType.SET,
-  })  : value = value,
-        type = _QueueItemType.STRING;
+    this.requestType = _QueueRequestType.set,
+  })  : _value = value,
+        type = _QueueItemType.string;
 
   const _QueueItem.stringList({
     @required this.key,
     List<String> value,
-    this.requestType = _QueueRequestType.SET,
-  })  : value = value,
-        type = _QueueItemType.STRING_LIST;
+    this.requestType = _QueueRequestType.set,
+  })  : _value = value,
+        type = _QueueItemType.stringList;
 }
 
 enum _QueueItemType {
-  STRING,
-  INT,
-  DOUBLE,
-  BOOL,
-  STRING_LIST,
+  string,
+  int,
+  double,
+  bool,
+  stringList,
 }
 
 enum _QueueRequestType {
-  SET,
-  REMOVE,
+  set,
+  remove,
 }

@@ -9,13 +9,13 @@ class Jwt {
   static Map<String, dynamic> parseJwt(String token) {
     final parts = token.split('.');
     if (parts.length != 3) {
-      throw FormatException('Invalid token.');
+      throw const FormatException('Invalid token.');
     }
 
     final payload = _decodeBase64(parts[1]);
     final payloadMap = json.decode(payload);
     if (payloadMap is! Map<String, dynamic>) {
-      throw FormatException('Invalid payload.');
+      throw const FormatException('Invalid payload.');
     }
 
     return payloadMap;
@@ -53,7 +53,7 @@ class Jwt {
     final Map<String, dynamic> payload = parseJwt(token);
     if (payload['exp'] != null) {
       return DateTime.fromMillisecondsSinceEpoch(0)
-          .add(Duration(seconds: payload["exp"]));
+          .add(Duration(seconds: payload["exp"] as int));
     }
     return null;
   }

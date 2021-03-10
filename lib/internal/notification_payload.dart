@@ -23,6 +23,6 @@ class NotificationPayload {
 }
 
 enum NotificationAction {
-  PIN,
-  REMINDER,
+  pin,
+  reminder,
 }

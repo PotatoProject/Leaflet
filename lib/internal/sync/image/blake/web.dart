@@ -230,7 +230,7 @@ class Blake2 extends BlakeBase {
   ///
   /// [salt] and [personalization] may be null and
   /// must both be 8 characters in length.
-  static Blake2 fromStrings({
+  factory Blake2.fromStrings({
     int digestLength = 32,
     String key,
     String salt,

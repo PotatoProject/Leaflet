@@ -13,13 +13,13 @@ abstract class QueueItem {
   });
 
   ValueNotifier<QueueItemStatus> status =
-      ValueNotifier<QueueItemStatus>(QueueItemStatus.PENDING);
+      ValueNotifier<QueueItemStatus>(QueueItemStatus.pending);
 
   ValueNotifier<double?> progress = ValueNotifier<double?>(null);
 }
 
 enum QueueItemStatus {
-  PENDING,
-  ONGOING,
-  COMPLETE,
+  pending,
+  ongoing,
+  complete,
 }

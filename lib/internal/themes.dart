@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
 class Themes {
   final Color _mainColor;
 
@@ -9,12 +10,12 @@ class Themes {
 
   Color get mainColor => _mainColor ?? Colors.blueAccent;
 
-  static final Color lightColor = Colors.white;
-  static final Color lightSecondaryColor = Color(0xFFFAFAFA);
-  static final Color darkColor = Color(0xFF212121);
-  static final Color darkSecondaryColor = Color(0xFF161616);
-  static final Color blackColor = Color(0xFF121212);
-  static final Color blackSecondaryColor = Colors.black;
+  static const Color lightColor = Color(0xFFFFFFFF);
+  static const Color lightSecondaryColor = Color(0xFFFAFAFA);
+  static const Color darkColor = Color(0xFF212121);
+  static const Color darkSecondaryColor = Color(0xFF161616);
+  static const Color blackColor = Color(0xFF121212);
+  static const Color blackSecondaryColor = Color(0xFF000000);
 
   ThemeData get light => ThemeData.light().copyWith(
         accentColor: mainColor,
@@ -43,13 +44,9 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        cardTheme: CardTheme(
-          elevation: 0,
-        ),
-        snackBarTheme: SnackBarThemeData(
-          actionTextColor: lightColor,
-        ),
-        bottomSheetTheme: BottomSheetThemeData(
+        cardTheme: const CardTheme(elevation: 0),
+        snackBarTheme: const SnackBarThemeData(actionTextColor: lightColor),
+        bottomSheetTheme: const BottomSheetThemeData(
           modalBackgroundColor: lightColor,
           shape: RoundedRectangleBorder(),
         ),
@@ -65,7 +62,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(
@@ -117,13 +114,9 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        cardTheme: CardTheme(
-          elevation: 0,
-        ),
-        snackBarTheme: SnackBarThemeData(
-          actionTextColor: darkColor,
-        ),
-        bottomSheetTheme: BottomSheetThemeData(
+        cardTheme: const CardTheme(elevation: 0),
+        snackBarTheme: const SnackBarThemeData(actionTextColor: darkColor),
+        bottomSheetTheme: const BottomSheetThemeData(
           modalBackgroundColor: darkColor,
           shape: RoundedRectangleBorder(),
         ),
@@ -139,7 +132,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(
@@ -191,13 +184,9 @@ class Themes {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        cardTheme: CardTheme(
-          elevation: 0,
-        ),
-        snackBarTheme: SnackBarThemeData(
-          actionTextColor: blackColor,
-        ),
-        bottomSheetTheme: BottomSheetThemeData(
+        cardTheme: const CardTheme(elevation: 0),
+        snackBarTheme: const SnackBarThemeData(actionTextColor: blackColor),
+        bottomSheetTheme: const BottomSheetThemeData(
           modalBackgroundColor: blackColor,
           shape: RoundedRectangleBorder(),
         ),
@@ -213,7 +202,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: mainColor,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
           ),
         ),
         popupMenuTheme: PopupMenuThemeData(

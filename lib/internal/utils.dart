@@ -36,12 +36,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 const double kCardBorderRadius = 4;
-const EdgeInsets kCardPadding = const EdgeInsets.all(4);
+const EdgeInsets kCardPadding = EdgeInsets.all(4);
 
 class Utils {
   Utils._();
 
-  static deleteNoteSafely(Note note) {
+  static void deleteNoteSafely(Note note) {
     ImageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
@@ -53,13 +53,11 @@ class Utils {
     //    });
   }
 
-  static Future<dynamic> showPassChallengeSheet(BuildContext context) async {
-    return await showNotesModalBottomSheet(
+  static Future<bool> showPassChallengeSheet(BuildContext context) async {
+    return showNotesModalBottomSheet<bool>(
       context: context,
       builder: (context) => PassChallenge(
-        editMode: false,
         onChallengeSuccess: () => context.pop(true),
-        onSave: null,
       ),
     );
   }
@@ -92,10 +90,11 @@ class Utils {
           ? await Utils.showBiometricPrompt()
           : false;
 
-      if (bioAuth)
+      if (bioAuth) {
         status = bioAuth;
-      else
+      } else {
         status = await Utils.showPassChallengeSheet(context) ?? false;
+      }
 
       return status;
     }
@@ -103,7 +102,7 @@ class Utils {
     return true;
   }
 
-  static Future<dynamic> showNotesModalBottomSheet<T>({
+  static Future<T> showNotesModalBottomSheet<T>({
     @required BuildContext context,
     @required WidgetBuilder builder,
     Color backgroundColor,
@@ -113,7 +112,7 @@ class Utils {
     Color barrierColor,
     bool childHandlesScroll = false,
   }) async {
-    return await context.push<T>(
+    return context.push<T>(
       BottomSheetRoute(
         child: builder(context),
         backgroundColor: backgroundColor,
@@ -126,7 +125,7 @@ class Utils {
   }
 
   static String generateId() {
-    return Uuid().v4();
+    return const Uuid().v4();
   }
 
   static SelectionOptions getSelectionOptionsForMode(ReturnMode mode) {
@@ -136,19 +135,19 @@ class Utils {
         final bool showUnpin = notes.first.pinned;
 
         return [
-          SelectionOptionEntry(
+          const SelectionOptionEntry(
             title: "Select",
             icon: Icons.check,
             value: 'select',
             showOnlyOnRightClickMenu: true,
           ),
-          SelectionOptionEntry(
+          const SelectionOptionEntry(
             title: "Select all",
             icon: Icons.select_all_outlined,
             value: 'selectall',
             showOnlyOnRightClickMenu: true,
           ),
-          if (mode == ReturnMode.NORMAL)
+          if (mode == ReturnMode.normal)
             SelectionOptionEntry(
               title: anyStarred
                   ? LocaleStrings.mainPage.selectionBarRemoveFavourites
@@ -156,13 +155,13 @@ class Utils {
               icon: anyStarred ? Icons.favorite : Icons.favorite_border,
               value: 'favourites',
             ),
-          if (mode == ReturnMode.NORMAL)
+          if (mode == ReturnMode.normal)
             SelectionOptionEntry(
               title: LocaleStrings.mainPage.selectionBarChangeColor,
               icon: Icons.color_lens_outlined,
               value: 'color',
             ),
-          if (mode != ReturnMode.ARCHIVE)
+          if (mode != ReturnMode.archive)
             SelectionOptionEntry(
               title: LocaleStrings.mainPage.selectionBarArchive,
               icon: MdiIcons.archiveOutline,
@@ -171,9 +170,9 @@ class Utils {
           SelectionOptionEntry(
             title: LocaleStrings.mainPage.selectionBarDelete,
             icon: Icons.delete_outline,
-            value: mode == ReturnMode.TRASH ? 'perma_delete' : 'delete',
+            value: mode == ReturnMode.trash ? 'perma_delete' : 'delete',
           ),
-          if (mode != ReturnMode.NORMAL)
+          if (mode != ReturnMode.normal)
             SelectionOptionEntry(
               icon: Icons.settings_backup_restore,
               title: LocaleStrings.common.restore,
@@ -227,15 +226,16 @@ class Utils {
         if (unlocked) {
           final bool anyStarred = notes.any((item) => item.starred);
 
-          for (Note note in notes) {
-            if (anyStarred)
+          for (final Note note in notes) {
+            if (anyStarred) {
               await helper.saveNote(
                 note.markChanged().copyWith(starred: false),
               );
-            else
+            } else {
               await helper.saveNote(
                 note.markChanged().copyWith(starred: true),
               );
+            }
           }
 
           state.closeSelection();
@@ -252,14 +252,16 @@ class Utils {
           int selectedColor;
 
           if (notes.length > 1) {
-            int color = notes.first.color;
+            final int color = notes.first.color;
 
-            if (notes.every((item) => item.color == color))
+            if (notes.every((item) => item.color == color)) {
               selectedColor = color;
-            else
+            } else {
               selectedColor = 0;
-          } else
+            }
+          } else {
             selectedColor = notes.first.color;
+          }
 
           selectedColor = await Utils.showNotesModalBottomSheet(
             context: context,
@@ -272,8 +274,9 @@ class Utils {
           );
 
           if (selectedColor != null) {
-            for (Note note in notes)
+            for (final Note note in notes) {
               await helper.saveNote(note.copyWith(color: selectedColor));
+            }
 
             state.closeSelection();
           }
@@ -344,7 +347,7 @@ class Utils {
 
         if (unlocked) {
           Share.share(
-            (notes.first.title.isNotEmpty ? notes.first.title + "\n\n" : "") +
+            (notes.first.title.isNotEmpty ? "${notes.first.title}\n\n" : "") +
                 notes.first.content,
           );
 
@@ -373,16 +376,16 @@ class Utils {
             ongoing: true,
             priority: Priority.max,
           ),
-          iOS: IOSNotificationDetails(
+          iOS: const IOSNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
           ),
-          macOS: MacOSNotificationDetails(),
+          macOS: const MacOSNotificationDetails(),
         ),
         payload: json.encode(
           NotificationPayload(
-            action: NotificationAction.PIN,
+            action: NotificationAction.pin,
             id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
             noteId: note.id,
           ).toJson(),
@@ -393,28 +396,28 @@ class Utils {
 
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
-      case ReturnMode.NORMAL:
+      case ReturnMode.normal:
         return LocaleStrings.mainPage.titleHome;
-      case ReturnMode.ARCHIVE:
+      case ReturnMode.archive:
         return LocaleStrings.mainPage.titleArchive;
-      case ReturnMode.TRASH:
+      case ReturnMode.trash:
         return LocaleStrings.mainPage.titleTrash;
-      case ReturnMode.FAVOURITES:
+      case ReturnMode.favourites:
         return LocaleStrings.mainPage.titleFavourites;
-      case ReturnMode.TAG:
+      case ReturnMode.tag:
         if (prefs.tags.isNotEmpty) {
           return prefs.tags[tagIndex].name;
         } else {
           return LocaleStrings.mainPage.titleTag;
         }
         break;
-      case ReturnMode.ALL:
+      case ReturnMode.all:
       default:
         return LocaleStrings.mainPage.titleAll;
     }
   }
 
-  static get defaultAccent => Color(0xFF66BB6A);
+  static Color get defaultAccent => const Color(0xFF66BB6A);
 
   static Future<bool> deleteNotes({
     @required BuildContext context,
@@ -437,7 +440,7 @@ class Utils {
             note.markChanged().copyWith(deleted: false, archived: true));
       } else {
         if (permaDelete) {
-          await Utils.deleteNoteSafely(note);
+          Utils.deleteNoteSafely(note);
         } else {
           await helper.saveNote(
               note.markChanged().copyWith(deleted: true, archived: false));
@@ -497,7 +500,7 @@ class Utils {
         action: SnackBarAction(
           label: LocaleStrings.common.undo,
           onPressed: () async {
-            for (Note note in backupNotes) {
+            for (final Note note in backupNotes) {
               await helper.saveNote(note);
             }
           },
@@ -513,44 +516,44 @@ class Utils {
           name: "Davide Bianco",
           role: LocaleStrings.about.contributorsHrx,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
-          socialLinks: [
-            SocialLink(SocialLinkType.GITHUB, "HrX03"),
-            SocialLink(SocialLinkType.INSTAGRAM, "b_b_biancoboi"),
-            SocialLink(SocialLinkType.TWITTER, "HrX2003"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.github, "HrX03"),
+            SocialLink(SocialLinkType.instagram, "b_b_biancoboi"),
+            SocialLink(SocialLinkType.twitter, "HrX2003"),
           ],
         ),
         ContributorInfo(
           name: "Bas Wieringa (broodrooster)",
           role: LocaleStrings.about.contributorsBas,
           avatarUrl: "https://avatars.githubusercontent.com/u/31385368",
-          socialLinks: [
-            SocialLink(SocialLinkType.GITHUB, "broodroosterdev"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.github, "broodroosterdev"),
           ],
         ),
         ContributorInfo(
           name: "Nico Franke",
           role: LocaleStrings.about.contributorsNico,
           avatarUrl: "https://avatars.githubusercontent.com/u/23036430",
-          socialLinks: [
-            SocialLink(SocialLinkType.GITHUB, "ZerNico"),
-            SocialLink(SocialLinkType.INSTAGRAM, "z3rnico"),
-            SocialLink(SocialLinkType.TWITTER, "Z3rNico"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.github, "ZerNico"),
+            SocialLink(SocialLinkType.instagram, "z3rnico"),
+            SocialLink(SocialLinkType.twitter, "Z3rNico"),
           ],
         ),
         ContributorInfo(
           name: "SphericalKat",
           role: LocaleStrings.about.contributorsKat,
           avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
-          socialLinks: [
-            SocialLink(SocialLinkType.GITHUB, "ATechnoHazard"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.github, "ATechnoHazard"),
           ],
         ),
         ContributorInfo(
           name: "Rohit K.Parida",
           role: LocaleStrings.about.contributorsRohit,
           avatarUrl: "https://avatars.githubusercontent.com/u/18437518",
-          socialLinks: [
-            SocialLink(SocialLinkType.TWITTER, "paridadesigns"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.twitter, "paridadesigns"),
           ],
         ),
         ContributorInfo(
@@ -558,18 +561,18 @@ class Utils {
           role: LocaleStrings.about.contributorsRshbfn,
           avatarUrl:
               "https://pbs.twimg.com/profile_images/1306121394241953792/G0zeUpRb.jpg",
-          socialLinks: [
-            SocialLink(SocialLinkType.TWITTER, "RshBfn"),
+          socialLinks: const [
+            SocialLink(SocialLinkType.twitter, "RshBfn"),
           ],
         ),
-        ContributorInfo(
+        const ContributorInfo(
           name: "Elias Gagnef",
           role: "Leaflet brand name",
           avatarUrl: "https://avatars.githubusercontent.com/u/46574798",
           socialLinks: [
-            SocialLink(SocialLinkType.TWITTER, "EliasGagnef"),
-            SocialLink(SocialLinkType.GITHUB, "EliasGagnef"),
-            SocialLink(SocialLinkType.STEAM, "Gagnef"),
+            SocialLink(SocialLinkType.twitter, "EliasGagnef"),
+            SocialLink(SocialLinkType.github, "EliasGagnef"),
+            SocialLink(SocialLinkType.steam, "Gagnef"),
           ],
         ),
       ];
@@ -594,9 +597,7 @@ class Utils {
   static Widget quickIllustration(
       BuildContext context, Widget illustration, String text) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           height: 148,
@@ -604,7 +605,7 @@ class Utils {
             child: illustration,
           ),
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         Text(
           text,
           style: TextStyle(
@@ -618,9 +619,9 @@ class Utils {
     );
   }
 
-  static void newNote(BuildContext context) async {
+  static Future<void> newNote(BuildContext context) async {
     final int currentLength =
-        (await helper.listNotes(ReturnMode.NORMAL)).length;
+        (await helper.listNotes(ReturnMode.normal)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -634,12 +635,12 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static void deleteLastNoteIfEmpty(
+  static Future<void> deleteLastNoteIfEmpty(
     BuildContext context,
     int currentLength,
     String id,
   ) async {
-    final List<Note> notes = await helper.listNotes(ReturnMode.NORMAL);
+    final List<Note> notes = await helper.listNotes(ReturnMode.normal);
     final int newLength = notes.length;
 
     if (newLength > currentLength) {
@@ -660,7 +661,7 @@ class Utils {
     }
   }
 
-  static void newImage(BuildContext context, ImageSource source) async {
+  static Future<void> newImage(BuildContext context, ImageSource source) async {
     Note note = NoteX.emptyNote;
     final File image = await pickImage();
 
@@ -670,7 +671,7 @@ class Utils {
       note.images.add(savedImage);
 
       final int currentLength =
-          (await helper.listNotes(ReturnMode.NORMAL)).length;
+          (await helper.listNotes(ReturnMode.normal)).length;
       final String id = generateId();
 
       note = note.copyWith(id: id);
@@ -688,9 +689,9 @@ class Utils {
     }
   }
 
-  static void newList(BuildContext context) async {
+  static Future<void> newList(BuildContext context) async {
     final int currentLength =
-        (await helper.listNotes(ReturnMode.NORMAL)).length;
+        (await helper.listNotes(ReturnMode.normal)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -704,9 +705,9 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static void newDrawing(BuildContext context) async {
+  static Future<void> newDrawing(BuildContext context) async {
     final int currentLength =
-        (await helper.listNotes(ReturnMode.NORMAL)).length;
+        (await helper.listNotes(ReturnMode.normal)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -723,30 +724,28 @@ class Utils {
   static Future<File> pickImage() async {
     String path;
 
-    try {
-      if (DeviceInfo.isDesktop) {
-        final XFile image = await openFile(
-          acceptedTypeGroups: [
-            XTypeGroup(
-              label: 'images',
-              extensions: [
-                'png',
-                'jpg',
-                'jpeg',
-                'bmp',
-              ],
-            ),
-          ],
-        );
+    if (DeviceInfo.isDesktop) {
+      final XFile image = await openFile(
+        acceptedTypeGroups: [
+          XTypeGroup(
+            label: 'images',
+            extensions: [
+              'png',
+              'jpg',
+              'jpeg',
+              'bmp',
+            ],
+          ),
+        ],
+      );
 
-        path = image.path;
-      } else {
-        final PickedFile image =
-            await ImagePicker().getImage(source: ImageSource.gallery);
+      path = image.path;
+    } else {
+      final PickedFile image =
+          await ImagePicker().getImage(source: ImageSource.gallery);
 
-        path = image.path;
-      }
-    } catch (e) {}
+      path = image.path;
+    }
 
     return path != null ? File(path) : null;
   }
@@ -755,16 +754,24 @@ class Utils {
     String url, {
     Map<String, String> headers,
   }) async {
-    bool canLaunchLink = await canLaunch(url);
+    final bool canLaunchLink = await canLaunch(url);
 
     if (canLaunchLink) {
-      return await launch(url, headers: headers);
+      return launch(url, headers: headers);
     }
 
     return false;
   }
 
   static String get defaultApiUrl => "https://sync.potatoproject.co/api/v2";
+
+  static List<T> asList<T>(dynamic obj) {
+    return List<T>.from(obj as List<dynamic>);
+  }
+
+  static Map<K, V> asMap<K, V>(dynamic obj) {
+    return Map<K, V>.from(obj as Map<dynamic, dynamic>);
+  }
 }
 
 extension NoteX on Note {
@@ -791,22 +798,24 @@ extension NoteX on Note {
       );
 
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
-    Map<String, dynamic> newMap = Map();
+    final Map<String, dynamic> newMap = {};
     syncMap.forEach((key, value) {
       Object newValue = value;
       String newKey = ReCase(key).camelCase;
       switch (key) {
         case "style_json":
           {
-            final List<dynamic> map = json.decode(value);
-            final List<int> data =
-                List<int>.from(map.map((i) => i as int)).toList();
+            final List<int> map =
+                Utils.asList<int>(json.decode(value.toString()));
+            final List<int> data = List<int>.from(map.map((i) => i)).toList();
             newValue = data;
             break;
           }
         case "images":
           {
-            final List<dynamic> list = json.decode(value);
+            final List<Map<String, dynamic>> list =
+                Utils.asList<Map<String, dynamic>>(
+                    json.decode(value.toString()));
             final List<SavedImage> images =
                 list.map((i) => SavedImage.fromJson(i)).toList();
             newValue = images;
@@ -814,26 +823,31 @@ extension NoteX on Note {
           }
         case "list_content":
           {
-            final List<dynamic> map = json.decode(value);
-            final List<ListItem> content =
-                List<ListItem>.from(map.map((i) => ListItem.fromJson(i)))
-                    .toList();
+            final List<Map<String, dynamic>> map =
+                Utils.asList<Map<String, dynamic>>(
+              json.decode(value.toString()),
+            );
+            final List<ListItem> content = Utils.asList<ListItem>(
+              map.map((i) => ListItem.fromJson(i)).toList(),
+            );
             newValue = content;
             break;
           }
         case "reminders":
           {
-            final List<dynamic> map = json.decode(value);
-            final List<DateTime> reminders =
-                List<DateTime>.from(map.map((i) => DateTime.parse(i))).toList();
+            final List<String> map =
+                Utils.asList<String>(json.decode(value.toString()));
+            final List<DateTime> reminders = Utils.asList<DateTime>(
+              map.map((i) => DateTime.parse(i)).toList(),
+            );
             newValue = reminders;
             break;
           }
         case "tags":
           {
-            var map = json.decode(value);
-            List<String> tagIds = List<String>.from(map).toList();
-            newValue = tagIds;
+            final List<String> map =
+                Utils.asList<String>(json.decode(value.toString()));
+            newValue = map;
           }
       }
       if (key == "note_id") {
@@ -860,39 +874,39 @@ extension NoteX on Note {
   }
 
   Map<String, dynamic> toSyncMap() {
-    final Map<String, dynamic> originalMap = this.toJson();
-    final Map<String, dynamic> newMap = Map();
+    final Map<String, dynamic> originalMap = toJson();
+    final Map<String, dynamic> newMap = {};
     originalMap.forEach((key, value) {
       Object newValue = value;
       String newKey = ReCase(key).snakeCase;
       switch (key) {
         case "styleJson":
           {
-            final List<int> style = value;
+            final List<int> style = Utils.asList<int>(value);
             newValue = json.encode(style);
             break;
           }
         case "images":
           {
-            final List<SavedImage> images = value;
+            final List<SavedImage> images = Utils.asList<SavedImage>(value);
             newValue = json.encode(images);
             break;
           }
         case "listContent":
           {
-            final List<ListItem> listContent = value;
+            final List<ListItem> listContent = Utils.asList<ListItem>(value);
             newValue = json.encode(listContent);
             break;
           }
         case "reminders":
           {
-            final List<DateTime> reminders = value;
+            final List<DateTime> reminders = Utils.asList<DateTime>(value);
             newValue = json.encode(reminders);
             break;
           }
         case "tags":
           {
-            final List<String> tags = value;
+            final List<String> tags = Utils.asList<String>(value);
             newValue = json.encode(tags);
             break;
           }
@@ -910,7 +924,7 @@ extension NoteX on Note {
   }
 
   int get notificationId =>
-      int.parse(this.id.split("-")[0], radix: 16).toUnsigned(31);
+      int.parse(id.split("-")[0], radix: 16).toUnsigned(31);
 
   bool get pinned {
     return appInfo.activeNotifications.any(
@@ -951,15 +965,17 @@ extension SafeGetList<T> on List<T> {
   T get(int index) {
     if (index >= length) {
       return last;
-    } else
+    } else {
       return this[index];
+    }
   }
 
   T maybeGet(int index) {
     if (index >= length) {
       return null;
-    } else
+    } else {
       return this[index];
+    }
   }
 }
 

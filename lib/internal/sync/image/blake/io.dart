@@ -262,7 +262,7 @@ class Blake2 extends BlakeBase {
   ///
   /// [salt] and [personalization] may be null and
   /// must both be 8 characters in length.
-  static Blake2 fromStrings({
+  factory Blake2.fromStrings({
     int digestLength = 32,
     String key,
     String salt,
@@ -276,8 +276,8 @@ class Blake2 extends BlakeBase {
 
     return Blake2(
       digestLength: digestLength,
-      key: (key == null) ? key : Uint8List.fromList(key.codeUnits),
-      salt: (salt == null) ? salt : Uint8List.fromList(salt.codeUnits),
+      key: (key == null) ? null : Uint8List.fromList(key.codeUnits),
+      salt: (salt == null) ? null : Uint8List.fromList(salt.codeUnits),
       personalization: (personalization != null)
           ? Uint8List.fromList(personalization.codeUnits)
           : null,

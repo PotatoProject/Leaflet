@@ -14,6 +14,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class MigrationTask {
+  MigrationTask._();
+
   static Future<String> get v1DatabasePath async => join(
         DeviceInfo.isDesktop
             ? await databaseFactoryFfi.getDatabasesPath()
@@ -22,7 +24,7 @@ class MigrationTask {
       );
 
   static Future<bool> isMigrationAvailable(String path) async =>
-      await File(path).exists();
+      File(path).exists();
 
   static Future<List<Note>> migrate(String path) async {
     if (path == null) return null;
@@ -42,41 +44,38 @@ class MigrationTask {
 
     final List<NoteV1Model> v1Notes = List.generate(rawV1Notes.length, (index) {
       return NoteV1Model(
-        id: rawV1Notes[index]['id'],
-        title: rawV1Notes[index]['title'],
-        content: rawV1Notes[index]['content'],
-        isStarred: rawV1Notes[index]['isStarred'],
-        date: rawV1Notes[index]['date'],
-        color: rawV1Notes[index]['color'],
-        imagePath: rawV1Notes[index]['imagePath'],
-        isList: rawV1Notes[index]['isList'],
-        listParseString: rawV1Notes[index]['listParseString'],
-        reminders: rawV1Notes[index]['reminders'],
-        hideContent: rawV1Notes[index]['hideContent'],
-        pin: rawV1Notes[index]['pin'] == null
-            ? rawV1Notes[index]['pin']
-            : rawV1Notes[index]['pin'].toString(),
-        password: rawV1Notes[index]['password'],
-        isDeleted: rawV1Notes[index]['isDeleted'] ?? 0,
-        isArchived: rawV1Notes[index]['isArchived'] ?? 0,
+        id: rawV1Notes[index]['id'] as int,
+        title: rawV1Notes[index]['title'] as String,
+        content: rawV1Notes[index]['content'] as String,
+        isStarred: rawV1Notes[index]['isStarred'] as int,
+        date: rawV1Notes[index]['date'] as int,
+        color: rawV1Notes[index]['color'] as int,
+        imagePath: rawV1Notes[index]['imagePath'] as String,
+        isList: rawV1Notes[index]['isList'] as int,
+        listParseString: rawV1Notes[index]['listParseString'] as String,
+        reminders: rawV1Notes[index]['reminders'] as String,
+        hideContent: rawV1Notes[index]['hideContent'] as int,
+        password: rawV1Notes[index]['password'] as String,
+        isDeleted: rawV1Notes[index]['isDeleted'] as int ?? 0,
+        isArchived: rawV1Notes[index]['isArchived'] as int ?? 0,
       );
     });
 
     for (final NoteV1Model v1Note in v1Notes) {
       final List<ListItem> listItems = [];
       final List<String> rawListItems =
-          v1Note.listParseString?.split("\'..\'") ?? [];
+          v1Note.listParseString?.split("'..'") ?? [];
       final String id = Utils.generateId();
 
       for (int i = 0; i < rawListItems.length; i++) {
-        String rawListItem = rawListItems[i];
-        List<String> listItem = rawListItem.split("\',,\'");
+        final String rawListItem = rawListItems[i];
+        final List<String> listItem = rawListItem.split("',,'");
 
         listItems.add(
           ListItem(
-            i,
-            listItem[1],
-            int.parse(listItem[0]) == 1,
+            id: i,
+            text: listItem[1],
+            status: int.parse(listItem[0]) == 1,
           ),
         );
       }
@@ -86,7 +85,7 @@ class MigrationTask {
         final Response response = await dio.get(v1Note.imagePath);
         final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
           ..create();
-        await file.writeAsBytes(response.data);
+        await file.writeAsBytes(Utils.asList<int>(response.data));
         savedImage = await ImageHelper.copyToCache(file);
         imageQueue.addUpload(savedImage, id);
       }

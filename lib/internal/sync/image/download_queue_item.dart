@@ -7,18 +7,16 @@ import 'package:potato_notes/internal/sync/image/queue_item.dart';
 
 class DownloadQueueItem extends QueueItem {
   final String noteId;
-  final String localPath;
-  final SavedImage savedImage;
 
   DownloadQueueItem({
     @required this.noteId,
-    @required this.localPath,
-    @required this.savedImage,
+    @required String localPath,
+    @required SavedImage savedImage,
   }) : super(localPath: localPath, savedImage: savedImage);
 
   @action
   Future<void> downloadImage() async {
-    status.value = QueueItemStatus.ONGOING;
+    status.value = QueueItemStatus.ongoing;
     await dio.download(
       await getDownloadUrl(),
       localPath,
@@ -26,27 +24,27 @@ class DownloadQueueItem extends QueueItem {
         progress.value = count / total;
       },
     );
-    status.value = QueueItemStatus.COMPLETE;
+    status.value = QueueItemStatus.complete;
   }
 
   Future<String> getDownloadUrl() async {
     switch (savedImage.storageLocation) {
-      case StorageLocation.SYNC:
+      case StorageLocation.sync:
         final String token = await prefs.getToken();
         final String url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
         final Response presign = await dio.get(
           url,
           options: Options(
-            headers: {"Authorization": "Bearer " + token},
+            headers: {"Authorization": "Bearer $token"},
           ),
         );
         if (presign.statusCode == 200) {
-          return presign.data;
+          return presign.data.toString();
         } else {
           throw presign.data;
         }
         break;
-      case StorageLocation.LOCAL:
+      case StorageLocation.local:
       default:
         throw "Local images can not be downloaded";
     }

@@ -7,34 +7,38 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 
 class InAppUpdater {
-  static final BuildType buildType = _getBuildType(
-    const String.fromEnvironment(
-      "build_type",
-      defaultValue: "github",
-    ),
-  );
+  const InAppUpdater._();
+
+  static BuildType get buildType => _getBuildType(
+        const String.fromEnvironment(
+          "build_type",
+          defaultValue: "github",
+        ),
+      );
 
   static BuildType _getBuildType(String buildTypeFromEnv) {
     switch (buildTypeFromEnv.toLowerCase()) {
       case 'playstore':
-        return BuildType.PLAYSTORE;
+        return BuildType.playStore;
       case 'github':
       default:
-        return BuildType.GITHUB;
+        return BuildType.gitHub;
     }
   }
 
   static Future<AppUpdateInfo> _internalCheckForUpdate() async {
     switch (buildType) {
-      case BuildType.PLAYSTORE:
-        return await InAppUpdate.checkForUpdate();
-      case BuildType.GITHUB:
+      case BuildType.playStore:
+        return InAppUpdate.checkForUpdate();
+      case BuildType.gitHub:
       default:
         final Response githubRelease = await dio.get(
           "https://api.github.com/repos/HrX03/PotatoNotes/releases/latest",
         );
-        final Map<dynamic, dynamic> body = githubRelease.data;
-        final int versionCode = int.parse(body["tag_name"].split("+")[1]);
+        final Map<dynamic, dynamic> body =
+            githubRelease.data as Map<dynamic, String>;
+        final int versionCode =
+            int.parse(body["tag_name"].split("+")[1] as String);
         return AppUpdateInfo(
           versionCode,
           false,
@@ -48,27 +52,26 @@ class InAppUpdater {
     }
   }
 
-  static void checkForUpdate(BuildContext context,
+  static Future<void> checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
     if (DeviceInfo.isDesktopOrWeb) return;
-    final AppUpdateInfo updateInfo =
-        await InAppUpdater._internalCheckForUpdate();
+    final AppUpdateInfo updateInfo = await _internalCheckForUpdate();
     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-      InAppUpdater.update(
-        context,
-        updateInfo.immediateUpdateAllowed,
-        updateInfo.flexibleUpdateAllowed,
+      update(
+        context: context,
+        immediateUpdateAllowed: updateInfo.immediateUpdateAllowed,
+        flexibleUpdateAllowed: updateInfo.flexibleUpdateAllowed,
       );
     } else {
       if (showNoUpdatesAvailable) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            content: Text("You're already on the latest app version"),
+            content: const Text("You're already on the latest app version"),
             actions: [
               TextButton(
-                child: Text("Close"),
                 onPressed: () => context.pop(),
+                child: const Text("Close"),
               ),
             ],
           ),
@@ -77,20 +80,20 @@ class InAppUpdater {
     }
   }
 
-  static Future<void> update(
-    BuildContext context,
-    bool immediateUpdateAllowed,
-    bool flexibleUpdateAllowed,
-  ) async {
+  static Future<void> update({
+    @required BuildContext context,
+    bool immediateUpdateAllowed = false,
+    bool flexibleUpdateAllowed = false,
+  }) async {
     switch (buildType) {
-      case BuildType.PLAYSTORE:
+      case BuildType.playStore:
         if (flexibleUpdateAllowed) {
           await InAppUpdate.startFlexibleUpdate();
         } else {
           await InAppUpdate.performImmediateUpdate();
         }
         break;
-      case BuildType.GITHUB:
+      case BuildType.gitHub:
       default:
         final bool shouldUpdate = await _showUpdateDialog(context);
 
@@ -108,7 +111,7 @@ class InAppUpdater {
       builder: (context) {
         return AlertDialog(
           title: Row(
-            children: [
+            children: const [
               Illustration.leaflet(
                 height: 24,
               ),
@@ -116,17 +119,17 @@ class InAppUpdater {
               Text("Update available!"),
             ],
           ),
-          content: Text(
+          content: const Text(
             "A new update is available to download, click update to download the update.",
           ),
           actions: [
             TextButton(
-              child: Text("Not now".toUpperCase()),
               onPressed: () => context.pop(false),
+              child: Text("Not now".toUpperCase()),
             ),
             TextButton(
-              child: Text("Update".toUpperCase()),
               onPressed: () => context.pop(true),
+              child: Text("Update".toUpperCase()),
             ),
           ],
         );
@@ -138,6 +141,6 @@ class InAppUpdater {
 }
 
 enum BuildType {
-  GITHUB,
-  PLAYSTORE,
+  gitHub,
+  playStore,
 }

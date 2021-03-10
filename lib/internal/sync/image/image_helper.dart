@@ -18,14 +18,17 @@ import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 import 'download_queue_item.dart';
 
 class ImageHelper {
-  static const JPEG_QUALITY = 90;
-  static const maxHeight = 2048;
+  static const int jpegQuality = 90;
+  static const int maxHeight = 2048;
+  static const int maxBlurHashHeight = 100;
+
+  ImageHelper._();
 
   static Future<void> handleDownloads(List<Note> changedNotes) async {
     imageQueue.downloadQueue.clear();
-    for (Note note in changedNotes) {
-      if (note.images.length > 0) {
-        for (SavedImage image in note.images) {
+    for (final Note note in changedNotes) {
+      if (note.images.isNotEmpty) {
+        for (final SavedImage image in note.images) {
           if (!image.existsLocally) {
             imageQueue.addDownload(image, note.id);
           }
@@ -53,8 +56,8 @@ class ImageHelper {
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
     final String hash =
-        rawDigest.map((int) => int.toRadixString(16).toString()).join('');
-    print(hash);
+        rawDigest.map((n) => n.toRadixString(16).toString()).join('');
+    Loggy.d(message: hash);
     return hash;
   }
 
@@ -70,11 +73,10 @@ class ImageHelper {
   static Image compressImage(Uint8List rawBytes) {
     final Image image = decodeImage(rawBytes);
     // Default height of compressed images
-    final int height = maxHeight;
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
-    if (image.height > height) {
-      resized = copyResize(image, height: height);
+    if (image.height > maxHeight) {
+      resized = copyResize(image, height: maxHeight);
     } else {
       resized = image;
     }
@@ -83,11 +85,10 @@ class ImageHelper {
 
   static Image compressForBlur(Image image) {
     // Default height of compressed images
-    final int height = 100;
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
-    if (image.height > height) {
-      resized = copyResize(image, height: height);
+    if (image.height > maxBlurHashHeight) {
+      resized = copyResize(image, height: maxBlurHashHeight);
     } else {
       resized = image;
     }
@@ -96,7 +97,7 @@ class ImageHelper {
 
   static File saveImage(Image image, String path) {
     final File imageFile = File(path);
-    imageFile.writeAsBytesSync(encodeJpg(image, quality: JPEG_QUALITY));
+    imageFile.writeAsBytesSync(encodeJpg(image, quality: jpegQuality));
     return imageFile;
   }
 
@@ -112,7 +113,7 @@ class ImageHelper {
 
   static Future<String> getAvatar(String token) async {
     final String url = "${prefs.getFromCache("api_url")}/files/get/avatar.jpg";
-    Loggy.v(message: "Going to send GET to :" + url);
+    Loggy.v(message: "Going to send GET to: $url");
     final Response presign = await dio.get(
       url,
       options: Options(
@@ -125,33 +126,35 @@ class ImageHelper {
     if (presign.statusCode != 200) {
       return null;
     } else {
-      return presign.data;
+      return presign.data.toString();
     }
   }
 
-  static handleNoteDeletion(Note note) {
-    for (SavedImage image in note.images) {
+  static void handleNoteDeletion(Note note) {
+    for (final SavedImage image in note.images) {
       imageQueue.addDelete(image);
     }
   }
 
   static String processImage(String jsonParameters) {
-    Map<String, dynamic> parameters = json.decode(jsonParameters);
-    Map<String, String> data = Map();
-    final Uint8List rawBytes = File(parameters["original"]).readAsBytesSync();
-    print("Hashing image");
+    final Map<String, dynamic> parameters =
+        json.decode(jsonParameters) as Map<String, dynamic>;
+    final Map<String, String> data = {};
+    final Uint8List rawBytes =
+        File(parameters["original"] as String).readAsBytesSync();
+    Loggy.d(message: "Hashing image");
     data["hash"] = ImageHelper.generateImageHash(rawBytes);
-    print("Resizing image");
+    Loggy.d(message: "Resizing image");
     final Image compressedImage = ImageHelper.compressImage(rawBytes);
     data["width"] = compressedImage.width.toString();
     data["height"] = compressedImage.height.toString();
-    print("generating blurhash");
+    Loggy.d(message: "generating blurhash");
     final String blurHash = ImageHelper.generateBlurHash(
         ImageHelper.compressForBlur(compressedImage));
     data["blurhash"] = blurHash;
-    print("Saving image");
+    Loggy.d(message: "Saving image");
     ImageHelper.saveImage(
-        compressedImage, parameters["tempDirectory"] + "/${data["hash"]}.jpg");
+        compressedImage, "${parameters["tempDirectory"]}/${data["hash"]}.jpg");
     return jsonEncode(data);
   }
 }

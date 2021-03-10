@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore_for_file: constant_identifier_names
 class CustomIcons {
   CustomIcons._();
 
-  static const _kFontFam = 'CustomIcons';
-  static const _kFontPkg = null;
+  static const String _kFontFam = 'CustomIcons';
 
-  static const IconData notes =
-      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData notes = IconData(0xe800, fontFamily: _kFontFam);
   static const IconData settings_outline =
-      IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+      IconData(0xe801, fontFamily: _kFontFam);
 }
 
 class SpinningSyncIcon extends StatefulWidget {
   final bool spin;
 
-  SpinningSyncIcon({
+  const SpinningSyncIcon({
     this.spin = false,
   });
 
@@ -33,7 +32,7 @@ class _SpinningSyncIconState extends State<SpinningSyncIcon>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
     _updateAnim();
   }
@@ -65,11 +64,11 @@ class _SpinningSyncIconState extends State<SpinningSyncIcon>
   @override
   Widget build(BuildContext context) {
     return SizedBox.fromSize(
-      size: Size.square(24),
+      size: const Size.square(24),
       child: RotationTransition(
         turns: Tween<double>(begin: 0, end: 1)
             .animate(ReverseAnimation(_controller)),
-        child: Icon(Icons.sync),
+        child: const Icon(Icons.sync),
       ),
     );
   }

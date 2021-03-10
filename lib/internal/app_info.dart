@@ -17,7 +17,7 @@ part 'app_info.g.dart';
 class AppInfo = _AppInfoBase with _$AppInfo;
 
 abstract class _AppInfoBase with Store {
-  static final EventChannel accentStreamChannel =
+  static const EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
 
   _AppInfoBase() {
@@ -41,38 +41,39 @@ abstract class _AppInfoBase with Store {
 
   List<ActiveNotification> get activeNotifications => _activeNotificationsValue;
 
-  void _initNotifications() async {
+  Future<void> _initNotifications() {
     notifications = FlutterLocalNotificationsPlugin();
-    final AndroidInitializationSettings initializationSettingsAndroid =
+    const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
-    final IOSInitializationSettings initializationSettingsIOS =
+    const IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings();
-    final MacOSInitializationSettings initializationSettingsMacOS =
+    const MacOSInitializationSettings initializationSettingsMacOS =
         MacOSInitializationSettings();
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    await notifications.initialize(initializationSettings,
+    return notifications.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
   }
 
   Future<dynamic> _handleNotificationTap(String payload) async {
-    final NotificationPayload nPayload =
-        NotificationPayload.fromJson(json.decode(payload));
+    final NotificationPayload nPayload = NotificationPayload.fromJson(
+      json.decode(payload) as Map<String, dynamic>,
+    );
 
     switch (nPayload.action) {
-      case NotificationAction.PIN:
+      case NotificationAction.pin:
         notifications.cancel(nPayload.id);
         break;
-      case NotificationAction.REMINDER:
+      case NotificationAction.reminder:
         break;
     }
   }
 
-  void loadData() async {
+  Future<void> loadData() async {
     tempDirectory = await getTemporaryDirectory();
 
     if (!DeviceInfo.isDesktopOrWeb) {
@@ -98,7 +99,7 @@ abstract class _AppInfoBase with Store {
 
   @action
   void pollForActiveNotifications() {
-    Timer.periodic(Duration(milliseconds: 500), (timer) async {
+    Timer.periodic(const Duration(milliseconds: 500), (timer) async {
       _activeNotificationsValue = await notifications
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()

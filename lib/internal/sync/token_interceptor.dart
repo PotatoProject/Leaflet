@@ -15,7 +15,8 @@ class TokenInterceptor extends InterceptorsWrapper {
           receiveTimeout: rOptions.receiveTimeout,
           extra: rOptions.extra,
           headers: rOptions.headers
-              .update("Authorization", (value) => prefs.getToken()),
+                  .update("Authorization", (value) => prefs.getToken())
+              as Map<String, dynamic>,
           responseType: rOptions.responseType,
           contentType: rOptions.contentType,
           validateStatus: rOptions.validateStatus,

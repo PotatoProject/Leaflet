@@ -37,11 +37,12 @@ class PathInfo {
     this.tint,
   });
 
+  @override
   bool operator ==(Object? other) {
     if (other is PathInfo) {
-      return this.name == other.name &&
-          this.size == other.size &&
-          listEquals(this.data, other.data);
+      return name == other.name &&
+          size == other.size &&
+          listEquals(data, other.data);
     }
     return false;
   }
@@ -74,9 +75,10 @@ class PathData {
     this.color,
   });
 
+  @override
   bool operator ==(Object? other) {
     if (other is PathData) {
-      return this.path == other.path && this.color?.value == other.color?.value;
+      return path == other.path && color?.value == other.color?.value;
     }
     return false;
   }
@@ -96,7 +98,7 @@ class PathInfoPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(PathInfoPainter old) =>
-      this.info != old.info || this.height != old.height;
+      info != old.info || height != old.height;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -107,7 +109,7 @@ class PathInfoPainter extends CustomPainter {
       final Path path = PathCache.instance
           .getPath("${info.name}_path${i + 1}", pathData.path);
       final Paint paint = Paint()
-        ..color = info.tint ?? pathData.color ?? Color(0xFF000000);
+        ..color = info.tint ?? pathData.color ?? const Color(0xFF000000);
 
       canvas.drawPath(path, paint);
     }
