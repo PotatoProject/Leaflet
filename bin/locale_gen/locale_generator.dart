@@ -20,12 +20,11 @@ class LocaleGenerator {
     final File localesFile = File("${absoluteOutputDir.path}/locales.g.dart");
     final StringBuffer buffer = StringBuffer(_baseLocaleClass);
 
-    for (var element in files) {
+    for (final FileSystemEntity element in files) {
       if (element is Directory) {
-        print(element);
         final String locale = getNameFromPath(element.path);
         locales.add(locale);
-        paths.add(File(element.path + "/strings.xml"));
+        paths.add(File("${element.path}/strings.xml"));
       }
     }
 
@@ -36,15 +35,16 @@ class LocaleGenerator {
     localesBuffer.writeln();
     localesBuffer.writeln("import 'dart:ui';");
     localesBuffer.writeln();
+    localesBuffer.writeln("// ignore_for_file: avoid_escaping_inner_quotes");
     localesBuffer.writeln("class Locales {");
     localesBuffer.writeln("  Locales._();");
     localesBuffer.writeln();
     localesBuffer.writeln("  static List<Locale> get supported => [");
-    locales.forEach((e) {
-      final List<String> splittedLocale = e.split("-");
+    for (final String locale in locales) {
+      final List<String> splittedLocale = locale.split("-");
       localesBuffer.writeln(
-          '    Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');
-    });
+          '    const Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');
+    }
     localesBuffer.writeln("  ];");
     localesBuffer.writeln();
     localesBuffer.writeln(
@@ -53,7 +53,7 @@ class LocaleGenerator {
     for (int i = 0; i < locales.length; i++) {
       final String locale = locales[i];
       final File path = paths[i];
-      Map<String, String> result = await XmlFileParser.load(path, locale);
+      final Map<String, String> result = await XmlFileParser.load(path, locale);
 
       buffer.writeln();
       buffer.writeln(getLocaleClass(result, locale));
@@ -63,8 +63,7 @@ class LocaleGenerator {
     localesBuffer.writeln("  };");
     localesBuffer.writeln("}");
 
-    await localesFile
-        .writeAsString(localesBuffer.toString() + "\n" + buffer.toString());
+    await localesFile.writeAsString("$localesBuffer\n$buffer");
   }
 }
 
@@ -93,7 +92,7 @@ String getLocaleClass(Map<String, String> data, String locale) {
   buffer.writeln(
       "class ${getClassNameFromLocale(locale)} extends _\$LocaleBase {");
   buffer.writeln("  @override");
-  buffer.writeln("  String get locale => \"$locale\";");
+  buffer.writeln('  String get locale => "$locale";');
   buffer.writeln();
   buffer.writeln("  @override");
   buffer.writeln("  Map<String, String> get data => {");

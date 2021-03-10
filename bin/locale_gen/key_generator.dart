@@ -23,12 +23,12 @@ class KeyGenerator {
     final File localeStringsFile =
         File("${absoluteOutputDir.path}/locale_strings.g.dart");
 
-    for (var element in files) {
+    for (final FileSystemEntity element in files) {
       if (element is Directory) {
         final String _locale = getNameFromPath(element.path);
         if (_locale == defaultLocale) {
           locale = _locale;
-          path = File(element.path + "/strings.xml");
+          path = File("${element.path}/strings.xml");
         }
       }
     }
@@ -54,11 +54,11 @@ class KeyGenerator {
         if (stringInfo is CommonString) {
           final String varName = ReCase(key).camelCase;
           currentBuffer
-              .writeln("  final String $varName = \"$routeFile.$key\".tr();");
+              .writeln('  final String $varName = "$routeFile.$key".tr();');
         } else if (stringInfo is PluralString) {
           final String varName = ReCase(key).camelCase;
           currentBuffer.writeln(
-              "  String $varName(num value) => \"$routeFile.$key\".plural(value);");
+              '  String $varName(num value) => "$routeFile.$key".plural(value);');
         } else if (stringInfo is ArgumentString) {
           final String varName = ReCase(key).camelCase;
           final int argNum = stringInfo.argNum;
@@ -74,7 +74,7 @@ class KeyGenerator {
               string += "Object arg${i + 1}, ";
             }
           }
-          string += "\"$routeFile.$key\".tr(args: [${args.join(", ")}]);";
+          string += '"$routeFile.$key".tr(args: [${args.join(", ")}]);';
           currentBuffer.writeln(string);
         }
       });
@@ -87,8 +87,8 @@ class KeyGenerator {
     });
     commonBuffer.writeln("}");
 
-    await localeStringsFile.writeAsString(
-        commonBuffer.toString() + "\n" + stringClassesBuffer.toString());
+    await localeStringsFile
+        .writeAsString("$commonBuffer\n$stringClassesBuffer");
   }
 }
 

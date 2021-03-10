@@ -12,23 +12,24 @@ class XmlFileParser {
     final XmlDocument document = XmlDocument.parse(fileContent);
     document.normalize();
 
-    XmlElement base = document.lastElementChild;
+    final XmlElement base = document.lastElementChild;
 
-    for (XmlNode item in base.children) {
+    for (final XmlNode item in base.children) {
       if (item is XmlElement) {
-        XmlElement element = item;
+        final XmlElement element = item;
 
-        String name = element.getAttribute("name");
+        final String name = element.getAttribute("name");
         if (name == null) continue;
 
         if (element.name.toString() == "string") {
-          returnMap["$name"] = _replacer(element.text);
+          returnMap[name] = _replacer(element.text);
         } else if (element.name.toString() == "plurals") {
-          for (XmlNode plural in element.children) {
+          for (final XmlNode plural in element.children) {
             if (plural is XmlElement) {
-              XmlElement pluralElement = plural;
+              final XmlElement pluralElement = plural;
 
-              String pluralAttribute = pluralElement.getAttribute("quantity");
+              final String pluralAttribute =
+                  pluralElement.getAttribute("quantity");
               if (pluralAttribute == null) continue;
 
               returnMap["$name.$pluralAttribute"] =
@@ -52,7 +53,7 @@ class XmlFileParser {
 
     final XmlElement base = document.lastElementChild;
 
-    for (XmlNode item in base.children) {
+    for (final XmlNode item in base.children) {
       if (item is XmlElement) {
         final XmlElement element = item;
 
@@ -84,8 +85,8 @@ class XmlFileParser {
   static String _replacer(String base) {
     return base
         .replaceAll("%s", "{}")
-        .replaceAll("\\\"", "\"")
-        .replaceAll("\\\'", "\'")
+        .replaceAll('\\"', '"')
+        .replaceAll("\\'", "'")
         .replaceAll("\\n", "\n");
   }
 

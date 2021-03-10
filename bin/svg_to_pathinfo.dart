@@ -1,18 +1,19 @@
 import 'dart:io';
 
+import 'package:loggy/loggy.dart';
 import 'package:xml/xml.dart';
 
-void main(List<String> args) async {
+Future<void> main(List<String> args) async {
   if (args.isEmpty || args.length != 1) {
-    print("Usage: dart bin/svg_to_pathinfo.dart <svg file>");
+    Loggy.d(message: "Usage: dart bin/svg_to_pathinfo.dart <svg file>");
     return;
   }
 
-  print(await xmlToFile(File(args[0])));
+  Loggy.d(message: await xmlToFile(File(args[0])));
 }
 
 Future<String> xmlToFile(File file) async {
-  StringBuffer fileContent = StringBuffer();
+  final StringBuffer fileContent = StringBuffer();
   final String xmlContent = await file.readAsString();
   final XmlDocument document = XmlDocument.parse(xmlContent);
   document.normalize();
@@ -26,7 +27,7 @@ Future<String> xmlToFile(File file) async {
   fileContent.writeln('  size: Size($width, $height),');
   fileContent.writeln('  data: [');
 
-  for (XmlNode item in base.children) {
+  for (final XmlNode item in base.children) {
     if (item is XmlElement) {
       final XmlElement element = item;
 
@@ -38,11 +39,12 @@ Future<String> xmlToFile(File file) async {
           opacity != null ? ".withOpacity($opacity)" : "";
       if (path == null) continue;
 
-      StringBuffer pathDataBuffer = StringBuffer();
+      final StringBuffer pathDataBuffer = StringBuffer();
       pathDataBuffer.writeln('    PathData(');
       pathDataBuffer.writeln('      path: "$path",');
-      if (color != null)
+      if (color != null) {
         pathDataBuffer.writeln('      color: $colorString$opacityString,');
+      }
       pathDataBuffer.writeln('    ),');
       fileContent.write(pathDataBuffer.toString());
     }
