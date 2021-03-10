@@ -9,16 +9,16 @@ import '../helper/empty_note.dart';
 class MockNoteHelper extends Mock implements NoteHelper {}
 
 ImageQueue imageQueue = ImageQueue();
-main() {
+void main() {
   setUpAll(() {
     imageQueue = ImageQueue();
   });
   test('returns true when image is uploaded and other uploaded images exist',
       () async {
-    var fakeImage = new SavedImage.empty()
+    final SavedImage fakeImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "test";
-    var otherImage = new SavedImage.empty()
+    final SavedImage otherImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "test";
     expect(await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
@@ -27,10 +27,10 @@ main() {
   test(
       'returns true when image is uploaded and other uploaded images exist with different hash',
       () async {
-    var fakeImage = new SavedImage.empty()
+    final SavedImage fakeImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "test";
-    var otherImage = new SavedImage.empty()
+    final SavedImage otherImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "nottest";
     expect(await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
@@ -42,7 +42,7 @@ Future<bool> hasDuplicatesWith(SavedImage fakeImage, SavedImage otherImage) {
   final MockNoteHelper helper = MockNoteHelper();
   var fakeNote = EmptyNote.get();
   fakeNote = fakeNote.copyWith(images: [otherImage]);
-  when(helper.listNotes(ReturnMode.LOCAL))
+  when(helper.listNotes(ReturnMode.local))
       .thenAnswer((_) => Future.value([fakeNote]));
   return imageQueue.hasDuplicates(fakeImage, noteHelper: helper);
 }
