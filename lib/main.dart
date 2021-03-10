@@ -22,7 +22,7 @@ import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   if (DeviceInfo.isDesktop) {
@@ -37,7 +37,7 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: Locales.supported,
-      fallbackLocale: Locale("en", "US"),
+      fallbackLocale: const Locale("en", "US"),
       useFallbackTranslations: true,
       assetLoader: GeneratedAssetLoader(),
       path: "assets/locales",
@@ -121,7 +121,7 @@ class PotatoNotes extends StatelessWidget {
             );
 
             SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
+              const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
               ),
             );
