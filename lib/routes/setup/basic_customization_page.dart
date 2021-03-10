@@ -9,7 +9,7 @@ class BasicCustomizationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(CustomIcons.settings_outline),
+        leading: const Icon(CustomIcons.settings_outline),
         title: Text(LocaleStrings.setup.basicCustomizationTitle),
         textTheme: context.theme.textTheme,
       ),
@@ -18,7 +18,7 @@ class BasicCustomizationPage extends StatelessWidget {
         padding: EdgeInsets.only(
           top: 56 + context.padding.top,
         ),
-        child: SettingsPage(trimmed: true),
+        child: const SettingsPage(trimmed: true),
       ),
     );
   }

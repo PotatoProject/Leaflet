@@ -13,7 +13,7 @@ class NotePageImageGallery extends StatefulWidget {
   final Note note;
   final int currentImage;
 
-  NotePageImageGallery({
+  const NotePageImageGallery({
     @required this.note,
     @required this.currentImage,
   });
@@ -52,36 +52,37 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             itemBuilder: (context, index) {
               return ClipRect(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 56),
+                  padding: const EdgeInsets.only(top: 56),
                   child: InteractiveViewer(
-                    child: NoteImage(
-                      savedImage: widget.note.images[index],
-                      fit: BoxFit.contain,
-                    ),
                     transformationController: transformationController,
                     minScale: 1,
                     maxScale: 4,
                     onInteractionUpdate: (details) => setState(() {}),
+                    child: NoteImage(
+                      savedImage: widget.note.images[index],
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               );
             },
             controller: pageController,
             onPageChanged: (index) => setState(() => currentPage = index),
-            physics: currentScale > 1 ? NeverScrollableScrollPhysics() : null,
+            physics:
+                currentScale > 1 ? const NeverScrollableScrollPhysics() : null,
           ),
           Visibility(
             visible: isMouseConnected,
             child: Row(
               children: [
                 _PageSwitchSideButton(
-                  icon: Icon(Icons.arrow_back),
+                  icon: const Icon(Icons.arrow_back),
                   onTap: _previousPage,
                   enabled: currentPage != 0,
                 ),
-                Spacer(),
+                const Spacer(),
                 _PageSwitchSideButton(
-                  icon: Icon(Icons.arrow_forward),
+                  icon: const Icon(Icons.arrow_forward),
                   onTap: _nextPage,
                   enabled: currentPage != widget.note.images.length - 1,
                 ),
@@ -94,17 +95,17 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
         textTheme: context.theme.textTheme,
         title: Text(
           LocaleStrings.common.xOfY(
-            (currentPage + 1),
+            currentPage + 1,
             widget.note.images.length,
           ),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit_outlined),
-            padding: EdgeInsets.all(0),
+            icon: const Icon(Icons.edit_outlined),
+            padding: EdgeInsets.zero,
             tooltip: LocaleStrings.common.edit,
             onPressed: () async {
               await Utils.showSecondaryRoute(
@@ -120,8 +121,8 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete_outline),
-            padding: EdgeInsets.all(0),
+            icon: const Icon(Icons.delete_outline),
+            padding: EdgeInsets.zero,
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
               imageQueue.addDelete(widget.note.images[currentPage]);
@@ -136,17 +137,17 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
     );
   }
 
-  void _nextPage() async {
+  Future<void> _nextPage() async {
     await pageController.nextPage(
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       curve: decelerateEasing,
     );
     setState(() {});
   }
 
-  void _previousPage() async {
+  Future<void> _previousPage() async {
     await pageController.previousPage(
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       curve: decelerateEasing,
     );
     setState(() {});
@@ -162,7 +163,7 @@ class _PageSwitchSideButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool enabled;
 
-  _PageSwitchSideButton({
+  const _PageSwitchSideButton({
     @required this.icon,
     this.onTap,
     this.enabled = true,
@@ -181,9 +182,7 @@ class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: 250,
-      ),
+      duration: const Duration(milliseconds: 250),
     );
   }
 
@@ -203,19 +202,19 @@ class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
           child: Container(
             height: constraints.maxHeight,
             alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: FadeTransition(
               opacity: _controller,
               child: SizedBox.fromSize(
-                size: Size.square(48),
+                size: const Size.square(48),
                 child: AnimatedOpacity(
                   opacity: widget.enabled ? 1 : 0.5,
-                  duration: Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 150),
                   curve: decelerateEasing,
                   child: FloatingActionButton(
-                    child: widget.icon,
                     onPressed: widget.enabled ? widget.onTap : null,
                     heroTag: null,
+                    child: widget.icon,
                   ),
                 ),
               ),

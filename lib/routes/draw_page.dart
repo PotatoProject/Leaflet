@@ -28,7 +28,7 @@ class DrawPage extends StatefulWidget {
   final Note note;
   final SavedImage savedImage;
 
-  DrawPage({
+  const DrawPage({
     @required this.note,
     this.savedImage,
   });
@@ -50,22 +50,20 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     DrawingTool(
       icon: Icons.brush_outlined,
       title: LocaleStrings.drawing.toolsBrush,
-      toolType: DrawTool.PEN,
-      color: Colors.black,
-      size: ToolSize.FOUR,
+      toolType: DrawTool.pen,
     ),
     DrawingTool(
       icon: MdiIcons.marker,
       title: LocaleStrings.drawing.toolsMarker,
-      toolType: DrawTool.MARKER,
+      toolType: DrawTool.marker,
       color: Color(NoteColors.yellow.color),
-      size: ToolSize.TWELVE,
+      size: ToolSize.twelve,
     ),
     DrawingTool(
       icon: MdiIcons.eraserVariant,
       title: LocaleStrings.drawing.toolsEraser,
-      toolType: DrawTool.ERASER,
-      size: ToolSize.THIRTYTWO,
+      toolType: DrawTool.eraser,
+      size: ToolSize.thirtyTwo,
       allowColor: false,
     ),
   ];
@@ -85,11 +83,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     BackButtonInterceptor.add(exitPrompt);
     _appbarAc = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
     _toolbarAc = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
     _savedImage = widget.savedImage;
   }
@@ -132,8 +130,8 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                     changeNotifier: _controller,
                     builder: (context) {
                       return IconButton(
-                        icon: Icon(Icons.save_outlined),
-                        padding: EdgeInsets.all(0),
+                        icon: const Icon(Icons.save_outlined),
+                        padding: const EdgeInsets.all(0),
                         tooltip: LocaleStrings.common.save,
                         onPressed: !_controller.saved ? _saveImage : null,
                       );
@@ -156,7 +154,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           child: DrawingBoard(
             repaintKey: _drawingKey,
             controller: _controller,
-            path: widget.savedImage != null ? widget.savedImage.path : null,
+            path: widget.savedImage?.path,
             color: Colors.grey[50],
           ),
         ),
@@ -176,23 +174,25 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                 toolIndex: _toolIndex,
                 onIndexChanged: (value) => setState(() => _toolIndex = value),
                 clearCanvas: () {
-                  showDialog(
+                  Utils.showNotesModalBottomSheet(
                     context: context,
                     builder: (context) => AlertDialog(
+                      shape: const RoundedRectangleBorder(),
+                      elevation: 0,
                       title: Text(LocaleStrings.common.areYouSure),
-                      content:
-                          Text("This operation can't be undone. Continue?"),
+                      content: const Text(
+                          "This operation can't be undone. Continue?"),
                       actions: [
                         TextButton(
-                          child: Text(LocaleStrings.common.cancel),
                           onPressed: () => context.pop(),
+                          child: Text(LocaleStrings.common.cancel),
                         ),
                         TextButton(
-                          child: Text(LocaleStrings.common.confirm),
                           onPressed: () {
                             _controller.clearCanvas();
                             context.pop();
                           },
+                          child: Text(LocaleStrings.common.confirm),
                         ),
                       ],
                     ),
@@ -214,7 +214,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     DrawObject object;
 
     switch (_tools[_toolIndex].toolType) {
-      case DrawTool.MARKER:
+      case DrawTool.marker:
         object = DrawObject(
           Paint()
             ..strokeCap = StrokeCap.square
@@ -226,7 +226,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           [],
         );
         break;
-      case DrawTool.ERASER:
+      case DrawTool.eraser:
         object = DrawObject(
           Paint()
             ..strokeCap = StrokeCap.round
@@ -239,7 +239,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           [],
         );
         break;
-      case DrawTool.PEN:
+      case DrawTool.pen:
       default:
         object = DrawObject(
           Paint()
@@ -270,11 +270,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   void _normalModePanUpdate(ScaleUpdateDetails details) {
     if (details.pointerCount > 1) return;
 
-    final RenderBox appbarBox = _appbarKey.currentContext.findRenderObject();
+    final RenderBox appbarBox =
+        _appbarKey.currentContext.findRenderObject() as RenderBox;
     Rect appbarRect =
         (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
 
-    final RenderBox toolbarBox = _toolbarKey.currentContext.findRenderObject();
+    final RenderBox toolbarBox =
+        _toolbarKey.currentContext.findRenderObject() as RenderBox;
     Rect toolbarRect =
         (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
 
@@ -286,17 +288,19 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     final Offset point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
     if (!_appbarAc.isAnimating) {
-      if (appbarRect.contains(point))
+      if (appbarRect.contains(point)) {
         _appbarAc.forward();
-      else
+      } else {
         _appbarAc.reverse();
+      }
     }
 
     if (!_toolbarAc.isAnimating) {
-      if (toolbarRect.contains(point))
+      if (toolbarRect.contains(point)) {
         _toolbarAc.forward();
-      else
+      } else {
         _toolbarAc.reverse();
+      }
     }
 
     _controller.addPointToObject(_controller.currentIndex, point);
@@ -312,9 +316,9 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   bool exitPrompt(bool _, RouteInfo __) {
     final Uri uri = _filePath != null ? Uri.file(_filePath) : null;
 
-    void _internal() async {
+    Future<void> _internal() async {
       if (!_controller.saved) {
-        bool exit = await showDialog(
+        final bool exit = await showDialog(
           context: _globalContext,
           builder: (context) => AlertDialog(
             title: Text(LocaleStrings.common.areYouSure),
@@ -345,7 +349,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     return true;
   }
 
-  void _saveImage() async {
+  Future<void> _saveImage() async {
     String drawing;
     final RenderRepaintBoundary box =
         _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
@@ -389,16 +393,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 }
 
-enum MenuShowReason {
-  COLOR_PICKER,
-  RADIUS_PICKER,
-}
-
 class _ChangeNotifierBuilder<T extends ChangeNotifier> extends StatefulWidget {
   final T changeNotifier;
   final WidgetBuilder builder;
 
-  _ChangeNotifierBuilder({
+  const _ChangeNotifierBuilder({
     @required this.changeNotifier,
     @required this.builder,
   });

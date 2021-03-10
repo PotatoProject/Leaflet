@@ -23,7 +23,7 @@ class NoteListPage extends StatefulWidget {
   final int tagIndex;
   final SelectionOptions selectionOptions;
 
-  NoteListPage({
+  const NoteListPage({
     Key key,
     @required this.noteKind,
     this.tagIndex,
@@ -97,7 +97,7 @@ class NoteListPageState extends State<NoteListPage> {
           child: SelectionState(
             state: this,
             child: selecting
-                ? SelectionBar()
+                ? const SelectionBar()
                 : DefaultAppBar(
                     extraActions: appBarButtons,
                     title: Text(Utils.getNameFromMode(widget.noteKind)),
@@ -105,14 +105,14 @@ class NoteListPageState extends State<NoteListPage> {
           ),
         ),
         useAppBarAsSecondary: selecting,
-        secondaryAppBar: widget.noteKind == ReturnMode.NORMAL && !selecting
+        secondaryAppBar: widget.noteKind == ReturnMode.normal && !selecting
             ? NewNoteBar()
             : null,
         body: StreamBuilder<List<Note>>(
           stream: helper.noteStream(widget.noteKind),
-          initialData: [],
+          initialData: const [],
           builder: (context, snapshot) {
-            final List<Note> notes = widget.noteKind == ReturnMode.TAG
+            final List<Note> notes = widget.noteKind == ReturnMode.tag
                 ? snapshot.data
                     .where(
                       (note) =>
@@ -132,7 +132,7 @@ class NoteListPageState extends State<NoteListPage> {
         ),
         resizeToAvoidBottomInset: false,
         floatingActionButton:
-            widget.noteKind == ReturnMode.NORMAL && !selecting ? fab : null,
+            widget.noteKind == ReturnMode.normal && !selecting ? fab : null,
       ),
     );
   }
@@ -141,28 +141,28 @@ class NoteListPageState extends State<NoteListPage> {
     return MenuFab(
       backgroundColor: context.theme.accentColor,
       foregroundColor: context.theme.colorScheme.onPrimary,
-      fabShape: CircleBorder(),
+      fabShape: const CircleBorder(),
       menuShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
       ),
       mainEntry: MenuFabEntry(
-        icon: Icon(Icons.edit_outlined),
+        icon: const Icon(Icons.edit_outlined),
         label: LocaleStrings.common.newNote,
         onTap: () => Utils.newNote(context),
       ),
       entries: [
         MenuFabEntry(
-          icon: Icon(Icons.check_box_outlined),
+          icon: const Icon(Icons.check_box_outlined),
           label: LocaleStrings.common.newList,
           onTap: () => Utils.newList(context),
         ),
         MenuFabEntry(
-          icon: Icon(Icons.image_outlined),
+          icon: const Icon(Icons.image_outlined),
           label: LocaleStrings.common.newImage,
           onTap: () => Utils.newImage(context, ImageSource.gallery),
         ),
         MenuFabEntry(
-          icon: Icon(Icons.brush_outlined),
+          icon: const Icon(Icons.brush_outlined),
           label: LocaleStrings.common.newDrawing,
           onTap: () => Utils.newDrawing(context),
         ),
@@ -172,12 +172,12 @@ class NoteListPageState extends State<NoteListPage> {
 
   List<Widget> get appBarButtons => [
         Visibility(
-          visible: widget.noteKind == ReturnMode.ARCHIVE ||
-              widget.noteKind == ReturnMode.TRASH,
+          visible: widget.noteKind == ReturnMode.archive ||
+              widget.noteKind == ReturnMode.trash,
           child: Builder(
             builder: (context) {
               return IconButton(
-                icon: Icon(Icons.settings_backup_restore),
+                icon: const Icon(Icons.settings_backup_restore),
                 onPressed: () async {
                   final List<Note> notes =
                       await helper.listNotes(widget.noteKind);
@@ -186,7 +186,7 @@ class NoteListPageState extends State<NoteListPage> {
                     builder: (context) => AlertDialog(
                       title: Text(LocaleStrings.common.areYouSure),
                       content: Text(
-                        widget.noteKind == ReturnMode.ARCHIVE
+                        widget.noteKind == ReturnMode.archive
                             ? LocaleStrings.mainPage.restorePromptArchive
                             : LocaleStrings.mainPage.restorePromptTrash,
                       ),
@@ -209,7 +209,7 @@ class NoteListPageState extends State<NoteListPage> {
                       notes: notes,
                       reason: LocaleStrings.mainPage
                           .notesRestored(_selectionList.length),
-                      archive: widget.noteKind == ReturnMode.ARCHIVE,
+                      archive: widget.noteKind == ReturnMode.archive,
                     );
                   }
                 },
@@ -218,9 +218,9 @@ class NoteListPageState extends State<NoteListPage> {
           ),
         ),
         Visibility(
-          visible: widget.noteKind == ReturnMode.TAG,
+          visible: widget.noteKind == ReturnMode.tag,
           child: IconButton(
-            icon: Icon(Icons.label_off_outlined),
+            icon: const Icon(Icons.label_off_outlined),
             onPressed: () async {
               final bool result = await showDialog(
                     context: context,
@@ -242,8 +242,8 @@ class NoteListPageState extends State<NoteListPage> {
                   false;
 
               if (result) {
-                final List<Note> notes = await helper.listNotes(ReturnMode.ALL);
-                for (Note note in notes) {
+                final List<Note> notes = await helper.listNotes(ReturnMode.all);
+                for (final Note note in notes) {
                   note.tags.remove(prefs.tags[widget.tagIndex].id);
                   await helper.saveNote(note.markChanged());
                 }
@@ -254,9 +254,9 @@ class NoteListPageState extends State<NoteListPage> {
           ),
         ),
         Visibility(
-          visible: widget.noteKind == ReturnMode.TAG,
+          visible: widget.noteKind == ReturnMode.tag,
           child: IconButton(
-            icon: Icon(Icons.edit_outlined),
+            icon: const Icon(Icons.edit_outlined),
             onPressed: () {
               Utils.showNotesModalBottomSheet(
                 context: context,
@@ -298,7 +298,7 @@ class NoteListPageState extends State<NoteListPage> {
     );
   }
 
-  void _onNoteTap(BuildContext context, Note note) async {
+  Future<void> _onNoteTap(BuildContext context, Note note) async {
     final _state = context.selectionState;
 
     if (_state.selecting) {
@@ -341,14 +341,14 @@ class SelectionState extends InheritedWidget {
   @protected
   final NoteListPageState state;
 
-  SelectionState({
+  const SelectionState({
     @required this.state,
     Widget child,
   }) : super(child: child);
 
   @override
   bool updateShouldNotify(covariant SelectionState old) {
-    return old.state != this.state;
+    return state != old.state;
   }
 
   static NoteListPageState of(BuildContext context) {

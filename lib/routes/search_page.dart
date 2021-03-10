@@ -6,7 +6,7 @@ import 'package:potato_notes/widget/dependent_scaffold.dart';
 class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
 
-  SearchPage({
+  const SearchPage({
     Key key,
     @required this.delegate,
   }) : super(key: key);
@@ -58,17 +58,14 @@ class _SearchPageState<T> extends State<SearchPage> {
 
     return DependentScaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0),
-          child: TextField(
-            controller: widget.delegate._queryTextController,
-            focusNode: focusNode,
-            decoration: InputDecoration.collapsed(
-              hintText: LocaleStrings.search.textboxHint,
-            ),
-            autofocus: true,
-            onChanged: (value) => _onSearchBodyChanged(),
+        title: TextField(
+          controller: widget.delegate._queryTextController,
+          focusNode: focusNode,
+          decoration: InputDecoration.collapsed(
+            hintText: LocaleStrings.search.textboxHint,
           ),
+          autofocus: true,
+          onChanged: (value) => _onSearchBodyChanged(),
         ),
         actions: widget.delegate.buildActions(context),
       ),

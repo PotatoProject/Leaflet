@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     final List<Widget> items = [
       TextFormField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           labelText: register ? "Email" : "Email or username",
           errorText: register ? emailError : (emailError ?? usernameError),
         ),
@@ -100,19 +100,17 @@ class _LoginPageState extends State<LoginPage> {
       ),
       Visibility(
         visible: register,
-        child: SizedBox(height: 16),
+        child: const SizedBox(height: 16),
       ),
       Visibility(
         visible: register,
         child: TextFormField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: "Username",
             errorText: usernameError,
           ),
-          autofillHints: [
-            AutofillHints.username,
-          ],
+          autofillHints: const [AutofillHints.username],
           onFieldSubmitted: (_) =>
               context.focusScope.requestFocus(passwordFocusNode),
           controller: usernameController,
@@ -120,11 +118,11 @@ class _LoginPageState extends State<LoginPage> {
           onChanged: (_) => setState(() {}),
         ),
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       Builder(builder: (context) {
         return TextFormField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: "Password",
             errorText: passwordError,
             suffixIcon: IconButton(
@@ -140,16 +138,14 @@ class _LoginPageState extends State<LoginPage> {
           onFieldSubmitted: enabledCondition
               ? (text) => onSubmit(context)
               : (text) => context.focusScope.unfocus(),
-          autofillHints: [
-            AutofillHints.password,
-          ],
+          autofillHints: const [AutofillHints.password],
           controller: passwordController,
           keyboardType: TextInputType.visiblePassword,
           obscureText: obscurePass,
           onChanged: (_) => setState(() {}),
         );
       }),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       Row(
         children: <Widget>[
           Visibility(
@@ -157,24 +153,24 @@ class _LoginPageState extends State<LoginPage> {
             child: Expanded(
               flex: 12,
               child: TextButton(
-                child: Text(
+                onPressed: () => Utils.launchUrl(
+                    "${prefs.apiUrl}/account/password-forgotten"),
+                child: const Text(
                   "Forgot password",
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () => Utils.launchUrl(
-                    "${prefs.apiUrl}/account/password-forgotten"),
               ),
             ),
           ),
           Visibility(
             visible: !register,
-            child: Spacer(),
+            child: const Spacer(),
           ),
           Expanded(
             flex: 12,
             child: ElevatedButton(
-              child: Text(register ? "Register" : "Login"),
               onPressed: enabledCondition ? () => onSubmit(context) : null,
+              child: Text(register ? "Register" : "Login"),
             ),
           ),
         ],
@@ -191,40 +187,35 @@ class _LoginPageState extends State<LoginPage> {
           ),
           body: Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: PageTransitionSwitcher(
-                duration: Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 250),
                 transitionBuilder:
                     (child, primaryAnimation, secondaryAnimation) {
                   return FadeThroughTransition(
                     animation: primaryAnimation,
                     secondaryAnimation: secondaryAnimation,
-                    child: child,
                     fillColor: Colors.transparent,
+                    child: child,
                   );
                 },
                 child: ConstrainedBox(
-                  key: register ? Key("register") : Key("login"),
-                  constraints: BoxConstraints(
-                    maxWidth: 480,
-                  ),
+                  key: register ? const Key("register") : const Key("login"),
+                  constraints: const BoxConstraints(maxWidth: 480),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
                     children: items,
                   ),
                 ),
               ),
             ),
           ),
-          bottomNavigationBar: Container(
+          bottomNavigationBar: SizedBox(
             height: 49,
             child: Material(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Divider(height: 1),
+                  const Divider(height: 1),
                   Expanded(
                     child: Center(
                       child: TextButton(
@@ -247,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                         style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                         ),
                         child: RichText(
                           text: TextSpan(
@@ -277,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Visibility(
           visible: showLoadingOverlay,
-          child: SizedBox.expand(
+          child: const SizedBox.expand(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: Colors.black54,
@@ -292,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onSubmit(BuildContext context) async {
+  Future<void> onSubmit(BuildContext context) async {
     AuthResponse response;
 
     setState(() {
@@ -320,11 +311,12 @@ class _LoginPageState extends State<LoginPage> {
       context.pop();
     } else {
       if (response.message is Map<String, dynamic>) {
-        final Map<String, dynamic> validation = response.message;
+        final Map<String, dynamic> validation =
+            response.message as Map<String, dynamic>;
         setState(() {
-          usernameError = getString(validation["username"]);
-          emailError = getString(validation["email"]);
-          passwordError = getString(validation["password"]);
+          usernameError = getString(validation["username"] as int);
+          emailError = getString(validation["email"] as int);
+          passwordError = getString(validation["password"] as int);
         });
       } else {
         final bool canBeHandled = _statusMessages.containsKey(

@@ -24,20 +24,20 @@ class AboutPage extends StatelessWidget {
             children: <Widget>[
               Container(
                 width: constraints.maxWidth,
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: 16,
                 ),
                 child: Column(
                   children: <Widget>[
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 48,
                       backgroundColor: Color(0xFF212C21),
                       child: Illustration.leaflet(
                         height: 48,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    Text(
+                    const SizedBox(height: 16),
+                    const Text(
                       "Leaflet",
                       style: TextStyle(
                         fontSize: 22,
@@ -46,14 +46,14 @@ class AboutPage extends StatelessWidget {
                     ),
                     Text(
                       "${appInfo.packageInfo.version}+${appInfo.packageInfo.buildNumber}",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                       ),
                     ),
                   ],
                 ),
               ),
-              Divider(height: 1),
+              const Divider(height: 1),
               SettingsCategory(
                 header: LocaleStrings.about.contributors,
                 children: List.generate(
@@ -86,13 +86,13 @@ class AboutPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 16,
             ),
             child: Text(
               LocaleStrings.about.links,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
               ),
             ),
@@ -126,13 +126,13 @@ class AboutPage extends StatelessWidget {
 
   IconData getIconForSocialLink(SocialLinkType type) {
     switch (type) {
-      case SocialLinkType.TWITTER:
+      case SocialLinkType.twitter:
         return MdiIcons.twitter;
-      case SocialLinkType.GITHUB:
+      case SocialLinkType.github:
         return MdiIcons.github;
-      case SocialLinkType.INSTAGRAM:
+      case SocialLinkType.instagram:
         return MdiIcons.instagram;
-      case SocialLinkType.STEAM:
+      case SocialLinkType.steam:
         return MdiIcons.steam;
       default:
         throw ArgumentError.notNull("type");
@@ -141,13 +141,13 @@ class AboutPage extends StatelessWidget {
 
   String getSocialNameForSocialLink(SocialLinkType type) {
     switch (type) {
-      case SocialLinkType.TWITTER:
+      case SocialLinkType.twitter:
         return "Twitter";
-      case SocialLinkType.GITHUB:
+      case SocialLinkType.github:
         return "Github";
-      case SocialLinkType.INSTAGRAM:
+      case SocialLinkType.instagram:
         return "Instagram";
-      case SocialLinkType.STEAM:
+      case SocialLinkType.steam:
         return "Steaj";
       default:
         throw ArgumentError.notNull("type");
@@ -156,13 +156,13 @@ class AboutPage extends StatelessWidget {
 
   String getLinkForSocialLink(SocialLink link) {
     switch (link.type) {
-      case SocialLinkType.TWITTER:
+      case SocialLinkType.twitter:
         return "https://twitter.com/${link.username}";
-      case SocialLinkType.GITHUB:
+      case SocialLinkType.github:
         return "https://github.com/${link.username}";
-      case SocialLinkType.INSTAGRAM:
+      case SocialLinkType.instagram:
         return "https://instagram.com/${link.username}";
-      case SocialLinkType.STEAM:
+      case SocialLinkType.steam:
         return "https://https://steamcommunity.com/id/${link.username}";
       default:
         throw ArgumentError.notNull("type");
@@ -194,8 +194,8 @@ class SocialLink {
 }
 
 enum SocialLinkType {
-  TWITTER,
-  GITHUB,
-  INSTAGRAM,
-  STEAM,
+  twitter,
+  github,
+  instagram,
+  steam,
 }

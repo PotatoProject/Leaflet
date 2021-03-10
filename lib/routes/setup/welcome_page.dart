@@ -23,7 +23,7 @@ class WelcomePage extends StatelessWidget {
                 Positioned(
                   top: (height / 2) - (_logoHeight / 2),
                   child: Row(
-                    children: [
+                    children: const [
                       Illustration.leaflet(
                         height: _logoHeight,
                       ),
@@ -47,9 +47,7 @@ class WelcomePage extends StatelessWidget {
                         Text(
                           LocaleStrings.setup.welcomeCatchphrase,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),

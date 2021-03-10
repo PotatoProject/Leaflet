@@ -49,10 +49,11 @@ class _SetupPagetate extends State<SetupPage> {
       buttonText = LocaleStrings.setup.buttonNext;
     }
     return WillPopScope(
+      onWillPop: () async => pageIndex == (pages.length - 1),
       child: Scaffold(
         body: GestureDetector(
           onHorizontalDragEnd: (details) {
-            double sign = textDirection == TextDirection.rtl
+            final double sign = textDirection == TextDirection.rtl
                 ? -details.primaryVelocity.sign
                 : details.primaryVelocity.sign;
 
@@ -79,8 +80,8 @@ class _SetupPagetate extends State<SetupPage> {
               animation: primaryAnimation,
               secondaryAnimation: secondaryAnimation,
               transitionType: SharedAxisTransitionType.horizontal,
-              child: child,
               fillColor: Colors.transparent,
+              child: child,
             ),
             child: pages[pageIndex],
           ),
@@ -88,20 +89,18 @@ class _SetupPagetate extends State<SetupPage> {
         bottomNavigationBar: Material(
           child: Container(
             height: 56,
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             margin: EdgeInsets.only(
               bottom: context.padding.bottom,
             ),
             child: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back),
+                  icon: const Icon(Icons.arrow_back),
                   tooltip: LocaleStrings.setup.buttonBack,
                   onPressed: pageIndex != 0 ? prevPage : null,
                 ),
-                Spacer(),
+                const Spacer(),
                 FlatIconButton(
                   onPressed: pageIndex != (pages.length - 1)
                       ? nextPage
@@ -111,7 +110,7 @@ class _SetupPagetate extends State<SetupPage> {
                         },
                   text: Text(
                     buttonText.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       letterSpacing: 1,
                       fontWeight: FontWeight.w500,
                     ),
@@ -127,7 +126,6 @@ class _SetupPagetate extends State<SetupPage> {
           ),
         ),
       ),
-      onWillPop: () async => pageIndex == (pages.length - 1),
     );
   }
 

@@ -26,7 +26,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
 
-  SettingsPage({
+  const SettingsPage({
     Key key,
     this.trimmed = false,
   }) : super(key: key);
@@ -56,13 +56,13 @@ class _SettingsPageState extends State<SettingsPage> {
               header: "Backup & Restore",
               children: [
                 SettingsTile(
-                  icon: Icon(MdiIcons.contentSaveOutline),
-                  title: Text("Backup"),
-                  description: Text("Create a local copy of your notes"),
+                  icon: const Icon(MdiIcons.contentSaveOutline),
+                  title: const Text("Backup"),
+                  description: const Text("Create a local copy of your notes"),
                   onTap: () {
                     context.scaffoldMessenger.removeCurrentSnackBar();
                     context.scaffoldMessenger.showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text(
                             "This feature is not yet available on this version."),
                         behavior: SnackBarBehavior.floating,
@@ -71,14 +71,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 SettingsTile(
-                  icon: Icon(MdiIcons.restore),
-                  title: Text("Restore"),
-                  description: Text(
+                  icon: const Icon(MdiIcons.restore),
+                  title: const Text("Restore"),
+                  description: const Text(
                       "Restore a backup created from a version of Leaflet"),
                   onTap: () {
                     context.scaffoldMessenger.removeCurrentSnackBar();
                     context.scaffoldMessenger.showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text(
                             "This feature is not yet available on this version."),
                         behavior: SnackBarBehavior.floating,
@@ -87,12 +87,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 SettingsTile(
-                  icon: Icon(MdiIcons.fileImportOutline),
-                  title: Text("Migrate"),
+                  icon: const Icon(MdiIcons.fileImportOutline),
+                  title: const Text("Migrate"),
                   description:
-                      Text("Import notes from a version of PotatoNotes"),
+                      const Text("Import notes from a version of PotatoNotes"),
                   onTap: () async {
-                    return Utils.showSecondaryRoute(
+                    await Utils.showSecondaryRoute(
                       context,
                       ImportPage(),
                     );
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
               header: LocaleStrings.settings.infoTitle,
               children: <Widget>[
                 SettingsTile(
-                  icon: Icon(Icons.info_outline),
+                  icon: const Icon(Icons.info_outline),
                   title: Text(LocaleStrings.settings.infoAboutApp),
                   onTap: () => Utils.showSecondaryRoute(
                     context,
@@ -112,8 +112,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 SettingsTile(
-                  icon: Icon(Icons.update_outlined),
-                  title: Text("Check for app updates"),
+                  icon: const Icon(Icons.update_outlined),
+                  title: const Text("Check for app updates"),
                   onTap: () => InAppUpdater.checkForUpdate(
                     context,
                     showNoUpdatesAvailable: true,
@@ -122,12 +122,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             Visibility(
+              // ignore: avoid_redundant_argument_values
               visible: kDebugMode,
               child: SettingsCategory(
                 header: LocaleStrings.settings.debugTitle,
                 children: [
                   SettingsTile.withSwitch(
-                    icon: Icon(MdiIcons.humanGreeting),
+                    icon: const Icon(MdiIcons.humanGreeting),
                     title: Text(
                       LocaleStrings.settings.debugShowSetupScreen,
                     ),
@@ -138,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(MdiIcons.databaseRemoveOutline),
+                    icon: const Icon(MdiIcons.databaseRemoveOutline),
                     title: Text(LocaleStrings.settings.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
@@ -146,13 +147,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
-                    icon: Icon(Icons.text_snippet_outlined),
+                    icon: const Icon(Icons.text_snippet_outlined),
                     title: Text(LocaleStrings.settings.debugLogLevel),
                     onTap: () {
                       showDropdownSheet(
                         context: context,
                         itemBuilder: (context, index) {
-                          bool selected =
+                          final bool selected =
                               prefs.logLevel == logEntryValues[index];
 
                           return dropDownTile(
@@ -187,13 +188,14 @@ class _SettingsPageState extends State<SettingsPage> {
           header: LocaleStrings.settings.personalizationTitle,
           children: [
             SettingsTile(
-              icon: Icon(Icons.brightness_medium_outlined),
+              icon: const Icon(Icons.brightness_medium_outlined),
               title: Text(LocaleStrings.settings.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
                   context: context,
                   itemBuilder: (context, index) {
-                    bool selected = prefs.themeMode == ThemeMode.values[index];
+                    final bool selected =
+                        prefs.themeMode == ThemeMode.values[index];
 
                     return dropDownTile(
                       selected: selected,
@@ -215,7 +217,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settings.personalizationUseAmoled),
-              icon: Icon(Icons.brightness_2_outlined),
+              icon: const Icon(Icons.brightness_2_outlined),
               activeColor: context.theme.accentColor,
             ),
             if (deviceInfo.canUseSystemAccent)
@@ -227,20 +229,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text(
                   LocaleStrings.settings.personalizationUseCustomAccent,
                 ),
-                icon: Icon(Icons.color_lens_outlined),
+                icon: const Icon(Icons.color_lens_outlined),
                 activeColor: context.theme.accentColor,
               ),
             SettingsTile(
               title: Text(
                 LocaleStrings.settings.personalizationCustomAccent,
               ),
-              icon: Icon(Icons.colorize_outlined),
+              icon: const Icon(Icons.colorize_outlined),
               enabled: !deviceInfo.canUseSystemAccent || prefs.useCustomAccent,
               trailing: AnimatedOpacity(
                 opacity: !deviceInfo.canUseSystemAccent || prefs.useCustomAccent
                     ? 1
                     : 0.5,
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 child: SizedBox(
                   width: 60,
                   child: Icon(
@@ -271,11 +273,11 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settings.personalizationUseGrid),
-              icon: Icon(Icons.dashboard_outlined),
+              icon: const Icon(Icons.dashboard_outlined),
               activeColor: context.theme.accentColor,
             ),
             SettingsTile(
-              icon: Icon(Icons.translate),
+              icon: const Icon(Icons.translate),
               title: Text(LocaleStrings.settings.personalizationLocale),
               onTap: () {
                 showDropdownSheet(
@@ -319,8 +321,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SettingsTile(
-              icon: Icon(Icons.autorenew),
-              title: Text("Change sync API url"),
+              icon: const Icon(Icons.autorenew),
+              title: const Text("Change sync API url"),
               onTap: () async {
                 final bool status = await showInfoSheet(
                   context,
@@ -328,11 +330,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
                   buttonAction: LocaleStrings.common.goOn,
                 );
-                if (status)
+                if (status) {
                   Utils.showNotesModalBottomSheet(
                     context: context,
                     builder: (context) => SyncUrlEditor(),
                   );
+                }
               },
             )
           ],
@@ -359,7 +362,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     prefs.masterPass = "";
 
                     final List<Note> notes =
-                        await helper.listNotes(ReturnMode.LOCAL);
+                        await helper.listNotes(ReturnMode.local);
 
                     setState(() => removingMasterPass = true);
                     context.basePage.setBottomBarEnabled(false);
@@ -375,13 +378,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
-              icon: Icon(Icons.vpn_key_outlined),
+              icon: const Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settings.privacyUseMasterPass),
               activeColor: context.theme.accentColor,
-              subtitle: removingMasterPass ? LinearProgressIndicator() : null,
+              subtitle:
+                  removingMasterPass ? const LinearProgressIndicator() : null,
             ),
             SettingsTile(
-              icon: Icon(MdiIcons.formTextboxPassword),
+              icon: const Icon(MdiIcons.formTextboxPassword),
               title: Text(LocaleStrings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
@@ -404,11 +408,11 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Text(content),
               ),
               ListTile(
-                leading: Icon(Icons.arrow_forward),
+                leading: const Icon(Icons.arrow_forward),
                 title: Text(buttonAction),
                 onTap: () {
                   context.pop(true);
@@ -427,7 +431,7 @@ class _SettingsPageState extends State<SettingsPage> {
     int initialIndex = 0,
     bool scrollable = false,
   }) async {
-    return await Utils.showNotesModalBottomSheet(
+    return Utils.showNotesModalBottomSheet(
       context: context,
       childHandlesScroll: scrollable,
       builder: (context) => scrollable
@@ -454,10 +458,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }) {
     return ListTile(
       selected: selected,
-      contentPadding: EdgeInsets.symmetric(horizontal: 24),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24),
       title: title,
       subtitle: subtitle,
-      trailing: selected ? Icon(Icons.check) : null,
+      trailing: selected ? const Icon(Icons.check) : null,
       onTap: onTap,
     );
   }
@@ -474,9 +478,9 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<dynamic> showPassChallengeSheet(BuildContext context,
+  Future<bool> showPassChallengeSheet(BuildContext context,
       [bool editMode = true]) async {
-    return await Utils.showNotesModalBottomSheet(
+    return Utils.showNotesModalBottomSheet(
       context: context,
       builder: (context) => PassChallenge(
         editMode: editMode,

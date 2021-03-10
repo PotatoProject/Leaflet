@@ -49,25 +49,25 @@ class BasePageState extends State<BasePage>
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _pages = [
     NoteListPage(
-      key: PageStorageKey(ReturnMode.NORMAL),
-      noteKind: ReturnMode.NORMAL,
-      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.NORMAL),
+      key: const PageStorageKey(ReturnMode.normal),
+      noteKind: ReturnMode.normal,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.normal),
     ),
     NoteListPage(
-      key: PageStorageKey(ReturnMode.ARCHIVE),
-      noteKind: ReturnMode.ARCHIVE,
-      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.ARCHIVE),
+      key: const PageStorageKey(ReturnMode.archive),
+      noteKind: ReturnMode.archive,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.archive),
     ),
     SearchPage(
-      key: PageStorageKey('search'),
+      key: const PageStorageKey('search'),
       delegate: NoteSearchDelegate(),
     ),
     NoteListPage(
-      key: PageStorageKey(ReturnMode.TRASH),
-      noteKind: ReturnMode.TRASH,
-      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.TRASH),
+      key: const PageStorageKey(ReturnMode.trash),
+      noteKind: ReturnMode.trash,
+      selectionOptions: Utils.getSelectionOptionsForMode(ReturnMode.trash),
     ),
-    SettingsPage(key: PageStorageKey('settings')),
+    const SettingsPage(key: PageStorageKey('settings')),
   ];
 
   int _currentPage = 0;
@@ -76,7 +76,7 @@ class BasePageState extends State<BasePage>
   Widget _appBar;
   Widget _secondaryAppBar;
   AnimationController _ac;
-  DefaultDrawerMode _defaultDrawerMode = DefaultDrawerMode.COLLAPSED;
+  DefaultDrawerMode _defaultDrawerMode = DefaultDrawerMode.collapsed;
   bool _collapsedDrawer = false;
 
   Widget get fab => _floatingActionButton;
@@ -84,7 +84,7 @@ class BasePageState extends State<BasePage>
   Widget get secondaryAppBar => _secondaryAppBar;
 
   void setCurrentPage(int newPage) {
-    if (_defaultDrawerMode == DefaultDrawerMode.COLLAPSED) {
+    if (_defaultDrawerMode == DefaultDrawerMode.collapsed) {
       _collapsedDrawer = true;
     }
     _currentPage = newPage;
@@ -105,11 +105,11 @@ class BasePageState extends State<BasePage>
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
-  void setSecondaryAppBar(Widget secondaryAppBar) async {
+  Future<void> setSecondaryAppBar(Widget secondaryAppBar) async {
     if (secondaryAppBar.runtimeType != _secondaryAppBar.runtimeType) {
-      if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null)
+      if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null) {
         await _ac.animateBack(0);
-      else {
+      } else {
         await _ac.animateBack(0);
         _ac.animateTo(1);
       }
@@ -126,24 +126,24 @@ class BasePageState extends State<BasePage>
       context.scaffoldMessenger.showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(CustomIcons.notes),
           label: "Notes",
         ),
         BottomNavigationBarItem(
-          icon: Icon(MdiIcons.archiveOutline),
+          icon: const Icon(MdiIcons.archiveOutline),
           label: LocaleStrings.mainPage.titleArchive,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_outlined),
+          icon: const Icon(Icons.search_outlined),
           label: LocaleStrings.mainPage.search,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined),
           label: LocaleStrings.mainPage.titleTrash,
         ),
         BottomNavigationBarItem(
-          icon: Icon(CustomIcons.settings_outline),
+          icon: const Icon(CustomIcons.settings_outline),
           label: LocaleStrings.mainPage.settings,
         ),
       ];
@@ -171,7 +171,7 @@ class BasePageState extends State<BasePage>
 
     _ac = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
 
     InAppUpdater.checkForUpdate(context);
@@ -202,10 +202,10 @@ class BasePageState extends State<BasePage>
   void _updateDrawer() {
     if (deviceInfo.uiSizeFactor > 5) {
       _collapsedDrawer = false;
-      _defaultDrawerMode = DefaultDrawerMode.EXPANDED;
+      _defaultDrawerMode = DefaultDrawerMode.expanded;
     } else {
       _collapsedDrawer = true;
-      _defaultDrawerMode = DefaultDrawerMode.COLLAPSED;
+      _defaultDrawerMode = DefaultDrawerMode.collapsed;
     }
   }
 
@@ -233,19 +233,20 @@ class BasePageState extends State<BasePage>
                   child: AnimatedPadding(
                     padding: EdgeInsetsDirectional.only(
                       start: useDynamicDrawer
-                          ? _defaultDrawerMode == DefaultDrawerMode.EXPANDED
+                          ? _defaultDrawerMode == DefaultDrawerMode.expanded
                               ? _collapsedDrawer
                                   ? drawerClosedWidth
                                   : drawerOpenedWidth
                               : drawerClosedWidth
                           : 0,
                     ),
-                    duration: Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     child: Scaffold(
                       key: _scaffoldKey,
                       backgroundColor: Colors.transparent,
                       appBar: ConstrainedWidthAppbar(
+                        width: 1920,
                         child: !useDynamicDrawer
                             ? !deviceInfo.isLandscape
                                 ? _appBar
@@ -260,12 +261,10 @@ class BasePageState extends State<BasePage>
                                     ],
                                   )
                             : null,
-                        width: 1920,
                       ),
                       extendBody: useDesktopLayout,
                       extendBodyBehindAppBar: true,
                       body: PageTransitionSwitcher(
-                        child: _pages.get(_currentPage),
                         transitionBuilder: (
                           child,
                           primaryAnimation,
@@ -289,6 +288,7 @@ class BasePageState extends State<BasePage>
                             ),
                           ),
                         ),
+                        child: _pages.get(_currentPage),
                       ),
                       resizeToAvoidBottomInset: false,
                       bottomNavigationBar: !useDesktopLayout
@@ -308,13 +308,13 @@ class BasePageState extends State<BasePage>
                   ),
                 ),
                 Visibility(
-                  visible: _defaultDrawerMode == DefaultDrawerMode.COLLAPSED,
+                  visible: _defaultDrawerMode == DefaultDrawerMode.collapsed,
                   child: IgnorePointer(
                     ignoring: _collapsedDrawer,
                     child: GestureDetector(
                       onTap: () => setState(() => _collapsedDrawer = true),
                       child: AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         curve: decelerateEasing,
                         color: _collapsedDrawer
                             ? Colors.transparent
@@ -326,7 +326,7 @@ class BasePageState extends State<BasePage>
                 Visibility(
                   visible: useDynamicDrawer,
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     width: _collapsedDrawer
                         ? drawerClosedWidth
@@ -342,12 +342,10 @@ class BasePageState extends State<BasePage>
                         header: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               child: DrawerListTile(
-                                icon: Illustration.leaflet(
-                                  height: 32,
-                                ),
-                                title: Text(
+                                icon: const Illustration.leaflet(height: 32),
+                                title: const Text(
                                   "leaflet",
                                   style: TextStyle(
                                     fontFamily: "ValeraRound",
@@ -358,7 +356,7 @@ class BasePageState extends State<BasePage>
                               ),
                             ),
                             DrawerListTile(
-                              icon: AccountAvatar(),
+                              icon: const AccountAvatar(),
                               title: Text(
                                 prefs.accessToken != null
                                     ? prefs.username ?? "Guest"
@@ -401,7 +399,7 @@ class BasePageState extends State<BasePage>
 }
 
 class BasePageInheritedWidget extends InheritedWidget {
-  BasePageInheritedWidget({
+  const BasePageInheritedWidget({
     Key key,
     Widget child,
     this.state,
@@ -416,15 +414,15 @@ class BasePageInheritedWidget extends InheritedWidget {
 }
 
 enum DefaultDrawerMode {
-  COLLAPSED,
-  EXPANDED,
+  collapsed,
+  expanded,
 }
 
 class _SecondaryAppBar extends StatelessWidget {
   final AnimationController animationController;
   final Widget child;
 
-  _SecondaryAppBar({
+  const _SecondaryAppBar({
     @required this.animationController,
     this.child,
   });
@@ -437,7 +435,7 @@ class _SecondaryAppBar extends StatelessWidget {
       ),
       child: SlideTransition(
         position: Tween<Offset>(
-          begin: Offset(0, 1),
+          begin: const Offset(0, 1),
           end: Offset.zero,
         ).animate(
           CurvedAnimation(
@@ -447,16 +445,19 @@ class _SecondaryAppBar extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 16,
             bottom: 16,
           ),
           child: ConstrainedWidthAppbar(
+            width: min(640, context.mSize.width - 32),
             child: Material(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
               ),
               color: context.theme.cardColor,
+              clipBehavior: Clip.antiAlias,
+              elevation: 8,
               child: SizedBox(
                 height: 48,
                 child: Theme(
@@ -468,10 +469,7 @@ class _SecondaryAppBar extends StatelessWidget {
                   child: child ?? Container(),
                 ),
               ),
-              clipBehavior: Clip.antiAlias,
-              elevation: 8,
             ),
-            width: min(640, context.mSize.width - 32),
           ),
         ),
       ),

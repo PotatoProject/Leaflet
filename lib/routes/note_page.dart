@@ -30,7 +30,7 @@ class NotePage extends StatefulWidget {
   final bool openWithList;
   final bool openWithDrawing;
 
-  NotePage({
+  const NotePage({
     this.note,
     this.focusTitle = false,
     this.openWithList = false,
@@ -115,7 +115,9 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void dispose() {
-    listContentNodes.forEach((node) => node.dispose());
+    for (final FocusNode node in listContentNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -165,15 +167,15 @@ class _NotePageState extends State<NotePage> {
           appBar: AppBar(
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.remove_red_eye_outlined),
-                padding: EdgeInsets.all(0),
+                icon: const Icon(Icons.remove_red_eye_outlined),
+                padding: const EdgeInsets.all(0),
                 tooltip: LocaleStrings.notePage.privacyTitle,
                 onPressed: showPrivacyOptionSheet,
               ),
               IconButton(
                 icon:
                     Icon(note.starred ? Icons.favorite : Icons.favorite_border),
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 tooltip: note.starred
                     ? LocaleStrings.mainPage.selectionBarRemoveFavourites
                     : LocaleStrings.mainPage.selectionBarAddFavourites,
@@ -194,7 +196,7 @@ class _NotePageState extends State<NotePage> {
                   );
                 },
               ),
-              ...getToolbarButtons(!deviceInfo.isLandscape),
+              ...getToolbarButtons(returnNothing: !deviceInfo.isLandscape),
             ],
           ),
           extendBodyBehindAppBar: true,
@@ -214,7 +216,7 @@ class _NotePageState extends State<NotePage> {
                       ),
                     if (note.tags.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         width: context.mSize.width,
                         child: Wrap(
                           spacing: 8,
@@ -222,7 +224,7 @@ class _NotePageState extends State<NotePage> {
                           children: List.generate(
                             note.tags.length,
                             (index) {
-                              Tag tag = prefs.tags.firstWhere(
+                              final Tag tag = prefs.tags.firstWhere(
                                 (tag) => tag.id == note.tags[index],
                               );
 
@@ -258,7 +260,7 @@ class _NotePageState extends State<NotePage> {
                     ),
                     if (note.list)
                       ...List.generate(note.listContent.length, (index) {
-                        ListItem currentItem = note.listContent[index];
+                        final ListItem currentItem = note.listContent[index];
 
                         if (needsFocus &&
                             index == note.listContent.length - 1) {
@@ -311,17 +313,18 @@ class _NotePageState extends State<NotePage> {
                       AnimatedOpacity(
                         opacity: showNewItemButton ? 1 : 0,
                         duration: showNewItemButton
-                            ? Duration(milliseconds: 300)
-                            : Duration(milliseconds: 0),
+                            ? const Duration(milliseconds: 300)
+                            : Duration.zero,
                         child: ListTile(
-                          leading: Icon(Icons.add),
+                          leading: const Icon(Icons.add),
                           title: Text(
                             LocaleStrings.notePage.addEntryHint,
                             style: TextStyle(
                               color: context.theme.iconTheme.color,
                             ),
                           ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16),
                           onTap: showNewItemButton
                               ? () => addListContentItem()
                               : null,
@@ -350,7 +353,7 @@ class _NotePageState extends State<NotePage> {
                       bottom:
                           context.viewInsets.bottom + context.padding.bottom,
                     ),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: getToolbarButtons(),
@@ -377,19 +380,19 @@ class _NotePageState extends State<NotePage> {
 
         setState(() {});
       },
-      layoutType: ImageLayoutType.STRIP,
+      layoutType: ImageLayoutType.strip,
       stripAxis: axis,
     );
   }
 
-  List<Widget> getToolbarButtons([bool returnNothing = false]) {
+  List<Widget> getToolbarButtons({bool returnNothing = false}) {
     if (returnNothing) {
       return [];
     } else {
       return [
         IconButton(
-          icon: Icon(Icons.local_offer_outlined),
-          padding: EdgeInsets.all(0),
+          icon: const Icon(Icons.local_offer_outlined),
+          padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarTags,
           onPressed: () async {
             await Utils.showSecondaryRoute(
@@ -406,8 +409,8 @@ class _NotePageState extends State<NotePage> {
           },
         ),
         IconButton(
-          icon: Icon(Icons.color_lens_outlined),
-          padding: EdgeInsets.all(0),
+          icon: const Icon(Icons.color_lens_outlined),
+          padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showNotesModalBottomSheet(
             context: context,
@@ -424,8 +427,8 @@ class _NotePageState extends State<NotePage> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.add),
-          padding: EdgeInsets.all(0),
+          icon: const Icon(Icons.add),
+          padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarAddItem,
           onPressed: () async {
             Utils.showNotesModalBottomSheet(
@@ -444,18 +447,18 @@ class _NotePageState extends State<NotePage> {
                       onTap: () => handleAddItemTap(context, 'list'),
                     ),
                     ListTile(
-                      leading: Icon(Icons.photo_outlined),
+                      leading: const Icon(Icons.photo_outlined),
                       title: Text(LocaleStrings.notePage.imageGallery),
                       onTap: () => handleAddItemTap(context, 'image'),
                     ),
                     ListTile(
-                      leading: Icon(Icons.camera_outlined),
+                      leading: const Icon(Icons.camera_outlined),
                       enabled: !DeviceInfo.isDesktop,
                       title: Text(LocaleStrings.notePage.imageCamera),
                       onTap: () => handleAddItemTap(context, 'camera'),
                     ),
                     ListTile(
-                      leading: Icon(Icons.brush_outlined),
+                      leading: const Icon(Icons.brush_outlined),
                       title: Text(LocaleStrings.notePage.drawing),
                       onTap: () => handleAddItemTap(context, 'drawing'),
                     ),
@@ -469,7 +472,7 @@ class _NotePageState extends State<NotePage> {
     }
   }
 
-  void handleAddItemTap(BuildContext context, String value) async {
+  Future<void> handleAddItemTap(BuildContext context, String value) async {
     switch (value) {
       case 'list':
         context.pop();
@@ -507,9 +510,9 @@ class _NotePageState extends State<NotePage> {
 
     note.listContent.add(
       ListItem(
-        id,
-        "",
-        false,
+        id: id,
+        text: "",
+        status: false,
       ),
     );
     notifyNoteChanged();
@@ -538,7 +541,7 @@ class _NotePageState extends State<NotePage> {
                 notifyNoteChanged();
               },
               activeColor: context.theme.accentColor,
-              secondary: Icon(Icons.remove_red_eye_outlined),
+              secondary: const Icon(Icons.remove_red_eye_outlined),
               title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
             SwitchListTile(
@@ -556,12 +559,12 @@ class _NotePageState extends State<NotePage> {
                     }
                   : null,
               activeColor: context.theme.accentColor,
-              secondary: Icon(Icons.lock_outlined),
+              secondary: const Icon(Icons.lock_outlined),
               title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
                   ? Text(
                       LocaleStrings.notePage.privacyLockNoteMissingPass,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     )
                   : null,
             ),
@@ -587,7 +590,7 @@ class _NotePageState extends State<NotePage> {
                       }
                     : null,
                 activeColor: context.theme.accentColor,
-                secondary: Icon(Icons.fingerprint_outlined),
+                secondary: const Icon(Icons.fingerprint_outlined),
                 title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),
             ),
@@ -597,7 +600,7 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
-  void toggleList() async {
+  Future<void> toggleList() async {
     setState(() => note = note.copyWith(list: !note.list));
     notifyNoteChanged();
 
@@ -606,7 +609,7 @@ class _NotePageState extends State<NotePage> {
     }
   }
 
-  void addDrawing() async {
+  Future<void> addDrawing() async {
     await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),
@@ -639,7 +642,7 @@ class _NoteListEntryItem extends StatefulWidget {
   final ValueChanged<bool> onCheckChanged;
   final Color checkColor;
 
-  _NoteListEntryItem({
+  const _NoteListEntryItem({
     Key key,
     @required this.item,
     this.controller,
@@ -668,7 +671,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
         color: context.theme.brightness == Brightness.dark
             ? Colors.red[400]
             : Colors.red[600],
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.centerRight,
         child: Icon(
           Icons.delete_outline,
@@ -694,7 +697,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
               width: 18,
             ),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           title: TextField(
             controller: widget.controller,
             decoration: InputDecoration.collapsed(
@@ -715,9 +718,9 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
           ),
           trailing: AnimatedOpacity(
             opacity: showDeleteButton ? 1 : 0,
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             child: IconButton(
-              icon: Icon(Icons.delete_outline),
+              icon: const Icon(Icons.delete_outline),
               onPressed:
                   showDeleteButton ? () => widget.onDismissed(null) : null,
               padding: EdgeInsets.zero,
@@ -738,7 +741,7 @@ class _NotePageTextFormField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final ValueChanged<String> onSubmitted;
 
-  _NotePageTextFormField({
+  const _NotePageTextFormField({
     this.contentField = false,
     this.hintText,
     this.controller,

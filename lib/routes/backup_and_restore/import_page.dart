@@ -41,8 +41,8 @@ class _ImportPageState extends State<ImportPage> {
             animation: primaryAnimation,
             secondaryAnimation: secondaryAnimation,
             transitionType: SharedAxisTransitionType.horizontal,
-            child: child,
             fillColor: Colors.transparent,
+            child: child,
           );
         },
         child: page,
@@ -51,12 +51,12 @@ class _ImportPageState extends State<ImportPage> {
   }
 }
 
-typedef void LoadedNotesCallback(List<Note> result);
+typedef LoadedNotesCallback = void Function(List<Note> result);
 
 class _FileSelectionPage extends StatefulWidget {
   final LoadedNotesCallback onNextTapped;
 
-  _FileSelectionPage({
+  const _FileSelectionPage({
     Key key,
     this.onNextTapped,
   }) : super(key: key);
@@ -75,7 +75,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
     _checkIfCanMigrateFromOldDbFile();
   }
 
-  void _checkIfCanMigrateFromOldDbFile() async {
+  Future<void> _checkIfCanMigrateFromOldDbFile() async {
     final String file = await MigrationTask.v1DatabasePath;
 
     canUseOldDbFile =
@@ -87,10 +87,10 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
     return Scaffold(
       body: ListView(
         children: [
-          Text("To begin migration select a database file to open."),
+          const Text("To begin migration select a database file to open."),
           ListTile(
-            leading: Icon(MdiIcons.fileRestoreOutline),
-            title: Text("Open PotatoNotes backup file"),
+            leading: const Icon(MdiIcons.fileRestoreOutline),
+            title: const Text("Open PotatoNotes backup file"),
             onTap: () async {
               final dynamic asyncFile = DeviceInfo.isDesktop
                   ? await openFile(
@@ -110,12 +110,14 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
               final dynamic file =
                   DeviceInfo.isDesktop ? asyncFile : asyncFile.files.first;
 
-              if (file.path != null && p.extension(file.path) == ".db") {
-                bool canMigrate =
-                    await MigrationTask.isMigrationAvailable(file.path);
+              if (file.path != null &&
+                  p.extension(file.path as String) == ".db") {
+                final bool canMigrate =
+                    await MigrationTask.isMigrationAvailable(
+                        file.path as String);
 
                 if (canMigrate) {
-                  notes = await MigrationTask.migrate(file.path);
+                  notes = await MigrationTask.migrate(file.path as String);
                 }
 
                 setState(() {});
@@ -125,8 +127,8 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
             },
           ),
           ListTile(
-            leading: Icon(MdiIcons.databaseOutline),
-            title: Text("Open previous version database"),
+            leading: const Icon(MdiIcons.databaseOutline),
+            title: const Text("Open previous version database"),
             enabled: canUseOldDbFile,
             onTap: () async {
               final String file = await MigrationTask.v1DatabasePath;
@@ -137,7 +139,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
             subtitle: !canUseOldDbFile
                 ? Text(
                     _getErrorText(),
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   )
                 : null,
           ),
@@ -145,7 +147,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
       ),
       bottomNavigationBar: Container(
         height: 48,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: [
             if (notes != null)
@@ -156,7 +158,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                     Icons.check,
                     color: context.theme.accentColor,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     "Notes loaded successfully",
                     style: TextStyle(
@@ -165,7 +167,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                   ),
                 ],
               ),
-            Spacer(),
+            const Spacer(),
             TextButton(
               onPressed: notes != null
                   ? () {
@@ -174,7 +176,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                   : null,
               child: Text(
                 LocaleStrings.setup.buttonNext.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   letterSpacing: 1,
                   fontWeight: FontWeight.w500,
                 ),
@@ -187,8 +189,9 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
   }
 
   String _getErrorText() {
-    if (DeviceInfo.isDesktop)
+    if (DeviceInfo.isDesktop) {
       return "Desktop does not support loading from previous version";
+    }
 
     if (canUseOldDbFile) return "There was no database found from old version";
 
@@ -199,7 +202,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
 class _NoteSelectionPage extends StatefulWidget {
   final List<Note> notes;
 
-  _NoteSelectionPage({
+  const _NoteSelectionPage({
     Key key,
     @required this.notes,
   }) : super(key: key);
@@ -258,13 +261,13 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
               );
             },
             noteCount: widget.notes.length,
-            gridColumns: deviceInfo.uiSizeFactor.clamp(0, 4),
+            gridColumns: deviceInfo.uiSizeFactor.clamp(0, 4) as int,
           );
         },
       ),
       bottomNavigationBar: Container(
         height: 48,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: [
             TextButton.icon(
@@ -272,7 +275,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 textStyle: TextStyle(
                   color: context.theme.textTheme.bodyText2.color,
                 ),
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                   right: 16,
                 ),
@@ -295,7 +298,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             TextButton.icon(
               onPressed: selectedNotes.isNotEmpty
                   ? () async {
@@ -310,10 +313,10 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                       context.pop();
                     }
                   : null,
-              icon: Icon(Icons.check),
+              icon: const Icon(Icons.check),
               label: Text(
                 LocaleStrings.setup.buttonFinish.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   letterSpacing: 1,
                   fontWeight: FontWeight.w500,
                 ),

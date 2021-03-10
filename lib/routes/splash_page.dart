@@ -12,7 +12,7 @@ import 'package:universal_platform/universal_platform.dart';
 class SplashPage extends StatefulWidget {
   final Widget child;
 
-  SplashPage({
+  const SplashPage({
     this.child,
   });
 
@@ -35,22 +35,18 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _loadColors();
     _elementsAc = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: 250,
-      ),
+      duration: const Duration(milliseconds: 250),
     );
     _transitionAc = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: 350,
-      ),
+      duration: const Duration(milliseconds: 350),
       value: 1,
     );
     Timer(
       Duration(milliseconds: DeviceInfo.isDesktop ? 600 : 250),
       () => _elementsAc.forward(),
     );
-    Timer(Duration(milliseconds: 1400), () => _transitionAc.reverse());
+    Timer(const Duration(milliseconds: 1400), () => _transitionAc.reverse());
     _transitionAc.addListener(_transitionListener);
     _elementsAc.addListener(_elementsListener);
     super.initState();
@@ -73,7 +69,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     if (_elementsAc.value == 1) setState(() => showChild = true);
   }
 
-  void _loadColors() async {
+  Future<void> _loadColors() async {
     final MediaQueryData data =
         MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
@@ -82,10 +78,11 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     Color color = Themes.lightColor;
 
-    if (isDarkSystemTheme)
+    if (isDarkSystemTheme) {
       initialColor = Themes.darkColor;
-    else
+    } else {
       initialColor = Themes.lightColor;
+    }
 
     if (themeMode == ThemeMode.system && isDarkSystemTheme ||
         themeMode == ThemeMode.dark) {
@@ -132,7 +129,7 @@ class _ForegroundLayer extends StatelessWidget {
   final Animation<double> transitionAnimation;
   final Animation<double> elementsAnimation;
 
-  _ForegroundLayer({
+  const _ForegroundLayer({
     @required this.backgroundColor,
     @required this.transitionAnimation,
     @required this.elementsAnimation,
@@ -178,7 +175,7 @@ class _ForegroundLayer extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 32),
+              padding: const EdgeInsets.only(bottom: 32),
               child: AnimatedBuilder(
                 animation: elementsAnimation,
                 builder: (context, _) => Illustration.posp(
@@ -201,7 +198,7 @@ class _LogoAnimationLayer extends StatelessWidget {
   final Animation<double> animation;
   final ColorTween textColorTween;
 
-  _LogoAnimationLayer({
+  const _LogoAnimationLayer({
     @required this.animation,
     @required this.textColorTween,
   });
@@ -210,13 +207,10 @@ class _LogoAnimationLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox.fromSize(
-          size: Size.square(64),
-          child: Center(
-            child: Illustration.leaflet(height: 64),
-          ),
+          size: const Size.square(64),
+          child: const Center(child: Illustration.leaflet(height: 64)),
         ),
         AnimatedBuilder(
           animation: animation,
@@ -229,6 +223,9 @@ class _LogoAnimationLayer extends StatelessWidget {
                 child: FadeTransition(
                   opacity: animation,
                   child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                    ),
                     child: Text(
                       "leaflet",
                       style: TextStyle(
@@ -236,9 +233,6 @@ class _LogoAnimationLayer extends StatelessWidget {
                         fontSize: 48,
                         color: textColorTween.evaluate(animation),
                       ),
-                    ),
-                    padding: EdgeInsets.only(
-                      left: 16,
                     ),
                   ),
                 ),
