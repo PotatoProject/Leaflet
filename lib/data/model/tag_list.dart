@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:moor/moor.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class TagListConverter extends TypeConverter<List<String>, String> {
   const TagListConverter();
@@ -9,8 +10,8 @@ class TagListConverter extends TypeConverter<List<String>, String> {
     if (fromDb == null) {
       return null;
     }
-    final List<dynamic> decoded = json.decode(fromDb);
-    return List.generate(decoded.length, (index) => decoded[index] as String);
+    final List<String> decoded = Utils.asList<String>(json.decode(fromDb));
+    return List.generate(decoded.length, (index) => decoded[index]);
   }
 
   @override

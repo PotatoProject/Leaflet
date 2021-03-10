@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
   const ImageListConverter();
@@ -11,7 +12,8 @@ class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
       return null;
     }
 
-    final List<dynamic> decoded = json.decode(fromDb);
+    final List<Map<String, dynamic>> decoded =
+        Utils.asList<Map<String, dynamic>>(json.decode(fromDb));
     return List.generate(
       decoded.length,
       (index) => SavedImage.fromJson(

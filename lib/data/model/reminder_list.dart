@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:moor/moor.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class ReminderListConverter extends TypeConverter<List<DateTime>, String> {
   const ReminderListConverter();
@@ -9,11 +10,11 @@ class ReminderListConverter extends TypeConverter<List<DateTime>, String> {
     if (fromDb == null) {
       return null;
     }
-    final List<dynamic> decoded = json.decode(fromDb);
+    final List<String> decoded = Utils.asList<String>(json.decode(fromDb));
     return List.generate(
       decoded.length,
       (index) => DateTime.fromMillisecondsSinceEpoch(
-        json.decode(decoded[index]),
+        json.decode(decoded[index]) as int,
       ),
     );
   }

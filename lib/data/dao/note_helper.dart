@@ -13,38 +13,38 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 
   Future<List<Note>> listNotes(ReturnMode mode) async {
     switch (mode) {
-      case ReturnMode.ALL:
+      case ReturnMode.all:
         return select(notes).get();
-      case ReturnMode.NORMAL:
+      case ReturnMode.normal:
         return (select(notes)
               ..where((table) =>
                   table.archived.not() &
                   table.deleted.not() &
                   table.id.contains("-synced").not()))
             .get();
-      case ReturnMode.ARCHIVE:
+      case ReturnMode.archive:
         return (select(notes)
               ..where((table) =>
                   table.archived &
                   table.deleted.not() &
                   table.id.contains("-synced").not()))
             .get();
-      case ReturnMode.TRASH:
+      case ReturnMode.trash:
         return (select(notes)
               ..where((table) =>
                   table.archived.not() &
                   table.deleted &
                   table.id.contains("-synced").not()))
             .get();
-      case ReturnMode.SYNCED:
+      case ReturnMode.synced:
         return (select(notes)..where((table) => table.id.contains("-synced")))
             .get();
-      case ReturnMode.TAG:
-      case ReturnMode.LOCAL:
+      case ReturnMode.tag:
+      case ReturnMode.local:
         return (select(notes)
               ..where((table) => table.id.contains("-synced").not()))
             .get();
-      case ReturnMode.FAVOURITES:
+      case ReturnMode.favourites:
         return (select(notes)
               ..where((table) =>
                   table.starred &
@@ -62,24 +62,24 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 
     switch (mode) {
-      case ReturnMode.ALL:
+      case ReturnMode.all:
         selectQuery = select(notes);
         break;
-      case ReturnMode.NORMAL:
+      case ReturnMode.normal:
         selectQuery = select(notes)
           ..where((table) =>
               table.archived.not() &
               table.deleted.not() &
               table.id.contains("-synced").not());
         break;
-      case ReturnMode.ARCHIVE:
+      case ReturnMode.archive:
         selectQuery = select(notes)
           ..where((table) =>
               table.archived &
               table.deleted.not() &
               table.id.contains("-synced").not());
         break;
-      case ReturnMode.FAVOURITES:
+      case ReturnMode.favourites:
         selectQuery = select(notes)
           ..where((table) =>
               table.starred &
@@ -87,19 +87,19 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
               table.deleted.not() &
               table.id.contains("-synced").not());
         break;
-      case ReturnMode.TRASH:
+      case ReturnMode.trash:
         selectQuery = select(notes)
           ..where((table) =>
               table.archived.not() &
               table.deleted &
               table.id.contains("-synced").not());
         break;
-      case ReturnMode.SYNCED:
+      case ReturnMode.synced:
         selectQuery = select(notes)
           ..where((table) => table.id.contains("-synced"));
         break;
-      case ReturnMode.TAG:
-      case ReturnMode.LOCAL:
+      case ReturnMode.tag:
+      case ReturnMode.local:
         selectQuery = select(notes)
           ..where((table) => table.id.contains("-synced").not());
         break;
@@ -108,7 +108,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
     return (selectQuery
           ..orderBy([
             (table) => OrderingTerm(
-                expression: (table).creationDate, mode: OrderingMode.desc)
+                expression: table.creationDate, mode: OrderingMode.desc)
           ]))
         .watch();
   }
@@ -124,11 +124,11 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<void> deleteAllNotes() async {
-    final List<Note> notes = await listNotes(ReturnMode.ALL);
+    final List<Note> notes = await listNotes(ReturnMode.all);
 
-    notes.forEach((note) async {
+    for (final Note note in notes) {
       await deleteNote(note);
-    });
+    }
   }
 }
 
@@ -155,7 +155,7 @@ class SearchQuery {
     this.caseSensitive = false,
     int color = 0,
     this.date,
-    this.dateMode = DateFilterMode.ONLY,
+    this.dateMode = DateFilterMode.only,
     this.onlyFavourites = false,
     this.returnMode = const SearchReturnMode(
       fromNormal: true,
@@ -168,7 +168,7 @@ class SearchQuery {
     caseSensitive = false;
     _color = 0;
     date = null;
-    dateMode = DateFilterMode.ONLY;
+    dateMode = DateFilterMode.only;
     onlyFavourites = false;
     returnMode = const SearchReturnMode(
       fromNormal: true,
@@ -210,9 +210,9 @@ class SearchReturnMode {
   @override
   bool operator ==(Object other) {
     if (other is SearchReturnMode) {
-      return this.fromNormal == other.fromNormal &&
-          this.fromArchive == other.fromArchive &&
-          this.fromTrash == other.fromTrash;
+      return fromNormal == other.fromNormal &&
+          fromArchive == other.fromArchive &&
+          fromTrash == other.fromTrash;
     }
     return false;
   }
@@ -222,9 +222,18 @@ class SearchReturnMode {
 }
 
 enum DateFilterMode {
-  AFTER,
-  BEFORE,
-  ONLY,
+  after,
+  before,
+  only,
 }
 
-enum ReturnMode { ALL, NORMAL, ARCHIVE, TRASH, FAVOURITES, TAG, SYNCED, LOCAL }
+enum ReturnMode {
+  all,
+  normal,
+  archive,
+  trash,
+  favourites,
+  tag,
+  synced,
+  local,
+}

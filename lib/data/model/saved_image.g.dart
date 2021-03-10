@@ -9,13 +9,14 @@ part of 'saved_image.dart';
 
 SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
   return SavedImage(
-    json['id'] as String,
-    _$enumDecode(_$StorageLocationEnumMap, json['storageLocation']),
-    json['hash'] as String?,
-    json['fileExtension'] as String?,
-    json['encrypted'] as bool,
-    (json['width'] as num?)?.toDouble(),
-    (json['height'] as num?)?.toDouble(),
+    id: json['id'] as String,
+    storageLocation:
+        _$enumDecode(_$StorageLocationEnumMap, json['storageLocation']),
+    hash: json['hash'] as String?,
+    fileExtension: json['fileExtension'] as String?,
+    encrypted: json['encrypted'] as bool,
+    width: (json['width'] as num?)?.toDouble(),
+    height: (json['height'] as num?)?.toDouble(),
   )
     ..blurHash = json['blurHash'] as String?
     ..uploaded = json['uploaded'] as bool;
@@ -61,6 +62,6 @@ K _$enumDecode<K, V>(
 }
 
 const _$StorageLocationEnumMap = {
-  StorageLocation.LOCAL: 'LOCAL',
-  StorageLocation.SYNC: 'SYNC',
+  StorageLocation.local: 'local',
+  StorageLocation.sync: 'sync',
 };

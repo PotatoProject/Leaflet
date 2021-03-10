@@ -706,7 +706,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get starred => _starred ??= _constructStarred();
   GeneratedBoolColumn _constructStarred() {
     return GeneratedBoolColumn('starred', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _creationDateMeta =
@@ -743,7 +743,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedIntColumn get color => _color ??= _constructColor();
   GeneratedIntColumn _constructColor() {
     return GeneratedIntColumn('color', $tableName, false,
-        defaultValue: Constant(0));
+        defaultValue: const Constant(0));
   }
 
   final VerificationMeta _imagesMeta = const VerificationMeta('images');
@@ -764,7 +764,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get list => _list ??= _constructList();
   GeneratedBoolColumn _constructList() {
     return GeneratedBoolColumn('list', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _listContentMeta =
@@ -813,7 +813,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       _hideContent ??= _constructHideContent();
   GeneratedBoolColumn _constructHideContent() {
     return GeneratedBoolColumn('hide_content', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _lockNoteMeta = const VerificationMeta('lockNote');
@@ -822,7 +822,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get lockNote => _lockNote ??= _constructLockNote();
   GeneratedBoolColumn _constructLockNote() {
     return GeneratedBoolColumn('lock_note', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _usesBiometricsMeta =
@@ -833,7 +833,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       _usesBiometrics ??= _constructUsesBiometrics();
   GeneratedBoolColumn _constructUsesBiometrics() {
     return GeneratedBoolColumn('uses_biometrics', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _deletedMeta = const VerificationMeta('deleted');
@@ -842,7 +842,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get deleted => _deleted ??= _constructDeleted();
   GeneratedBoolColumn _constructDeleted() {
     return GeneratedBoolColumn('deleted', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _archivedMeta = const VerificationMeta('archived');
@@ -851,7 +851,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get archived => _archived ??= _constructArchived();
   GeneratedBoolColumn _constructArchived() {
     return GeneratedBoolColumn('archived', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
@@ -860,7 +860,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   GeneratedBoolColumn get synced => _synced ??= _constructSynced();
   GeneratedBoolColumn _constructSynced() {
     return GeneratedBoolColumn('synced', $tableName, false,
-        defaultValue: Constant(false));
+        defaultValue: const Constant(false));
   }
 
   @override

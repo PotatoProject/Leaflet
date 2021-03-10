@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moor/moor.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 part 'list_content.g.dart';
 
@@ -13,7 +14,11 @@ class ListItem {
   String text;
   bool status;
 
-  ListItem(this.id, this.text, this.status);
+  ListItem({
+    required this.id,
+    required this.text,
+    required this.status,
+  });
 
   factory ListItem.fromJson(Map<String, dynamic> json) =>
       _$ListItemFromJson(json);
@@ -32,7 +37,8 @@ class ListContentConverter extends TypeConverter<List<ListItem>, String> {
       return null;
     }
 
-    final List<dynamic> decoded = json.decode(fromDb);
+    final List<Map<String, dynamic>> decoded =
+        Utils.asList<Map<String, dynamic>>(json.decode(fromDb));
     return List.generate(
       decoded.length,
       (index) => ListItem.fromJson(

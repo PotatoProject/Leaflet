@@ -9,9 +9,9 @@ part of 'list_content.dart';
 
 ListItem _$ListItemFromJson(Map<String, dynamic> json) {
   return ListItem(
-    json['id'] as int,
-    json['text'] as String,
-    json['status'] as bool,
+    id: json['id'] as int,
+    text: json['text'] as String,
+    status: json['status'] as bool,
   );
 }
 

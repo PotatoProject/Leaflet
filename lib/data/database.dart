@@ -16,21 +16,22 @@ class Notes extends Table {
   TextColumn get content => text().nullable()();
   TextColumn get styleJson =>
       text().map(const ContentStyleConverter()).nullable()();
-  BoolColumn get starred => boolean().withDefault(Constant(false))();
+  BoolColumn get starred => boolean().withDefault(const Constant(false))();
   DateTimeColumn get creationDate => dateTime()();
   DateTimeColumn get lastModifyDate => dateTime()();
-  IntColumn get color => integer().withDefault(Constant(0))();
+  IntColumn get color => integer().withDefault(const Constant(0))();
   TextColumn get images => text().map(const ImageListConverter())();
-  BoolColumn get list => boolean().withDefault(Constant(false))();
+  BoolColumn get list => boolean().withDefault(const Constant(false))();
   TextColumn get listContent => text().map(const ListContentConverter())();
   TextColumn get reminders => text().map(const ReminderListConverter())();
   TextColumn get tags => text().map(const TagListConverter())();
-  BoolColumn get hideContent => boolean().withDefault(Constant(false))();
-  BoolColumn get lockNote => boolean().withDefault(Constant(false))();
-  BoolColumn get usesBiometrics => boolean().withDefault(Constant(false))();
-  BoolColumn get deleted => boolean().withDefault(Constant(false))();
-  BoolColumn get archived => boolean().withDefault(Constant(false))();
-  BoolColumn get synced => boolean().withDefault(Constant(false))();
+  BoolColumn get hideContent => boolean().withDefault(const Constant(false))();
+  BoolColumn get lockNote => boolean().withDefault(const Constant(false))();
+  BoolColumn get usesBiometrics =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
+  BoolColumn get archived => boolean().withDefault(const Constant(false))();
+  BoolColumn get synced => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

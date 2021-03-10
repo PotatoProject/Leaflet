@@ -15,7 +15,7 @@ part 'saved_image.g.dart';
 @JsonSerializable()
 class SavedImage {
   String id = Utils.generateId();
-  StorageLocation storageLocation = StorageLocation.SYNC;
+  StorageLocation storageLocation = StorageLocation.sync;
   String? hash;
   String? blurHash;
   String? fileExtension;
@@ -27,17 +27,17 @@ class SavedImage {
 
   @observable
   bool get existsLocally => File(path).existsSync();
-  get path => join(appInfo.tempDirectory.path, "$id$fileExtension");
+  String get path => join(appInfo.tempDirectory.path, "$id$fileExtension");
 
-  SavedImage(
-    this.id,
-    this.storageLocation,
+  SavedImage({
+    required this.id,
+    this.storageLocation = StorageLocation.sync,
     this.hash,
     this.fileExtension,
-    this.encrypted,
+    this.encrypted = false,
     this.width,
     this.height,
-  );
+  });
   SavedImage.empty();
 
   Size get size => Size(width!, height!);
@@ -55,4 +55,4 @@ class SavedImage {
   String toString() => json.encode(toJson());
 }
 
-enum StorageLocation { LOCAL, SYNC }
+enum StorageLocation { local, sync }
