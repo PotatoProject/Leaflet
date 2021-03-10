@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'dart:convert';
 
 import 'package:moor/moor.dart';
@@ -7,7 +9,7 @@ import 'package:potato_notes/internal/utils.dart';
 class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
   const ImageListConverter();
   @override
-  List<SavedImage> mapToDart(String fromDb) {
+  List<SavedImage>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -23,7 +25,7 @@ class ImageListConverter extends TypeConverter<List<SavedImage>, String> {
   }
 
   @override
-  String mapToSql(List<SavedImage> value) {
+  String? mapToSql(List<SavedImage>? value) {
     if (value == null) {
       return null;
     }

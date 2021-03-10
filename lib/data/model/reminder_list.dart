@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'dart:convert';
 
 import 'package:moor/moor.dart';
@@ -6,7 +8,7 @@ import 'package:potato_notes/internal/utils.dart';
 class ReminderListConverter extends TypeConverter<List<DateTime>, String> {
   const ReminderListConverter();
   @override
-  List<DateTime> mapToDart(String fromDb) {
+  List<DateTime>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       return null;
     }
@@ -20,7 +22,7 @@ class ReminderListConverter extends TypeConverter<List<DateTime>, String> {
   }
 
   @override
-  String mapToSql(List<DateTime> value) {
+  String? mapToSql(List<DateTime>? value) {
     if (value == null) {
       return null;
     }

@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';

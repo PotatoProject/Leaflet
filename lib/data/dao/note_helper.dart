@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// @dart=2.12
+
 import 'package:loggy/loggy.dart';
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
@@ -135,13 +136,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
 class SearchQuery {
   bool caseSensitive;
   int _color;
-  DateTime date;
+  DateTime? date;
   DateFilterMode dateMode;
   List<String> tags = [];
   bool onlyFavourites;
   SearchReturnMode returnMode;
 
-  int get color => _color ?? 0;
+  int get color => _color;
 
   set color(int value) {
     if (value == -1) {
@@ -196,9 +197,9 @@ class SearchReturnMode {
       ];
 
   SearchReturnMode copyWith({
-    bool fromNormal,
-    bool fromArchive,
-    bool fromTrash,
+    bool? fromNormal,
+    bool? fromArchive,
+    bool? fromTrash,
   }) {
     return SearchReturnMode(
       fromNormal: fromNormal ?? this.fromNormal,
@@ -218,7 +219,8 @@ class SearchReturnMode {
   }
 
   @override
-  int get hashCode => hashValues(fromNormal, fromArchive, fromTrash);
+  int get hashCode =>
+      fromNormal.hashCode ^ fromArchive.hashCode ^ fromTrash.hashCode;
 }
 
 enum DateFilterMode {

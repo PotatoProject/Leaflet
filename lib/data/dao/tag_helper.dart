@@ -1,3 +1,5 @@
+// @dart=2.12
+
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
 
