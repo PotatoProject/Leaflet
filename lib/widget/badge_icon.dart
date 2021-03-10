@@ -8,7 +8,7 @@ class BadgeIcon extends StatelessWidget {
   final double badgeSize;
   final AlignmentGeometry badgeAlignment;
 
-  BadgeIcon({
+  const BadgeIcon({
     this.icon,
     this.badgeIcon,
     this.size = 24,
@@ -100,7 +100,7 @@ class _BadgeClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(_BadgeClipper old) {
-    return this.alignment != old.alignment || this.size != old.size;
+    return alignment != old.alignment || size != old.size;
   }
 }
 
@@ -134,6 +134,6 @@ class _BadgeLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_BadgeLayoutDelegate old) {
-    return this.alignment != old.alignment || this.direction != old.direction;
+    return alignment != old.alignment || direction != old.direction;
   }
 }

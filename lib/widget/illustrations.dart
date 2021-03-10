@@ -116,7 +116,7 @@ class IllustrationPaths {
 
   PathInfo get archive => PathInfo(
         name: "archive",
-        size: Size(195, 165.33),
+        size: const Size(195, 165.33),
         data: [
           PathData(
             path:
@@ -172,7 +172,7 @@ class IllustrationPaths {
 
   PathInfo get trash => PathInfo(
         name: "trash",
-        size: Size(204, 166),
+        size: const Size(204, 166),
         data: [
           PathData(
             path:
@@ -219,7 +219,7 @@ class IllustrationPaths {
 
   PathInfo get noNotes => PathInfo(
         name: "no_notes",
-        size: Size(156, 133),
+        size: const Size(156, 133),
         data: [
           PathData(
             path:
@@ -335,7 +335,7 @@ class IllustrationPaths {
 
   PathInfo get nothingFound => PathInfo(
         name: "nothing_found",
-        size: Size(109, 84),
+        size: const Size(109, 84),
         data: [
           PathData(
             path:
@@ -397,7 +397,7 @@ class IllustrationPaths {
 
   PathInfo get typeToSearch => PathInfo(
         name: "type_to_search",
-        size: Size(149, 84),
+        size: const Size(149, 84),
         data: [
           PathData(
             path:

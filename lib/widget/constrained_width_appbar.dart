@@ -32,6 +32,6 @@ class ConstrainedWidthAppbar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return Size.fromHeight(56.0);
+    return const Size.fromHeight(56.0);
   }
 }

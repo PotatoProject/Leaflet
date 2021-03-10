@@ -7,7 +7,7 @@ class BasePageNavigationBar extends StatelessWidget {
   final bool enabled;
   final ValueChanged<int> onPageChanged;
 
-  BasePageNavigationBar({
+  const BasePageNavigationBar({
     @required this.items,
     this.index = 0,
     this.enabled = true,
@@ -20,25 +20,24 @@ class BasePageNavigationBar extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 0.5),
+            offset: const Offset(0, 0.5),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.039),
           ),
           BoxShadow(
-            offset: Offset(0, 3.75),
+            offset: const Offset(0, 3.75),
             blurRadius: 11,
             color: Colors.black.withOpacity(0.19),
           ),
         ],
       ),
       child: Material(
-        elevation: 0,
         color: context.theme.canvasColor,
         child: IgnorePointer(
           ignoring: !enabled,
           child: AnimatedOpacity(
             opacity: enabled ? 1.0 : 0.5,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: BottomNavigationBar(
               items: items
                   .map(

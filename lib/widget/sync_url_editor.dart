@@ -25,7 +25,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(24),
             child: Text(
               "Change sync API url",
@@ -36,9 +36,9 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "URL",
                 border: UnderlineInputBorder(),
               ),
@@ -46,7 +46,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -54,7 +54,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
                   onPressed: () => context.pop(),
                   child: Text(LocaleStrings.common.cancel),
                 ),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: () async {
                     prefs.apiUrl = Utils.defaultApiUrl;

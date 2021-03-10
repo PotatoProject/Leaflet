@@ -35,13 +35,13 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
     return _BottomSheetBase(
-      child: child,
       route: this,
       backgroundColor: backgroundColor,
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
       childHandlesScroll: childHandlesScroll,
+      child: child,
     );
   }
 
@@ -49,10 +49,10 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final bool maintainState;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 300);
+  Duration get transitionDuration => const Duration(milliseconds: 300);
 
   @override
-  Duration get reverseTransitionDuration => Duration(milliseconds: 250);
+  Duration get reverseTransitionDuration => const Duration(milliseconds: 250);
 
   @override
   bool get barrierDismissible => true;
@@ -70,7 +70,7 @@ class _BottomSheetBase extends StatefulWidget {
   final Clip clipBehavior;
   final bool childHandlesScroll;
 
-  _BottomSheetBase({
+  const _BottomSheetBase({
     @required this.child,
     @required this.route,
     this.backgroundColor,
@@ -89,7 +89,8 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
   Curve _curve = decelerateEasing;
 
   double get _childHeight {
-    final RenderBox box = _childKey.currentContext.findRenderObject();
+    final RenderBox box =
+        _childKey.currentContext.findRenderObject() as RenderBox;
     return box.size.height;
   }
 
@@ -100,13 +101,11 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
       builder: (context, _) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            final double shortestSide = 480;
+            const double shortestSide = 480;
             final int roundedShortestSide = (shortestSide / 10).round() * 10;
 
             final BoxConstraints _constraints = BoxConstraints(
-              minWidth: 0,
               maxWidth: roundedShortestSide.toDouble(),
-              minHeight: 0.0,
               maxHeight: min(
                 600.0 + context.viewInsets.bottom,
                 context.mSize.height,
@@ -136,10 +135,11 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                       if (details.primaryVelocity > 350) {
                         final bool _closeSheet =
                             details.velocity.pixelsPerSecond.dy > 0;
-                        if (_closeSheet)
+                        if (_closeSheet) {
                           widget.route.navigator?.pop();
-                        else
+                        } else {
                           widget.route.controller.fling(velocity: 1);
+                        }
 
                         return;
                       }
@@ -152,7 +152,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                     }
                   : null,
               child: AnimatedAlign(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 curve: decelerateEasing,
                 alignment: _useDesktopLayout
                     ? Alignment.center
@@ -177,7 +177,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                         elevation: widget.elevation ?? 1,
                         clipBehavior: widget.clipBehavior ?? Clip.antiAlias,
                         child: AnimatedPadding(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: decelerateEasing,
                           padding: EdgeInsets.only(
                             bottom:
@@ -216,7 +216,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                       } else {
                         return SlideTransition(
                           position: Tween<Offset>(
-                            begin: Offset(0, 1),
+                            begin: const Offset(0, 1),
                             end: Offset.zero,
                           ).animate(
                             CurvedAnimation(

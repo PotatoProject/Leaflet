@@ -66,13 +66,13 @@ class DependentScaffold extends StatelessWidget {
       context.basePage.setAppBar(appBar);
 
       if (secondaryAppBar != null) {
-        if (!(secondaryAppBar is DefaultAppBar)) {
+        if (secondaryAppBar is! DefaultAppBar) {
           context.basePage.setSecondaryAppBar(secondaryAppBar);
         } else {
           context.basePage.setSecondaryAppBar(null);
         }
       } else if (useAppBarAsSecondary && appBar != null) {
-        if (!(appBar is DefaultAppBar)) {
+        if (appBar is! DefaultAppBar) {
           context.basePage.setSecondaryAppBar(appBar);
         } else {
           context.basePage.setSecondaryAppBar(null);

@@ -6,7 +6,7 @@ import 'package:potato_notes/internal/utils.dart';
 class RGBColorPicker extends StatefulWidget {
   final Color initialColor;
 
-  RGBColorPicker({
+  const RGBColorPicker({
     this.initialColor = const Color(0xFFFF0000),
   });
 
@@ -28,7 +28,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
   }
 
   @override
-  void setState(fn) {
+  void setState(VoidCallback fn) {
     super.setState(fn);
     controller.text =
         currentColor.value.toRadixString(16).substring(2, 8).toUpperCase();
@@ -53,7 +53,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          double shortestSide = constraints.maxWidth;
+          final double shortestSide = constraints.maxWidth;
 
           return Padding(
             padding: EdgeInsets.only(
@@ -110,7 +110,7 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                       Container(
                         height: shortestSide / 2,
                         width: shortestSide / 2,
-                        padding: EdgeInsets.symmetric(horizontal: 22),
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -119,21 +119,21 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                               onChange: (newColor) {
                                 setState(() => currentColor = newColor);
                               },
-                              rgb: RGB.RED,
+                              rgb: RGB.red,
                             ),
                             ColorSlider(
                               color: currentColor,
                               onChange: (newColor) {
                                 setState(() => currentColor = newColor);
                               },
-                              rgb: RGB.GREEN,
+                              rgb: RGB.green,
                             ),
                             ColorSlider(
                               color: currentColor,
                               onChange: (newColor) {
                                 setState(() => currentColor = newColor);
                               },
-                              rgb: RGB.BLUE,
+                              rgb: RGB.blue,
                             ),
                           ],
                         ),
@@ -172,7 +172,7 @@ class ColorSlider extends StatelessWidget {
   final Function(Color) onChange;
   final RGB rgb;
 
-  ColorSlider({
+  const ColorSlider({
     @required this.color,
     @required this.onChange,
     @required this.rgb,
@@ -186,14 +186,14 @@ class ColorSlider extends StatelessWidget {
     return Row(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(right: 0),
+          padding: EdgeInsets.zero,
           child: SizedBox.fromSize(
-            size: Size.square(24),
+            size: const Size.square(24),
             child: Center(
               child: Text(
-                rgb == RGB.RED
+                rgb == RGB.red
                     ? "R"
-                    : rgb == RGB.GREEN
+                    : rgb == RGB.green
                         ? "G"
                         : "B",
                 style: TextStyle(
@@ -204,26 +204,22 @@ class ColorSlider extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: SliderTheme(
-            data: SliderThemeData(),
-            child: Slider(
-              activeColor: widgetColor,
-              inactiveColor: widgetColor.withOpacity(0.4),
-              max: 255,
-              min: 0,
-              value: (rgb == RGB.RED
-                      ? color.red
-                      : rgb == RGB.GREEN
-                          ? color.green
-                          : color.blue)
-                  .toDouble(),
-              onChanged: (value) => onChange(
-                rgb == RGB.RED
-                    ? color.withRed(value.toInt())
-                    : rgb == RGB.GREEN
-                        ? color.withGreen(value.toInt())
-                        : color.withBlue(value.toInt()),
-              ),
+          child: Slider(
+            activeColor: widgetColor,
+            inactiveColor: widgetColor.withOpacity(0.4),
+            max: 255,
+            value: (rgb == RGB.red
+                    ? color.red
+                    : rgb == RGB.green
+                        ? color.green
+                        : color.blue)
+                .toDouble(),
+            onChanged: (value) => onChange(
+              rgb == RGB.red
+                  ? color.withRed(value.toInt())
+                  : rgb == RGB.green
+                      ? color.withGreen(value.toInt())
+                      : color.withBlue(value.toInt()),
             ),
           ),
         ),
@@ -232,21 +228,4 @@ class ColorSlider extends StatelessWidget {
   }
 }
 
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  Rect getPreferredRect({
-    @required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    @required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final double trackHeight = sliderTheme.trackHeight;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
-  }
-}
-
-enum RGB { RED, GREEN, BLUE }
+enum RGB { red, green, blue }

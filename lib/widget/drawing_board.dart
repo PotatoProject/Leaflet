@@ -10,7 +10,7 @@ class DrawingBoard extends StatefulWidget {
   final Color color;
   final String path;
 
-  DrawingBoard({
+  const DrawingBoard({
     this.repaintKey,
     this.controller,
     this.color,
@@ -22,8 +22,8 @@ class DrawingBoard extends StatefulWidget {
 }
 
 class _DrawingBoardState extends State<DrawingBoard> {
-  List<DrawObject> _objects = [];
-  List<DrawObject> _backupObjects = [];
+  final List<DrawObject> _objects = [];
+  final List<DrawObject> _backupObjects = [];
   int _currentIndex;
   int _actionQueueIndex = 0;
   bool _saved = true;
@@ -37,7 +37,8 @@ class _DrawingBoardState extends State<DrawingBoard> {
   }
 
   set backupObjects(List<DrawObject> value) {
-    _backupObjects = value;
+    _backupObjects.clear();
+    _backupObjects.addAll(value);
     setState(() {});
   }
 
@@ -56,12 +57,12 @@ class _DrawingBoardState extends State<DrawingBoard> {
   void initState() {
     super.initState();
 
-    widget.controller?._provideState(this);
+    widget.controller?._state = this;
 
     if (widget.path != null) {
       final ImageProvider image = FileImage(File(widget.path));
 
-      image?.resolve(ImageConfiguration())?.addListener(
+      image?.resolve(const ImageConfiguration())?.addListener(
         ImageStreamListener((image, synchronousCall) {
           _image = image.image;
           setState(() {});
@@ -121,7 +122,9 @@ class DrawPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.saveLayer(Rect.fromLTWH(0, 0, size.width, size.height), Paint());
-    objects.forEach((object) => object.render(canvas));
+    for (final DrawObject object in objects) {
+      object.render(canvas);
+    }
     canvas.restore();
   }
 
@@ -163,14 +166,12 @@ class BackgroundPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(BackgroundPainter oldDelegate) {
-    return oldDelegate.image != this.image;
+    return oldDelegate.image != image;
   }
 }
 
 class DrawingBoardController extends ChangeNotifier {
   _DrawingBoardState _state;
-
-  void _provideState(_DrawingBoardState state) => this._state = state;
 
   void clearCanvas() => _state._clearCanvas();
 

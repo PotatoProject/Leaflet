@@ -24,7 +24,7 @@ class NoteView extends StatefulWidget {
   final ValueChanged<bool> onCheckboxChanged;
   final bool allowSelection;
 
-  NoteView({
+  const NoteView({
     Key key,
     @required this.note,
     this.onTap,
@@ -134,10 +134,10 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         vertical: 16 + context.theme.visualDensity.vertical,
                       ),
                       child: SeparatedList(
-                        children: content,
                         separator: SizedBox(
                           height: 4 + context.theme.visualDensity.vertical,
                         ),
+                        children: content,
                       ),
                     ),
                   ),
@@ -165,13 +165,12 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                 top: 0,
                 child: AnimatedOpacity(
                   opacity: showCheckbox ? 1 : 0,
-                  duration: Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200),
                   child: Container(
                     alignment: AlignmentDirectional.topEnd,
-                    padding: EdgeInsetsDirectional.only(top: 8, end: 8),
+                    padding: const EdgeInsetsDirectional.only(top: 8, end: 8),
                     height: 64,
                     width: 64,
-                    clipBehavior: Clip.none,
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
                         center: Alignment.topRight,
@@ -203,7 +202,6 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         ),
                         activeColor: checkBoxColor,
                         checkColor: checkColor,
-                        shapeRadius: Radius.circular(2),
                       ),
                     ),
                   ),
@@ -258,8 +256,8 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         !widget.note.hideContent) {
       items.add(
         SeparatedList(
+          separator: const SizedBox(height: 4),
           children: listContentWidgets,
-          separator: SizedBox(height: 4),
         ),
       );
     }
@@ -277,10 +275,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
               : context.theme.cardColor;
           final bool showMoreItem = index == 5;
           final Widget icon = showMoreItem
-              ? Icon(
-                  Icons.add,
-                  size: 20,
-                )
+              ? const Icon(Icons.add, size: 20)
               : NoteViewCheckbox(
                   value: item.status,
                   activeColor: widget.note.color != 0
@@ -306,15 +301,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   IgnorePointer(
                     ignoring: !isMouseConnected || widget.selectorOpen,
                     child: SizedBox.fromSize(
-                      size: Size.square(24),
+                      size: const Size.square(24),
                       child: Center(
                         child: icon,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  const SizedBox(width: 8),
                   SizedBox(
                     width: constraints.maxWidth - 32,
                     child: Text(
@@ -338,7 +331,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         },
       );
 
-  void showOptionsMenu(details) async {
+  Future<void> showOptionsMenu(TapDownDetails details) async {
     final SelectionOptions selectionOptions =
         context.selectionState.selectionOptions;
     final List<SelectionOptionEntry> everyOption =
@@ -348,7 +341,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     final List<SelectionOptionEntry> oneNoteOptions =
         everyOption.where((e) => e.oneNoteOnly).toList();
 
-    final value = await showMenu(
+    final String value = await showMenu<String>(
       context: context,
       position: RelativeRect.fromLTRB(
         details.globalPosition.dx,
@@ -356,23 +349,23 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         details.globalPosition.dx,
         details.globalPosition.dy,
       ),
-      items: <PopupMenuEntry>[
+      items: <PopupMenuEntry<String>>[
         ...options
-            .map<PopupMenuEntry>(
-              (e) => PopupMenuItemWithIcon(
+            .map<PopupMenuEntry<String>>(
+              (e) => PopupMenuItemWithIcon<String>(
                 icon: Icon(e.icon),
-                child: Text(e.title),
                 value: e.value,
+                child: Text(e.title),
               ),
             )
             .toList(),
-        if (oneNoteOptions.isNotEmpty) PopupMenuDivider(),
+        if (oneNoteOptions.isNotEmpty) const PopupMenuDivider(),
         ...oneNoteOptions
-            .map<PopupMenuEntry>(
-              (e) => PopupMenuItemWithIcon(
+            .map<PopupMenuEntry<String>>(
+              (e) => PopupMenuItemWithIcon<String>(
                 icon: Icon(e.icon),
-                child: Text(e.title),
                 value: e.value,
+                child: Text(e.title),
               ),
             )
             .toList(),

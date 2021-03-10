@@ -16,7 +16,7 @@ class QueryFilters extends StatefulWidget {
   final SearchQuery query;
   final Function() filterChangedCallback;
 
-  QueryFilters({
+  const QueryFilters({
     @required this.query,
     this.filterChangedCallback,
   });
@@ -32,7 +32,7 @@ class _QueryFiltersState extends State<QueryFilters> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SwitchListTile(
-          secondary: Icon(Icons.format_size),
+          secondary: const Icon(Icons.format_size),
           title: Text(LocaleStrings.common.caseSensitive),
           value: widget.query.caseSensitive,
           activeColor: context.theme.accentColor,
@@ -42,8 +42,8 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         SwitchListTile(
-          secondary: Icon(Icons.favorite_border),
-          title: Text("Favourites only"),
+          secondary: const Icon(Icons.favorite_border),
+          title: const Text("Favourites only"),
           value: widget.query.onlyFavourites,
           activeColor: context.theme.accentColor,
           onChanged: (value) {
@@ -52,8 +52,8 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.folder_outlined),
-          title: Text("Note locations"),
+          leading: const Icon(Icons.folder_outlined),
+          title: const Text("Note locations"),
           subtitle: Text(returnModeToString),
           onTap: () async {
             await Utils.showNotesModalBottomSheet(
@@ -70,7 +70,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.color_lens_outlined),
+          leading: const Icon(Icons.color_lens_outlined),
           title: Text(LocaleStrings.common.colorFilter),
           trailing: Icon(
             Icons.brightness_1,
@@ -85,10 +85,11 @@ class _QueryFiltersState extends State<QueryFilters> {
               builder: (context) => NoteColorSelector(
                 selectedColor: widget.query.color ?? 0,
                 onColorSelect: (color) {
-                  if (color == 0)
+                  if (color == 0) {
                     context.pop(-1);
-                  else
+                  } else {
                     context.pop(color);
+                  }
                 },
               ),
             );
@@ -100,12 +101,12 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.date_range_outlined),
+          leading: const Icon(Icons.date_range_outlined),
           title: Text(LocaleStrings.common.dateFilter),
           subtitle: widget.query.date != null
-              ? Text(DateFormat("EEEE d MMM yyyy").format(widget.query.date) +
-                  " - " +
-                  DateFilterSelector.stringFromDateMode(widget.query.dateMode))
+              ? Text(
+                  "${DateFormat("EEEE d MMM yyyy").format(widget.query.date)} - ${DateFilterSelector.stringFromDateMode(widget.query.dateMode)}",
+                )
               : null,
           onTap: () async {
             await Utils.showNotesModalBottomSheet(
@@ -124,7 +125,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                 onReset: () {
                   setState(() {
                     widget.query.date = null;
-                    widget.query.dateMode = DateFilterMode.ONLY;
+                    widget.query.dateMode = DateFilterMode.only;
                   });
                   widget.filterChangedCallback?.call();
                 },
@@ -133,8 +134,8 @@ class _QueryFiltersState extends State<QueryFilters> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.label_outline),
-          title: Text("Tags"),
+          leading: const Icon(Icons.label_outline),
+          title: const Text("Tags"),
           trailing: Text(
             widget.query.tags.isNotEmpty
                 ? "${widget.query.tags.length} selected"
@@ -154,10 +155,10 @@ class _QueryFiltersState extends State<QueryFilters> {
             widget.filterChangedCallback?.call();
           },
         ),
-        Divider(),
+        const Divider(),
         ListTile(
-          leading: Icon(MdiIcons.filterRemoveOutline),
-          title: Text("Clear filters"),
+          leading: const Icon(MdiIcons.filterRemoveOutline),
+          title: const Text("Clear filters"),
           onTap: () async {
             widget.query.reset();
             setState(() {});

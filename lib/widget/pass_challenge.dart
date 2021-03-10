@@ -8,7 +8,7 @@ class PassChallenge extends StatefulWidget {
   final Function(String) onSave;
   final Function() onChallengeSuccess;
 
-  PassChallenge({
+  const PassChallenge({
     this.editMode = false,
     this.onSave,
     this.onChallengeSuccess,
@@ -46,23 +46,22 @@ class _PassChallengeState extends State<PassChallenge> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Text(
               widget.editMode
                   ? LocaleStrings.common.masterPassModify
                   : LocaleStrings.common.masterPassConfirm,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: TextFormField(
               keyboardType: numericPass
-                  ? TextInputType.numberWithOptions(
-                      signed: false, decimal: false)
+                  ? const TextInputType.numberWithOptions()
                   : TextInputType.visiblePassword,
               controller: controller,
               obscureText: !showPass,
@@ -79,11 +78,10 @@ class _PassChallengeState extends State<PassChallenge> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: controller.text.length >= 4
                       ? widget.editMode
@@ -92,9 +90,10 @@ class _PassChallengeState extends State<PassChallenge> {
                               if (prefs.masterPass == controller.text) {
                                 setState(() => status = null);
                                 widget.onChallengeSuccess();
-                              } else
+                              } else {
                                 setState(
                                     () => status = "Incorrect master pass");
+                              }
                             }
                       : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),

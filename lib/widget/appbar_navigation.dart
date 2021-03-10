@@ -9,7 +9,7 @@ class AppbarNavigation extends StatelessWidget {
   final bool enabled;
   final ValueChanged<int> onPageChanged;
 
-  AppbarNavigation({
+  const AppbarNavigation({
     @required this.items,
     @required this.index,
     this.enabled = true,
@@ -22,7 +22,7 @@ class AppbarNavigation extends StatelessWidget {
       ignoring: !enabled,
       child: AnimatedOpacity(
         opacity: enabled ? 1 : 0.5,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         child: Row(
           children: List.generate(
@@ -46,7 +46,7 @@ class _NavigationButton extends StatefulWidget {
   final Color selectedColor;
   final VoidCallback onTap;
 
-  _NavigationButton({
+  const _NavigationButton({
     @required this.item,
     this.selected = false,
     this.selectedColor,
@@ -65,7 +65,7 @@ class _NavigationButtonState extends State<_NavigationButton>
   void initState() {
     _ac = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
     super.initState();
   }
@@ -84,7 +84,7 @@ class _NavigationButtonState extends State<_NavigationButton>
 
   @override
   Widget build(BuildContext context) {
-    final AlignmentGeometry alignment = AlignmentDirectional(-1.0, -1.0);
+    const AlignmentGeometry alignment = AlignmentDirectional.topStart;
     final Animation<double> _curvedAnim = CurvedAnimation(
       parent: _ac,
       curve: Curves.linear,
@@ -93,9 +93,9 @@ class _NavigationButtonState extends State<_NavigationButton>
 
     return InkWell(
       onTap: widget.onTap,
-      customBorder: StadiumBorder(),
+      customBorder: const StadiumBorder(),
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
             IconTheme.merge(
@@ -120,7 +120,7 @@ class _NavigationButtonState extends State<_NavigationButton>
                       heightFactor: 1.0,
                       child: Row(
                         children: [
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             widget.item.label,
                             overflow: TextOverflow.ellipsis,

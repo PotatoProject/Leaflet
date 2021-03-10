@@ -9,7 +9,7 @@ class DrawerListTile extends StatefulWidget {
   final void Function() onTap;
   final bool active;
 
-  DrawerListTile({
+  const DrawerListTile({
     @required this.icon,
     this.activeIcon,
     @required this.title,
@@ -31,7 +31,7 @@ class _DrawerListTileState extends State<DrawerListTile>
     super.initState();
     _ac = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
   }
 
@@ -86,15 +86,13 @@ class _DrawerListTileState extends State<DrawerListTile>
             builder: (context, _) {
               return ClipRect(
                 child: Align(
-                  alignment: AlignmentDirectional(-1, 0),
+                  alignment: AlignmentDirectional.topCenter,
                   widthFactor: _curvedAc.value,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      SizedBox(
-                        width: 24,
-                      ),
+                      const SizedBox(width: 24),
                       Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: DefaultTextStyle(
@@ -119,12 +117,12 @@ class _DrawerListTileState extends State<DrawerListTile>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        Widget parent = InkWell(
+        final Widget parent = InkWell(
           onTap: widget.onTap,
           child: Container(
             height: height,
             width: constraints.maxWidth,
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: child,
           ),
         );

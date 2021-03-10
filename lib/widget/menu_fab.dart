@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class MenuFab extends StatefulWidget {
-  final Key key;
   final MenuFabEntry mainEntry;
   final List<MenuFabEntry> entries;
   final ShapeBorder fabShape;
@@ -26,8 +25,8 @@ class MenuFab extends StatefulWidget {
   final bool autofocus;
   final PageTransitionSwitcherTransitionBuilder transitionBuilder;
 
-  MenuFab({
-    this.key,
+  const MenuFab({
+    Key key,
     @required this.mainEntry,
     @required this.entries,
     this.fabShape = const StadiumBorder(),
@@ -60,7 +59,7 @@ class MenuFab extends StatefulWidget {
 }
 
 class _MenuFabState extends State<MenuFab> {
-  final Object heroTag = _DefaultHeroTag();
+  static const Object heroTag = _DefaultHeroTag();
 
   Color foregroundColor;
   Color backgroundColor;
@@ -168,7 +167,7 @@ class _MenuFabState extends State<MenuFab> {
     }
 
     final Widget _child = ConstrainedBox(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         minWidth: 56.0,
         minHeight: 56.0,
       ),
@@ -212,7 +211,7 @@ class _MenuFabState extends State<MenuFab> {
       elevation: _elevation,
       clipBehavior: Clip.antiAlias,
       color: Colors.transparent,
-      animationDuration: Duration(milliseconds: 300),
+      animationDuration: const Duration(milliseconds: 300),
       child: result,
     );
 
@@ -232,7 +231,7 @@ class _MenuFabState extends State<MenuFab> {
             parent: secondaryAnimation,
             curve: Curves.fastOutSlowIn,
           ),
-          box: context.findRenderObject(),
+          box: context.findRenderObject() as RenderBox,
           fabIcon: widget.mainEntry.icon,
           fabLabel: widget.mainEntry.label,
           fabOnTap: widget.mainEntry.onTap,
@@ -275,7 +274,7 @@ class _MenuFabRoute extends StatelessWidget {
   final double elevation;
   final PageTransitionSwitcherTransitionBuilder transitionBuilder;
 
-  _MenuFabRoute({
+  const _MenuFabRoute({
     @required this.box,
     @required this.fabIcon,
     @required this.fabLabel,
@@ -343,7 +342,10 @@ class _MenuFabRoute extends StatelessWidget {
             end: endShape,
           ).animate(animation);
 
-          Widget optionallyAnimate(Widget child, bool animate) =>
+          Widget optionallyAnimate({
+            @required Widget child,
+            @required bool animate,
+          }) =>
               Positioned.fill(
                 child: animate
                     ? transitionBuilder?.call(
@@ -358,12 +360,12 @@ class _MenuFabRoute extends StatelessWidget {
 
           final List<Widget> children = [
             optionallyAnimate(
-              fromHeroContext.widget,
-              flightDirection == HeroFlightDirection.pop,
+              child: fromHeroContext.widget,
+              animate: flightDirection == HeroFlightDirection.pop,
             ),
             optionallyAnimate(
-              toHeroContext.widget,
-              flightDirection == HeroFlightDirection.push,
+              child: toHeroContext.widget,
+              animate: flightDirection == HeroFlightDirection.push,
             ),
           ];
 
@@ -398,9 +400,9 @@ class _MenuFabRoute extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: ListView(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: entries,
+              physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
+              children: entries,
             ),
           ),
         ),
@@ -431,12 +433,12 @@ class _FabMenuLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_FabMenuLayoutDelegate old) {
-    return this.fabRect != old.fabRect;
+    return fabRect != old.fabRect;
   }
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    return BoxConstraints(maxWidth: 240);
+    return const BoxConstraints(maxWidth: 240);
   }
 
   @override
@@ -468,7 +470,7 @@ class _MenuEntryListTile extends StatelessWidget {
   final Color focusColor;
   final Color hoverColor;
 
-  _MenuEntryListTile({
+  const _MenuEntryListTile({
     this.leading,
     @required this.title,
     @required this.onTap,
@@ -491,15 +493,13 @@ class _MenuEntryListTile extends StatelessWidget {
           onTap?.call();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           height: 56.0 + baseAdjustment.dy,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (leading != null)
                 Padding(
-                  padding: EdgeInsetsDirectional.only(end: 16),
+                  padding: const EdgeInsetsDirectional.only(end: 16),
                   child: IconTheme.merge(
                     data: IconThemeData(
                       color: iconColor,

@@ -6,7 +6,7 @@ class FlatIconButton extends StatelessWidget {
   final Widget text;
   final VoidCallback onPressed;
 
-  FlatIconButton({
+  const FlatIconButton({
     @required this.icon,
     @required this.text,
     @required this.onPressed,
@@ -26,7 +26,7 @@ class FlatIconButton extends StatelessWidget {
       highlightColor: highlightColor,
       borderRadius: BorderRadius.circular(4),
       child: Padding(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 8,
         ),
@@ -38,7 +38,7 @@ class FlatIconButton extends StatelessWidget {
               ),
               child: text,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Theme(
               data: theme.copyWith(
                 iconTheme: theme.iconTheme.copyWith(

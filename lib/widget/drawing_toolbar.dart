@@ -12,7 +12,7 @@ class DrawingToolbar extends StatefulWidget {
   final DrawingBoardController boardController;
   final VoidCallback clearCanvas;
 
-  DrawingToolbar({
+  const DrawingToolbar({
     @required this.tools,
     this.controller,
     this.boardController,
@@ -36,13 +36,13 @@ class _DrawingToolbarState extends State<DrawingToolbar>
   void initState() {
     _ac = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
     _colorPanelAc = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
-    widget.controller?._provideState(this);
+    widget.controller?._state = this;
     widget.boardController.addListener(() {
       setState(() {});
     });
@@ -71,9 +71,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
     }
 
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 360,
-      ),
+      constraints: const BoxConstraints(maxWidth: 360),
       child: Material(
         color: context.theme.scaffoldBackgroundColor,
         elevation: 8,
@@ -95,10 +93,11 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                   final bool _animForward =
                       _ac.status == AnimationStatus.forward ||
                           _ac.status == AnimationStatus.completed;
-                  if (!_animForward)
+                  if (!_animForward) {
                     _ac.animateTo(1);
-                  else
+                  } else {
                     _ac.animateBack(0);
+                  }
                 }
 
                 if (_ac.value > 0.5) {
@@ -112,29 +111,27 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 elevation: 4,
                 child: Container(
                   height: 48,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.undo),
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        icon: const Icon(Icons.undo),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         tooltip: LocaleStrings.common.undo,
                         onPressed: widget.boardController.canUndo
                             ? () => widget.boardController.undo()
                             : null,
                       ),
                       IconButton(
-                        icon: Icon(Icons.redo),
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        icon: const Icon(Icons.redo),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         tooltip: LocaleStrings.common.redo,
                         onPressed: widget.boardController.canRedo
                             ? () => widget.boardController.redo()
                             : null,
                       ),
-                      VerticalDivider(
+                      const VerticalDivider(
                         indent: 8,
                         endIndent: 8,
                       ),
@@ -147,17 +144,18 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           color: widget.toolIndex == i
                               ? context.theme.accentColor
                               : null,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           onPressed: widget.toolIndex == i
                               ? () {
                                   _curve = decelerateEasing;
                                   final bool _animForward = _ac.status ==
                                           AnimationStatus.forward ||
                                       _ac.status == AnimationStatus.completed;
-                                  if (!_animForward)
+                                  if (!_animForward) {
                                     _ac.animateTo(1);
-                                  else
+                                  } else {
                                     _ac.animateBack(0);
+                                  }
                                 }
                               : () async {
                                   _curve = decelerateEasing;
@@ -167,9 +165,9 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                         );
                       }),
                       IconButton(
-                        icon: Icon(Icons.delete_outline),
+                        icon: const Icon(Icons.delete_outline),
                         tooltip: "Clear canvas",
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         onPressed: widget.clearCanvas,
                       ),
                     ],
@@ -182,13 +180,12 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 curve: _curve,
                 parent: _ac,
               ),
-              axis: Axis.vertical,
               axisAlignment: 1,
               child: Column(
                 children: [
                   Container(
                     height: 56,
-                    padding: EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.only(left: 4),
                     child: Material(
                       type: MaterialType.transparency,
                       child: Row(
@@ -197,10 +194,16 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           ...List.generate(
                             ToolSize.values.length,
                             (index) => InkWell(
+                              radius: 24,
+                              customBorder: const CircleBorder(),
+                              onTap: () {
+                                currentTool.size = ToolSize.values[index];
+                                setState(() {});
+                              },
                               child: SizedBox.fromSize(
-                                size: Size.square(42),
+                                size: const Size.square(42),
                                 child: CustomPaint(
-                                  size: Size.square(48),
+                                  size: const Size.square(48),
                                   painter: _ToolSizeButtonPainter(
                                     ToolSize.values[index] / 2,
                                     currentTool.size == ToolSize.values[index],
@@ -208,31 +211,26 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                                   ),
                                 ),
                               ),
-                              radius: 24,
-                              customBorder: CircleBorder(),
-                              onTap: () {
-                                currentTool.size = ToolSize.values[index];
-                                setState(() {});
-                              },
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           IconButton(
                             icon: RotationTransition(
                               turns: Tween<double>(begin: 0, end: 0.5)
                                   .animate(_colorPanelAc),
-                              child: Icon(Icons.expand_less),
+                              child: const Icon(Icons.expand_less),
                             ),
                             onPressed: currentTool.allowColor
                                 ? () {
-                                    if (_colorPanelAc.value > 0.5)
+                                    if (_colorPanelAc.value > 0.5) {
                                       _colorPanelAc.animateBack(0);
-                                    else
+                                    } else {
                                       _colorPanelAc.animateTo(1);
+                                    }
                                     setState(() {});
                                   }
                                 : null,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                           ),
                         ],
                       ),
@@ -240,9 +238,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                   ),
                   Visibility(
                     visible: widget.tools[widget.toolIndex].allowColor,
-                    child: Divider(
-                      height: 1,
-                    ),
+                    child: const Divider(height: 1),
                   ),
                   Visibility(
                     visible: widget.tools[widget.toolIndex].allowColor,
@@ -261,7 +257,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           _CollapsableWidget(
                             collapseStatus: _colorPanelAc,
                             child: _ColorStrip(
-                              type: ColorType.LIGHT,
+                              type: ColorType.light,
                               currentTool: widget.tools[widget.toolIndex],
                               onTap: (color) {
                                 widget.tools[widget.toolIndex].color = color;
@@ -270,7 +266,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                             ),
                           ),
                           _ColorStrip(
-                            type: ColorType.NORMAL,
+                            type: ColorType.normal,
                             currentTool: widget.tools[widget.toolIndex],
                             onTap: (color) {
                               widget.tools[widget.toolIndex].color = color;
@@ -280,7 +276,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           _CollapsableWidget(
                             collapseStatus: _colorPanelAc,
                             child: _ColorStrip(
-                              type: ColorType.DARK,
+                              type: ColorType.dark,
                               currentTool: widget.tools[widget.toolIndex],
                               onTap: (color) {
                                 widget.tools[widget.toolIndex].color = color;
@@ -313,7 +309,7 @@ class _CollapsableWidget extends StatelessWidget {
   final Widget child;
   final Animation<double> collapseStatus;
 
-  _CollapsableWidget({
+  const _CollapsableWidget({
     this.child,
     @required this.collapseStatus,
   });
@@ -339,7 +335,7 @@ class _ColorStrip extends StatelessWidget {
   final DrawingTool currentTool;
   final ValueChanged<Color> onTap;
 
-  _ColorStrip({
+  const _ColorStrip({
     @required this.type,
     this.currentTool,
     this.onTap,
@@ -348,9 +344,8 @@ class _ColorStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 7),
+        margin: const EdgeInsets.symmetric(horizontal: 7),
         height: 48,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -361,26 +356,26 @@ class _ColorStrip extends StatelessWidget {
 
               if (index == 0) {
                 switch (type) {
-                  case ColorType.DARK:
+                  case ColorType.dark:
                     color = Colors.grey;
                     break;
-                  case ColorType.LIGHT:
+                  case ColorType.light:
                     color = Colors.white;
                     break;
-                  case ColorType.NORMAL:
+                  case ColorType.normal:
                   default:
                     color = Colors.black;
                     break;
                 }
               } else {
                 switch (type) {
-                  case ColorType.DARK:
+                  case ColorType.dark:
                     color = Color(NoteColors.colorList[index].darkColor);
                     break;
-                  case ColorType.LIGHT:
+                  case ColorType.light:
                     color = Color(NoteColors.colorList[index].lightColor);
                     break;
-                  case ColorType.NORMAL:
+                  case ColorType.normal:
                   default:
                     color = Color(NoteColors.colorList[index].color);
                     break;
@@ -391,11 +386,14 @@ class _ColorStrip extends StatelessWidget {
                   34.0 - (currentTool.color == color ? 30.0 : 20.0);
 
               return SizedBox.fromSize(
-                size: Size.square(34),
+                size: const Size.square(34),
                 child: InkWell(
+                  radius: 20,
+                  customBorder: const CircleBorder(),
+                  onTap: () => onTap?.call(color),
                   child: AnimatedPadding(
                     padding: EdgeInsets.all(padding / 2),
-                    duration: Duration(milliseconds: 150),
+                    duration: const Duration(milliseconds: 150),
                     child: DecoratedBox(
                       decoration: ShapeDecoration(
                         shape: CircleBorder(
@@ -411,9 +409,6 @@ class _ColorStrip extends StatelessWidget {
                       ),
                     ),
                   ),
-                  radius: 20,
-                  customBorder: CircleBorder(),
-                  onTap: () => onTap?.call(color),
                 ),
               );
             },
@@ -428,10 +423,6 @@ class DrawingToolbarController {
   DrawingToolbarController();
 
   _DrawingToolbarState _state;
-
-  void _provideState(_DrawingToolbarState state) {
-    this._state = state;
-  }
 
   void closePanel() => _state.closePanel();
 }
@@ -450,40 +441,40 @@ class DrawingTool {
     @required this.toolType,
     this.allowColor = true,
     this.color = Colors.black,
-    this.size = ToolSize.FOUR,
+    this.size = ToolSize.four,
   });
 }
 
 class ToolSize {
-  static const double FOUR = 4;
-  static const double EIGHT = 8;
-  static const double TWELVE = 12;
-  static const double SIXTEEN = 16;
-  static const double TWENTYTWO = 22;
-  static const double TWENTYSIX = 26;
-  static const double THIRTYTWO = 32;
+  static const double four = 4;
+  static const double eight = 8;
+  static const double twelve = 12;
+  static const double sixteen = 16;
+  static const double twentyTwo = 22;
+  static const double twentySix = 26;
+  static const double thirtyTwo = 32;
 
   static const List<double> values = [
-    FOUR,
-    EIGHT,
-    TWELVE,
-    SIXTEEN,
-    TWENTYTWO,
-    TWENTYSIX,
-    THIRTYTWO,
+    four,
+    eight,
+    twelve,
+    sixteen,
+    twentyTwo,
+    twentySix,
+    thirtyTwo,
   ];
 }
 
 enum DrawTool {
-  PEN,
-  ERASER,
-  MARKER,
+  pen,
+  eraser,
+  marker,
 }
 
 enum ColorType {
-  NORMAL,
-  LIGHT,
-  DARK,
+  normal,
+  light,
+  dark,
 }
 
 class _ToolSizeButtonPainter extends CustomPainter {
@@ -513,6 +504,6 @@ class _ToolSizeButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ToolSizeButtonPainter old) {
-    return this.radius != old.radius || this.selected != old.selected;
+    return radius != old.radius || selected != old.selected;
   }
 }

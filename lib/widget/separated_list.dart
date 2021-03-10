@@ -8,7 +8,7 @@ class SeparatedList extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final MainAxisSize mainAxisSize;
 
-  SeparatedList({
+  const SeparatedList({
     @required this.children,
     @required this.separator,
     this.axis = Axis.vertical,

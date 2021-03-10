@@ -16,25 +16,25 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    return Size.fromHeight(56.0);
+    return const Size.fromHeight(56.0);
   }
 
   @override
   Widget build(BuildContext context) {
     final state = context.basePage;
     final Widget _leading = state != null
-        ? Center(
+        ? const Center(
             child: Illustration.leaflet(
               height: 28,
             ),
           )
         : null;
     final Widget _title = state != null
-        ? Text(
+        ? const Text(
             "leaflet",
             style: TextStyle(fontFamily: "ValeraRound"),
           )
-        : title ?? null;
+        : title;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -51,8 +51,8 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
           Visibility(
             visible: state != null,
             child: IconButton(
-              padding: EdgeInsets.all(16),
-              icon: AccountAvatar(),
+              padding: const EdgeInsets.all(16),
+              icon: const AccountAvatar(),
               splashRadius: 28,
               tooltip: LocaleStrings.mainPage.account,
               onPressed: () {

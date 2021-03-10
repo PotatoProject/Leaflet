@@ -223,7 +223,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
     final ThemeData themeData = context.theme;
-    Size size = Size.square(24);
+    const Size size = Size.square(24);
     final BoxConstraints additionalConstraints = BoxConstraints.tight(size);
     final MouseCursor effectiveMouseCursor =
         MaterialStateProperty.resolveAs<MouseCursor>(
@@ -452,9 +452,9 @@ class _RenderCheckbox extends RenderToggleable {
     // As t goes from 0.0 to 1.0, animate the two check mark strokes from the
     // short side to the long side.
     final Path path = Path();
-    Offset start = Offset(width * 0.15, width * 0.45);
-    Offset mid = Offset(width * 0.4, width * 0.7);
-    Offset end = Offset(width * 0.85, width * 0.25);
+    final Offset start = Offset(width * 0.15, width * 0.45);
+    final Offset mid = Offset(width * 0.4, width * 0.7);
+    final Offset end = Offset(width * 0.85, width * 0.25);
     if (t < 0.5) {
       final double strokeT = t * 2.0;
       final Offset drawMid = Offset.lerp(start, mid, strokeT);
@@ -474,9 +474,9 @@ class _RenderCheckbox extends RenderToggleable {
     assert(t >= 0.0 && t <= 1.0);
     // As t goes from 0.0 to 1.0, animate the horizontal line from the
     // mid point outwards.
-    Offset start = Offset(width * 0.2, width * 0.5);
-    Offset mid = Offset(width * 0.5, width * 0.5);
-    Offset end = Offset(width * 0.8, width * 0.5);
+    final Offset start = Offset(width * 0.2, width * 0.5);
+    final Offset mid = Offset(width * 0.5, width * 0.5);
+    final Offset end = Offset(width * 0.8, width * 0.5);
     final Offset drawStart = Offset.lerp(start, mid, 1.0 - t);
     final Offset drawEnd = Offset.lerp(mid, end, t);
     canvas.drawLine(origin + drawStart, origin + drawEnd, paint);
@@ -508,10 +508,11 @@ class _RenderCheckbox extends RenderToggleable {
         canvas.drawRRect(outer, paint);
 
         final double tShrink = (t - 0.5) * 2.0;
-        if (_oldValue == null || value == null)
+        if (_oldValue == null || value == null) {
           _drawDash(canvas, origin, tShrink, strokePaint);
-        else
+        } else {
           _drawCheck(canvas, origin, tShrink, strokePaint);
+        }
       }
     } else {
       // Two cases: null to true, true to null
@@ -521,16 +522,18 @@ class _RenderCheckbox extends RenderToggleable {
 
       if (tNormalized <= 0.5) {
         final double tShrink = 1.0 - tNormalized * 2.0;
-        if (_oldValue == true)
+        if (_oldValue == true) {
           _drawCheck(canvas, origin, tShrink, strokePaint);
-        else
+        } else {
           _drawDash(canvas, origin, tShrink, strokePaint);
+        }
       } else {
         final double tExpand = (tNormalized - 0.5) * 2.0;
-        if (value == true)
+        if (value == true) {
           _drawCheck(canvas, origin, tExpand, strokePaint);
-        else
+        } else {
           _drawDash(canvas, origin, tExpand, strokePaint);
+        }
       }
     }
   }

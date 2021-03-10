@@ -10,7 +10,7 @@ class NoteImage extends StatefulWidget {
   final SavedImage savedImage;
   final BoxFit fit;
 
-  NoteImage({
+  const NoteImage({
     @required this.savedImage,
     this.fit = BoxFit.cover,
   });
@@ -69,33 +69,32 @@ class _NoteImageState extends State<NoteImage> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable:
-            queueItem?.status ?? ValueNotifier(QueueItemStatus.COMPLETE),
+            queueItem?.status ?? ValueNotifier(QueueItemStatus.complete),
         builder: (context, value, _) {
           return Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NoteImage.getProvider(widget.savedImage),
                 fit: widget.fit,
-                alignment: Alignment.center,
               ),
             ),
             child: SizedBox.expand(
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Visibility(
-                  visible: value == QueueItemStatus.ONGOING,
+                  visible: value == QueueItemStatus.ongoing,
                   child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     child: SizedBox.fromSize(
-                      size: Size.square(32),
+                      size: const Size.square(32),
                       child: Card(
                         margin: EdgeInsets.zero,
                         elevation: 4,
-                        shape: CircleBorder(),
+                        shape: const CircleBorder(),
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: ValueListenableBuilder(
+                            padding: const EdgeInsets.all(8),
+                            child: ValueListenableBuilder<double>(
                               valueListenable:
                                   queueItem?.progress ?? ValueNotifier(null),
                               builder: (context, value, _) {

@@ -20,8 +20,8 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.filter_list),
-        padding: EdgeInsets.all(0),
+        icon: const Icon(Icons.filter_list),
+        padding: EdgeInsets.zero,
         onPressed: () => Utils.showNotesModalBottomSheet(
           context: context,
           builder: (context) => QueryFilters(
@@ -35,12 +35,12 @@ class NoteSearchDelegate extends CustomSearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return StreamBuilder<Object>(
-      stream: helper.noteStream(ReturnMode.LOCAL),
+    return StreamBuilder<List<Note>>(
+      stream: helper.noteStream(ReturnMode.local),
       builder: (context, snapshot) {
         return FutureBuilder<List<Note>>(
           future: getNotesForQuery(snapshot.data ?? []),
-          initialData: [],
+          initialData: const [],
           builder: (context, snapshot) {
             final Brightness brightness = context.theme.brightness;
             final Widget illustration = query.isEmpty
@@ -54,15 +54,16 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                     Illustration.nothingFound(brightness: brightness),
                     LocaleStrings.search.nothingFound,
                   );
-            snapshot.data
-                .sort((a, b) => b.creationDate.compareTo(a.creationDate));
+            final List<Note> results = List.from(snapshot.data);
+
+            results.sort((a, b) => b.creationDate.compareTo(a.creationDate));
 
             return NoteListWidget(
               itemBuilder: (context, index) => NoteView(
-                note: snapshot.data[index],
-                onTap: () => openNote(context, snapshot.data[index]),
+                note: results[index],
+                onTap: () => openNote(context, results[index]),
               ),
-              noteCount: snapshot.data.length,
+              noteCount: results.length,
               customIllustration: illustration,
             );
           },
@@ -71,7 +72,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     );
   }
 
-  void openNote(BuildContext context, Note note) async {
+  Future<void> openNote(BuildContext context, Note note) async {
     final bool status = await Utils.showNoteLockDialog(
       context: context,
       showLock: note.lockNote,
@@ -100,7 +101,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       return [];
     }
 
-    for (Note note in notes) {
+    for (final Note note in notes) {
       final bool titleMatch = _getTextBool(note.title);
       final bool contentMatch =
           !note.hideContent ? _getTextBool(note.content) : false;
@@ -135,24 +136,24 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   bool _getDateBool(DateTime noteDate) {
     if (searchQuery.date == null) return false;
 
-    DateTime sanitizedNoteDate = DateTime(
+    final DateTime sanitizedNoteDate = DateTime(
       noteDate.year,
       noteDate.month,
       noteDate.day,
     );
 
-    DateTime sanitizedQueryDate = DateTime(
+    final DateTime sanitizedQueryDate = DateTime(
       searchQuery.date.year,
       searchQuery.date.month,
       searchQuery.date.day,
     );
 
     switch (searchQuery.dateMode) {
-      case DateFilterMode.AFTER:
+      case DateFilterMode.after:
         return sanitizedNoteDate.isAfter(sanitizedQueryDate);
-      case DateFilterMode.BEFORE:
+      case DateFilterMode.before:
         return sanitizedNoteDate.isBefore(sanitizedQueryDate);
-      case DateFilterMode.ONLY:
+      case DateFilterMode.only:
       default:
         return sanitizedNoteDate.isAtSameMomentAs(sanitizedQueryDate);
     }
@@ -171,13 +172,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   bool _getTagBool(List<String> tags) {
     bool matchResult;
 
-    searchQuery.tags.forEach((tag) {
+    for (final String tag in searchQuery.tags) {
       if (matchResult != null) {
         matchResult = matchResult && tags.any((element) => element == tag);
       } else {
         matchResult = tags.any((element) => element == tag);
       }
-    });
+    }
 
     return matchResult;
   }

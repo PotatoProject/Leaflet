@@ -9,7 +9,7 @@ class TagEditor extends StatefulWidget {
   final ValueChanged<Tag> onSave;
   final ValueChanged<Tag> onDelete;
 
-  TagEditor({
+  const TagEditor({
     this.tag,
     this.initialInput = "",
     this.onSave,
@@ -33,8 +33,9 @@ class _NewTagState extends State<TagEditor> {
     if (widget.tag == null) {
       tag = tag.copyWith(id: Utils.generateId());
       tag = tag.copyWith(name: widget.initialInput);
-    } else
+    } else {
       tag = widget.tag;
+    }
 
     controller = TextEditingController();
     super.initState();
@@ -49,23 +50,23 @@ class _NewTagState extends State<TagEditor> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             child: Text(
               widget.tag != null
                   ? LocaleStrings.common.tagModify
                   : LocaleStrings.common.tagNew,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: LocaleStrings.common.tagTextboxHint,
-                border: UnderlineInputBorder(),
+                border: const UnderlineInputBorder(),
               ),
               initialValue: tag.name,
               maxLength: 30,
@@ -74,7 +75,7 @@ class _NewTagState extends State<TagEditor> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

@@ -10,7 +10,7 @@ class PopupMenuItemWithIcon<T> extends PopupMenuEntry<T> {
   final MouseCursor mouseCursor;
   final TextStyle textStyle;
 
-  PopupMenuItemWithIcon({
+  const PopupMenuItemWithIcon({
     @required this.value,
     @required this.child,
     this.icon,
@@ -33,10 +33,9 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
   @protected
   Widget buildChild() {
     return Row(
-      mainAxisSize: MainAxisSize.max,
       children: [
         if (widget.icon != null) widget.icon,
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         widget.child,
       ],
     );

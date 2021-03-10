@@ -6,11 +6,11 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
-  SelectionBar();
+  const SelectionBar();
 
   @override
   Size get preferredSize {
-    return Size.fromHeight(56.0);
+    return const Size.fromHeight(56.0);
   }
 
   @override
@@ -29,8 +29,8 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.close),
-        padding: EdgeInsets.all(0),
+        icon: const Icon(Icons.close),
+        padding: const EdgeInsets.all(0),
         onPressed: state.closeSelection,
         tooltip: LocaleStrings.mainPage.selectionBarClose,
       ),
@@ -55,13 +55,13 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
             )
             .toList(),
         if ((oneNoteOptions?.isNotEmpty ?? false) && selectionList.length == 1)
-          PopupMenuButton(
+          PopupMenuButton<String>(
             itemBuilder: (context) => oneNoteOptions
-                .map<PopupMenuEntry>(
-                  (e) => PopupMenuItemWithIcon(
+                .map<PopupMenuEntry<String>>(
+                  (e) => PopupMenuItemWithIcon<String>(
                     icon: Icon(e.icon),
-                    child: Text(e.title),
                     value: e.value,
+                    child: Text(e.title),
                   ),
                 )
                 .toList(),

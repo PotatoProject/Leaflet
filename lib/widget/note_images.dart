@@ -13,10 +13,10 @@ class NoteImages extends StatelessWidget {
   final Axis stripAxis;
   final int maxGridRows;
 
-  NoteImages({
+  const NoteImages({
     @required this.images,
     this.onImageTap,
-    this.layoutType = ImageLayoutType.GRID,
+    this.layoutType = ImageLayoutType.grid,
     this.stripAxis = Axis.horizontal,
     this.maxGridRows,
   });
@@ -24,13 +24,13 @@ class NoteImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (layoutType) {
-      case ImageLayoutType.STRIP:
+      case ImageLayoutType.strip:
         return _ImageStrip(
           images: images,
           onImageTap: onImageTap,
           axis: stripAxis,
         );
-      case ImageLayoutType.GRID:
+      case ImageLayoutType.grid:
       default:
         return _ImageGrid(
           images: images,
@@ -46,7 +46,7 @@ class _ImageGrid extends StatelessWidget {
   final ValueChanged<int> onImageTap;
   final int maxGridRows;
 
-  _ImageGrid({
+  const _ImageGrid({
     @required this.images,
     this.onImageTap,
     this.maxGridRows,
@@ -61,7 +61,7 @@ class _ImageGrid extends StatelessWidget {
         final List<Widget> _rows = <Widget>[];
 
         final int _forLength = maxGridRows != null
-            ? _groupedImages.length.clamp(0, maxGridRows)
+            ? _groupedImages.length.clamp(0, maxGridRows) as int
             : _groupedImages.length;
         for (int i = 0; i < _forLength; i++) {
           _rows.add(
@@ -74,8 +74,8 @@ class _ImageGrid extends StatelessWidget {
         }
 
         return SeparatedList(
+          separator: const SizedBox(height: _kImageGridSpacing),
           children: _rows,
-          separator: SizedBox(height: _kImageGridSpacing),
         );
       },
     );
@@ -83,7 +83,7 @@ class _ImageGrid extends StatelessWidget {
 
   Widget buildImageRow(
       List<SavedImage> images, double baseWidth, int forLoopIndex) {
-    assert(images.length > 0 && images.length <= 3);
+    assert(images.isNotEmpty && images.length <= 3);
 
     final List<Size> _sizes = images
         .map(
@@ -124,24 +124,26 @@ class _ImageGrid extends StatelessWidget {
     }
 
     return SeparatedList(
-      children: _children,
       axis: Axis.horizontal,
-      separator: SizedBox(width: _kImageGridSpacing),
+      separator: const SizedBox(width: _kImageGridSpacing),
+      children: _children,
     );
   }
 
   double _sumWidths(List<double> sizes) {
-    double w = 0;
+    double width = 0;
 
-    sizes.forEach((n) => w += n);
+    for (final double size in sizes) {
+      width += size;
+    }
 
-    return w;
+    return width;
   }
 
   double _getMinHeight(List<Size> sizes) {
     double minHeight;
 
-    for (Size size in sizes) {
+    for (final Size size in sizes) {
       if (minHeight == null) {
         minHeight = size.height;
         continue;
@@ -159,7 +161,7 @@ class _ImageStrip extends StatelessWidget {
   final Axis axis;
   final ValueChanged<int> onImageTap;
 
-  _ImageStrip({
+  const _ImageStrip({
     @required this.images,
     this.axis = Axis.horizontal,
     this.onImageTap,
@@ -214,7 +216,7 @@ class _ImageStrip extends StatelessWidget {
                 );
               },
               separatorBuilder: (context, index) => SizedBox.fromSize(
-                size: Size.square(_kImageStripSpacing),
+                size: const Size.square(_kImageStripSpacing),
               ),
               itemCount: images.length,
               scrollDirection: axis,
@@ -228,16 +230,16 @@ class _ImageStrip extends StatelessWidget {
 }
 
 enum ImageLayoutType {
-  GRID,
-  STRIP,
+  grid,
+  strip,
 }
 
 extension ListGrouping<T> on List<T> {
   List<List<T>> group(int size) {
-    List<List<T>> groups = [];
+    final List<List<T>> groups = [];
 
     for (var i = 0; i < length; i += size) {
-      var end = (i + size < length) ? i + size : length;
+      final int end = (i + size < length) ? i + size : length;
       groups.add(sublist(i, end));
     }
 

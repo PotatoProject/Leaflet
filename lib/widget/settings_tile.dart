@@ -31,12 +31,12 @@ class SettingsTile extends StatelessWidget {
     ValueChanged<bool> onChanged,
     Color activeColor,
     this.enabled = true,
-  })  : this.trailing = Switch.adaptive(
+  })  : trailing = Switch.adaptive(
           value: value,
           onChanged: enabled ? onChanged : null,
           activeColor: activeColor,
         ),
-        this.onTap = (() => onChanged(!value)),
+        onTap = (() => onChanged(!value)),
         super(key: key);
 
   @override

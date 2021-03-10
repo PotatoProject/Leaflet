@@ -52,7 +52,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             ),
             title: Text(filteredTags[index].name),
             trailing: IconButton(
-              icon: Icon(Icons.edit_outlined),
+              icon: const Icon(Icons.edit_outlined),
               padding: EdgeInsets.zero,
               splashRadius: 24,
               onPressed: () => Utils.showNotesModalBottomSheet(
@@ -84,7 +84,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
           ),
         ),
         ListTile(
-          leading: Icon(Icons.add),
+          leading: const Icon(Icons.add),
           title: Text(LocaleStrings.search.tagCreateHint(query)),
           onTap: () async {
             final bool result = await Utils.showNotesModalBottomSheet<bool>(
@@ -126,7 +126,7 @@ class _TapIsolatedListTile extends StatelessWidget {
   final Widget trailing;
   final VoidCallback onTap;
 
-  _TapIsolatedListTile({
+  const _TapIsolatedListTile({
     @required this.leading,
     @required this.title,
     @required this.trailing,
@@ -146,12 +146,12 @@ class _TapIsolatedListTile extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 alignment: AlignmentDirectional.centerStart,
                 child: Row(
                   children: [
                     leading,
-                    SizedBox(width: 28),
+                    const SizedBox(width: 28),
                     AnimatedDefaultTextStyle(
                       style: theme.textTheme.subtitle1,
                       duration: kThemeChangeDuration,
@@ -162,13 +162,13 @@ class _TapIsolatedListTile extends StatelessWidget {
               ),
             ),
           ),
-          VerticalDivider(
+          const VerticalDivider(
             indent: 8,
             endIndent: 8,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           trailing,
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
         ],
       ),
     );

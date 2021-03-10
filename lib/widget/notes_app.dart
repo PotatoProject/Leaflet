@@ -659,9 +659,9 @@ class _MaterialScrollBehavior extends ScrollBehavior {
       case TargetPlatform.fuchsia:
       default:
         return GlowingOverscrollIndicator(
-          child: child,
           axisDirection: axisDirection,
           color: context.theme.accentColor,
+          child: child,
         );
     }
   }
@@ -684,8 +684,9 @@ class _NotesAppState extends State<NotesApp> {
   // localizationsDelegate parameter can be used to override
   // _MaterialLocalizationsDelegate.
   Iterable<LocalizationsDelegate<dynamic>> get _localizationsDelegates sync* {
-    if (widget.localizationsDelegates != null)
+    if (widget.localizationsDelegates != null) {
       yield* widget.localizationsDelegates;
+    }
     yield DefaultMaterialLocalizations.delegate;
     yield DefaultCupertinoLocalizations.delegate;
   }
@@ -693,9 +694,9 @@ class _NotesAppState extends State<NotesApp> {
   Widget _inspectorSelectButtonBuilder(
       BuildContext context, VoidCallback onPressed) {
     return FloatingActionButton(
-      child: const Icon(Icons.search),
       onPressed: onPressed,
       mini: true,
+      child: const Icon(Icons.search),
     );
   }
 
@@ -825,7 +826,6 @@ class _NotesAppState extends State<NotesApp> {
         result = GridPaper(
           color: const Color(0xE0F9BBE0),
           interval: 8.0,
-          divisions: 2,
           subdivisions: 1,
           child: result,
         );

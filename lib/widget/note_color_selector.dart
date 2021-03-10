@@ -6,7 +6,7 @@ class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
   final void Function(int) onColorSelect;
 
-  NoteColorSelector({@required this.selectedColor, this.onColorSelect});
+  const NoteColorSelector({@required this.selectedColor, this.onColorSelect});
 
   @override
   _NoteColorSelectorState createState() => _NoteColorSelectorState();
@@ -18,13 +18,12 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Wrap(
-          crossAxisAlignment: WrapCrossAlignment.start,
           children: List.generate(
             NoteColors.colorList.length,
             (index) => noteColorItem(
-              index,
-              constraints.maxWidth / 5,
-              widget.selectedColor == index,
+              index: index,
+              size: constraints.maxWidth / 5,
+              selected: widget.selectedColor == index,
             ),
           ),
         );
@@ -32,22 +31,29 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     );
   }
 
-  Widget noteColorItem(int index, double size, bool selected) {
+  Widget noteColorItem({
+    @required int index,
+    @required double size,
+    @required bool selected,
+  }) {
     Color getIconColor() {
       if (index == 0) {
-        Brightness themeBrightness = context.theme.brightness;
+        final Brightness themeBrightness = context.theme.brightness;
 
-        if (themeBrightness == Brightness.light)
+        if (themeBrightness == Brightness.light) {
           return ThemeData.light().iconTheme.color;
-        else
+        } else {
           return ThemeData.dark().iconTheme.color;
+        }
       } else {
-        Color color = Color(NoteColors.colorList[index].dynamicColor(context));
+        final Color color =
+            Color(NoteColors.colorList[index].dynamicColor(context));
 
-        if (color.computeLuminance() > 0.5)
+        if (color.computeLuminance() > 0.5) {
           return Colors.black;
-        else
+        } else {
           return Colors.white;
+        }
       }
     }
 

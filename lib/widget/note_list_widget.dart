@@ -84,18 +84,18 @@ class NoteListWidget extends StatelessWidget {
 
   MapEntry<Widget, String> getInfoOnCurrentMode(Brightness themeBrightness) {
     switch (noteKind) {
-      case ReturnMode.ARCHIVE:
+      case ReturnMode.archive:
         return MapEntry(
           Illustration.archive(brightness: themeBrightness),
           LocaleStrings.mainPage.emptyStateArchive,
         );
-      case ReturnMode.TRASH:
+      case ReturnMode.trash:
         return MapEntry(
           Illustration.trash(brightness: themeBrightness),
           LocaleStrings.mainPage.emptyStateTrash,
         );
-      case ReturnMode.ALL:
-      case ReturnMode.NORMAL:
+      case ReturnMode.all:
+      case ReturnMode.normal:
       default:
         return MapEntry(
           Illustration.noNotes(brightness: themeBrightness),

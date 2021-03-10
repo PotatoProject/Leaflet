@@ -11,5 +11,5 @@ class FakeAppbar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) => child;
 
   @override
-  Size get preferredSize => Size.fromHeight(56);
+  Size get preferredSize => const Size.fromHeight(56);
 }

@@ -5,7 +5,7 @@ class SettingsCategory extends StatelessWidget {
   final String header;
   final List<Widget> children;
 
-  SettingsCategory({
+  const SettingsCategory({
     @required this.header,
     this.children,
   });
@@ -24,24 +24,20 @@ class SettingsCategory extends StatelessWidget {
           ),
           child: headerWidget(header),
         ),
-        ...(children ?? []),
+        ...children ?? [],
       ],
     );
   }
 
   Widget headerWidget(String text) => Builder(
-        builder: (context) {
-          TextStyle heading = TextStyle(
+        builder: (context) => Text(
+          text.toUpperCase(),
+          style: TextStyle(
             color: context.theme.accentColor,
             fontWeight: FontWeight.bold,
             fontSize: 12,
             letterSpacing: 2,
-          );
-
-          return Text(
-            text.toUpperCase(),
-            style: heading,
-          );
-        },
+          ),
+        ),
       );
 }

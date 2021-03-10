@@ -13,7 +13,7 @@ class NoteViewStatusbar extends StatefulWidget {
   final EdgeInsets padding;
   final double width;
 
-  NoteViewStatusbar({
+  const NoteViewStatusbar({
     @required this.note,
     this.padding,
     this.width,
@@ -67,19 +67,15 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
             child: Wrap(
               spacing: 4,
               runSpacing: 4,
-              alignment: WrapAlignment.start,
               children: List.generate(
                 widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
                 (index) {
                   if (index != 3) {
-                    Tag tag;
-
-                    try {
-                      tag = prefs.tags.firstWhere(
-                          (tag) => tag.id == widget.note.tags[index]);
-                    } on StateError {
-                      return Container();
-                    }
+                    final Tag tag = prefs.tags.firstWhere(
+                      (tag) => tag.id == widget.note.tags[index],
+                      orElse: () => null,
+                    );
+                    if (tag == null) return const SizedBox();
 
                     return TagChip(
                       title: tag.name,
@@ -104,7 +100,6 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                 bottom: 16 + context.theme.visualDensity.vertical,
               ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
@@ -125,13 +120,12 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                     children: List.generate(
                       icons.isNotEmpty ? icons.length + icons.length - 1 : 0,
                       (index) {
-                        if (index % 2 == 0)
-                          return icons[index ~/ 2];
-                        else
-                          return VerticalDivider(
-                            width: 4,
-                            color: Colors.transparent,
-                          );
+                        return index % 2 == 0
+                            ? icons[index ~/ 2]
+                            : const VerticalDivider(
+                                width: 4,
+                                color: Colors.transparent,
+                              );
                       },
                     ),
                   ),

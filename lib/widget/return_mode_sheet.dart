@@ -7,7 +7,7 @@ class ReturnModeSelectionSheet extends StatefulWidget {
   final SearchReturnMode mode;
   final ValueChanged<SearchReturnMode> onModeChanged;
 
-  ReturnModeSelectionSheet({
+  const ReturnModeSelectionSheet({
     @required this.mode,
     this.onModeChanged,
   });
@@ -34,12 +34,13 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         CheckboxListTile(
-          secondary: Icon(CustomIcons.notes),
-          title: Text("Normal notes"),
+          secondary: const Icon(CustomIcons.notes),
+          title: const Text("Normal notes"),
           value: _mode.fromNormal,
           onChanged:
               _mode.values.where((e) => e).length > 1 || !_mode.fromNormal
@@ -53,8 +54,8 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
                   : null,
         ),
         CheckboxListTile(
-          secondary: Icon(MdiIcons.archiveOutline),
-          title: Text("Archived notes"),
+          secondary: const Icon(MdiIcons.archiveOutline),
+          title: const Text("Archived notes"),
           value: _mode.fromArchive,
           onChanged:
               _mode.values.where((e) => e).length > 1 || !_mode.fromArchive
@@ -68,8 +69,8 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
                   : null,
         ),
         CheckboxListTile(
-          secondary: Icon(Icons.delete_outlined),
-          title: Text("Deleted notes"),
+          secondary: const Icon(Icons.delete_outlined),
+          title: const Text("Deleted notes"),
           value: _mode.fromTrash,
           onChanged: _mode.values.where((e) => e).length > 1 || !_mode.fromTrash
               ? (value) {

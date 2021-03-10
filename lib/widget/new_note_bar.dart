@@ -22,17 +22,17 @@ class NewNoteBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.check_box_outlined),
+          icon: const Icon(Icons.check_box_outlined),
           tooltip: LocaleStrings.common.newList,
           onPressed: () => Utils.newList(context),
         ),
         IconButton(
-          icon: Icon(Icons.image_outlined),
+          icon: const Icon(Icons.image_outlined),
           tooltip: LocaleStrings.common.newImage,
           onPressed: () => Utils.newImage(context, ImageSource.gallery),
         ),
         IconButton(
-          icon: Icon(Icons.brush_outlined),
+          icon: const Icon(Icons.brush_outlined),
           tooltip: LocaleStrings.common.newDrawing,
           onPressed: () => Utils.newDrawing(context),
         ),

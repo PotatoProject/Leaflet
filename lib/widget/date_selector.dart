@@ -11,9 +11,9 @@ class DateFilterSelector extends StatefulWidget {
   final Function(DateTime, DateFilterMode) onConfirm;
   final Function() onReset;
 
-  DateFilterSelector({
+  const DateFilterSelector({
     @required this.date,
-    this.mode = DateFilterMode.ONLY,
+    this.mode = DateFilterMode.only,
     this.onConfirm,
     this.onReset,
   });
@@ -23,13 +23,13 @@ class DateFilterSelector extends StatefulWidget {
 
   static String stringFromDateMode(DateFilterMode mode) {
     switch (mode) {
-      case DateFilterMode.AFTER:
+      case DateFilterMode.after:
         return LocaleStrings.common.dateFilterModeAfter;
         break;
-      case DateFilterMode.BEFORE:
+      case DateFilterMode.before:
         return LocaleStrings.common.dateFilterModeBefore;
         break;
-      case DateFilterMode.ONLY:
+      case DateFilterMode.only:
       default:
         return LocaleStrings.common.dateFilterModeExact;
         break;
@@ -66,26 +66,26 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
         ),
         ListTile(
           title: Text(LocaleStrings.common.dateFilterMode),
-          contentPadding: EdgeInsets.symmetric(horizontal: 24),
-          trailing: DropdownButton(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+          trailing: DropdownButton<DateFilterMode>(
             items: [
               DropdownMenuItem(
+                value: DateFilterMode.after,
                 child: Text(
-                  DateFilterSelector.stringFromDateMode(DateFilterMode.AFTER),
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.after),
                 ),
-                value: DateFilterMode.AFTER,
               ),
               DropdownMenuItem(
+                value: DateFilterMode.before,
                 child: Text(
-                  DateFilterSelector.stringFromDateMode(DateFilterMode.BEFORE),
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.before),
                 ),
-                value: DateFilterMode.BEFORE,
               ),
               DropdownMenuItem(
+                value: DateFilterMode.only,
                 child: Text(
-                  DateFilterSelector.stringFromDateMode(DateFilterMode.ONLY),
+                  DateFilterSelector.stringFromDateMode(DateFilterMode.only),
                 ),
-                value: DateFilterMode.ONLY,
               ),
             ],
             value: selectedMode,
@@ -106,29 +106,25 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 48,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  child: Text(LocaleStrings.common.cancel),
                   onPressed: () {
                     context.pop();
                   },
+                  child: Text(LocaleStrings.common.cancel),
                 ),
-                Spacer(),
-                SizedBox(
-                  width: 8,
-                ),
+                const Spacer(),
+                const SizedBox(width: 8),
                 TextButton(
-                  child: Text(LocaleStrings.common.confirm),
                   onPressed: () {
                     widget.onConfirm(selectedDate, selectedMode);
                     context.pop();
                   },
+                  child: Text(LocaleStrings.common.confirm),
                 ),
               ],
             ),
@@ -145,7 +141,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
   final DateTime date;
   final VoidCallback onReset;
 
-  _DateFilterSelectorHeader(this.date, {this.onReset});
+  const _DateFilterSelectorHeader(this.date, {this.onReset});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +150,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
       child: Container(
         width: context.mSize.width,
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 24,
           vertical: 16,
         ),
@@ -167,13 +163,13 @@ class _DateFilterSelectorHeader extends StatelessWidget {
                 color: context.theme.colorScheme.onSurface,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             TextButton(
-              child: Text(LocaleStrings.common.reset),
               onPressed: () {
                 onReset?.call();
                 context.pop();
               },
+              child: Text(LocaleStrings.common.reset),
             ),
           ],
         ),

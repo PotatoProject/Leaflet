@@ -15,7 +15,7 @@ class DrawerList extends StatelessWidget {
   final void Function(int index) onTap;
   final void Function(int index) onSecondaryTap;
 
-  DrawerList({
+  const DrawerList({
     this.header,
     @required this.items,
     this.secondaryItems,
@@ -38,7 +38,7 @@ class DrawerList extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(
+              separatorBuilder: (context, index) => const Divider(
                 indent: 8,
                 endIndent: 8,
               ),
@@ -86,7 +86,7 @@ class DrawerList extends StatelessWidget {
         ignoring: !enabled,
         child: AnimatedOpacity(
           opacity: enabled ? 1 : 0.5,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           curve: decelerateEasing,
           child: Column(
             children: [
@@ -105,7 +105,7 @@ class DrawerList extends StatelessWidget {
                   showTitle: showTitles,
                 ),
               ),
-              secondary ? secondaryItemsFooter ?? Container() : Container(),
+              if (secondary) secondaryItemsFooter ?? Container(),
             ],
           ),
         ),

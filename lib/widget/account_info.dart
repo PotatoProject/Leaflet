@@ -14,7 +14,7 @@ import 'package:potato_notes/widget/account_avatar.dart';
 class AccountInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<bool>(
       valueListenable: SyncRoutine.instance.syncing,
       builder: (context, syncing, _) {
         final bool loggedIn = prefs.accessToken != null;
@@ -26,7 +26,7 @@ class AccountInfo extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
               child: Row(
                 children: [
                   AccountAvatar(
@@ -35,17 +35,13 @@ class AccountInfo extends StatelessWidget {
                         context.theme.iconTheme.color.withOpacity(0.1),
                     showBadgeOnSync: false,
                   ),
-                  SizedBox(
-                    width: 24,
-                  ),
+                  const SizedBox(width: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         prefs.username ?? "Guest",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
+                        style: const TextStyle(fontSize: 16),
                       ),
                       Text(
                         prefs.email ?? "Not logged in",
@@ -64,11 +60,11 @@ class AccountInfo extends StatelessWidget {
                 future: FilesController.getStats(),
                 builder: (context, snapshot) {
                   return ListTile(
-                    leading: Icon(Icons.image_outlined),
-                    title: Text("Image upload capacity"),
+                    leading: const Icon(Icons.image_outlined),
+                    title: const Text("Image upload capacity"),
                     subtitle: LinearProgressIndicator(
                       value: snapshot.hasData
-                          ? snapshot.data.used / snapshot.data.limit
+                          ? snapshot.data.used / snapshot.data.limit as double
                           : null,
                       backgroundColor:
                           context.theme.accentColor.withOpacity(0.2),
@@ -79,20 +75,16 @@ class AccountInfo extends StatelessWidget {
                               .xOfY(snapshot.data.used, snapshot.data.limit)
                           : '-',
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                   );
                 },
               ),
             if (loggedIn)
               ListTile(
                 leading: SpinningSyncIcon(spin: syncing),
-                title: Text("Sync notes"),
+                title: const Text("Sync notes"),
                 subtitle: AnimatedSwitcher(
-                  child: Text(
-                    syncing ? "Syncing..." : "Last sync: $lastSync",
-                    key: ValueKey(syncing),
-                  ),
-                  duration: Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 150),
                   transitionBuilder: (child, animation) => FadeTransition(
                     opacity: animation,
                     child: child,
@@ -104,43 +96,47 @@ class AccountInfo extends StatelessWidget {
                       currentChild,
                     ],
                   ),
+                  child: Text(
+                    syncing ? "Syncing..." : "Last sync: $lastSync",
+                    key: ValueKey(syncing),
+                  ),
                 ),
                 onTap: () async {
                   SyncRoutine.instance.sync();
                 },
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),
-            Divider(),
+            const Divider(),
             if (loggedIn)
               ListTile(
-                leading: Icon(MdiIcons.accountSettingsOutline),
-                title: Text("Manage account"),
+                leading: const Icon(MdiIcons.accountSettingsOutline),
+                title: const Text("Manage account"),
                 onTap: () async {
                   Utils.launchUrl("${prefs.apiUrl}/account");
                 },
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),
             if (loggedIn)
               ListTile(
-                leading: Icon(Icons.logout),
-                title: Text("Logout"),
+                leading: const Icon(Icons.logout),
+                title: const Text("Logout"),
                 onTap: () async {
                   context.pop();
                   await AccountController.logout();
                 },
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),
             if (!loggedIn)
               ListTile(
-                leading: Icon(Icons.login),
-                title: Text("Login"),
+                leading: const Icon(Icons.login),
+                title: const Text("Login"),
                 onTap: () async {
                   context.pop();
                   await Utils.showSecondaryRoute(context, LoginPage());
                 },
-                contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
           ],
         );
       },

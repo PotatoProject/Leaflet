@@ -6,7 +6,7 @@ class TagChip extends StatelessWidget {
   final bool showIcon;
   final bool shrink;
 
-  TagChip({
+  const TagChip({
     @required this.title,
     this.showIcon = true,
     this.shrink = true,
