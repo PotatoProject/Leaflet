@@ -1,0 +1,7 @@
+include: package:lint/analysis_options.yaml
+
+linter:
+  rules:
+    avoid_bool_literals_in_conditional_expressions: false
+    avoid_positional_boolean_parameters: false
+    avoid_setters_without_getters: false

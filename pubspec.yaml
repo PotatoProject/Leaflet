@@ -7,9 +7,6 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-
   animations: ^2.0.0
 
   back_button_interceptor: ^5.0.0-nullsafety.1
@@ -24,9 +21,11 @@ dependencies:
 
   file_picker: ^3.0.0-nullsafety.2
   file_selector: ^0.8.2
-  file_selector_macos: ^0.0.4
   file_selector_linux: ^0.0.2
+  file_selector_macos: ^0.0.4
   file_selector_windows: ^0.0.2
+  flutter:
+    sdk: flutter
   flutter_blurhash: ^0.5.2-nullsafety.0
   flutter_local_notifications: ^5.0.0-nullsafety.0
   flutter_mobx:
@@ -62,7 +61,7 @@ dependencies:
 
   scrollable_positioned_list: ^0.2.0-nullsafety.0
   share_plus: ^2.0.0
-  shared_preferences: '2.0.1'
+  shared_preferences: ^2.0.3
   sqflite: ^2.0.0
   sqflite_common_ffi: ^2.0.0
   sqlite3_flutter_libs: ^0.4.0+1
@@ -76,15 +75,13 @@ dependencies:
   xml: ^5.0.2
 
 dev_dependencies:
-  moor_generator:
   build_runner:
   flutter_test:
     sdk: flutter
-  mockito:
+  lint:
   mobx_codegen:
-
-dependency_overrides:
-  plugin_platform_interface: ^2.0.0
+  mockito:
+  moor_generator:
 
 flutter:
   uses-material-design: true
