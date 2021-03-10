@@ -12,8 +12,6 @@ dependencies:
   back_button_interceptor: ^5.0.0-nullsafety.1
   blurhash_dart: ^1.0.0-nullsafety.0
 
-  crayola:
-
   dio: ^4.0.0-beta4
 
   easy_localization:
@@ -28,8 +26,9 @@ dependencies:
     sdk: flutter
   flutter_blurhash: ^0.5.2-nullsafety.0
   flutter_local_notifications: ^5.0.0-nullsafety.0
-  flutter_mobx:
+  flutter_mobx: ^2.0.0-nullsafety.1
   flutter_secure_storage: ^4.0.0
+  flutter_staggered_grid_view: ^0.4.0-nullsafety.3
 
   http: ^0.13.0
 
@@ -37,17 +36,18 @@ dependencies:
   image_picker: ^0.7.2
   image_picker_for_web: ^2.0.0
   image_size_getter:
+    git:
+      url: https://github.com/HrX03/dart_image_size_getter
+      path: library/
   in_app_update:
   intl: ^0.17.0
-
-  json_serializable: ^4.0.2
 
   local_auth: ^1.1.0
   loggy:
     git: https://github.com/HrX03/loggy
 
   material_design_icons_flutter: ^5.0.5955-rc.1
-  mobx:
+  mobx: ^2.0.0-nullsafety.3
   moor: ^4.1.0
 
   package_info_plus: ^1.0.0
@@ -70,18 +70,20 @@ dependencies:
   url_launcher: ^6.0.2
   uuid: ^3.0.1
 
-  waterfall_flow:
-
   xml: ^5.0.2
 
 dev_dependencies:
   build_runner:
   flutter_test:
     sdk: flutter
+  json_serializable: ^4.0.2
   lint:
   mobx_codegen:
-  mockito:
+  mockito: ^5.0.0-nullsafety.7
   moor_generator:
+
+dependency_overrides:
+  mobx: ^2.0.0-nullsafety.3
 
 flutter:
   uses-material-design: true

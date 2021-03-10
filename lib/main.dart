@@ -1,4 +1,3 @@
-import 'package:crayola/crayola.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -84,10 +83,6 @@ class PotatoNotes extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
           builder: (context, child) {
-            if (DeviceInfo.isMacOS) {
-              Crayola.setTitleVisibility(false);
-            }
-
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = QuickActions();
 
