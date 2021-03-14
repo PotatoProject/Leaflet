@@ -7,19 +7,19 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 
 class NoteListWidget extends StatelessWidget {
-  final TransitionBuilder builder;
+  final TransitionBuilder? builder;
   final IndexedWidgetBuilder itemBuilder;
   final int noteCount;
-  final ReturnMode noteKind;
-  final ScrollController scrollController;
-  final Widget customIllustration;
-  final int gridColumns;
+  final ReturnMode? noteKind;
+  final ScrollController? scrollController;
+  final Widget? customIllustration;
+  final int? gridColumns;
 
   const NoteListWidget({
-    Key key,
+    Key? key,
     this.builder,
-    @required this.itemBuilder,
-    this.noteCount,
+    required this.itemBuilder,
+    required this.noteCount,
     this.noteKind,
     this.scrollController,
     this.customIllustration,

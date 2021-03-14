@@ -5,8 +5,8 @@ import 'package:potato_notes/internal/utils.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
-  final Function(String) onSave;
-  final Function() onChallengeSuccess;
+  final ValueChanged<String>? onSave;
+  final VoidCallback? onChallengeSuccess;
 
   const PassChallenge({
     this.editMode = false,
@@ -19,15 +19,15 @@ class PassChallenge extends StatefulWidget {
 }
 
 class _PassChallengeState extends State<PassChallenge> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   bool showPass = false;
-  String status;
+  String? status;
 
   @override
   void initState() {
     controller = TextEditingController(
-      text: widget.editMode ? prefs.masterPass ?? "" : "",
+      text: widget.editMode ? prefs.masterPass : "",
     );
 
     controller.addListener(() => setState(() {}));
@@ -85,11 +85,11 @@ class _PassChallengeState extends State<PassChallenge> {
                 TextButton(
                   onPressed: controller.text.length >= 4
                       ? widget.editMode
-                          ? () => widget.onSave(controller.text)
+                          ? () => widget.onSave?.call(controller.text)
                           : () {
                               if (prefs.masterPass == controller.text) {
                                 setState(() => status = null);
-                                widget.onChallengeSuccess();
+                                widget.onChallengeSuccess?.call();
                               } else {
                                 setState(
                                     () => status = "Incorrect master pass");

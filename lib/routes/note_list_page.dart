@@ -16,18 +16,15 @@ import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
-import 'package:potato_notes/widget/tag_editor.dart';
 
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
-  final int tagIndex;
   final SelectionOptions selectionOptions;
 
   const NoteListPage({
-    Key key,
-    @required this.noteKind,
-    this.tagIndex,
-    @required this.selectionOptions,
+    Key? key,
+    required this.noteKind,
+    required this.selectionOptions,
   }) : super(key: key);
 
   @override
@@ -43,20 +40,20 @@ class NoteListPageState extends State<NoteListPage> {
   bool get selecting => _selecting;
   set selecting(bool value) {
     _selecting = value;
-    context.basePage.setBottomBarEnabled(!value);
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    context.basePage!.setBottomBarEnabled(!value);
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
   List<Note> get selectionList => _selectionList;
 
   void addSelectedNote(Note note) {
     _selectionList.add(note);
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
   void removeSelectedNoteWhere(bool Function(Note) test) {
     _selectionList.removeWhere(test);
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
   void closeSelection() {
@@ -112,20 +109,10 @@ class NoteListPageState extends State<NoteListPage> {
           stream: helper.noteStream(widget.noteKind),
           initialData: const [],
           builder: (context, snapshot) {
-            final List<Note> notes = widget.noteKind == ReturnMode.tag
-                ? snapshot.data
-                    .where(
-                      (note) =>
-                          note.tags.contains(prefs.tags[widget.tagIndex].id) &&
-                          !note.archived &&
-                          !note.deleted,
-                    )
-                    .toList()
-                : snapshot.data ?? [];
-
             return NoteListWidget(
-              itemBuilder: (_, index) => _buildNoteList(context, notes, index),
-              noteCount: notes.length,
+              itemBuilder: (_, index) =>
+                  _buildNoteList(context, snapshot.data!, index),
+              noteCount: snapshot.data!.length,
               noteKind: widget.noteKind,
             );
           },
@@ -181,7 +168,7 @@ class NoteListPageState extends State<NoteListPage> {
                 onPressed: () async {
                   final List<Note> notes =
                       await helper.listNotes(widget.noteKind);
-                  final bool result = await showDialog(
+                  final bool? result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(LocaleStrings.common.areYouSure),
@@ -217,60 +204,6 @@ class NoteListPageState extends State<NoteListPage> {
             },
           ),
         ),
-        Visibility(
-          visible: widget.noteKind == ReturnMode.tag,
-          child: IconButton(
-            icon: const Icon(Icons.label_off_outlined),
-            onPressed: () async {
-              final bool result = await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(LocaleStrings.common.areYouSure),
-                      content: Text(LocaleStrings.mainPage.tagDeletePrompt),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => context.pop(),
-                          child: Text(LocaleStrings.common.cancel),
-                        ),
-                        TextButton(
-                          onPressed: () => context.pop(true),
-                          child: Text(LocaleStrings.common.delete),
-                        ),
-                      ],
-                    ),
-                  ) ??
-                  false;
-
-              if (result) {
-                final List<Note> notes = await helper.listNotes(ReturnMode.all);
-                for (final Note note in notes) {
-                  note.tags.remove(prefs.tags[widget.tagIndex].id);
-                  await helper.saveNote(note.markChanged());
-                }
-                tagHelper.deleteTag(prefs.tags[widget.tagIndex]);
-                context.pop();
-              }
-            },
-          ),
-        ),
-        Visibility(
-          visible: widget.noteKind == ReturnMode.tag,
-          child: IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: () {
-              Utils.showNotesModalBottomSheet(
-                context: context,
-                builder: (context) => TagEditor(
-                  tag: prefs.tags[widget.tagIndex],
-                  onSave: (tag) {
-                    context.pop();
-                    tagHelper.saveTag(tag.markChanged());
-                  },
-                ),
-              );
-            },
-          ),
-        ),
       ];
 
   Widget _buildNoteList(BuildContext context, List<Note> notes, int index) {
@@ -285,14 +218,14 @@ class NoteListPageState extends State<NoteListPage> {
       selectorOpen: _state.selecting,
       selected: _state.selectionList.any((item) => item.id == note.id),
       onCheckboxChanged: (value) {
-        if (!value) {
+        if (!value!) {
           _state.removeSelectedNoteWhere((item) => item.id == note.id);
           if (_state.selectionList.isEmpty) _state.selecting = false;
         } else {
           _state.selecting = true;
           _state.addSelectedNote(note);
         }
-        context.basePage.setBottomBarEnabled(!_state.selecting);
+        context.basePage!.setBottomBarEnabled(!_state.selecting);
       },
       allowSelection: true,
     );
@@ -342,8 +275,8 @@ class SelectionState extends InheritedWidget {
   final NoteListPageState state;
 
   const SelectionState({
-    @required this.state,
-    Widget child,
+    required this.state,
+    required Widget child,
   }) : super(child: child);
 
   @override
@@ -352,6 +285,6 @@ class SelectionState extends InheritedWidget {
   }
 
   static NoteListPageState of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SelectionState>().state;
+    return context.dependOnInheritedWidgetOfExactType<SelectionState>()!.state;
   }
 }

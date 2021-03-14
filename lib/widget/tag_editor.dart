@@ -4,10 +4,10 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class TagEditor extends StatefulWidget {
-  final Tag tag;
+  final Tag? tag;
   final String initialInput;
-  final ValueChanged<Tag> onSave;
-  final ValueChanged<Tag> onDelete;
+  final ValueChanged<Tag>? onSave;
+  final ValueChanged<Tag>? onDelete;
 
   const TagEditor({
     this.tag,
@@ -22,11 +22,11 @@ class TagEditor extends StatefulWidget {
 
 class _NewTagState extends State<TagEditor> {
   Tag tag = Tag(
-    id: null,
-    name: null,
-    lastModifyDate: null,
+    id: "",
+    name: "",
+    lastModifyDate: DateTime.now(),
   );
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _NewTagState extends State<TagEditor> {
       tag = tag.copyWith(id: Utils.generateId());
       tag = tag.copyWith(name: widget.initialInput);
     } else {
-      tag = widget.tag;
+      tag = widget.tag!;
     }
 
     controller = TextEditingController();

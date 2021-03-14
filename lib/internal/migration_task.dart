@@ -26,7 +26,7 @@ class MigrationTask {
   static Future<bool> isMigrationAvailable(String path) async =>
       File(path).exists();
 
-  static Future<List<Note>> migrate(String path) async {
+  static Future<List<Note>?> migrate(String? path) async {
     if (path == null) return null;
 
     final Database db = DeviceInfo.isDesktop
@@ -56,8 +56,8 @@ class MigrationTask {
         reminders: rawV1Notes[index]['reminders'] as String,
         hideContent: rawV1Notes[index]['hideContent'] as int,
         password: rawV1Notes[index]['password'] as String,
-        isDeleted: rawV1Notes[index]['isDeleted'] as int ?? 0,
-        isArchived: rawV1Notes[index]['isArchived'] as int ?? 0,
+        isDeleted: rawV1Notes[index]['isDeleted'] as int,
+        isArchived: rawV1Notes[index]['isArchived'] as int,
       );
     });
 
@@ -80,9 +80,9 @@ class MigrationTask {
         );
       }
 
-      SavedImage savedImage;
+      SavedImage? savedImage;
       if (v1Note.imagePath != null) {
-        final Response response = await dio.get(v1Note.imagePath);
+        final Response response = await dio.get(v1Note.imagePath!);
         final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
           ..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
@@ -93,12 +93,13 @@ class MigrationTask {
       final Note note = Note(
         id: id,
         title: v1Note.title ?? "",
-        content:
-            v1Note.content != null && v1Note.isList == 0 ? v1Note.content : "",
+        content: v1Note.content != null && v1Note.isList == 0
+            ? v1Note.content ?? ""
+            : "",
         starred: v1Note.isStarred == 1,
-        creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date),
+        creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date!),
         lastModifyDate: DateTime.now(),
-        color: v1Note.color,
+        color: v1Note.color ?? 0,
         images: [if (savedImage != null) savedImage],
         list: v1Note.isList == 1,
         listContent: listItems,
@@ -123,21 +124,21 @@ class MigrationTask {
 
 @immutable
 class NoteV1Model {
-  final int id;
-  final String title;
-  final String content;
-  final int isStarred;
-  final int date;
-  final int color;
-  final String imagePath;
-  final int isList;
-  final String listParseString;
-  final String reminders;
-  final int hideContent;
-  final String pin;
-  final String password;
-  final int isDeleted;
-  final int isArchived;
+  final int? id;
+  final String? title;
+  final String? content;
+  final int? isStarred;
+  final int? date;
+  final int? color;
+  final String? imagePath;
+  final int? isList;
+  final String? listParseString;
+  final String? reminders;
+  final int? hideContent;
+  final String? pin;
+  final String? password;
+  final int? isDeleted;
+  final int? isArchived;
 
   const NoteV1Model({
     this.id,

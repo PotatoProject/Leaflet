@@ -52,10 +52,13 @@ class ImageQueue extends ChangeNotifier {
   }
 
   //This method can only be run if all images have been processed (e.g. have a hash)
-  Future<bool> hasDuplicates(SavedImage data, {NoteHelper noteHelper}) async {
-    noteHelper ??= helper;
+  Future<bool> hasDuplicates(
+    SavedImage data, {
+    NoteHelper? noteHelper,
+  }) async {
+    final _helper = noteHelper ?? helper;
+    final List<Note> notes = await _helper.listNotes(ReturnMode.local);
 
-    final List<Note> notes = await noteHelper.listNotes(ReturnMode.local);
     for (final Note note in notes) {
       if (note.images.indexWhere(
               (e) => e.id != data.id && e.uploaded && e.hash == data.hash) !=
@@ -160,10 +163,13 @@ class ImageQueue extends ChangeNotifier {
   }
 
   static List<DeleteQueueItem> deleteQueueFromPrefs() {
-    if (prefs.deleteQueue == null || prefs.deleteQueue.isEmpty) return [];
+    if (prefs.deleteQueue == null || (prefs.deleteQueue?.isEmpty ?? true)) {
+      return [];
+    }
+
     Loggy.d(message: prefs.deleteQueue);
     final List<DeleteQueueItem> queue =
-        Utils.asList<Map<String, dynamic>>(json.decode(prefs.deleteQueue))
+        Utils.asList<Map<String, dynamic>>(json.decode(prefs.deleteQueue!))
             .map((i) => DeleteQueueItem.fromJson(i))
             .toList();
     return queue;

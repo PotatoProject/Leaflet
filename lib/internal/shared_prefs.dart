@@ -5,7 +5,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static SharedPrefs _instance;
+  static late SharedPrefs _instance;
   final SharedPreferences prefs;
   final _SharedPreferencesQueue _queue;
 
@@ -28,7 +28,7 @@ class SharedPrefs {
   }
 
   ThemeMode get themeMode {
-    final int value = prefs.getInt("theme_mode");
+    final int? value = prefs.getInt("theme_mode");
     switch (value) {
       case 0:
         return ThemeMode.system;
@@ -58,12 +58,12 @@ class SharedPrefs {
     _queue.setInt("theme_mode", newValue);
   }
 
-  Color get customAccent {
-    final int colorValue = prefs.getInt("custom_accent");
+  Color? get customAccent {
+    final int? colorValue = prefs.getInt("custom_accent");
     return colorValue != null ? Color(colorValue) : null;
   }
 
-  set customAccent(Color value) {
+  set customAccent(Color? value) {
     addChangedKey("custom_accent");
     _queue.setInt("custom_accent", value?.value);
   }
@@ -111,43 +111,43 @@ class SharedPrefs {
     _queue.setString("api_url", value);
   }
 
-  String get accessToken {
+  String? get accessToken {
     return prefs.getString("access_token");
   }
 
-  set accessToken(String value) {
+  set accessToken(String? value) {
     _queue.setString("access_token", value);
   }
 
-  String get refreshToken {
+  String? get refreshToken {
     return prefs.getString("refresh_token");
   }
 
-  set refreshToken(String value) {
+  set refreshToken(String? value) {
     _queue.setString("refresh_token", value);
   }
 
-  String get username {
+  String? get username {
     return prefs.getString("username");
   }
 
-  set username(String value) {
+  set username(String? value) {
     _queue.setString("username", value);
   }
 
-  String get email {
+  String? get email {
     return prefs.getString("email");
   }
 
-  set email(String value) {
+  set email(String? value) {
     _queue.setString("email", value);
   }
 
-  String get avatarUrl {
+  String? get avatarUrl {
     return prefs.getString("avatar_url");
   }
 
-  set avatarUrl(String value) {
+  set avatarUrl(String? value) {
     _queue.setString("avatar_url", value);
   }
 
@@ -199,11 +199,11 @@ class SharedPrefs {
     return prefs.getStringList("updated_keys") ?? [];
   }
 
-  String get deleteQueue {
+  String? get deleteQueue {
     return prefs.getString("delete_queue");
   }
 
-  set deleteQueue(String value) {
+  set deleteQueue(String? value) {
     _queue.setString("delete_queue", value);
   }
 }
@@ -217,24 +217,24 @@ class _SharedPreferencesQueue {
   void _handleRequest() {
     final _QueueItem item = _queue.first;
 
-    if (item.requestType == _QueueRequestType.remove) {
+    if (item.requestType == _QueueRequestType.remove && item.value == null) {
       prefs.remove(item.key);
     } else {
       switch (item.type) {
         case _QueueItemType.bool:
-          prefs.setBool(item.key, item.value as bool);
+          prefs.setBool(item.key, item.value! as bool);
           break;
         case _QueueItemType.double:
-          prefs.setDouble(item.key, item.value as double);
+          prefs.setDouble(item.key, item.value! as double);
           break;
         case _QueueItemType.int:
-          prefs.setInt(item.key, item.value as int);
+          prefs.setInt(item.key, item.value! as int);
           break;
         case _QueueItemType.string:
-          prefs.setString(item.key, item.value as String);
+          prefs.setString(item.key, item.value! as String);
           break;
         case _QueueItemType.stringList:
-          prefs.setStringList(item.key, item.value as List<String>);
+          prefs.setStringList(item.key, item.value! as List<String>);
           break;
       }
     }
@@ -249,7 +249,7 @@ class _SharedPreferencesQueue {
     if (_queue.length == 1) _handleRequest();
   }
 
-  void setBool(String key, bool value) {
+  void setBool(String key, bool? value) {
     _set(_QueueItem.bool(
       key: key,
       value: value,
@@ -258,7 +258,7 @@ class _SharedPreferencesQueue {
     ));
   }
 
-  void setDouble(String key, double value) {
+  void setDouble(String key, double? value) {
     _set(_QueueItem.double(
       key: key,
       value: value,
@@ -267,7 +267,7 @@ class _SharedPreferencesQueue {
     ));
   }
 
-  void setInt(String key, int value) {
+  void setInt(String key, int? value) {
     _set(_QueueItem.int(
       key: key,
       value: value,
@@ -276,7 +276,7 @@ class _SharedPreferencesQueue {
     ));
   }
 
-  void setString(String key, String value) {
+  void setString(String key, String? value) {
     _set(_QueueItem.string(
       key: key,
       value: value,
@@ -285,7 +285,7 @@ class _SharedPreferencesQueue {
     ));
   }
 
-  void setStringList(String key, List<String> value) {
+  void setStringList(String key, List<String>? value) {
     _set(_QueueItem.stringList(
       key: key,
       value: value,
@@ -297,43 +297,43 @@ class _SharedPreferencesQueue {
 
 class _QueueItem {
   final String key;
-  final Object _value;
+  final Object? _value;
   final _QueueRequestType requestType;
   final _QueueItemType type;
 
-  Object get value => _value;
+  Object? get value => _value;
 
   const _QueueItem.bool({
-    @required this.key,
-    bool value,
+    required this.key,
+    bool? value,
     this.requestType = _QueueRequestType.set,
   })  : _value = value,
         type = _QueueItemType.bool;
 
   const _QueueItem.double({
-    @required this.key,
-    double value,
+    required this.key,
+    double? value,
     this.requestType = _QueueRequestType.set,
   })  : _value = value,
         type = _QueueItemType.double;
 
   const _QueueItem.int({
-    @required this.key,
-    int value,
+    required this.key,
+    int? value,
     this.requestType = _QueueRequestType.set,
   })  : _value = value,
         type = _QueueItemType.int;
 
   const _QueueItem.string({
-    @required this.key,
-    String value,
+    required this.key,
+    String? value,
     this.requestType = _QueueRequestType.set,
   })  : _value = value,
         type = _QueueItemType.string;
 
   const _QueueItem.stringList({
-    @required this.key,
-    List<String> value,
+    required this.key,
+    List<String>? value,
     this.requestType = _QueueRequestType.set,
   })  : _value = value,
         type = _QueueItemType.stringList;

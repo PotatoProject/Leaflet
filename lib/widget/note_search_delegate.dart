@@ -26,7 +26,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
           context: context,
           builder: (context) => QueryFilters(
             query: searchQuery,
-            filterChangedCallback: () => setState(() {}),
+            filterChangedCallback: () => setState!(() {}),
           ),
         ),
       ),
@@ -54,7 +54,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                     Illustration.nothingFound(brightness: brightness),
                     LocaleStrings.search.nothingFound,
                   );
-            final List<Note> results = List.from(snapshot.data);
+            final List<Note> results = List<Note>.from(snapshot.data!);
 
             results.sort((a, b) => b.creationDate.compareTo(a.creationDate));
 
@@ -129,7 +129,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   }
 
   bool _getColorBool(int noteColor) {
-    if (searchQuery.color == null) return false;
     return noteColor == searchQuery.color;
   }
 
@@ -143,9 +142,9 @@ class NoteSearchDelegate extends CustomSearchDelegate {
     );
 
     final DateTime sanitizedQueryDate = DateTime(
-      searchQuery.date.year,
-      searchQuery.date.month,
-      searchQuery.date.day,
+      searchQuery.date!.year,
+      searchQuery.date!.month,
+      searchQuery.date!.day,
     );
 
     switch (searchQuery.dateMode) {
@@ -170,7 +169,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   }
 
   bool _getTagBool(List<String> tags) {
-    bool matchResult;
+    bool? matchResult;
 
     for (final String tag in searchQuery.tags) {
       if (matchResult != null) {
@@ -180,7 +179,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       }
     }
 
-    return matchResult;
+    return matchResult!;
   }
 
   bool _getModesBool(Note note) {

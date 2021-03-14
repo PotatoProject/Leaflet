@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -53,7 +54,7 @@ class Utils {
     //    });
   }
 
-  static Future<bool> showPassChallengeSheet(BuildContext context) async {
+  static Future<bool?> showPassChallengeSheet(BuildContext context) async {
     return showNotesModalBottomSheet<bool>(
       context: context,
       builder: (context) => PassChallenge(
@@ -79,8 +80,8 @@ class Utils {
   }
 
   static Future<bool> showNoteLockDialog({
-    @required BuildContext context,
-    @required bool showLock,
+    required BuildContext context,
+    required bool showLock,
     bool showBiometrics = false,
   }) async {
     if (showLock) {
@@ -102,17 +103,17 @@ class Utils {
     return true;
   }
 
-  static Future<T> showNotesModalBottomSheet<T>({
-    @required BuildContext context,
-    @required WidgetBuilder builder,
-    Color backgroundColor,
-    double elevation,
-    ShapeBorder shape,
-    Clip clipBehavior,
-    Color barrierColor,
+  static Future<T?> showNotesModalBottomSheet<T extends Object?>({
+    required BuildContext context,
+    required WidgetBuilder builder,
+    Color? backgroundColor,
+    double? elevation,
+    ShapeBorder? shape,
+    Clip? clipBehavior,
+    Color? barrierColor,
     bool childHandlesScroll = false,
   }) async {
-    return context.push<T>(
+    return context.push<T?>(
       BottomSheetRoute(
         child: builder(context),
         backgroundColor: backgroundColor,
@@ -249,7 +250,7 @@ class Utils {
         );
 
         if (unlocked) {
-          int selectedColor;
+          int? selectedColor;
 
           if (notes.length > 1) {
             final int color = notes.first.color;
@@ -263,10 +264,10 @@ class Utils {
             selectedColor = notes.first.color;
           }
 
-          selectedColor = await Utils.showNotesModalBottomSheet(
+          selectedColor = await Utils.showNotesModalBottomSheet<int>(
             context: context,
             builder: (context) => NoteColorSelector(
-              selectedColor: selectedColor,
+              selectedColor: selectedColor!,
               onColorSelect: (color) {
                 context.pop(color);
               },
@@ -359,9 +360,9 @@ class Utils {
 
   static void handlePinNotes(BuildContext context, Note note) {
     if (note.pinned) {
-      appInfo.notifications.cancel(note.notificationId);
+      appInfo.notifications?.cancel(note.notificationId);
     } else {
-      appInfo.notifications.show(
+      appInfo.notifications?.show(
         note.notificationId,
         note.title.isEmpty
             ? LocaleStrings.common.notificationDefaultTitle
@@ -410,7 +411,6 @@ class Utils {
         } else {
           return LocaleStrings.mainPage.titleTag;
         }
-        break;
       case ReturnMode.all:
       default:
         return LocaleStrings.mainPage.titleAll;
@@ -420,9 +420,9 @@ class Utils {
   static Color get defaultAccent => const Color(0xFF66BB6A);
 
   static Future<bool> deleteNotes({
-    @required BuildContext context,
-    @required List<Note> notes,
-    @required String reason,
+    required BuildContext context,
+    required List<Note> notes,
+    required String reason,
     bool archive = false,
     bool showAuthDialog = true,
     bool permaDelete = false,
@@ -471,9 +471,9 @@ class Utils {
   }
 
   static Future<bool> restoreNotes({
-    @required BuildContext context,
-    @required List<Note> notes,
-    @required String reason,
+    required BuildContext context,
+    required List<Note> notes,
+    required String reason,
     bool archive = false,
     bool showAuthDialog = true,
   }) async {
@@ -644,9 +644,8 @@ class Utils {
     final int newLength = notes.length;
 
     if (newLength > currentLength) {
-      final Note lastNote = notes.firstWhere(
+      final Note? lastNote = notes.firstWhereOrNull(
         (element) => element.id == id,
-        orElse: () => null,
       );
       if (lastNote == null) return;
       Utils.handleNotePagePop(lastNote);
@@ -663,7 +662,7 @@ class Utils {
 
   static Future<void> newImage(BuildContext context, ImageSource source) async {
     Note note = NoteX.emptyNote;
-    final File image = await pickImage();
+    final File? image = await pickImage();
 
     if (image != null) {
       final SavedImage savedImage =
@@ -721,11 +720,11 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static Future<File> pickImage() async {
-    String path;
+  static Future<File?> pickImage() async {
+    String? path;
 
     if (DeviceInfo.isDesktop) {
-      final XFile image = await openFile(
+      final XFile? image = await openFile(
         acceptedTypeGroups: [
           XTypeGroup(
             label: 'images',
@@ -739,12 +738,12 @@ class Utils {
         ],
       );
 
-      path = image.path;
+      path = image?.path;
     } else {
-      final PickedFile image =
+      final PickedFile? image =
           await ImagePicker().getImage(source: ImageSource.gallery);
 
-      path = image.path;
+      path = image?.path;
     }
 
     return path != null ? File(path) : null;
@@ -752,7 +751,7 @@ class Utils {
 
   static Future<bool> launchUrl(
     String url, {
-    Map<String, String> headers,
+    Map<String, String> headers = const {},
   }) async {
     final bool canLaunchLink = await canLaunch(url);
 
@@ -776,7 +775,7 @@ class Utils {
 
 extension NoteX on Note {
   static Note get emptyNote => Note(
-        id: null,
+        id: "",
         title: "",
         content: "",
         styleJson: [],
@@ -800,7 +799,7 @@ extension NoteX on Note {
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
     final Map<String, dynamic> newMap = {};
     syncMap.forEach((key, value) {
-      Object newValue = value;
+      Object? newValue = value;
       String newKey = ReCase(key).camelCase;
       switch (key) {
         case "style_json":
@@ -877,7 +876,7 @@ extension NoteX on Note {
     final Map<String, dynamic> originalMap = toJson();
     final Map<String, dynamic> newMap = {};
     originalMap.forEach((key, value) {
-      Object newValue = value;
+      Object? newValue = value;
       String newKey = ReCase(key).snakeCase;
       switch (key) {
         case "styleJson":
@@ -942,7 +941,7 @@ extension TagX on Tag {
 extension UriX on Uri {
   ImageProvider toImageProvider() {
     if (data != null) {
-      return MemoryImage(data.contentAsBytes());
+      return MemoryImage(data!.contentAsBytes());
     } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
       return NetworkImage(toString());
     } else {
@@ -970,7 +969,7 @@ extension SafeGetList<T> on List<T> {
     }
   }
 
-  T maybeGet(int index) {
+  T? maybeGet(int index) {
     if (index >= length) {
       return null;
     } else {
@@ -988,12 +987,13 @@ extension ContextProviders on BuildContext {
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
   EdgeInsets get viewPadding => mediaQuery.viewPadding;
 
-  BasePageState get basePage => BasePage.of(this);
+  BasePageState? get basePage => BasePage.maybeOf(this);
   TextDirection get directionality => Directionality.of(this);
 
   NavigatorState get navigator => Navigator.of(this);
-  void pop<T extends Object>([T result]) => navigator.pop<T>(result);
-  Future<T> push<T extends Object>(Route<T> route) => navigator.push<T>(route);
+  void pop<T extends Object?>([T? result]) => navigator.pop<T?>(result);
+  Future<T?> push<T extends Object?>(Route<T> route) =>
+      navigator.push<T?>(route);
 
   NoteListPageState get selectionState => SelectionState.of(this);
 
@@ -1001,7 +1001,7 @@ extension ContextProviders on BuildContext {
 
   FocusScopeNode get focusScope => FocusScope.of(this);
 
-  DismissibleRouteState get dismissibleRoute => DismissibleRoute.of(this);
+  DismissibleRouteState? get dismissibleRoute => DismissibleRoute.maybeOf(this);
 }
 
 class SuspendedCurve extends Curve {
@@ -1009,8 +1009,7 @@ class SuspendedCurve extends Curve {
   const SuspendedCurve(
     this.startingPoint, {
     this.curve = Curves.easeOutCubic,
-  })  : assert(startingPoint != null),
-        assert(curve != null);
+  });
 
   /// The progress value at which [curve] should begin.
   ///
@@ -1035,6 +1034,6 @@ class SuspendedCurve extends Curve {
 
     final double curveProgress = (t - startingPoint) / (1 - startingPoint);
     final double transformed = curve.transform(curveProgress);
-    return lerpDouble(startingPoint, 1, transformed);
+    return lerpDouble(startingPoint, 1, transformed)!;
   }
 }

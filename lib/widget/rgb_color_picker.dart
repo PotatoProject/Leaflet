@@ -15,8 +15,8 @@ class RGBColorPicker extends StatefulWidget {
 }
 
 class _RGBColorPickerState extends State<RGBColorPicker> {
-  Color currentColor;
-  TextEditingController controller;
+  late Color currentColor;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -173,9 +173,9 @@ class ColorSlider extends StatelessWidget {
   final RGB rgb;
 
   const ColorSlider({
-    @required this.color,
-    @required this.onChange,
-    @required this.rgb,
+    required this.color,
+    required this.onChange,
+    required this.rgb,
   });
 
   @override

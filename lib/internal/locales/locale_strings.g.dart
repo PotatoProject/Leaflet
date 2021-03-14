@@ -1,5 +1,3 @@
-// @dart=2.12
-
 import 'package:easy_localization/easy_localization.dart';
 
 class LocaleStrings {
@@ -27,7 +25,8 @@ class _$CommonLocaleStrings {
   final String edit = "common.edit".tr();
   final String goOn = "common.go_on".tr();
   final String exit = "common.exit".tr();
-  String xOfY(Object arg1, Object arg2) => "common.x_of_y".tr(args: [arg1.toString(), arg2.toString()]);
+  String xOfY(Object arg1, Object arg2) =>
+      "common.x_of_y".tr(args: [arg1.toString(), arg2.toString()]);
   final String newNote = "common.new_note".tr();
   final String newList = "common.new_list".tr();
   final String newImage = "common.new_image".tr();
@@ -53,9 +52,12 @@ class _$CommonLocaleStrings {
   final String colorBlue = "common.color.blue".tr();
   final String colorPurple = "common.color.purple".tr();
   final String colorPink = "common.color.pink".tr();
-  final String notificationDefaultTitle = "common.notification.default_title".tr();
-  final String notificationDetailsTitle = "common.notification.details_title".tr();
-  final String notificationDetailsDesc = "common.notification.details_desc".tr();
+  final String notificationDefaultTitle =
+      "common.notification.default_title".tr();
+  final String notificationDetailsTitle =
+      "common.notification.details_title".tr();
+  final String notificationDetailsDesc =
+      "common.notification.details_desc".tr();
   final String tagNew = "common.tag.new".tr();
   final String tagModify = "common.tag.modify".tr();
   final String tagTextboxHint = "common.tag.textbox_hint".tr();
@@ -81,9 +83,12 @@ class _$MainPageLocaleStrings {
   final String titleTag = "main_page.title.tag".tr();
   final String titleAll = "main_page.title.all".tr();
   final String selectionBarClose = "main_page.selection_bar.close".tr();
-  final String selectionBarAddFavourites = "main_page.selection_bar.add_favourites".tr();
-  final String selectionBarRemoveFavourites = "main_page.selection_bar.remove_favourites".tr();
-  final String selectionBarChangeColor = "main_page.selection_bar.change_color".tr();
+  final String selectionBarAddFavourites =
+      "main_page.selection_bar.add_favourites".tr();
+  final String selectionBarRemoveFavourites =
+      "main_page.selection_bar.remove_favourites".tr();
+  final String selectionBarChangeColor =
+      "main_page.selection_bar.change_color".tr();
   final String selectionBarArchive = "main_page.selection_bar.archive".tr();
   final String selectionBarDelete = "main_page.selection_bar.delete".tr();
   final String selectionBarPin = "main_page.selection_bar.pin".tr();
@@ -104,7 +109,8 @@ class _$NotePageLocaleStrings {
   final String privacyTitle = "note_page.privacy.title".tr();
   final String privacyHideContent = "note_page.privacy.hide_content".tr();
   final String privacyLockNote = "note_page.privacy.lock_note".tr();
-  final String privacyLockNoteMissingPass = "note_page.privacy.lock_note.missing_pass".tr();
+  final String privacyLockNoteMissingPass =
+      "note_page.privacy.lock_note.missing_pass".tr();
   final String privacyUseBiometrics = "note_page.privacy.use_biometrics".tr();
   final String toggleList = "note_page.toggle_list".tr();
   final String imageGallery = "note_page.image_gallery".tr();
@@ -117,19 +123,29 @@ class _$NotePageLocaleStrings {
 class _$SettingsLocaleStrings {
   final String title = "settings.title".tr();
   final String personalizationTitle = "settings.personalization.title".tr();
-  final String personalizationThemeMode = "settings.personalization.theme_mode".tr();
-  final String personalizationThemeModeSystem = "settings.personalization.theme_mode.system".tr();
-  final String personalizationThemeModeLight = "settings.personalization.theme_mode.light".tr();
-  final String personalizationThemeModeDark = "settings.personalization.theme_mode.dark".tr();
-  final String personalizationUseAmoled = "settings.personalization.use_amoled".tr();
-  final String personalizationUseCustomAccent = "settings.personalization.use_custom_accent".tr();
-  final String personalizationCustomAccent = "settings.personalization.custom_accent".tr();
-  final String personalizationUseGrid = "settings.personalization.use_grid".tr();
+  final String personalizationThemeMode =
+      "settings.personalization.theme_mode".tr();
+  final String personalizationThemeModeSystem =
+      "settings.personalization.theme_mode.system".tr();
+  final String personalizationThemeModeLight =
+      "settings.personalization.theme_mode.light".tr();
+  final String personalizationThemeModeDark =
+      "settings.personalization.theme_mode.dark".tr();
+  final String personalizationUseAmoled =
+      "settings.personalization.use_amoled".tr();
+  final String personalizationUseCustomAccent =
+      "settings.personalization.use_custom_accent".tr();
+  final String personalizationCustomAccent =
+      "settings.personalization.custom_accent".tr();
+  final String personalizationUseGrid =
+      "settings.personalization.use_grid".tr();
   final String personalizationLocale = "settings.personalization.locale".tr();
   final String privacyTitle = "settings.privacy.title".tr();
   final String privacyUseMasterPass = "settings.privacy.use_master_pass".tr();
-  final String privacyUseMasterPassDisclaimer = "settings.privacy.use_master_pass.disclaimer".tr();
-  final String privacyModifyMasterPass = "settings.privacy.modify_master_pass".tr();
+  final String privacyUseMasterPassDisclaimer =
+      "settings.privacy.use_master_pass.disclaimer".tr();
+  final String privacyModifyMasterPass =
+      "settings.privacy.modify_master_pass".tr();
   final String infoTitle = "settings.info.title".tr();
   final String infoAboutApp = "settings.info.about_app".tr();
   final String debugTitle = "settings.debug.title".tr();
@@ -154,7 +170,8 @@ class _$AboutLocaleStrings {
 
 class _$SearchLocaleStrings {
   final String textboxHint = "search.textbox_hint".tr();
-  String tagCreateHint(Object arg1) => "search.tag_create_hint".tr(args: [arg1.toString()]);
+  String tagCreateHint(Object arg1) =>
+      "search.tag_create_hint".tr(args: [arg1.toString()]);
   final String typeToSearch = "search.type_to_search".tr();
   final String nothingFound = "search.nothing_found".tr();
 }
@@ -179,4 +196,3 @@ class _$SetupLocaleStrings {
   final String finishTitle = "setup.finish.title".tr();
   final String finishLastWords = "setup.finish.last_words".tr();
 }
-

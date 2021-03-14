@@ -7,8 +7,8 @@ class SearchPage extends StatefulWidget {
   final CustomSearchDelegate delegate;
 
   const SearchPage({
-    Key key,
-    @required this.delegate,
+    Key? key,
+    required this.delegate,
   }) : super(key: key);
 
   @override
@@ -89,7 +89,6 @@ abstract class CustomSearchDelegate<T> {
 
   String get query => _queryTextController.text;
   set query(String value) {
-    assert(query != null);
     _queryTextController.text = value;
   }
 
@@ -98,22 +97,22 @@ abstract class CustomSearchDelegate<T> {
     context.pop();
   }
 
-  final String searchFieldLabel;
+  final String? searchFieldLabel;
 
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
 
   final TextInputAction textInputAction;
 
   Animation<double> get transitionAnimation => _proxyAnimation;
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
 
   final TextEditingController _queryTextController = TextEditingController();
 
   final ProxyAnimation _proxyAnimation =
       ProxyAnimation(kAlwaysDismissedAnimation);
 
-  void Function(VoidCallback) _setState;
+  void Function(VoidCallback)? _setState;
 
-  void Function(VoidCallback) get setState => _setState;
+  void Function(VoidCallback)? get setState => _setState;
 }

@@ -4,9 +4,9 @@ import 'package:potato_notes/internal/utils.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
-  final void Function(int) onColorSelect;
+  final void Function(int)? onColorSelect;
 
-  const NoteColorSelector({@required this.selectedColor, this.onColorSelect});
+  const NoteColorSelector({required this.selectedColor, this.onColorSelect});
 
   @override
   _NoteColorSelectorState createState() => _NoteColorSelectorState();
@@ -32,18 +32,18 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
   }
 
   Widget noteColorItem({
-    @required int index,
-    @required double size,
-    @required bool selected,
+    required int index,
+    required double size,
+    required bool selected,
   }) {
     Color getIconColor() {
       if (index == 0) {
         final Brightness themeBrightness = context.theme.brightness;
 
         if (themeBrightness == Brightness.light) {
-          return ThemeData.light().iconTheme.color;
+          return ThemeData.light().iconTheme.color!;
         } else {
-          return ThemeData.dark().iconTheme.color;
+          return ThemeData.dark().iconTheme.color!;
         }
       } else {
         final Color color =
@@ -66,7 +66,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
             child: Tooltip(
               message: NoteColors.colorList[index].label,
               child: InkWell(
-                onTap: () => widget.onColorSelect(index),
+                onTap: () => widget.onColorSelect?.call(index),
                 child: Center(
                   child: Visibility(
                     visible: selected,

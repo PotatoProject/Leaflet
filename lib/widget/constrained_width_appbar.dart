@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class ConstrainedWidthAppbar extends StatelessWidget with PreferredSizeWidget {
-  final Widget child;
+  final Widget? child;
   final double width;
 
   ConstrainedWidthAppbar({
-    @required this.child,
+    required this.child,
     this.width = 1080,
   });
 

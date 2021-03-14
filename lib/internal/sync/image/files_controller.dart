@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class FilesController {
   static const String filesPrefix = "/files";
@@ -99,7 +100,7 @@ class FilesController {
     );
     if (getResult.statusCode == 200) {
       final Map<String, dynamic> jsonBody =
-          getResult.data as Map<String, dynamic>;
+          Utils.asMap<String, dynamic>(getResult.data);
       return FilesApiStats(jsonBody["used"] as int, jsonBody["limit"] as int);
     } else {
       throw "Cant get stats ${getResult.data}";

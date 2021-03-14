@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:dio/dio.dart';
@@ -14,6 +13,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/blake/stub.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 import 'download_queue_item.dart';
 
@@ -56,7 +56,7 @@ class ImageHelper {
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
     final String hash =
-        rawDigest.map((n) => n.toRadixString(16).toString()).join('');
+        rawDigest.map((n) => n.toRadixString(16).toString()).join();
     Loggy.d(message: hash);
     return hash;
   }
@@ -71,7 +71,7 @@ class ImageHelper {
   }
 
   static Image compressImage(Uint8List rawBytes) {
-    final Image image = decodeImage(rawBytes);
+    final Image image = decodeImage(rawBytes)!;
     // Default height of compressed images
     Image resized;
     // Ensure we dont enlarge the picture since the resize algorithm makes it look ugly then
@@ -101,7 +101,7 @@ class ImageHelper {
     return imageFile;
   }
 
-  static DownloadQueueItem getDownloadItem(SavedImage savedimage) {
+  static DownloadQueueItem? getDownloadItem(SavedImage savedimage) {
     final int index = imageQueue.downloadQueue
         .indexWhere((e) => e.savedImage.id == savedimage.id);
     if (index == -1) {
@@ -111,7 +111,7 @@ class ImageHelper {
     }
   }
 
-  static Future<String> getAvatar(String token) async {
+  static Future<String?> getAvatar(String token) async {
     final String url = "${prefs.getFromCache("api_url")}/files/get/avatar.jpg";
     Loggy.v(message: "Going to send GET to: $url");
     final Response presign = await dio.get(
@@ -137,11 +137,10 @@ class ImageHelper {
   }
 
   static String processImage(String jsonParameters) {
-    final Map<String, dynamic> parameters =
-        json.decode(jsonParameters) as Map<String, dynamic>;
+    final Map<String, String> parameters =
+        Utils.asMap<String, String>(json.decode(jsonParameters));
     final Map<String, String> data = {};
-    final Uint8List rawBytes =
-        File(parameters["original"] as String).readAsBytesSync();
+    final Uint8List rawBytes = File(parameters["original"]!).readAsBytesSync();
     Loggy.d(message: "Hashing image");
     data["hash"] = ImageHelper.generateImageHash(rawBytes);
     Loggy.d(message: "Resizing image");

@@ -3,16 +3,16 @@ import 'package:potato_notes/internal/utils.dart';
 
 class DrawerListTile extends StatefulWidget {
   final Widget icon;
-  final Widget activeIcon;
+  final Widget? activeIcon;
   final Text title;
   final bool showTitle;
-  final void Function() onTap;
+  final VoidCallback? onTap;
   final bool active;
 
   const DrawerListTile({
-    @required this.icon,
+    required this.icon,
     this.activeIcon,
-    @required this.title,
+    required this.title,
     this.showTitle = true,
     this.onTap,
     this.active = false,
@@ -24,7 +24,7 @@ class DrawerListTile extends StatefulWidget {
 
 class _DrawerListTileState extends State<DrawerListTile>
     with SingleTickerProviderStateMixin {
-  AnimationController _ac;
+  late AnimationController _ac;
 
   @override
   void initState() {
@@ -96,7 +96,7 @@ class _DrawerListTileState extends State<DrawerListTile>
                       Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: DefaultTextStyle(
-                          style: textTheme.bodyText1.copyWith(
+                          style: textTheme.bodyText1!.copyWith(
                             color: widget.active
                                 ? _activeColor
                                 : contrast.withOpacity(0.7),
@@ -127,7 +127,7 @@ class _DrawerListTileState extends State<DrawerListTile>
           ),
         );
         return !widget.showTitle
-            ? Tooltip(message: widget.title.data, child: parent)
+            ? Tooltip(message: widget.title.data!, child: parent)
             : parent;
       },
     );
@@ -137,12 +137,12 @@ class _DrawerListTileState extends State<DrawerListTile>
 @immutable
 class DrawerListTileData {
   final Widget icon;
-  final Widget activeIcon;
+  final Widget? activeIcon;
   final Widget title;
 
   const DrawerListTileData({
-    this.icon,
+    required this.icon,
     this.activeIcon,
-    this.title,
+    required this.title,
   });
 }

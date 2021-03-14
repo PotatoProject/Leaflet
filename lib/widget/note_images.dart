@@ -8,13 +8,13 @@ const double _kImageStripSpacing = 8.0;
 
 class NoteImages extends StatelessWidget {
   final List<SavedImage> images;
-  final ValueChanged<int> onImageTap;
+  final ValueChanged<int>? onImageTap;
   final ImageLayoutType layoutType;
   final Axis stripAxis;
-  final int maxGridRows;
+  final int? maxGridRows;
 
   const NoteImages({
-    @required this.images,
+    required this.images,
     this.onImageTap,
     this.layoutType = ImageLayoutType.grid,
     this.stripAxis = Axis.horizontal,
@@ -43,11 +43,11 @@ class NoteImages extends StatelessWidget {
 
 class _ImageGrid extends StatelessWidget {
   final List<SavedImage> images;
-  final ValueChanged<int> onImageTap;
-  final int maxGridRows;
+  final ValueChanged<int>? onImageTap;
+  final int? maxGridRows;
 
   const _ImageGrid({
-    @required this.images,
+    required this.images,
     this.onImageTap,
     this.maxGridRows,
   });
@@ -61,7 +61,7 @@ class _ImageGrid extends StatelessWidget {
         final List<Widget> _rows = <Widget>[];
 
         final int _forLength = maxGridRows != null
-            ? _groupedImages.length.clamp(0, maxGridRows) as int
+            ? _groupedImages.length.clamp(0, maxGridRows ?? 2)
             : _groupedImages.length;
         for (int i = 0; i < _forLength; i++) {
           _rows.add(
@@ -87,7 +87,7 @@ class _ImageGrid extends StatelessWidget {
 
     final List<Size> _sizes = images
         .map(
-          (image) => Size(image.width, image.height),
+          (image) => Size(image.width!, image.height!),
         )
         .toList();
 
@@ -141,7 +141,7 @@ class _ImageGrid extends StatelessWidget {
   }
 
   double _getMinHeight(List<Size> sizes) {
-    double minHeight;
+    double? minHeight;
 
     for (final Size size in sizes) {
       if (minHeight == null) {
@@ -152,17 +152,17 @@ class _ImageGrid extends StatelessWidget {
       }
     }
 
-    return minHeight;
+    return minHeight!;
   }
 }
 
 class _ImageStrip extends StatelessWidget {
   final List<SavedImage> images;
   final Axis axis;
-  final ValueChanged<int> onImageTap;
+  final ValueChanged<int>? onImageTap;
 
   const _ImageStrip({
-    @required this.images,
+    required this.images,
     this.axis = Axis.horizontal,
     this.onImageTap,
   });

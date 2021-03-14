@@ -3,13 +3,13 @@ import 'package:potato_notes/internal/utils.dart';
 
 class BadgeIcon extends StatelessWidget {
   final Widget icon;
-  final Widget badgeIcon;
+  final Widget? badgeIcon;
   final double size;
   final double badgeSize;
-  final AlignmentGeometry badgeAlignment;
+  final AlignmentGeometry? badgeAlignment;
 
   const BadgeIcon({
-    this.icon,
+    required this.icon,
     this.badgeIcon,
     this.size = 24,
     this.badgeSize = 12,
@@ -43,7 +43,7 @@ class BadgeIcon extends StatelessWidget {
                     size: Size.square(badgeSize),
                     child: IconTheme.merge(
                       data: IconThemeData(size: badgeSize),
-                      child: badgeIcon,
+                      child: badgeIcon!,
                     ),
                   ),
                 ),

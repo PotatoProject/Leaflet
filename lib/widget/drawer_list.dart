@@ -4,26 +4,26 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {
-  final Widget header;
+  final Widget? header;
   final List<BottomNavigationBarItem> items;
-  final List<BottomNavigationBarItem> secondaryItems;
-  final Widget secondaryItemsFooter;
-  final Widget footer;
+  final List<BottomNavigationBarItem>? secondaryItems;
+  final Widget? secondaryItemsFooter;
+  final Widget? footer;
   final int currentIndex;
   final bool showTitles;
   final bool enabled;
-  final void Function(int index) onTap;
-  final void Function(int index) onSecondaryTap;
+  final ValueChanged<int>? onTap;
+  final ValueChanged<int>? onSecondaryTap;
 
   const DrawerList({
     this.header,
-    @required this.items,
+    required this.items,
     this.secondaryItems,
     this.secondaryItemsFooter,
     this.footer,
     this.currentIndex = 0,
     this.showTitles = true,
-    this.enabled,
+    this.enabled = true,
     this.onTap,
     this.onSecondaryTap,
   });
@@ -64,15 +64,13 @@ class DrawerList extends StatelessWidget {
     final List<Widget> list = [];
 
     if (header != null) {
-      list.add(header);
+      list.add(header!);
     }
 
-    if (items != null) {
-      list.add(generateDrawerListTiles(items, false));
-    }
+    list.add(generateDrawerListTiles(items, false));
 
     if (secondaryItems != null) {
-      list.add(generateDrawerListTiles(secondaryItems, true));
+      list.add(generateDrawerListTiles(secondaryItems!, true));
     }
 
     return list;
@@ -95,10 +93,10 @@ class DrawerList extends StatelessWidget {
                 (index) => DrawerListTile(
                   icon: items[index].icon,
                   activeIcon: items[index].activeIcon,
-                  title: Text(items[index].label),
+                  title: Text(items[index].label!),
                   onTap: secondary
-                      ? () => onSecondaryTap(index)
-                      : () => onTap(index),
+                      ? () => onSecondaryTap?.call(index)
+                      : () => onTap?.call(index),
                   active: secondary
                       ? currentIndex == (index + (this.items.length))
                       : currentIndex == index,
@@ -117,15 +115,14 @@ class DrawerListItem {
   final Widget icon;
   final Widget selectedIcon;
   final String label;
-  final Color color;
-  final Color selectedColor;
+  final Color? color;
+  final Color? selectedColor;
 
   const DrawerListItem({
-    @required this.icon,
-    Widget selectedIcon,
-    this.label,
+    required this.icon,
+    Widget? selectedIcon,
+    required this.label,
     this.color,
     this.selectedColor,
-  })  : selectedIcon = selectedIcon ?? icon,
-        assert(icon != null);
+  }) : selectedIcon = selectedIcon ?? icon;
 }

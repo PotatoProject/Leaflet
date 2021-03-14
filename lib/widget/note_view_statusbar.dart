@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,11 +11,11 @@ import 'package:potato_notes/widget/tag_chip.dart';
 
 class NoteViewStatusbar extends StatefulWidget {
   final Note note;
-  final EdgeInsets padding;
-  final double width;
+  final EdgeInsets? padding;
+  final double? width;
 
   const NoteViewStatusbar({
-    @required this.note,
+    required this.note,
     this.padding,
     this.width,
   });
@@ -71,9 +72,8 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                 widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
                 (index) {
                   if (index != 3) {
-                    final Tag tag = prefs.tags.firstWhere(
+                    final Tag? tag = prefs.tags.firstWhereOrNull(
                       (tag) => tag.id == widget.note.tags[index],
-                      orElse: () => null,
                     );
                     if (tag == null) return const SizedBox();
 
@@ -106,7 +106,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                   DateFormat("d MMMM y", context.locale.toString())
                       .format(widget.note.creationDate),
                   style: TextStyle(
-                    color: context.theme.iconTheme.color.withOpacity(0.5),
+                    color: context.theme.iconTheme.color!.withOpacity(0.5),
                     fontSize: 12,
                   ),
                 ),

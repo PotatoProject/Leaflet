@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -36,7 +35,7 @@ class InAppUpdater {
           "https://api.github.com/repos/HrX03/PotatoNotes/releases/latest",
         );
         final Map<dynamic, dynamic> body =
-            githubRelease.data as Map<dynamic, String>;
+            Utils.asMap<String, dynamic>(githubRelease.data);
         final int versionCode =
             int.parse(body["tag_name"].split("+")[1] as String);
         return AppUpdateInfo(
@@ -54,7 +53,7 @@ class InAppUpdater {
 
   static Future<void> checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
-    if (DeviceInfo.isDesktopOrWeb) return;
+    //if (DeviceInfo.isDesktopOrWeb) return;
     final AppUpdateInfo updateInfo = await _internalCheckForUpdate();
     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       update(
@@ -81,7 +80,7 @@ class InAppUpdater {
   }
 
   static Future<void> update({
-    @required BuildContext context,
+    required BuildContext context,
     bool immediateUpdateAllowed = false,
     bool flexibleUpdateAllowed = false,
   }) async {
@@ -105,7 +104,7 @@ class InAppUpdater {
   }
 
   static Future<bool> _showUpdateDialog(BuildContext context) async {
-    final bool status = await showDialog<bool>(
+    final bool? status = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) {

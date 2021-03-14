@@ -14,10 +14,10 @@ import 'note_color_selector.dart';
 
 class QueryFilters extends StatefulWidget {
   final SearchQuery query;
-  final Function() filterChangedCallback;
+  final VoidCallback? filterChangedCallback;
 
   const QueryFilters({
-    @required this.query,
+    required this.query,
     this.filterChangedCallback,
   });
 
@@ -80,10 +80,10 @@ class _QueryFiltersState extends State<QueryFilters> {
             ),
           ),
           onTap: () async {
-            final int queryColor = await Utils.showNotesModalBottomSheet(
+            final int? queryColor = await Utils.showNotesModalBottomSheet(
               context: context,
               builder: (context) => NoteColorSelector(
-                selectedColor: widget.query.color ?? 0,
+                selectedColor: widget.query.color,
                 onColorSelect: (color) {
                   if (color == 0) {
                     context.pop(-1);
@@ -105,7 +105,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           title: Text(LocaleStrings.common.dateFilter),
           subtitle: widget.query.date != null
               ? Text(
-                  "${DateFormat("EEEE d MMM yyyy").format(widget.query.date)} - ${DateFilterSelector.stringFromDateMode(widget.query.dateMode)}",
+                  "${DateFormat("EEEE d MMM yyyy").format(widget.query.date!)} - ${DateFilterSelector.stringFromDateMode(widget.query.dateMode)}",
                 )
               : null,
           onTap: () async {

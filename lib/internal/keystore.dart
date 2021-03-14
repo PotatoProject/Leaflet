@@ -6,7 +6,8 @@ class Keystore {
   Keystore();
 
   Future<String> getMasterPass() async {
-    return _storage.read(key: "master_pass") ?? Future.value("");
+    final String? value = await _storage.read(key: "master_pass");
+    return value ?? "";
   }
 
   Future<void> setMasterPass(String value) async {

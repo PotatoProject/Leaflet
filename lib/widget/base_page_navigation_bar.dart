@@ -5,10 +5,10 @@ class BasePageNavigationBar extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
   final int index;
   final bool enabled;
-  final ValueChanged<int> onPageChanged;
+  final ValueChanged<int>? onPageChanged;
 
   const BasePageNavigationBar({
-    @required this.items,
+    required this.items,
     this.index = 0,
     this.enabled = true,
     this.onPageChanged,
@@ -55,7 +55,7 @@ class BasePageNavigationBar extends StatelessWidget {
               onTap: onPageChanged,
               type: BottomNavigationBarType.fixed,
               selectedItemColor: context.theme.accentColor,
-              unselectedItemColor: context.theme.textTheme.caption.color,
+              unselectedItemColor: context.theme.textTheme.caption!.color,
               elevation: 0,
             ),
           ),

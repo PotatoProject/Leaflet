@@ -5,17 +5,17 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 
 class DrawingToolbar extends StatefulWidget {
-  final DrawingToolbarController controller;
+  final DrawingToolbarController? controller;
   final List<DrawingTool> tools;
   final int toolIndex;
-  final ValueChanged<int> onIndexChanged;
+  final ValueChanged<int>? onIndexChanged;
   final DrawingBoardController boardController;
-  final VoidCallback clearCanvas;
+  final VoidCallback? clearCanvas;
 
   const DrawingToolbar({
-    @required this.tools,
+    required this.tools,
     this.controller,
-    this.boardController,
+    required this.boardController,
     this.toolIndex = 0,
     this.onIndexChanged,
     this.clearCanvas,
@@ -27,8 +27,8 @@ class DrawingToolbar extends StatefulWidget {
 
 class _DrawingToolbarState extends State<DrawingToolbar>
     with TickerProviderStateMixin {
-  AnimationController _ac;
-  AnimationController _colorPanelAc;
+  late AnimationController _ac;
+  late AnimationController _colorPanelAc;
   double _panelHeight = 0;
   Curve _curve = decelerateEasing;
 
@@ -83,13 +83,13 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 setState(() => _curve = Curves.linear);
               },
               onVerticalDragUpdate: (details) {
-                _ac.value -= details.primaryDelta / _panelHeight;
+                _ac.value -= details.primaryDelta! / _panelHeight;
               },
               onVerticalDragEnd: (details) {
                 setState(() => _curve =
                     SuspendedCurve(_ac.value, curve: decelerateEasing));
 
-                if (details.primaryVelocity > 350) {
+                if (details.primaryVelocity! > 350) {
                   final bool _animForward =
                       _ac.status == AnimationStatus.forward ||
                           _ac.status == AnimationStatus.completed;
@@ -310,8 +310,8 @@ class _CollapsableWidget extends StatelessWidget {
   final Animation<double> collapseStatus;
 
   const _CollapsableWidget({
-    this.child,
-    @required this.collapseStatus,
+    required this.child,
+    required this.collapseStatus,
   });
 
   @override
@@ -333,11 +333,11 @@ class _CollapsableWidget extends StatelessWidget {
 class _ColorStrip extends StatelessWidget {
   final ColorType type;
   final DrawingTool currentTool;
-  final ValueChanged<Color> onTap;
+  final ValueChanged<Color>? onTap;
 
   const _ColorStrip({
-    @required this.type,
-    this.currentTool,
+    required this.type,
+    required this.currentTool,
     this.onTap,
   });
 
@@ -370,10 +370,10 @@ class _ColorStrip extends StatelessWidget {
               } else {
                 switch (type) {
                   case ColorType.dark:
-                    color = Color(NoteColors.colorList[index].darkColor);
+                    color = Color(NoteColors.colorList[index].darkColor!);
                     break;
                   case ColorType.light:
-                    color = Color(NoteColors.colorList[index].lightColor);
+                    color = Color(NoteColors.colorList[index].lightColor!);
                     break;
                   case ColorType.normal:
                   default:
@@ -422,9 +422,9 @@ class _ColorStrip extends StatelessWidget {
 class DrawingToolbarController {
   DrawingToolbarController();
 
-  _DrawingToolbarState _state;
+  _DrawingToolbarState? _state;
 
-  void closePanel() => _state.closePanel();
+  void closePanel() => _state?.closePanel();
 }
 
 class DrawingTool {
@@ -436,9 +436,9 @@ class DrawingTool {
   double size;
 
   DrawingTool({
-    @required this.title,
-    @required this.icon,
-    @required this.toolType,
+    required this.title,
+    required this.icon,
+    required this.toolType,
     this.allowColor = true,
     this.color = Colors.black,
     this.size = ToolSize.four,

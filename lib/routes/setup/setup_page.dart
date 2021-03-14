@@ -54,10 +54,10 @@ class _SetupPagetate extends State<SetupPage> {
         body: GestureDetector(
           onHorizontalDragEnd: (details) {
             final double sign = textDirection == TextDirection.rtl
-                ? -details.primaryVelocity.sign
-                : details.primaryVelocity.sign;
+                ? -details.primaryVelocity!.sign
+                : details.primaryVelocity!.sign;
 
-            if (details.primaryVelocity.abs() > 320) {
+            if (details.primaryVelocity!.abs() > 320) {
               if (sign == 1) {
                 if (pageIndex != 0) {
                   prevPage();

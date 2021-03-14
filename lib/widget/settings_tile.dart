@@ -3,16 +3,16 @@ import 'package:potato_notes/internal/utils.dart';
 
 class SettingsTile extends StatelessWidget {
   final Widget title;
-  final Widget description;
-  final Widget icon;
-  final Widget subtitle;
-  final Widget trailing;
+  final Widget? description;
+  final Widget? icon;
+  final Widget? subtitle;
+  final Widget? trailing;
   final bool enabled;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const SettingsTile({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.description,
     this.icon,
     this.subtitle,
@@ -22,33 +22,33 @@ class SettingsTile extends StatelessWidget {
   }) : super(key: key);
 
   SettingsTile.withSwitch({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.description,
     this.icon,
     this.subtitle,
-    bool value,
-    ValueChanged<bool> onChanged,
-    Color activeColor,
+    required bool value,
+    ValueChanged<bool>? onChanged,
+    Color? activeColor,
     this.enabled = true,
   })  : trailing = Switch.adaptive(
           value: value,
           onChanged: enabled ? onChanged : null,
           activeColor: activeColor,
         ),
-        onTap = (() => onChanged(!value)),
+        onTap = (() => onChanged?.call(!value)),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget _subtitle;
+    Widget? _subtitle;
 
     if (subtitle != null) {
       _subtitle = DefaultTextStyle(
-        style: context.theme.textTheme.subtitle2.copyWith(
-          color: context.theme.textTheme.caption.color,
+        style: context.theme.textTheme.subtitle2!.copyWith(
+          color: context.theme.textTheme.caption!.color,
         ),
-        child: subtitle,
+        child: subtitle!,
       );
     }
 

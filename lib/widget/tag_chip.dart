@@ -7,14 +7,14 @@ class TagChip extends StatelessWidget {
   final bool shrink;
 
   const TagChip({
-    @required this.title,
+    required this.title,
     this.showIcon = true,
     this.shrink = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color contrast = context.theme.iconTheme.color.withOpacity(0.2);
+    final Color contrast = context.theme.iconTheme.color!.withOpacity(0.2);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -50,7 +50,7 @@ class TagChip extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: shrink ? 12 : 14,
-                    color: context.theme.iconTheme.color.withOpacity(1),
+                    color: context.theme.iconTheme.color!.withOpacity(1),
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,

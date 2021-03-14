@@ -5,10 +5,10 @@ import 'package:potato_notes/internal/custom_icons.dart';
 
 class ReturnModeSelectionSheet extends StatefulWidget {
   final SearchReturnMode mode;
-  final ValueChanged<SearchReturnMode> onModeChanged;
+  final ValueChanged<SearchReturnMode>? onModeChanged;
 
   const ReturnModeSelectionSheet({
-    @required this.mode,
+    required this.mode,
     this.onModeChanged,
   });
 
@@ -18,7 +18,7 @@ class ReturnModeSelectionSheet extends StatefulWidget {
 }
 
 class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
-  SearchReturnMode _mode;
+  late SearchReturnMode _mode;
 
   @override
   void initState() {

@@ -13,7 +13,7 @@ class SplashPage extends StatefulWidget {
   final Widget child;
 
   const SplashPage({
-    this.child,
+    required this.child,
   });
 
   @override
@@ -21,11 +21,11 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
-  AnimationController _elementsAc;
-  AnimationController _transitionAc;
+  late AnimationController _elementsAc;
+  late AnimationController _transitionAc;
 
-  Color initialColor;
-  Color finalColor;
+  late Color initialColor;
+  late Color finalColor;
 
   bool showChildOnly = false;
   bool showChild = false;
@@ -71,7 +71,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   Future<void> _loadColors() async {
     final MediaQueryData data =
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+        MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
     final ThemeMode themeMode = prefs.themeMode;
     final bool useAmoled = prefs.useAmoled;
@@ -130,16 +130,16 @@ class _ForegroundLayer extends StatelessWidget {
   final Animation<double> elementsAnimation;
 
   const _ForegroundLayer({
-    @required this.backgroundColor,
-    @required this.transitionAnimation,
-    @required this.elementsAnimation,
+    required this.backgroundColor,
+    required this.transitionAnimation,
+    required this.elementsAnimation,
   });
 
   @override
   Widget build(BuildContext context) {
     final ColorTween textColorTween = ColorTween(
-      begin: _getContrastingColor(backgroundColor.begin),
-      end: _getContrastingColor(backgroundColor.end),
+      begin: _getContrastingColor(backgroundColor.begin!),
+      end: _getContrastingColor(backgroundColor.end!),
     );
 
     return AnimatedBuilder(
@@ -162,7 +162,7 @@ class _ForegroundLayer extends StatelessWidget {
             child: AnimatedBuilder(
               animation: elementsAnimation,
               builder: (context, _) => ColoredBox(
-                color: backgroundColor.evaluate(elementsAnimation),
+                color: backgroundColor.evaluate(elementsAnimation)!,
               ),
             ),
           ),
@@ -190,7 +190,7 @@ class _ForegroundLayer extends StatelessWidget {
   }
 
   Color _getContrastingColor(Color base) {
-    return base.computeLuminance() > 0.5 ? Colors.grey[900] : Colors.white;
+    return base.computeLuminance() > 0.5 ? Colors.grey.shade900 : Colors.white;
   }
 }
 
@@ -199,8 +199,8 @@ class _LogoAnimationLayer extends StatelessWidget {
   final ColorTween textColorTween;
 
   const _LogoAnimationLayer({
-    @required this.animation,
-    @required this.textColorTween,
+    required this.animation,
+    required this.textColorTween,
   });
 
   @override

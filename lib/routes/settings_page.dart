@@ -27,7 +27,7 @@ class SettingsPage extends StatefulWidget {
   final bool trimmed;
 
   const SettingsPage({
-    Key key,
+    Key? key,
     this.trimmed = false,
   }) : super(key: key);
 
@@ -253,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () async {
-                final int result = await Utils.showNotesModalBottomSheet(
+                final int? result = await Utils.showNotesModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
                     initialColor: context.theme.accentColor,
@@ -283,14 +283,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 showDropdownSheet(
                   context: context,
                   initialIndex:
-                      context.supportedLocales.indexOf(context.savedLocale) + 1,
+                      context.supportedLocales.indexOf(context.savedLocale!) +
+                          1,
                   scrollable: true,
                   itemBuilder: (context, index) {
-                    final Locale locale =
+                    final Locale? locale =
                         index == 0 ? null : context.supportedLocales[index - 1];
                     final String nativeName = locale != null
                         ? firstLetterToUppercase(
-                            localeNativeNames[locale.languageCode],
+                            localeNativeNames[locale.languageCode]!,
                           )
                         : "Device default";
                     final bool selected = context.savedLocale == locale;
@@ -315,7 +316,7 @@ class _SettingsPageState extends State<SettingsPage> {
               subtitle: Text(
                 context.savedLocale != null
                     ? firstLetterToUppercase(
-                        localeNativeNames[context.savedLocale.languageCode],
+                        localeNativeNames[context.savedLocale!.languageCode]!,
                       )
                     : "Device default",
               ),
@@ -324,13 +325,13 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: const Icon(Icons.autorenew),
               title: const Text("Change sync API url"),
               onTap: () async {
-                final bool status = await showInfoSheet(
+                final bool? status = await showInfoSheet(
                   context,
                   content:
                       "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
                   buttonAction: LocaleStrings.common.goOn,
                 );
-                if (status) {
+                if (status ?? false) {
                   Utils.showNotesModalBottomSheet(
                     context: context,
                     builder: (context) => SyncUrlEditor(),
@@ -347,25 +348,25 @@ class _SettingsPageState extends State<SettingsPage> {
               value: prefs.masterPass != "",
               onChanged: (value) async {
                 if (prefs.masterPass == "") {
-                  final bool status = await showInfoSheet(
+                  final bool? status = await showInfoSheet(
                     context,
                     content:
                         LocaleStrings.settings.privacyUseMasterPassDisclaimer,
                     buttonAction: LocaleStrings.common.goOn,
                   );
-                  if (status) showPassChallengeSheet(context);
+                  if (status ?? false) showPassChallengeSheet(context);
                 } else {
-                  final bool confirm =
-                      await showPassChallengeSheet(context, false) ?? false;
+                  final bool? confirm =
+                      await showPassChallengeSheet(context, false);
 
-                  if (confirm) {
+                  if (confirm ?? false) {
                     prefs.masterPass = "";
 
                     final List<Note> notes =
                         await helper.listNotes(ReturnMode.local);
 
                     setState(() => removingMasterPass = true);
-                    context.basePage.setBottomBarEnabled(false);
+                    context.basePage!.setBottomBarEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
                       final Note note = notes[i];
                       if (note.lockNote) {
@@ -374,7 +375,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       }
                     }
-                    context.basePage.setBottomBarEnabled(true);
+                    context.basePage!.setBottomBarEnabled(true);
                   }
                 }
               },
@@ -389,9 +390,9 @@ class _SettingsPageState extends State<SettingsPage> {
               title: Text(LocaleStrings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
-                final bool confirm =
-                    await showPassChallengeSheet(context, false) ?? false;
-                if (confirm) showPassChallengeSheet(context);
+                final bool? confirm =
+                    await showPassChallengeSheet(context, false);
+                if (confirm ?? false) showPassChallengeSheet(context);
               },
             ),
           ],
@@ -400,8 +401,11 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<bool> showInfoSheet(BuildContext context,
-      {String content, String buttonAction}) async {
+  Future<bool?> showInfoSheet(
+    BuildContext context, {
+    required String content,
+    required String buttonAction,
+  }) async {
     return await Utils.showNotesModalBottomSheet(
           context: context,
           builder: (context) => Column(
@@ -425,9 +429,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<dynamic> showDropdownSheet({
-    @required BuildContext context,
-    @required IndexedWidgetBuilder itemBuilder,
-    int itemCount,
+    required BuildContext context,
+    required IndexedWidgetBuilder itemBuilder,
+    required int itemCount,
     int initialIndex = 0,
     bool scrollable = false,
   }) async {
@@ -451,10 +455,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget dropDownTile({
-    @required Widget title,
-    Widget subtitle,
-    @required bool selected,
-    VoidCallback onTap,
+    required Widget title,
+    Widget? subtitle,
+    required bool selected,
+    VoidCallback? onTap,
   }) {
     return ListTile(
       selected: selected,
@@ -478,7 +482,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<bool> showPassChallengeSheet(BuildContext context,
+  Future<bool?> showPassChallengeSheet(BuildContext context,
       [bool editMode = true]) async {
     return Utils.showNotesModalBottomSheet(
       context: context,

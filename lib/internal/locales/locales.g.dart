@@ -1,5 +1,3 @@
-// @dart=2.12
-
 import 'dart:ui';
 
 // ignore_for_file: avoid_escaping_inner_quotes

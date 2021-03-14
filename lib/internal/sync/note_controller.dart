@@ -29,7 +29,7 @@ class NoteController {
         message:
             "(${note.id} add) Server responded with {${addResult.statusCode}): ${addResult.data}",
       );
-      return handleResponse(addResult);
+      return handleResponse(addResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -52,7 +52,7 @@ class NoteController {
         message:
             "($id delete) Server responded with (${deleteResponse.statusCode}}: ${deleteResponse.data}",
       );
-      return handleResponse(deleteResponse);
+      return handleResponse(deleteResponse).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -75,7 +75,7 @@ class NoteController {
         message:
             "(delete-all) Server responded with (${deleteResult.statusCode}: ${deleteResult.data}",
       );
-      return handleResponse(deleteResult);
+      return handleResponse(deleteResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -131,7 +131,7 @@ class NoteController {
         message:
             "($id update) Server responded with (${updateResult.statusCode}): ${updateResult.data}",
       );
-      return handleResponse(updateResult);
+      return handleResponse(updateResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -168,12 +168,12 @@ class NoteController {
     }
   }
 
-  static String handleResponse(Response response) {
+  static Object? handleResponse(Response response) {
     switch (response.statusCode) {
       case 401:
         throw "Token is not valid";
       default:
-        return response.data.toString();
+        return response.data;
     }
   }
 }

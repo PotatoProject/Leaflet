@@ -4,13 +4,15 @@ publish_to: 'none'
 version: 2.0.0-beta1+16
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   animations: ^2.0.0
 
   back_button_interceptor: ^5.0.0-nullsafety.1
   blurhash_dart: ^1.0.0-nullsafety.0
+
+  collection: ^1.15.0
 
   dio: ^4.0.0-beta4
 
@@ -79,11 +81,16 @@ dev_dependencies:
   json_serializable: ^4.0.2
   lint:
   mobx_codegen:
+    git:
+      url: https://github.com/mobxjs/mobx.dart
+      path: mobx_codegen
+      ref: null_safety
   mockito: ^5.0.0-nullsafety.7
-  moor_generator:
+  moor_generator: ^4.1.0
 
 dependency_overrides:
-  mobx: ^2.0.0-nullsafety.3
+  analyzer: ^1.1.0
+  pub_semver: ^1.3.2
 
 flutter:
   uses-material-design: true

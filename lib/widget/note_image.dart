@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -11,7 +12,7 @@ class NoteImage extends StatefulWidget {
   final BoxFit fit;
 
   const NoteImage({
-    @required this.savedImage,
+    required this.savedImage,
     this.fit = BoxFit.cover,
   });
 
@@ -24,7 +25,7 @@ class NoteImage extends StatefulWidget {
     if (savedImage.existsLocally && savedImage.uploaded) {
       image = FileImage(File(savedImage.path));
     } else if (savedImage.hash != null) {
-      image = BlurHashImage(savedImage.blurHash);
+      image = BlurHashImage(savedImage.blurHash!);
     } else {
       image = FileImage(File(savedImage.path));
     }
@@ -34,7 +35,7 @@ class NoteImage extends StatefulWidget {
 }
 
 class _NoteImageState extends State<NoteImage> {
-  QueueItem queueItem;
+  QueueItem? queueItem;
 
   @override
   void initState() {
@@ -44,9 +45,8 @@ class _NoteImageState extends State<NoteImage> {
   }
 
   void _getQueueItem() {
-    queueItem = imageQueue.queue.firstWhere(
+    queueItem = imageQueue.queue.firstWhereOrNull(
       (e) => e.savedImage.id == widget.savedImage.id,
-      orElse: () => null,
     );
     if (queueItem != null) setState(() {});
   }
@@ -67,7 +67,7 @@ class _NoteImageState extends State<NoteImage> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<QueueItemStatus>(
         valueListenable:
             queueItem?.status ?? ValueNotifier(QueueItemStatus.complete),
         builder: (context, value, _) {
@@ -94,9 +94,9 @@ class _NoteImageState extends State<NoteImage> {
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.all(8),
-                            child: ValueListenableBuilder<double>(
-                              valueListenable:
-                                  queueItem?.progress ?? ValueNotifier(null),
+                            child: ValueListenableBuilder<double?>(
+                              valueListenable: queueItem?.progress ??
+                                  ValueNotifier<double?>(null),
                               builder: (context, value, _) {
                                 return CircularProgressIndicator(
                                   strokeWidth: 2,

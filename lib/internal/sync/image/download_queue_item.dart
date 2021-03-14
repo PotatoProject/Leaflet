@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -9,9 +8,9 @@ class DownloadQueueItem extends QueueItem {
   final String noteId;
 
   DownloadQueueItem({
-    @required this.noteId,
-    @required String localPath,
-    @required SavedImage savedImage,
+    required this.noteId,
+    required String localPath,
+    required SavedImage savedImage,
   }) : super(localPath: localPath, savedImage: savedImage);
 
   @action
@@ -41,9 +40,8 @@ class DownloadQueueItem extends QueueItem {
         if (presign.statusCode == 200) {
           return presign.data.toString();
         } else {
-          throw presign.data;
+          throw presign.data.toString();
         }
-        break;
       case StorageLocation.local:
       default:
         throw "Local images can not be downloaded";

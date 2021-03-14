@@ -8,6 +8,7 @@ import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 import 'image_helper.dart';
 
@@ -16,9 +17,9 @@ class UploadQueueItem extends QueueItem {
   final StorageLocation storageLocation;
 
   UploadQueueItem({
-    @required this.noteId,
-    @required String localPath,
-    @required SavedImage savedImage,
+    required this.noteId,
+    required String localPath,
+    required SavedImage savedImage,
     this.storageLocation = StorageLocation.local,
   }) : super(localPath: localPath, savedImage: savedImage);
 
@@ -32,11 +33,11 @@ class UploadQueueItem extends QueueItem {
     final String resultJson =
         await compute(ImageHelper.processImage, jsonEncode(data));
     final Map<String, String> result =
-        json.decode(resultJson) as Map<String, String>;
+        Utils.asMap<String, String>(json.decode(resultJson));
     savedImage.hash = result["hash"];
     savedImage.blurHash = result["blurhash"];
-    savedImage.width = double.parse(result["width"]);
-    savedImage.height = double.parse(result["height"]);
+    savedImage.width = double.parse(result["width"]!);
+    savedImage.height = double.parse(result["height"]!);
     return;
   }
 
@@ -82,9 +83,8 @@ class UploadQueueItem extends QueueItem {
         if (presign.statusCode == 200) {
           return presign.data.toString();
         } else {
-          throw presign.data;
+          throw presign.data.toString();
         }
-        break;
       case StorageLocation.local:
       default:
         throw "Local images should not be uploaded";

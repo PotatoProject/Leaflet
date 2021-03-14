@@ -8,7 +8,7 @@ import 'package:potato_notes/widget/badge_icon.dart';
 
 class AccountAvatar extends StatelessWidget {
   final double size;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool showBadgeOnSync;
 
   const AccountAvatar({
@@ -21,7 +21,7 @@ class AccountAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        final String avatarUrl = prefs.avatarUrl;
+        final String? avatarUrl = prefs.avatarUrl;
 
         return ValueListenableBuilder<bool>(
           valueListenable: SyncRoutine.instance.syncing,

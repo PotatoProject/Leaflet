@@ -9,13 +9,13 @@ abstract class BlakeBase {
   int get digestLength;
 
   /// If set, [key] is used for the first round of compression.
-  Uint8List get key;
+  Uint8List? get key;
 
   /// If set, [salt] is used to modify the initialization vector.
-  Uint8List get salt;
+  Uint8List? get salt;
 
   /// If set, [personalization] acts as a second [salt].
-  Uint8List get personalization;
+  Uint8List? get personalization;
 
   /// Initialization vector
   List<int> get iv;
@@ -24,7 +24,7 @@ abstract class BlakeBase {
   Uint8List get sigma;
 
   /// The hash of the key + all of the values added via `update()`.
-  List<int> _hash;
+  late List<int> _hash;
 
   /// The bit-length of the integers being used in the hashing function.
   ///
@@ -35,19 +35,19 @@ abstract class BlakeBase {
   int get _blockSize => bitLength * 2;
 
   /// Buffer block
-  List<int> _block;
+  late List<int> _block;
 
   /// Resets the hash to its initial state, effectively
   /// clearing all values added via `update()`.
   void reset() {
-    final keyLength = (key == null) ? 0 : key.length;
+    final keyLength = (key == null) ? 0 : key!.length;
 
-    final hash = List<int>.filled(8, null);
+    final hash = List<int>.filled(8, 0);
 
     for (var i = 0; i < hash.length; i++) {
       hash[i] = iv[i];
-      if (salt != null) hash[i] ^= salt[i];
-      if (personalization != null) hash[i] ^= personalization[i];
+      if (salt != null) hash[i] ^= salt![i];
+      if (personalization != null) hash[i] ^= personalization![i];
     }
 
     final block = List<int>.filled(_blockSize, 0);
@@ -62,7 +62,7 @@ abstract class BlakeBase {
 
     // If [key] exists, make the first round with it.
     if (keyLength > 0) {
-      update(key);
+      update(key!);
       _pointer = _blockSize;
     }
   }
@@ -98,8 +98,6 @@ abstract class BlakeBase {
 
   /// Update hash content with the given data.
   void update(Uint8List data) {
-    assert(data != null);
-
     for (var i = 0; i < data.length; i++) {
       if (_pointer == _blockSize) {
         _counter += _pointer;
@@ -114,15 +112,11 @@ abstract class BlakeBase {
 
   /// Converts [data] to a [Uint8List] and passes it to `update()`.
   void updateWithString(String data) {
-    assert(data != null);
-
     update(Uint8List.fromList(data.codeUnits));
   }
 
   /// Compression function
   void _compress(bool isLast) {
-    assert(isLast != null);
-
     List<int> v;
     List<int> m;
 
@@ -187,9 +181,6 @@ abstract class BlakeBase {
 
   /// Convert 4 bytes to Little-endian word.
   int _get32(List<int> data, int index) {
-    assert(data != null);
-    assert(index != null);
-
     return data[index + 1] ^
         (data[index + 1] << 8) ^
         (data[index + 1] << 16) ^
@@ -198,9 +189,6 @@ abstract class BlakeBase {
 
   /// Cyclic right rotation
   int _rotateRight(int data, int shift, int length) {
-    assert(data != null);
-    assert(shift != null);
-
     return (data >> shift) ^ (data << (length - shift));
   }
 }
@@ -208,23 +196,23 @@ abstract class BlakeBase {
 // This is just a fake blake class
 class Blake2 extends BlakeBase {
   @override
-  int get bitLength => null;
+  int get bitLength => 0;
 
   @override
-  int get digestLength => null;
+  int get digestLength => 0;
 
   @override
-  List<int> get iv => null;
+  List<int> get iv => [];
 
   @override
-  Uint8List get key => null;
+  Uint8List? get key => null;
 
   @override
-  Uint8List get personalization => null;
+  Uint8List? get personalization => null;
 
   @override
-  Uint8List get salt => null;
+  Uint8List? get salt => null;
 
   @override
-  Uint8List get sigma => null;
+  Uint8List get sigma => Uint8List(0);
 }

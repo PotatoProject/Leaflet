@@ -29,11 +29,11 @@ class _LoginPageState extends State<LoginPage> {
   bool register = false;
   bool showLoadingOverlay = false;
 
-  String usernameError;
-  String emailError;
-  String passwordError;
+  String? usernameError;
+  String? emailError;
+  String? passwordError;
 
-  String getString(int statusCode) {
+  String? getString(int statusCode) {
     switch (statusCode) {
       case 1:
         return "Too short";
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     BackButtonInterceptor.add((_, __) => showLoadingOverlay, name: "antiPop");
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance!.addPostFrameCallback(
       (_) => context.focusScope.requestFocus(emailOrUserFocusNode),
     );
     super.initState();
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           passwordController.text.isNotEmpty;
     }
 
-    context.dismissibleRoute.requestDisableGestures = showLoadingOverlay;
+    context.dismissibleRoute!.requestDisableGestures = showLoadingOverlay;
 
     final List<Widget> items = [
       TextFormField(
@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                           emailError = null;
                           passwordError = null;
                           setState(() => register = !register);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                          WidgetsBinding.instance!.addPostFrameCallback((_) {
                             if (register) {
                               context.focusScope.requestFocus(emailFocusNode);
                             } else {
@@ -312,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       if (response.message is Map<String, dynamic>) {
         final Map<String, dynamic> validation =
-            response.message as Map<String, dynamic>;
+            Utils.asMap<String, dynamic>(response.message);
         setState(() {
           usernameError = getString(validation["username"] as int);
           emailError = getString(validation["email"] as int);
@@ -326,10 +326,10 @@ class _LoginPageState extends State<LoginPage> {
         String message;
 
         if (register) {
-          message = response.message.toString().trim() ?? "Registered!";
+          message = response.message?.toString().trim() ?? "Registered!";
         } else {
           if (canBeHandled) {
-            message = _statusMessages[response.message.toString()];
+            message = _statusMessages[response.message.toString()] ?? "";
           } else {
             message = response.message.toString();
           }

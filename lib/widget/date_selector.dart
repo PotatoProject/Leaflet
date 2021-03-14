@@ -6,13 +6,13 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class DateFilterSelector extends StatefulWidget {
-  final DateTime date;
+  final DateTime? date;
   final DateFilterMode mode;
-  final Function(DateTime, DateFilterMode) onConfirm;
-  final Function() onReset;
+  final Function(DateTime, DateFilterMode)? onConfirm;
+  final Function()? onReset;
 
   const DateFilterSelector({
-    @required this.date,
+    required this.date,
     this.mode = DateFilterMode.only,
     this.onConfirm,
     this.onReset,
@@ -25,21 +25,18 @@ class DateFilterSelector extends StatefulWidget {
     switch (mode) {
       case DateFilterMode.after:
         return LocaleStrings.common.dateFilterModeAfter;
-        break;
       case DateFilterMode.before:
         return LocaleStrings.common.dateFilterModeBefore;
-        break;
       case DateFilterMode.only:
       default:
         return LocaleStrings.common.dateFilterModeExact;
-        break;
     }
   }
 }
 
 class _DateFilterSelectorState extends State<DateFilterSelector> {
-  DateTime selectedDate;
-  DateFilterMode selectedMode;
+  late DateTime selectedDate;
+  late DateFilterMode selectedMode;
 
   @override
   void initState() {
@@ -89,7 +86,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
               ),
             ],
             value: selectedMode,
-            onChanged: (mode) => setState(() => selectedMode = mode),
+            onChanged: (mode) => setState(() => selectedMode = mode!),
           ),
         ),
       ],
@@ -121,7 +118,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                 const SizedBox(width: 8),
                 TextButton(
                   onPressed: () {
-                    widget.onConfirm(selectedDate, selectedMode);
+                    widget.onConfirm?.call(selectedDate, selectedMode);
                     context.pop();
                   },
                   child: Text(LocaleStrings.common.confirm),
@@ -139,7 +136,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
 
 class _DateFilterSelectorHeader extends StatelessWidget {
   final DateTime date;
-  final VoidCallback onReset;
+  final VoidCallback? onReset;
 
   const _DateFilterSelectorHeader(this.date, {this.onReset});
 
@@ -159,7 +156,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
             Text(
               DateFormat("EEE, MMM d", context.locale.toLanguageTag())
                   .format(date),
-              style: context.theme.textTheme.headline5.copyWith(
+              style: context.theme.textTheme.headline5!.copyWith(
                 color: context.theme.colorScheme.onSurface,
               ),
             ),

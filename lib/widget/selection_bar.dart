@@ -49,12 +49,13 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                 icon: Icon(e.icon),
                 tooltip: e.title,
                 onPressed: () {
-                  selectionOptions.onSelected(context, selectionList, e.value);
+                  selectionOptions.onSelected
+                      ?.call(context, selectionList, e.value);
                 },
               ),
             )
             .toList(),
-        if ((oneNoteOptions?.isNotEmpty ?? false) && selectionList.length == 1)
+        if (oneNoteOptions.isNotEmpty && selectionList.length == 1)
           PopupMenuButton<String>(
             itemBuilder: (context) => oneNoteOptions
                 .map<PopupMenuEntry<String>>(
@@ -65,7 +66,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 )
                 .toList(),
-            onSelected: (value) => selectionOptions.onSelected(
+            onSelected: (value) => selectionOptions.onSelected?.call(
               context,
               [selectionList.first],
               value,
@@ -91,12 +92,12 @@ class SelectionOptions {
   final SelectionOptionsCallback options;
 
   /// This callback gets called once the user selects an option
-  final SelectedCallback onSelected;
+  final SelectedCallback? onSelected;
 
   const SelectionOptions({
-    @required this.options,
+    required this.options,
     this.onSelected,
-  }) : assert(options != null);
+  });
 }
 
 @immutable
@@ -108,9 +109,9 @@ class SelectionOptionEntry {
   final bool showOnlyOnRightClickMenu;
 
   const SelectionOptionEntry({
-    @required this.title,
-    @required this.icon,
-    @required this.value,
+    required this.title,
+    required this.icon,
+    required this.value,
     this.oneNoteOnly = false,
     this.showOnlyOnRightClickMenu = false,
   });

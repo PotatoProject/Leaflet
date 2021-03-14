@@ -4,12 +4,12 @@ import 'package:potato_notes/internal/utils.dart';
 class FlatIconButton extends StatelessWidget {
   final Widget icon;
   final Widget text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const FlatIconButton({
-    @required this.icon,
-    @required this.text,
-    @required this.onPressed,
+    required this.icon,
+    required this.text,
+    this.onPressed,
   });
 
   @override
@@ -33,7 +33,7 @@ class FlatIconButton extends StatelessWidget {
         child: Row(
           children: [
             DefaultTextStyle(
-              style: theme.textTheme.button.copyWith(
+              style: theme.textTheme.button!.copyWith(
                 color: onPressed != null ? accent : accent.withOpacity(0.38),
               ),
               child: text,

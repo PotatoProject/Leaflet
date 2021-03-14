@@ -25,7 +25,7 @@ import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class NotePage extends StatefulWidget {
-  final Note note;
+  final Note? note;
   final bool focusTitle;
   final bool openWithList;
   final bool openWithDrawing;
@@ -45,11 +45,11 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
   static const double imageWidgetSize = 240.0;
-  Note note;
+  late Note note;
 
-  TextEditingController titleController;
+  late TextEditingController titleController;
   final FocusNode titleFocusNode = FocusNode();
-  TextEditingController contentController;
+  late TextEditingController contentController;
   final FocusNode contentFocusNode = FocusNode();
 
   final List<TextEditingController> listContentControllers = [];
@@ -83,7 +83,7 @@ class _NotePageState extends State<NotePage> {
     titleController = TextEditingController(text: note.title);
     contentController = TextEditingController(text: note.content);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
         if (widget.focusTitle) {
           context.focusScope.requestFocus(titleFocusNode);
@@ -136,10 +136,10 @@ class _NotePageState extends State<NotePage> {
             ? Color(NoteColors.colorList[note.color].dynamicColor(context))
             : null,
         accentColor:
-            note.color != 0 ? context.theme.textTheme.caption.color : null,
+            note.color != 0 ? context.theme.textTheme.caption!.color : null,
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor:
-              note.color != 0 ? context.theme.textTheme.caption.color : null,
+              note.color != 0 ? context.theme.textTheme.caption!.color : null,
         ),
         appBarTheme: context.theme.appBarTheme.copyWith(
           color: note.color != 0
@@ -148,17 +148,17 @@ class _NotePageState extends State<NotePage> {
               : null,
         ),
         toggleableActiveColor: note.color != 0
-            ? context.theme.textTheme.caption.color
+            ? context.theme.textTheme.caption!.color
             : context.theme.accentColor,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: note.color != 0
-              ? context.theme.textTheme.caption.color
+              ? context.theme.textTheme.caption!.color
               : context.theme.accentColor,
           selectionColor: note.color != 0
-              ? context.theme.textTheme.caption.color.withOpacity(0.3)
+              ? context.theme.textTheme.caption!.color!.withOpacity(0.3)
               : context.theme.accentColor.withOpacity(0.3),
           selectionHandleColor: note.color != 0
-              ? context.theme.textTheme.caption.color
+              ? context.theme.textTheme.caption!.color
               : context.theme.accentColor,
         ),
       ),
@@ -265,7 +265,7 @@ class _NotePageState extends State<NotePage> {
                         if (needsFocus &&
                             index == note.listContent.length - 1) {
                           needsFocus = false;
-                          WidgetsBinding.instance.addPostFrameCallback(
+                          WidgetsBinding.instance!.addPostFrameCallback(
                             (_) => context.focusScope
                                 .requestFocus(listContentNodes.last),
                           );
@@ -300,7 +300,7 @@ class _NotePageState extends State<NotePage> {
                           },
                           onCheckChanged: (value) {
                             setState(
-                                () => note.listContent[index].status = value);
+                                () => note.listContent[index].status = value!);
                             notifyNoteChanged();
                           },
                           checkColor: note.color != 0
@@ -479,7 +479,7 @@ class _NotePageState extends State<NotePage> {
         toggleList();
         break;
       case 'image':
-        final File image = await Utils.pickImage();
+        final File? image = await Utils.pickImage();
 
         if (image != null) {
           await handleImageAdd(image.path);
@@ -487,7 +487,7 @@ class _NotePageState extends State<NotePage> {
         }
         break;
       case 'camera':
-        final PickedFile image =
+        final PickedFile? image =
             await ImagePicker().getImage(source: ImageSource.camera);
 
         if (image != null) {
@@ -569,7 +569,7 @@ class _NotePageState extends State<NotePage> {
                   : null,
             ),
             Visibility(
-              visible: deviceInfo.canCheckBiometrics ?? false,
+              visible: deviceInfo.canCheckBiometrics,
               child: SwitchListTile(
                 value: note.usesBiometrics,
                 onChanged: note.lockNote
@@ -634,17 +634,17 @@ class _NotePageState extends State<NotePage> {
 
 class _NoteListEntryItem extends StatefulWidget {
   final ListItem item;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final DismissDirectionCallback onDismissed;
-  final ValueChanged<String> onTextChanged;
-  final VoidCallback onEditingComplete;
-  final ValueChanged<bool> onCheckChanged;
-  final Color checkColor;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final DismissDirectionCallback? onDismissed;
+  final ValueChanged<String>? onTextChanged;
+  final VoidCallback? onEditingComplete;
+  final ValueChanged<bool?>? onCheckChanged;
+  final Color? checkColor;
 
   const _NoteListEntryItem({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
     this.controller,
     this.focusNode,
     this.onDismissed,
@@ -694,7 +694,6 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
               onChanged: widget.onCheckChanged,
               checkColor:
                   widget.checkColor ?? context.theme.scaffoldBackgroundColor,
-              width: 18,
             ),
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -705,7 +704,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
             ),
             textCapitalization: TextCapitalization.sentences,
             style: TextStyle(
-              color: context.theme.iconTheme.color.withOpacity(
+              color: context.theme.iconTheme.color!.withOpacity(
                 widget.item.status ? 0.3 : 0.7,
               ),
               decoration:
@@ -721,8 +720,9 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
             duration: const Duration(milliseconds: 200),
             child: IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed:
-                  showDeleteButton ? () => widget.onDismissed(null) : null,
+              onPressed: showDeleteButton
+                  ? () => widget.onDismissed?.call(DismissDirection.endToStart)
+                  : null,
               padding: EdgeInsets.zero,
               splashRadius: 24,
             ),
@@ -735,11 +735,11 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
 
 class _NotePageTextFormField extends StatelessWidget {
   final bool contentField;
-  final String hintText;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final ValueChanged<String> onChanged;
-  final ValueChanged<String> onSubmitted;
+  final String? hintText;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
 
   const _NotePageTextFormField({
     this.contentField = false,
@@ -764,7 +764,7 @@ class _NotePageTextFormField extends StatelessWidget {
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(
-            color: context.theme.textTheme.caption.color
+            color: context.theme.textTheme.caption!.color!
                 .withOpacity(contentField ? 0.3 : 0.5),
           ),
           isDense: contentField,
@@ -774,7 +774,7 @@ class _NotePageTextFormField extends StatelessWidget {
         style: TextStyle(
           fontSize: contentField ? 16 : 18,
           fontWeight: contentField ? FontWeight.normal : FontWeight.w500,
-          color: context.theme.textTheme.caption.color
+          color: context.theme.textTheme.caption!.color!
               .withOpacity(contentField ? 0.5 : 0.7),
         ),
         onChanged: onChanged,

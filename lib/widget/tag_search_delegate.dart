@@ -9,7 +9,7 @@ import 'package:potato_notes/widget/tag_editor.dart';
 
 class TagSearchDelegate extends CustomSearchDelegate {
   final List<String> tags;
-  final VoidCallback onChanged;
+  final VoidCallback? onChanged;
 
   TagSearchDelegate(
     this.tags, {
@@ -47,8 +47,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
               checkColor: context.theme.scaffoldBackgroundColor,
               activeColor: context.theme.accentColor,
               onChanged: (value) =>
-                  _onChangeValue(value, filteredTags[index].id),
-              width: 18,
+                  _onChangeValue(value!, filteredTags[index].id),
             ),
             title: Text(filteredTags[index].name),
             trailing: IconButton(
@@ -70,7 +69,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
                     context.pop();
                     tagHelper.deleteTag(tag.markChanged());
 
-                    setState(() {
+                    setState!(() {
                       tags.remove(filteredTags[index].id);
                     });
 
@@ -87,7 +86,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
           leading: const Icon(Icons.add),
           title: Text(LocaleStrings.search.tagCreateHint(query)),
           onTap: () async {
-            final bool result = await Utils.showNotesModalBottomSheet<bool>(
+            final bool? result = await Utils.showNotesModalBottomSheet<bool>(
               context: context,
               builder: (context) => TagEditor(
                 initialInput: query,
@@ -99,7 +98,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             );
             if (result ?? false) {
               query = "";
-              setState(() {});
+              setState!(() {});
             }
           },
         ),
@@ -108,7 +107,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
   }
 
   void _onChangeValue(bool value, String id) {
-    setState(() {
+    setState!(() {
       if (value) {
         tags.add(id);
       } else {
@@ -124,12 +123,12 @@ class _TapIsolatedListTile extends StatelessWidget {
   final Widget leading;
   final Widget title;
   final Widget trailing;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _TapIsolatedListTile({
-    @required this.leading,
-    @required this.title,
-    @required this.trailing,
+    required this.leading,
+    required this.title,
+    required this.trailing,
     this.onTap,
   });
 
@@ -153,9 +152,9 @@ class _TapIsolatedListTile extends StatelessWidget {
                     leading,
                     const SizedBox(width: 28),
                     AnimatedDefaultTextStyle(
-                      style: theme.textTheme.subtitle1,
+                      style: theme.textTheme.subtitle1!,
                       duration: kThemeChangeDuration,
-                      child: title ?? const SizedBox(),
+                      child: title,
                     ),
                   ],
                 ),

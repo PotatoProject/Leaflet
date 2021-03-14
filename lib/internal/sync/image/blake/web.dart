@@ -22,33 +22,32 @@ class Blake2 extends BlakeBase {
     this.key,
     this.salt,
     this.personalization,
-    this.iv,
-  })  : assert(digestLength != null && digestLength > 0 && digestLength <= 32),
+    Uint32List? iv,
+  })  : assert(digestLength > 0 && digestLength <= 32),
         assert(salt == null || salt.length == 8),
         assert(personalization == null || personalization.length == 8),
-        assert(iv == null || iv.length == 8) {
-    iv ??= Uint32List.fromList(<int>[
-      0x6A09E667,
-      0xBB67AE85,
-      0x3C6EF372,
-      0xA54FF53A,
-      0x510E527F,
-      0x9B05688C,
-      0x1F83D9AB,
-      0x5BE0CD19,
-    ]);
-
+        iv = iv ??
+            Uint32List.fromList(<int>[
+              0x6A09E667,
+              0xBB67AE85,
+              0x3C6EF372,
+              0xA54FF53A,
+              0x510E527F,
+              0x9B05688C,
+              0x1F83D9AB,
+              0x5BE0CD19,
+            ]) {
     reset();
   }
 
   @override
-  final Uint8List key;
+  final Uint8List? key;
 
   @override
-  final Uint8List salt;
+  final Uint8List? salt;
 
   @override
-  final Uint8List personalization;
+  final Uint8List? personalization;
 
   @override
   final int digestLength;
@@ -232,12 +231,12 @@ class Blake2 extends BlakeBase {
   /// must both be 8 characters in length.
   factory Blake2.fromStrings({
     int digestLength = 32,
-    String key,
-    String salt,
-    String personalization,
-    Uint32List iv,
+    String? key,
+    String? salt,
+    String? personalization,
+    Uint32List? iv,
   }) {
-    assert(digestLength != null && digestLength > 0 && digestLength <= 32);
+    assert(digestLength > 0 && digestLength <= 32);
     assert(salt == null || salt.length == 8);
     assert(personalization == null || personalization.length == 8);
     assert(iv == null || iv.length == 8);

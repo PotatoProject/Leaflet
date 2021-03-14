@@ -44,11 +44,11 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
 abstract class _DeviceInfoBase with Store {
   @observable
   @protected
-  bool _canCheckBiometricsValue;
+  bool _canCheckBiometricsValue = false;
 
   @observable
   @protected
-  List<BiometricType> _availableBiometricsValue;
+  List<BiometricType> _availableBiometricsValue = [];
 
   @observable
   @protected

@@ -9,7 +9,7 @@ bool _gestureStartAllowed = false;
 
 class DismissiblePageRoute<T> extends PageRoute<T> {
   DismissiblePageRoute({
-    @required this.builder,
+    required this.builder,
     this.allowGestures = false,
     this.pushImmediate = false,
   });
@@ -32,10 +32,10 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   bool get opaque => false;
 
   @override
-  Color get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   Curve get barrierCurve => Curves.easeIn;
@@ -81,11 +81,11 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
       return false;
     }
 
-    if (route.animation.status != AnimationStatus.completed) {
+    if (route.animation!.status != AnimationStatus.completed) {
       return false;
     }
 
-    if (route.secondaryAnimation.status != AnimationStatus.dismissed) {
+    if (route.secondaryAnimation!.status != AnimationStatus.dismissed) {
       return false;
     }
 
@@ -101,16 +101,6 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
       explicitChildNodes: true,
       child: child,
     );
-    assert(() {
-      if (child == null) {
-        throw FlutterError.fromParts(<DiagnosticsNode>[
-          ErrorSummary(
-              'The builder for route "${settings.name}" returned null.'),
-          ErrorDescription('Route builders must never return null.'),
-        ]);
-      }
-      return true;
-    }());
     return result;
   }
 
@@ -142,8 +132,8 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
       child: DismissibleRoute(
         maxWidth: context.mSize.width,
         enableGesture: allowGestures && _isPopGestureEnabled(route),
-        controller: route.controller,
-        navigator: route.navigator,
+        controller: route.controller!,
+        navigator: route.navigator!,
         isFirst: route.isFirst,
         child: child,
       ),
@@ -158,9 +148,9 @@ class DismissiblePageTransition extends StatefulWidget {
   final bool linearTransition;
 
   const DismissiblePageTransition({
-    @required this.child,
-    @required this.animation,
-    @required this.secondaryAnimation,
+    required this.child,
+    required this.animation,
+    required this.secondaryAnimation,
     this.linearTransition = false,
   });
 
@@ -170,10 +160,10 @@ class DismissiblePageTransition extends StatefulWidget {
 }
 
 class _DismissiblePageTransitionState extends State<DismissiblePageTransition> {
-  Curve _curveFg;
-  Curve _reverseCurveFg;
-  Curve _curveBg;
-  Curve _reverseCurveBg;
+  late Curve _curveFg;
+  late Curve _reverseCurveFg;
+  late Curve _curveBg;
+  late Curve _reverseCurveBg;
 
   @override
   void initState() {
@@ -269,11 +259,11 @@ class DismissibleRoute extends StatefulWidget {
   final bool isFirst;
 
   const DismissibleRoute({
-    @required this.child,
-    @required this.maxWidth,
+    required this.child,
+    required this.maxWidth,
     this.enableGesture = true,
-    @required this.controller,
-    @required this.navigator,
+    required this.controller,
+    required this.navigator,
     this.isFirst = false,
   });
 
@@ -281,6 +271,12 @@ class DismissibleRoute extends StatefulWidget {
   DismissibleRouteState createState() => DismissibleRouteState();
 
   static DismissibleRouteState of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_DismissibleRouteInheritedWidget>()!
+        .state;
+  }
+
+  static DismissibleRouteState? maybeOf(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<_DismissibleRouteInheritedWidget>()
         ?.state;
@@ -293,7 +289,7 @@ class DismissibleRouteState extends State<DismissibleRoute> {
   bool get requestDisableGestures => _requestDisableGestures;
 
   set requestDisableGestures(bool disable) {
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance!.addPostFrameCallback(
       (_) => setState(() => _requestDisableGestures = disable),
     );
   }
@@ -311,11 +307,10 @@ class DismissibleRouteState extends State<DismissibleRoute> {
 
     final double width = widget.isFirst || deviceInfo.uiSizeFactor <= 3
         ? context.mSize.width
-        : (context.mSize.width - padding.horizontal).clamp(0.0, 720.0)
-            as double;
+        : (context.mSize.width - padding.horizontal).clamp(0.0, 720.0);
     final double height = widget.isFirst || deviceInfo.uiSizeFactor <= 3
         ? context.mSize.height
-        : (context.mSize.height - padding.vertical).clamp(0.0, 580.0) as double;
+        : (context.mSize.height - padding.vertical).clamp(0.0, 580.0);
 
     final Widget content = Material(
       elevation: 16,
@@ -339,15 +334,15 @@ class DismissibleRouteState extends State<DismissibleRoute> {
                 SystemChannels.textInput.invokeMethod('TextInput.hide');
                 widget.controller.value -=
                     (context.directionality == TextDirection.rtl
-                            ? -details.primaryDelta
-                            : details.primaryDelta) /
+                            ? -details.primaryDelta!
+                            : details.primaryDelta!) /
                         widget.maxWidth;
               }
             : null,
         onHorizontalDragEnd: _gestureStartAllowed
             ? (details) async {
                 setState(() => _gestureStartAllowed = false);
-                if (details.primaryVelocity > 345) {
+                if (details.primaryVelocity! > 345) {
                   context.pop();
                 } else {
                   if (widget.controller.value < 0.5) {
@@ -398,9 +393,9 @@ class DismissibleRouteState extends State<DismissibleRoute> {
 
 class _DismissibleRouteInheritedWidget extends InheritedWidget {
   const _DismissibleRouteInheritedWidget({
-    Key key,
-    Widget child,
-    this.state,
+    Key? key,
+    required Widget child,
+    required this.state,
   }) : super(key: key, child: child);
 
   final DismissibleRouteState state;

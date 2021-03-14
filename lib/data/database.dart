@@ -1,5 +1,3 @@
-// @dart=2.12
-
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
@@ -14,8 +12,8 @@ part 'database.g.dart';
 
 class Notes extends Table {
   TextColumn get id => text()();
-  TextColumn get title => text().nullable()();
-  TextColumn get content => text().nullable()();
+  TextColumn get title => text()();
+  TextColumn get content => text()();
   TextColumn get styleJson =>
       text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(const Constant(false))();

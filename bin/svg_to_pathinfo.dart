@@ -18,9 +18,9 @@ Future<String> xmlToFile(File file) async {
   final XmlDocument document = XmlDocument.parse(xmlContent);
   document.normalize();
 
-  final XmlElement base = document.lastElementChild;
-  final String width = base.getAttribute("width");
-  final String height = base.getAttribute("height");
+  final XmlElement base = document.lastElementChild!;
+  final String width = base.getAttribute("width")!;
+  final String height = base.getAttribute("height")!;
 
   fileContent.writeln('PathInfo(');
   fileContent.writeln('  name: "${getNameFromPath(file.path)}",');
@@ -31,10 +31,11 @@ Future<String> xmlToFile(File file) async {
     if (item is XmlElement) {
       final XmlElement element = item;
 
-      final String path = element.getAttribute("d");
-      final String color = element.getAttribute("fill");
-      final String colorString = getStringFromColor(color);
-      final String opacity = element.getAttribute("opacity");
+      final String? path = element.getAttribute("d");
+      final String? color = element.getAttribute("fill");
+      final String? colorString =
+          color != null ? getStringFromColor(color) : null;
+      final String? opacity = element.getAttribute("opacity");
       final String opacityString =
           opacity != null ? ".withOpacity($opacity)" : "";
       if (path == null) continue;

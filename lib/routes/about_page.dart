@@ -178,10 +178,10 @@ class ContributorInfo {
   final List<SocialLink> socialLinks;
 
   const ContributorInfo({
-    this.name,
-    this.role,
-    this.avatarUrl,
-    this.socialLinks,
+    required this.name,
+    required this.role,
+    required this.avatarUrl,
+    required this.socialLinks,
   });
 }
 

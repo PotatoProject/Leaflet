@@ -6,29 +6,29 @@ import 'package:potato_notes/internal/utils.dart';
 class MenuFab extends StatefulWidget {
   final MenuFabEntry mainEntry;
   final List<MenuFabEntry> entries;
-  final ShapeBorder fabShape;
+  final ShapeBorder? fabShape;
   final ShapeBorder menuShape;
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final Color focusColor;
-  final Color hoverColor;
-  final Color splashColor;
-  final double elevation;
-  final double focusElevation;
-  final double hoverElevation;
-  final double highlightElevation;
-  final double disabledElevation;
-  final MaterialTapTargetSize materialTapTargetSize;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final Color? focusColor;
+  final Color? hoverColor;
+  final Color? splashColor;
+  final double? elevation;
+  final double? focusElevation;
+  final double? hoverElevation;
+  final double? highlightElevation;
+  final double? disabledElevation;
+  final MaterialTapTargetSize? materialTapTargetSize;
   final MouseCursor mouseCursor;
   final Clip clipBehavior;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final bool autofocus;
-  final PageTransitionSwitcherTransitionBuilder transitionBuilder;
+  final PageTransitionSwitcherTransitionBuilder? transitionBuilder;
 
   const MenuFab({
-    Key key,
-    @required this.mainEntry,
-    @required this.entries,
+    Key? key,
+    required this.mainEntry,
+    required this.entries,
     this.fabShape = const StadiumBorder(),
     this.menuShape = const RoundedRectangleBorder(),
     this.backgroundColor,
@@ -61,25 +61,25 @@ class MenuFab extends StatefulWidget {
 class _MenuFabState extends State<MenuFab> {
   static const Object heroTag = _DefaultHeroTag();
 
-  Color foregroundColor;
-  Color backgroundColor;
-  Color focusColor;
-  Color hoverColor;
-  Color splashColor;
-  double elevation;
-  double focusElevation;
-  double hoverElevation;
-  double disabledElevation;
-  double highlightElevation;
-  MaterialTapTargetSize materialTapTargetSize;
-  TextStyle textStyle;
-  ShapeBorder shape;
+  late Color foregroundColor;
+  late Color backgroundColor;
+  late Color focusColor;
+  late Color hoverColor;
+  late Color splashColor;
+  late double elevation;
+  late double focusElevation;
+  late double hoverElevation;
+  late double disabledElevation;
+  late double highlightElevation;
+  late MaterialTapTargetSize materialTapTargetSize;
+  late TextStyle textStyle;
+  late ShapeBorder shape;
 
   bool _hovered = false;
   bool _focused = false;
   bool _highlighted = false;
   bool _disableElevation = false;
-  double _elevation;
+  double? _elevation;
 
   void _updateColors() {
     final ThemeData theme = context.theme;
@@ -134,12 +134,12 @@ class _MenuFabState extends State<MenuFab> {
         MenuFab._defaultHighlightElevation;
     materialTapTargetSize =
         widget.materialTapTargetSize ?? theme.materialTapTargetSize;
-    textStyle = theme.textTheme.button.copyWith(
+    textStyle = theme.textTheme.button!.copyWith(
       color: foregroundColor,
       letterSpacing: 1.2,
       fontWeight: FontWeight.normal,
     );
-    shape = widget.fabShape ?? floatingActionButtonTheme.shape;
+    shape = widget.fabShape ?? floatingActionButtonTheme.shape!;
   }
 
   @override
@@ -150,9 +150,10 @@ class _MenuFabState extends State<MenuFab> {
 
   @override
   Widget build(BuildContext context) {
-    if (foregroundColor == null) _updateColors();
-
-    _elevation ??= elevation;
+    if (_elevation == null) {
+      _updateColors();
+      _elevation = elevation;
+    }
 
     if (_disableElevation) {
       _elevation = 0;
@@ -208,7 +209,7 @@ class _MenuFabState extends State<MenuFab> {
 
     result = Material(
       shape: shape,
-      elevation: _elevation,
+      elevation: _elevation!,
       clipBehavior: Clip.antiAlias,
       color: Colors.transparent,
       animationDuration: const Duration(milliseconds: 300),
@@ -231,13 +232,13 @@ class _MenuFabState extends State<MenuFab> {
             parent: secondaryAnimation,
             curve: Curves.fastOutSlowIn,
           ),
-          box: context.findRenderObject() as RenderBox,
+          box: context.findRenderObject()! as RenderBox,
           fabIcon: widget.mainEntry.icon,
           fabLabel: widget.mainEntry.label,
           fabOnTap: widget.mainEntry.onTap,
           heroTag: heroTag,
           entries: widget.entries,
-          beginShape: widget.fabShape,
+          beginShape: widget.fabShape ?? const CircleBorder(),
           endShape: widget.menuShape,
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
@@ -272,25 +273,25 @@ class _MenuFabRoute extends StatelessWidget {
   final Color focusColor;
   final Color hoverColor;
   final double elevation;
-  final PageTransitionSwitcherTransitionBuilder transitionBuilder;
+  final PageTransitionSwitcherTransitionBuilder? transitionBuilder;
 
   const _MenuFabRoute({
-    @required this.box,
-    @required this.fabIcon,
-    @required this.fabLabel,
-    @required this.fabOnTap,
-    @required this.heroTag,
-    @required this.entries,
-    @required this.beginShape,
-    @required this.endShape,
-    @required this.animation,
-    @required this.secondaryAnimation,
-    @required this.backgroundColor,
-    @required this.foregroundColor,
-    @required this.focusColor,
-    @required this.hoverColor,
-    @required this.elevation,
-    @required this.transitionBuilder,
+    required this.box,
+    required this.fabIcon,
+    required this.fabLabel,
+    required this.fabOnTap,
+    required this.heroTag,
+    required this.entries,
+    required this.beginShape,
+    required this.endShape,
+    required this.animation,
+    required this.secondaryAnimation,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.focusColor,
+    required this.hoverColor,
+    required this.elevation,
+    required this.transitionBuilder,
   });
 
   @override
@@ -337,14 +338,14 @@ class _MenuFabRoute extends StatelessWidget {
           fromHeroContext,
           toHeroContext,
         ) {
-          final Animation<ShapeBorder> shapeAnim = ShapeBorderTween(
+          final Animation<ShapeBorder?> shapeAnim = ShapeBorderTween(
             begin: beginShape,
             end: endShape,
           ).animate(animation);
 
           Widget optionallyAnimate({
-            @required Widget child,
-            @required bool animate,
+            required Widget child,
+            required bool animate,
           }) =>
               Positioned.fill(
                 child: animate
@@ -373,12 +374,12 @@ class _MenuFabRoute extends StatelessWidget {
             animation: animation,
             builder: (context, child) => CustomPaint(
               painter: _AnimatedShapeShadowPainter(
-                shapeAnim.value,
+                shapeAnim.value!,
                 elevation,
                 animation.value,
               ),
               child: ClipPath(
-                clipper: ShapeBorderClipper(shape: shapeAnim.value),
+                clipper: ShapeBorderClipper(shape: shapeAnim.value!),
                 child: Material(
                   color: foregroundColor,
                   child: Stack(
@@ -461,21 +462,21 @@ class _FabMenuLayoutDelegate extends SingleChildLayoutDelegate {
 }
 
 class _MenuEntryListTile extends StatelessWidget {
-  final Widget leading;
+  final Widget? leading;
   final String title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color tileColor;
   final Color iconColor;
-  final Color textColor;
-  final Color focusColor;
-  final Color hoverColor;
+  final Color? textColor;
+  final Color? focusColor;
+  final Color? hoverColor;
 
   const _MenuEntryListTile({
     this.leading,
-    @required this.title,
-    @required this.onTap,
+    required this.title,
+    required this.onTap,
     this.tileColor = Colors.transparent,
-    @required this.iconColor,
+    required this.iconColor,
     this.textColor,
     this.focusColor,
     this.hoverColor,
@@ -504,20 +505,19 @@ class _MenuEntryListTile extends StatelessWidget {
                     data: IconThemeData(
                       color: iconColor,
                     ),
-                    child: leading,
+                    child: leading!,
                   ),
                 ),
-              if (title != null)
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 16,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 16,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
+              ),
             ],
           ),
         ),
@@ -533,9 +533,9 @@ class MenuFabEntry {
   final VoidCallback onTap;
 
   const MenuFabEntry({
-    this.icon,
-    @required this.label,
-    @required this.onTap,
+    required this.icon,
+    required this.label,
+    required this.onTap,
   });
 }
 

@@ -6,8 +6,8 @@ class SettingsCategory extends StatelessWidget {
   final List<Widget> children;
 
   const SettingsCategory({
-    @required this.header,
-    this.children,
+    required this.header,
+    required this.children,
   });
 
   @override
@@ -24,7 +24,7 @@ class SettingsCategory extends StatelessWidget {
           ),
           child: headerWidget(header),
         ),
-        ...children ?? [],
+        ...children,
       ],
     );
   }

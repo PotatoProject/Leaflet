@@ -5,14 +5,14 @@ import 'package:potato_notes/internal/utils.dart';
 class PopupMenuItemWithIcon<T> extends PopupMenuEntry<T> {
   final T value;
   final Widget child;
-  final Widget icon;
+  final Widget? icon;
   final bool enabled;
-  final MouseCursor mouseCursor;
-  final TextStyle textStyle;
+  final MouseCursor? mouseCursor;
+  final TextStyle? textStyle;
 
   const PopupMenuItemWithIcon({
-    @required this.value,
-    @required this.child,
+    required this.value,
+    required this.child,
     this.icon,
     this.enabled = true,
     this.mouseCursor,
@@ -26,7 +26,7 @@ class PopupMenuItemWithIcon<T> extends PopupMenuEntry<T> {
   double get height => 48;
 
   @override
-  bool represents(T value) => this.value == value;
+  bool represents(T? value) => this.value == value;
 }
 
 class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
@@ -34,7 +34,7 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
   Widget buildChild() {
     return Row(
       children: [
-        if (widget.icon != null) widget.icon,
+        if (widget.icon != null) widget.icon!,
         const SizedBox(width: 16),
         widget.child,
       ],
@@ -52,7 +52,7 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
     final PopupMenuThemeData popupMenuTheme = context.theme.popupMenuTheme;
     TextStyle style = widget.textStyle ??
         popupMenuTheme.textStyle ??
-        theme.textTheme.subtitle1;
+        theme.textTheme.subtitle1!;
 
     if (!widget.enabled) style = style.copyWith(color: theme.disabledColor);
 

@@ -25,7 +25,7 @@ class SpinningSyncIcon extends StatefulWidget {
 
 class _SpinningSyncIconState extends State<SpinningSyncIcon>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _SpinningSyncIconState extends State<SpinningSyncIcon>
     if (widget.spin) {
       _controller.repeat();
     } else {
-      _controller.stop(canceled: true);
+      _controller.stop();
       _controller.value = 0;
     }
   }

@@ -12,8 +12,6 @@ class AssetLoaderGenerator {
 }
 
 String _class = """
-// @dart=2.12
-
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';

@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/sync_routine.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class AccountController {
   AccountController._();
@@ -96,8 +96,8 @@ class AccountController {
       );
       switch (loginResponse.statusCode) {
         case 200:
-          final Map<String, String> response = Map<String, String>.from(
-              loginResponse.data as Map<String, dynamic>);
+          final Map<String, String> response =
+              Utils.asMap<String, String>(loginResponse.data);
           prefs.accessToken = response["token"];
           prefs.refreshToken = response["refresh_token"];
           await getUserInfo();
@@ -108,7 +108,6 @@ class AccountController {
             status: false,
             message: loginResponse.data,
           );
-          break;
       }
     } on SocketException {
       return AuthResponse(
@@ -144,10 +143,10 @@ class AccountController {
         );
         switch (profileRequest.statusCode) {
           case 200:
-            final Map<String, String> response = Map<String, String>.from(
-                profileRequest.data as Map<String, dynamic>);
-            prefs.username = response["username"];
-            prefs.email = response["email"];
+            final Map<String, Object?> response =
+                Utils.asMap<String, Object?>(profileRequest.data);
+            prefs.username = response["username"] as String?;
+            prefs.email = response["email"] as String?;
             prefs.avatarUrl = await ImageHelper.getAvatar(token);
             return AuthResponse(status: true);
           case 400:
@@ -230,10 +229,10 @@ class AccountController {
 
 class AuthResponse {
   final bool status;
-  final Object message;
+  final Object? message;
 
   AuthResponse({
-    @required this.status,
+    required this.status,
     this.message,
   });
 }

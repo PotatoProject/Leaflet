@@ -27,7 +27,7 @@ class TagController {
         message:
             "(${tag.id} tag-add) Server responded with (${addResult.statusCode}): ${addResult.data}",
       );
-      return NoteController.handleResponse(addResult);
+      return NoteController.handleResponse(addResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -50,7 +50,7 @@ class TagController {
         message:
             "($id tag-delete) Server responded with (${deleteResponse.statusCode}}: ${deleteResponse.data}",
       );
-      return NoteController.handleResponse(deleteResponse);
+      return NoteController.handleResponse(deleteResponse).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -76,9 +76,7 @@ class TagController {
             "(tag-list) Server responded with (${listResult.statusCode}): ${listResult.data}",
       );
       final List<Map<String, dynamic>> body =
-          Utils.asList<Map<String, dynamic>>(
-        json.decode(NoteController.handleResponse(listResult)),
-      );
+          Utils.asList<Map<String, dynamic>>(listResult.data);
       final List<Tag> tags = body.map((map) {
         final Tag tag = fromSync(map);
         return tag;
@@ -108,7 +106,7 @@ class TagController {
         message:
             "($id tag-update) Server responded with (${updateResult.statusCode}): ${updateResult.data}",
       );
-      return NoteController.handleResponse(updateResult);
+      return NoteController.handleResponse(updateResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -148,7 +146,7 @@ class TagController {
     final Map<String, dynamic> jsonMap = tag.toJson();
     final Map<String, dynamic> newMap = {};
     jsonMap.forEach((key, value) {
-      final Object newValue = value;
+      final dynamic newValue = value;
       final String newKey = ReCase(key).snakeCase;
       newMap.putIfAbsent(newKey, () => newValue);
     });
@@ -158,7 +156,7 @@ class TagController {
   static Tag fromSync(Map<String, dynamic> jsonMap) {
     final Map<String, dynamic> newMap = {};
     jsonMap.forEach((key, value) {
-      final String newValue = value as String;
+      final Object? newValue = value;
       final String newKey = ReCase(key).camelCase;
       newMap.putIfAbsent(newKey, () => newValue);
     });

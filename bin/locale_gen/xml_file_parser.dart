@@ -12,13 +12,13 @@ class XmlFileParser {
     final XmlDocument document = XmlDocument.parse(fileContent);
     document.normalize();
 
-    final XmlElement base = document.lastElementChild;
+    final XmlElement base = document.lastElementChild!;
 
     for (final XmlNode item in base.children) {
       if (item is XmlElement) {
         final XmlElement element = item;
 
-        final String name = element.getAttribute("name");
+        final String? name = element.getAttribute("name");
         if (name == null) continue;
 
         if (element.name.toString() == "string") {
@@ -28,7 +28,7 @@ class XmlFileParser {
             if (plural is XmlElement) {
               final XmlElement pluralElement = plural;
 
-              final String pluralAttribute =
+              final String? pluralAttribute =
                   pluralElement.getAttribute("quantity");
               if (pluralAttribute == null) continue;
 
@@ -51,13 +51,13 @@ class XmlFileParser {
     final XmlDocument document = XmlDocument.parse(fileContent);
     document.normalize();
 
-    final XmlElement base = document.lastElementChild;
+    final XmlElement base = document.lastElementChild!;
 
     for (final XmlNode item in base.children) {
       if (item is XmlElement) {
         final XmlElement element = item;
 
-        final String name = element.getAttribute("name");
+        final String? name = element.getAttribute("name");
         if (name == null) continue;
         final List<String> splittedName = name.split(".");
         final String routeName = splittedName.first;
@@ -68,13 +68,13 @@ class XmlFileParser {
 
         if (element.name.toString() == "string") {
           if (element.text.contains("%s")) {
-            returnMap[routeName][normalizedName] ??= ArgumentString()
+            returnMap[routeName]![normalizedName] ??= ArgumentString()
               ..argNum = _argumentNum(element.text);
           } else {
-            returnMap[routeName][normalizedName] ??= CommonString();
+            returnMap[routeName]![normalizedName] ??= CommonString();
           }
         } else if (element.name.toString() == "plurals") {
-          returnMap[routeName][normalizedName] ??= PluralString();
+          returnMap[routeName]![normalizedName] ??= PluralString();
         }
       }
     }
@@ -111,5 +111,5 @@ class CommonString extends StringInfo {}
 class PluralString extends StringInfo {}
 
 class ArgumentString extends StringInfo {
-  int argNum;
+  late int argNum;
 }

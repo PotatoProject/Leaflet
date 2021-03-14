@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 import 'note_controller.dart';
 
@@ -26,7 +27,7 @@ class SettingController {
         message:
             "($key get) Server responded with (${getResult.statusCode}): ${getResult.data}",
       );
-      return NoteController.handleResponse(getResult);
+      return NoteController.handleResponse(getResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -50,7 +51,7 @@ class SettingController {
         message:
             "($key set) Server responded with (${setResult.statusCode}): ${setResult.data}",
       );
-      return NoteController.handleResponse(setResult);
+      return NoteController.handleResponse(setResult).toString();
     } on SocketException {
       throw "Could not connect to server";
     } catch (e) {
@@ -75,7 +76,8 @@ class SettingController {
             "(getChanged) Server responded with (${getResult.statusCode}): ${getResult.data}",
       );
       NoteController.handleResponse(getResult);
-      final Map<String, dynamic> data = getResult.data as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          Utils.asMap<String, dynamic>(getResult.data);
       return data
           .map((key, value) => MapEntry(key.toString(), value.toString()));
     } on SocketException {

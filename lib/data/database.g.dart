@@ -1,5 +1,4 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// @dart=2.12
 
 part of 'database.dart';
 
@@ -10,8 +9,8 @@ part of 'database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Note extends DataClass implements Insertable<Note> {
   final String id;
-  final String? title;
-  final String? content;
+  final String title;
+  final String content;
   final List<int>? styleJson;
   final bool starred;
   final DateTime creationDate;
@@ -30,8 +29,8 @@ class Note extends DataClass implements Insertable<Note> {
   final bool synced;
   Note(
       {required this.id,
-      this.title,
-      this.content,
+      required this.title,
+      required this.content,
       this.styleJson,
       required this.starred,
       required this.creationDate,
@@ -58,9 +57,9 @@ class Note extends DataClass implements Insertable<Note> {
     return Note(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       title:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
-      content:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}content']),
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      content: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
       styleJson: $NotesTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}style_json'])),
       starred:
@@ -97,12 +96,8 @@ class Note extends DataClass implements Insertable<Note> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String?>(title);
-    }
-    if (!nullToAbsent || content != null) {
-      map['content'] = Variable<String?>(content);
-    }
+    map['title'] = Variable<String>(title);
+    map['content'] = Variable<String>(content);
     if (!nullToAbsent || styleJson != null) {
       final converter = $NotesTable.$converter0;
       map['style_json'] = Variable<String?>(converter.mapToSql(styleJson));
@@ -140,11 +135,8 @@ class Note extends DataClass implements Insertable<Note> {
   NotesCompanion toCompanion(bool nullToAbsent) {
     return NotesCompanion(
       id: Value(id),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
-      content: content == null && nullToAbsent
-          ? const Value.absent()
-          : Value(content),
+      title: Value(title),
+      content: Value(content),
       styleJson: styleJson == null && nullToAbsent
           ? const Value.absent()
           : Value(styleJson),
@@ -171,8 +163,8 @@ class Note extends DataClass implements Insertable<Note> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Note(
       id: serializer.fromJson<String>(json['id']),
-      title: serializer.fromJson<String?>(json['title']),
-      content: serializer.fromJson<String?>(json['content']),
+      title: serializer.fromJson<String>(json['title']),
+      content: serializer.fromJson<String>(json['content']),
       styleJson: serializer.fromJson<List<int>?>(json['styleJson']),
       starred: serializer.fromJson<bool>(json['starred']),
       creationDate: serializer.fromJson<DateTime>(json['creationDate']),
@@ -196,8 +188,8 @@ class Note extends DataClass implements Insertable<Note> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'title': serializer.toJson<String?>(title),
-      'content': serializer.toJson<String?>(content),
+      'title': serializer.toJson<String>(title),
+      'content': serializer.toJson<String>(content),
       'styleJson': serializer.toJson<List<int>?>(styleJson),
       'starred': serializer.toJson<bool>(starred),
       'creationDate': serializer.toJson<DateTime>(creationDate),
@@ -353,8 +345,8 @@ class Note extends DataClass implements Insertable<Note> {
 
 class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> id;
-  final Value<String?> title;
-  final Value<String?> content;
+  final Value<String> title;
+  final Value<String> content;
   final Value<List<int>?> styleJson;
   final Value<bool> starred;
   final Value<DateTime> creationDate;
@@ -394,8 +386,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
   });
   NotesCompanion.insert({
     required String id,
-    this.title = const Value.absent(),
-    this.content = const Value.absent(),
+    required String title,
+    required String content,
     this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
     required DateTime creationDate,
@@ -413,6 +405,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.archived = const Value.absent(),
     this.synced = const Value.absent(),
   })  : id = Value(id),
+        title = Value(title),
+        content = Value(content),
         creationDate = Value(creationDate),
         lastModifyDate = Value(lastModifyDate),
         images = Value(images),
@@ -421,8 +415,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
         tags = Value(tags);
   static Insertable<Note> custom({
     Expression<String>? id,
-    Expression<String?>? title,
-    Expression<String?>? content,
+    Expression<String>? title,
+    Expression<String>? content,
     Expression<List<int>?>? styleJson,
     Expression<bool>? starred,
     Expression<DateTime>? creationDate,
@@ -465,8 +459,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
 
   NotesCompanion copyWith(
       {Value<String>? id,
-      Value<String?>? title,
-      Value<String?>? content,
+      Value<String>? title,
+      Value<String>? content,
       Value<List<int>?>? styleJson,
       Value<bool>? starred,
       Value<DateTime>? creationDate,
@@ -513,10 +507,10 @@ class NotesCompanion extends UpdateCompanion<Note> {
       map['id'] = Variable<String>(id.value);
     }
     if (title.present) {
-      map['title'] = Variable<String?>(title.value);
+      map['title'] = Variable<String>(title.value);
     }
     if (content.present) {
-      map['content'] = Variable<String?>(content.value);
+      map['content'] = Variable<String>(content.value);
     }
     if (styleJson.present) {
       final converter = $NotesTable.$converter0;
@@ -625,7 +619,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return GeneratedTextColumn(
       'title',
       $tableName,
-      true,
+      false,
     );
   }
 
@@ -636,7 +630,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return GeneratedTextColumn(
       'content',
       $tableName,
-      true,
+      false,
     );
   }
 
@@ -836,10 +830,14 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
           content.isAcceptableOrUnknown(data['content']!, _contentMeta));
+    } else if (isInserting) {
+      context.missing(_contentMeta);
     }
     context.handle(_styleJsonMeta, const VerificationResult.success());
     if (data.containsKey('starred')) {

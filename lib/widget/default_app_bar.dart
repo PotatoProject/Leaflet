@@ -7,7 +7,7 @@ import 'package:potato_notes/widget/illustrations.dart';
 
 class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> extraActions;
-  final Widget title;
+  final Widget? title;
 
   const DefaultAppBar({
     this.extraActions = const [],
@@ -22,14 +22,14 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.basePage;
-    final Widget _leading = state != null
+    final Widget? _leading = state != null
         ? const Center(
             child: Illustration.leaflet(
               height: 28,
             ),
           )
         : null;
-    final Widget _title = state != null
+    final Widget? _title = state != null
         ? const Text(
             "leaflet",
             style: TextStyle(fontFamily: "ValeraRound"),

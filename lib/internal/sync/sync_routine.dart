@@ -88,11 +88,7 @@ class SyncRoutine {
 
   Future<void> sync() async {
     _syncing.value = true;
-    try {
-      await _syncNotes();
-    } catch (e) {
-      Loggy.e(message: e);
-    }
+    await _syncNotes();
     _syncing.value = false;
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
   }
@@ -298,7 +294,7 @@ class SyncRoutine {
     changedSettings = await SettingController.getChanged(prefs.lastUpdated);
 
     changedSettings.forEach((key, value) {
-      final Object original = prefs.getFromCache(key);
+      final Object? original = prefs.getFromCache(key);
       switch (original.runtimeType) {
         case String:
           {
@@ -336,7 +332,7 @@ class SyncRoutine {
           !changedSettings.keys.contains(key)) {
         try {
           Loggy.v(message: "Preparing to save $key");
-          Object value = prefs.getFromCache(key);
+          Object? value = prefs.getFromCache(key);
           if (key == "tags") {
             value = json.encode(value);
           }

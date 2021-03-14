@@ -26,10 +26,10 @@ import 'package:potato_notes/widget/fake_appbar.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
-  final SavedImage savedImage;
+  final SavedImage? savedImage;
 
   const DrawPage({
-    @required this.note,
+    required this.note,
     this.savedImage,
   });
 
@@ -38,13 +38,13 @@ class DrawPage extends StatefulWidget {
 }
 
 class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
-  BuildContext _globalContext;
+  BuildContext? _globalContext;
   final DrawingBoardController _controller = DrawingBoardController();
   final DrawingToolbarController _toolbarController =
       DrawingToolbarController();
 
-  AnimationController _appbarAc;
-  AnimationController _toolbarAc;
+  late AnimationController _appbarAc;
+  late AnimationController _toolbarAc;
 
   final List<DrawingTool> _tools = [
     DrawingTool(
@@ -69,13 +69,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   ];
   int _toolIndex = 0;
 
-  String _filePath;
+  String? _filePath;
 
   final GlobalKey _drawingKey = GlobalKey();
   final GlobalKey _appbarKey = GlobalKey();
   final GlobalKey _toolbarKey = GlobalKey();
 
-  SavedImage _savedImage;
+  SavedImage? _savedImage;
 
   @override
   void initState() {
@@ -257,30 +257,30 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     _controller.addObject(object);
 
     _controller.currentIndex = _controller.objects.length - 1;
-    _controller.actionQueueIndex = _controller.currentIndex;
+    _controller.actionQueueIndex = _controller.currentIndex!;
 
-    final RenderBox box = context.findRenderObject() as RenderBox;
+    final RenderBox box = context.findRenderObject()! as RenderBox;
     final Offset topLeft = box.localToGlobal(Offset.zero);
 
     final Offset point = details.focalPoint.translate(-topLeft.dx, -topLeft.dy);
 
-    _controller.addPointToObject(_controller.currentIndex, point);
+    _controller.addPointToObject(_controller.currentIndex!, point);
   }
 
   void _normalModePanUpdate(ScaleUpdateDetails details) {
     if (details.pointerCount > 1) return;
 
     final RenderBox appbarBox =
-        _appbarKey.currentContext.findRenderObject() as RenderBox;
+        _appbarKey.currentContext!.findRenderObject()! as RenderBox;
     Rect appbarRect =
         (appbarBox.localToGlobal(Offset.zero) & appbarBox.size).inflate(8);
 
     final RenderBox toolbarBox =
-        _toolbarKey.currentContext.findRenderObject() as RenderBox;
+        _toolbarKey.currentContext!.findRenderObject()! as RenderBox;
     Rect toolbarRect =
         (toolbarBox.localToGlobal(Offset.zero) & toolbarBox.size).inflate(8);
 
-    final RenderBox box = context.findRenderObject() as RenderBox;
+    final RenderBox box = context.findRenderObject()! as RenderBox;
     final Offset topLeft = box.localToGlobal(Offset.zero);
 
     appbarRect = appbarRect.shift(topLeft * -1);
@@ -303,7 +303,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
       }
     }
 
-    _controller.addPointToObject(_controller.currentIndex, point);
+    _controller.addPointToObject(_controller.currentIndex!, point);
   }
 
   void _normalModePanEnd(details) {
@@ -313,13 +313,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     _toolbarAc.reverse();
   }
 
-  bool exitPrompt(bool _, RouteInfo __) {
-    final Uri uri = _filePath != null ? Uri.file(_filePath) : null;
+  bool exitPrompt(bool _, RouteInfo? __) {
+    final Uri? uri = _filePath != null ? Uri.file(_filePath!) : null;
 
     Future<void> _internal() async {
       if (!_controller.saved) {
-        final bool exit = await showDialog(
-          context: _globalContext,
+        final bool? exit = await showDialog(
+          context: _globalContext!,
           builder: (context) => AlertDialog(
             title: Text(LocaleStrings.common.areYouSure),
             content: Text(LocaleStrings.drawing.exitPrompt),
@@ -337,10 +337,10 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         );
 
         if (exit != null) {
-          Navigator.pop(_globalContext, uri);
+          Navigator.pop(_globalContext!, uri);
         }
       } else {
-        Navigator.pop(_globalContext, uri);
+        Navigator.pop(_globalContext!, uri);
       }
     }
 
@@ -351,14 +351,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   Future<void> _saveImage() async {
     String drawing;
-    final RenderRepaintBoundary box =
-        _drawingKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+    final RenderRepaintBoundary box = _drawingKey.currentContext!
+        .findRenderObject()! as RenderRepaintBoundary;
 
     final ui.Image image = await box.toImage();
-    final ByteData byteData = await image.toByteData(
-      format: ui.ImageByteFormat.png,
-    );
-    final Uint8List pngBytes = byteData.buffer.asUint8List();
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List pngBytes = byteData!.buffer.asUint8List();
     final DateTime now = DateTime.now();
     final String timestamp = DateFormat(
       "HH_mm_ss-MM_dd_yyyy",
@@ -373,7 +372,7 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     if (_filePath == null) {
       _filePath = drawing;
     } else {
-      drawing = _filePath;
+      drawing = _filePath!;
     }
 
     final File imgFile = File(drawing);
@@ -382,11 +381,11 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
     if (_savedImage != null) {
       widget.note.images
-          .removeWhere((savedImage) => savedImage.id == _savedImage.id);
+          .removeWhere((savedImage) => savedImage.id == _savedImage!.id);
     }
     _savedImage = await ImageHelper.copyToCache(imgFile);
 
-    widget.note.images.add(_savedImage);
+    widget.note.images.add(_savedImage!);
     helper.saveNote(widget.note.markChanged());
 
     _controller.saved = true;
@@ -398,8 +397,8 @@ class _ChangeNotifierBuilder<T extends ChangeNotifier> extends StatefulWidget {
   final WidgetBuilder builder;
 
   const _ChangeNotifierBuilder({
-    @required this.changeNotifier,
-    @required this.builder,
+    required this.changeNotifier,
+    required this.builder,
   });
 
   @override

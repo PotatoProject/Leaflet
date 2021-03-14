@@ -11,13 +11,13 @@ import 'package:potato_notes/internal/sync/token_interceptor.dart';
 class _ProvidersSingleton {
   _ProvidersSingleton._();
 
-  AppInfo _appInfo;
-  DeviceInfo _deviceInfo;
-  Preferences _prefs;
-  ImageQueue _imageQueue;
-  Dio _dio;
-  NoteHelper _helper;
-  TagHelper _tagHelper;
+  late AppInfo _appInfo;
+  late DeviceInfo _deviceInfo;
+  late Preferences _prefs;
+  late ImageQueue _imageQueue;
+  late Dio _dio;
+  late NoteHelper _helper;
+  late TagHelper _tagHelper;
 
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
 

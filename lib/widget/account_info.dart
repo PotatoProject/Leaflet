@@ -32,7 +32,7 @@ class AccountInfo extends StatelessWidget {
                   AccountAvatar(
                     size: 36,
                     backgroundColor:
-                        context.theme.iconTheme.color.withOpacity(0.1),
+                        context.theme.iconTheme.color!.withOpacity(0.1),
                     showBadgeOnSync: false,
                   ),
                   const SizedBox(width: 24),
@@ -47,7 +47,8 @@ class AccountInfo extends StatelessWidget {
                         prefs.email ?? "Not logged in",
                         style: TextStyle(
                           fontSize: 14,
-                          color: context.theme.iconTheme.color.withOpacity(0.5),
+                          color:
+                              context.theme.iconTheme.color!.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -56,7 +57,7 @@ class AccountInfo extends StatelessWidget {
               ),
             ),
             if (loggedIn)
-              FutureBuilder(
+              FutureBuilder<FilesApiStats>(
                 future: FilesController.getStats(),
                 builder: (context, snapshot) {
                   return ListTile(
@@ -64,7 +65,7 @@ class AccountInfo extends StatelessWidget {
                     title: const Text("Image upload capacity"),
                     subtitle: LinearProgressIndicator(
                       value: snapshot.hasData
-                          ? snapshot.data.used / snapshot.data.limit as double
+                          ? snapshot.data!.used / snapshot.data!.limit
                           : null,
                       backgroundColor:
                           context.theme.accentColor.withOpacity(0.2),
@@ -72,7 +73,7 @@ class AccountInfo extends StatelessWidget {
                     trailing: Text(
                       snapshot.hasData
                           ? LocaleStrings.common
-                              .xOfY(snapshot.data.used, snapshot.data.limit)
+                              .xOfY(snapshot.data!.used, snapshot.data!.limit)
                           : '-',
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 24),
@@ -93,7 +94,7 @@ class AccountInfo extends StatelessWidget {
                     alignment: AlignmentDirectional.centerStart,
                     children: [
                       ...previousChildren,
-                      currentChild,
+                      currentChild ?? const SizedBox(),
                     ],
                   ),
                   child: Text(

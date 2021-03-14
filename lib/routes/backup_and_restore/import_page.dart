@@ -21,7 +21,7 @@ class ImportPage extends StatefulWidget {
 }
 
 class _ImportPageState extends State<ImportPage> {
-  List<Note> loadedNotes;
+  List<Note>? loadedNotes;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _ImportPageState extends State<ImportPage> {
             onNextTapped: (notes) => setState(() => loadedNotes = notes),
           )
         : _NoteSelectionPage(
-            notes: loadedNotes,
+            notes: loadedNotes!,
           );
 
     return Scaffold(
@@ -54,10 +54,10 @@ class _ImportPageState extends State<ImportPage> {
 typedef LoadedNotesCallback = void Function(List<Note> result);
 
 class _FileSelectionPage extends StatefulWidget {
-  final LoadedNotesCallback onNextTapped;
+  final LoadedNotesCallback? onNextTapped;
 
   const _FileSelectionPage({
-    Key key,
+    Key? key,
     this.onNextTapped,
   }) : super(key: key);
 
@@ -67,7 +67,7 @@ class _FileSelectionPage extends StatefulWidget {
 
 class _FileSelectionPageState extends State<_FileSelectionPage> {
   bool canUseOldDbFile = false;
-  List<Note> notes;
+  List<Note>? notes;
 
   @override
   void initState() {
@@ -101,9 +101,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
                         ),
                       ],
                     )
-                  : await FilePicker.platform.pickFiles(
-                      type: FileType.any,
-                    );
+                  : await FilePicker.platform.pickFiles();
 
               if (asyncFile == null) return;
 
@@ -171,7 +169,7 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
             TextButton(
               onPressed: notes != null
                   ? () {
-                      widget.onNextTapped?.call(notes);
+                      widget.onNextTapped?.call(notes!);
                     }
                   : null,
               child: Text(
@@ -203,8 +201,8 @@ class _NoteSelectionPage extends StatefulWidget {
   final List<Note> notes;
 
   const _NoteSelectionPage({
-    Key key,
-    @required this.notes,
+    Key? key,
+    required this.notes,
   }) : super(key: key);
 
   @override
@@ -251,7 +249,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                   setState(() {});
                 },
                 onCheckboxChanged: (value) {
-                  if (value) {
+                  if (value!) {
                     selectedNotes.add(note.id);
                   } else {
                     selectedNotes.remove(note.id);
@@ -261,7 +259,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
               );
             },
             noteCount: widget.notes.length,
-            gridColumns: deviceInfo.uiSizeFactor.clamp(0, 4) as int,
+            gridColumns: deviceInfo.uiSizeFactor.clamp(0, 4),
           );
         },
       ),
@@ -273,7 +271,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
             TextButton.icon(
               style: TextButton.styleFrom(
                 textStyle: TextStyle(
-                  color: context.theme.textTheme.bodyText2.color,
+                  color: context.theme.textTheme.bodyText2!.color,
                 ),
                 padding: const EdgeInsets.only(
                   left: 10,
@@ -294,7 +292,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
               label: Text(
                 "Replace existing notes",
                 style: TextStyle(
-                  color: context.theme.textTheme.bodyText2.color,
+                  color: context.theme.textTheme.bodyText2!.color,
                 ),
               ),
             ),

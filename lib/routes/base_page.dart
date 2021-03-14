@@ -32,6 +32,12 @@ import 'package:potato_notes/widget/note_search_delegate.dart';
 class BasePage extends StatefulWidget {
   static BasePageState of(BuildContext context) {
     return context
+        .dependOnInheritedWidgetOfExactType<BasePageInheritedWidget>()!
+        .state;
+  }
+
+  static BasePageState? maybeOf(BuildContext context) {
+    return context
         .dependOnInheritedWidgetOfExactType<BasePageInheritedWidget>()
         ?.state;
   }
@@ -72,16 +78,16 @@ class BasePageState extends State<BasePage>
 
   int _currentPage = 0;
   bool _bottomBarEnabled = true;
-  Widget _floatingActionButton;
-  Widget _appBar;
-  Widget _secondaryAppBar;
-  AnimationController _ac;
+  Widget? _floatingActionButton;
+  Widget? _appBar;
+  Widget? _secondaryAppBar;
+  late AnimationController _ac;
   DefaultDrawerMode _defaultDrawerMode = DefaultDrawerMode.collapsed;
   bool _collapsedDrawer = false;
 
-  Widget get fab => _floatingActionButton;
-  Widget get appBar => _appBar;
-  Widget get secondaryAppBar => _secondaryAppBar;
+  Widget? get fab => _floatingActionButton;
+  Widget? get appBar => _appBar;
+  Widget? get secondaryAppBar => _secondaryAppBar;
 
   void setCurrentPage(int newPage) {
     if (_defaultDrawerMode == DefaultDrawerMode.collapsed) {
@@ -95,17 +101,17 @@ class BasePageState extends State<BasePage>
     setState(() => _bottomBarEnabled = enabled);
   }
 
-  void setFAB(Widget fab) {
+  void setFAB(Widget? fab) {
     _floatingActionButton = fab;
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
-  void setAppBar(Widget appBar) {
+  void setAppBar(Widget? appBar) {
     _appBar = appBar;
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
-  Future<void> setSecondaryAppBar(Widget secondaryAppBar) async {
+  Future<void> setSecondaryAppBar(Widget? secondaryAppBar) async {
     if (secondaryAppBar.runtimeType != _secondaryAppBar.runtimeType) {
       if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null) {
         await _ac.animateBack(0);
@@ -116,7 +122,7 @@ class BasePageState extends State<BasePage>
     }
     _secondaryAppBar = secondaryAppBar;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
   void hideCurrentSnackBar() => context.scaffoldMessenger.hideCurrentSnackBar();
@@ -151,7 +157,7 @@ class BasePageState extends State<BasePage>
   @override
   void initState() {
     if (!DeviceInfo.isDesktopOrWeb) {
-      appInfo.quickActions.initialize((shortcutType) async {
+      appInfo.quickActions?.initialize((shortcutType) async {
         switch (shortcutType) {
           case 'new_text':
             Utils.newNote(context);
@@ -176,7 +182,7 @@ class BasePageState extends State<BasePage>
 
     InAppUpdater.checkForUpdate(context);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (!prefs.welcomePageSeen) {
         Utils.showSecondaryRoute(
           context,
@@ -400,9 +406,9 @@ class BasePageState extends State<BasePage>
 
 class BasePageInheritedWidget extends InheritedWidget {
   const BasePageInheritedWidget({
-    Key key,
-    Widget child,
-    this.state,
+    Key? key,
+    required Widget child,
+    required this.state,
   }) : super(key: key, child: child);
 
   final BasePageState state;
@@ -420,10 +426,10 @@ enum DefaultDrawerMode {
 
 class _SecondaryAppBar extends StatelessWidget {
   final AnimationController animationController;
-  final Widget child;
+  final Widget? child;
 
   const _SecondaryAppBar({
-    @required this.animationController,
+    required this.animationController,
     this.child,
   });
 

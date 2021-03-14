@@ -9,7 +9,7 @@ class SyncUrlEditor extends StatefulWidget {
 }
 
 class _SyncUrlEditorState extends State<SyncUrlEditor> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {

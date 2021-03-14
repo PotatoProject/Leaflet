@@ -91,12 +91,12 @@ class NoteColors {
 class ColorInfo {
   final String label;
   final int color;
-  final int lightColor;
-  final int darkColor;
+  final int? lightColor;
+  final int? darkColor;
 
   const ColorInfo({
-    @required this.label,
-    @required this.color,
+    required this.label,
+    required this.color,
     this.lightColor,
     this.darkColor,
   });

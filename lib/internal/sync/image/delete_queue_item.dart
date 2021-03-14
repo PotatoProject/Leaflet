@@ -1,10 +1,9 @@
-// @dart=2.12
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class DeleteQueueItem extends QueueItem {
   final StorageLocation storageLocation;
@@ -35,8 +34,8 @@ class DeleteQueueItem extends QueueItem {
   factory DeleteQueueItem.fromJson(Map<String, dynamic> json) =>
       DeleteQueueItem(
         localPath: json['localPath'] as String,
-        savedImage:
-            SavedImage.fromJson(json['savedImage'] as Map<String, dynamic>),
+        savedImage: SavedImage.fromJson(
+            Utils.asMap<String, dynamic>(json['savedImage'])),
         storageLocation: StorageLocation.values[json['storageLocation'] as int],
       )
         ..status = ValueNotifier(QueueItemStatus.values[json['status'] as int])

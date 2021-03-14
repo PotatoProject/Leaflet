@@ -10,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 part 'app_info.g.dart';
@@ -24,10 +25,10 @@ abstract class _AppInfoBase with Store {
     loadData();
   }
 
-  Directory tempDirectory;
-  FlutterLocalNotificationsPlugin notifications;
-  QuickActions quickActions;
-  PackageInfo packageInfo;
+  late Directory tempDirectory;
+  FlutterLocalNotificationsPlugin? notifications;
+  QuickActions? quickActions;
+  late PackageInfo packageInfo;
 
   @observable
   @protected
@@ -55,18 +56,20 @@ abstract class _AppInfoBase with Store {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    return notifications.initialize(initializationSettings,
+    return notifications!.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
   }
 
-  Future<dynamic> _handleNotificationTap(String payload) async {
+  Future<dynamic> _handleNotificationTap(String? payload) async {
+    if (payload == null) return;
+
     final NotificationPayload nPayload = NotificationPayload.fromJson(
-      json.decode(payload) as Map<String, dynamic>,
+      Utils.asMap<String, dynamic>(json.decode(payload)),
     );
 
     switch (nPayload.action) {
       case NotificationAction.pin:
-        notifications.cancel(nPayload.id);
+        notifications!.cancel(nPayload.id);
         break;
       case NotificationAction.reminder:
         break;
@@ -100,10 +103,11 @@ abstract class _AppInfoBase with Store {
   @action
   void pollForActiveNotifications() {
     Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-      _activeNotificationsValue = await notifications
-          .resolvePlatformSpecificImplementation<
+      final List<ActiveNotification>? _activeNotifications = await notifications
+          ?.resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
-          .getActiveNotifications();
+          ?.getActiveNotifications();
+      _activeNotificationsValue = _activeNotifications ?? [];
     });
   }
 }

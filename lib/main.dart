@@ -27,10 +27,9 @@ Future<void> main() async {
   if (DeviceInfo.isDesktop) {
     sqfliteFfiInit();
   }
-  GestureBinding.instance.resamplingEnabled = true;
+  GestureBinding.instance!.resamplingEnabled = true;
   await SharedPrefs.init();
   final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  Loggy.generateAppLabel();
   initProviders(_db);
 
   runApp(
@@ -86,7 +85,7 @@ class PotatoNotes extends StatelessWidget {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = QuickActions();
 
-              appInfo.quickActions.setShortcutItems([
+              appInfo.quickActions!.setShortcutItems([
                 ShortcutItem(
                   type: 'new_text',
                   localizedTitle: LocaleStrings.common.newNote,
@@ -121,7 +120,7 @@ class PotatoNotes extends StatelessWidget {
               ),
             );
 
-            return child;
+            return child!;
           },
           themeMode: prefs.themeMode,
           home: BasePage(),

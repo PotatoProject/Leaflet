@@ -4,7 +4,7 @@ import 'package:potato_notes/widget/dismissible_route.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 class Themes {
-  final Color _mainColor;
+  final Color? _mainColor;
 
   const Themes(this._mainColor);
 

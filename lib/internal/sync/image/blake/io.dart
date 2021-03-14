@@ -22,33 +22,32 @@ class Blake2 extends BlakeBase {
     this.key,
     this.salt,
     this.personalization,
-    this.iv,
-  })  : assert(digestLength != null && digestLength > 0 && digestLength <= 32),
+    Uint64List? iv,
+  })  : assert(digestLength > 0 && digestLength <= 32),
         assert(salt == null || salt.length == 8),
         assert(personalization == null || personalization.length == 8),
-        assert(iv == null || iv.length == 8) {
-    iv ??= Uint64List.fromList(<int>[
-      0x6a09e667f3bcc908,
-      0xbb67ae8584caa73b,
-      0x3c6ef372fe94f82b,
-      0xa54ff53a5f1d36f1,
-      0x510e527fade682d1,
-      0x9b05688c2b3e6c1f,
-      0x1f83d9abfb41bd6b,
-      0x5be0cd19137e2179,
-    ]);
-
+        iv = iv ??
+            Uint64List.fromList(<int>[
+              0x6a09e667f3bcc908,
+              0xbb67ae8584caa73b,
+              0x3c6ef372fe94f82b,
+              0xa54ff53a5f1d36f1,
+              0x510e527fade682d1,
+              0x9b05688c2b3e6c1f,
+              0x1f83d9abfb41bd6b,
+              0x5be0cd19137e2179,
+            ]) {
     reset();
   }
 
   @override
-  final Uint8List key;
+  final Uint8List? key;
 
   @override
-  final Uint8List salt;
+  final Uint8List? salt;
 
   @override
-  final Uint8List personalization;
+  final Uint8List? personalization;
 
   @override
   final int digestLength;
@@ -264,12 +263,12 @@ class Blake2 extends BlakeBase {
   /// must both be 8 characters in length.
   factory Blake2.fromStrings({
     int digestLength = 32,
-    String key,
-    String salt,
-    String personalization,
-    Uint64List iv,
+    String? key,
+    String? salt,
+    String? personalization,
+    Uint64List? iv,
   }) {
-    assert(digestLength != null && digestLength > 0 && digestLength <= 32);
+    assert(digestLength > 0 && digestLength <= 32);
     assert(salt == null || salt.length == 8);
     assert(personalization == null || personalization.length == 8);
     assert(iv == null || iv.length == 8);

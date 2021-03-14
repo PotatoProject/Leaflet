@@ -14,8 +14,8 @@ class NotePageImageGallery extends StatefulWidget {
   final int currentImage;
 
   const NotePageImageGallery({
-    @required this.note,
-    @required this.currentImage,
+    required this.note,
+    required this.currentImage,
   });
 
   @override
@@ -24,10 +24,10 @@ class NotePageImageGallery extends StatefulWidget {
 
 class _NotePageImageGalleryState extends State<NotePageImageGallery>
     with MouseListenerMixin {
-  PageController pageController;
+  late PageController pageController;
   final TransformationController transformationController =
       TransformationController();
-  int currentPage;
+  late int currentPage;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
 
   @override
   Widget build(BuildContext context) {
-    context.dismissibleRoute.requestDisableGestures = currentScale > 1;
+    context.dismissibleRoute!.requestDisableGestures = currentScale > 1;
 
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
@@ -160,11 +160,11 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
 
 class _PageSwitchSideButton extends StatefulWidget {
   final Widget icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool enabled;
 
   const _PageSwitchSideButton({
-    @required this.icon,
+    required this.icon,
     this.onTap,
     this.enabled = true,
   });
@@ -175,7 +175,7 @@ class _PageSwitchSideButton extends StatefulWidget {
 
 class _PageSwitchSideButtonState extends State<_PageSwitchSideButton>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {

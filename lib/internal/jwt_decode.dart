@@ -1,5 +1,3 @@
-// @dart=2.12
-//
 // Shamelessly copied from https://github.com/sidsbrmnn/jwt_decode/blob/master/lib/jwt_decode.dart,
 // adds support for NNBD
 
