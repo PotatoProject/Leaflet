@@ -2,30 +2,23 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:recase/recase.dart';
 
-class TagController {
-  static Future<String> add(Tag tag) async {
+class TagController extends Controller {
+  Future<String> add(Tag tag) async {
     try {
-      final String token = await prefs.getToken();
       final String tagJson = json.encode(toSync(tag));
-      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag";
-      Loggy.v(message: "Going to send POST to $url");
       final Response addResult = await dio.post(
-        url,
+        url("tag"),
         data: tagJson,
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: Controller.tokenHeaders,
         ),
-      );
-      Loggy.d(
-        message:
-            "(${tag.id} tag-add) Server responded with (${addResult.statusCode}): ${addResult.data}",
       );
       return NoteController.handleResponse(addResult).toString();
     } on SocketException {
@@ -35,20 +28,13 @@ class TagController {
     }
   }
 
-  static Future<String> delete(String id) async {
+  Future<String> delete(String id) async {
     try {
-      final String token = await prefs.getToken();
-      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag/$id";
-      Loggy.v(message: "Goind to send DELETE to $url");
       final Response deleteResponse = await dio.delete(
-        url,
+        url("tag/$id"),
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: Controller.tokenHeaders,
         ),
-      );
-      Loggy.d(
-        message:
-            "($id tag-delete) Server responded with (${deleteResponse.statusCode}}: ${deleteResponse.data}",
       );
       return NoteController.handleResponse(deleteResponse).toString();
     } on SocketException {
@@ -58,22 +44,13 @@ class TagController {
     }
   }
 
-  static Future<List<Tag>> list(int lastUpdated) async {
+  Future<List<Tag>> list(int lastUpdated) async {
     try {
-      final String token = await prefs.getToken();
-      final String url =
-          "${prefs.apiUrl}${NoteController.notesPrefix}/tag/list?last_updated=$lastUpdated";
-      Loggy.v(message: "Going to send GET to $url");
-
       final Response listResult = await dio.get(
-        url,
+        url("tag/list?last_updated=$lastUpdated"),
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: Controller.tokenHeaders,
         ),
-      );
-      Loggy.d(
-        message:
-            "(tag-list) Server responded with (${listResult.statusCode}): ${listResult.data}",
       );
       final List<Map<String, dynamic>> body =
           Utils.asList<Map<String, dynamic>>(listResult.data);
@@ -89,22 +66,15 @@ class TagController {
     }
   }
 
-  static Future<String> update(String id, Map<String, dynamic> tagDelta) async {
+  Future<String> update(String id, Map<String, dynamic> tagDelta) async {
     try {
       final String deltaJson = jsonEncode(tagDelta);
-      final String token = await prefs.getToken();
-      final String url = "${prefs.apiUrl}${NoteController.notesPrefix}/tag/$id";
-      Loggy.v(message: "Going to send PATCH to $url");
       final Response updateResult = await dio.patch(
-        url,
+        url("tag/$id"),
         data: deltaJson,
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: Controller.tokenHeaders,
         ),
-      );
-      Loggy.d(
-        message:
-            "($id tag-update) Server responded with (${updateResult.statusCode}): ${updateResult.data}",
       );
       return NoteController.handleResponse(updateResult).toString();
     } on SocketException {
@@ -114,23 +84,15 @@ class TagController {
     }
   }
 
-  static Future<List<String>> listDeleted(List<String> localIdList) async {
+  Future<List<String>> listDeleted(List<String> localIdList) async {
     try {
       final String idListJson = jsonEncode(localIdList);
-      final String token = await prefs.getToken();
-      final String url =
-          "${prefs.apiUrl}${NoteController.notesPrefix}/tag/deleted";
-      Loggy.v(message: "Going to send POST to $url");
       final Response listResult = await dio.post(
-        url,
+        url("tag/deleted"),
         data: idListJson,
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: Controller.tokenHeaders,
         ),
-      );
-      Loggy.d(
-        message:
-            "(tag-listDeleted) Server responded with (${listResult.statusCode})}: ${listResult.data}",
       );
       NoteController.handleResponse(listResult);
       final List<dynamic> data = listResult.data as List<dynamic>;
@@ -142,7 +104,7 @@ class TagController {
     }
   }
 
-  static Map<String, dynamic> toSync(Tag tag) {
+  Map<String, dynamic> toSync(Tag tag) {
     final Map<String, dynamic> jsonMap = tag.toJson();
     final Map<String, dynamic> newMap = {};
     jsonMap.forEach((key, value) {
@@ -153,7 +115,7 @@ class TagController {
     return newMap;
   }
 
-  static Tag fromSync(Map<String, dynamic> jsonMap) {
+  Tag fromSync(Map<String, dynamic> jsonMap) {
     final Map<String, dynamic> newMap = {};
     jsonMap.forEach((key, value) {
       final Object? newValue = value;
@@ -162,4 +124,7 @@ class TagController {
     });
     return Tag.fromJson(newMap);
   }
+
+  @override
+  String get prefix => "notes";
 }

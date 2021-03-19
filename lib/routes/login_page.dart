@@ -4,7 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -293,13 +293,13 @@ class _LoginPageState extends State<LoginPage> {
       showLoadingOverlay = true;
     });
     if (register) {
-      response = await AccountController.register(
+      response = await Controller.account.register(
         usernameController.text,
         emailController.text,
         passwordController.text,
       );
     } else {
-      response = await AccountController.login(
+      response = await Controller.account.login(
         emailOrUserController.text,
         passwordController.text,
       );

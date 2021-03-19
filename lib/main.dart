@@ -12,7 +12,6 @@ import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
@@ -28,9 +27,8 @@ Future<void> main() async {
     sqfliteFfiInit();
   }
   GestureBinding.instance!.resamplingEnabled = true;
-  await SharedPrefs.init();
   final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  initProviders(_db);
+  await initProviders(_db);
 
   runApp(
     EasyLocalization(
@@ -51,7 +49,7 @@ class PotatoNotes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        Loggy.setLogLevel(prefs.logLevel);
+        Loggy.instance.logLevel = LogLevel.values[prefs.logLevel];
 
         Color accentColor;
         bool canUseSystemAccent = true;

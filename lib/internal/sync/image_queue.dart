@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/image/upload_queue_item.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -14,14 +14,16 @@ import 'image/delete_queue_item.dart';
 import 'image/download_queue_item.dart';
 import 'image/queue_item.dart';
 
-class ImageQueue extends ChangeNotifier {
+class ImageQueue extends ChangeNotifier with LoggerProvider {
   List<QueueItem> get queue => List.from(downloadQueue)..addAll(uploadQueue);
 
   final List<UploadQueueItem> uploadQueue = [];
-  final List<DeleteQueueItem> deleteQueue;
+  final List<DeleteQueueItem> deleteQueue = [];
   final List<DownloadQueueItem> downloadQueue = [];
 
-  ImageQueue() : deleteQueue = deleteQueueFromPrefs();
+  ImageQueue() {
+    deleteQueue.addAll(deleteQueueFromPrefs());
+  }
 
   void addUpload(SavedImage data, String noteId) {
     final UploadQueueItem item = UploadQueueItem(
@@ -77,8 +79,8 @@ class ImageQueue extends ChangeNotifier {
   }
 
   Future<void> processDownloads() async {
-    Loggy.d(message: "DownloadQueue has ${downloadQueue.length} items queued");
-    Loggy.d(message: "Started processing downloads");
+    logger.d("DownloadQueue has ${downloadQueue.length} items queued");
+    logger.d("Started processing downloads");
     for (final DownloadQueueItem item in downloadQueue) {
       await item.downloadImage();
     }
@@ -88,16 +90,16 @@ class ImageQueue extends ChangeNotifier {
     downloadQueue.removeWhere(
       (item) => item.status.value == QueueItemStatus.complete,
     );
-    Loggy.d(
-      message: "DownloadQueue now contains ${downloadQueue.length} items",
+    logger.d(
+      "DownloadQueue now contains ${downloadQueue.length} items",
     );
   }
 
   Future<void> process() async {
     final String tempDirectory = appInfo.tempDirectory.path;
 
-    Loggy.d(message: "UploadQueue has ${uploadQueue.length} items queued");
-    Loggy.d(message: "Started processing uploads");
+    logger.d("UploadQueue has ${uploadQueue.length} items queued");
+    logger.d("Started processing uploads");
     await Future.wait(
         uploadQueue.map((item) => uploadItem(item, tempDirectory)));
 
@@ -107,8 +109,8 @@ class ImageQueue extends ChangeNotifier {
       await updateItem(item);
     }
 
-    Loggy.d(message: "DeleteQueue has ${downloadQueue.length} items queued");
-    Loggy.d(message: "Started processing uploads");
+    logger.d("DeleteQueue has ${downloadQueue.length} items queued");
+    logger.d("Started processing uploads");
     await Future.wait(deleteQueue.map((item) async {
       if (await hasDuplicates(item.savedImage)) {
         item.status.value = QueueItemStatus.complete;
@@ -123,8 +125,8 @@ class ImageQueue extends ChangeNotifier {
     deleteQueue
         .removeWhere((item) => item.status.value == QueueItemStatus.complete);
 
-    Loggy.d(message: "UploadQueue now contains ${uploadQueue.length} items");
-    Loggy.d(message: "DeleteQueue now contains ${deleteQueue.length} items");
+    logger.d("UploadQueue now contains ${uploadQueue.length} items");
+    logger.d("DeleteQueue now contains ${deleteQueue.length} items");
   }
 
   Future<void> deleteItem(DeleteQueueItem item) async {
@@ -162,12 +164,12 @@ class ImageQueue extends ChangeNotifier {
     prefs.deleteQueue = jsonEncode(deleteQueue);
   }
 
-  static List<DeleteQueueItem> deleteQueueFromPrefs() {
+  List<DeleteQueueItem> deleteQueueFromPrefs() {
     if (prefs.deleteQueue == null || (prefs.deleteQueue?.isEmpty ?? true)) {
       return [];
     }
 
-    Loggy.d(message: prefs.deleteQueue);
+    //logger.d(prefs.deleteQueue);
     final List<DeleteQueueItem> queue =
         Utils.asList<Map<String, dynamic>>(json.decode(prefs.deleteQueue!))
             .map((i) => DeleteQueueItem.fromJson(i))

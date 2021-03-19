@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 
-abstract class QueueItem {
+abstract class QueueItem with LoggerProvider {
   final String localPath;
   final SavedImage savedImage;
 

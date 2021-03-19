@@ -2,18 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
-class AccountController {
-  AccountController._();
-
+class AccountController extends Controller {
   // used for registering a user, all it needs is username, email, password.
   // When there is an error it throws an exception which needs to be catched
-  static Future<AuthResponse> register(
+  Future<AuthResponse> register(
       String username, String email, String password) async {
     final Map<String, String> body = {
       "username": username,
@@ -22,17 +18,12 @@ class AccountController {
     };
     try {
       final Response registerResponse = await dio.post(
-        "${prefs.apiUrl}/login/user/register",
+        url("user/register"),
         data: json.encode(body),
         options: Options(
           headers: {"Content-Type": "application/json"},
           validateStatus: (status) => true,
         ),
-      );
-      Loggy.v(
-        message:
-            "(register) Server responded with (${registerResponse.statusCode}): ${registerResponse.data}",
-        secure: true,
       );
 
       switch (registerResponse.statusCode) {
@@ -65,7 +56,7 @@ class AccountController {
 
   // Logs in the user and puts tokens in shared_prefs
   // When there is an error it throws an exception which needs to be catched
-  static Future<AuthResponse> login(String emailOrUser, String password) async {
+  Future<AuthResponse> login(String emailOrUser, String password) async {
     Map<String, String> body;
 
     if (emailOrUser.contains(RegExp(".*..*@.*..*", dotAll: true))) {
@@ -82,17 +73,12 @@ class AccountController {
 
     try {
       final Response loginResponse = await dio.post(
-        "${prefs.apiUrl}/login/user/login",
+        url("user/login"),
         data: json.encode(body),
         options: Options(
           headers: {"Content-Type": "application/json"},
           validateStatus: (status) => true,
         ),
-      );
-      Loggy.v(
-        message:
-            "(login) Server responded with (${loginResponse.statusCode}): ${loginResponse.data}",
-        secure: true,
       );
       switch (loginResponse.statusCode) {
         case 200:
@@ -103,7 +89,7 @@ class AccountController {
           await getUserInfo();
           return AuthResponse(status: true);
         default:
-          Loggy.d(message: loginResponse.data);
+          logger.d(loginResponse.data);
           return AuthResponse(
             status: false,
             message: loginResponse.data,
@@ -128,17 +114,15 @@ class AccountController {
     }
   }
 
-  static Future<AuthResponse> getUserInfo() async {
-    final bool loggedIn = await SyncRoutine.checkLoginStatus();
+  Future<AuthResponse> getUserInfo() async {
+    final bool loggedIn = await syncRoutine.checkLoginStatus();
 
     if (loggedIn) {
-      final String token = await prefs.getToken();
-
       try {
         final Response profileRequest = await dio.get(
-          "${prefs.apiUrl}/login/user/profile",
+          url("user/profile"),
           options: Options(
-            headers: {"Authorization": "Bearer $token"},
+            headers: Controller.tokenHeaders,
           ),
         );
         switch (profileRequest.statusCode) {
@@ -147,7 +131,7 @@ class AccountController {
                 Utils.asMap<String, Object?>(profileRequest.data);
             prefs.username = response["username"] as String?;
             prefs.email = response["email"] as String?;
-            prefs.avatarUrl = await ImageHelper.getAvatar(token);
+            prefs.avatarUrl = await imageHelper.getAvatar();
             return AuthResponse(status: true);
           case 400:
             return AuthResponse(
@@ -167,7 +151,7 @@ class AccountController {
     }
   }
 
-  static Future<void> logout() async {
+  Future<void> logout() async {
     prefs.accessToken = null;
     prefs.refreshToken = null;
     prefs.username = null;
@@ -183,7 +167,7 @@ class AccountController {
   // If the refreshing returns an exception with the body, it means it couldnt request access again
   // This means that the user needs to log back in.
   // When there is an error it throws an exception which needs to be catched
-  static Future<AuthResponse> refreshToken() async {
+  Future<AuthResponse> refreshToken() async {
     Response refresh;
 
     if (prefs.refreshToken == null) {
@@ -191,24 +175,17 @@ class AccountController {
     }
 
     try {
-      final String url = "${prefs.apiUrl}/login/user/refresh";
-      Loggy.v(message: "Going to send GET to $url");
       refresh = await dio.get(
-        url,
+        url("user/refresh"),
         options: Options(
-          headers: {"Authorization": "Bearer ${prefs.refreshToken}"},
+          headers: Controller.refreshTokenHeaders,
         ),
-      );
-      Loggy.v(
-        message:
-            "(refreshToken) Server responded with (${refresh.statusCode}): ${refresh.data}",
-        secure: true,
       );
       switch (refresh.statusCode) {
         case 200:
           {
             prefs.accessToken = refresh.data["token"] as String;
-            Loggy.d(message: "accessToken: ${prefs.accessToken}", secure: true);
+            logger.d("accessToken: ${prefs.accessToken}", secure: true);
             return AuthResponse(status: true);
           }
         case 400:
@@ -225,14 +202,7 @@ class AccountController {
       rethrow;
     }
   }
-}
 
-class AuthResponse {
-  final bool status;
-  final Object? message;
-
-  AuthResponse({
-    required this.status,
-    this.message,
-  });
+  @override
+  String get prefix => "login";
 }

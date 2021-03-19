@@ -41,7 +41,15 @@ class SavedImage {
   Size get size => Size(width!, height!);
 
   factory SavedImage.fromJson(Map<String, dynamic> json) =>
-      _$SavedImageFromJson(json);
+      _$SavedImageFromJson(
+        json.map((key, value) {
+          if (key == "storageLocation") {
+            return MapEntry(key, value.toString().toLowerCase());
+          } else {
+            return MapEntry(key, value);
+          }
+        }),
+      );
 
   Map<String, dynamic> toJson() => _$SavedImageToJson(this);
 

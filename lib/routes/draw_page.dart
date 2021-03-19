@@ -9,16 +9,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_toolbar.dart';
@@ -37,7 +36,8 @@ class DrawPage extends StatefulWidget {
   _DrawPageState createState() => _DrawPageState();
 }
 
-class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
+class _DrawPageState extends State<DrawPage>
+    with TickerProviderStateMixin, LoggerProvider {
   BuildContext? _globalContext;
   final DrawingBoardController _controller = DrawingBoardController();
   final DrawingToolbarController _toolbarController =
@@ -377,13 +377,13 @@ class _DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
     final File imgFile = File(drawing);
     await imgFile.writeAsBytes(pngBytes, flush: true);
-    Loggy.d(message: drawing);
+    logger.d(drawing);
 
     if (_savedImage != null) {
       widget.note.images
           .removeWhere((savedImage) => savedImage.id == _savedImage!.id);
     }
-    _savedImage = await ImageHelper.copyToCache(imgFile);
+    _savedImage = await imageHelper.copyToCache(imgFile);
 
     widget.note.images.add(_savedImage!);
     helper.saveNote(widget.note.markChanged());

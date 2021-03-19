@@ -3,25 +3,21 @@ import 'dart:core';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
-import 'package:potato_notes/internal/sync/note_controller.dart';
-import 'package:potato_notes/internal/sync/setting_controller.dart';
-import 'package:potato_notes/internal/sync/tag_controller.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
-class SyncRoutine {
+class SyncRoutine with LoggerProvider {
   static const Set<String> _settingsToSync = {
     "custom_accent",
     "use_amoled",
     "use_grid",
     "use_custom_accent"
   };
-  static final SyncRoutine instance = SyncRoutine._();
 
   final List<Note> _localNotes = [];
   final List<Note> _addedNotes = [];
@@ -32,52 +28,48 @@ class SyncRoutine {
   final List<Tag> _deletedTags = [];
   final Map<Tag, Map<String, dynamic>> _updatedTags = {};
 
-  SyncRoutine._();
+  SyncRoutine();
 
   final ValueNotifier<bool> _syncing = ValueNotifier(false);
   ValueNotifier<bool> get syncing => _syncing;
 
-  static Future<bool> _checkOnlineStatus() async {
-    final String url = "${prefs.apiUrl}/notes/ping";
-    Loggy.d(message: "Going to send GET to $url");
+  Future<bool> _checkOnlineStatus() async {
+    final url = Controller.note.url("ping");
     final Response pingResponse = await dio.get(url);
     if (pingResponse.statusCode != 200) {
-      Loggy.e(message: "Server did not respond with 200 on ping");
+      logger.e("Server did not respond with 200 on ping");
       return false;
     }
     if (pingResponse.data != "Pong!") {
-      Loggy.e(message: "Server did not respond with Pong!");
+      logger.e("Server did not respond with Pong!");
       return false;
     }
     return true;
   }
 
-  static Future<bool> checkLoginStatus() async {
+  Future<bool> checkLoginStatus() async {
     if (prefs.accessToken == null) {
-      Loggy.d(message: "Tried syncing without accesstoken");
+      logger.d("Tried syncing without accesstoken");
       return false;
     }
 
     try {
-      final String url =
-          "${prefs.apiUrl}${NoteController.notesPrefix}/secure-ping";
-      Loggy.d(message: "Going to send GET to $url");
       final Response securePingResponse = await dio.get(
-        url,
+        Controller.note.url("secure-ping"),
         options: Options(
           headers: {"Authorization": prefs.accessToken},
         ),
       );
       if (securePingResponse.statusCode == 401) {
-        Loggy.e(message: "Token is not valid");
+        logger.e("Token is not valid");
         return false;
       }
       if (securePingResponse.statusCode != 200) {
-        Loggy.e(message: "Server did not respond with 200 on ping");
+        logger.e("Server did not respond with 200 on ping");
         return false;
       }
       if (securePingResponse.data != "Pong!") {
-        Loggy.e(message: "Server did not respond with Pong!");
+        logger.e("Server did not respond with Pong!");
         return false;
       }
       return true;
@@ -149,24 +141,22 @@ class SyncRoutine {
 
     // Get a list of tags which have been updated since the client updated
     try {
-      final List<Tag> tags = await TagController.list(lastUpdated);
-      Loggy.i(
-          message: "Got these tags: ${tags.map((tag) => tag.id).join(",")}");
+      final List<Tag> tags = await Controller.tag.list(lastUpdated);
+      logger.i("Got these tags: ${tags.map((tag) => tag.id).join(",")}");
       for (final Tag tag in tags) {
-        Loggy.i(message: "Saving tag: $tag.id");
+        logger.i("Saving tag: $tag.id");
         await _saveSyncedTag(tag);
       }
     } catch (e) {
-      Loggy.e(message: e.toString());
+      logger.e(e.toString());
       throw "Failed to list tags: $e";
     }
 
     // Get a list of notes which have been updated since the client updated
-    final List<Note> notes = await NoteController.list(lastUpdated);
-    Loggy.i(
-        message: "Got these notes: ${notes.map((note) => note.id).join(",")}");
+    final List<Note> notes = await Controller.note.list(lastUpdated);
+    logger.i("Got these notes: ${notes.map((note) => note.id).join(",")}");
     for (final Note note in notes) {
-      Loggy.i(message: "Saving note: ${note.id}");
+      logger.i("Saving note: ${note.id}");
 
       //TODO Add a way of disabling this when adding data saving setting
       /*for (SavedImage savedImage in note.images.data) {
@@ -175,18 +165,18 @@ class SyncRoutine {
       await _saveSyncedNote(note);
     }
     prefs.lastUpdated = DateTime.now().millisecondsSinceEpoch;
-    await ImageHelper.handleDownloads(await helper.listNotes(ReturnMode.local));
+    await imageHelper.handleDownloads(await helper.listNotes(ReturnMode.local));
     return true;
   }
 
-  static Future<bool> _addNote(Note note) async {
+  Future<bool> _addNote(Note note) async {
     try {
-      await NoteController.add(note);
+      await Controller.note.add(note);
       await _saveSyncedNote(note);
-      Loggy.i(message: "Added note: ${note.id}");
+      logger.i("Added note: ${note.id}");
       return true;
     } catch (e) {
-      Loggy.e(message: "Failed to add note: $e");
+      logger.e("Failed to add note: $e");
       return false;
     }
   }
@@ -200,8 +190,8 @@ class SyncRoutine {
     }
     // Get list of notes which should be deleted on the client since they are deleted on the remote server
     try {
-      final List<String> deletedIdList = await NoteController.listDeleted(
-          _localNotes.map((note) => note.id).toList());
+      final List<String> deletedIdList = await Controller.note
+          .listDeleted(_localNotes.map((note) => note.id).toList());
       for (final String id in deletedIdList) {
         final Note localNote = _localNotes.firstWhere((note) => note.id == id);
         await helper.deleteNote(localNote);
@@ -211,26 +201,26 @@ class SyncRoutine {
         _deletedNotes.removeWhere((note) => note.id == localNote.id);
       }
     } catch (e) {
-      Loggy.e(message: e.toString());
+      logger.e(e.toString());
       throw "Failed to list deleted notes: $e";
     }
     _updatedNotes.forEach((note, delta) async {
       try {
-        await NoteController.update(note.id, delta);
+        await Controller.note.update(note.id, delta);
         await _saveSyncedNote(note);
-        Loggy.i(message: "Updated note: ${note.id}");
+        logger.i("Updated note: ${note.id}");
       } catch (e) {
-        Loggy.e(message: e);
+        logger.e(e);
       }
     });
     for (final Note note in _deletedNotes) {
       final String localNoteId = note.id.replaceFirst("-synced", "");
       try {
-        await NoteController.delete(localNoteId);
+        await Controller.note.delete(localNoteId);
         await _deleteSyncedNote(note);
-        Loggy.i(message: "Deleted note: $localNoteId");
+        logger.i("Deleted note: $localNoteId");
       } catch (e) {
-        Loggy.e(message: e.toString());
+        logger.e(e.toString());
         throw "Failed to delete notes: $e";
       }
     }
@@ -241,18 +231,18 @@ class SyncRoutine {
     // Send the post requests to add new tags
     for (final Tag tag in _addedTags) {
       try {
-        await TagController.add(tag);
+        await Controller.tag.add(tag);
         await _saveSyncedTag(tag);
-        Loggy.i(message: "Added tag: ${tag.id}");
+        logger.i("Added tag: ${tag.id}");
       } catch (e) {
-        Loggy.e(message: e.toString());
+        logger.e(e.toString());
         throw "Failed to add tags: $e";
       }
     }
     // Get list of tags which should be deleted on the client since they are deleted on the remote server
     try {
-      final List<String> deletedIdList = await TagController.listDeleted(
-          localTags.map((tag) => tag.id).toList());
+      final List<String> deletedIdList = await Controller.tag
+          .listDeleted(localTags.map((tag) => tag.id).toList());
       for (final String id in deletedIdList) {
         final Tag localTag = localTags.firstWhere((tag) => tag.id == id);
         await tagHelper.deleteTag(localTag);
@@ -262,89 +252,89 @@ class SyncRoutine {
         _deletedTags.removeWhere((tag) => tag.id == localTag.id);
       }
     } catch (e) {
-      Loggy.e(message: e.toString());
+      logger.e(e.toString());
       throw "Failed to list deleted tags: $e";
     }
     _updatedTags.forEach((tag, delta) async {
       try {
-        await TagController.update(tag.id, delta);
+        await Controller.tag.update(tag.id, delta);
         await _saveSyncedTag(tag);
-        Loggy.i(message: "Updated tag: ${tag.id}");
+        logger.i("Updated tag: ${tag.id}");
       } catch (e) {
-        Loggy.e(message: e);
+        logger.e(e);
         throw "Failed to update tags: $e";
       }
     });
     for (final Tag tag in _deletedTags) {
       final String localTagId = tag.id.replaceFirst("-synced", "");
       try {
-        await TagController.delete(localTagId);
+        await Controller.tag.delete(localTagId);
         await _deleteSyncedTag(tag);
-        Loggy.i(message: "Deleted tag: $localTagId");
+        logger.i("Deleted tag: $localTagId");
       } catch (e) {
-        Loggy.e(message: e.toString());
+        logger.e(e.toString());
         throw "Failed to delete tags: $e";
       }
     }
     return true;
   }
 
-  static Future<void> _sendSettingUpdates() async {
+  Future<void> _sendSettingUpdates() async {
     Map<String, String> changedSettings;
-    changedSettings = await SettingController.getChanged(prefs.lastUpdated);
+    changedSettings = await Controller.setting.getChanged(prefs.lastUpdated);
 
     changedSettings.forEach((key, value) {
       final Object? original = prefs.getFromCache(key);
       switch (original.runtimeType) {
         case String:
           {
-            prefs.prefs.prefs.setString(key, value);
+            sharedPrefs.setString(key, value);
             break;
           }
         case bool:
           {
-            prefs.prefs.prefs.setBool(key, value == "true");
+            sharedPrefs.setBool(key, value == "true");
             break;
           }
         case double:
           {
-            prefs.prefs.prefs.setDouble(key, double.parse(value));
+            sharedPrefs.setDouble(key, double.parse(value));
             break;
           }
         case int:
           {
-            prefs.prefs.prefs.setInt(key, int.parse(value));
+            sharedPrefs.setInt(key, int.parse(value));
             break;
           }
         case List:
           {
             final List<String> list = Utils.asList<String>(json.decode(value));
-            prefs.prefs.prefs.setStringList(key, list);
+            sharedPrefs.setStringList(key, list);
             break;
           }
       }
     });
 
-    final List<String> keys = prefs.prefs.changedKeys;
+    final List<String> keys = sharedPrefs.changedKeys;
 
     for (final String key in keys) {
       if (_settingsToSync.contains(key) &&
           !changedSettings.keys.contains(key)) {
         try {
-          Loggy.v(message: "Preparing to save $key");
+          logger.v("Preparing to save $key");
           Object? value = prefs.getFromCache(key);
           if (key == "tags") {
             value = json.encode(value);
           }
-          await SettingController.set(key, value.toString());
-          Loggy.v(message: "Saved setting $key");
+          await Controller.setting.set(key, value.toString());
+          logger.v("Saved setting $key");
         } catch (e) {
-          Loggy.e(message: e);
+          logger.e(e);
           throw "Failed to save setting: $e";
         }
       }
     }
-    prefs.prefs.clearChangedKeys();
+    sharedPrefs.clearChangedKeys();
   }
 
   static Future<void> _saveSyncedNote(Note note) async {
@@ -422,27 +412,27 @@ class SyncRoutine {
     }
   }
 
-  static Map<String, dynamic> _getNoteDelta(Note localNote, Note syncedNote) {
+  Map<String, dynamic> _getNoteDelta(Note localNote, Note syncedNote) {
     final Map<String, dynamic> localMap = localNote.toSyncMap();
     final Map<String, dynamic> syncedMap = syncedNote.toSyncMap();
     final Map<String, dynamic> noteDelta = {};
     localMap.forEach((key, localValue) {
       if (localValue != syncedMap[key] &&
           (key != "note_id" && key != "synced")) {
-        Loggy.d(message: "$key:$localValue");
+        logger.d("$key:$localValue");
         noteDelta.putIfAbsent(key, () => localValue);
       }
     });
     return noteDelta;
   }
 
-  static Map<String, dynamic> _getTagDelta(Tag localTag, Tag syncedTag) {
-    final Map<String, dynamic> localMap = TagController.toSync(localTag);
-    final Map<String, dynamic> syncedMap = TagController.toSync(syncedTag);
+  Map<String, dynamic> _getTagDelta(Tag localTag, Tag syncedTag) {
+    final Map<String, dynamic> localMap = Controller.tag.toSync(localTag);
+    final Map<String, dynamic> syncedMap = Controller.tag.toSync(syncedTag);
     final Map<String, dynamic> tagDelta = {};
     localMap.forEach((key, localValue) {
       if (localValue != syncedMap[key] && (key != "id")) {
-        Loggy.d(message: "$key:$localValue");
+        logger.d("$key:$localValue");
         tagDelta.putIfAbsent(key, () => localValue);
       }
     });

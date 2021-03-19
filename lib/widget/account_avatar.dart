@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/badge_icon.dart';
 
@@ -24,7 +23,7 @@ class AccountAvatar extends StatelessWidget {
         final String? avatarUrl = prefs.avatarUrl;
 
         return ValueListenableBuilder<bool>(
-          valueListenable: SyncRoutine.instance.syncing,
+          valueListenable: syncRoutine.syncing,
           builder: (context, syncing, _) {
             return BadgeIcon(
               icon: CircleAvatar(

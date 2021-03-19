@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:potato_notes/internal/utils.dart';
 
@@ -16,13 +17,9 @@ class DeleteQueueItem extends QueueItem {
 
   Future<void> deleteImage() async {
     status.value = QueueItemStatus.ongoing;
-    final String url = "${prefs.apiUrl}/files/delete/${savedImage.hash}.jpg";
-    final String token = await prefs.getToken();
     final Response response = await dio.delete(
-      url,
-      options: Options(
-        headers: {"Authorization": "Bearer $token"},
-      ),
+      Controller.files.url("delete/${savedImage.hash}.jpg"),
+      options: Options(headers: Controller.tokenHeaders),
     );
     if (response.statusCode != 200) {
       return;

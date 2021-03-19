@@ -4,9 +4,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/image/files_controller.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/login_page.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
@@ -15,7 +14,7 @@ class AccountInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: SyncRoutine.instance.syncing,
+      valueListenable: syncRoutine.syncing,
       builder: (context, syncing, _) {
         final bool loggedIn = prefs.accessToken != null;
         final String lastSync = prefs.lastUpdated != 0
@@ -58,7 +57,7 @@ class AccountInfo extends StatelessWidget {
             ),
             if (loggedIn)
               FutureBuilder<FilesApiStats>(
-                future: FilesController.getStats(),
+                future: Controller.files.getStats(),
                 builder: (context, snapshot) {
                   return ListTile(
                     leading: const Icon(Icons.image_outlined),
@@ -103,7 +102,7 @@ class AccountInfo extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  SyncRoutine.instance.sync();
+                  syncRoutine.sync();
                 },
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),
@@ -123,7 +122,7 @@ class AccountInfo extends StatelessWidget {
                 title: const Text("Logout"),
                 onTap: () async {
                   context.pop();
-                  await AccountController.logout();
+                  await Controller.account.logout();
                 },
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24),
               ),

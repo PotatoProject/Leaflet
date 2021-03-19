@@ -12,7 +12,6 @@ import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
@@ -106,7 +105,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> handleImageAdd(String path) async {
-    final SavedImage savedImage = await ImageHelper.copyToCache(File(path));
+    final SavedImage savedImage = await imageHelper.copyToCache(File(path));
     setState(() => note.images.add(savedImage));
     imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();

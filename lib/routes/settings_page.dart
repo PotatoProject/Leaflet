@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:loggy/loggy.dart';
+import 'package:logging/logging.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
-import 'package:potato_notes/internal/sync/note_controller.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -143,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(LocaleStrings.settings.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
-                      await NoteController.deleteAll();
+                      await Controller.note.deleteAll();
                     },
                   ),
                   SettingsTile(
@@ -153,24 +153,25 @@ class _SettingsPageState extends State<SettingsPage> {
                       showDropdownSheet(
                         context: context,
                         itemBuilder: (context, index) {
-                          final bool selected =
-                              prefs.logLevel == logEntryValues[index];
+                          final bool selected = prefs.logLevel == index;
 
                           return dropDownTile(
                             selected: selected,
                             title: Text(
-                              getLogEntryName(logEntryValues[index]),
+                              firstLetterToUppercase(Level.LEVELS[index].name),
                             ),
                             onTap: () {
-                              prefs.logLevel = logEntryValues[index];
+                              prefs.logLevel = index;
                               context.pop();
                             },
                           );
                         },
-                        itemCount: logEntryValues.length,
+                        itemCount: Level.LEVELS.length,
                       );
                     },
-                    subtitle: Text(getLogEntryName(prefs.logLevel)),
+                    subtitle: Text(
+                      firstLetterToUppercase(Level.LEVELS[prefs.logLevel].name),
+                    ),
                   ),
                 ],
               ),
@@ -282,9 +283,10 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () {
                 showDropdownSheet(
                   context: context,
-                  initialIndex:
-                      context.supportedLocales.indexOf(context.savedLocale!) +
-                          1,
+                  initialIndex: context.savedLocale != null
+                      ? context.supportedLocales.indexOf(context.savedLocale!) +
+                          1
+                      : 0,
                   scrollable: true,
                   itemBuilder: (context, index) {
                     final Locale? locale =
@@ -500,32 +502,5 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String firstLetterToUppercase(String origin) {
     return ReCase(origin).sentenceCase;
-  }
-
-  List<int> get logEntryValues => [
-        LogEntry.VERBOSE,
-        LogEntry.DEBUG,
-        LogEntry.INFO,
-        LogEntry.WARN,
-        LogEntry.ERROR,
-        LogEntry.WTF,
-      ];
-
-  String getLogEntryName(int entry) {
-    switch (entry) {
-      case LogEntry.DEBUG:
-        return "Debug";
-      case LogEntry.INFO:
-        return "Info";
-      case LogEntry.WARN:
-        return "Warn";
-      case LogEntry.ERROR:
-        return "Error";
-      case LogEntry.WTF:
-        return "WTF";
-      case LogEntry.VERBOSE:
-      default:
-        return "Verbose";
-    }
   }
 }

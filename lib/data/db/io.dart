@@ -13,8 +13,8 @@ QueryExecutor constructDb({bool logStatements = false}) {
 
   if (Platform.isIOS || Platform.isAndroid) {
     final LazyDatabase executor = LazyDatabase(() async {
-      final String? dataDir = await getDatabasesPath();
-      final File dbFile = File(p.join(dataDir!, 'notes.sqlite'));
+      final String dataDir = await getDatabasesPath();
+      final File dbFile = File(p.join(dataDir, 'notes.sqlite'));
       return VmDatabase(dbFile, logStatements: logStatements);
     });
     return executor;

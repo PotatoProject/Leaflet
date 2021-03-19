@@ -3,14 +3,12 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:potato_notes/internal/utils.dart';
-
-import 'image_helper.dart';
 
 class UploadQueueItem extends QueueItem {
   final String noteId;
@@ -31,7 +29,7 @@ class UploadQueueItem extends QueueItem {
       "tempDirectory": tempDirectory
     };
     final String resultJson =
-        await compute(ImageHelper.processImage, jsonEncode(data));
+        await compute(imageHelper.processImage, jsonEncode(data));
     final Map<String, String> result =
         Utils.asMap<String, String>(json.decode(resultJson));
     savedImage.hash = result["hash"];
@@ -71,14 +69,9 @@ class UploadQueueItem extends QueueItem {
   Future<String> getUploadUrl() async {
     switch (savedImage.storageLocation) {
       case StorageLocation.sync:
-        final String token = await prefs.getToken();
-        final String url = "${prefs.apiUrl}/files/put/${savedImage.hash}.jpg";
-        Loggy.d(message: url);
         final Response presign = await dio.get(
-          url,
-          options: Options(
-            headers: {"Authorization": "Bearer $token"},
-          ),
+          Controller.files.url("put/${savedImage.hash}.jpg"),
+          options: Options(headers: Controller.tokenHeaders),
         );
         if (presign.statusCode == 200) {
           return presign.data.toString();

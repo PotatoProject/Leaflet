@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/jwt_decode.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/account_controller.dart';
 import 'package:potato_notes/internal/keystore.dart';
-import 'package:potato_notes/internal/shared_prefs.dart';
-import 'package:potato_notes/internal/sync/image/files_controller.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 part 'preferences.g.dart';
 
 class Preferences = _PreferencesBase with _$Preferences;
 
-abstract class _PreferencesBase with Store {
-  final SharedPrefs prefs = SharedPrefs.instance;
+abstract class _PreferencesBase with Store, LoggerProvider {
+  static final _keystoreSupported = UniversalPlatform.isAndroid ||
+      UniversalPlatform.isIOS ||
+      UniversalPlatform.isLinux;
   final Keystore keystore = Keystore();
 
   _PreferencesBase() {
@@ -30,55 +29,55 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  ThemeMode _themeModeValue = SharedPrefs.instance.themeMode;
+  ThemeMode _themeModeValue = sharedPrefs.themeMode;
 
   @observable
   @protected
-  Color? _customAccentValue = SharedPrefs.instance.customAccent;
+  Color? _customAccentValue = sharedPrefs.customAccent;
 
   @observable
   @protected
-  bool _useAmoledValue = SharedPrefs.instance.useAmoled;
+  bool _useAmoledValue = sharedPrefs.useAmoled;
 
   @observable
   @protected
-  bool _useGridValue = SharedPrefs.instance.useGrid;
+  bool _useGridValue = sharedPrefs.useGrid;
 
   @observable
   @protected
-  bool _useCustomAccentValue = SharedPrefs.instance.useCustomAccent;
+  bool _useCustomAccentValue = sharedPrefs.useCustomAccent;
 
   @observable
   @protected
-  bool _welcomePageSeenValue = SharedPrefs.instance.welcomePageSeen;
+  bool _welcomePageSeenValue = sharedPrefs.welcomePageSeen;
 
   @observable
   @protected
-  String _apiUrlValue = SharedPrefs.instance.apiUrl;
+  String _apiUrlValue = sharedPrefs.apiUrl;
 
   @observable
   @protected
-  String? _accessTokenValue = SharedPrefs.instance.accessToken;
+  String? _accessTokenValue = sharedPrefs.accessToken;
 
   @observable
   @protected
-  String? _refreshTokenValue = SharedPrefs.instance.refreshToken;
+  String? _refreshTokenValue = sharedPrefs.refreshToken;
 
   @observable
   @protected
-  String? _usernameValue = SharedPrefs.instance.username;
+  String? _usernameValue = sharedPrefs.username;
 
   @observable
   @protected
-  String? _emailValue = SharedPrefs.instance.email;
+  String? _emailValue = sharedPrefs.email;
 
   @observable
   @protected
-  String? _avatarUrlValue = SharedPrefs.instance.avatarUrl;
+  String? _avatarUrlValue = sharedPrefs.avatarUrl;
 
   @observable
   @protected
-  int _logLevelValue = SharedPrefs.instance.logLevel;
+  int _logLevelValue = sharedPrefs.logLevel;
 
   @observable
   @protected
@@ -86,19 +85,19 @@ abstract class _PreferencesBase with Store {
 
   @observable
   @protected
-  List<String> _downloadedImagesValue = SharedPrefs.instance.downloadedImages;
+  List<String> _downloadedImagesValue = sharedPrefs.downloadedImages;
 
   @observable
   @protected
-  List<String> _deletedImagesValue = SharedPrefs.instance.deletedImages;
+  List<String> _deletedImagesValue = sharedPrefs.deletedImages;
 
   @observable
   @protected
-  int _lastUpdatedValue = SharedPrefs.instance.lastUpdated;
+  int _lastUpdatedValue = sharedPrefs.lastUpdated;
 
   @observable
   @protected
-  String? _deleteQueueValue = SharedPrefs.instance.deleteQueue;
+  String? _deleteQueueValue = sharedPrefs.deleteQueue;
 
   String get masterPass => _masterPassValue;
   ThemeMode get themeMode => _themeModeValue;
@@ -124,107 +123,107 @@ abstract class _PreferencesBase with Store {
   set masterPass(String value) {
     _masterPassValue = value;
 
-    if (DeviceInfo.isDesktopOrWeb) {
-      prefs.masterPass = value;
-    } else {
+    if (_keystoreSupported) {
       keystore.setMasterPass(value);
+    } else {
+      sharedPrefs.masterPass = value;
     }
   }
 
   set themeMode(ThemeMode value) {
     _themeModeValue = value;
-    prefs.themeMode = value;
+    sharedPrefs.themeMode = value;
   }
 
   set customAccent(Color? value) {
     _customAccentValue = value;
-    prefs.customAccent = value;
+    sharedPrefs.customAccent = value;
   }
 
   set useAmoled(bool value) {
     _useAmoledValue = value;
-    prefs.useAmoled = value;
+    sharedPrefs.useAmoled = value;
   }
 
   set useGrid(bool value) {
     _useGridValue = value;
-    prefs.useGrid = value;
+    sharedPrefs.useGrid = value;
   }
 
   set useCustomAccent(bool value) {
     _useCustomAccentValue = value;
-    prefs.useCustomAccent = value;
+    sharedPrefs.useCustomAccent = value;
   }
 
   set welcomePageSeen(bool value) {
     _welcomePageSeenValue = value;
-    prefs.welcomePageSeen = value;
+    sharedPrefs.welcomePageSeen = value;
   }
 
   set apiUrl(String value) {
     _apiUrlValue = value;
-    prefs.apiUrl = value;
+    sharedPrefs.apiUrl = value;
   }
 
   set accessToken(String? value) {
     _accessTokenValue = value;
-    prefs.accessToken = value;
+    sharedPrefs.accessToken = value;
   }
 
   set refreshToken(String? value) {
     _refreshTokenValue = value;
-    prefs.refreshToken = value;
+    sharedPrefs.refreshToken = value;
   }
 
   set username(String? value) {
     _usernameValue = value;
-    prefs.username = value;
+    sharedPrefs.username = value;
   }
 
   set email(String? value) {
     _emailValue = value;
-    prefs.email = value;
+    sharedPrefs.email = value;
   }
 
   set avatarUrl(String? value) {
     _avatarUrlValue = value;
-    prefs.avatarUrl = value;
+    sharedPrefs.avatarUrl = value;
   }
 
   set logLevel(int value) {
     _logLevelValue = value;
-    prefs.logLevel = value;
+    sharedPrefs.logLevel = value;
   }
 
   set downloadedImages(List<String> value) {
     _downloadedImagesValue = value;
-    prefs.downloadedImages = value;
+    sharedPrefs.downloadedImages = value;
   }
 
   set deletedImages(List<String> value) {
     _deletedImagesValue = value;
-    prefs.deletedImages = value;
+    sharedPrefs.deletedImages = value;
   }
 
   set lastUpdated(int value) {
     _lastUpdatedValue = value;
-    prefs.lastUpdated = value;
+    sharedPrefs.lastUpdated = value;
   }
 
   set deleteQueue(String? value) {
     _deleteQueueValue = value;
-    prefs.deleteQueue = value;
+    sharedPrefs.deleteQueue = value;
   }
 
   Object? getFromCache(String key) {
-    return prefs.prefs.get(key);
+    return sharedPrefs.prefs.get(key);
   }
 
   Future<void> loadData() async {
-    if (DeviceInfo.isDesktopOrWeb) {
-      _masterPassValue = prefs.masterPass;
-    } else {
+    if (_keystoreSupported) {
       _masterPassValue = await keystore.getMasterPass();
+    } else {
+      _masterPassValue = sharedPrefs.masterPass;
     }
 
     _tagsValue = await tagHelper.listTags(TagReturnMode.local);
@@ -233,10 +232,9 @@ abstract class _PreferencesBase with Store {
       _tagsValue = newTags;
     });
 
-    if (prefs.accessToken != null) {
-      await FilesController.getStats();
-      final String? netAvatarUrl =
-          await ImageHelper.getAvatar(await getToken());
+    if (sharedPrefs.accessToken != null) {
+      await Controller.files.getStats();
+      final String? netAvatarUrl = await imageHelper.getAvatar();
       if (netAvatarUrl != _avatarUrlValue) {
         avatarUrl = netAvatarUrl;
       }
@@ -251,10 +249,10 @@ abstract class _PreferencesBase with Store {
         : false;
 
     if (accessToken == null || tokenExpired) {
-      final AuthResponse response = await AccountController.refreshToken();
+      final AuthResponse response = await Controller.account.refreshToken();
 
       if (!response.status) {
-        Loggy.w(message: response.message);
+        logger.w(response.message);
       }
     }
 

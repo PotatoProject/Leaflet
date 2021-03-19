@@ -109,10 +109,11 @@ class NoteListPageState extends State<NoteListPage> {
           stream: helper.noteStream(widget.noteKind),
           initialData: const [],
           builder: (context, snapshot) {
+            final List<Note> notes = snapshot.data ?? [];
+
             return NoteListWidget(
-              itemBuilder: (_, index) =>
-                  _buildNoteList(context, snapshot.data!, index),
-              noteCount: snapshot.data!.length,
+              itemBuilder: (_, index) => _buildNoteList(context, notes, index),
+              noteCount: notes.length,
               noteKind: widget.noteKind,
             );
           },

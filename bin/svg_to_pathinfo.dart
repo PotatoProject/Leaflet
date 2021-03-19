@@ -5,11 +5,11 @@ import 'package:xml/xml.dart';
 
 Future<void> main(List<String> args) async {
   if (args.isEmpty || args.length != 1) {
-    Loggy.d(message: "Usage: dart bin/svg_to_pathinfo.dart <svg file>");
+    Loggy.defaultLogger.d("Usage: dart bin/svg_to_pathinfo.dart <svg file>");
     return;
   }
 
-  Loggy.d(message: await xmlToFile(File(args[0])));
+  Loggy.defaultLogger.d(await xmlToFile(File(args[0])));
 }
 
 Future<String> xmlToFile(File file) async {

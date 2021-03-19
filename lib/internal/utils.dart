@@ -20,7 +20,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -43,7 +42,7 @@ class Utils {
   Utils._();
 
   static void deleteNoteSafely(Note note) {
-    ImageHelper.handleNoteDeletion(note);
+    imageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
 
@@ -84,7 +83,7 @@ class Utils {
     required bool showLock,
     bool showBiometrics = false,
   }) async {
-    if (showLock) {
+    if (showLock && prefs.masterPass != '') {
       bool status;
 
       final bool bioAuth = showBiometrics && !DeviceInfo.isDesktopOrWeb
@@ -666,7 +665,7 @@ class Utils {
 
     if (image != null) {
       final SavedImage savedImage =
-          await ImageHelper.copyToCache(File(image.path));
+          await imageHelper.copyToCache(File(image.path));
       note.images.add(savedImage);
 
       final int currentLength =
@@ -803,58 +802,78 @@ extension NoteX on Note {
       String newKey = ReCase(key).camelCase;
       switch (key) {
         case "style_json":
-          {
-            final List<int> map =
-                Utils.asList<int>(json.decode(value.toString()));
-            final List<int> data = List<int>.from(map.map((i) => i)).toList();
-            newValue = data;
-            break;
-          }
+          final List<int> map = Utils.asList<int>(
+            json.decode(value.toString()),
+          );
+          final List<int> data = List<int>.from(map.map((i) => i)).toList();
+          newValue = data;
+          break;
         case "images":
-          {
-            final List<Map<String, dynamic>> list =
-                Utils.asList<Map<String, dynamic>>(
-                    json.decode(value.toString()));
-            final List<SavedImage> images =
-                list.map((i) => SavedImage.fromJson(i)).toList();
-            newValue = images;
-            break;
-          }
+          final List<Map<String, dynamic>> list =
+              Utils.asList<Map<String, dynamic>>(
+            json.decode(value.toString()),
+          );
+          final List<SavedImage> images =
+              list.map((i) => SavedImage.fromJson(i)).toList();
+          newValue = images;
+          break;
         case "list_content":
-          {
-            final List<Map<String, dynamic>> map =
-                Utils.asList<Map<String, dynamic>>(
-              json.decode(value.toString()),
-            );
-            final List<ListItem> content = Utils.asList<ListItem>(
-              map.map((i) => ListItem.fromJson(i)).toList(),
-            );
-            newValue = content;
-            break;
-          }
+          final List<Map<String, dynamic>> map =
+              Utils.asList<Map<String, dynamic>>(
+            json.decode(value.toString()),
+          );
+          final List<ListItem> content = Utils.asList<ListItem>(
+            map.map((i) => ListItem.fromJson(i)).toList(),
+          );
+          newValue = content;
+          break;
         case "reminders":
-          {
-            final List<String> map =
-                Utils.asList<String>(json.decode(value.toString()));
-            final List<DateTime> reminders = Utils.asList<DateTime>(
-              map.map((i) => DateTime.parse(i)).toList(),
-            );
-            newValue = reminders;
-            break;
-          }
+          final List<String> map =
+              Utils.asList<String>(json.decode(value.toString()));
+          final List<DateTime> reminders = Utils.asList<DateTime>(
+            map.map((i) => DateTime.parse(i)).toList(),
+          );
+          newValue = reminders;
+          break;
         case "tags":
-          {
-            final List<String> map =
-                Utils.asList<String>(json.decode(value.toString()));
-            newValue = map;
-          }
-      }
-      if (key == "note_id") {
-        newKey = "id";
+          final List<String> map = Utils.asList<String>(
+            json.decode(value.toString()),
+          );
+          newValue = map;
+          break;
+        case "note_id":
+          newKey = "id";
+          break;
       }
       newMap.putIfAbsent(newKey, () => newValue);
     });
-    return Note.fromJson(newMap);
+
+    return Note.fromJson(fillInMissingFields(newMap));
+  }
+
+  static Map<String, dynamic> fillInMissingFields(
+      Map<String, dynamic> original) {
+    final Map<String, dynamic> derivated = Map.from(original);
+    derivated.putIfAbsent('id', () => '');
+    derivated.putIfAbsent('title', () => '');
+    derivated.putIfAbsent('content', () => '');
+    derivated.putIfAbsent('styleJson', () => []);
+    derivated.putIfAbsent('starred', () => false);
+    derivated.putIfAbsent('creationDate', () => DateTime.now());
+    derivated.putIfAbsent('lastModifyDate', () => DateTime.now());
+    derivated.putIfAbsent('color', () => 0);
+    derivated.putIfAbsent('images', () => []);
+    derivated.putIfAbsent('list', () => false);
+    derivated.putIfAbsent('listContent', () => []);
+    derivated.putIfAbsent('reminders', () => []);
+    derivated.putIfAbsent('tags', () => []);
+    derivated.putIfAbsent('hideContent', () => false);
+    derivated.putIfAbsent('lockNote', () => false);
+    derivated.putIfAbsent('usesBiometrics', () => false);
+    derivated.putIfAbsent('deleted', () => false);
+    derivated.putIfAbsent('archived', () => false);
+    derivated.putIfAbsent('synced', () => false);
+    return derivated;
   }
 
   bool get isEmpty {

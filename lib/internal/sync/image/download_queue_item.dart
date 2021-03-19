@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/image/queue_item.dart';
 
 class DownloadQueueItem extends QueueItem {
@@ -29,13 +30,9 @@ class DownloadQueueItem extends QueueItem {
   Future<String> getDownloadUrl() async {
     switch (savedImage.storageLocation) {
       case StorageLocation.sync:
-        final String token = await prefs.getToken();
-        final String url = "${prefs.apiUrl}/files/get/${savedImage.hash}.jpg";
         final Response presign = await dio.get(
-          url,
-          options: Options(
-            headers: {"Authorization": "Bearer $token"},
-          ),
+          Controller.files.url("get/${savedImage.hash}.jpg"),
+          options: Options(headers: Controller.tokenHeaders),
         );
         if (presign.statusCode == 200) {
           return presign.data.toString();

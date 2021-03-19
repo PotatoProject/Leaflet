@@ -1,11 +1,12 @@
-import 'package:loggy/loggy.dart';
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 
 part 'note_helper.g.dart';
 
 @UseDao(tables: [Notes])
-class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
+class NoteHelper extends DatabaseAccessor<AppDatabase>
+    with _$NoteHelperMixin, LoggerProvider {
   final AppDatabase db;
 
   NoteHelper(this.db) : super(db);
@@ -113,12 +114,12 @@ class NoteHelper extends DatabaseAccessor<AppDatabase> with _$NoteHelperMixin {
   }
 
   Future<void> saveNote(Note note) {
-    Loggy.d(message: "The note id is: ${note.id}");
+    logger.d("The note id is: ${note.id}");
     return into(notes).insert(note, mode: InsertMode.replace);
   }
 
   Future<void> deleteNote(Note note) {
-    Loggy.d(message: "The note id to delete: ${note.id}");
+    logger.d("The note id to delete: ${note.id}");
     return delete(notes).delete(note);
   }
 
