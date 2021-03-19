@@ -5,17 +5,14 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static late SharedPrefs _instance;
   final SharedPreferences prefs;
-  final _SharedPreferencesQueue _queue;
 
-  SharedPrefs._(this.prefs) : _queue = _SharedPreferencesQueue(prefs);
+  SharedPrefs._(this.prefs);
 
-  static Future<void> init() async {
-    _instance = SharedPrefs._(await SharedPreferences.getInstance());
+  static Future<SharedPrefs> newInstance() async {
+    final SharedPreferences instance = await SharedPreferences.getInstance();
+    return SharedPrefs._(instance);
   }
-
-  static SharedPrefs get instance => _instance;
 
   String get masterPass {
     return prefs.getString("master_pass") ?? "";
@@ -24,7 +21,7 @@ class SharedPrefs {
   set masterPass(String value) {
     //TODO Only remove comment chars after master_pass is hashed before saving
     //addChangedKey("master_pass");
-    _queue.setString("master_pass", value);
+    setString("master_pass", value);
   }
 
   ThemeMode get themeMode {
@@ -55,7 +52,7 @@ class SharedPrefs {
         newValue = 2;
         break;
     }
-    _queue.setInt("theme_mode", newValue);
+    setInt("theme_mode", newValue);
   }
 
   Color? get customAccent {
@@ -65,7 +62,7 @@ class SharedPrefs {
 
   set customAccent(Color? value) {
     addChangedKey("custom_accent");
-    _queue.setInt("custom_accent", value?.value);
+    setInt("custom_accent", value?.value);
   }
 
   bool get useAmoled {
@@ -74,7 +71,7 @@ class SharedPrefs {
 
   set useAmoled(bool value) {
     addChangedKey("use_amoled");
-    _queue.setBool("use_amoled", value);
+    setBool("use_amoled", value);
   }
 
   bool get useGrid {
@@ -83,7 +80,7 @@ class SharedPrefs {
 
   set useGrid(bool value) {
     addChangedKey("use_grid");
-    _queue.setBool("use_grid", value);
+    setBool("use_grid", value);
   }
 
   bool get useCustomAccent {
@@ -92,7 +89,7 @@ class SharedPrefs {
 
   set useCustomAccent(bool value) {
     addChangedKey("use_custom_accent");
-    _queue.setBool("use_custom_accent", value);
+    setBool("use_custom_accent", value);
   }
 
   bool get welcomePageSeen {
@@ -100,7 +97,7 @@ class SharedPrefs {
   }
 
   set welcomePageSeen(bool value) {
-    _queue.setBool("welcome_page_seen_v2", value);
+    setBool("welcome_page_seen_v2", value);
   }
 
   String get apiUrl {
@@ -108,7 +105,7 @@ class SharedPrefs {
   }
 
   set apiUrl(String value) {
-    _queue.setString("api_url", value);
+    setString("api_url", value);
   }
 
   String? get accessToken {
@@ -116,7 +113,7 @@ class SharedPrefs {
   }
 
   set accessToken(String? value) {
-    _queue.setString("access_token", value);
+    setString("access_token", value);
   }
 
   String? get refreshToken {
@@ -124,7 +121,7 @@ class SharedPrefs {
   }
 
   set refreshToken(String? value) {
-    _queue.setString("refresh_token", value);
+    setString("refresh_token", value);
   }
 
   String? get username {
@@ -132,7 +129,7 @@ class SharedPrefs {
   }
 
   set username(String? value) {
-    _queue.setString("username", value);
+    setString("username", value);
   }
 
   String? get email {
@@ -140,7 +137,7 @@ class SharedPrefs {
   }
 
   set email(String? value) {
-    _queue.setString("email", value);
+    setString("email", value);
   }
 
   String? get avatarUrl {
@@ -148,15 +145,15 @@ class SharedPrefs {
   }
 
   set avatarUrl(String? value) {
-    _queue.setString("avatar_url", value);
+    setString("avatar_url", value);
   }
 
   int get logLevel {
-    return prefs.getInt("log_level") ?? LogEntry.VERBOSE;
+    return prefs.getInt("log_level") ?? LogLevel.VERBOSE.index;
   }
 
   set logLevel(int value) {
-    _queue.setInt("log_level", value);
+    setInt("log_level", value);
   }
 
   List<String> get downloadedImages {
@@ -164,7 +161,7 @@ class SharedPrefs {
   }
 
   set downloadedImages(List<String> value) {
-    _queue.setStringList("downloaded_images", value);
+    setStringList("downloaded_images", value);
   }
 
   List<String> get deletedImages {
@@ -172,7 +169,7 @@ class SharedPrefs {
   }
 
   set deletedImages(List<String> value) {
-    _queue.setStringList("deleted_images", value);
+    setStringList("deleted_images", value);
   }
 
   int get lastUpdated {
@@ -180,7 +177,7 @@ class SharedPrefs {
   }
 
   set lastUpdated(int value) {
-    _queue.setInt("last_updated", value);
+    setInt("last_updated", value);
   }
 
   void addChangedKey(String key) {
@@ -188,7 +185,7 @@ class SharedPrefs {
     if (!changedKeys.contains(key)) {
       changedKeys.add(key);
     }
-    _queue.setStringList("updated_keys", changedKeys);
+    setStringList("updated_keys", changedKeys);
   }
 
   void clearChangedKeys() {
@@ -204,150 +201,44 @@ class SharedPrefs {
   }
 
   set deleteQueue(String? value) {
-    _queue.setString("delete_queue", value);
-  }
-}
-
-class _SharedPreferencesQueue {
-  final SharedPreferences prefs;
-  final List<_QueueItem> _queue = [];
-
-  _SharedPreferencesQueue(this.prefs);
-
-  void _handleRequest() {
-    final _QueueItem item = _queue.first;
-
-    if (item.requestType == _QueueRequestType.remove && item.value == null) {
-      prefs.remove(item.key);
-    } else {
-      switch (item.type) {
-        case _QueueItemType.bool:
-          prefs.setBool(item.key, item.value! as bool);
-          break;
-        case _QueueItemType.double:
-          prefs.setDouble(item.key, item.value! as double);
-          break;
-        case _QueueItemType.int:
-          prefs.setInt(item.key, item.value! as int);
-          break;
-        case _QueueItemType.string:
-          prefs.setString(item.key, item.value! as String);
-          break;
-        case _QueueItemType.stringList:
-          prefs.setStringList(item.key, item.value! as List<String>);
-          break;
-      }
-    }
-
-    _queue.remove(item);
-
-    if (_queue.isNotEmpty) _handleRequest();
-  }
-
-  void _set(_QueueItem item) {
-    _queue.add(item);
-    if (_queue.length == 1) _handleRequest();
+    setString("delete_queue", value);
   }
 
   void setBool(String key, bool? value) {
-    _set(_QueueItem.bool(
-      key: key,
-      value: value,
-      requestType:
-          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
-    ));
+    _setValue<bool>(key, value);
   }
 
   void setDouble(String key, double? value) {
-    _set(_QueueItem.double(
-      key: key,
-      value: value,
-      requestType:
-          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
-    ));
+    _setValue<double>(key, value);
   }
 
   void setInt(String key, int? value) {
-    _set(_QueueItem.int(
-      key: key,
-      value: value,
-      requestType:
-          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
-    ));
+    _setValue<int>(key, value);
   }
 
   void setString(String key, String? value) {
-    _set(_QueueItem.string(
-      key: key,
-      value: value,
-      requestType:
-          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
-    ));
+    _setValue<String>(key, value);
   }
 
   void setStringList(String key, List<String>? value) {
-    _set(_QueueItem.stringList(
-      key: key,
-      value: value,
-      requestType:
-          value == null ? _QueueRequestType.remove : _QueueRequestType.set,
-    ));
+    _setValue<List<String>>(key, value);
   }
-}
 
-class _QueueItem {
-  final String key;
-  final Object? _value;
-  final _QueueRequestType requestType;
-  final _QueueItemType type;
-
-  Object? get value => _value;
-
-  const _QueueItem.bool({
-    required this.key,
-    bool? value,
-    this.requestType = _QueueRequestType.set,
-  })  : _value = value,
-        type = _QueueItemType.bool;
-
-  const _QueueItem.double({
-    required this.key,
-    double? value,
-    this.requestType = _QueueRequestType.set,
-  })  : _value = value,
-        type = _QueueItemType.double;
-
-  const _QueueItem.int({
-    required this.key,
-    int? value,
-    this.requestType = _QueueRequestType.set,
-  })  : _value = value,
-        type = _QueueItemType.int;
-
-  const _QueueItem.string({
-    required this.key,
-    String? value,
-    this.requestType = _QueueRequestType.set,
-  })  : _value = value,
-        type = _QueueItemType.string;
-
-  const _QueueItem.stringList({
-    required this.key,
-    List<String>? value,
-    this.requestType = _QueueRequestType.set,
-  })  : _value = value,
-        type = _QueueItemType.stringList;
-}
-
-enum _QueueItemType {
-  string,
-  int,
-  double,
-  bool,
-  stringList,
-}
-
-enum _QueueRequestType {
-  set,
-  remove,
+  void _setValue<T>(String key, T? value) {
+    if (value != null) {
+      if (value is bool) {
+        prefs.setBool(key, value);
+      } else if (value is double) {
+        prefs.setDouble(key, value);
+      } else if (value is int) {
+        prefs.setInt(key, value);
+      } else if (value is String) {
+        prefs.setString(key, value);
+      } else if (value is List<String>) {
+        prefs.setStringList(key, value);
+      }
+    } else {
+      prefs.remove(key);
+    }
+  }
 }
