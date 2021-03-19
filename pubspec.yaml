@@ -30,7 +30,6 @@ dependencies:
   flutter_local_notifications: ^5.0.0-nullsafety.0
   flutter_mobx: ^2.0.0-nullsafety.1
   flutter_secure_storage: ^4.0.0
-  flutter_staggered_grid_view: ^0.4.0-nullsafety.3
 
   http: ^0.13.0
 
@@ -63,7 +62,7 @@ dependencies:
 
   scrollable_positioned_list: ^0.2.0-nullsafety.0
   share_plus: ^2.0.0
-  shared_preferences: ^2.0.3
+  shared_preferences: ^2.0.4
   sqflite: ^2.0.0
   sqflite_common_ffi: ^2.0.0
   sqlite3_flutter_libs: ^0.4.0+1
@@ -71,6 +70,8 @@ dependencies:
   universal_platform: ^1.0.0-nullsafety
   url_launcher: ^6.0.2
   uuid: ^3.0.1
+
+  waterfall_flow: ^3.0.1
 
   xml: ^5.0.2
 

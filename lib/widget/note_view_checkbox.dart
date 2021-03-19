@@ -62,7 +62,6 @@ class NoteViewCheckbox extends StatefulWidget {
     this.hoverColor,
     this.overlayColor,
     this.splashRadius,
-    this.materialTapTargetSize,
     this.visualDensity,
     this.focusNode,
     this.autofocus = false,
@@ -179,19 +178,6 @@ class NoteViewCheckbox extends StatefulWidget {
   ///
   /// If tristate is false (the default), [value] must not be null.
   final bool tristate;
-
-  /// {@template flutter.material.checkbox.materialTapTargetSize}
-  /// Configures the minimum size of the tap target.
-  /// {@endtemplate}
-  ///
-  /// If null, then the value of [CheckboxThemeData.materialTapTargetSize] is
-  /// used. If that is also null, then the value of
-  /// [ThemeData.materialTapTargetSize] is used.
-  ///
-  /// See also:
-  ///
-  ///  * [MaterialTapTargetSize], for a description of how this affects tap targets.
-  final MaterialTapTargetSize? materialTapTargetSize;
 
   /// {@template flutter.material.checkbox.visualDensity}
   /// Defines how compact the checkbox's layout will be.
@@ -349,24 +335,9 @@ class _CheckboxState extends State<NoteViewCheckbox>
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
     final ThemeData themeData = Theme.of(context);
-    final MaterialTapTargetSize effectiveMaterialTapTargetSize =
-        widget.materialTapTargetSize ??
-            themeData.checkboxTheme.materialTapTargetSize ??
-            themeData.materialTapTargetSize;
     final VisualDensity effectiveVisualDensity = widget.visualDensity ??
         themeData.checkboxTheme.visualDensity ??
         themeData.visualDensity;
-    Size size;
-    switch (effectiveMaterialTapTargetSize) {
-      case MaterialTapTargetSize.padded:
-        size = const Size(kMinInteractiveDimension, kMinInteractiveDimension);
-        break;
-      case MaterialTapTargetSize.shrinkWrap:
-        size = const Size(
-            kMinInteractiveDimension - 8.0, kMinInteractiveDimension - 8.0);
-        break;
-    }
-    size += effectiveVisualDensity.baseSizeAdjustment;
 
     final MaterialStateProperty<MouseCursor> effectiveMouseCursor =
         MaterialStateProperty.resolveWith<MouseCursor>(
@@ -431,7 +402,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
         mouseCursor: effectiveMouseCursor,
         focusNode: widget.focusNode,
         autofocus: widget.autofocus,
-        size: size,
+        size: const Size.square(32) + effectiveVisualDensity.baseSizeAdjustment,
         painter: _painter
           ..position = position
           ..reaction = reaction
@@ -455,7 +426,7 @@ class _CheckboxState extends State<NoteViewCheckbox>
           ..shape = widget.shape ??
               themeData.checkboxTheme.shape ??
               const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(1.0)))
+                  borderRadius: BorderRadius.all(Radius.circular(2.0)))
           ..side = widget.side ?? themeData.checkboxTheme.side
           ..width = widget.width,
       ),

@@ -26,7 +26,7 @@ class NoteColors {
   static ColorInfo get red => ColorInfo(
         label: LocaleStrings.common.colorRed,
         color: 0xFFF44336,
-        lightColor: 0xFFF55D51,
+        lightColor: 0xFFF7786E,
         darkColor: 0xFF5B2925,
       );
 
@@ -61,28 +61,28 @@ class NoteColors {
   static ColorInfo get lightBlue => ColorInfo(
         label: LocaleStrings.common.colorLightBlue,
         color: 0xFF03A9f4,
-        lightColor: 0xFF51C1F5,
+        lightColor: 0xFF6ECCF7,
         darkColor: 0xFF254A5B,
       );
 
   static ColorInfo get blue => ColorInfo(
         label: LocaleStrings.common.colorBlue,
         color: 0xFF1E88E5,
-        lightColor: 0xFF8195F8,
+        lightColor: 0xFF9EAEFA,
         darkColor: 0xFF252E5B,
       );
 
   static ColorInfo get purple => ColorInfo(
         label: LocaleStrings.common.colorPurple,
         color: 0xFF9C27B0,
-        lightColor: 0xFFA064F6,
+        lightColor: 0xFFB281F8,
         darkColor: 0xFF3A255B,
       );
 
   static ColorInfo get pink => ColorInfo(
         label: LocaleStrings.common.colorPink,
         color: 0xFFE91E63,
-        lightColor: 0xFFF664C1,
+        lightColor: 0xFFF881CD,
         darkColor: 0xFF5B2547,
       );
 }

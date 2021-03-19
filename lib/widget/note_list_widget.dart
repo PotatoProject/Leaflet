@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListWidget extends StatelessWidget {
   final TransitionBuilder? builder;
@@ -41,9 +41,10 @@ class NoteListWidget extends StatelessWidget {
 
     if (noteCount > 0) {
       if (prefs.useGrid) {
-        child = StaggeredGridView.countBuilder(
-          crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,
-          staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
+        child = WaterfallFlow.builder(
+          gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+            crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,
+          ),
           itemBuilder: itemBuilder,
           itemCount: noteCount,
           padding: padding,

@@ -36,25 +36,13 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     required double size,
     required bool selected,
   }) {
-    Color getIconColor() {
-      if (index == 0) {
-        final Brightness themeBrightness = context.theme.brightness;
+    late Color iconColor;
+    final Brightness themeBrightness = context.theme.brightness;
 
-        if (themeBrightness == Brightness.light) {
-          return ThemeData.light().iconTheme.color!;
-        } else {
-          return ThemeData.dark().iconTheme.color!;
-        }
-      } else {
-        final Color color =
-            Color(NoteColors.colorList[index].dynamicColor(context));
-
-        if (color.computeLuminance() > 0.5) {
-          return Colors.black;
-        } else {
-          return Colors.white;
-        }
-      }
+    if (themeBrightness == Brightness.light) {
+      iconColor = ThemeData.light().iconTheme.color!;
+    } else {
+      iconColor = ThemeData.dark().iconTheme.color!;
     }
 
     return Builder(
@@ -72,7 +60,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
                     visible: selected,
                     child: Icon(
                       Icons.check,
-                      color: getIconColor(),
+                      color: iconColor,
                     ),
                   ),
                 ),
