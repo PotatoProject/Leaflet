@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Zrušit</string>
+    <string name="common.reset">Resetovat</string>
+    <string name="common.restore">Obnovit</string>
+    <string name="common.confirm">Potvrdit</string>
+    <string name="common.save">Uložit</string>
+    <string name="common.delete">Odstranit</string>
+    <string name="common.undo">Zpět</string>
+    <string name="common.redo">Opakovat</string>
+    <string name="common.edit">Upravit</string>
+    <string name="common.go_on">Přejít na</string>
+    <string name="common.exit">Odejít</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s z %s</string>
+    <string name="common.new_note">Nová poznámka</string>
+    <string name="common.new_list">Nový seznam</string>
+    <string name="common.new_image">Nový obrázek</string>
+    <string name="common.new_drawing">Nový výkres</string>
+    <string name="common.biometrics_prompt">Potvrdit biometrikou</string>
+    <string name="common.master_pass.modify">Upravit hlavní heslo</string>
+    <string name="common.master_pass.confirm">Potvrdit master heslo</string>
+    <string name="common.are_you_sure">Opravdu?</string>
+    <string name="common.case_sensitive">Rozlišit malá a velká písmena</string>
+    <string name="common.color_filter">Barevný filtr</string>
+    <string name="common.date_filter">Datumový filtr</string>
+    <string name="common.date_filter_mode">Režim filtru</string>
+    <string name="common.date_filter_mode.after">Po datu</string>
+    <string name="common.date_filter_mode.exact">Přesné datum</string>
+    <string name="common.date_filter_mode.before">Před datem</string>
+    <string name="common.color.none">Nic</string>
+    <string name="common.color.red">Červená</string>
+    <string name="common.color.orange">Oranžová</string>
+    <string name="common.color.yellow">Žlutá</string>
+    <string name="common.color.green">Zelená</string>
+    <string name="common.color.cyan">Azurová</string>
+    <string name="common.color.light_blue">Světle modrá</string>
+    <string name="common.color.blue">Modrá</string>
+    <string name="common.color.purple">Fialová</string>
+    <string name="common.color.pink">Růžová</string>
+    <string name="common.notification.default_title">Připnout do notifikací</string>
+    <string name="common.notification.details_title">Připnuto do notifikací</string>
+    <string name="common.notification.details_desc">Uživatelská připnutá oznámení</string>
+    <string name="common.tag.new">Nový štítek</string>
+    <string name="common.tag.modify">Upravit štítek</string>
+    <string name="common.tag.textbox_hint">Jméno</string>
+    <!-- Main page -->
+    <string name="main_page.settings">Nastavení</string>
+    <string name="main_page.search">Hledat</string>
+    <string name="main_page.account">Účet</string>
+    <string name="main_page.restore_prompt.archive">Chcete obnovit všechny poznámky z archivu?</string>
+    <string name="main_page.restore_prompt.trash">Chcete obnovit všechny poznámky z koše?</string>
+    <string name="main_page.tag_delete_prompt">Tato značka bude navždy odebrána, pokud ji odstraníte</string>
+    <string name="main_page.deleted_empty_note">Smazána prázdná poznámka</string>
+    <string name="main_page.empty_state.home">Zatím nebyly přidány žádné poznámky</string>
+    <string name="main_page.empty_state.archive">Archiv je prázdný</string>
+    <string name="main_page.empty_state.trash">Koš je prázdný</string>
+    <string name="main_page.empty_state.favourites">Zatím žádné oblíbené poznámky</string>
+    <string name="main_page.empty_state.tag">Žádné poznámky s tímto štítkem</string>
+    <string name="main_page.title.home">Domů</string>
+    <string name="main_page.title.archive">Archiv</string>
+    <string name="main_page.title.trash">Koš</string>
+    <string name="main_page.title.favourites">Oblíbené</string>
+    <string name="main_page.title.tag">Štítek</string>
+    <string name="main_page.title.all">Vše</string>
+    <string name="main_page.selection_bar.close">Zavřít</string>
+    <string name="main_page.selection_bar.add_favourites">Přidat do oblíbených</string>
+    <string name="main_page.selection_bar.remove_favourites">Odebrat z oblíbených</string>
+    <string name="main_page.selection_bar.change_color">Změnit barvu</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archiv</string>
+    <string name="main_page.selection_bar.delete">Přesunout do koše</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Připnout</string>
+    <string name="main_page.selection_bar.share">Sdílet</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s poznámka byla přesunuta do koše</item>
+        <item quantity="few">%s poznámka byla přesunuta do koše</item>
+        <item quantity="many">%s poznámek přesunuto do koše</item>
+        <item quantity="other">%s poznámek přesunuto do koše</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">Archivováno %s poznámek</item>
+        <item quantity="few">Archivováno %s poznámek</item>
+        <item quantity="many">Archivováno %s poznámek</item>
+        <item quantity="other">Archivováno %s poznámek</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">Obnovena %s poznámka</item>
+        <item quantity="few">Obnoveno %s poznámek</item>
+        <item quantity="many">Obnoveno %s poznámek</item>
+        <item quantity="other">Obnoveno %s poznámek</item>
+    </plurals>
+    <!-- Note page -->
+    <string name="note_page.title_hint">Titulek</string>
+    <string name="note_page.content_hint">Obsah</string>
+    <string name="note_page.list_item_hint">Vstup</string>
+    <string name="note_page.add_entry_hint">Přidat položku</string>
+    <string name="note_page.toolbar.tags">Spravovat štítky</string>
+    <string name="note_page.toolbar.color">Změnit barvu</string>
+    <string name="note_page.toolbar.add_item">Přidat položku</string>
+    <string name="note_page.privacy.title">Možnosti ochrany soukromí</string>
+    <string name="note_page.privacy.hide_content">Skrýt obsah poznámky na hlavní stránce</string>
+    <string name="note_page.privacy.lock_note">Zamknout poznámku</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Musíte nastavit hlavní heslo z nastavení</string>
+    <string name="note_page.privacy.use_biometrics">Použít biometrii k odemknutí</string>
+    <string name="note_page.toggle_list">Přepnout seznam</string>
+    <string name="note_page.image_gallery">Obrázek z galerie</string>
+    <string name="note_page.image_camera">Vyfotit</string>
+    <string name="note_page.drawing">Přidat výkres</string>
+    <string name="note_page.added_favourites">Poznámka přidána do oblíbených</string>
+    <string name="note_page.removed_favourites">Poznámka odebrána z oblíbených</string>
+    <!-- Settings page -->
+    <string name="settings.title">Nastavení</string>
+    <string name="settings.personalization.title">Přizpůsobení</string>
+    <string name="settings.personalization.theme_mode">Režim motivu</string>
+    <string name="settings.personalization.theme_mode.system">Systém</string>
+    <string name="settings.personalization.theme_mode.light">Světlé</string>
+    <string name="settings.personalization.theme_mode.dark">Tmavé</string>
+    <string name="settings.personalization.use_amoled">Použít černý motiv</string>
+    <string name="settings.personalization.use_custom_accent">Podle motivu systému</string>
+    <string name="settings.personalization.custom_accent">Vybrat vlastní odstín</string>
+    <string name="settings.personalization.use_grid">Zobrazení mřížky pro poznámky</string>
+    <string name="settings.personalization.locale">Lokalizace aplikace</string>
+    <string name="settings.privacy.title">Soukromí</string>
+    <string name="settings.privacy.use_master_pass">Použít hlavní heslo</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Varování: Pokud jste někdy zapomněli heslo, nemůžete jej resetovat, budete muset aplikaci odinstalovat, takže všechny poznámky budou vymazány a přeinstalovány. Prosím někde si to zapište.</string>
+    <string name="settings.privacy.modify_master_pass">Upravit hlavní heslo</string>
+    <string name="settings.info.title">Info</string>
+    <string name="settings.info.about_app">O PotatoNotes</string>
+    <string name="settings.debug.title">Ladění</string>
+    <string name="settings.debug.show_setup_screen">Zobrazit obrazovku nastavení při příštím spuštění</string>
+    <string name="settings.debug.clear_database">Vymazat databázi</string>
+    <string name="settings.debug.migrate_database">Migrovat databázi</string>
+    <string name="settings.debug.log_level">Úroveň logu</string>
+    <!-- About page -->
+    <string name="about.title">O aplikaci</string>
+    <string name="about.pwa_version">Verze PWA</string>
+    <string name="about.links">Odkazy</string>
+    <string name="about.contributors">Přispěvatelé</string>
+    <string name="about.contributors.hrx">Hlavní vývojář a design aplikace</string>
+    <string name="about.contributors.bas">Synchronizovat API a aplikaci</string>
+    <string name="about.contributors.nico">Synchronizovat API</string>
+    <string name="about.contributors.kat">Staré synchronizační API</string>
+    <string name="about.contributors.rohit">Ilustrace a barvy poznámek</string>
+    <string name="about.contributors.rshbfn">Ikona aplikace a hlavní zvýraznění</string>
+    <!-- Search page-->
+    <string name="search.textbox_hint">Hledat</string>
+    <string name="search.tag_create_hint">Vytvořit štítek \"%s\"</string>
+    <string name="search.type_to_search">Psaním začnete vyhledávat</string>
+    <string name="search.nothing_found">Nic nenalezeno...</string>
+    <!-- Draw page -->
+    <string name="drawing.color_black">Černá</string>
+    <string name="drawing.exit_prompt">Všechny neuložené změny budou ztraceny. Chcete idejít?</string>
+    <string name="drawing.tools.brush">Štětec</string>
+    <string name="drawing.tools.eraser">Guma</string>
+    <string name="drawing.tools.marker">Zvýrazňovač</string>
+    <string name="drawing.tools.color_picker">Barva</string>
+    <string name="drawing.tools.radius_picker">Rádius</string>
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Začněme</string>
+    <string name="setup.button.finish">Dokončit</string>
+    <string name="setup.button.next">Další</string>
+    <string name="setup.button.back">Zpět</string>
+    <string name="setup.basic_customization.title">Základní přizpůsobení</string>
+    <string name="setup.welcome.catchphrase">Vaše nová oblíbená aplikace pro poznámky</string>
+    <string name="setup.finish.title">Vše nastaveno!</string>
+    <string name="setup.finish.last_words">Nyní jste připraveni vychutnat si PotatoNotes v plném rozsahu. \nPokud chcete více přizpůsobit hlavičku na stránku nastavení v bočním panelu, místo toho, pokud chcete spravovat svůj účet PotatoSync, klikněte na avatara v horním panelu.</string>
+</resources>
