@@ -10,7 +10,7 @@
     <string name="common.undo">Ångra</string>
     <string name="common.redo">Gör om</string>
     <string name="common.edit">Redigera</string>
-    <string name="common.go_on">Go on</string>
+    <string name="common.go_on">Gå vidare</string>
     <string name="common.exit">Avsluta</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s av %s</string>
     <string name="common.new_note">Ny anteckning</string>
@@ -18,8 +18,8 @@
     <string name="common.new_image">Ny bild</string>
     <string name="common.new_drawing">Ny teckning</string>
     <string name="common.biometrics_prompt">Confirm biometrics</string>
-    <string name="common.master_pass.modify">Modify master pass</string>
-    <string name="common.master_pass.confirm">Confirm master pass</string>
+    <string name="common.master_pass.modify">Ändra huvudlösenord</string>
+    <string name="common.master_pass.confirm">Bekräfta huvudlösenord</string>
     <string name="common.are_you_sure">Är du säker?</string>
     <string name="common.case_sensitive">Skiftlägeskänslig</string>
     <string name="common.color_filter">Färgfilter</string>
@@ -38,9 +38,9 @@
     <string name="common.color.blue">Blå</string>
     <string name="common.color.purple">Lila</string>
     <string name="common.color.pink">Rosa</string>
-    <string name="common.notification.default_title">Klistrad avisering</string>
-    <string name="common.notification.details_title">Klistrade aviseringar</string>
-    <string name="common.notification.details_desc">Klistrade användaraviseringar</string>
+    <string name="common.notification.default_title">Fäst avisering</string>
+    <string name="common.notification.details_title">Fästa aviseringar</string>
+    <string name="common.notification.details_desc">Användarens fästa aviseringar</string>
     <string name="common.tag.new">Ny etikett</string>
     <string name="common.tag.modify">Ändra etikett</string>
     <string name="common.tag.textbox_hint">Namn</string>
@@ -52,63 +52,63 @@
     <string name="main_page.restore_prompt.trash">Vill du återställa varje anteckning i papperskorgen?</string>
     <string name="main_page.tag_delete_prompt">Denna tagg kommer att försvinna för alltid om du tar bort den</string>
     <string name="main_page.deleted_empty_note">Borttagen tom anteckning</string>
-    <string name="main_page.empty_state.home">No notes were added yet</string>
-    <string name="main_page.empty_state.archive">The archive is empty</string>
-    <string name="main_page.empty_state.trash">The trash is empty</string>
-    <string name="main_page.empty_state.favourites">No favourites for now</string>
-    <string name="main_page.empty_state.tag">No notes with this tag</string>
-    <string name="main_page.title.home">Home</string>
-    <string name="main_page.title.archive">Archive</string>
-    <string name="main_page.title.trash">Trash</string>
-    <string name="main_page.title.favourites">Favourites</string>
-    <string name="main_page.title.tag">Tag</string>
-    <string name="main_page.title.all">All</string>
-    <string name="main_page.selection_bar.close">Close</string>
-    <string name="main_page.selection_bar.add_favourites">Add to favourites</string>
-    <string name="main_page.selection_bar.remove_favourites">Remove from favourites</string>
-    <string name="main_page.selection_bar.change_color">Change color</string>
-    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archive</string>
-    <string name="main_page.selection_bar.delete">Move to trash</string>
-    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Pin</string>
-    <string name="main_page.selection_bar.share">Share</string>
+    <string name="main_page.empty_state.home">Inga anteckningar har lagts till ännu</string>
+    <string name="main_page.empty_state.archive">Arkivet är tomt</string>
+    <string name="main_page.empty_state.trash">Papperskorgen är tom</string>
+    <string name="main_page.empty_state.favourites">Inga favoriter just nu</string>
+    <string name="main_page.empty_state.tag">Inga anteckningar med denna etikett</string>
+    <string name="main_page.title.home">Hem</string>
+    <string name="main_page.title.archive">Arkiv</string>
+    <string name="main_page.title.trash">Papperskorg</string>
+    <string name="main_page.title.favourites">Favoriter</string>
+    <string name="main_page.title.tag">Etiketter</string>
+    <string name="main_page.title.all">Alla</string>
+    <string name="main_page.selection_bar.close">Stäng</string>
+    <string name="main_page.selection_bar.add_favourites">Lägg till i favoriter</string>
+    <string name="main_page.selection_bar.remove_favourites">Ta bort från favoriter</string>
+    <string name="main_page.selection_bar.change_color">Ändra färg</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Arkivera</string>
+    <string name="main_page.selection_bar.delete">Flytta till papperskorgen</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fäst</string>
+    <string name="main_page.selection_bar.share">Dela</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s note moved to trash</item>
-        <item quantity="other">%s notes moved to trash</item>
+        <item quantity="other">%s anteckningar flyttade till papperskorgen</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="one">Archived %s note</item>
-        <item quantity="other">Archived %s notes</item>
+        <item quantity="other">Arkiverade %s anteckningar</item>
     </plurals>
     <plurals name="main_page.notes_restored">
-        <item quantity="one">Restored %s note</item>
-        <item quantity="other">Restored %s notes</item>
+        <item quantity="one">Återställd %s anteckning</item>
+        <item quantity="other">Återställda %s anteckningar</item>
     </plurals>
     <!-- Note page -->
-    <string name="note_page.title_hint">Title</string>
-    <string name="note_page.content_hint">Content</string>
+    <string name="note_page.title_hint">Rubrik</string>
+    <string name="note_page.content_hint">Innehåll</string>
     <string name="note_page.list_item_hint">Input</string>
     <string name="note_page.add_entry_hint">Add entry</string>
-    <string name="note_page.toolbar.tags">Manage tags</string>
-    <string name="note_page.toolbar.color">Change color</string>
+    <string name="note_page.toolbar.tags">Hantera etiketter</string>
+    <string name="note_page.toolbar.color">Ändra färg</string>
     <string name="note_page.toolbar.add_item">Add item</string>
-    <string name="note_page.privacy.title">Privacy options</string>
-    <string name="note_page.privacy.hide_content">Hide content on main page</string>
-    <string name="note_page.privacy.lock_note">Lock note</string>
-    <string name="note_page.privacy.lock_note.missing_pass">You must set a master pass from settings</string>
+    <string name="note_page.privacy.title">Sekretessinställningar</string>
+    <string name="note_page.privacy.hide_content">Dölj innehåll på huvudsidan</string>
+    <string name="note_page.privacy.lock_note">Lås anteckning</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Du måste ange ett huvudlösenord i inställningarna</string>
     <string name="note_page.privacy.use_biometrics">Use biometrics to unlock</string>
     <string name="note_page.toggle_list">Toggle list</string>
-    <string name="note_page.image_gallery">Image from gallery</string>
-    <string name="note_page.image_camera">Take a photo</string>
-    <string name="note_page.drawing">Add a drawing</string>
-    <string name="note_page.added_favourites">Note added to favourites</string>
-    <string name="note_page.removed_favourites">Note removed from favourites</string>
+    <string name="note_page.image_gallery">Bild från galleri</string>
+    <string name="note_page.image_camera">Ta ett foto</string>
+    <string name="note_page.drawing">Lägg till en teckning</string>
+    <string name="note_page.added_favourites">Anteckning tillagd i favoriter</string>
+    <string name="note_page.removed_favourites">Anteckning borttagen från favoriter</string>
     <!-- Settings page -->
-    <string name="settings.title">Settings</string>
-    <string name="settings.personalization.title">Personalization</string>
-    <string name="settings.personalization.theme_mode">Theme mode</string>
+    <string name="settings.title">Inställningar</string>
+    <string name="settings.personalization.title">Anpassning</string>
+    <string name="settings.personalization.theme_mode">Temaläge</string>
     <string name="settings.personalization.theme_mode.system">System</string>
-    <string name="settings.personalization.theme_mode.light">Light</string>
-    <string name="settings.personalization.theme_mode.dark">Dark</string>
+    <string name="settings.personalization.theme_mode.light">Ljust</string>
+    <string name="settings.personalization.theme_mode.dark">Mörkt</string>
     <string name="settings.personalization.use_amoled">Använd svart tema</string>
     <string name="settings.personalization.use_custom_accent">Följ systemets accent</string>
     <string name="settings.personalization.custom_accent">Välj en anpassad accent</string>
@@ -157,5 +157,5 @@
     <string name="setup.basic_customization.title">Grundläggande anpassning</string>
     <string name="setup.welcome.catchphrase">Din nya favoritapp för anteckningar</string>
     <string name="setup.finish.title">Allt klart!</string>
-    <string name="setup.finish.last_words">Now you\'re ready to enjoy PotatoNotes to its fullest. \nIf you want to customize more head over to the settings page in the side drawer, instead if you want to manage your PotatoSync account instead click your avatar on the top bar.</string>
+    <string name="setup.finish.last_words">Nu är du redo att njuta av PotatoNotes till fullo. \nOm du vill ändra på fler saker går du till sidan inställningar i sidomenyn. Om du istället vill hantera ditt PotatoSync-konto klickar du på din avatar i toppmenyn.</string>
 </resources>
