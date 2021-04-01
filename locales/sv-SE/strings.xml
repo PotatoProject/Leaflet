@@ -21,7 +21,7 @@
     <string name="common.master_pass.modify">Ändra huvudlösenord</string>
     <string name="common.master_pass.confirm">Bekräfta huvudlösenord</string>
     <string name="common.are_you_sure">Är du säker?</string>
-    <string name="common.case_sensitive">Skiftlägeskänslig</string>
+    <string name="common.case_sensitive">Skiftlägeskänslighet</string>
     <string name="common.color_filter">Färgfilter</string>
     <string name="common.date_filter">Datumfilter</string>
     <string name="common.date_filter_mode">Filterläge</string>
@@ -40,7 +40,7 @@
     <string name="common.color.pink">Rosa</string>
     <string name="common.notification.default_title">Fäst avisering</string>
     <string name="common.notification.details_title">Fästa aviseringar</string>
-    <string name="common.notification.details_desc">Användarens fästa aviseringar</string>
+    <string name="common.notification.details_desc">Dina fästa aviseringar</string>
     <string name="common.tag.new">Ny etikett</string>
     <string name="common.tag.modify">Ändra etikett</string>
     <string name="common.tag.textbox_hint">Namn</string>
@@ -50,7 +50,7 @@
     <string name="main_page.account">Konto</string>
     <string name="main_page.restore_prompt.archive">Vill du återställa varje anteckning i arkivet?</string>
     <string name="main_page.restore_prompt.trash">Vill du återställa varje anteckning i papperskorgen?</string>
-    <string name="main_page.tag_delete_prompt">Denna tagg kommer att försvinna för alltid om du tar bort den</string>
+    <string name="main_page.tag_delete_prompt">Denna etikett kommer att försvinna för alltid om du tar bort den</string>
     <string name="main_page.deleted_empty_note">Borttagen tom anteckning</string>
     <string name="main_page.empty_state.home">Inga anteckningar har lagts till ännu</string>
     <string name="main_page.empty_state.archive">Arkivet är tomt</string>
@@ -96,7 +96,7 @@
     <string name="note_page.privacy.lock_note">Lås anteckning</string>
     <string name="note_page.privacy.lock_note.missing_pass">Du måste ange ett huvudlösenord i inställningarna</string>
     <string name="note_page.privacy.use_biometrics">Använd biometri för att låsa upp</string>
-    <string name="note_page.toggle_list">Växla lista</string>
+    <string name="note_page.toggle_list">Växla lista av/på</string>
     <string name="note_page.image_gallery">Bild från galleri</string>
     <string name="note_page.image_camera">Ta ett foto</string>
     <string name="note_page.drawing">Lägg till en teckning</string>
@@ -113,7 +113,7 @@
     <string name="settings.personalization.use_custom_accent">Följ systemets accent</string>
     <string name="settings.personalization.custom_accent">Välj en anpassad accent</string>
     <string name="settings.personalization.use_grid">Rutnätsvy för anteckningar</string>
-    <string name="settings.personalization.locale">App språk</string>
+    <string name="settings.personalization.locale">Appspråk</string>
     <string name="settings.privacy.title">Sekretess</string>
     <string name="settings.privacy.use_master_pass">Använd huvudlösenord</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Varning: Om du någonsin glömt lösenordet kan du inte återställa det, du måste avinstallera appen, därmed få alla anteckningar raderade och installera om den. Skriv ner det någonstans.</string>
