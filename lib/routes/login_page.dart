@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
           labelText: register ? "Email" : "Email or username",
           errorText: register ? emailError : (emailError ?? usernameError),
         ),
-        autofillHints: [
+        autofillHints: const [
           AutofillHints.email,
         ],
         onFieldSubmitted: (_) => context.focusScope.requestFocus(

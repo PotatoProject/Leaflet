@@ -6,7 +6,7 @@ import 'package:potato_notes/internal/utils.dart';
 
 class RequestInterceptor extends InterceptorsWrapper with LoggerProvider {
   @override
-  Future onRequest(RequestOptions options) async {
+  Future onRequest(RequestOptions options, RequestInterceptorHandler h) async {
     logger.v(
       "Going to send ${options.method.toUpperCase()} to ${options.uri.toString()}",
     );
@@ -24,52 +24,52 @@ class RequestInterceptor extends InterceptorsWrapper with LoggerProvider {
       headers.putIfAbsent("Authorization", () => "Bearer $token");
     }
 
-    return super.onRequest(options.copyWith(headers: headers));
+    return super.onRequest(options.copyWith(headers: headers), h);
   }
 
   @override
-  Future onResponse(Response response) {
+  void onResponse(Response response, ResponseInterceptorHandler h) {
     final List<String> uriParts =
         response.realUri.toString().replaceFirst(prefs.apiUrl, "").split("/");
     uriParts.removeAt(0);
     logger.v(
-      "(${response.request.method.toUpperCase()} /${uriParts.join("/")}) Server responded with (${response.statusCode}): ${response.data}",
+      "(${response.requestOptions.method.toUpperCase()} /${uriParts.join("/")}) Server responded with (${response.statusCode}): ${response.data}",
     );
-    return super.onResponse(response);
+    super.onResponse(response, h);
   }
 
   @override
-  Future onError(DioError err) async {
+  Future onError(DioError err, ErrorInterceptorHandler h) async {
     if (err.response?.statusCode == 401) {
       final AuthResponse response = await Controller.account.refreshToken();
       if (response.status) {
-        final RequestOptions rOptions = err.request!;
         final Options options = Options(
-          method: rOptions.method,
-          sendTimeout: rOptions.sendTimeout,
-          receiveTimeout: rOptions.receiveTimeout,
-          extra: rOptions.extra,
-          headers: Utils.asMap<String, dynamic>(rOptions.headers
+          method: err.requestOptions.method,
+          sendTimeout: err.requestOptions.sendTimeout,
+          receiveTimeout: err.requestOptions.receiveTimeout,
+          extra: err.requestOptions.extra,
+          headers: Utils.asMap<String, dynamic>(err.requestOptions.headers
               .update("Authorization", (value) => prefs.getToken())),
-          responseType: rOptions.responseType,
-          contentType: rOptions.contentType,
-          validateStatus: rOptions.validateStatus,
-          receiveDataWhenStatusError: rOptions.receiveDataWhenStatusError,
-          followRedirects: rOptions.followRedirects,
-          maxRedirects: rOptions.maxRedirects,
-          requestEncoder: rOptions.requestEncoder,
-          responseDecoder: rOptions.responseDecoder,
-          listFormat: rOptions.listFormat,
+          responseType: err.requestOptions.responseType,
+          contentType: err.requestOptions.contentType,
+          validateStatus: err.requestOptions.validateStatus,
+          receiveDataWhenStatusError:
+              err.requestOptions.receiveDataWhenStatusError,
+          followRedirects: err.requestOptions.followRedirects,
+          maxRedirects: err.requestOptions.maxRedirects,
+          requestEncoder: err.requestOptions.requestEncoder,
+          responseDecoder: err.requestOptions.responseDecoder,
+          listFormat: err.requestOptions.listFormat,
         );
 
         return dio.request(
-          rOptions.path,
+          err.requestOptions.path,
           options: options,
-          onReceiveProgress: err.request!.onReceiveProgress,
-          onSendProgress: err.request!.onSendProgress,
+          onReceiveProgress: err.requestOptions.onReceiveProgress,
+          onSendProgress: err.requestOptions.onSendProgress,
         );
       }
     }
-    return super.onError(err);
+    return super.onError(err, h);
   }
 }
