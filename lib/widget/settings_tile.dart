@@ -8,6 +8,7 @@ class SettingsTile extends StatelessWidget {
   final Widget? subtitle;
   final Widget? trailing;
   final bool enabled;
+  final bool visible;
   final VoidCallback? onTap;
 
   const SettingsTile({
@@ -18,6 +19,7 @@ class SettingsTile extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.enabled = true,
+    this.visible = true,
     this.onTap,
   }) : super(key: key);
 
@@ -31,6 +33,7 @@ class SettingsTile extends StatelessWidget {
     ValueChanged<bool>? onChanged,
     Color? activeColor,
     this.enabled = true,
+    this.visible = true,
   })  : trailing = Switch.adaptive(
           value: value,
           onChanged: enabled ? onChanged : null,
@@ -52,19 +55,22 @@ class SettingsTile extends StatelessWidget {
       );
     }
 
-    return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(
-        16 + context.viewPadding.left,
-        0,
-        16 + context.viewPadding.right,
-        0,
+    return Visibility(
+      visible: visible,
+      child: ListTile(
+        contentPadding: EdgeInsets.fromLTRB(
+          16 + context.viewPadding.left,
+          0,
+          16 + context.viewPadding.right,
+          0,
+        ),
+        leading: icon,
+        title: title,
+        trailing: trailing ?? _subtitle,
+        subtitle: description,
+        enabled: enabled,
+        onTap: onTap,
       ),
-      leading: icon,
-      title: title,
-      trailing: trailing ?? _subtitle,
-      subtitle: description,
-      enabled: enabled,
-      onTap: onTap,
     );
   }
 }

@@ -15,7 +15,13 @@ import 'package:quick_actions/quick_actions.dart';
 
 part 'app_info.g.dart';
 
-class AppInfo = _AppInfoBase with _$AppInfo;
+class AppInfo extends _AppInfoBase with _$AppInfo {
+  AppInfo();
+
+  /// This bool defines whether the app is ready to
+  /// support the notes api in a production environment
+  static bool supportsNotesApi = false;
+}
 
 abstract class _AppInfoBase with Store {
   static const EventChannel accentStreamChannel =

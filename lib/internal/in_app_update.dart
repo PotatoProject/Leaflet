@@ -1,19 +1,35 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:loggy/loggy.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class InAppUpdater {
   const InAppUpdater._();
 
-  static BuildType get buildType => _getBuildType(
-        const String.fromEnvironment(
-          "build_type",
-          defaultValue: "github",
-        ),
-      );
+  static BuildType get buildType {
+    if (UniversalPlatform.isWeb) {
+      // Users always get the latest version as long as they refresh and
+      // other stuff we cant really manipulate (at least idk how to do that)
+      return BuildType.unsupported;
+    }
+
+    if (DeviceInfo.isDesktop) {
+      // No other way to have an in app update, we can just notify users
+      return BuildType.gitHub;
+    }
+
+    return _getBuildType(
+      const String.fromEnvironment(
+        "build_type",
+        defaultValue: "github",
+      ),
+    );
+  }
 
   static BuildType _getBuildType(String buildTypeFromEnv) {
     switch (buildTypeFromEnv.toLowerCase()) {
@@ -30,16 +46,32 @@ class InAppUpdater {
       case BuildType.playStore:
         return InAppUpdate.checkForUpdate();
       case BuildType.gitHub:
-      default:
         final Response githubRelease = await dio.get(
           "https://api.github.com/repos/HrX03/PotatoNotes/releases/latest",
         );
         final Map<dynamic, dynamic> body =
             Utils.asMap<String, dynamic>(githubRelease.data);
         final int versionCode =
-            int.parse(body["tag_name"].split("+")[1] as String);
+            (body["tag_name"].split("+").last as String).toInt();
+
+        late String buildNumber;
+        if (UniversalPlatform.isWindows) {
+          // This terrible hack is necessary on windows because of a bug on
+          // package_info_plus where each field gets a null character
+          // appended at the end
+          buildNumber =
+              appInfo.packageInfo.buildNumber.characters.skipLast(1).toString();
+        } else {
+          buildNumber = appInfo.packageInfo.buildNumber;
+        }
+        final bool updateAvailable = versionCode > int.parse(buildNumber);
+        Loggy.defaultLogger.d(updateAvailable);
+        Loggy.defaultLogger.d(versionCode);
+        Loggy.defaultLogger.d(buildNumber);
         return AppUpdateInfo(
-          versionCode,
+          updateAvailable
+              ? UpdateAvailability.updateAvailable
+              : UpdateAvailability.updateNotAvailable,
           false,
           true,
           versionCode,
@@ -48,12 +80,23 @@ class InAppUpdater {
           0,
           0,
         );
+      case BuildType.unsupported:
+      default:
+        return AppUpdateInfo(
+          UpdateAvailability.updateNotAvailable,
+          false,
+          false,
+          -1,
+          -1,
+          "com.potatoproject.notes",
+          0,
+          -1,
+        );
     }
   }
 
   static Future<void> checkForUpdate(BuildContext context,
       {bool showNoUpdatesAvailable = false}) async {
-    //if (DeviceInfo.isDesktopOrWeb) return;
     final AppUpdateInfo updateInfo = await _internalCheckForUpdate();
     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       update(
@@ -93,13 +136,16 @@ class InAppUpdater {
         }
         break;
       case BuildType.gitHub:
-      default:
         final bool shouldUpdate = await _showUpdateDialog(context);
 
         if (!shouldUpdate) return;
 
         await Utils.launchUrl(
             "https://github.com/PotatoProject/Leaflet/releases/latest");
+        break;
+      case BuildType.unsupported:
+      default:
+        break;
     }
   }
 
@@ -142,4 +188,5 @@ class InAppUpdater {
 enum BuildType {
   gitHub,
   playStore,
+  unsupported,
 }

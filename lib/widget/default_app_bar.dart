@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
@@ -49,7 +50,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
         centerTitle: false,
         actions: [
           Visibility(
-            visible: state != null,
+            visible: state != null && AppInfo.supportsNotesApi,
             child: IconButton(
               padding: const EdgeInsets.all(16),
               icon: const AccountAvatar(),

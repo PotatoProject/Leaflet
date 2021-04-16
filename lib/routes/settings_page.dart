@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
@@ -326,6 +327,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsTile(
               icon: const Icon(Icons.autorenew),
               title: const Text("Change sync API url"),
+              visible: AppInfo.supportsNotesApi,
               onTap: () async {
                 final bool? status = await showInfoSheet(
                   context,

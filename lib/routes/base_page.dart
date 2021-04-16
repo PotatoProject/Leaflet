@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
@@ -361,21 +362,22 @@ class BasePageState extends State<BasePage>
                                 showTitle: !_collapsedDrawer,
                               ),
                             ),
-                            DrawerListTile(
-                              icon: const AccountAvatar(),
-                              title: Text(
-                                prefs.accessToken != null
-                                    ? prefs.username ?? "Guest"
-                                    : LocaleStrings.mainPage.account,
+                            if (AppInfo.supportsNotesApi)
+                              DrawerListTile(
+                                icon: const AccountAvatar(),
+                                title: Text(
+                                  prefs.accessToken != null
+                                      ? prefs.username ?? "Guest"
+                                      : LocaleStrings.mainPage.account,
+                                ),
+                                onTap: () {
+                                  Utils.showNotesModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => AccountInfo(),
+                                  );
+                                },
+                                showTitle: !_collapsedDrawer,
                               ),
-                              onTap: () {
-                                Utils.showNotesModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => AccountInfo(),
-                                );
-                              },
-                              showTitle: !_collapsedDrawer,
-                            ),
                           ],
                         ),
                         footer: DrawerListTile(

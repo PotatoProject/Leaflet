@@ -957,6 +957,16 @@ extension TagX on Tag {
   }
 }
 
+extension ObjectX on String {
+  int toInt() {
+    return int.parse(this);
+  }
+
+  double toDouble() {
+    return double.parse(this);
+  }
+}
+
 extension UriX on Uri {
   ImageProvider toImageProvider() {
     if (data != null) {
