@@ -61,7 +61,6 @@ class _NotePageState extends State<NotePage> {
       id: widget.note?.id ?? Utils.generateId(),
       title: widget.note?.title ?? "",
       content: widget.note?.content ?? "",
-      styleJson: [],
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
       lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),

@@ -11,7 +11,6 @@ class Note extends DataClass implements Insertable<Note> {
   final String id;
   final String title;
   final String content;
-  final List<int>? styleJson;
   final bool starred;
   final DateTime creationDate;
   final DateTime lastModifyDate;
@@ -31,7 +30,6 @@ class Note extends DataClass implements Insertable<Note> {
       {required this.id,
       required this.title,
       required this.content,
-      this.styleJson,
       required this.starred,
       required this.creationDate,
       required this.lastModifyDate,
@@ -60,8 +58,6 @@ class Note extends DataClass implements Insertable<Note> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       content: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
-      styleJson: $NotesTable.$converter0.mapToDart(stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}style_json'])),
       starred:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}starred'])!,
       creationDate: dateTimeType
@@ -69,14 +65,14 @@ class Note extends DataClass implements Insertable<Note> {
       lastModifyDate: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date'])!,
       color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
-      images: $NotesTable.$converter1.mapToDart(stringType
+      images: $NotesTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}images']))!,
       list: boolType.mapFromDatabaseResponse(data['${effectivePrefix}list'])!,
-      listContent: $NotesTable.$converter2.mapToDart(stringType
+      listContent: $NotesTable.$converter1.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}list_content']))!,
-      reminders: $NotesTable.$converter3.mapToDart(stringType
+      reminders: $NotesTable.$converter2.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}reminders']))!,
-      tags: $NotesTable.$converter4.mapToDart(
+      tags: $NotesTable.$converter3.mapToDart(
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}tags']))!,
       hideContent: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}hide_content'])!,
@@ -98,29 +94,25 @@ class Note extends DataClass implements Insertable<Note> {
     map['id'] = Variable<String>(id);
     map['title'] = Variable<String>(title);
     map['content'] = Variable<String>(content);
-    if (!nullToAbsent || styleJson != null) {
-      final converter = $NotesTable.$converter0;
-      map['style_json'] = Variable<String?>(converter.mapToSql(styleJson));
-    }
     map['starred'] = Variable<bool>(starred);
     map['creation_date'] = Variable<DateTime>(creationDate);
     map['last_modify_date'] = Variable<DateTime>(lastModifyDate);
     map['color'] = Variable<int>(color);
     {
-      final converter = $NotesTable.$converter1;
+      final converter = $NotesTable.$converter0;
       map['images'] = Variable<String>(converter.mapToSql(images)!);
     }
     map['list'] = Variable<bool>(list);
     {
-      final converter = $NotesTable.$converter2;
+      final converter = $NotesTable.$converter1;
       map['list_content'] = Variable<String>(converter.mapToSql(listContent)!);
     }
     {
-      final converter = $NotesTable.$converter3;
+      final converter = $NotesTable.$converter2;
       map['reminders'] = Variable<String>(converter.mapToSql(reminders)!);
     }
     {
-      final converter = $NotesTable.$converter4;
+      final converter = $NotesTable.$converter3;
       map['tags'] = Variable<String>(converter.mapToSql(tags)!);
     }
     map['hide_content'] = Variable<bool>(hideContent);
@@ -137,9 +129,6 @@ class Note extends DataClass implements Insertable<Note> {
       id: Value(id),
       title: Value(title),
       content: Value(content),
-      styleJson: styleJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(styleJson),
       starred: Value(starred),
       creationDate: Value(creationDate),
       lastModifyDate: Value(lastModifyDate),
@@ -165,7 +154,6 @@ class Note extends DataClass implements Insertable<Note> {
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
-      styleJson: serializer.fromJson<List<int>?>(json['styleJson']),
       starred: serializer.fromJson<bool>(json['starred']),
       creationDate: serializer.fromJson<DateTime>(json['creationDate']),
       lastModifyDate: serializer.fromJson<DateTime>(json['lastModifyDate']),
@@ -190,7 +178,6 @@ class Note extends DataClass implements Insertable<Note> {
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
-      'styleJson': serializer.toJson<List<int>?>(styleJson),
       'starred': serializer.toJson<bool>(starred),
       'creationDate': serializer.toJson<DateTime>(creationDate),
       'lastModifyDate': serializer.toJson<DateTime>(lastModifyDate),
@@ -213,7 +200,6 @@ class Note extends DataClass implements Insertable<Note> {
           {String? id,
           String? title,
           String? content,
-          List<int>? styleJson,
           bool? starred,
           DateTime? creationDate,
           DateTime? lastModifyDate,
@@ -233,7 +219,6 @@ class Note extends DataClass implements Insertable<Note> {
         id: id ?? this.id,
         title: title ?? this.title,
         content: content ?? this.content,
-        styleJson: styleJson ?? this.styleJson,
         starred: starred ?? this.starred,
         creationDate: creationDate ?? this.creationDate,
         lastModifyDate: lastModifyDate ?? this.lastModifyDate,
@@ -256,7 +241,6 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
-          ..write('styleJson: $styleJson, ')
           ..write('starred: $starred, ')
           ..write('creationDate: $creationDate, ')
           ..write('lastModifyDate: $lastModifyDate, ')
@@ -284,40 +268,38 @@ class Note extends DataClass implements Insertable<Note> {
           $mrjc(
               content.hashCode,
               $mrjc(
-                  styleJson.hashCode,
+                  starred.hashCode,
                   $mrjc(
-                      starred.hashCode,
+                      creationDate.hashCode,
                       $mrjc(
-                          creationDate.hashCode,
+                          lastModifyDate.hashCode,
                           $mrjc(
-                              lastModifyDate.hashCode,
+                              color.hashCode,
                               $mrjc(
-                                  color.hashCode,
+                                  images.hashCode,
                                   $mrjc(
-                                      images.hashCode,
+                                      list.hashCode,
                                       $mrjc(
-                                          list.hashCode,
+                                          listContent.hashCode,
                                           $mrjc(
-                                              listContent.hashCode,
+                                              reminders.hashCode,
                                               $mrjc(
-                                                  reminders.hashCode,
+                                                  tags.hashCode,
                                                   $mrjc(
-                                                      tags.hashCode,
+                                                      hideContent.hashCode,
                                                       $mrjc(
-                                                          hideContent.hashCode,
+                                                          lockNote.hashCode,
                                                           $mrjc(
-                                                              lockNote.hashCode,
+                                                              usesBiometrics
+                                                                  .hashCode,
                                                               $mrjc(
-                                                                  usesBiometrics
+                                                                  deleted
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      deleted
+                                                                      archived
                                                                           .hashCode,
-                                                                      $mrjc(
-                                                                          archived
-                                                                              .hashCode,
-                                                                          synced
-                                                                              .hashCode)))))))))))))))))));
+                                                                      synced
+                                                                          .hashCode))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -325,7 +307,6 @@ class Note extends DataClass implements Insertable<Note> {
           other.id == this.id &&
           other.title == this.title &&
           other.content == this.content &&
-          other.styleJson == this.styleJson &&
           other.starred == this.starred &&
           other.creationDate == this.creationDate &&
           other.lastModifyDate == this.lastModifyDate &&
@@ -347,7 +328,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> id;
   final Value<String> title;
   final Value<String> content;
-  final Value<List<int>?> styleJson;
   final Value<bool> starred;
   final Value<DateTime> creationDate;
   final Value<DateTime> lastModifyDate;
@@ -367,7 +347,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
-    this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
     this.creationDate = const Value.absent(),
     this.lastModifyDate = const Value.absent(),
@@ -388,7 +367,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     required String id,
     required String title,
     required String content,
-    this.styleJson = const Value.absent(),
     this.starred = const Value.absent(),
     required DateTime creationDate,
     required DateTime lastModifyDate,
@@ -417,7 +395,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Expression<String>? id,
     Expression<String>? title,
     Expression<String>? content,
-    Expression<List<int>?>? styleJson,
     Expression<bool>? starred,
     Expression<DateTime>? creationDate,
     Expression<DateTime>? lastModifyDate,
@@ -438,7 +415,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
-      if (styleJson != null) 'style_json': styleJson,
       if (starred != null) 'starred': starred,
       if (creationDate != null) 'creation_date': creationDate,
       if (lastModifyDate != null) 'last_modify_date': lastModifyDate,
@@ -461,7 +437,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
       {Value<String>? id,
       Value<String>? title,
       Value<String>? content,
-      Value<List<int>?>? styleJson,
       Value<bool>? starred,
       Value<DateTime>? creationDate,
       Value<DateTime>? lastModifyDate,
@@ -481,7 +456,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
-      styleJson: styleJson ?? this.styleJson,
       starred: starred ?? this.starred,
       creationDate: creationDate ?? this.creationDate,
       lastModifyDate: lastModifyDate ?? this.lastModifyDate,
@@ -512,11 +486,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
-    if (styleJson.present) {
-      final converter = $NotesTable.$converter0;
-      map['style_json'] =
-          Variable<String?>(converter.mapToSql(styleJson.value));
-    }
     if (starred.present) {
       map['starred'] = Variable<bool>(starred.value);
     }
@@ -530,23 +499,23 @@ class NotesCompanion extends UpdateCompanion<Note> {
       map['color'] = Variable<int>(color.value);
     }
     if (images.present) {
-      final converter = $NotesTable.$converter1;
+      final converter = $NotesTable.$converter0;
       map['images'] = Variable<String>(converter.mapToSql(images.value)!);
     }
     if (list.present) {
       map['list'] = Variable<bool>(list.value);
     }
     if (listContent.present) {
-      final converter = $NotesTable.$converter2;
+      final converter = $NotesTable.$converter1;
       map['list_content'] =
           Variable<String>(converter.mapToSql(listContent.value)!);
     }
     if (reminders.present) {
-      final converter = $NotesTable.$converter3;
+      final converter = $NotesTable.$converter2;
       map['reminders'] = Variable<String>(converter.mapToSql(reminders.value)!);
     }
     if (tags.present) {
-      final converter = $NotesTable.$converter4;
+      final converter = $NotesTable.$converter3;
       map['tags'] = Variable<String>(converter.mapToSql(tags.value)!);
     }
     if (hideContent.present) {
@@ -576,7 +545,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
-          ..write('styleJson: $styleJson, ')
           ..write('starred: $starred, ')
           ..write('creationDate: $creationDate, ')
           ..write('lastModifyDate: $lastModifyDate, ')
@@ -631,17 +599,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       'content',
       $tableName,
       false,
-    );
-  }
-
-  final VerificationMeta _styleJsonMeta = const VerificationMeta('styleJson');
-  @override
-  late final GeneratedTextColumn styleJson = _constructStyleJson();
-  GeneratedTextColumn _constructStyleJson() {
-    return GeneratedTextColumn(
-      'style_json',
-      $tableName,
-      true,
     );
   }
 
@@ -794,7 +751,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         id,
         title,
         content,
-        styleJson,
         starred,
         creationDate,
         lastModifyDate,
@@ -839,7 +795,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     } else if (isInserting) {
       context.missing(_contentMeta);
     }
-    context.handle(_styleJsonMeta, const VerificationResult.success());
     if (data.containsKey('starred')) {
       context.handle(_starredMeta,
           starred.isAcceptableOrUnknown(data['starred']!, _starredMeta));
@@ -916,15 +871,13 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     return $NotesTable(_db, alias);
   }
 
-  static TypeConverter<List<int>, String> $converter0 =
-      const ContentStyleConverter();
-  static TypeConverter<List<SavedImage>, String> $converter1 =
+  static TypeConverter<List<SavedImage>, String> $converter0 =
       const ImageListConverter();
-  static TypeConverter<List<ListItem>, String> $converter2 =
+  static TypeConverter<List<ListItem>, String> $converter1 =
       const ListContentConverter();
-  static TypeConverter<List<DateTime>, String> $converter3 =
+  static TypeConverter<List<DateTime>, String> $converter2 =
       const ReminderListConverter();
-  static TypeConverter<List<String>, String> $converter4 =
+  static TypeConverter<List<String>, String> $converter3 =
       const TagListConverter();
 }
 

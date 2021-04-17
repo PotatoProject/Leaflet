@@ -33,7 +33,7 @@ class RequestInterceptor extends InterceptorsWrapper with LoggerProvider {
         response.realUri.toString().replaceFirst(prefs.apiUrl, "").split("/");
     uriParts.removeAt(0);
     logger.v(
-      "(${response.requestOptions.method.toUpperCase()} /${uriParts.join("/")}) Server responded with (${response.statusCode}): ${response.data}",
+      "(${response.requestOptions.method.toUpperCase()} /${uriParts.join("/")}) Server responded!",
     );
     super.onResponse(response, h);
   }

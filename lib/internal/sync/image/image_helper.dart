@@ -42,6 +42,9 @@ class ImageHelper with LoggerProvider {
     final String path =
         join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
     file.copy(path);
+    savedImage.storageLocation = prefs.accessToken != null
+        ? StorageLocation.sync
+        : StorageLocation.local;
     final Size _size = getImageSize(file);
     savedImage.width = _size.width.toDouble();
     savedImage.height = _size.height.toDouble();

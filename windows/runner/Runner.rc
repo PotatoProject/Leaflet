@@ -96,7 +96,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) 2020 PotatoProject. All rights reserved."
             VALUE "OriginalFilename", "leaflet.exe"
             VALUE "ProductName", "Leaflet"
-            VALUE "ProductVersion", VERSION_AS_NUMBER
+            VALUE "ProductVersion", VERSION_AS_STRING
         END
     END
     BLOCK "VarFileInfo"

@@ -1,6 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -92,30 +90,17 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
             leading: const Icon(MdiIcons.fileRestoreOutline),
             title: const Text("Open PotatoNotes backup file"),
             onTap: () async {
-              final dynamic asyncFile = DeviceInfo.isDesktop
-                  ? await openFile(
-                      acceptedTypeGroups: [
-                        XTypeGroup(
-                          label: "PotatoNotes database",
-                          extensions: ["db"],
-                        ),
-                      ],
-                    )
-                  : await FilePicker.platform.pickFiles();
+              final String? pickedFilePath = await Utils.pickFile(
+                allowedExtensions: ["db"],
+              );
 
-              if (asyncFile == null) return;
-
-              final dynamic file =
-                  DeviceInfo.isDesktop ? asyncFile : asyncFile.files.first;
-
-              if (file.path != null &&
-                  p.extension(file.path as String) == ".db") {
+              if (pickedFilePath != null &&
+                  p.extension(pickedFilePath) == ".db") {
                 final bool canMigrate =
-                    await MigrationTask.isMigrationAvailable(
-                        file.path as String);
+                    await MigrationTask.isMigrationAvailable(pickedFilePath);
 
                 if (canMigrate) {
-                  notes = await MigrationTask.migrate(file.path as String);
+                  notes = await MigrationTask.migrate(pickedFilePath);
                 }
 
                 setState(() {});

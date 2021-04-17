@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -49,12 +50,12 @@ class MigrationTask {
         isStarred: rawV1Notes[index]['isStarred'] as int,
         date: rawV1Notes[index]['date'] as int,
         color: rawV1Notes[index]['color'] as int,
-        imagePath: rawV1Notes[index]['imagePath'] as String,
+        imagePath: rawV1Notes[index]['imagePath'] as String?,
         isList: rawV1Notes[index]['isList'] as int,
-        listParseString: rawV1Notes[index]['listParseString'] as String,
-        reminders: rawV1Notes[index]['reminders'] as String,
+        listParseString: rawV1Notes[index]['listParseString'] as String?,
+        reminders: rawV1Notes[index]['reminders'] as String?,
         hideContent: rawV1Notes[index]['hideContent'] as int,
-        password: rawV1Notes[index]['password'] as String,
+        password: rawV1Notes[index]['password'] as String?,
         isDeleted: rawV1Notes[index]['isDeleted'] as int,
         isArchived: rawV1Notes[index]['isArchived'] as int,
       );
@@ -81,11 +82,15 @@ class MigrationTask {
 
       SavedImage? savedImage;
       if (v1Note.imagePath != null) {
-        final Response response = await dio.get(v1Note.imagePath!);
-        final File file = File(join(appInfo.tempDirectory.path, "id.jpg"))
+        final Response response = await dio.get<Uint8List>(
+          v1Note.imagePath!,
+          options: Options(responseType: ResponseType.bytes),
+        );
+        final File file = File(join(appInfo.tempDirectory.path, "$id.jpg"))
           ..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
         savedImage = await imageHelper.copyToCache(file);
+        await file.delete();
         imageQueue.addUpload(savedImage, id);
       }
 

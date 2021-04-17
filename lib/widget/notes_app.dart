@@ -177,6 +177,7 @@ class NotesApp extends StatefulWidget {
     this.shortcuts,
     this.actions,
     this.restorationScopeId,
+    this.scrollBehavior,
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
@@ -214,6 +215,7 @@ class NotesApp extends StatefulWidget {
     this.shortcuts,
     this.actions,
     this.restorationScopeId,
+    this.scrollBehavior,
   })  : navigatorObservers = null,
         navigatorKey = null,
         onGenerateRoute = null,
@@ -574,7 +576,7 @@ class NotesApp extends StatefulWidget {
   ///   return WidgetsApp(
   ///     actions: <Type, Action<Intent>>{
   ///       ... WidgetsApp.defaultActions,
-  ///       ActivateAction: CallbackAction(
+  ///       ActivateAction: CallbackAction<Intent>(
   ///         onInvoke: (Intent intent) {
   ///           // Do something here...
   ///           return null;
@@ -595,6 +597,23 @@ class NotesApp extends StatefulWidget {
   /// {@macro flutter.widgets.widgetsApp.restorationScopeId}
   final String? restorationScopeId;
 
+  /// {@template flutter.material.NotesApp.scrollBehavior}
+  /// The default [ScrollBehavior] for the application.
+  ///
+  /// [ScrollBehavior]s describe how [Scrollable] widgets behave. Providing
+  /// a [ScrollBehavior] can set the default [ScrollPhysics] across
+  /// an application, and manage [Scrollable] decorations like [Scrollbar]s and
+  /// [GlowingOverscrollIndicator]s.
+  /// {@endtemplate}
+  ///
+  /// When null, defaults to [MaterialScrollBehavior].
+  ///
+  /// See also:
+  ///
+  ///  * [ScrollConfiguration], which controls how [Scrollable] widgets behave
+  ///    in a subtree.
+  final ScrollBehavior? scrollBehavior;
+
   /// Turns on a [GridPaper] overlay that paints a baseline grid
   /// Material apps.
   ///
@@ -606,7 +625,7 @@ class NotesApp extends StatefulWidget {
   final bool debugShowMaterialGrid;
 
   @override
-  _MaterialAppState createState() => _MaterialAppState();
+  _NotesAppState createState() => _NotesAppState();
 
   /// The [HeroController] used for Material page transitions.
   ///
@@ -620,15 +639,58 @@ class NotesApp extends StatefulWidget {
   }
 }
 
-class _MaterialScrollBehavior extends ScrollBehavior {
+/// Describes how [Scrollable] widgets behave for [NotesApp]s.
+///
+/// {@macro flutter.widgets.scrollBehavior}
+///
+/// Setting a [MaterialScrollBehavior] will apply a
+/// [GlowingOverscrollIndicator] to [Scrollable] descendants when executing on
+/// [TargetPlatform.android] and [TargetPlatform.fuchsia].
+///
+/// When using the desktop platform, if the [Scrollable] widget scrolls in the
+/// [Axis.vertical], a [Scrollbar] is applied.
+///
+/// See also:
+///
+///  * [ScrollBehavior], the default scrolling behavior extended by this class.
+class MaterialScrollBehavior extends ScrollBehavior {
+  /// Creates a MaterialScrollBehavior that decorates [Scrollable]s with
+  /// [GlowingOverscrollIndicator]s and [Scrollbar]s based on the current
+  /// platform and provided [ScrollableDetails].
+  const MaterialScrollBehavior();
+
   @override
-  TargetPlatform getPlatform(BuildContext context) {
-    return Theme.of(context).platform;
+  TargetPlatform getPlatform(BuildContext context) =>
+      Theme.of(context).platform;
+
+  @override
+  Widget buildScrollbar(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    // When modifying this function, consider modifying the implementation in
+    // the base class as well.
+    switch (axisDirectionToAxis(details.direction)) {
+      case Axis.horizontal:
+        return child;
+      case Axis.vertical:
+        switch (getPlatform(context)) {
+          case TargetPlatform.linux:
+          case TargetPlatform.macOS:
+          case TargetPlatform.windows:
+            return Scrollbar(
+              controller: details.controller,
+              child: child,
+            );
+          case TargetPlatform.android:
+          case TargetPlatform.fuchsia:
+          case TargetPlatform.iOS:
+            return child;
+        }
+    }
   }
 
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
     // When modifying this function, consider modifying the implementation in
     // the base class as well.
     switch (getPlatform(context)) {
@@ -640,15 +702,15 @@ class _MaterialScrollBehavior extends ScrollBehavior {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
         return GlowingOverscrollIndicator(
-          axisDirection: axisDirection,
-          color: Theme.of(context).accentColor,
+          axisDirection: details.direction,
+          color: Theme.of(context).colorScheme.secondary,
           child: child,
         );
     }
   }
 }
 
-class _MaterialAppState extends State<NotesApp> {
+class _NotesAppState extends State<NotesApp> {
   late HeroController _heroController;
 
   bool get _usesRouter => widget.routerDelegate != null;
@@ -701,28 +763,29 @@ class _MaterialAppState extends State<NotesApp> {
     theme ??= widget.theme ?? ThemeData.light();
 
     return ScaffoldMessenger(
-        key: widget.scaffoldMessengerKey,
-        child: AnimatedTheme(
-          data: theme,
-          child: widget.builder != null
-              ? Builder(
-                  builder: (BuildContext context) {
-                    // Why are we surrounding a builder with a builder?
-                    //
-                    // The widget.builder may contain code that invokes
-                    // Theme.of(), which should return the theme we selected
-                    // above in AnimatedTheme. However, if we invoke
-                    // widget.builder() directly as the child of AnimatedTheme
-                    // then there is no Context separating them, and the
-                    // widget.builder() will not find the theme. Therefore, we
-                    // surround widget.builder with yet another builder so that
-                    // a context separates them and Theme.of() correctly
-                    // resolves to the theme we passed to AnimatedTheme.
-                    return widget.builder!(context, child);
-                  },
-                )
-              : child!,
-        ));
+      key: widget.scaffoldMessengerKey,
+      child: AnimatedTheme(
+        data: theme,
+        child: widget.builder != null
+            ? Builder(
+                builder: (BuildContext context) {
+                  // Why are we surrounding a builder with a builder?
+                  //
+                  // The widget.builder may contain code that invokes
+                  // Theme.of(), which should return the theme we selected
+                  // above in AnimatedTheme. However, if we invoke
+                  // widget.builder() directly as the child of AnimatedTheme
+                  // then there is no Context separating them, and the
+                  // widget.builder() will not find the theme. Therefore, we
+                  // surround widget.builder with yet another builder so that
+                  // a context separates them and Theme.of() correctly
+                  // resolves to the theme we passed to AnimatedTheme.
+                  return widget.builder!(context, child);
+                },
+              )
+            : child!,
+      ),
+    );
   }
 
   Widget _buildWidgetApp(BuildContext context) {
@@ -816,10 +879,11 @@ class _MaterialAppState extends State<NotesApp> {
     }());
 
     return ScrollConfiguration(
-        behavior: _MaterialScrollBehavior(),
-        child: HeroControllerScope(
-          controller: _heroController,
-          child: result,
-        ));
+      behavior: widget.scrollBehavior ?? const MaterialScrollBehavior(),
+      child: HeroControllerScope(
+        controller: _heroController,
+        child: result,
+      ),
+    );
   }
 }

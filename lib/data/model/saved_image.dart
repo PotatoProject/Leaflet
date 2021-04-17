@@ -13,7 +13,7 @@ part 'saved_image.g.dart';
 @JsonSerializable()
 class SavedImage {
   String id = Utils.generateId();
-  StorageLocation storageLocation = StorageLocation.sync;
+  StorageLocation storageLocation = StorageLocation.local;
   String? hash;
   String? blurHash;
   String? fileExtension;
@@ -29,7 +29,7 @@ class SavedImage {
 
   SavedImage({
     required this.id,
-    this.storageLocation = StorageLocation.sync,
+    this.storageLocation = StorageLocation.local,
     this.hash,
     this.fileExtension,
     this.encrypted = false,

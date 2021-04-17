@@ -1,7 +1,6 @@
 import 'package:moor/moor.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
-import 'package:potato_notes/data/model/content_style.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
@@ -14,8 +13,6 @@ class Notes extends Table {
   TextColumn get id => text()();
   TextColumn get title => text()();
   TextColumn get content => text()();
-  TextColumn get styleJson =>
-      text().map(const ContentStyleConverter()).nullable()();
   BoolColumn get starred => boolean().withDefault(const Constant(false))();
   DateTimeColumn get creationDate => dateTime()();
   DateTimeColumn get lastModifyDate => dateTime()();

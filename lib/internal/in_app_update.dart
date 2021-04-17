@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -52,22 +51,9 @@ class InAppUpdater {
         final Map<dynamic, dynamic> body =
             Utils.asMap<String, dynamic>(githubRelease.data);
         final int versionCode =
-            (body["tag_name"].split("+").last as String).toInt();
-
-        late String buildNumber;
-        if (UniversalPlatform.isWindows) {
-          // This terrible hack is necessary on windows because of a bug on
-          // package_info_plus where each field gets a null character
-          // appended at the end
-          buildNumber =
-              appInfo.packageInfo.buildNumber.characters.skipLast(1).toString();
-        } else {
-          buildNumber = appInfo.packageInfo.buildNumber;
-        }
-        final bool updateAvailable = versionCode > int.parse(buildNumber);
-        Loggy.defaultLogger.d(updateAvailable);
-        Loggy.defaultLogger.d(versionCode);
-        Loggy.defaultLogger.d(buildNumber);
+            int.parse(body["tag_name"].split("+").last as String);
+        final bool updateAvailable =
+            versionCode > appInfo.packageInfo.buildNumberInt;
         return AppUpdateInfo(
           updateAvailable
               ? UpdateAvailability.updateAvailable

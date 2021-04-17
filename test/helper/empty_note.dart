@@ -1,12 +1,11 @@
 import 'package:potato_notes/data/database.dart';
 
 class EmptyNote {
-  static Note get(){
+  static Note get() {
     return Note(
       id: "",
       title: "",
       content: "",
-      styleJson: [],
       starred: false,
       creationDate: DateTime.now(),
       lastModifyDate: DateTime.now(),

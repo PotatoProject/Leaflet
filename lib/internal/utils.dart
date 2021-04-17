@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,10 +13,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/backup_restore.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -188,6 +192,12 @@ class Utils {
               value: 'pin',
               oneNoteOnly: true,
             ),
+          const SelectionOptionEntry(
+            title: "Save locally",
+            icon: Icons.save_alt_outlined,
+            value: 'export',
+            oneNoteOnly: true,
+          ),
           /* SelectionOptionEntry(
             icon: Icons.share_outlined,
             title: LocaleStrings.mainPage.selectionBarShare,
@@ -215,6 +225,9 @@ class Utils {
         for (final Note note in notes) {
           state.addSelectedNote(note);
         }
+        break;
+      case 'export':
+        BackupRestore.saveNote(notes.first);
         break;
       case 'favourites':
         final bool unlocked = await Utils.showNoteLockDialog(
@@ -719,6 +732,25 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
+  static Future<void> importNote(BuildContext context) async {
+    final String? pickedFilePath = await Utils.pickFile(
+      allowedExtensions: ["note"],
+    );
+
+    if (pickedFilePath != null && p.extension(pickedFilePath) == ".note") {
+      final Note? note = await BackupRestore.restoreNote(pickedFilePath);
+
+      if (note != null) {
+        await Utils.showSecondaryRoute(
+          context,
+          NotePage(
+            note: note,
+          ),
+        );
+      }
+    }
+  }
+
   static Future<File?> pickImage() async {
     String? path;
 
@@ -746,6 +778,26 @@ class Utils {
     }
 
     return path != null ? File(path) : null;
+  }
+
+  static Future<String?> pickFile({List<String>? allowedExtensions}) async {
+    final dynamic asyncFile = DeviceInfo.isDesktop
+        ? await openFile(
+            acceptedTypeGroups: [
+              XTypeGroup(
+                extensions: allowedExtensions,
+              ),
+            ],
+          )
+        : await FilePicker.platform.pickFiles(
+            allowedExtensions: allowedExtensions,
+          );
+
+    if (asyncFile == null) return null;
+
+    final dynamic file =
+        DeviceInfo.isDesktop ? asyncFile : asyncFile.files.first;
+    return file.path as String;
   }
 
   static Future<bool> launchUrl(
@@ -777,7 +829,6 @@ extension NoteX on Note {
         id: "",
         title: "",
         content: "",
-        styleJson: [],
         starred: false,
         creationDate: DateTime.now(),
         lastModifyDate: DateTime.now(),
@@ -957,13 +1008,13 @@ extension TagX on Tag {
   }
 }
 
-extension ObjectX on String {
-  int toInt() {
-    return int.parse(this);
-  }
-
-  double toDouble() {
-    return double.parse(this);
+extension PackageInfoX on PackageInfo {
+  int get buildNumberInt {
+    // This terrible hack is necessary on windows because of a bug on
+    // package_info_plus where each field gets a null character
+    // appended at the end
+    final String cleanBuildNumber = buildNumber.replaceAll('\u0000', '');
+    return int.tryParse(cleanBuildNumber) ?? -1;
   }
 }
 
