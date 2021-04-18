@@ -86,19 +86,19 @@ class NoteListWidget extends StatelessWidget {
     switch (noteKind) {
       case ReturnMode.archive:
         return MapEntry(
-          Illustration.archive(brightness: themeBrightness),
+          Illustration.archive(brightness: themeBrightness, height: 128),
           LocaleStrings.mainPage.emptyStateArchive,
         );
       case ReturnMode.trash:
         return MapEntry(
-          Illustration.trash(brightness: themeBrightness),
+          Illustration.trash(brightness: themeBrightness, height: 128),
           LocaleStrings.mainPage.emptyStateTrash,
         );
       case ReturnMode.all:
       case ReturnMode.normal:
       default:
         return MapEntry(
-          Illustration.noNotes(brightness: themeBrightness),
+          Illustration.noNotes(brightness: themeBrightness, height: 128),
           LocaleStrings.mainPage.emptyStateHome,
         );
     }

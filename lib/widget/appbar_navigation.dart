@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/separated_list.dart';
 
 class AppbarNavigation extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
@@ -24,14 +25,20 @@ class AppbarNavigation extends StatelessWidget {
         opacity: enabled ? 1 : 0.5,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        child: Row(
-          children: List.generate(
-            items.length,
-            (index) => _NavigationButton(
-              item: items[index],
-              selected: this.index == index,
-              selectedColor: context.theme.accentColor,
-              onTap: () => onPageChanged?.call(index),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: SeparatedList(
+            separator: const SizedBox(width: 4),
+            axis: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List.generate(
+              items.length,
+              (index) => _NavigationButton(
+                item: items[index],
+                selected: this.index == index,
+                selectedColor: context.theme.accentColor,
+                onTap: () => onPageChanged?.call(index),
+              ),
             ),
           ),
         ),
@@ -95,7 +102,7 @@ class _NavigationButtonState extends State<_NavigationButton>
       onTap: widget.onTap,
       customBorder: const StadiumBorder(),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
             IconTheme.merge(

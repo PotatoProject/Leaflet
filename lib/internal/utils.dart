@@ -612,7 +612,7 @@ class Utils {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 148,
+          height: 128,
           child: Center(
             child: illustration,
           ),
@@ -789,9 +789,7 @@ class Utils {
               ),
             ],
           )
-        : await FilePicker.platform.pickFiles(
-            allowedExtensions: allowedExtensions,
-          );
+        : await FilePicker.platform.pickFiles();
 
     if (asyncFile == null) return null;
 

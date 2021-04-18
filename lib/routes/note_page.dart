@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -222,9 +223,10 @@ class _NotePageState extends State<NotePage> {
                           children: List.generate(
                             note.tags.length,
                             (index) {
-                              final Tag tag = prefs.tags.firstWhere(
+                              final Tag? tag = prefs.tags.firstWhereOrNull(
                                 (tag) => tag.id == note.tags[index],
                               );
+                              if (tag == null) return const SizedBox();
 
                               return TagChip(
                                 title: tag.name,

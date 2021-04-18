@@ -46,12 +46,18 @@ class NoteSearchDelegate extends CustomSearchDelegate {
             final Widget illustration = query.isEmpty
                 ? Utils.quickIllustration(
                     context,
-                    Illustration.typeToSearch(brightness: brightness),
+                    Illustration.typeToSearch(
+                      brightness: brightness,
+                      height: 72,
+                    ),
                     LocaleStrings.search.typeToSearch,
                   )
                 : Utils.quickIllustration(
                     context,
-                    Illustration.nothingFound(brightness: brightness),
+                    Illustration.nothingFound(
+                      brightness: brightness,
+                      height: 72,
+                    ),
                     LocaleStrings.search.nothingFound,
                   );
             final List<Note> results = List<Note>.from(snapshot.data!);
