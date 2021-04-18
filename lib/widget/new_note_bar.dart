@@ -37,7 +37,7 @@ class NewNoteBar extends StatelessWidget {
           onPressed: () => Utils.newDrawing(context),
         ),
         IconButton(
-          icon: const Icon(Icons.folder_outlined),
+          icon: const Icon(Icons.note_add_outlined),
           tooltip: "Import",
           onPressed: () => Utils.importNote(context),
         ),

@@ -3,6 +3,7 @@ import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class SharedPrefs {
   final SharedPreferences prefs;
@@ -34,7 +35,9 @@ class SharedPrefs {
       case 2:
         return ThemeMode.dark;
       default:
-        return ThemeMode.system;
+        return UniversalPlatform.isWindows || UniversalPlatform.isLinux
+            ? ThemeMode.light
+            : ThemeMode.system;
     }
   }
 

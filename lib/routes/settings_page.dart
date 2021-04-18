@@ -23,6 +23,7 @@ import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
 import 'package:recase/recase.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -144,7 +145,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(LocaleStrings.settings.debugClearDatabase),
                     onTap: () async {
                       await helper.deleteAllNotes();
-                      await Controller.note.deleteAll();
+                      if (AppInfo.supportsNotesApi &&
+                          prefs.accessToken != null) {
+                        await Controller.note.deleteAll();
+                      }
                     },
                   ),
                   SettingsTile(
@@ -196,16 +200,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 showDropdownSheet(
                   context: context,
                   itemBuilder: (context, index) {
-                    final bool selected =
-                        prefs.themeMode == ThemeMode.values[index];
+                    final ThemeMode themeMode = ThemeMode.values[index];
+
+                    if (themeMode == ThemeMode.system &&
+                            UniversalPlatform.isWindows ||
+                        UniversalPlatform.isLinux) {
+                      return const SizedBox();
+                    }
+                    final bool selected = prefs.themeMode == themeMode;
 
                     return dropDownTile(
                       selected: selected,
                       title: Text(
-                        getThemeModeName(ThemeMode.values[index]),
+                        getThemeModeName(themeMode),
                       ),
                       onTap: () {
-                        prefs.themeMode = ThemeMode.values[index];
+                        prefs.themeMode = themeMode;
                         context.pop();
                       },
                     );
