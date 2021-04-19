@@ -5,98 +5,75 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/jwt_decode.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 part 'preferences.g.dart';
 
 class Preferences = _PreferencesBase with _$Preferences;
 
 abstract class _PreferencesBase with Store, LoggerProvider {
-  static final _keystoreSupported = UniversalPlatform.isAndroid ||
-      UniversalPlatform.isIOS ||
-      UniversalPlatform.isLinux;
-  final Keystore keystore = Keystore();
-
   _PreferencesBase() {
     loadData();
   }
 
   @observable
-  @protected
   String _masterPassValue = "";
 
   @observable
-  @protected
   ThemeMode _themeModeValue = sharedPrefs.themeMode;
 
   @observable
-  @protected
   Color? _customAccentValue = sharedPrefs.customAccent;
 
   @observable
-  @protected
   bool _useAmoledValue = sharedPrefs.useAmoled;
 
   @observable
-  @protected
   bool _useGridValue = sharedPrefs.useGrid;
 
   @observable
-  @protected
   bool _useCustomAccentValue = sharedPrefs.useCustomAccent;
 
   @observable
-  @protected
   bool _welcomePageSeenValue = sharedPrefs.welcomePageSeen;
 
   @observable
-  @protected
+  bool _protectBackupsValue = sharedPrefs.protectBackups;
+
+  @observable
   String _apiUrlValue = sharedPrefs.apiUrl;
 
   @observable
-  @protected
   String? _accessTokenValue = sharedPrefs.accessToken;
 
   @observable
-  @protected
   String? _refreshTokenValue = sharedPrefs.refreshToken;
 
   @observable
-  @protected
   String? _usernameValue = sharedPrefs.username;
 
   @observable
-  @protected
   String? _emailValue = sharedPrefs.email;
 
   @observable
-  @protected
   String? _avatarUrlValue = sharedPrefs.avatarUrl;
 
   @observable
-  @protected
   int _logLevelValue = sharedPrefs.logLevel;
 
   @observable
-  @protected
   List<dynamic> _tagsValue = [];
 
   @observable
-  @protected
   List<String> _downloadedImagesValue = sharedPrefs.downloadedImages;
 
   @observable
-  @protected
   List<String> _deletedImagesValue = sharedPrefs.deletedImages;
 
   @observable
-  @protected
   int _lastUpdatedValue = sharedPrefs.lastUpdated;
 
   @observable
-  @protected
   String? _deleteQueueValue = sharedPrefs.deleteQueue;
 
   String get masterPass => _masterPassValue;
@@ -106,6 +83,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   bool get useGrid => _useGridValue;
   bool get useCustomAccent => _useCustomAccentValue;
   bool get welcomePageSeen => _welcomePageSeenValue;
+  bool get protectBackups => _protectBackupsValue;
   String get apiUrl => _apiUrlValue;
   String? get accessToken => _accessTokenValue;
   String? get refreshToken => _refreshTokenValue;
@@ -123,11 +101,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   set masterPass(String value) {
     _masterPassValue = value;
 
-    if (_keystoreSupported) {
-      keystore.setMasterPass(value);
-    } else {
-      sharedPrefs.masterPass = value;
-    }
+    keystore.setMasterPass(value);
   }
 
   set themeMode(ThemeMode value) {
@@ -158,6 +132,11 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   set welcomePageSeen(bool value) {
     _welcomePageSeenValue = value;
     sharedPrefs.welcomePageSeen = value;
+  }
+
+  set protectBackups(bool value) {
+    _protectBackupsValue = value;
+    sharedPrefs.protectBackups = value;
   }
 
   set apiUrl(String value) {
@@ -220,11 +199,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   }
 
   Future<void> loadData() async {
-    if (_keystoreSupported) {
-      _masterPassValue = await keystore.getMasterPass();
-    } else {
-      _masterPassValue = sharedPrefs.masterPass;
-    }
+    _masterPassValue = await keystore.getMasterPass();
 
     _tagsValue = await tagHelper.listTags(TagReturnMode.local);
 

@@ -18,14 +18,11 @@ import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  if (DeviceInfo.isDesktop) {
-    sqfliteFfiInit();
-  }
+  await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
   final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
   await initProviders(_db);

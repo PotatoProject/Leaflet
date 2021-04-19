@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:logging/logging.dart';
+import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           return dropDownTile(
                             selected: selected,
                             title: Text(
-                              firstLetterToUppercase(Level.LEVELS[index].name),
+                              LogLevel.values[index].name,
                             ),
                             onTap: () {
                               prefs.logLevel = index;
@@ -171,12 +171,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                           );
                         },
-                        itemCount: Level.LEVELS.length,
+                        itemCount: LogLevel.values.length,
                       );
                     },
-                    subtitle: Text(
-                      firstLetterToUppercase(Level.LEVELS[prefs.logLevel].name),
-                    ),
+                    subtitle: Text(LogLevel.values[prefs.logLevel].name),
                   ),
                 ],
               ),
@@ -504,7 +502,7 @@ class _SettingsPageState extends State<SettingsPage> {
         editMode: editMode,
         onChallengeSuccess: () => context.pop(true),
         onSave: (text) async {
-          prefs.masterPass = text;
+          prefs.masterPass = Utils.hashedPass(text);
 
           context.pop();
         },
@@ -514,5 +512,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String firstLetterToUppercase(String origin) {
     return ReCase(origin).sentenceCase;
+  }
+}
+
+extension _LogLevelName on LogLevel {
+  String get name {
+    return toString().split(".").last.sentenceCase;
   }
 }

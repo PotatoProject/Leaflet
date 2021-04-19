@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';
@@ -14,6 +15,7 @@ import 'package:potato_notes/internal/sync/request_interceptor.dart';
 class _ProvidersSingleton {
   _ProvidersSingleton._();
 
+  late Keystore _keystore;
   late SharedPrefs _sharedPrefs;
   late AppInfo _appInfo;
   late DeviceInfo _deviceInfo;
@@ -26,6 +28,10 @@ class _ProvidersSingleton {
   late ImageHelper _imageHelper;
 
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
+
+  Future<void> initKeystore() async {
+    _keystore = await Keystore.newInstance();
+  }
 
   Future<void> initProviders(AppDatabase _db) async {
     _sharedPrefs = await SharedPrefs.newInstance();
@@ -42,8 +48,13 @@ class _ProvidersSingleton {
   }
 }
 
+Future<void> initKeystore() async =>
+    _ProvidersSingleton.instance.initKeystore();
+
 Future<void> initProviders(AppDatabase _db) async =>
     _ProvidersSingleton.instance.initProviders(_db);
+
+Keystore get keystore => _ProvidersSingleton.instance._keystore;
 
 SharedPrefs get sharedPrefs => _ProvidersSingleton.instance._sharedPrefs;
 

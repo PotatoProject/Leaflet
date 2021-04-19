@@ -103,6 +103,14 @@ class SharedPrefs {
     setBool("welcome_page_seen_v2", value);
   }
 
+  bool get protectBackups {
+    return prefs.getBool("protect_backups") ?? false;
+  }
+
+  set protectBackups(bool value) {
+    setBool("protect_backups", value);
+  }
+
   String get apiUrl {
     return prefs.getString("api_url") ?? Utils.defaultApiUrl;
   }

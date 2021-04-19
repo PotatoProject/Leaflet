@@ -178,11 +178,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                           Colors.grey.shade900.withOpacity(
                             widget.note.images.isNotEmpty &&
                                     !widget.note.hideContent
-                                ? 0.6
+                                ? 0.5
                                 : 0,
                           ),
                           Colors.grey.shade900.withOpacity(0),
+                          Colors.grey.shade900.withOpacity(0),
                         ],
+                        stops: const [0.0, 0.9, 1.0],
                         radius: 1,
                       ),
                     ),

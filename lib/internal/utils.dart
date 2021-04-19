@@ -24,6 +24,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -35,6 +36,7 @@ import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:recase/recase.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sqflite/utils/utils.dart' as utils;
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -57,11 +59,15 @@ class Utils {
     //    });
   }
 
-  static Future<bool?> showPassChallengeSheet(BuildContext context) async {
+  static Future<bool?> showPassChallengeSheet(
+    BuildContext context, {
+    String? description,
+  }) async {
     return showNotesModalBottomSheet<bool>(
       context: context,
       builder: (context) => PassChallenge(
         onChallengeSuccess: () => context.pop(true),
+        description: description,
       ),
     );
   }
@@ -86,6 +92,7 @@ class Utils {
     required BuildContext context,
     required bool showLock,
     bool showBiometrics = false,
+    String? description,
   }) async {
     if (showLock && prefs.masterPass != '') {
       bool status;
@@ -97,7 +104,11 @@ class Utils {
       if (bioAuth) {
         status = bioAuth;
       } else {
-        status = await Utils.showPassChallengeSheet(context) ?? false;
+        status = await Utils.showPassChallengeSheet(
+              context,
+              description: description,
+            ) ??
+            false;
       }
 
       return status;
@@ -226,9 +237,6 @@ class Utils {
           state.addSelectedNote(note);
         }
         break;
-      case 'export':
-        BackupRestore.saveNote(notes.first);
-        break;
       case 'favourites':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
@@ -349,6 +357,18 @@ class Utils {
           handlePinNotes(context, notes.first);
 
           state.closeSelection();
+        }
+        break;
+      case 'export':
+        final bool unlocked = await Utils.showNoteLockDialog(
+          context: context,
+          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
+          showBiometrics: notes.any((n) => n.usesBiometrics),
+          description: "Note: The exported note won't be locked.",
+        );
+
+        if (unlocked) {
+          BackupRestore.saveNote(notes.first);
         }
         break;
       case 'share':
@@ -819,6 +839,12 @@ class Utils {
 
   static Map<K, V> asMap<K, V>(dynamic obj) {
     return Map<K, V>.from(obj as Map<dynamic, dynamic>);
+  }
+
+  static String hashedPass(String pass) {
+    final Blake2 blake = Blake2();
+    blake.updateWithString(pass);
+    return utils.hex(blake.digest());
   }
 }
 

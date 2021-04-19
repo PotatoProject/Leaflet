@@ -11,6 +11,7 @@ dependencies:
   archive: ^3.1.2
 
   back_button_interceptor: ^5.0.0
+  biometric_storage: ^2.0.2
   blurhash_dart: ^1.0.2
 
   collection: ^1.15.0
@@ -63,7 +64,10 @@ dependencies:
   shared_preferences: ^2.0.5
   sqflite: ^2.0.0
   sqflite_common_ffi: ^2.0.0
-  sqlite3_flutter_libs: ^0.4.1
+  sqlcipher_flutter_libs:
+    git:
+      url: https://github.com/simolus3/sqlite3.dart.git
+      path: sqlcipher_flutter_libs
 
   universal_platform: ^1.0.0-nullsafety
   url_launcher: ^6.0.3

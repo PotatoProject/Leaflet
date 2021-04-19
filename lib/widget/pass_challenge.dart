@@ -7,11 +7,13 @@ class PassChallenge extends StatefulWidget {
   final bool editMode;
   final ValueChanged<String>? onSave;
   final VoidCallback? onChallengeSuccess;
+  final String? description;
 
   const PassChallenge({
     this.editMode = false,
     this.onSave,
     this.onChallengeSuccess,
+    this.description,
   });
 
   @override
@@ -36,9 +38,6 @@ class _PassChallengeState extends State<PassChallenge> {
 
   @override
   Widget build(BuildContext context) {
-    final bool numericPass =
-        !widget.editMode ? int.tryParse(prefs.masterPass) != null : false;
-
     return Padding(
       padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
       child: Column(
@@ -57,12 +56,15 @@ class _PassChallengeState extends State<PassChallenge> {
               ),
             ),
           ),
+          if (widget.description != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(widget.description!),
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: TextFormField(
-              keyboardType: numericPass
-                  ? const TextInputType.numberWithOptions()
-                  : TextInputType.visiblePassword,
+              keyboardType: TextInputType.visiblePassword,
               controller: controller,
               obscureText: !showPass,
               onChanged: (_) => setState(() => status = null),
@@ -75,6 +77,8 @@ class _PassChallengeState extends State<PassChallenge> {
                 ),
                 errorText: status,
               ),
+              onFieldSubmitted:
+                  controller.text.length >= 4 ? (_) => _onConfirm() : null,
             ),
           ),
           Padding(
@@ -83,19 +87,7 @@ class _PassChallengeState extends State<PassChallenge> {
               children: [
                 const Spacer(),
                 TextButton(
-                  onPressed: controller.text.length >= 4
-                      ? widget.editMode
-                          ? () => widget.onSave?.call(controller.text)
-                          : () {
-                              if (prefs.masterPass == controller.text) {
-                                setState(() => status = null);
-                                widget.onChallengeSuccess?.call();
-                              } else {
-                                setState(
-                                    () => status = "Incorrect master pass");
-                              }
-                            }
-                      : null,
+                  onPressed: controller.text.length >= 4 ? _onConfirm : null,
                   child: Text(widget.editMode ? "Save" : "Confirm"),
                 ),
               ],
@@ -104,5 +96,20 @@ class _PassChallengeState extends State<PassChallenge> {
         ],
       ),
     );
+  }
+
+  void _onConfirm() {
+    if (widget.editMode) {
+      widget.onSave?.call(controller.text);
+    } else {
+      final String controllerHash = Utils.hashedPass(controller.text);
+
+      if (controllerHash == prefs.masterPass) {
+        setState(() => status = null);
+        widget.onChallengeSuccess?.call();
+      } else {
+        setState(() => status = "Incorrect master pass");
+      }
+    }
   }
 }
