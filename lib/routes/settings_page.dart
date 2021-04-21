@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
@@ -14,6 +18,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
+import 'package:potato_notes/routes/backup_and_restore/backup_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/import_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
@@ -61,14 +66,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   icon: const Icon(MdiIcons.contentSaveOutline),
                   title: const Text("Backup"),
                   description: const Text("Create a local copy of your notes"),
-                  onTap: () {
-                    context.scaffoldMessenger.removeCurrentSnackBar();
-                    context.scaffoldMessenger.showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            "This feature is not yet available on this version."),
-                        behavior: SnackBarBehavior.floating,
-                      ),
+                  onTap: () async {
+                    await Utils.showNotesModalBottomSheet(
+                      context: context,
+                      builder: (context) => BackupPage(),
                     );
                   },
                 ),
@@ -148,6 +149,42 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (AppInfo.supportsNotesApi &&
                           prefs.accessToken != null) {
                         await Controller.note.deleteAll();
+                      }
+                    },
+                  ),
+                  SettingsTile(
+                    icon: const Icon(MdiIcons.databasePlusOutline),
+                    title: const Text("Generate trash"),
+                    onTap: () async {
+                      for (int i = 0; i < 100; i++) {
+                        final Random r = Random();
+                        final Note n = NoteX.emptyNote.copyWith(
+                          id: Utils.generateId(),
+                          title: String.fromCharCodes(
+                            List.generate(
+                              32,
+                              (index) => 33 + r.nextInt(126 - 33),
+                            ),
+                          ),
+                          content: String.fromCharCodes(
+                            List.generate(
+                              128,
+                              (index) => 33 + r.nextInt(126 - 33),
+                            ),
+                          ),
+                          starred: r.nextBool(),
+                          //archived: r.nextBool(),
+                          color: r.nextInt(10),
+                          images: List.generate(
+                            2,
+                            (index) => SavedImage.fromJson(
+                              json.decode(
+                                      '{"id": "fe4fbad3-8f4e-4bbd-95ca-b3ed12490ba8","storageLocation": "local","hash": null,"blurHash": null,"fileExtension": ".png","encrypted": false,"width": 708.0,"height": 491.0,"uploaded": false}')
+                                  as Map<String, dynamic>,
+                            ),
+                          ),
+                        );
+                        await helper.saveNote(n);
                       }
                     },
                   ),

@@ -32,7 +32,11 @@ class _ImportPageState extends State<ImportPage> {
           );
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          loadedNotes == null ? "Choose note source" : "Select notes to import",
+        ),
+      ),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
           return SharedAxisTransition(
@@ -85,7 +89,11 @@ class _FileSelectionPageState extends State<_FileSelectionPage> {
     return Scaffold(
       body: ListView(
         children: [
-          const Text("To begin migration select a database file to open."),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text("To begin migration select a database file to open."),
+          ),
+          const SizedBox(height: 16),
           ListTile(
             leading: const Icon(MdiIcons.fileRestoreOutline),
             title: const Text("Open PotatoNotes backup file"),

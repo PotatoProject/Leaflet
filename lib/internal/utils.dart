@@ -126,6 +126,7 @@ class Utils {
     Clip? clipBehavior,
     Color? barrierColor,
     bool childHandlesScroll = false,
+    bool enableDismiss = true,
   }) async {
     return context.push<T?>(
       BottomSheetRoute(
@@ -135,6 +136,7 @@ class Utils {
         shape: shape,
         clipBehavior: clipBehavior,
         childHandlesScroll: childHandlesScroll,
+        enableDismiss: enableDismiss,
       ),
     );
   }
@@ -752,22 +754,28 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static Future<void> importNote(BuildContext context) async {
-    final String? pickedFilePath = await Utils.pickFile(
+  static Future<void> importNotes(BuildContext context) async {
+    final List<String>? pickedFiles = await Utils.pickFiles(
       allowedExtensions: ["note"],
     );
 
-    if (pickedFilePath != null && p.extension(pickedFilePath) == ".note") {
-      final Note? note = await BackupRestore.restoreNote(pickedFilePath);
+    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+      int restoredFiles = 0;
+      for (final String file in pickedFiles) {
+        if (p.extension(file) != ".note") continue;
 
-      if (note != null) {
-        await Utils.showSecondaryRoute(
-          context,
-          NotePage(
-            note: note,
-          ),
-        );
+        await BackupRestore.restoreNote(file);
+        restoredFiles++;
       }
+
+      context.scaffoldMessenger.removeCurrentSnackBar();
+      context.scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text("$restoredFiles notes were restored."),
+          behavior: SnackBarBehavior.floating,
+          width: min(640, context.mSize.width - 32),
+        ),
+      );
     }
   }
 
@@ -809,13 +817,28 @@ class Utils {
               ),
             ],
           )
-        : await FilePicker.platform.pickFiles();
+        : (await FilePicker.platform.pickFiles())?.files.first;
 
     if (asyncFile == null) return null;
 
-    final dynamic file =
-        DeviceInfo.isDesktop ? asyncFile : asyncFile.files.first;
-    return file.path as String;
+    return asyncFile.path as String;
+  }
+
+  static Future<List<String>?> pickFiles(
+      {List<String>? allowedExtensions}) async {
+    final List<dynamic>? asyncFiles = DeviceInfo.isDesktop
+        ? await openFiles(
+            acceptedTypeGroups: [
+              XTypeGroup(
+                extensions: allowedExtensions,
+              ),
+            ],
+          )
+        : (await FilePicker.platform.pickFiles())?.files;
+
+    if (asyncFiles == null) return null;
+
+    return asyncFiles.map((e) => e.path as String).toList();
   }
 
   static Future<bool> launchUrl(

@@ -16,6 +16,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
     this.clipBehavior = Clip.none,
     this.maintainState = true,
     this.childHandlesScroll = false,
+    this.enableDismiss = true,
   });
 
   final Widget child;
@@ -24,6 +25,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final ShapeBorder? shape;
   final Clip? clipBehavior;
   final bool childHandlesScroll;
+  final bool enableDismiss;
 
   @override
   Color get barrierColor => Colors.black54;
@@ -55,7 +57,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   Duration get reverseTransitionDuration => const Duration(milliseconds: 250);
 
   @override
-  bool get barrierDismissible => true;
+  bool get barrierDismissible => enableDismiss;
 
   @override
   Curve get barrierCurve => decelerateEasing;

@@ -142,7 +142,7 @@ class NoteListPageState extends State<NoteListPage> {
         MenuFabEntry(
           icon: const Icon(Icons.note_add_outlined),
           label: "Import",
-          onTap: () => Utils.importNote(context),
+          onTap: () => Utils.importNotes(context),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.check_box_outlined),

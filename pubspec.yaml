@@ -31,7 +31,6 @@ dependencies:
   flutter_blurhash: ^0.6.0
   flutter_local_notifications: ^5.0.0
   flutter_mobx: ^2.0.0
-  flutter_secure_storage: ^4.1.0
 
   http: ^0.13.1
 

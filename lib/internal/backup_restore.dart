@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -16,16 +18,91 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class BackupRestore {
-  static Future<void> saveNote(Note note, {Directory? baseDir}) async {
-    final Directory tempDir = baseDir ?? await getTemporaryDirectory();
-    final Directory workDir =
-        Directory(p.join(tempDir.path, "${note.id}-export"));
-    await workDir.create();
+  static Future<void> saveNote(Note note) async {
+    final Directory baseDir = await getTemporaryDirectory();
+    final Directory noteDir =
+        Directory(p.join(baseDir.path, "${note.id}-export"));
+    await _createNoteFolderStructure(
+      note: note,
+      baseDir: noteDir,
+    );
+
+    final Directory docsDir = await getApplicationDocumentsDirectory();
+    final Directory outDir = Directory(p.join(
+      docsDir.path,
+      "LeafletBackups",
+    ));
+    final String formattedDate =
+        DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
+    ZipFileEncoder()
+      ..create(p.join(outDir.path, "note-$formattedDate.note"))
+      ..addDirectory(noteDir, includeDirName: false)
+      ..close();
+
+    await noteDir.delete(recursive: true);
+  }
+
+  static Future<File> createBackup({
+    required List<Note> notes,
+    String? name,
+    ValueChanged<int>? onProgress,
+  }) async {
+    final Directory tempDir = await getTemporaryDirectory();
     final DateTime now = DateTime.now();
-    final File noteDataFile = File(p.join(workDir.path, "note.data"));
+    final String formattedDate = DateFormat("dd_MM_yyyy-HH_mm_ss").format(now);
+    final Directory baseDir =
+        Directory(p.join(tempDir.path, "$formattedDate-backup"));
+    await baseDir.create();
+
+    final Map<String, dynamic> metadata = {};
+    final List<String> noteIds = [];
+    for (int i = 0; i < notes.length; i++) {
+      final Note note = notes[i];
+      final Directory noteDir =
+          Directory(p.join(baseDir.path, "${note.id}-export"));
+      noteIds.add(note.id);
+      await _createNoteFolderStructure(
+        note: note,
+        baseDir: noteDir,
+      );
+      onProgress?.call(i + 1);
+    }
+    final String _name = name ?? formattedDate;
+    metadata["name"] = _name;
+    metadata["notes"] = noteIds;
+    metadata["note_count"] = notes.length;
+    metadata["creation_date"] = now.millisecondsSinceEpoch;
+    metadata["app_version"] = appInfo.packageInfo.buildNumberInt;
+    final File metadataFile = File(p.join(baseDir.path, "meta.data"));
+    await metadataFile.writeAsString(
+      const JsonEncoder.withIndent('    ').convert(metadata),
+    );
+
+    final Directory docsDir = await getApplicationDocumentsDirectory();
+    final Directory outDir = Directory(p.join(
+      docsDir.path,
+      "LeafletBackups",
+    ));
+    ZipFileEncoder()
+      ..create(p.join(outDir.path, "backup-$_name.backup"))
+      ..addDirectory(baseDir, includeDirName: false)
+      ..close();
+
+    await baseDir.delete(recursive: true);
+
+    return File(p.join(outDir.path, "backup-$_name.backup"));
+  }
+
+  static Future<void> _createNoteFolderStructure({
+    required Note note,
+    required Directory baseDir,
+  }) async {
+    await baseDir.create();
+    final DateTime now = DateTime.now();
+    final File noteDataFile = File(p.join(baseDir.path, "note.data"));
     final Map<String, dynamic> noteData = {};
     noteData["note"] = note.toJson();
-    noteData["created_at"] = now.millisecondsSinceEpoch;
+    noteData["creation_date"] = now.millisecondsSinceEpoch;
     noteData["app_version"] = appInfo.packageInfo.buildNumberInt;
 
     await noteDataFile.writeAsString(
@@ -34,7 +111,7 @@ class BackupRestore {
 
     if (note.images.isNotEmpty) {
       final Directory imagesDirectory =
-          Directory(p.join(workDir.path, "images"));
+          Directory(p.join(baseDir.path, "images"));
       await imagesDirectory.create();
       for (final SavedImage image in note.images) {
         await File(image.path).copy(
@@ -42,19 +119,6 @@ class BackupRestore {
         );
       }
     }
-
-    final Directory docsDir = await getApplicationDocumentsDirectory();
-    final Directory outDir = Directory(p.join(
-      docsDir.path,
-      "LeafletBackups",
-    ));
-    final String formattedDate = DateFormat("dd_MM_yyyy-HH_mm_ss").format(now);
-    ZipFileEncoder()
-      ..create(p.join(outDir.path, "leaflet-$formattedDate.note"))
-      ..addDirectory(workDir, includeDirName: false)
-      ..close();
-
-    await workDir.delete(recursive: true);
   }
 
   static Future<Note?> restoreNote(String path) async {
