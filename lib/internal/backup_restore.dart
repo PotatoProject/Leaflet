@@ -209,7 +209,7 @@ class BackupRestore {
 
   static Future<SecretKey> _deriveKey(String password, List<int> nonce) async {
     final kdf = Pbkdf2(
-      bits: 128,
+      bits: 256,
       iterations: 100000,
       macAlgorithm: Hmac.sha512(),
     );
