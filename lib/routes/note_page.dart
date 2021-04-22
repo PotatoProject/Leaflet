@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -99,6 +98,255 @@ class _NotePageState extends State<NotePage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    for (final FocusNode node in listContentNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: notePageThemeData,
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.remove_red_eye_outlined),
+                  padding: EdgeInsets.zero,
+                  tooltip: LocaleStrings.notePage.privacyTitle,
+                  onPressed: showPrivacyOptionSheet,
+                ),
+                IconButton(
+                  icon: Icon(
+                    note.starred ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  padding: EdgeInsets.zero,
+                  tooltip: note.starred
+                      ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                      : LocaleStrings.mainPage.selectionBarAddFavourites,
+                  onPressed: () => setStarred(!note.starred),
+                ),
+                ...getToolbarButtons(returnNothing: !deviceInfo.isLandscape),
+              ],
+            ),
+            extendBodyBehindAppBar: true,
+            body: Row(
+              children: <Widget>[
+                Expanded(
+                  child: mainBody,
+                ),
+                if (note.images.isNotEmpty && deviceInfo.isLandscape)
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: context.padding.top + 56,
+                    ),
+                    width: imageWidgetSize,
+                    child: getImageWidget(Axis.vertical),
+                  ),
+              ],
+            ),
+            bottomNavigationBar: !deviceInfo.isLandscape
+                ? Material(
+                    color: context.theme.cardColor,
+                    elevation: 8,
+                    child: Container(
+                      height: 48,
+                      margin: EdgeInsets.only(
+                        bottom:
+                            context.viewInsets.bottom + context.padding.bottom,
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: getToolbarButtons(),
+                      ),
+                    ),
+                  )
+                : null,
+          );
+        },
+      ),
+    );
+  }
+
+  ThemeData get notePageThemeData {
+    final Color? noteColor = note.color != 0
+        ? Color(NoteColors.colorList[note.color].dynamicColor(context))
+        : null;
+    final Color? foregroundColor =
+        note.color != 0 ? context.theme.textTheme.caption!.color : null;
+
+    return context.theme.copyWith(
+      scaffoldBackgroundColor: noteColor,
+      cardColor: noteColor,
+      accentColor: foregroundColor,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: foregroundColor,
+      ),
+      appBarTheme: context.theme.appBarTheme.copyWith(
+        color: noteColor?.withOpacity(0.9),
+      ),
+      toggleableActiveColor: foregroundColor ?? context.theme.accentColor,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: foregroundColor ?? context.theme.accentColor,
+        selectionColor:
+            (foregroundColor ?? context.theme.accentColor).withOpacity(0.3),
+        selectionHandleColor: foregroundColor ?? context.theme.accentColor,
+      ),
+    );
+  }
+
+  Widget get mainBody {
+    final bool showNewItemButton =
+        note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
+            note.listContent.isEmpty;
+
+    return ListView(
+      padding: EdgeInsets.only(
+        top: context.padding.top + 56,
+        bottom: 16,
+      ),
+      children: [
+        if (note.images.isNotEmpty && !deviceInfo.isLandscape)
+          SizedBox(
+            height: imageWidgetSize,
+            child: getImageWidget(Axis.horizontal),
+          ),
+        if (note.actualTags.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(8),
+            width: context.mSize.width,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: List.generate(
+                note.actualTags.length,
+                (index) {
+                  final Tag tag = prefs.tags.firstWhere(
+                    (tag) => tag.id == note.actualTags[index],
+                  );
+
+                  return TagChip(
+                    title: tag.name,
+                    shrink: !(Platform.isAndroid || Platform.isIOS),
+                  );
+                },
+              ),
+            ),
+          ),
+        _NotePageTextFormField(
+          hintText: LocaleStrings.notePage.titleHint,
+          controller: titleController,
+          focusNode: titleFocusNode,
+          onChanged: (text) {
+            note = note.copyWith(title: text);
+            notifyNoteChanged();
+          },
+          onSubmitted: (value) =>
+              context.focusScope.requestFocus(contentFocusNode),
+        ),
+        _NotePageTextFormField(
+          contentField: true,
+          hintText: LocaleStrings.notePage.contentHint,
+          controller: contentController,
+          focusNode: contentFocusNode,
+          onChanged: (text) {
+            note = note.copyWith(content: text);
+
+            notifyNoteChanged();
+          },
+        ),
+        if (note.list)
+          ...List.generate(note.listContent.length, generateListItem),
+        if (note.list)
+          AnimatedOpacity(
+            opacity: showNewItemButton ? 1 : 0,
+            duration: showNewItemButton
+                ? const Duration(milliseconds: 300)
+                : Duration.zero,
+            child: ListTile(
+              leading: const Icon(Icons.add),
+              title: Text(
+                LocaleStrings.notePage.addEntryHint,
+                style: TextStyle(
+                  color: context.theme.iconTheme.color,
+                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              onTap: showNewItemButton ? () => addListContentItem() : null,
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget generateListItem(int index) {
+    final ListItem currentItem = note.listContent[index];
+
+    if (needsFocus && index == note.listContent.length - 1) {
+      needsFocus = false;
+      WidgetsBinding.instance!.addPostFrameCallback(
+        (_) => context.focusScope.requestFocus(listContentNodes.last),
+      );
+    }
+
+    return _NoteListEntryItem(
+      item: currentItem,
+      controller: listContentControllers[index],
+      focusNode: listContentNodes[index],
+      onDismissed: (_) => setState(() {
+        note.listContent.removeAt(index);
+        listContentControllers.removeAt(index);
+        listContentNodes.removeAt(index);
+        notifyNoteChanged();
+      }),
+      onTextChanged: (text) {
+        setState(() => note.listContent[index].text = text);
+        notifyNoteChanged();
+      },
+      onEditingComplete: () {
+        if (index == note.listContent.length - 1) {
+          if (note.listContent.last.text != "") {
+            addListContentItem();
+          } else {
+            context.focusScope.requestFocus(listContentNodes[index]);
+          }
+        } else {
+          context.focusScope.requestFocus(listContentNodes[index + 1]);
+        }
+      },
+      onCheckChanged: (value) {
+        setState(() => note.listContent[index].status = value!);
+        notifyNoteChanged();
+      },
+      checkColor: note.color != 0
+          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
+          : context.theme.scaffoldBackgroundColor,
+    );
+  }
+
+  void setStarred(bool starred) {
+    setState(() => note = note.copyWith(starred: starred));
+    notifyNoteChanged();
+    context.scaffoldMessenger.removeCurrentSnackBar();
+    context.scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          starred
+              ? LocaleStrings.notePage.addedFavourites
+              : LocaleStrings.notePage.removedFavourites,
+        ),
+        width: min(640, context.mSize.width - 32),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   void notifyNoteChanged() {
     note = note.markChanged();
     helper.saveNote(note);
@@ -110,260 +358,6 @@ class _NotePageState extends State<NotePage> {
     imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
     await helper.saveNote(note);
-  }
-
-  @override
-  void dispose() {
-    for (final FocusNode node in listContentNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool showNewItemButton =
-        note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
-            note.listContent.isEmpty;
-
-    return Theme(
-      data: context.theme.copyWith(
-        scaffoldBackgroundColor: note.color != 0
-            ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-            : null,
-        cardColor: note.color != 0
-            ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-            : null,
-        accentColor:
-            note.color != 0 ? context.theme.textTheme.caption!.color : null,
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor:
-              note.color != 0 ? context.theme.textTheme.caption!.color : null,
-        ),
-        appBarTheme: context.theme.appBarTheme.copyWith(
-          color: note.color != 0
-              ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-                  .withOpacity(0.9)
-              : null,
-        ),
-        toggleableActiveColor: note.color != 0
-            ? context.theme.textTheme.caption!.color
-            : context.theme.accentColor,
-        textSelectionTheme: TextSelectionThemeData(
-          cursorColor: note.color != 0
-              ? context.theme.textTheme.caption!.color
-              : context.theme.accentColor,
-          selectionColor: note.color != 0
-              ? context.theme.textTheme.caption!.color!.withOpacity(0.3)
-              : context.theme.accentColor.withOpacity(0.3),
-          selectionHandleColor: note.color != 0
-              ? context.theme.textTheme.caption!.color
-              : context.theme.accentColor,
-        ),
-      ),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.remove_red_eye_outlined),
-                padding: const EdgeInsets.all(0),
-                tooltip: LocaleStrings.notePage.privacyTitle,
-                onPressed: showPrivacyOptionSheet,
-              ),
-              IconButton(
-                icon:
-                    Icon(note.starred ? Icons.favorite : Icons.favorite_border),
-                padding: const EdgeInsets.all(0),
-                tooltip: note.starred
-                    ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                    : LocaleStrings.mainPage.selectionBarAddFavourites,
-                onPressed: () {
-                  setState(() => note = note.copyWith(starred: !note.starred));
-                  notifyNoteChanged();
-                  context.scaffoldMessenger.removeCurrentSnackBar();
-                  context.scaffoldMessenger.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        note.starred
-                            ? LocaleStrings.notePage.addedFavourites
-                            : LocaleStrings.notePage.removedFavourites,
-                      ),
-                      width: min(640, context.mSize.width - 32),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-              ),
-              ...getToolbarButtons(returnNothing: !deviceInfo.isLandscape),
-            ],
-          ),
-          extendBodyBehindAppBar: true,
-          body: Row(
-            children: <Widget>[
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.only(
-                    top: context.padding.top + 56,
-                    bottom: 16,
-                  ),
-                  children: [
-                    if (note.images.isNotEmpty && !deviceInfo.isLandscape)
-                      SizedBox(
-                        height: imageWidgetSize,
-                        child: getImageWidget(Axis.horizontal),
-                      ),
-                    if (note.tags.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        width: context.mSize.width,
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(
-                            note.tags.length,
-                            (index) {
-                              final Tag? tag = prefs.tags.firstWhereOrNull(
-                                (tag) => tag.id == note.tags[index],
-                              );
-                              if (tag == null) return const SizedBox();
-
-                              return TagChip(
-                                title: tag.name,
-                                shrink: !(Platform.isAndroid || Platform.isIOS),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    _NotePageTextFormField(
-                      hintText: LocaleStrings.notePage.titleHint,
-                      controller: titleController,
-                      focusNode: titleFocusNode,
-                      onChanged: (text) {
-                        note = note.copyWith(title: text);
-                        notifyNoteChanged();
-                      },
-                      onSubmitted: (value) =>
-                          context.focusScope.requestFocus(contentFocusNode),
-                    ),
-                    _NotePageTextFormField(
-                      contentField: true,
-                      hintText: LocaleStrings.notePage.contentHint,
-                      controller: contentController,
-                      focusNode: contentFocusNode,
-                      onChanged: (text) {
-                        note = note.copyWith(content: text);
-
-                        notifyNoteChanged();
-                      },
-                    ),
-                    if (note.list)
-                      ...List.generate(note.listContent.length, (index) {
-                        final ListItem currentItem = note.listContent[index];
-
-                        if (needsFocus &&
-                            index == note.listContent.length - 1) {
-                          needsFocus = false;
-                          WidgetsBinding.instance!.addPostFrameCallback(
-                            (_) => context.focusScope
-                                .requestFocus(listContentNodes.last),
-                          );
-                        }
-
-                        return _NoteListEntryItem(
-                          item: currentItem,
-                          controller: listContentControllers[index],
-                          focusNode: listContentNodes[index],
-                          onDismissed: (_) => setState(() {
-                            note.listContent.removeAt(index);
-                            listContentControllers.removeAt(index);
-                            listContentNodes.removeAt(index);
-                            notifyNoteChanged();
-                          }),
-                          onTextChanged: (text) {
-                            setState(() => note.listContent[index].text = text);
-                            notifyNoteChanged();
-                          },
-                          onEditingComplete: () {
-                            if (index == note.listContent.length - 1) {
-                              if (note.listContent.last.text != "") {
-                                addListContentItem();
-                              } else {
-                                context.focusScope
-                                    .requestFocus(listContentNodes[index]);
-                              }
-                            } else {
-                              context.focusScope
-                                  .requestFocus(listContentNodes[index + 1]);
-                            }
-                          },
-                          onCheckChanged: (value) {
-                            setState(
-                                () => note.listContent[index].status = value!);
-                            notifyNoteChanged();
-                          },
-                          checkColor: note.color != 0
-                              ? Color(NoteColors.colorList[note.color]
-                                  .dynamicColor(context))
-                              : context.theme.scaffoldBackgroundColor,
-                        );
-                      }),
-                    if (note.list)
-                      AnimatedOpacity(
-                        opacity: showNewItemButton ? 1 : 0,
-                        duration: showNewItemButton
-                            ? const Duration(milliseconds: 300)
-                            : Duration.zero,
-                        child: ListTile(
-                          leading: const Icon(Icons.add),
-                          title: Text(
-                            LocaleStrings.notePage.addEntryHint,
-                            style: TextStyle(
-                              color: context.theme.iconTheme.color,
-                            ),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 16),
-                          onTap: showNewItemButton
-                              ? () => addListContentItem()
-                              : null,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              if (note.images.isNotEmpty && deviceInfo.isLandscape)
-                Container(
-                  padding: EdgeInsets.only(
-                    top: context.padding.top + 56,
-                  ),
-                  width: imageWidgetSize,
-                  child: getImageWidget(Axis.vertical),
-                ),
-            ],
-          ),
-          bottomNavigationBar: !deviceInfo.isLandscape
-              ? Material(
-                  color: context.theme.cardColor,
-                  elevation: 8,
-                  child: Container(
-                    height: 48,
-                    margin: EdgeInsets.only(
-                      bottom:
-                          context.viewInsets.bottom + context.padding.bottom,
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: getToolbarButtons(),
-                    ),
-                  ),
-                )
-              : null,
-        );
-      }),
-    );
   }
 
   Widget getImageWidget(Axis axis) {
@@ -684,48 +678,57 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
       child: MouseRegion(
         onEnter: (_) => setState(() => showDeleteButton = true),
         onExit: (_) => setState(() => showDeleteButton = false),
-        child: ListTile(
-          leading: Container(
-            width: 24,
-            height: 24,
-            alignment: Alignment.center,
-            child: NoteViewCheckbox(
-              value: widget.item.status,
-              onChanged: widget.onCheckChanged,
-              checkColor:
-                  widget.checkColor ?? context.theme.scaffoldBackgroundColor,
-            ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          title: TextField(
-            controller: widget.controller,
-            decoration: InputDecoration.collapsed(
-              hintText: LocaleStrings.notePage.listItemHint,
-            ),
-            textCapitalization: TextCapitalization.sentences,
-            style: TextStyle(
-              color: context.theme.iconTheme.color!.withOpacity(
-                widget.item.status ? 0.3 : 0.7,
+        child: Container(
+          height: 56 + context.theme.visualDensity.baseSizeAdjustment.dy,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                alignment: Alignment.center,
+                child: NoteViewCheckbox(
+                  value: widget.item.status,
+                  onChanged: widget.onCheckChanged,
+                  checkColor: widget.checkColor ??
+                      context.theme.scaffoldBackgroundColor,
+                ),
               ),
-              decoration:
-                  widget.item.status ? TextDecoration.lineThrough : null,
-            ),
-            onEditingComplete: widget.onEditingComplete,
-            onChanged: widget.onTextChanged,
-            focusNode: widget.focusNode,
-            textInputAction: TextInputAction.next,
-          ),
-          trailing: AnimatedOpacity(
-            opacity: showDeleteButton ? 1 : 0,
-            duration: const Duration(milliseconds: 200),
-            child: IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: showDeleteButton
-                  ? () => widget.onDismissed?.call(DismissDirection.endToStart)
-                  : null,
-              padding: EdgeInsets.zero,
-              splashRadius: 24,
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: widget.controller,
+                  decoration: InputDecoration.collapsed(
+                    hintText: LocaleStrings.notePage.listItemHint,
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(
+                    color: context.theme.iconTheme.color!.withOpacity(
+                      widget.item.status ? 0.3 : 0.7,
+                    ),
+                    decoration:
+                        widget.item.status ? TextDecoration.lineThrough : null,
+                  ),
+                  onEditingComplete: widget.onEditingComplete,
+                  onChanged: widget.onTextChanged,
+                  focusNode: widget.focusNode,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              AnimatedOpacity(
+                opacity: showDeleteButton ? 1 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: IconButton(
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: showDeleteButton
+                      ? () =>
+                          widget.onDismissed?.call(DismissDirection.endToStart)
+                      : null,
+                  padding: EdgeInsets.zero,
+                  splashRadius: 24,
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1047,6 +1047,17 @@ extension NoteX on Note {
       (e) => e.id == notificationId,
     );
   }
+
+  List<String> get actualTags {
+    final List<String> actualTags = [];
+    for (final String tag in tags) {
+      final Tag? actualTag = prefs.tags.firstWhereOrNull(
+        (t) => t.id == tag,
+      );
+      if (actualTag != null) actualTags.add(actualTag.id);
+    }
+    return actualTags;
+  }
 }
 
 extension TagX on Tag {

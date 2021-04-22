@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,12 +11,10 @@ import 'package:potato_notes/widget/tag_chip.dart';
 class NoteViewStatusbar extends StatefulWidget {
   final Note note;
   final EdgeInsets? padding;
-  final double? width;
 
   const NoteViewStatusbar({
     required this.note,
     this.padding,
-    this.width,
   });
 
   @override
@@ -25,6 +22,15 @@ class NoteViewStatusbar extends StatefulWidget {
 }
 
 class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
+  static const Map<String, IconData> iconData = {
+    'visible': Icons.visibility_off_outlined,
+    'locked': Icons.lock_outlined,
+    'hasBiometrics': Icons.fingerprint,
+    'hasReminders': Icons.alarm_outlined,
+    'starred': Icons.favorite_border,
+    'pinned': Icons.push_pin_outlined,
+  };
+
   final List<Widget> icons = [];
 
   @override
@@ -61,28 +67,28 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Visibility(
-          visible: widget.note.tags.isNotEmpty,
-          child: Container(
-            width: widget.width,
+          visible: widget.note.actualTags.isNotEmpty,
+          child: Padding(
             padding: widget.padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
             child: Wrap(
               spacing: 4,
               runSpacing: 4,
               children: List.generate(
-                widget.note.tags.length > 3 ? 4 : widget.note.tags.length,
+                widget.note.actualTags.length > 3
+                    ? 4
+                    : widget.note.actualTags.length,
                 (index) {
                   if (index != 3) {
-                    final Tag? tag = prefs.tags.firstWhereOrNull(
-                      (tag) => tag.id == widget.note.tags[index],
+                    final Tag tag = prefs.tags.firstWhere(
+                      (tag) => tag.id == widget.note.actualTags[index],
                     );
-                    if (tag == null) return const SizedBox();
 
                     return TagChip(
                       title: tag.name,
                     );
                   } else {
                     return TagChip(
-                      title: "+${widget.note.tags.length - 3}",
+                      title: "+${widget.note.actualTags.length - 3}",
                       showIcon: false,
                     );
                   }
@@ -91,8 +97,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
             ),
           ),
         ),
-        Container(
-          width: widget.width,
+        Padding(
           padding: widget.padding ??
               EdgeInsets.only(
                 left: 16 + context.theme.visualDensity.horizontal,
@@ -141,15 +146,6 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
   List<Widget> getIcons(
     BuildContext context,
   ) {
-    final Map<String, IconData> iconData = {
-      'visible': Icons.visibility_off_outlined,
-      'locked': Icons.lock_outlined,
-      'hasBiometrics': Icons.fingerprint,
-      'hasReminders': Icons.alarm_outlined,
-      'starred': Icons.favorite_border,
-      'pinned': Icons.push_pin_outlined,
-    };
-
     final List<String> icons = [];
 
     if (widget.note.hideContent) icons.add('visible');

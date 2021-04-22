@@ -73,7 +73,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       _elevation = 2;
     }
 
-    final List<Widget> content = getItems(context);
+    final List<Widget> items = getItems(context);
     final bool showCheckbox =
         (_hovered || widget.selected || widget.selectorOpen) &&
             widget.allowSelection;
@@ -127,7 +127,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     ),
                   ),
                   Visibility(
-                    visible: content.isNotEmpty,
+                    visible: items.isNotEmpty,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 16 + context.theme.visualDensity.horizontal,
@@ -137,26 +137,19 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                         separator: SizedBox(
                           height: 4 + context.theme.visualDensity.vertical,
                         ),
-                        children: content,
+                        children: items,
                       ),
                     ),
                   ),
-                  LayoutBuilder(
-                    builder: (context, constraints) => SizedBox(
-                      width: constraints.maxWidth,
-                      child: NoteViewStatusbar(
-                        note: widget.note,
-                        width: constraints.maxWidth,
-                        padding: content.isEmpty
-                            ? EdgeInsets.symmetric(
-                                horizontal:
-                                    16 + context.theme.visualDensity.horizontal,
-                                vertical:
-                                    16 + context.theme.visualDensity.vertical,
-                              )
-                            : null,
-                      ),
-                    ),
+                  NoteViewStatusbar(
+                    note: widget.note,
+                    padding: items.isEmpty
+                        ? EdgeInsets.symmetric(
+                            horizontal:
+                                16 + context.theme.visualDensity.horizontal,
+                            vertical: 16 + context.theme.visualDensity.vertical,
+                          )
+                        : null,
                   ),
                 ],
               ),
@@ -256,9 +249,13 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         widget.note.listContent.isNotEmpty &&
         !widget.note.hideContent) {
       items.add(
-        SeparatedList(
-          separator: const SizedBox(height: 4),
-          children: listContentWidgets,
+        Padding(
+          padding:
+              EdgeInsets.only(top: 16 + context.theme.visualDensity.vertical),
+          child: SeparatedList(
+            separator: const SizedBox(height: 8),
+            children: listContentWidgets,
+          ),
         ),
       );
     }
@@ -303,7 +300,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   IgnorePointer(
                     ignoring: !isMouseConnected || widget.selectorOpen,
                     child: SizedBox.fromSize(
-                      size: const Size.square(24),
+                      size: const Size.square(20),
                       child: Center(
                         child: icon,
                       ),
