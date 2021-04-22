@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/backup_restore.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,6 +19,8 @@ class BackupPage extends StatefulWidget {
 class _BackupPageState extends State<BackupPage> {
   final List<Note> notes = [];
   String name = "";
+  String password = "";
+  bool useMasterPass = false;
 
   @override
   void initState() {
@@ -56,60 +59,101 @@ class _BackupPageState extends State<BackupPage> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: "Backup name (optional)",
-                  ),
-                  maxLength: 64,
-                  onChanged: (value) {
-                    name = value;
-                  },
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        hintStyle: TextStyle(
+                          color: context.theme.hintColor
+                              .withOpacity(useMasterPass ? 0.2 : 0.6),
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: context.theme.textTheme.bodyText2!.color!
+                            .withOpacity(useMasterPass ? 0.4 : 1.0),
+                      ),
+                      maxLength: 64,
+                      onChanged: (value) {
+                        password = value;
+                        setState(() {});
+                      },
+                      enabled: !useMasterPass,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: "Name (optional)",
+                      ),
+                      maxLength: 64,
+                      onChanged: (value) {
+                        name = value;
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            "Notes to be included in backup: ${notes.length}",
-            style: TextStyle(
-              color: context.theme.iconTheme.color,
-            ),
-          ),
+        CheckboxListTile(
+          value: useMasterPass,
+          title: const Text("Use master pass as password"),
+          secondary: const Icon(Icons.vpn_key_outlined),
+          onChanged: prefs.masterPass != ""
+              ? (value) => setState(() => useMasterPass = value!)
+              : null,
+          subtitle: prefs.masterPass == ""
+              ? Text(
+                  LocaleStrings.notePage.privacyLockNoteMissingPass,
+                  style: const TextStyle(color: Colors.red),
+                )
+              : null,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Row(
             children: [
+              Text(
+                "Notes to be included in backup: ${notes.length}",
+                style: TextStyle(
+                  color: context.theme.iconTheme.color,
+                ),
+              ),
               const Spacer(),
               TextButton(
-                onPressed: () async {
-                  final bool promptForPassword = notes.any((n) => n.lockNote);
-                  final bool promptForBiometrics = notes.any((n) => n.lockNote);
-                  bool status = true;
-                  if (promptForPassword) {
-                    status = await Utils.showNoteLockDialog(
-                      context: context,
-                      showLock: promptForPassword,
-                      showBiometrics: promptForBiometrics,
-                      description:
-                          "Some notes are locked, require password. Note: backup won't be locked.",
-                    );
-                  }
-                  if (status) {
-                    Navigator.pop(context);
-                    Utils.showNotesModalBottomSheet(
-                      context: context,
-                      builder: (context) => _BackupProgressPage(
-                        notes: notes,
-                        name: name.trim() != "" ? name : null,
-                      ),
-                      enableDismiss: false,
-                    );
-                  }
-                },
+                onPressed: password.length >= 4 || useMasterPass
+                    ? () async {
+                        final bool promptForPassword =
+                            notes.any((n) => n.lockNote);
+                        final bool promptForBiometrics =
+                            notes.any((n) => n.lockNote);
+                        bool status = true;
+                        if (promptForPassword) {
+                          status = await Utils.showNoteLockDialog(
+                            context: context,
+                            showLock: promptForPassword,
+                            showBiometrics: promptForBiometrics,
+                            description: useMasterPass
+                                ? null
+                                : "Some notes are locked, require password to proceed.",
+                          );
+                        }
+                        if (status) {
+                          Navigator.pop(context);
+                          Utils.showNotesModalBottomSheet(
+                            context: context,
+                            builder: (context) => _BackupProgressPage(
+                              notes: notes,
+                              password:
+                                  useMasterPass ? prefs.masterPass : password,
+                              name: name.trim() != "" ? name : null,
+                            ),
+                            enableDismiss: false,
+                          );
+                        }
+                      }
+                    : null,
                 child: Text("Create".toUpperCase()),
               ),
             ],
@@ -122,10 +166,12 @@ class _BackupPageState extends State<BackupPage> {
 
 class _BackupProgressPage extends StatefulWidget {
   final List<Note> notes;
+  final String password;
   final String? name;
 
   const _BackupProgressPage({
     required this.notes,
+    required this.password,
     this.name,
   });
 
@@ -145,6 +191,7 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
   Future<void> _startBackup() async {
     final File backup = await BackupRestore.createBackup(
       notes: widget.notes,
+      password: widget.password,
       name: widget.name,
       onProgress: (value) => setState(() => currentNote = value),
     );

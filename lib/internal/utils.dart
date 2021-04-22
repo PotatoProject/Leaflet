@@ -29,6 +29,7 @@ import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
+import 'package:potato_notes/widget/backup_password_prompt.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
@@ -46,6 +47,17 @@ const EdgeInsets kCardPadding = EdgeInsets.all(4);
 
 class Utils {
   Utils._();
+
+  static final OverlayEntry _loadingOverlayEntry = OverlayEntry(
+    builder: (context) => const SizedBox.expand(
+      child: ColoredBox(
+        color: Colors.black54,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    ),
+  );
 
   static void deleteNoteSafely(Note note) {
     imageHelper.handleNoteDeletion(note);
@@ -117,6 +129,19 @@ class Utils {
     return true;
   }
 
+  static Future<String?> showBackupPasswordPrompt({
+    required BuildContext context,
+    bool confirmationMode = true,
+  }) async {
+    final String? password = await Utils.showNotesModalBottomSheet(
+      context: context,
+      builder: (context) =>
+          BackupPasswordPrompt(confirmationMode: confirmationMode),
+    );
+
+    return password;
+  }
+
   static Future<T?> showNotesModalBottomSheet<T extends Object?>({
     required BuildContext context,
     required WidgetBuilder builder,
@@ -140,6 +165,11 @@ class Utils {
       ),
     );
   }
+
+  static void showLoadingOverlay(BuildContext context) =>
+      context.overlay!.insert(_loadingOverlayEntry);
+  static void hideLoadingOverlay(BuildContext context) =>
+      _loadingOverlayEntry.remove();
 
   static String generateId() {
     return const Uuid().v4();
@@ -209,7 +239,6 @@ class Utils {
             title: "Save locally",
             icon: Icons.save_alt_outlined,
             value: 'export',
-            oneNoteOnly: true,
           ),
           /* SelectionOptionEntry(
             icon: Icons.share_outlined,
@@ -366,11 +395,34 @@ class Utils {
           context: context,
           showLock: notes.any((n) => n.lockNote && !n.isEmpty),
           showBiometrics: notes.any((n) => n.usesBiometrics),
-          description: "Note: The exported note won't be locked.",
+          description: notes.length > 1
+              ? "Some notes are locked, master pass is required."
+              : "The note is locked, master pass is required.",
         );
+        final int noteCount = notes.length;
 
         if (unlocked) {
-          BackupRestore.saveNote(notes.first);
+          final String? password = await showBackupPasswordPrompt(
+            context: context,
+            confirmationMode: false,
+          );
+          if (password != null) {
+            Utils.showLoadingOverlay(context);
+            for (final Note note in notes) {
+              await BackupRestore.saveNote(note, password);
+            }
+            Utils.hideLoadingOverlay(context);
+            context.basePage?.hideCurrentSnackBar();
+            context.basePage?.showSnackBar(
+              SnackBar(
+                content: Text("Exported $noteCount notes."),
+                behavior: SnackBarBehavior.floating,
+                width: min(640, context.mSize.width - 32),
+              ),
+            );
+          }
+
+          state.closeSelection();
         }
         break;
       case 'share':
@@ -758,15 +810,19 @@ class Utils {
     final List<String>? pickedFiles = await Utils.pickFiles(
       allowedExtensions: ["note"],
     );
+    final String? password = await showBackupPasswordPrompt(context: context);
+    if (password == null) return;
 
     if (pickedFiles != null && pickedFiles.isNotEmpty) {
       int restoredFiles = 0;
+      Utils.showLoadingOverlay(context);
       for (final String file in pickedFiles) {
         if (p.extension(file) != ".note") continue;
 
-        await BackupRestore.restoreNote(file);
+        await BackupRestore.restoreNote(file, password);
         restoredFiles++;
       }
+      Utils.hideLoadingOverlay(context);
 
       context.scaffoldMessenger.removeCurrentSnackBar();
       context.scaffoldMessenger.showSnackBar(
@@ -1140,6 +1196,8 @@ extension ContextProviders on BuildContext {
   FocusScopeNode get focusScope => FocusScope.of(this);
 
   DismissibleRouteState? get dismissibleRoute => DismissibleRoute.maybeOf(this);
+
+  OverlayState? get overlay => Overlay.of(this);
 }
 
 class SuspendedCurve extends Curve {

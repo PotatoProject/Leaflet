@@ -7,6 +7,7 @@ import 'package:archive/archive_io.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -20,13 +21,34 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class BackupRestore {
-  static Future<void> saveNote(Note note) async {
+  static Future<void> saveNote(Note note, String password) async {
+    final Map<String, dynamic> payload = {
+      'note': note.toJson(serializer: const _TypeAwareValueSerializer()),
+      'password': password,
+      'buildNumber': appInfo.packageInfo.buildNumberInt,
+    };
+
+    await compute(_rawSaveNote, json.encode(payload));
+  }
+
+  static Future<void> _rawSaveNote(String payload) async {
+    final Map<String, dynamic> data =
+        json.decode(payload) as Map<String, dynamic>;
+
+    final Note note = Note.fromJson(
+      data['note']! as Map<String, dynamic>,
+      serializer: const _TypeAwareValueSerializer(),
+    );
+    final String password = data['password']! as String;
+    final int buildNumber = data['buildNumber']! as int;
+
     final Directory baseDir = await getTemporaryDirectory();
     final Directory noteDir =
         Directory(p.join(baseDir.path, "${note.id}-export"));
     await _createNoteFolderStructure(
       note: note,
       baseDir: noteDir,
+      buildNumber: buildNumber,
     );
 
     final Directory docsDir = await getApplicationDocumentsDirectory();
@@ -41,13 +63,14 @@ class BackupRestore {
       ..addDirectory(noteDir, includeDirName: false);
     final List<int> fileBytes = encoder.close();
     File(p.join(outDir.path, "note-$formattedDate.note"))
-        .writeAsBytes(await _encryptBytes(fileBytes, ""));
+        .writeAsBytes(await _encryptBytes(fileBytes, password));
 
     await noteDir.delete(recursive: true);
   }
 
   static Future<File> createBackup({
     required List<Note> notes,
+    required String password,
     String? name,
     ValueChanged<int>? onProgress,
   }) async {
@@ -68,6 +91,7 @@ class BackupRestore {
       await _createNoteFolderStructure(
         note: note,
         baseDir: noteDir,
+        buildNumber: appInfo.packageInfo.buildNumberInt,
       );
       onProgress?.call(i + 1);
     }
@@ -93,7 +117,7 @@ class BackupRestore {
       ..close();
     final List<int> fileBytes = encoder.close();
     File(p.join(outDir.path, "backup-$_name.backup"))
-        .writeAsBytes(await _encryptBytes(fileBytes, ""));
+        .writeAsBytes(await _encryptBytes(fileBytes, password));
 
     await baseDir.delete(recursive: true);
 
@@ -103,6 +127,7 @@ class BackupRestore {
   static Future<void> _createNoteFolderStructure({
     required Note note,
     required Directory baseDir,
+    required int buildNumber,
   }) async {
     await baseDir.create();
     final DateTime now = DateTime.now();
@@ -110,7 +135,7 @@ class BackupRestore {
     final Map<String, dynamic> noteData = {};
     noteData["note"] = note.toJson();
     noteData["creation_date"] = now.millisecondsSinceEpoch;
-    noteData["app_version"] = appInfo.packageInfo.buildNumberInt;
+    noteData["app_version"] = buildNumber;
 
     await noteDataFile.writeAsString(
       const JsonEncoder.withIndent('    ').convert(noteData),
@@ -128,12 +153,35 @@ class BackupRestore {
     }
   }
 
-  static Future<Note?> restoreNote(String path) async {
+  static Future<Note?> restoreNote(String path, String password) async {
+    final Map<String, dynamic> payload = {
+      'path': path,
+      'password': password,
+    };
+
+    final String rawNote = await compute(_rawRestoreNote, json.encode(payload));
+    if (rawNote != "null") {
+      final Note note = Note.fromJson(
+        json.decode(rawNote) as Map<String, dynamic>,
+        serializer: const _TypeAwareValueSerializer(),
+      );
+      await helper.saveNote(note);
+    }
+  }
+
+  static Future<String> _rawRestoreNote(String payload) async {
+    final Map<String, dynamic> data =
+        json.decode(payload) as Map<String, dynamic>;
+
+    final String path = data['path']! as String;
+    final String password = data['password']! as String;
+
     final Directory imagesDir = await getTemporaryDirectory();
     final File zipFile = File(path);
     final List<int> fileBytes = await zipFile.readAsBytes();
-    final List<ArchiveFile> files =
-        ZipDecoder().decodeBytes(await _decryptBytes(fileBytes, "")).files;
+    final List<ArchiveFile> files = ZipDecoder()
+        .decodeBytes(await _decryptBytes(fileBytes, password))
+        .files;
     Note? returnNote;
 
     for (final ArchiveFile file in files) {
@@ -148,7 +196,6 @@ class BackupRestore {
             noteJson,
             serializer: const _TypeAwareValueSerializer(),
           );
-          helper.saveNote(note);
           returnNote = note;
         } else if (file.name.startsWith("images/")) {
           final File image = File(
@@ -161,12 +208,16 @@ class BackupRestore {
         }
       }
     }
-    return returnNote;
+
+    return returnNote?.toJsonString(
+          serializer: const _TypeAwareValueSerializer(),
+        ) ??
+        "null";
   }
 
   static Future<List<int>> _encryptBytes(
       List<int> origin, String password) async {
-    final keySalt = generateNonce();
+    final keySalt = _generateNonce();
     final key = await _deriveKey(password, keySalt);
 
     final aes = AesGcm.with256bits();
@@ -202,7 +253,7 @@ class BackupRestore {
     return plaintext;
   }
 
-  static List<int> generateNonce([int length = 16]) => List.generate(
+  static List<int> _generateNonce([int length = 16]) => List.generate(
         length,
         (index) => Random.secure().nextInt(255),
       );

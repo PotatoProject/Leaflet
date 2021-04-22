@@ -142,6 +142,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                   SettingsTile(
+                    icon: const Icon(Icons.timer),
+                    title: const Text("Test loading overlay"),
+                    onTap: () {
+                      Utils.showLoadingOverlay(context);
+                      Future.delayed(
+                        const Duration(milliseconds: 5000),
+                        () async => Utils.hideLoadingOverlay(context),
+                      );
+                    },
+                  ),
+                  SettingsTile(
                     icon: const Icon(MdiIcons.databaseRemoveOutline),
                     title: Text(LocaleStrings.settings.debugClearDatabase),
                     onTap: () async {
@@ -173,14 +184,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                           starred: r.nextBool(),
-                          //archived: r.nextBool(),
                           color: r.nextInt(10),
                           images: List.generate(
                             2,
                             (index) => SavedImage.fromJson(
                               json.decode(
-                                      '{"id": "fe4fbad3-8f4e-4bbd-95ca-b3ed12490ba8","storageLocation": "local","hash": null,"blurHash": null,"fileExtension": ".png","encrypted": false,"width": 708.0,"height": 491.0,"uploaded": false}')
-                                  as Map<String, dynamic>,
+                                '{"id": "fe4fbad3-8f4e-4bbd-95ca-b3ed12490ba8","storageLocation": "local","hash": null,"blurHash": null,"fileExtension": ".png","encrypted": false,"width": 708.0,"height": 491.0,"uploaded": false}',
+                              ) as Map<String, dynamic>,
                             ),
                           ),
                         );
