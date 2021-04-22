@@ -208,11 +208,10 @@ class BackupRestore {
       );
 
   static Future<SecretKey> _deriveKey(String password, List<int> nonce) async {
-    final kdf = Argon2id(
-      parallelism: 3,
-      memorySize: 1000 * 1000 * 10, // 10 mb
-      iterations: 4,
-      hashLength: 32,
+    final kdf = Pbkdf2(
+      bits: 128,
+      iterations: 100000,
+      macAlgorithm: Hmac.sha512(),
     );
     final key = await kdf.deriveKey(
       secretKey: SecretKey(password.codeUnits),
