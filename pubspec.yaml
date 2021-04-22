@@ -1,6 +1,6 @@
 name: potato_notes
 description: Official POSP notes app
-publish_to: 'none'
+publish_to: "none"
 version: 2.0.0-beta1+16
 
 environment:
@@ -15,6 +15,7 @@ dependencies:
   blurhash_dart: ^1.0.2
 
   collection: ^1.15.0
+  cryptography: ^2.0.1
 
   dio: ^4.0.0
 

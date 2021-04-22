@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:archive/archive_io.dart';
+import 'package:cryptography/cryptography.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:moor/moor.dart';
@@ -126,12 +128,6 @@ class BackupRestore {
     }
   }
 
-  static Future<List<int>> _encryptBytes(
-      List<int> origin, String password) async {
-    /// This is a stub as of now, the actual implementation will be done later.
-    return origin;
-  }
-
   static Future<Note?> restoreNote(String path) async {
     final Directory imagesDir = await getTemporaryDirectory();
     final File zipFile = File(path);
@@ -168,10 +164,62 @@ class BackupRestore {
     return returnNote;
   }
 
+  static Future<List<int>> _encryptBytes(
+      List<int> origin, String password) async {
+    final keySalt = generateNonce();
+    final key = await _deriveKey(password, keySalt);
+
+    final aes = AesGcm.with256bits();
+    final ciphertext = await aes.encrypt(origin, secretKey: key);
+
+    return [
+      ...keySalt,
+      ...ciphertext.nonce,
+      ...ciphertext.mac.bytes,
+      ...ciphertext.cipherText,
+    ];
+  }
+
   static Future<List<int>> _decryptBytes(
       List<int> origin, String password) async {
-    /// This is a stub as of now, the actual implementation will be done later.
-    return origin;
+    final keySalt = origin.sublist(0, 16);
+    final aesNonce = origin.sublist(16, 28);
+    final macBytes = origin.sublist(28, 44);
+    final payload = origin.sublist(44);
+
+    final key = await _deriveKey(password, keySalt);
+
+    final aes = AesGcm.with256bits();
+    final plaintext = await aes.decrypt(
+      SecretBox(
+        payload,
+        nonce: aesNonce,
+        mac: Mac(macBytes),
+      ),
+      secretKey: key,
+    );
+
+    return plaintext;
+  }
+
+  static List<int> generateNonce([int length = 16]) => List.generate(
+        length,
+        (index) => Random.secure().nextInt(255),
+      );
+
+  static Future<SecretKey> _deriveKey(String password, List<int> nonce) async {
+    final kdf = Argon2id(
+      parallelism: 3,
+      memorySize: 1000 * 1000 * 10, // 10 mb
+      iterations: 4,
+      hashLength: 32,
+    );
+    final key = await kdf.deriveKey(
+      secretKey: SecretKey(password.codeUnits),
+      nonce: nonce,
+    );
+
+    return key;
   }
 }
 

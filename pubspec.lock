@@ -211,6 +211,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  cryptography:
+    dependency: "direct main"
+    description:
+      name: cryptography
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   dart_style:
     dependency: transitive
     description:
@@ -897,7 +904,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   sqflite:
     dependency: "direct main"
     description:
@@ -990,7 +997,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.2.19"
   timezone:
     dependency: transitive
     description:
