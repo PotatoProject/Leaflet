@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:cryptography/cryptography.dart';
@@ -215,6 +216,34 @@ class BackupRestore {
         "null";
   }
 
+  static List<int> _combineMetadata(String metadata, List<int> data) {
+    final metadataBytes = metadata.codeUnits;
+
+    final byteData = ByteData(2);
+    byteData.setInt16(0, metadataBytes.length, Endian.little);
+
+    return [
+      ...byteData.buffer.asUint8List(),
+      ...metadataBytes,
+      ...data,
+    ];
+  }
+
+  static _MetadataExtractionResult _extractMetadata(List<int> data) {
+    final header = data.sublist(0, 2);
+
+    final byteData = ByteData.sublistView(Uint8List.fromList(header));
+    final metadataLength = byteData.getInt16(0, Endian.little);
+
+    final metadataBytes = data.sublist(2, metadataLength + 2);
+    final payload = data.sublist(metadataLength + 2);
+
+    return _MetadataExtractionResult(
+      utf8.decode(metadataBytes),
+      payload,
+    );
+  }
+
   static Future<List<int>> _encryptBytes(
       List<int> origin, String password) async {
     final keySalt = _generateNonce();
@@ -271,6 +300,13 @@ class BackupRestore {
 
     return key;
   }
+}
+
+class _MetadataExtractionResult {
+  final String metadata;
+  final List<int> data;
+
+  const _MetadataExtractionResult(this.metadata, this.data);
 }
 
 class _TypeAwareValueSerializer extends ValueSerializer {
