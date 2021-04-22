@@ -34,10 +34,12 @@ class BackupRestore {
     ));
     final String formattedDate =
         DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
-    ZipFileEncoder()
-      ..create(p.join(outDir.path, "note-$formattedDate.note"))
-      ..addDirectory(noteDir, includeDirName: false)
-      ..close();
+    final ZipByteEncoder encoder = ZipByteEncoder()
+      ..create()
+      ..addDirectory(noteDir, includeDirName: false);
+    final List<int> fileBytes = encoder.close();
+    File(p.join(outDir.path, "note-$formattedDate.note"))
+        .writeAsBytes(await _encryptBytes(fileBytes, ""));
 
     await noteDir.delete(recursive: true);
   }
@@ -83,10 +85,13 @@ class BackupRestore {
       docsDir.path,
       "LeafletBackups",
     ));
-    ZipFileEncoder()
-      ..create(p.join(outDir.path, "backup-$_name.backup"))
+    final ZipByteEncoder encoder = ZipByteEncoder()
+      ..create()
       ..addDirectory(baseDir, includeDirName: false)
       ..close();
+    final List<int> fileBytes = encoder.close();
+    File(p.join(outDir.path, "backup-$_name.backup"))
+        .writeAsBytes(await _encryptBytes(fileBytes, ""));
 
     await baseDir.delete(recursive: true);
 
@@ -121,11 +126,18 @@ class BackupRestore {
     }
   }
 
+  static Future<List<int>> _encryptBytes(
+      List<int> origin, String password) async {
+    /// This is a stub as of now, the actual implementation will be done later.
+    return origin;
+  }
+
   static Future<Note?> restoreNote(String path) async {
     final Directory imagesDir = await getTemporaryDirectory();
     final File zipFile = File(path);
     final List<int> fileBytes = await zipFile.readAsBytes();
-    final List<ArchiveFile> files = ZipDecoder().decodeBytes(fileBytes).files;
+    final List<ArchiveFile> files =
+        ZipDecoder().decodeBytes(await _decryptBytes(fileBytes, "")).files;
     Note? returnNote;
 
     for (final ArchiveFile file in files) {
@@ -154,6 +166,12 @@ class BackupRestore {
       }
     }
     return returnNote;
+  }
+
+  static Future<List<int>> _decryptBytes(
+      List<int> origin, String password) async {
+    /// This is a stub as of now, the actual implementation will be done later.
+    return origin;
   }
 }
 
@@ -212,5 +230,66 @@ class _TypeAwareValueSerializer extends ValueSerializer {
     }
 
     return value;
+  }
+}
+
+class ZipByteEncoder {
+  late String zipPath;
+  late OutputStream _output;
+  late ZipEncoder _encoder;
+
+  static const int store = 0;
+  static const int gzip = 1;
+
+  void zipDirectory(Directory dir, {String? filename, int? level}) {
+    level ??= gzip;
+    create(level: level);
+    addDirectory(dir, includeDirName: false, level: level);
+    close();
+  }
+
+  void create({int? level}) {
+    _output = OutputStream();
+    _encoder = ZipEncoder();
+    _encoder.startEncode(_output, level: level);
+  }
+
+  void addDirectory(Directory dir, {bool includeDirName = true, int? level}) {
+    final List<FileSystemEntity> files = dir.listSync(recursive: true);
+    for (final FileSystemEntity file in files) {
+      if (file is! File) {
+        continue;
+      }
+
+      final f = file;
+      final dirName = p.basename(dir.path);
+      final relPath = p.relative(f.path, from: dir.path);
+      addFile(f, includeDirName ? ('$dirName/$relPath') : relPath, level);
+    }
+  }
+
+  void addFile(File file, [String? filename, int? level = gzip]) {
+    final InputFileStream fileStream = InputFileStream.file(file);
+    final ArchiveFile archiveFile = ArchiveFile.stream(
+        filename ?? p.basename(file.path), file.lengthSync(), fileStream);
+
+    if (level == store) {
+      archiveFile.compress = false;
+    }
+
+    archiveFile.lastModTime = file.lastModifiedSync().millisecondsSinceEpoch;
+    archiveFile.mode = file.statSync().mode;
+
+    _encoder.addFile(archiveFile);
+    fileStream.close();
+  }
+
+  void addArchiveFile(ArchiveFile file) {
+    _encoder.addFile(file);
+  }
+
+  List<int> close() {
+    _encoder.endEncode();
+    return _output.getBytes();
   }
 }
