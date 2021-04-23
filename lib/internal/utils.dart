@@ -402,7 +402,7 @@ class Utils {
         final int noteCount = notes.length;
 
         if (unlocked) {
-          final String? password = await showBackupPasswordPrompt(
+          final String? password = await Utils.showBackupPasswordPrompt(
             context: context,
             confirmationMode: false,
           );
@@ -810,7 +810,8 @@ class Utils {
     final List<String>? pickedFiles = await Utils.pickFiles(
       allowedExtensions: ["note"],
     );
-    final String? password = await showBackupPasswordPrompt(context: context);
+    final String? password =
+        await Utils.showBackupPasswordPrompt(context: context);
     if (password == null) return;
 
     if (pickedFiles != null && pickedFiles.isNotEmpty) {

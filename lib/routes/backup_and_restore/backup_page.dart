@@ -145,8 +145,9 @@ class _BackupPageState extends State<BackupPage> {
                             context: context,
                             builder: (context) => _BackupProgressPage(
                               notes: notes,
-                              password:
-                                  useMasterPass ? prefs.masterPass : password,
+                              password: useMasterPass
+                                  ? prefs.masterPass
+                                  : Utils.hashedPass(password),
                               name: name.trim() != "" ? name : null,
                             ),
                             enableDismiss: false,

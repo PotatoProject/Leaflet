@@ -61,7 +61,12 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
               ),
               enabled: !useMasterPass,
               onFieldSubmitted: controller.text.length >= 4
-                  ? (text) => Navigator.pop(context, text)
+                  ? (text) => Navigator.pop(
+                        context,
+                        useMasterPass
+                            ? prefs.masterPass
+                            : Utils.hashedPass(text),
+                      )
                   : null,
               maxLength: 64,
             ),

@@ -27,6 +27,7 @@ class BackupRestore {
       'note': note.toJson(serializer: const _TypeAwareValueSerializer()),
       'password': password,
       'buildNumber': appInfo.packageInfo.buildNumberInt,
+      'baseDir': appInfo.tempDirectory.path,
     };
 
     await compute(_rawSaveNote, json.encode(payload));
@@ -42,13 +43,13 @@ class BackupRestore {
     );
     final String password = data['password']! as String;
     final int buildNumber = data['buildNumber']! as int;
+    final String baseDir = data['baseDir']! as String;
 
-    final Directory baseDir = await getTemporaryDirectory();
-    final Directory noteDir =
-        Directory(p.join(baseDir.path, "${note.id}-export"));
+    final Directory noteDir = Directory(p.join(baseDir, "${note.id}-export"));
     await _createNoteFolderStructure(
       note: note,
       baseDir: noteDir,
+      tempDir: baseDir,
     );
 
     final Directory docsDir = await getApplicationDocumentsDirectory();
@@ -83,7 +84,7 @@ class BackupRestore {
     String? name,
     ValueChanged<int>? onProgress,
   }) async {
-    final Directory tempDir = await getTemporaryDirectory();
+    final Directory tempDir = appInfo.tempDirectory;
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat("dd_MM_yyyy-HH_mm_ss").format(now);
     final Directory baseDir =
@@ -99,6 +100,7 @@ class BackupRestore {
       await _createNoteFolderStructure(
         note: note,
         baseDir: noteDir,
+        tempDir: tempDir.path,
       );
       onProgress?.call(i + 1);
     }
@@ -135,6 +137,7 @@ class BackupRestore {
   static Future<void> _createNoteFolderStructure({
     required Note note,
     required Directory baseDir,
+    required String tempDir,
   }) async {
     await baseDir.create();
     final File noteDataFile = File(p.join(baseDir.path, "note.data"));
@@ -148,7 +151,7 @@ class BackupRestore {
           Directory(p.join(baseDir.path, "images"));
       await imagesDirectory.create();
       for (final SavedImage image in note.images) {
-        await File(image.path).copy(
+        await File(p.join(tempDir, "${image.id}${image.fileExtension}")).copy(
           p.join(imagesDirectory.path, "${image.id}${image.fileExtension}"),
         );
       }
@@ -159,15 +162,11 @@ class BackupRestore {
     final Map<String, dynamic> payload = {
       'path': path,
       'password': password,
+      'baseDir': appInfo.tempDirectory.path,
     };
 
     late final String rawNote;
-    try {
-      rawNote = await compute(_rawRestoreNote, json.encode(payload));
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    rawNote = await compute(_rawRestoreNote, json.encode(payload));
 
     if (rawNote != "null") {
       final Note note = Note.fromJson(
@@ -184,8 +183,8 @@ class BackupRestore {
 
     final String path = data['path']! as String;
     final String password = data['password']! as String;
+    final String baseDir = data['baseDir']! as String;
 
-    final Directory imagesDir = await getTemporaryDirectory();
     final File zipFile = File(path);
     final List<int> fileBytes = await zipFile.readAsBytes();
     final _MetadataExtractionResult extractionResult =
@@ -203,7 +202,7 @@ class BackupRestore {
           final Map<String, dynamic> decodedContent =
               Utils.asMap<String, dynamic>(json.decode(content));
           final Map<String, dynamic> noteJson =
-              Utils.asMap<String, dynamic>(decodedContent["note"]);
+              Utils.asMap<String, dynamic>(decodedContent);
           final Note note = Note.fromJson(
             noteJson,
             serializer: const _TypeAwareValueSerializer(),
@@ -212,7 +211,7 @@ class BackupRestore {
         } else if (file.name.startsWith("images/")) {
           final File image = File(
             p.join(
-              imagesDir.path,
+              baseDir,
               file.name.replaceAll("images/", ""),
             ),
           );
