@@ -9,6 +9,8 @@ import 'package:potato_notes/internal/backup_restore.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BackupPage extends StatefulWidget {
@@ -190,17 +192,20 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
   }
 
   Future<void> _startBackup() async {
-    final File backup = await BackupRestore.createBackup(
+    final String backup = await BackupRestore.createBackup(
       notes: widget.notes,
       password: widget.password,
       name: widget.name,
       onProgress: (value) => setState(() => currentNote = value),
     );
-    Navigator.pop(context);
+    if (UniversalPlatform.isIOS) {
+      Share.shareFiles([backup]);
+      return;
+    }
     Utils.showNotesModalBottomSheet(
       context: context,
       builder: (context) => _BackupCompletePage(
-        backupFile: backup,
+        backupFile: File(backup),
       ),
       enableDismiss: false,
     );
@@ -274,7 +279,9 @@ class _BackupCompletePage extends StatelessWidget {
                     decoration: TextDecoration.underline,
                   ),
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () => launch(backupFile.parent.path),
+                    ..onTap = () {
+                      launch("file://" + backupFile.parent.path + '/');
+                    },
                 ),
               ],
             ),

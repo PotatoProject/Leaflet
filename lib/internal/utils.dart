@@ -810,30 +810,30 @@ class Utils {
     final List<String>? pickedFiles = await Utils.pickFiles(
       allowedExtensions: ["note"],
     );
+    if (pickedFiles == null || pickedFiles.isEmpty) return;
+
     final String? password =
         await Utils.showBackupPasswordPrompt(context: context);
     if (password == null) return;
 
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
-      int restoredFiles = 0;
-      Utils.showLoadingOverlay(context);
-      for (final String file in pickedFiles) {
-        if (p.extension(file) != ".note") continue;
+    int restoredFiles = 0;
+    Utils.showLoadingOverlay(context);
+    for (final String file in pickedFiles) {
+      if (p.extension(file) != ".note") continue;
 
-        await BackupRestore.restoreNote(file, password);
-        restoredFiles++;
-      }
-      Utils.hideLoadingOverlay(context);
-
-      context.scaffoldMessenger.removeCurrentSnackBar();
-      context.scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text("$restoredFiles notes were restored."),
-          behavior: SnackBarBehavior.floating,
-          width: min(640, context.mSize.width - 32),
-        ),
-      );
+      final bool restored = await BackupRestore.restoreNote(file, password);
+      if (restored) restoredFiles++;
     }
+    Utils.hideLoadingOverlay(context);
+
+    context.scaffoldMessenger.removeCurrentSnackBar();
+    context.scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text("$restoredFiles notes were restored."),
+        behavior: SnackBarBehavior.floating,
+        width: min(640, context.mSize.width - 32),
+      ),
+    );
   }
 
   static Future<File?> pickImage() async {

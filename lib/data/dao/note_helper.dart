@@ -118,6 +118,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
     return into(notes).insert(note, mode: InsertMode.replace);
   }
 
+  Future<bool> noteExists(Note note) async {
+    final SimpleSelectStatement<$NotesTable, Note> selectQuery = select(notes)
+      ..whereSamePrimaryKey(note);
+    final Note? match = await selectQuery.getSingleOrNull();
+    return match != null;
+  }
+
   Future<void> deleteNote(Note note) {
     logger.d("The note id to delete: ${note.id}");
     return delete(notes).delete(note);
