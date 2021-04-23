@@ -49,7 +49,6 @@ class BackupRestore {
     await _createNoteFolderStructure(
       note: note,
       baseDir: noteDir,
-      buildNumber: buildNumber,
     );
 
     final Directory docsDir = await getApplicationDocumentsDirectory();
@@ -63,8 +62,17 @@ class BackupRestore {
       ..create()
       ..addDirectory(noteDir, includeDirName: false);
     final List<int> fileBytes = encoder.close();
-    File(p.join(outDir.path, "note-$formattedDate.note"))
-        .writeAsBytes(await _encryptBytes(fileBytes, password));
+    final _NoteMetadata metadata = _NoteMetadata(
+      createdAt: DateTime.now(),
+      appVersion: buildNumber,
+      noteCount: 1,
+    );
+    File(p.join(outDir.path, "note-$formattedDate.note")).writeAsBytes(
+      _combineMetadata(
+        metadata,
+        await _encryptBytes(fileBytes, password),
+      ),
+    );
 
     await noteDir.delete(recursive: true);
   }
@@ -82,7 +90,6 @@ class BackupRestore {
         Directory(p.join(tempDir.path, "$formattedDate-backup"));
     await baseDir.create();
 
-    final Map<String, dynamic> metadata = {};
     final List<String> noteIds = [];
     for (int i = 0; i < notes.length; i++) {
       final Note note = notes[i];
@@ -92,19 +99,15 @@ class BackupRestore {
       await _createNoteFolderStructure(
         note: note,
         baseDir: noteDir,
-        buildNumber: appInfo.packageInfo.buildNumberInt,
       );
       onProgress?.call(i + 1);
     }
     final String _name = name ?? formattedDate;
-    metadata["name"] = _name;
-    metadata["notes"] = noteIds;
-    metadata["note_count"] = notes.length;
-    metadata["creation_date"] = now.millisecondsSinceEpoch;
-    metadata["app_version"] = appInfo.packageInfo.buildNumberInt;
-    final File metadataFile = File(p.join(baseDir.path, "meta.data"));
-    await metadataFile.writeAsString(
-      const JsonEncoder.withIndent('    ').convert(metadata),
+    final _NoteMetadata metadata = _NoteMetadata(
+      noteCount: notes.length,
+      name: _name,
+      createdAt: now,
+      appVersion: appInfo.packageInfo.buildNumberInt,
     );
 
     final Directory docsDir = await getApplicationDocumentsDirectory();
@@ -117,8 +120,12 @@ class BackupRestore {
       ..addDirectory(baseDir, includeDirName: false)
       ..close();
     final List<int> fileBytes = encoder.close();
-    File(p.join(outDir.path, "backup-$_name.backup"))
-        .writeAsBytes(await _encryptBytes(fileBytes, password));
+    File(p.join(outDir.path, "backup-$_name.backup")).writeAsBytes(
+      _combineMetadata(
+        metadata,
+        await _encryptBytes(fileBytes, password),
+      ),
+    );
 
     await baseDir.delete(recursive: true);
 
@@ -128,18 +135,12 @@ class BackupRestore {
   static Future<void> _createNoteFolderStructure({
     required Note note,
     required Directory baseDir,
-    required int buildNumber,
   }) async {
     await baseDir.create();
-    final DateTime now = DateTime.now();
     final File noteDataFile = File(p.join(baseDir.path, "note.data"));
-    final Map<String, dynamic> noteData = {};
-    noteData["note"] = note.toJson();
-    noteData["creation_date"] = now.millisecondsSinceEpoch;
-    noteData["app_version"] = buildNumber;
 
     await noteDataFile.writeAsString(
-      const JsonEncoder.withIndent('    ').convert(noteData),
+      const JsonEncoder.withIndent('    ').convert(note.toJson()),
     );
 
     if (note.images.isNotEmpty) {
@@ -160,7 +161,14 @@ class BackupRestore {
       'password': password,
     };
 
-    final String rawNote = await compute(_rawRestoreNote, json.encode(payload));
+    late final String rawNote;
+    try {
+      rawNote = await compute(_rawRestoreNote, json.encode(payload));
+    } catch (e) {
+      print(e);
+      return null;
+    }
+
     if (rawNote != "null") {
       final Note note = Note.fromJson(
         json.decode(rawNote) as Map<String, dynamic>,
@@ -180,9 +188,12 @@ class BackupRestore {
     final Directory imagesDir = await getTemporaryDirectory();
     final File zipFile = File(path);
     final List<int> fileBytes = await zipFile.readAsBytes();
-    final List<ArchiveFile> files = ZipDecoder()
-        .decodeBytes(await _decryptBytes(fileBytes, password))
-        .files;
+    final _MetadataExtractionResult extractionResult =
+        _extractMetadata(fileBytes);
+    final List<int> decryptedBytes =
+        await _decryptBytes(extractionResult.data, password);
+    final List<ArchiveFile> files =
+        ZipDecoder().decodeBytes(decryptedBytes).files;
     Note? returnNote;
 
     for (final ArchiveFile file in files) {
@@ -216,10 +227,10 @@ class BackupRestore {
         "null";
   }
 
-  static List<int> _combineMetadata(String metadata, List<int> data) {
-    final metadataBytes = metadata.codeUnits;
+  static List<int> _combineMetadata(_NoteMetadata metadata, List<int> data) {
+    final List<int> metadataBytes = metadata.toJsonString().codeUnits;
 
-    final byteData = ByteData(2);
+    final ByteData byteData = ByteData(2);
     byteData.setInt16(0, metadataBytes.length, Endian.little);
 
     return [
@@ -230,16 +241,16 @@ class BackupRestore {
   }
 
   static _MetadataExtractionResult _extractMetadata(List<int> data) {
-    final header = data.sublist(0, 2);
+    final List<int> header = data.sublist(0, 2);
 
-    final byteData = ByteData.sublistView(Uint8List.fromList(header));
-    final metadataLength = byteData.getInt16(0, Endian.little);
+    final ByteData byteData = ByteData.sublistView(Uint8List.fromList(header));
+    final int metadataLength = byteData.getInt16(0, Endian.little);
 
-    final metadataBytes = data.sublist(2, metadataLength + 2);
-    final payload = data.sublist(metadataLength + 2);
+    final List<int> metadataBytes = data.sublist(2, metadataLength + 2);
+    final List<int> payload = data.sublist(metadataLength + 2);
 
     return _MetadataExtractionResult(
-      utf8.decode(metadataBytes),
+      _NoteMetadata.fromJsonString(utf8.decode(metadataBytes)),
       payload,
     );
   }
@@ -303,10 +314,63 @@ class BackupRestore {
 }
 
 class _MetadataExtractionResult {
-  final String metadata;
+  final _NoteMetadata metadata;
   final List<int> data;
 
   const _MetadataExtractionResult(this.metadata, this.data);
+
+  @override
+  String toString() {
+    return metadata.toJsonString();
+  }
+}
+
+class _NoteMetadata {
+  final String? name;
+  final DateTime createdAt;
+  final int noteCount;
+  final int appVersion;
+
+  _NoteMetadata({
+    required this.createdAt,
+    required this.appVersion,
+    required this.noteCount,
+    this.name,
+  });
+
+  factory _NoteMetadata.fromJson(Map<String, dynamic> json) {
+    final String? name = json['name'] as String?;
+    final int? noteCount = json['noteCount'] as int?;
+    final int? createdAt = json['createdAt'] as int?;
+    final int? appVersion = json['appVersion'] as int?;
+
+    if (createdAt == null || appVersion == null || noteCount == null) {
+      throw ArgumentError.notNull();
+    }
+
+    return _NoteMetadata(
+      name: name,
+      noteCount: noteCount,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(createdAt),
+      appVersion: appVersion,
+    );
+  }
+
+  factory _NoteMetadata.fromJsonString(String jsonString) {
+    return _NoteMetadata.fromJson(
+        json.decode(jsonString) as Map<String, dynamic>);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'noteCount': noteCount,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'appVersion': appVersion,
+    };
+  }
+
+  String toJsonString() => json.encode(toJson());
 }
 
 class _TypeAwareValueSerializer extends ValueSerializer {
