@@ -399,7 +399,6 @@ class Utils {
               ? "Some notes are locked, master pass is required."
               : "The note is locked, master pass is required.",
         );
-        final int noteCount = notes.length;
 
         if (unlocked) {
           final String? password = await Utils.showBackupPasswordPrompt(
@@ -408,14 +407,15 @@ class Utils {
           );
           if (password != null) {
             Utils.showLoadingOverlay(context);
-            for (final Note note in notes) {
-              await BackupRestore.saveNote(note, password);
-            }
+            final bool exported =
+                await BackupRestore.saveNote(notes.first, password);
             Utils.hideLoadingOverlay(context);
             context.basePage?.hideCurrentSnackBar();
             context.basePage?.showSnackBar(
               SnackBar(
-                content: Text("Exported $noteCount notes."),
+                content: Text(exported
+                    ? "Note successfully exported."
+                    : "Something went wrong while exporting."),
                 behavior: SnackBarBehavior.floating,
                 width: min(640, context.mSize.width - 32),
               ),
@@ -807,29 +807,25 @@ class Utils {
   }
 
   static Future<void> importNotes(BuildContext context) async {
-    final List<String>? pickedFiles = await Utils.pickFiles(
+    final String? pickedFile = await Utils.pickFile(
       allowedExtensions: ["note"],
     );
-    if (pickedFiles == null || pickedFiles.isEmpty) return;
+    if (pickedFile == null || p.extension(pickedFile) != ".note") return;
 
     final String? password =
         await Utils.showBackupPasswordPrompt(context: context);
     if (password == null) return;
 
-    int restoredFiles = 0;
     Utils.showLoadingOverlay(context);
-    for (final String file in pickedFiles) {
-      if (p.extension(file) != ".note") continue;
-
-      final bool restored = await BackupRestore.restoreNote(file, password);
-      if (restored) restoredFiles++;
-    }
+    final bool restored = await BackupRestore.restoreNote(pickedFile, password);
     Utils.hideLoadingOverlay(context);
 
     context.scaffoldMessenger.removeCurrentSnackBar();
     context.scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text("$restoredFiles notes were restored."),
+        content: Text(restored
+            ? "The note was successfuly restored."
+            : "There was an issue while importing the note."),
         behavior: SnackBarBehavior.floating,
         width: min(640, context.mSize.width - 32),
       ),
@@ -891,7 +887,7 @@ class Utils {
               ),
             ],
           )
-        : (await FilePicker.platform.pickFiles())?.files;
+        : (await FilePicker.platform.pickFiles(allowMultiple: true))?.files;
 
     if (asyncFiles == null) return null;
 

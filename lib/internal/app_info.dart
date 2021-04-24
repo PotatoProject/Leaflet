@@ -26,6 +26,8 @@ class AppInfo extends _AppInfoBase with _$AppInfo {
 abstract class _AppInfoBase with Store {
   static const EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
+  static const MethodChannel backupPromptChannel =
+      MethodChannel('potato_notes_backup_prompt');
 
   _AppInfoBase() {
     loadData();
@@ -115,5 +117,13 @@ abstract class _AppInfoBase with Store {
           ?.getActiveNotifications();
       _activeNotificationsValue = _activeNotifications ?? [];
     });
+  }
+
+  Future<String?> requestBackupExport(String name, String path) async {
+    final String? result = await backupPromptChannel.invokeMethod<String>(
+      'requestBackupExport',
+      {'name': name, 'path': path},
+    );
+    return result;
   }
 }

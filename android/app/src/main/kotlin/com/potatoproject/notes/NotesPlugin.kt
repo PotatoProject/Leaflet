@@ -1,24 +1,68 @@
 package com.potatoproject.notes
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Handler
-import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.net.toFile
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
+import io.flutter.plugin.common.MethodChannel
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
-class NotesPlugin : FlutterPlugin {
+class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
+    var backupResult: ActivityResultLauncher<BackupInputPayload> =
+        activity.registerForActivityResult(CreateCustomDocument()) { payload: BackupOutputPayload ->
+            if (payload.outputUri != null) {
+                FileTools.cloneOriginToResult(activity, payload.inputUri, payload.outputUri);
+
+                payload.result.success(payload.outputUri.toString())
+            } else {
+                payload.result.success(null)
+            }
+        }
+
     override fun onAttachedToEngine(binding: FlutterPluginBinding) {
         EventChannel(binding.binaryMessenger, "potato_notes_accents").setStreamHandler(
             AccentStreamHandler(binding.applicationContext)
         )
+
+        MethodChannel(
+            binding.binaryMessenger,
+            "potato_notes_backup_prompt"
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "requestBackupExport") {
+                val name: String? = call.argument<String>("name")
+                val inputPath: String? = call.argument<String>("path");
+
+                if (name != null && inputPath != null) {
+                    backupResult.launch(
+                        BackupInputPayload(
+                            name,
+                            Uri.fromFile(File(inputPath)),
+                            result
+                        )
+                    )
+                } else {
+                    result.success(null)
+                }
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {}
@@ -30,60 +74,29 @@ class NotesPlugin : FlutterPlugin {
         private var savedThemeMode: Long? = null
         private var accentColor: Int? = null
 
-        private val runnable: Runnable = object: Runnable {
+        private val runnable: Runnable = object : Runnable {
             override fun run() {
-                val sharedPref = mContext.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                val sharedPref =
+                    mContext.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
                 val currentSavedThemeMode = sharedPref.getLong("flutter.theme_mode", 0)
                 val isCurrentlyThemeDark = isCurrentThemeDark()
                 val lightAccent = getColorRes("accent_device_default_light")
                 val darkAccent = getColorRes("accent_device_default_dark")
 
-                if(currentSavedThemeMode != savedThemeMode) {
+                if (currentSavedThemeMode != savedThemeMode) {
                     savedThemeMode = currentSavedThemeMode
                     isThemeDark = isCurrentlyThemeDark
-                    when(savedThemeMode) {
+                    when (savedThemeMode) {
                         0L -> accentColor = if (isThemeDark == true) darkAccent else lightAccent
                         1L -> accentColor = lightAccent
                         2L -> accentColor = darkAccent
                     }
                     eventSink?.success(accentColor)
-                } else if(currentSavedThemeMode == 0L && isThemeDark != isCurrentlyThemeDark) {
+                } else if (currentSavedThemeMode == 0L && isThemeDark != isCurrentlyThemeDark) {
                     isThemeDark = isCurrentlyThemeDark
                     accentColor = if (isThemeDark == true) darkAccent else lightAccent
                     eventSink?.success(accentColor)
                 }
-
-                /*if (savedThemeMode == 0L) {
-                    if (currentThemeMode != themeMode) {
-                        themeMode = currentThemeMode
-                        accentColor = if (themeMode != false) lightAccent else darkAccent
-                        eventSink?.success(accentColor)
-                    } else {
-                        if (themeMode == true) {
-                            if (darkAccent != accentColor) {
-                                accentColor = darkAccent
-                                eventSink?.success(accentColor)
-                            }
-                        } else {
-                            if (lightAccent != accentColor) {
-                                accentColor = lightAccent
-                                eventSink?.success(accentColor)
-                            }
-                        }
-                    }
-                } else {
-                    if (savedThemeMode == 1L) {
-                        if (lightAccent != accentColor) {
-                            accentColor = lightAccent
-                            eventSink?.success(accentColor)
-                        }
-                    } else if (savedThemeMode == 2L) {
-                        if (darkAccent != accentColor) {
-                            accentColor = darkAccent
-                            eventSink?.success(accentColor)
-                        }
-                    }
-                }*/
                 handler.postDelayed(this, 125)
             }
         }
@@ -103,11 +116,11 @@ class NotesPlugin : FlutterPlugin {
         }
 
         fun getColorRes(resName: String): Int {
-            var resId: Int
-            var res: Resources?
-            var colorInt: Int?
+            val resId: Int
+            val res: Resources?
+            val colorInt: Int?
 
-            if(android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
                 return -1;
             }
 
@@ -133,6 +146,62 @@ class NotesPlugin : FlutterPlugin {
                 Configuration.UI_MODE_NIGHT_NO -> false
                 else -> false
             }
+        }
+    }
+
+    class CreateCustomDocument : ActivityResultContract<BackupInputPayload, BackupOutputPayload>() {
+        private lateinit var result: MethodChannel.Result
+        private lateinit var inputUri: Uri
+
+        override fun createIntent(context: Context, input: BackupInputPayload): Intent {
+            result = input.result
+            inputUri = input.inputUri
+
+            return Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .setType("*/*")
+                .putExtra(Intent.EXTRA_TITLE, input.name)
+        }
+
+        override fun getSynchronousResult(
+            context: Context,
+            input: BackupInputPayload
+        ): SynchronousResult<BackupOutputPayload>? {
+            return null
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): BackupOutputPayload {
+            val uri: Uri? =
+                if (intent == null || resultCode != Activity.RESULT_OK) null else intent.data
+            return BackupOutputPayload(inputUri, uri, result)
+        }
+    }
+
+    data class BackupInputPayload(
+        val name: String,
+        val inputUri: Uri,
+        val result: MethodChannel.Result
+    )
+
+    data class BackupOutputPayload(
+        val inputUri: Uri,
+        val outputUri: Uri?,
+        val result: MethodChannel.Result
+    )
+
+    object FileTools {
+        fun cloneOriginToResult(context: Context, originUri: Uri, resultUri: Uri): Uri {
+            FileInputStream(originUri.toFile()).use { inputStream ->
+                context.contentResolver.openOutputStream(resultUri).use { outputStream ->
+                    val buffer = ByteArray(4 * 1024)
+                    while (true) {
+                        val byteCount = inputStream.read(buffer)
+                        if (byteCount < 0) break
+                        outputStream!!.write(buffer, 0, byteCount)
+                    }
+                    outputStream!!.flush()
+                }
+            }
+            return resultUri
         }
     }
 }

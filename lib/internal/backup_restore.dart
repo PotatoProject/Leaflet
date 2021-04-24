@@ -25,20 +25,34 @@ import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class BackupRestore {
-  static Future<void> saveNote(Note note, String password) async {
-    final String outputDir = await _getOutputDir();
-    final Map<String, dynamic> payload = {
-      'note': note.toJson(serializer: const _TypeAwareValueSerializer()),
-      'password': password,
-      'buildNumber': appInfo.packageInfo.buildNumberInt,
-      'baseDir': appInfo.tempDirectory.path,
-      'outputDir': outputDir,
-    };
+  static Future<bool> saveNote(Note note, String password) async {
+    try {
+      final String outputDir = await _getOutputDir();
+      final String formattedDate =
+          DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
+      final String name = "note-$formattedDate.note";
+      final Map<String, dynamic> payload = {
+        'note': note.toJson(serializer: const _TypeAwareValueSerializer()),
+        'password': password,
+        'buildNumber': appInfo.packageInfo.buildNumberInt,
+        'baseDir': appInfo.tempDirectory.path,
+        'outputDir': outputDir,
+        'name': name,
+      };
 
-    final String filePath = await compute(_rawSaveNote, json.encode(payload));
+      final String filePath = await compute(_rawSaveNote, json.encode(payload));
 
-    if (UniversalPlatform.isIOS) {
-      Share.shareFiles([filePath]);
+      if (UniversalPlatform.isAndroid) {
+        final String? exportPath =
+            await appInfo.requestBackupExport(name, filePath);
+        return exportPath != null;
+      }
+      if (UniversalPlatform.isIOS) {
+        await Share.shareFiles([filePath]);
+      }
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -54,6 +68,7 @@ class BackupRestore {
     final int buildNumber = data['buildNumber']! as int;
     final String baseDir = data['baseDir']! as String;
     final String outputDir = data['outputDir']! as String;
+    final String name = data['name']! as String;
 
     final Directory noteDir = Directory(p.join(baseDir, "${note.id}-export"));
     await _createNoteFolderStructure(
@@ -73,9 +88,7 @@ class BackupRestore {
       appVersion: buildNumber,
       noteCount: 1,
     );
-    final String formattedDate =
-        DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
-    final String filePath = p.join(outputDir, "note-$formattedDate.note");
+    final String filePath = p.join(outputDir, name);
     File(filePath).writeAsBytes(
       _combineMetadata(
         metadata,
@@ -88,7 +101,7 @@ class BackupRestore {
   static Future<String> createBackup({
     required List<Note> notes,
     required String password,
-    String? name,
+    required String name,
     ValueChanged<int>? onProgress,
   }) async {
     final ReceivePort progressPort = ReceivePort();
@@ -110,7 +123,7 @@ class BackupRestore {
     });
 
     final String finalBackupName = await returnPort.first as String;
-    return p.join(outDir, 'backup-$finalBackupName.backup');
+    return p.join(outDir, finalBackupName);
   }
 
   static Future<void> _rawCreateBackup(_BackupPayload payload) async {
@@ -120,7 +133,7 @@ class BackupRestore {
     final String outDir = payload.outDir;
     final String tempDir = payload.baseDir;
     final int appVersion = payload.appVersion;
-    final String? name = payload.name;
+    final String name = payload.name;
 
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat("dd_MM_yyyy-HH_mm_ss").format(now);
@@ -141,10 +154,9 @@ class BackupRestore {
       );
       progressPort.send(i + 1);
     }
-    final String _name = name ?? formattedDate;
     final _NoteMetadata metadata = _NoteMetadata(
       noteCount: notes.length,
-      name: _name,
+      name: name,
       createdAt: now,
       appVersion: appVersion,
     );
@@ -155,13 +167,14 @@ class BackupRestore {
       ..close();
     final List<int> fileBytes = encoder.close();
     await baseDir.delete(recursive: true);
-    File(p.join(outDir, "backup-$_name.backup")).writeAsBytes(
+    final String backupPath = p.join(outDir, name);
+    File(backupPath).writeAsBytes(
       _combineMetadata(
         metadata,
         await _encryptBytes(fileBytes, password),
       ),
     );
-    payload.returnPort.send(_name);
+    payload.returnPort.send(backupPath);
   }
 
   static Future<void> _createNoteFolderStructure({
@@ -195,19 +208,24 @@ class BackupRestore {
       'baseDir': appInfo.tempDirectory.path,
     };
 
-    final String rawNote = await compute(_rawRestoreNote, json.encode(payload));
+    try {
+      final String rawNote =
+          await compute(_rawRestoreNote, json.encode(payload));
 
-    if (rawNote != "null") {
-      final Note note = Note.fromJson(
-        json.decode(rawNote) as Map<String, dynamic>,
-        serializer: const _TypeAwareValueSerializer(),
-      );
-      if (!await helper.noteExists(note)) {
-        await helper.saveNote(note);
-        return true;
+      if (rawNote != "null") {
+        final Note note = Note.fromJson(
+          json.decode(rawNote) as Map<String, dynamic>,
+          serializer: const _TypeAwareValueSerializer(),
+        );
+        if (!await helper.noteExists(note)) {
+          await helper.saveNote(note);
+          return true;
+        }
       }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<String> _rawRestoreNote(String payload) async {
@@ -363,7 +381,7 @@ class _BackupPayload {
   final String outDir;
   final String baseDir;
   final int appVersion;
-  final String? name;
+  final String name;
 
   const _BackupPayload({
     required this.progressPort,
@@ -373,7 +391,7 @@ class _BackupPayload {
     required this.outDir,
     required this.baseDir,
     required this.appVersion,
-    this.name,
+    required this.name,
   });
 }
 
