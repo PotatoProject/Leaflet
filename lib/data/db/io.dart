@@ -18,6 +18,17 @@ QueryExecutor constructDb({bool logStatements = false}) {
     OperatingSystem.windows,
     () => DynamicLibrary.open('sqlcipher.dll'),
   );
+  open.overrideFor(OperatingSystem.linux, () {
+    final executableDir = Platform.resolvedExecutable.split('/');
+    executableDir.removeLast();
+
+    final libPath = p.join(
+      executableDir.join('/'),
+      'lib/libsqlcipher.so',
+    );
+
+    return DynamicLibrary.open(libPath);
+  });
   open.overrideFor(
     OperatingSystem.android,
     () => DynamicLibrary.open('libsqlcipher.so'),
