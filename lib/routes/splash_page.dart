@@ -69,7 +69,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     if (_elementsAc.value == 1) setState(() => showChild = true);
   }
 
-  Future<void> _loadColors() async {
+  void _loadColors() {
     final MediaQueryData data =
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;

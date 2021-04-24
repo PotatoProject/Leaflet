@@ -25,6 +25,7 @@ import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/sync/image/blake/stub.dart';
+import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -921,6 +922,21 @@ class Utils {
     final Blake2 blake = Blake2();
     blake.updateWithString(pass);
     return utils.hex(blake.digest());
+  }
+
+  static Color getMainColorFromTheme() {
+    final MediaQueryData data =
+        MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
+    final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
+    final ThemeMode themeMode = prefs.themeMode;
+    final bool useAmoled = prefs.useAmoled;
+
+    if (themeMode == ThemeMode.system && isDarkSystemTheme ||
+        themeMode == ThemeMode.dark) {
+      return useAmoled ? Themes.blackColor : Themes.darkColor;
+    }
+
+    return Themes.lightColor;
   }
 }
 

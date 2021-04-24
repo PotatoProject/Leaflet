@@ -120,6 +120,7 @@ class PotatoNotes extends StatelessWidget {
           themeMode: prefs.themeMode,
           home: BasePage(),
           debugShowCheckedModeBanner: false,
+          color: Utils.getMainColorFromTheme(),
         );
       },
     );
