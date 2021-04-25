@@ -248,8 +248,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     final ThemeMode themeMode = ThemeMode.values[index];
 
                     if (themeMode == ThemeMode.system &&
-                            UniversalPlatform.isWindows ||
-                        UniversalPlatform.isLinux) {
+                        UniversalPlatform.isWindows) {
                       return const SizedBox();
                     }
                     final bool selected = prefs.themeMode == themeMode;
