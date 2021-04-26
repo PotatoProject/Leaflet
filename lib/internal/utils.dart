@@ -19,7 +19,6 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/backup_restore.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -409,7 +408,7 @@ class Utils {
           if (password != null) {
             Utils.showLoadingOverlay(context);
             final bool exported =
-                await BackupRestore.saveNote(notes.first, password);
+                await backupDelegate.saveNote(notes.first, password);
             Utils.hideLoadingOverlay(context);
             context.basePage?.hideCurrentSnackBar();
             context.basePage?.showSnackBar(
@@ -818,7 +817,8 @@ class Utils {
     if (password == null) return;
 
     Utils.showLoadingOverlay(context);
-    final bool restored = await BackupRestore.restoreNote(pickedFile, password);
+    final bool restored =
+        await backupDelegate.restoreNote(pickedFile, password);
     Utils.hideLoadingOverlay(context);
 
     context.scaffoldMessenger.removeCurrentSnackBar();

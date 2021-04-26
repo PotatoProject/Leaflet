@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
@@ -20,6 +21,7 @@ class _ProvidersSingleton {
   late AppInfo _appInfo;
   late DeviceInfo _deviceInfo;
   late Preferences _prefs;
+  late BackupDelegate _backupDelegate;
   late ImageQueue _imageQueue;
   late Dio _dio;
   late NoteHelper _helper;
@@ -43,6 +45,7 @@ class _ProvidersSingleton {
     _deviceInfo = DeviceInfo();
     _imageQueue = ImageQueue();
     _appInfo = AppInfo();
+    _backupDelegate = BackupDelegate();
     _syncRoutine = SyncRoutine();
     _imageHelper = ImageHelper();
   }
@@ -63,6 +66,9 @@ AppInfo get appInfo => _ProvidersSingleton.instance._appInfo;
 DeviceInfo get deviceInfo => _ProvidersSingleton.instance._deviceInfo;
 
 Preferences get prefs => _ProvidersSingleton.instance._prefs;
+
+BackupDelegate get backupDelegate =>
+    _ProvidersSingleton.instance._backupDelegate;
 
 ImageQueue get imageQueue => _ProvidersSingleton.instance._imageQueue;
 

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/backup_restore.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -200,7 +199,7 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
         DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
     final String _name = widget.name ?? formattedDate;
     final String name = "backup-$_name.backup";
-    final String backup = await BackupRestore.createBackup(
+    final String backup = await backupDelegate.createBackup(
       notes: widget.notes,
       password: widget.password,
       name: name,

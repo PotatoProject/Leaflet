@@ -19,13 +19,14 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-class BackupRestore {
-  static Future<bool> saveNote(Note note, String password) async {
+class BackupDelegate with LoggerProvider {
+  Future<bool> saveNote(Note note, String password) async {
     try {
       final String outputDir = await _getOutputDir();
       final String formattedDate =
@@ -38,7 +39,9 @@ class BackupRestore {
         'baseDir': appInfo.tempDirectory.path,
         'outputDir': outputDir,
         'name': name,
+        'tags': _encodeTags(await tagHelper.getTagsById(note.tags)),
       };
+      logger.d(payload['tags']);
 
       final String filePath = await compute(_rawSaveNote, json.encode(payload));
 
@@ -52,6 +55,7 @@ class BackupRestore {
       }
       return true;
     } catch (e) {
+      logger.e(e);
       return false;
     }
   }
@@ -69,6 +73,9 @@ class BackupRestore {
     final String baseDir = data['baseDir']! as String;
     final String outputDir = data['outputDir']! as String;
     final String name = data['name']! as String;
+    final List<Map<String, dynamic>> rawTags =
+        data['tags']! as List<Map<String, dynamic>>;
+    final List<Tag> tags = _decodeTags(rawTags);
 
     final Directory noteDir = Directory(p.join(baseDir, "${note.id}-export"));
     await _createNoteFolderStructure(
@@ -87,9 +94,10 @@ class BackupRestore {
       createdAt: DateTime.now(),
       appVersion: buildNumber,
       noteCount: 1,
+      tags: tags,
     );
     final String filePath = p.join(outputDir, name);
-    File(filePath).writeAsBytes(
+    await File(filePath).writeAsBytes(
       _combineMetadata(
         metadata,
         await _encryptBytes(fileBytes, password),
@@ -98,7 +106,7 @@ class BackupRestore {
     return filePath;
   }
 
-  static Future<String> createBackup({
+  Future<String> createBackup({
     required List<Note> notes,
     required String password,
     required String name,
@@ -201,7 +209,7 @@ class BackupRestore {
     }
   }
 
-  static Future<bool> restoreNote(String path, String password) async {
+  Future<bool> restoreNote(String path, String password) async {
     final Map<String, dynamic> payload = {
       'path': path,
       'password': password,
@@ -211,19 +219,27 @@ class BackupRestore {
     try {
       final String rawNote =
           await compute(_rawRestoreNote, json.encode(payload));
+      final Map<String, dynamic> returnPayload =
+          json.decode(rawNote) as Map<String, dynamic>;
 
-      if (rawNote != "null") {
+      if (returnPayload['note'] != null) {
         final Note note = Note.fromJson(
-          json.decode(rawNote) as Map<String, dynamic>,
+          json.decode(returnPayload['note'] as String) as Map<String, dynamic>,
           serializer: const _TypeAwareValueSerializer(),
         );
         if (!await helper.noteExists(note)) {
+          final List<Tag> tags = _decodeTags(
+              Utils.asList<Map<String, dynamic>>(returnPayload['tags']));
           await helper.saveNote(note);
+          for (final Tag tag in tags) {
+            tagHelper.saveTag(tag);
+          }
           return true;
         }
       }
       return false;
     } catch (e) {
+      logger.e(e);
       return false;
     }
   }
@@ -240,6 +256,7 @@ class BackupRestore {
     final List<int> fileBytes = await zipFile.readAsBytes();
     final _MetadataExtractionResult extractionResult =
         _extractMetadata(fileBytes);
+    final _NoteMetadata metadata = extractionResult.metadata;
     final List<int> decryptedBytes =
         await _decryptBytes(extractionResult.data, password);
     final List<ArchiveFile> files =
@@ -270,11 +287,13 @@ class BackupRestore {
         }
       }
     }
+    final Map<String, dynamic> returnPayload = {};
+    returnPayload['note'] = returnNote?.toJsonString(
+      serializer: const _TypeAwareValueSerializer(),
+    );
+    returnPayload['tags'] = _encodeTags(metadata.tags);
 
-    return returnNote?.toJsonString(
-          serializer: const _TypeAwareValueSerializer(),
-        ) ??
-        "null";
+    return json.encode(returnPayload);
   }
 
   static Future<String> _getOutputDir() async {
@@ -353,6 +372,19 @@ class BackupRestore {
     return plaintext;
   }
 
+  static List<Map<String, dynamic>> _encodeTags(List<Tag> tags) {
+    return tags
+        .map((e) => e.toJson(serializer: const _TypeAwareValueSerializer()))
+        .toList();
+  }
+
+  static List<Tag> _decodeTags(List<Map<String, dynamic>> tags) {
+    return tags
+        .map((e) =>
+            Tag.fromJson(e, serializer: const _TypeAwareValueSerializer()))
+        .toList();
+  }
+
   static List<int> _generateNonce([int length = 16]) => List.generate(
         length,
         (index) => Random.secure().nextInt(255),
@@ -412,29 +444,29 @@ class _NoteMetadata {
   final DateTime createdAt;
   final int noteCount;
   final int appVersion;
+  final List<Tag> tags;
 
   _NoteMetadata({
     required this.createdAt,
     required this.appVersion,
     required this.noteCount,
+    this.tags = const <Tag>[],
     this.name,
   });
 
   factory _NoteMetadata.fromJson(Map<String, dynamic> json) {
     final String? name = json['name'] as String?;
-    final int? noteCount = json['noteCount'] as int?;
-    final int? createdAt = json['createdAt'] as int?;
-    final int? appVersion = json['appVersion'] as int?;
-
-    if (createdAt == null || appVersion == null || noteCount == null) {
-      throw ArgumentError.notNull();
-    }
+    final int noteCount = json['noteCount']! as int;
+    final int createdAt = json['createdAt']! as int;
+    final int appVersion = json['appVersion']! as int;
+    final List<dynamic> tags = json['tags']! as List<dynamic>;
 
     return _NoteMetadata(
       name: name,
       noteCount: noteCount,
       createdAt: DateTime.fromMillisecondsSinceEpoch(createdAt),
       appVersion: appVersion,
+      tags: tags.map((t) => Tag.fromJson(t as Map<String, dynamic>)).toList(),
     );
   }
 
@@ -444,15 +476,25 @@ class _NoteMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'noteCount': noteCount,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'appVersion': appVersion,
-    };
+    final Map<String, dynamic> json = {};
+
+    if (name != null) json['name'] = name;
+    json['noteCount'] = noteCount;
+    json['createdAt'] = createdAt.millisecondsSinceEpoch;
+    json['appVersion'] = appVersion;
+    json['tags'] = tags
+        .map((e) => e.toJson(serializer: const _TypeAwareValueSerializer()))
+        .toList();
+
+    return json;
   }
 
   String toJsonString() => json.encode(toJson());
+
+  @override
+  String toString() {
+    return toJsonString();
+  }
 }
 
 class _TypeAwareValueSerializer extends ValueSerializer {
