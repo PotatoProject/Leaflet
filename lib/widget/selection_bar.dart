@@ -15,16 +15,17 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("rebuild");
     final state = context.selectionState;
     final List<Note> selectionList = state.selectionList;
     final SelectionOptions selectionOptions = state.selectionOptions;
     final List<SelectionOptionEntry> everyOption =
         selectionOptions.options(context, selectionList);
     final List<SelectionOptionEntry> options = everyOption
-        .where((e) => !e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
+        .safeWhere((e) => !e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
         .toList();
     final List<SelectionOptionEntry> oneNoteOptions = everyOption
-        .where((e) => e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
+        .safeWhere((e) => e.oneNoteOnly && !e.showOnlyOnRightClickMenu)
         .toList();
 
     return AppBar(
@@ -55,7 +56,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
             .toList(),
-        if (oneNoteOptions.isNotEmpty && selectionList.length == 1)
+        if (oneNoteOptions.isNotEmpty && selectionList.length <= 1)
           PopupMenuButton<String>(
             itemBuilder: (context) => oneNoteOptions
                 .map<PopupMenuEntry<String>>(

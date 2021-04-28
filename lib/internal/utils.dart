@@ -23,11 +23,11 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/base_page.dart';
-import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/backup_password_prompt.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
@@ -179,7 +179,7 @@ class Utils {
     return SelectionOptions(
       options: (context, notes) {
         final bool anyStarred = notes.any((item) => item.starred);
-        final bool showUnpin = notes.first.pinned;
+        final bool showUnpin = notes.firstOrNull?.pinned ?? false;
 
         return [
           const SelectionOptionEntry(
@@ -239,6 +239,7 @@ class Utils {
             title: "Save locally",
             icon: Icons.save_alt_outlined,
             value: 'export',
+            oneNoteOnly: true,
           ),
           /* SelectionOptionEntry(
             icon: Icons.share_outlined,
@@ -263,7 +264,7 @@ class Utils {
         break;
       case 'selectall':
         state.selecting = true;
-        final List<Note> notes = await helper.listNotes(state.widget.noteKind);
+        final List<Note> notes = await helper.listNotes(state.noteKind);
         for (final Note note in notes) {
           state.addSelectedNote(note);
         }
@@ -1183,6 +1184,14 @@ extension SafeGetList<T> on List<T> {
       return this[index];
     }
   }
+
+  Iterable<T> safeWhere(bool Function(T) test) {
+    try {
+      return where(test);
+    } on StateError {
+      return [];
+    }
+  }
 }
 
 extension ContextProviders on BuildContext {
@@ -1202,7 +1211,7 @@ extension ContextProviders on BuildContext {
   Future<T?> push<T extends Object?>(Route<T> route) =>
       navigator.push<T?>(route);
 
-  NoteListPageState get selectionState => SelectionState.of(this);
+  SelectionState get selectionState => SelectionState.of(this);
 
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 

@@ -931,7 +931,7 @@ packages:
     description:
       path: sqlcipher_flutter_libs
       ref: HEAD
-      resolved-ref: eb4828a4891161c2c362646249552957c802f807
+      resolved-ref: b82c9693ffa4b6fdf73acd4089cb0165aee431aa
       url: "https://github.com/simolus3/sqlite3.dart.git"
     source: git
     version: "0.0.1"
@@ -941,7 +941,7 @@ packages:
       name: sqlite3
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   sqlparser:
     dependency: transitive
     description:

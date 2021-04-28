@@ -117,11 +117,18 @@ class BasePageState extends State<BasePage>
       if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null) {
         await _ac.animateBack(0);
       } else {
-        await _ac.animateBack(0);
-        _ac.animateTo(1);
+        if (_ac.value == 0) {
+          _ac.animateTo(1);
+        }
       }
     }
-    _secondaryAppBar = secondaryAppBar;
+    print(secondaryAppBar.runtimeType);
+    _secondaryAppBar = secondaryAppBar != null
+        ? KeyedSubtree(
+            key: ValueKey(secondaryAppBar.runtimeType),
+            child: secondaryAppBar,
+          )
+        : null;
 
     WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
@@ -178,7 +185,7 @@ class BasePageState extends State<BasePage>
 
     _ac = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 75),
     );
 
     InAppUpdater.checkForUpdate(context);
@@ -474,7 +481,12 @@ class _SecondaryAppBar extends StatelessWidget {
                       color: context.theme.cardColor,
                     ),
                   ),
-                  child: child ?? Container(),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 150),
+                    switchInCurve: decelerateEasing,
+                    switchOutCurve: decelerateEasing,
+                    child: child ?? Container(),
+                  ),
                 ),
               ),
             ),
