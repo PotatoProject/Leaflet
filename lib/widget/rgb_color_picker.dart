@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class RGBColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -194,8 +194,8 @@ class ColorSlider extends StatelessWidget {
                 rgb == RGB.red
                     ? "R"
                     : rgb == RGB.green
-                        ? "G"
-                        : "B",
+                    ? "G"
+                    : "B",
                 style: TextStyle(
                   color: widgetColor,
                 ),
@@ -211,15 +211,15 @@ class ColorSlider extends StatelessWidget {
             value: (rgb == RGB.red
                     ? color.red
                     : rgb == RGB.green
-                        ? color.green
-                        : color.blue)
+                    ? color.green
+                    : color.blue)
                 .toDouble(),
             onChanged: (value) => onChange(
               rgb == RGB.red
                   ? color.withRed(value.toInt())
                   : rgb == RGB.green
-                      ? color.withGreen(value.toInt())
-                      : color.withBlue(value.toInt()),
+                  ? color.withGreen(value.toInt())
+                  : color.withBlue(value.toInt()),
             ),
           ),
         ),

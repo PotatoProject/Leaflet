@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/badge_icon.dart';
 
 class AccountAvatar extends StatelessWidget {

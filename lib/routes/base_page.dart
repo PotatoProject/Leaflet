@@ -11,6 +11,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -49,8 +50,8 @@ class BasePage extends StatefulWidget {
 
 class BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
-  static const double drawerClosedWidth = 72.0;
-  static const double drawerOpenedWidth = 300.0;
+  static const double _drawerClosedWidth = 72.0;
+  static const double _drawerOpenedWidth = 300.0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
@@ -122,7 +123,6 @@ class BasePageState extends State<BasePage>
         }
       }
     }
-    print(secondaryAppBar.runtimeType);
     _secondaryAppBar = secondaryAppBar != null
         ? KeyedSubtree(
             key: ValueKey(secondaryAppBar.runtimeType),
@@ -249,9 +249,9 @@ class BasePageState extends State<BasePage>
                       start: useDynamicDrawer
                           ? _defaultDrawerMode == DefaultDrawerMode.expanded
                               ? _collapsedDrawer
-                                  ? drawerClosedWidth
-                                  : drawerOpenedWidth
-                              : drawerClosedWidth
+                                  ? _drawerClosedWidth
+                                  : _drawerOpenedWidth
+                              : _drawerClosedWidth
                           : 0,
                     ),
                     duration: const Duration(milliseconds: 200),
@@ -343,8 +343,8 @@ class BasePageState extends State<BasePage>
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     width: _collapsedDrawer
-                        ? drawerClosedWidth
-                        : drawerOpenedWidth,
+                        ? _drawerClosedWidth
+                        : _drawerOpenedWidth,
                     child: Material(
                       elevation: 12,
                       child: DrawerList(

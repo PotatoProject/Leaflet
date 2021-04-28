@@ -11,6 +11,8 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
@@ -303,7 +305,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   width: 60,
                   child: Icon(
                     Icons.brightness_1,
-                    color: prefs.customAccent ?? Utils.defaultAccent,
+                    color: prefs.customAccent ?? Constants.defaultAccent,
                     size: 28,
                   ),
                 ),

@@ -7,10 +7,12 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/db/stub.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -62,7 +64,7 @@ class PotatoNotes extends StatelessWidget {
         }
 
         if (prefs.useCustomAccent || !canUseSystemAccent) {
-          accentColor = prefs.customAccent ?? Utils.defaultAccent;
+          accentColor = prefs.customAccent ?? Constants.defaultAccent;
         } else {
           accentColor = Color(appInfo.accentData);
         }

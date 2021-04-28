@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class SyncUrlEditor extends StatefulWidget {
@@ -57,7 +58,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
                 const Spacer(),
                 TextButton(
                   onPressed: () async {
-                    prefs.apiUrl = Utils.defaultApiUrl;
+                    prefs.apiUrl = Constants.defaultApiUrl;
                     await helper.deleteAllNotes();
                     context.pop();
                   },

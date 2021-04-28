@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 
 class NoteViewStatusbar extends StatefulWidget {
