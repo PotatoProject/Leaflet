@@ -17,6 +17,7 @@ dependencies:
   collection: ^1.15.0
   cryptography: ^2.0.1
 
+  date_time_format: ^2.0.1
   dio: ^4.0.0
 
   easy_localization:

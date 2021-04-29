@@ -10,6 +10,7 @@ import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,22 +39,10 @@ class _BackupPageState extends State<BackupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    return DialogSheetBase(
+      title: const Text("Create backup"),
+      content: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              "Create backup",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -115,59 +104,52 @@ class _BackupPageState extends State<BackupPage> {
                   )
                 : null,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                Text(
-                  "Notes to be included in backup: ${notes.length}",
-                  style: TextStyle(
-                    color: context.theme.iconTheme.color,
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: password.length >= 4 || useMasterPass
-                      ? () async {
-                          final bool promptForPassword =
-                              notes.any((n) => n.lockNote);
-                          final bool promptForBiometrics =
-                              notes.any((n) => n.lockNote);
-                          bool status = true;
-                          if (promptForPassword) {
-                            status = await Utils.showNoteLockDialog(
-                              context: context,
-                              showLock: promptForPassword,
-                              showBiometrics: promptForBiometrics,
-                              description: useMasterPass
-                                  ? null
-                                  : "Some notes are locked, require password to proceed.",
-                            );
-                          }
-                          if (status) {
-                            Navigator.pop(context);
-                            Utils.showNotesModalBottomSheet(
-                              context: context,
-                              builder: (context) => _BackupProgressPage(
-                                notes: notes,
-                                password: useMasterPass
-                                    ? prefs.masterPass
-                                    : Utils.hashedPass(password),
-                                name: name.trim() != "" ? name : null,
-                              ),
-                              enableDismiss: false,
-                            );
-                          }
-                        }
-                      : null,
-                  child: Text("Create".toUpperCase()),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
+      contentPadding: EdgeInsets.zero,
+      actions: [
+        Text(
+          "Notes to be included in backup: ${notes.length}",
+          style: TextStyle(
+            color: context.theme.iconTheme.color,
+          ),
+        ),
+        const Spacer(),
+        TextButton(
+          onPressed: password.length >= 4 || useMasterPass ? _onSubmit : null,
+          child: Text("Create".toUpperCase()),
+        ),
+      ],
     );
+  }
+
+  Future<void> _onSubmit() async {
+    final bool promptForPassword = notes.any((n) => n.lockNote);
+    final bool promptForBiometrics = notes.any((n) => n.lockNote);
+    bool status = true;
+    if (promptForPassword) {
+      status = await Utils.showNoteLockDialog(
+        context: context,
+        showLock: promptForPassword,
+        showBiometrics: promptForBiometrics,
+        description: useMasterPass
+            ? null
+            : "Some notes are locked, require password to proceed.",
+      );
+    }
+    if (status) {
+      Navigator.pop(context);
+      Utils.showNotesModalBottomSheet(
+        context: context,
+        builder: (context) => _BackupProgressPage(
+          notes: notes,
+          password:
+              useMasterPass ? prefs.masterPass : Utils.hashedPass(password),
+          name: name.trim() != "" ? name : null,
+        ),
+        enableDismiss: false,
+      );
+    }
   }
 }
 

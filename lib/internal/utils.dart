@@ -16,6 +16,7 @@ import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -30,6 +31,7 @@ import 'package:potato_notes/widget/bottom_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
+import 'package:potato_notes/widget/restore_confirmation_dialog.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/utils/utils.dart' as utils;
@@ -731,27 +733,76 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static Future<void> importNotes(BuildContext context) async {
+  static Future<void> importNotes(BuildContext context,
+      {String extension = "note"}) async {
     final String? pickedFile = await Utils.pickFile(
-      allowedExtensions: ["note"],
+      allowedExtensions: [extension],
     );
-    if (pickedFile == null || p.extension(pickedFile) != ".note") return;
+    if (pickedFile == null || p.extension(pickedFile) != ".$extension") return;
+    final MetadataExtractionResult? extractionResult =
+        await BackupDelegate.extractMetadataFromFile(pickedFile);
 
-    final String? password =
-        await Utils.showBackupPasswordPrompt(context: context);
-    if (password == null) return;
+    late final String message;
+    if (extractionResult != null) {
+      final bool? confirmation = await Utils.showNotesModalBottomSheet<bool>(
+        context: context,
+        builder: (context) =>
+            RestoreConfirmationDialog(metadata: extractionResult.metadata),
+      );
 
-    Utils.showLoadingOverlay(context);
-    final bool restored =
-        await backupDelegate.restoreNote(pickedFile, password);
-    Utils.hideLoadingOverlay(context);
+      if (confirmation != true) return;
+
+      final String? password =
+          await Utils.showBackupPasswordPrompt(context: context);
+      if (password == null) return;
+
+      Utils.showLoadingOverlay(context);
+      final RestoreResult result =
+          await backupDelegate.restoreNote(extractionResult, password);
+      if (result.status == RestoreResultStatus.success) {
+        final List<Note> notes = result.notes;
+        final List<Tag> tags = result.tags;
+        int restoredCount = 0;
+
+        for (final Note note in notes) {
+          if (!await helper.noteExists(note)) {
+            await helper.saveNote(note);
+            restoredCount++;
+          }
+        }
+
+        if (restoredCount > 0) {
+          for (final Tag tag in tags) {
+            await tagHelper.saveTag(tag);
+          }
+        }
+
+        message = "$restoredCount notes were restored.";
+      } else {
+        switch (result.status) {
+          case RestoreResultStatus.success:
+            message = "The note was successfuly restored.";
+            break;
+          case RestoreResultStatus.wrongFormat:
+            message = "The specified file is not a valid Leaflet backup.";
+            break;
+          case RestoreResultStatus.wrongPassword:
+            message = "Wrong password. Can't decrypt. Not restoring.";
+            break;
+          case RestoreResultStatus.unknown:
+            message = "There was an issue while importing the note.";
+            break;
+        }
+      }
+      Utils.hideLoadingOverlay(context);
+    } else {
+      message = "The specified file is not a valid Leaflet backup.";
+    }
 
     context.scaffoldMessenger.removeCurrentSnackBar();
     context.scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text(restored
-            ? "The note was successfuly restored."
-            : "There was an issue while importing the note."),
+        content: Text(message),
         behavior: SnackBarBehavior.floating,
         width: min(640, context.mSize.width - 32),
       ),

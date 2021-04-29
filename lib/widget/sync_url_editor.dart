@@ -3,6 +3,7 @@ import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class SyncUrlEditor extends StatefulWidget {
   @override
@@ -20,65 +21,45 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              "Change sync API url",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: "URL",
-                border: UnderlineInputBorder(),
-              ),
-              controller: controller,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(LocaleStrings.common.cancel),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () async {
-                    prefs.apiUrl = Constants.defaultApiUrl;
-                    await helper.deleteAllNotes();
-                    context.pop();
-                  },
-                  child: Text(LocaleStrings.common.reset),
-                ),
-                TextButton(
-                  onPressed: controller.text.isNotEmpty
-                      ? () async {
-                          prefs.apiUrl = controller.text;
-                          await helper.deleteAllNotes();
-                          context.pop();
-                        }
-                      : null,
-                  child: Text(LocaleStrings.common.save),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return DialogSheetBase(
+      title: const Text("Change sync API url"),
+      content: TextFormField(
+        decoration: const InputDecoration(
+          labelText: "URL",
+          border: UnderlineInputBorder(),
+        ),
+        autofocus: true,
+        controller: controller,
+        onFieldSubmitted: controller.text.isNotEmpty ? _onSubmit : null,
       ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(LocaleStrings.common.cancel),
+        ),
+        const Spacer(),
+        TextButton(
+          onPressed: () async {
+            prefs.apiUrl = Constants.defaultApiUrl;
+            await helper.deleteAllNotes();
+            context.pop();
+          },
+          child: Text(LocaleStrings.common.reset),
+        ),
+        TextButton(
+          onPressed: controller.text.isNotEmpty
+              ? () => _onSubmit(controller.text)
+              : null,
+          child: Text(LocaleStrings.common.save),
+        ),
+      ],
     );
+  }
+
+  Future<void> _onSubmit(String text) async {
+    prefs.apiUrl = text;
+    await helper.deleteAllNotes();
+    context.pop();
   }
 }

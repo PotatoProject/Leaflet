@@ -24,8 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode usernameFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
   bool obscurePass = true;
   bool register = false;
   bool showLoadingOverlay = false;
@@ -181,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
     return Stack(
       children: [
         Scaffold(
-          key: scaffoldKey,
           appBar: AppBar(
             title: Text(register ? "Register" : "Login"),
             textTheme: context.theme.textTheme,

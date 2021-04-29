@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
@@ -53,7 +52,6 @@ class BasePageState extends State<BasePage>
   static const double _drawerClosedWidth = 72.0;
   static const double _drawerOpenedWidth = 300.0;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _pages = [
     NoteListPage(
@@ -145,7 +143,7 @@ class BasePageState extends State<BasePage>
           label: "Notes",
         ),
         BottomNavigationBarItem(
-          icon: const Icon(MdiIcons.archiveOutline),
+          icon: const Icon(Icons.inventory_2_outlined),
           label: LocaleStrings.mainPage.titleArchive,
         ),
         BottomNavigationBarItem(
@@ -257,7 +255,6 @@ class BasePageState extends State<BasePage>
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     child: Scaffold(
-                      key: _scaffoldKey,
                       backgroundColor: Colors.transparent,
                       appBar: ConstrainedWidthAppbar(
                         width: 1920,

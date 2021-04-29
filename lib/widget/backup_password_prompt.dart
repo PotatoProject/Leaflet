@@ -3,6 +3,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class BackupPasswordPrompt extends StatefulWidget {
   final bool confirmationMode;
@@ -25,25 +26,14 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    return DialogSheetBase(
+      title: const Text("Input backup password"),
+      content: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              "Input backup password",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: TextFormField(
+              autofocus: true,
               keyboardType: TextInputType.visiblePassword,
               controller: controller,
               obscureText: !showPass,
@@ -61,13 +51,9 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
                     .withOpacity(useMasterPass ? 0.4 : 1.0),
               ),
               enabled: !useMasterPass,
-              onFieldSubmitted: controller.text.length >= 4
-                  ? (text) => Navigator.pop(
-                        context,
-                        useMasterPass
-                            ? prefs.masterPass
-                            : Utils.hashedPass(text),
-                      )
+              onFieldSubmitted: controller.text.length >= 4 || useMasterPass
+                  ? (text) => _onSubmit(
+                      useMasterPass ? prefs.masterPass : Utils.hashedPass(text))
                   : null,
               maxLength: 64,
             ),
@@ -87,27 +73,26 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
                     )
                   : null,
             ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                const Spacer(),
-                TextButton(
-                  onPressed: controller.text.length >= 4 || useMasterPass
-                      ? () => Navigator.pop(
-                            context,
-                            useMasterPass
-                                ? prefs.masterPass
-                                : Utils.hashedPass(controller.text),
-                          )
-                      : null,
-                  child: const Text("Confirm"),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: controller.text.length >= 4 || useMasterPass
+              ? () => _onSubmit(useMasterPass
+                  ? prefs.masterPass
+                  : Utils.hashedPass(controller.text))
+              : null,
+          child: const Text("Confirm"),
+        ),
+      ],
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+
+  void _onSubmit(String text) {
+    Navigator.pop(
+      context,
+      text,
     );
   }
 }
