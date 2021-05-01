@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class RGBColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -36,30 +37,27 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: context.theme.copyWith(
-        textSelectionTheme: TextSelectionThemeData(
-          cursorColor: currentColor.computeLuminance() > 0.5
-              ? Colors.black
-              : Colors.white,
-          selectionHandleColor: currentColor.computeLuminance() > 0.5
-              ? Colors.black
-              : Colors.white,
-          selectionColor: (currentColor.computeLuminance() > 0.5
-                  ? Colors.black
-                  : Colors.white)
-              .withOpacity(0.4),
+    return DialogSheetBase(
+      content: Theme(
+        data: context.theme.copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: currentColor.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white,
+            selectionHandleColor: currentColor.computeLuminance() > 0.5
+                ? Colors.black
+                : Colors.white,
+            selectionColor: (currentColor.computeLuminance() > 0.5
+                    ? Colors.black
+                    : Colors.white)
+                .withOpacity(0.4),
+          ),
         ),
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final double shortestSide = constraints.maxWidth;
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final double shortestSide = constraints.maxWidth;
 
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: context.viewInsets.bottom,
-            ),
-            child: Column(
+            return Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
@@ -141,28 +139,26 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                     ],
                   ),
                 ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () => context.pop(-1),
-                      child: Text(LocaleStrings.common.reset),
-                    ),
-                    TextButton(
-                      onPressed: () => context.pop(),
-                      child: Text(LocaleStrings.common.cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => context.pop(currentColor.value),
-                      child: Text(LocaleStrings.common.confirm),
-                    ),
-                  ],
-                ),
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
+      contentPadding: EdgeInsets.zero,
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(-1),
+          child: Text(LocaleStrings.common.reset),
+        ),
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(LocaleStrings.common.cancel),
+        ),
+        TextButton(
+          onPressed: () => context.pop(currentColor.value),
+          child: Text(LocaleStrings.common.confirm),
+        ),
+      ],
     );
   }
 }
@@ -194,8 +190,8 @@ class ColorSlider extends StatelessWidget {
                 rgb == RGB.red
                     ? "R"
                     : rgb == RGB.green
-                        ? "G"
-                        : "B",
+                    ? "G"
+                    : "B",
                 style: TextStyle(
                   color: widgetColor,
                 ),
@@ -211,15 +207,15 @@ class ColorSlider extends StatelessWidget {
             value: (rgb == RGB.red
                     ? color.red
                     : rgb == RGB.green
-                        ? color.green
-                        : color.blue)
+                    ? color.green
+                    : color.blue)
                 .toDouble(),
             onChanged: (value) => onChange(
               rgb == RGB.red
                   ? color.withRed(value.toInt())
                   : rgb == RGB.green
-                      ? color.withGreen(value.toInt())
-                      : color.withBlue(value.toInt()),
+                  ? color.withGreen(value.toInt())
+                  : color.withBlue(value.toInt()),
             ),
           ),
         ),

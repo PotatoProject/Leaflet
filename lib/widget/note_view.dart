@@ -5,8 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
@@ -23,6 +24,7 @@ class NoteView extends StatefulWidget {
   final bool selected;
   final ValueChanged<bool?>? onCheckboxChanged;
   final bool allowSelection;
+  final List<Tag>? overrideTags;
 
   const NoteView({
     Key? key,
@@ -33,6 +35,7 @@ class NoteView extends StatefulWidget {
     this.selected = false,
     this.onCheckboxChanged,
     this.allowSelection = false,
+    this.overrideTags,
   }) : super(key: key);
 
   @override
@@ -81,7 +84,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     return Card(
       color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kCardBorderRadius),
+        borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
         side: BorderSide(
           color: borderColor,
           width: 2,
@@ -90,7 +93,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       clipBehavior: Clip.antiAlias,
       elevation: _elevation,
       shadowColor: Colors.black.withOpacity(0.4),
-      margin: kCardPadding,
+      margin: Constants.cardPadding,
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
         child: InkWell(
@@ -108,7 +111,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
               ? widget.onLongPress
               : null,
           splashFactory: InkRipple.splashFactory,
-          borderRadius: BorderRadius.circular(kCardBorderRadius),
+          borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
           child: Stack(
             fit: StackFit.passthrough,
             children: [
@@ -150,6 +153,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                             vertical: 16 + context.theme.visualDensity.vertical,
                           )
                         : null,
+                    overrideTags: widget.overrideTags,
                   ),
                 ],
               ),

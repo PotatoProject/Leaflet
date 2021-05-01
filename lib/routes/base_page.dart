@@ -5,12 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -49,10 +49,9 @@ class BasePage extends StatefulWidget {
 
 class BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
-  static const double drawerClosedWidth = 72.0;
-  static const double drawerOpenedWidth = 300.0;
+  static const double _drawerClosedWidth = 72.0;
+  static const double _drawerOpenedWidth = 300.0;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _pages = [
     NoteListPage(
@@ -117,11 +116,17 @@ class BasePageState extends State<BasePage>
       if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null) {
         await _ac.animateBack(0);
       } else {
-        await _ac.animateBack(0);
-        _ac.animateTo(1);
+        if (_ac.value == 0) {
+          _ac.animateTo(1);
+        }
       }
     }
-    _secondaryAppBar = secondaryAppBar;
+    _secondaryAppBar = secondaryAppBar != null
+        ? KeyedSubtree(
+            key: ValueKey(secondaryAppBar.runtimeType),
+            child: secondaryAppBar,
+          )
+        : null;
 
     WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
@@ -138,7 +143,7 @@ class BasePageState extends State<BasePage>
           label: "Notes",
         ),
         BottomNavigationBarItem(
-          icon: const Icon(MdiIcons.archiveOutline),
+          icon: const Icon(Icons.inventory_2_outlined),
           label: LocaleStrings.mainPage.titleArchive,
         ),
         BottomNavigationBarItem(
@@ -178,7 +183,7 @@ class BasePageState extends State<BasePage>
 
     _ac = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 75),
     );
 
     InAppUpdater.checkForUpdate(context);
@@ -242,15 +247,14 @@ class BasePageState extends State<BasePage>
                       start: useDynamicDrawer
                           ? _defaultDrawerMode == DefaultDrawerMode.expanded
                               ? _collapsedDrawer
-                                  ? drawerClosedWidth
-                                  : drawerOpenedWidth
-                              : drawerClosedWidth
+                                  ? _drawerClosedWidth
+                                  : _drawerOpenedWidth
+                              : _drawerClosedWidth
                           : 0,
                     ),
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     child: Scaffold(
-                      key: _scaffoldKey,
                       backgroundColor: Colors.transparent,
                       appBar: ConstrainedWidthAppbar(
                         width: 1920,
@@ -336,8 +340,8 @@ class BasePageState extends State<BasePage>
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
                     width: _collapsedDrawer
-                        ? drawerClosedWidth
-                        : drawerOpenedWidth,
+                        ? _drawerClosedWidth
+                        : _drawerOpenedWidth,
                     child: Material(
                       elevation: 12,
                       child: DrawerList(
@@ -371,7 +375,7 @@ class BasePageState extends State<BasePage>
                                       : LocaleStrings.mainPage.account,
                                 ),
                                 onTap: () {
-                                  Utils.showNotesModalBottomSheet(
+                                  Utils.showModalBottomSheet(
                                     context: context,
                                     builder: (context) => AccountInfo(),
                                   );
@@ -474,7 +478,12 @@ class _SecondaryAppBar extends StatelessWidget {
                       color: context.theme.cardColor,
                     ),
                   ),
-                  child: child ?? Container(),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 150),
+                    switchInCurve: decelerateEasing,
+                    switchOutCurve: decelerateEasing,
+                    child: child ?? Container(),
+                  ),
                 ),
               ),
             ),

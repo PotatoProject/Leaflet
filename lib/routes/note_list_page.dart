@@ -4,8 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
@@ -32,42 +34,14 @@ class NoteListPage extends StatefulWidget {
 }
 
 class NoteListPageState extends State<NoteListPage> {
-  bool _selecting = false;
-  final List<Note> _selectionList = [];
-
-  SelectionOptions get selectionOptions => widget.selectionOptions;
-
-  bool get selecting => _selecting;
-  set selecting(bool value) {
-    _selecting = value;
-    context.basePage!.setBottomBarEnabled(!value);
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  List<Note> get selectionList => _selectionList;
-
-  void addSelectedNote(Note note) {
-    _selectionList.add(note);
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  void removeSelectedNoteWhere(bool Function(Note) test) {
-    _selectionList.removeWhere(test);
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  void closeSelection() {
-    selecting = false;
-    _selectionList.clear();
-    setState(() {});
-  }
+  late SelectionState _selectionState;
 
   bool _backButtonSelectionClosingInterceptor(
     bool stopDefaultEvent,
     RouteInfo info,
   ) {
-    if (selecting) {
-      closeSelection();
+    if (_selectionState.selecting) {
+      _selectionState.closeSelection();
       return true;
     }
     return false;
@@ -76,6 +50,14 @@ class NoteListPageState extends State<NoteListPage> {
   @override
   void initState() {
     super.initState();
+    _selectionState = SelectionState(
+      options: widget.selectionOptions,
+      noteKind: widget.noteKind,
+      onSelectionChanged: (value) {
+        context.basePage!.setBottomBarEnabled(!value);
+      },
+    );
+    _selectionState.selectingNotifier.addListener(() => setState(() {}));
     BackButtonInterceptor.add(_backButtonSelectionClosingInterceptor);
   }
 
@@ -87,13 +69,13 @@ class NoteListPageState extends State<NoteListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectionState(
-      state: this,
+    return SelectionStateWidget.withState(
+      state: _selectionState,
       child: DependentScaffold(
         appBar: FakeAppbar(
-          child: SelectionState(
-            state: this,
-            child: selecting
+          child: SelectionStateWidget.withState(
+            state: _selectionState,
+            child: _selectionState.selecting
                 ? const SelectionBar()
                 : DefaultAppBar(
                     extraActions: appBarButtons,
@@ -101,10 +83,11 @@ class NoteListPageState extends State<NoteListPage> {
                   ),
           ),
         ),
-        useAppBarAsSecondary: selecting,
-        secondaryAppBar: widget.noteKind == ReturnMode.normal && !selecting
-            ? NewNoteBar()
-            : null,
+        useAppBarAsSecondary: _selectionState.selecting,
+        secondaryAppBar:
+            widget.noteKind == ReturnMode.normal && !_selectionState.selecting
+                ? NewNoteBar()
+                : null,
         body: StreamBuilder<List<Note>>(
           stream: helper.noteStream(widget.noteKind),
           initialData: const [],
@@ -120,7 +103,9 @@ class NoteListPageState extends State<NoteListPage> {
         ),
         resizeToAvoidBottomInset: false,
         floatingActionButton:
-            widget.noteKind == ReturnMode.normal && !selecting ? fab : null,
+            widget.noteKind == ReturnMode.normal && !_selectionState.selecting
+                ? fab
+                : null,
       ),
     );
   }
@@ -201,7 +186,7 @@ class NoteListPageState extends State<NoteListPage> {
                       context: context,
                       notes: notes,
                       reason: LocaleStrings.mainPage
-                          .notesRestored(_selectionList.length),
+                          .notesRestored(_selectionState.selectionList.length),
                       archive: widget.noteKind == ReturnMode.archive,
                     );
                   }
@@ -273,24 +258,5 @@ class NoteListPageState extends State<NoteListPage> {
 
     _state.selecting = true;
     _state.addSelectedNote(note);
-  }
-}
-
-class SelectionState extends InheritedWidget {
-  @protected
-  final NoteListPageState state;
-
-  const SelectionState({
-    required this.state,
-    required Widget child,
-  }) : super(child: child);
-
-  @override
-  bool updateShouldNotify(covariant SelectionState old) {
-    return state != old.state;
-  }
-
-  static NoteListPageState of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SelectionState>()!.state;
   }
 }

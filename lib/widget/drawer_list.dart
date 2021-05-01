@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 
 class DrawerList extends StatelessWidget {

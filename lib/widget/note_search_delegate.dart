@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -22,7 +23,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       IconButton(
         icon: const Icon(Icons.filter_list),
         padding: EdgeInsets.zero,
-        onPressed: () => Utils.showNotesModalBottomSheet(
+        onPressed: () => Utils.showModalBottomSheet(
           context: context,
           builder: (context) => QueryFilters(
             query: searchQuery,

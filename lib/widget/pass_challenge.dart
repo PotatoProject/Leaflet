@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class PassChallenge extends StatefulWidget {
   final bool editMode;
@@ -38,32 +39,20 @@ class _PassChallengeState extends State<PassChallenge> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return DialogSheetBase(
+      title: Text(
+        widget.editMode
+            ? LocaleStrings.common.masterPassModify
+            : LocaleStrings.common.masterPassConfirm,
+      ),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (widget.description != null) Text(widget.description!),
           Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              widget.editMode
-                  ? LocaleStrings.common.masterPassModify
-                  : LocaleStrings.common.masterPassConfirm,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          if (widget.description != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(widget.description!),
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
+              autofocus: true,
               keyboardType: TextInputType.visiblePassword,
               controller: controller,
               obscureText: !showPass,
@@ -81,20 +70,14 @@ class _PassChallengeState extends State<PassChallenge> {
                   controller.text.length >= 4 ? (_) => _onConfirm() : null,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                const Spacer(),
-                TextButton(
-                  onPressed: controller.text.length >= 4 ? _onConfirm : null,
-                  child: Text(widget.editMode ? "Save" : "Confirm"),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: controller.text.length >= 4 ? _onConfirm : null,
+          child: Text(widget.editMode ? "Save" : "Confirm"),
+        ),
+      ],
     );
   }
 

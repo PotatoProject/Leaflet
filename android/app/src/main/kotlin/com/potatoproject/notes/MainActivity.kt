@@ -12,7 +12,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
-        flutterEngine.getPlugins().add(NotesPlugin())
+        flutterEngine.plugins.add(NotesPlugin(this))
     }
 
     override fun provideSplashScreen(): SplashScreen? {

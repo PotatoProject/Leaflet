@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loggy/loggy.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -112,7 +112,7 @@ class SharedPrefs {
   }
 
   String get apiUrl {
-    return prefs.getString("api_url") ?? Utils.defaultApiUrl;
+    return prefs.getString("api_url") ?? Constants.defaultApiUrl;
   }
 
   set apiUrl(String value) {

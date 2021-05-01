@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
@@ -47,7 +48,8 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
         titleSpacing: 0,
         title: _title,
         textTheme: context.theme.textTheme,
-        centerTitle: false,
+        centerTitle: context.theme.platform == TargetPlatform.iOS ||
+            context.theme.platform == TargetPlatform.macOS,
         actions: [
           Visibility(
             visible: state != null && AppInfo.supportsNotesApi,
@@ -57,7 +59,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
               splashRadius: 28,
               tooltip: LocaleStrings.mainPage.account,
               onPressed: () {
-                Utils.showNotesModalBottomSheet(
+                Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => AccountInfo(),
                 );

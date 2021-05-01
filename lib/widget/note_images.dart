@@ -3,8 +3,8 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/widget/note_image.dart';
 import 'package:potato_notes/widget/separated_list.dart';
 
-const double _kImageGridSpacing = 2.0;
-const double _kImageStripSpacing = 8.0;
+const double _imageGridSpacing = 2.0;
+const double _imageStripSpacing = 8.0;
 
 class NoteImages extends StatelessWidget {
   final List<SavedImage> images;
@@ -74,7 +74,7 @@ class _ImageGrid extends StatelessWidget {
         }
 
         return SeparatedList(
-          separator: const SizedBox(height: _kImageGridSpacing),
+          separator: const SizedBox(height: _imageGridSpacing),
           children: _rows,
         );
       },
@@ -97,7 +97,7 @@ class _ImageGrid extends StatelessWidget {
 
     final double _widthSum = _sumWidths(_transformedWidths);
     final double _newHeight =
-        (baseWidth - (images.length - 1) * _kImageGridSpacing) *
+        (baseWidth - (images.length - 1) * _imageGridSpacing) *
             _height /
             _widthSum;
 
@@ -125,7 +125,7 @@ class _ImageGrid extends StatelessWidget {
 
     return SeparatedList(
       axis: Axis.horizontal,
-      separator: const SizedBox(width: _kImageGridSpacing),
+      separator: const SizedBox(width: _imageGridSpacing),
       children: _children,
     );
   }
@@ -170,9 +170,9 @@ class _ImageStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(_kImageStripSpacing),
+      padding: const EdgeInsets.all(_imageStripSpacing),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(_kImageStripSpacing / 2),
+        borderRadius: BorderRadius.circular(_imageStripSpacing / 2),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return ListView.separated(
@@ -195,8 +195,7 @@ class _ImageStrip extends StatelessWidget {
                 return SizedBox.fromSize(
                   size: _imageWidgetSize,
                   child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(_kImageStripSpacing / 2),
+                    borderRadius: BorderRadius.circular(_imageStripSpacing / 2),
                     child: Stack(
                       children: [
                         Positioned.fill(
@@ -216,7 +215,7 @@ class _ImageStrip extends StatelessWidget {
                 );
               },
               separatorBuilder: (context, index) => SizedBox.fromSize(
-                size: const Size.square(_kImageStripSpacing),
+                size: const Size.square(_imageStripSpacing),
               ),
               itemCount: images.length,
               scrollDirection: axis,

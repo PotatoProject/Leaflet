@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 
@@ -54,7 +53,7 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
                   : null,
         ),
         CheckboxListTile(
-          secondary: const Icon(MdiIcons.archiveOutline),
+          secondary: const Icon(Icons.inventory_2_outlined),
           title: const Text("Archived notes"),
           value: _mode.fromArchive,
           onChanged:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;

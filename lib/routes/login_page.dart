@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -22,8 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode usernameFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
-
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool obscurePass = true;
   bool register = false;
@@ -180,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
     return Stack(
       children: [
         Scaffold(
-          key: scaffoldKey,
           appBar: AppBar(
             title: Text(register ? "Register" : "Login"),
             textTheme: context.theme.textTheme,
