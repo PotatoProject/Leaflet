@@ -18,38 +18,50 @@ class DialogSheetBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (title != null)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: DefaultTextStyle(
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+    Widget? _content = content;
+
+    if (contentPadding != EdgeInsets.zero) {
+      _content = Padding(
+        padding: contentPadding,
+        child: _content,
+      );
+    }
+
+    return LayoutBuilder(builder: (context, constraints) {
+      //print(constraints);
+      return Padding(
+        padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
+        child: ConstrainedBox(
+          constraints: constraints,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    child: title!,
+                  ),
                 ),
-                child: title!,
-              ),
-            ),
-          if (content != null)
-            Padding(
-              padding: contentPadding,
-              child: content,
-            ),
-          if (actions != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: actionsAlignment,
-                children: actions!,
-              ),
-            ),
-        ],
-      ),
-    );
+              if (_content != null) _content,
+              if (actions != null)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: actionsAlignment,
+                    children: actions!,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

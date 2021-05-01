@@ -175,7 +175,7 @@ class _DrawPageState extends State<DrawPage>
                 toolIndex: _toolIndex,
                 onIndexChanged: (value) => setState(() => _toolIndex = value),
                 clearCanvas: () {
-                  Utils.showNotesModalBottomSheet(
+                  Utils.showModalBottomSheet(
                     context: context,
                     builder: (context) => AlertDialog(
                       shape: const RoundedRectangleBorder(),

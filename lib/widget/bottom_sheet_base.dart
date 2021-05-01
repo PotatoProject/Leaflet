@@ -15,7 +15,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
     this.shape = const RoundedRectangleBorder(),
     this.clipBehavior = Clip.none,
     this.maintainState = true,
-    this.childHandlesScroll = false,
     this.enableDismiss = true,
   });
 
@@ -24,7 +23,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final double? elevation;
   final ShapeBorder? shape;
   final Clip? clipBehavior;
-  final bool childHandlesScroll;
   final bool enableDismiss;
 
   @override
@@ -42,7 +40,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
-      childHandlesScroll: childHandlesScroll,
       child: child,
     );
   }
@@ -70,7 +67,6 @@ class _BottomSheetBase extends StatefulWidget {
   final double? elevation;
   final ShapeBorder? shape;
   final Clip? clipBehavior;
-  final bool childHandlesScroll;
 
   const _BottomSheetBase({
     required this.child,
@@ -79,7 +75,6 @@ class _BottomSheetBase extends StatefulWidget {
     this.elevation,
     this.shape,
     this.clipBehavior,
-    this.childHandlesScroll = false,
   });
 
   @override
@@ -108,12 +103,11 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
 
             final BoxConstraints _constraints = BoxConstraints(
               maxWidth: roundedShortestSide.toDouble(),
-              maxHeight: min(
-                600.0 + context.viewInsets.bottom,
-                context.mSize.height,
-              ),
+              maxHeight:
+                  min(600.0 + context.viewInsets.bottom, context.mSize.height),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
+            //print(_constraints);
 
             return GestureDetector(
               onVerticalDragStart: !_useDesktopLayout
@@ -197,11 +191,7 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                                       : context.viewInsets.bottom,
                                 ),
                               ),
-                              child: !widget.childHandlesScroll
-                                  ? SingleChildScrollView(
-                                      child: widget.child,
-                                    )
-                                  : widget.child,
+                              child: widget.child,
                             ),
                           ),
                         ),

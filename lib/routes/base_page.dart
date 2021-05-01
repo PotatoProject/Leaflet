@@ -375,7 +375,7 @@ class BasePageState extends State<BasePage>
                                       : LocaleStrings.mainPage.account,
                                 ),
                                 onTap: () {
-                                  Utils.showNotesModalBottomSheet(
+                                  Utils.showModalBottomSheet(
                                     context: context,
                                     builder: (context) => AccountInfo(),
                                   );

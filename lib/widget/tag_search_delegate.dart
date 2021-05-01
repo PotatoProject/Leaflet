@@ -55,7 +55,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
               icon: const Icon(Icons.edit_outlined),
               padding: EdgeInsets.zero,
               splashRadius: 24,
-              onPressed: () => Utils.showNotesModalBottomSheet(
+              onPressed: () => Utils.showModalBottomSheet(
                 context: context,
                 builder: (context) => TagEditor(
                   initialInput: query,
@@ -87,7 +87,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
           leading: const Icon(Icons.add),
           title: Text(LocaleStrings.search.tagCreateHint(query)),
           onTap: () async {
-            final bool? result = await Utils.showNotesModalBottomSheet<bool>(
+            final bool? result = await Utils.showModalBottomSheet<bool>(
               context: context,
               builder: (context) => TagEditor(
                 initialInput: query,

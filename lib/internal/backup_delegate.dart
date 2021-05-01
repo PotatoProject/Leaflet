@@ -29,7 +29,7 @@ import 'package:universal_platform/universal_platform.dart';
 class BackupDelegate with LoggerProvider {
   Future<bool> saveNote(Note note, String password) async {
     try {
-      final String outputDir = await _getOutputDir();
+      final String outputDir = await getOutputDir();
       final String formattedDate =
           DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
       final String name = "note-$formattedDate.note";
@@ -115,7 +115,12 @@ class BackupDelegate with LoggerProvider {
   }) async {
     final ReceivePort progressPort = ReceivePort();
     final ReceivePort returnPort = ReceivePort();
-    final String outDir = await _getOutputDir();
+    final String outDir = await getOutputDir();
+    final List<Tag> tags = [];
+    for (final Note note in notes) {
+      tags.addAll(await tagHelper.getTagsById(note.tags));
+    }
+
     final _BackupPayload payload = _BackupPayload(
       progressPort: progressPort.sendPort,
       returnPort: returnPort.sendPort,
@@ -125,6 +130,7 @@ class BackupDelegate with LoggerProvider {
       baseDir: appInfo.tempDirectory.path,
       appVersion: appInfo.packageInfo.buildNumberInt,
       name: name,
+      tags: tags,
     );
     await Isolate.spawn(_rawCreateBackup, payload);
     progressPort.listen((message) {
@@ -143,6 +149,7 @@ class BackupDelegate with LoggerProvider {
     final String tempDir = payload.baseDir;
     final int appVersion = payload.appVersion;
     final String name = payload.name;
+    final List<Tag> tags = payload.tags;
 
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat("dd_MM_yyyy-HH_mm_ss").format(now);
@@ -168,6 +175,7 @@ class BackupDelegate with LoggerProvider {
       name: name,
       createdAt: now,
       appVersion: appVersion,
+      tags: tags,
     );
 
     final ZipByteEncoder encoder = ZipByteEncoder()
@@ -203,9 +211,13 @@ class BackupDelegate with LoggerProvider {
           Directory(p.join(baseDir.path, "images"));
       await imagesDirectory.create();
       for (final SavedImage image in note.images) {
-        await File(p.join(tempDir, "${image.id}${image.fileExtension}")).copy(
-          p.join(imagesDirectory.path, "${image.id}${image.fileExtension}"),
-        );
+        final String imagePath =
+            p.join(tempDir, "${image.id}${image.fileExtension}");
+        final String newImagePath =
+            p.join(imagesDirectory.path, "${image.id}${image.fileExtension}");
+        try {
+          await File(imagePath).copy(newImagePath);
+        } catch (e) {}
       }
     }
   }
@@ -291,7 +303,7 @@ class BackupDelegate with LoggerProvider {
     ).toJsonString();
   }
 
-  static Future<String> _getOutputDir() async {
+  static Future<String> getOutputDir() async {
     if (UniversalPlatform.isAndroid) {
       final List<Directory>? directories =
           await getExternalStorageDirectories(type: StorageDirectory.documents);
@@ -420,6 +432,7 @@ class _BackupPayload {
   final String baseDir;
   final int appVersion;
   final String name;
+  final List<Tag> tags;
 
   const _BackupPayload({
     required this.progressPort,
@@ -430,6 +443,7 @@ class _BackupPayload {
     required this.baseDir,
     required this.appVersion,
     required this.name,
+    required this.tags,
   });
 }
 

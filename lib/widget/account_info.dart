@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -110,7 +109,7 @@ class AccountInfo extends StatelessWidget {
             const Divider(),
             if (loggedIn)
               ListTile(
-                leading: const Icon(MdiIcons.accountSettingsOutline),
+                leading: const Icon(Icons.manage_accounts_outlined),
                 title: const Text("Manage account"),
                 onTap: () async {
                   Utils.launchUrl("${prefs.apiUrl}/account");

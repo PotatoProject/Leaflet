@@ -28,6 +28,7 @@ import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/backup_password_prompt.dart';
 import 'package:potato_notes/widget/bottom_sheet_base.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
@@ -69,7 +70,7 @@ class Utils {
     BuildContext context, {
     String? description,
   }) async {
-    return showNotesModalBottomSheet<bool>(
+    return showModalBottomSheet<bool>(
       context: context,
       builder: (context) => PassChallenge(
         onChallengeSuccess: () => context.pop(true),
@@ -127,7 +128,7 @@ class Utils {
     required BuildContext context,
     bool confirmationMode = true,
   }) async {
-    final String? password = await Utils.showNotesModalBottomSheet(
+    final String? password = await Utils.showModalBottomSheet(
       context: context,
       builder: (context) =>
           BackupPasswordPrompt(confirmationMode: confirmationMode),
@@ -136,7 +137,7 @@ class Utils {
     return password;
   }
 
-  static Future<T?> showNotesModalBottomSheet<T extends Object?>({
+  static Future<T?> showModalBottomSheet<T extends Object?>({
     required BuildContext context,
     required WidgetBuilder builder,
     Color? backgroundColor,
@@ -144,7 +145,6 @@ class Utils {
     ShapeBorder? shape,
     Clip? clipBehavior,
     Color? barrierColor,
-    bool childHandlesScroll = false,
     bool enableDismiss = true,
   }) async {
     return context.push<T?>(
@@ -154,8 +154,29 @@ class Utils {
         elevation: elevation,
         shape: shape,
         clipBehavior: clipBehavior,
-        childHandlesScroll: childHandlesScroll,
         enableDismiss: enableDismiss,
+      ),
+    );
+  }
+
+  static Future<void> showAlertDialog({
+    required BuildContext context,
+    Widget? title,
+    Widget? content,
+    List<Widget>? actions,
+  }) {
+    return Utils.showModalBottomSheet(
+      context: context,
+      builder: (context) => DialogSheetBase(
+        title: title,
+        content: content,
+        actions: actions ??
+            [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Text("Ok"),
+              ),
+            ],
       ),
     );
   }
@@ -205,7 +226,7 @@ class Utils {
           if (mode != ReturnMode.archive)
             SelectionOptionEntry(
               title: LocaleStrings.mainPage.selectionBarArchive,
-              icon: MdiIcons.archiveOutline,
+              icon: Icons.inventory_2_outlined,
               value: 'archive',
             ),
           SelectionOptionEntry(
@@ -310,7 +331,7 @@ class Utils {
             selectedColor = notes.first.color;
           }
 
-          selectedColor = await Utils.showNotesModalBottomSheet<int>(
+          selectedColor = await Utils.showModalBottomSheet<int>(
             context: context,
             builder: (context) => NoteColorSelector(
               selectedColor: selectedColor!,
@@ -744,7 +765,7 @@ class Utils {
 
     late final String message;
     if (extractionResult != null) {
-      final bool? confirmation = await Utils.showNotesModalBottomSheet<bool>(
+      final bool? confirmation = await Utils.showModalBottomSheet<bool>(
         context: context,
         builder: (context) =>
             RestoreConfirmationDialog(metadata: extractionResult.metadata),
@@ -838,7 +859,10 @@ class Utils {
     return path != null ? File(path) : null;
   }
 
-  static Future<String?> pickFile({List<String>? allowedExtensions}) async {
+  static Future<String?> pickFile({
+    List<String>? allowedExtensions,
+    String? initialDirectory,
+  }) async {
     final dynamic asyncFile = DeviceInfo.isDesktop
         ? await openFile(
             acceptedTypeGroups: [
@@ -846,6 +870,7 @@ class Utils {
                 extensions: allowedExtensions,
               ),
             ],
+            initialDirectory: initialDirectory,
           )
         : (await FilePicker.platform.pickFiles())?.files.first;
 
@@ -854,8 +879,10 @@ class Utils {
     return asyncFile.path as String;
   }
 
-  static Future<List<String>?> pickFiles(
-      {List<String>? allowedExtensions}) async {
+  static Future<List<String>?> pickFiles({
+    List<String>? allowedExtensions,
+    String? initialDirectory,
+  }) async {
     final List<dynamic>? asyncFiles = DeviceInfo.isDesktop
         ? await openFiles(
             acceptedTypeGroups: [
@@ -863,6 +890,7 @@ class Utils {
                 extensions: allowedExtensions,
               ),
             ],
+            initialDirectory: initialDirectory,
           )
         : (await FilePicker.platform.pickFiles(allowMultiple: true))?.files;
 

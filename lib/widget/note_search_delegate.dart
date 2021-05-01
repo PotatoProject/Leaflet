@@ -23,7 +23,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       IconButton(
         icon: const Icon(Icons.filter_list),
         padding: EdgeInsets.zero,
-        onPressed: () => Utils.showNotesModalBottomSheet(
+        onPressed: () => Utils.showModalBottomSheet(
           context: context,
           builder: (context) => QueryFilters(
             query: searchQuery,

@@ -24,6 +24,7 @@ class NoteView extends StatefulWidget {
   final bool selected;
   final ValueChanged<bool?>? onCheckboxChanged;
   final bool allowSelection;
+  final List<Tag>? overrideTags;
 
   const NoteView({
     Key? key,
@@ -34,6 +35,7 @@ class NoteView extends StatefulWidget {
     this.selected = false,
     this.onCheckboxChanged,
     this.allowSelection = false,
+    this.overrideTags,
   }) : super(key: key);
 
   @override
@@ -151,6 +153,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                             vertical: 16 + context.theme.visualDensity.vertical,
                           )
                         : null,
+                    overrideTags: widget.overrideTags,
                   ),
                 ],
               ),

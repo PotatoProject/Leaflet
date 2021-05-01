@@ -192,10 +192,11 @@ extension NoteX on Note {
     );
   }
 
-  List<String> get actualTags {
+  List<String> getActualTags({List<Tag>? overrideTags}) {
     final List<String> actualTags = [];
+    final List<Tag> providedTags = overrideTags ?? prefs.tags;
     for (final String tag in tags) {
-      final Tag? actualTag = prefs.tags.firstWhereOrNull(
+      final Tag? actualTag = providedTags.firstWhereOrNull(
         (t) => t.id == tag,
       );
       if (actualTag != null) actualTags.add(actualTag.id);

@@ -206,6 +206,7 @@ class _NotePageState extends State<NotePage> {
     final bool showNewItemButton =
         note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
             note.listContent.isEmpty;
+    final List<String> actualTags = note.getActualTags();
 
     return ListView(
       padding: EdgeInsets.only(
@@ -218,7 +219,7 @@ class _NotePageState extends State<NotePage> {
             height: imageWidgetSize,
             child: getImageWidget(Axis.horizontal),
           ),
-        if (note.actualTags.isNotEmpty)
+        if (actualTags.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(8),
             width: context.mSize.width,
@@ -226,10 +227,10 @@ class _NotePageState extends State<NotePage> {
               spacing: 8,
               runSpacing: 8,
               children: List.generate(
-                note.actualTags.length,
+                actualTags.length,
                 (index) {
                   final Tag tag = prefs.tags.firstWhere(
-                    (tag) => tag.id == note.actualTags[index],
+                    (tag) => tag.id == actualTags[index],
                   );
 
                   return TagChip(
@@ -407,7 +408,7 @@ class _NotePageState extends State<NotePage> {
           icon: const Icon(Icons.color_lens_outlined),
           padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarColor,
-          onPressed: () => Utils.showNotesModalBottomSheet(
+          onPressed: () => Utils.showModalBottomSheet(
             context: context,
             backgroundColor: context.theme.cardColor,
             builder: (context) => NoteColorSelector(
@@ -426,7 +427,7 @@ class _NotePageState extends State<NotePage> {
           padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarAddItem,
           onPressed: () async {
-            Utils.showNotesModalBottomSheet(
+            Utils.showModalBottomSheet(
               context: context,
               builder: (context) {
                 return Column(
@@ -521,7 +522,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   void showPrivacyOptionSheet() {
-    Utils.showNotesModalBottomSheet(
+    Utils.showModalBottomSheet(
       context: context,
       backgroundColor: context.theme.bottomSheetTheme.backgroundColor,
       builder: (context) => StatefulBuilder(

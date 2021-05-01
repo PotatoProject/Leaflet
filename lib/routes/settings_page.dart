@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,7 +8,6 @@ import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -21,7 +19,7 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/backup_page.dart';
-import 'package:potato_notes/routes/backup_and_restore/import_page.dart';
+import 'package:potato_notes/routes/backup_and_restore/restore_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -65,41 +63,37 @@ class _SettingsPageState extends State<SettingsPage> {
               header: "Backup & Restore",
               children: [
                 SettingsTile(
-                  icon: const Icon(MdiIcons.contentSaveOutline),
+                  icon: const Icon(Icons.save_outlined),
                   title: const Text("Backup"),
                   description: const Text("Create a local copy of your notes"),
                   onTap: () async {
-                    await Utils.showNotesModalBottomSheet(
+                    await Utils.showModalBottomSheet(
                       context: context,
                       builder: (context) => BackupPage(),
                     );
                   },
                 ),
                 SettingsTile(
-                  icon: const Icon(MdiIcons.restore),
+                  icon: const Icon(Icons.restart_alt_rounded),
                   title: const Text("Restore"),
                   description: const Text(
                       "Restore a backup created from a version of Leaflet"),
-                  onTap: () {
-                    context.scaffoldMessenger.removeCurrentSnackBar();
-                    context.scaffoldMessenger.showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            "This feature is not yet available on this version."),
-                        behavior: SnackBarBehavior.floating,
-                      ),
+                  onTap: () async {
+                    await Utils.showModalBottomSheet(
+                      context: context,
+                      builder: (context) => const RestoreNotesPage(),
                     );
                   },
                 ),
                 SettingsTile(
-                  icon: const Icon(MdiIcons.fileImportOutline),
+                  icon: const Icon(Icons.file_present_outlined),
                   title: const Text("Migrate"),
                   description:
                       const Text("Import notes from a version of PotatoNotes"),
                   onTap: () async {
-                    await Utils.showSecondaryRoute(
-                      context,
-                      ImportPage(),
+                    await Utils.showModalBottomSheet(
+                      context: context,
+                      builder: (context) => const ImportNotesPage(),
                     );
                   },
                 ),
@@ -133,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 header: LocaleStrings.settings.debugTitle,
                 children: [
                   SettingsTile.withSwitch(
-                    icon: const Icon(MdiIcons.humanGreeting),
+                    icon: const Icon(Icons.emoji_people_outlined),
                     title: Text(
                       LocaleStrings.settings.debugShowSetupScreen,
                     ),
@@ -187,14 +181,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           starred: r.nextBool(),
                           color: r.nextInt(10),
-                          images: List.generate(
-                            2,
-                            (index) => SavedImage.fromJson(
-                              json.decode(
-                                '{"id": "fe4fbad3-8f4e-4bbd-95ca-b3ed12490ba8","storageLocation": "local","hash": null,"blurHash": null,"fileExtension": ".png","encrypted": false,"width": 708.0,"height": 491.0,"uploaded": false}',
-                              ) as Map<String, dynamic>,
-                            ),
-                          ),
                         );
                         await helper.saveNote(n);
                       }
@@ -311,7 +297,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () async {
-                final int? result = await Utils.showNotesModalBottomSheet(
+                final int? result = await Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
                     initialColor: context.theme.accentColor,
@@ -392,7 +378,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   buttonAction: LocaleStrings.common.goOn,
                 );
                 if (status ?? false) {
-                  Utils.showNotesModalBottomSheet(
+                  Utils.showModalBottomSheet(
                     context: context,
                     builder: (context) => SyncUrlEditor(),
                   );
@@ -446,7 +432,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   removingMasterPass ? const LinearProgressIndicator() : null,
             ),
             SettingsTile(
-              icon: const Icon(MdiIcons.formTextboxPassword),
+              icon: const Icon(Icons.password_outlined),
               title: Text(LocaleStrings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
@@ -466,7 +452,7 @@ class _SettingsPageState extends State<SettingsPage> {
     required String content,
     required String buttonAction,
   }) async {
-    return await Utils.showNotesModalBottomSheet(
+    return await Utils.showModalBottomSheet(
           context: context,
           builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -495,9 +481,8 @@ class _SettingsPageState extends State<SettingsPage> {
     int initialIndex = 0,
     bool scrollable = false,
   }) async {
-    return Utils.showNotesModalBottomSheet(
+    return Utils.showModalBottomSheet(
       context: context,
-      childHandlesScroll: scrollable,
       builder: (context) => scrollable
           ? ScrollablePositionedList.builder(
               itemBuilder: itemBuilder,
@@ -544,7 +529,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<bool?> showPassChallengeSheet(BuildContext context,
       [bool editMode = true]) async {
-    return Utils.showNotesModalBottomSheet(
+    return Utils.showModalBottomSheet(
       context: context,
       builder: (context) => PassChallenge(
         editMode: editMode,

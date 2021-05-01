@@ -11,10 +11,12 @@ import 'package:potato_notes/widget/tag_chip.dart';
 class NoteViewStatusbar extends StatefulWidget {
   final Note note;
   final EdgeInsets? padding;
+  final List<Tag>? overrideTags;
 
   const NoteViewStatusbar({
     required this.note,
     this.padding,
+    this.overrideTags,
   });
 
   @override
@@ -63,24 +65,26 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> actualTags =
+        widget.note.getActualTags(overrideTags: widget.overrideTags);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Visibility(
-          visible: widget.note.actualTags.isNotEmpty,
+          visible: actualTags.isNotEmpty,
           child: Padding(
             padding: widget.padding ?? const EdgeInsets.fromLTRB(12, 0, 12, 12),
             child: Wrap(
               spacing: 4,
               runSpacing: 4,
               children: List.generate(
-                widget.note.actualTags.length > 3
-                    ? 4
-                    : widget.note.actualTags.length,
+                actualTags.length > 3 ? 4 : actualTags.length,
                 (index) {
                   if (index != 3) {
-                    final Tag tag = prefs.tags.firstWhere(
-                      (tag) => tag.id == widget.note.actualTags[index],
+                    final List<Tag> tags = widget.overrideTags ?? prefs.tags;
+                    final Tag tag = tags.firstWhere(
+                      (tag) => tag.id == actualTags[index],
                     );
 
                     return TagChip(
@@ -88,7 +92,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                     );
                   } else {
                     return TagChip(
-                      title: "+${widget.note.actualTags.length - 3}",
+                      title: "+${actualTags.length - 3}",
                       showIcon: false,
                     );
                   }

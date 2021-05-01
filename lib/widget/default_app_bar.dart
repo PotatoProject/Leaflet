@@ -59,7 +59,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
               splashRadius: 28,
               tooltip: LocaleStrings.mainPage.account,
               onPressed: () {
-                Utils.showNotesModalBottomSheet(
+                Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => AccountInfo(),
                 );

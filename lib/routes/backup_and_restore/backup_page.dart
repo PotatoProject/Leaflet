@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -48,7 +47,7 @@ class _BackupPageState extends State<BackupPage> {
             child: Row(
               children: [
                 const Icon(
-                  MdiIcons.zipBox,
+                  Icons.archive_outlined,
                   size: 64,
                 ),
                 const SizedBox(width: 16),
@@ -139,7 +138,7 @@ class _BackupPageState extends State<BackupPage> {
     }
     if (status) {
       Navigator.pop(context);
-      Utils.showNotesModalBottomSheet(
+      Utils.showModalBottomSheet(
         context: context,
         builder: (context) => _BackupProgressPage(
           notes: notes,
@@ -198,7 +197,7 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
       cancelled = exportPath == null;
     }
     Navigator.pop(context);
-    Utils.showNotesModalBottomSheet(
+    Utils.showModalBottomSheet(
       context: context,
       builder: (context) => _BackupCompletePage(
         backupFile: !UniversalPlatform.isAndroid && !UniversalPlatform.isIOS
