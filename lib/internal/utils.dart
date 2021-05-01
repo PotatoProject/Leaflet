@@ -754,16 +754,15 @@ class Utils {
     deleteLastNoteIfEmpty(context, currentLength, id);
   }
 
-  static Future<void> importNotes(BuildContext context,
-      {String extension = "note"}) async {
+  static Future<void> importNotes(BuildContext context) async {
     final String? pickedFile = await Utils.pickFile(
-      allowedExtensions: [extension],
+      allowedExtensions: ['note'],
     );
-    if (pickedFile == null || p.extension(pickedFile) != ".$extension") return;
+    if (pickedFile == null || p.extension(pickedFile) != ".note") return;
     final MetadataExtractionResult? extractionResult =
         await BackupDelegate.extractMetadataFromFile(pickedFile);
 
-    late final String message;
+    late final RestoreResultStatus status;
     if (extractionResult != null) {
       final bool? confirmation = await Utils.showModalBottomSheet<bool>(
         context: context,
@@ -781,49 +780,30 @@ class Utils {
       final RestoreResult result =
           await backupDelegate.restoreNote(extractionResult, password);
       if (result.status == RestoreResultStatus.success) {
-        final List<Note> notes = result.notes;
+        final Note note = result.notes.first;
         final List<Tag> tags = result.tags;
-        int restoredCount = 0;
 
-        for (final Note note in notes) {
-          if (!await helper.noteExists(note)) {
-            await helper.saveNote(note);
-            restoredCount++;
-          }
-        }
-
-        if (restoredCount > 0) {
+        if (!await helper.noteExists(note)) {
+          await helper.saveNote(note);
           for (final Tag tag in tags) {
             await tagHelper.saveTag(tag);
           }
+          status = RestoreResultStatus.success;
+        } else {
+          status = RestoreResultStatus.alreadyExists;
         }
-
-        message = "$restoredCount notes were restored.";
       } else {
-        switch (result.status) {
-          case RestoreResultStatus.success:
-            message = "The note was successfuly restored.";
-            break;
-          case RestoreResultStatus.wrongFormat:
-            message = "The specified file is not a valid Leaflet backup.";
-            break;
-          case RestoreResultStatus.wrongPassword:
-            message = "Wrong password. Can't decrypt. Not restoring.";
-            break;
-          case RestoreResultStatus.unknown:
-            message = "There was an issue while importing the note.";
-            break;
-        }
+        status = result.status;
       }
       Utils.hideLoadingOverlay(context);
     } else {
-      message = "The specified file is not a valid Leaflet backup.";
+      status = RestoreResultStatus.wrongFormat;
     }
 
     context.scaffoldMessenger.removeCurrentSnackBar();
     context.scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(Utils.getMessageFromRestoreStatus(status)),
         behavior: SnackBarBehavior.floating,
         width: min(640, context.mSize.width - 32),
       ),
@@ -939,6 +919,21 @@ class Utils {
     }
 
     return Themes.lightColor;
+  }
+
+  static String getMessageFromRestoreStatus(RestoreResultStatus status) {
+    switch (status) {
+      case RestoreResultStatus.success:
+        return "The note was successfuly restored.";
+      case RestoreResultStatus.wrongFormat:
+        return "The specified file is not a valid Leaflet backup.";
+      case RestoreResultStatus.wrongPassword:
+        return "The password you inserted was unable to decrypt the backup.";
+      case RestoreResultStatus.alreadyExists:
+        return "The note inside the backups is already present in the database.";
+      case RestoreResultStatus.unknown:
+        return "There was an issue while importing the note.";
+    }
   }
 }
 

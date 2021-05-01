@@ -528,6 +528,7 @@ enum RestoreResultStatus {
   success,
   wrongPassword,
   wrongFormat,
+  alreadyExists,
   unknown,
 }
 

@@ -121,6 +121,8 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
                   backups![backupKey] = metadataResult;
                   selectedBackup = backupKey;
                   setState(() {});
+                } else {
+                  _unableToRestore(RestoreResultStatus.wrongFormat);
                 }
               }
             },
@@ -154,11 +156,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
                       ),
                     );
                   } else {
-                    Utils.showAlertDialog(
-                      context: context,
-                      title: const Text("Unable to restore backup"),
-                      content: Text("${result.status}"),
-                    );
+                    _unableToRestore(result.status);
                   }
                 }
               : null,
@@ -174,6 +172,16 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
       contentPadding: backups?.isNotEmpty ?? false
           ? EdgeInsets.zero
           : const EdgeInsets.symmetric(horizontal: 16),
+    );
+  }
+
+  void _unableToRestore(RestoreResultStatus status) {
+    Utils.showAlertDialog(
+      context: context,
+      title: const Text("Unable to restore backup"),
+      content: Text(
+        Utils.getMessageFromRestoreStatus(status),
+      ),
     );
   }
 }
