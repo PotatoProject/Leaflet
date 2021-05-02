@@ -9,6 +9,8 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_image.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class NotePageImageGallery extends StatefulWidget {
   final Note note;
@@ -53,12 +55,13 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             itemBuilder: (context, index) {
               return ClipRect(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 56),
+                  padding: EdgeInsets.only(top: context.padding.top),
                   child: InteractiveViewer(
                     transformationController: transformationController,
                     minScale: 1,
                     maxScale: 4,
                     onInteractionUpdate: (details) => setState(() {}),
+                    clipBehavior: Clip.none,
                     child: NoteImage(
                       savedImage: widget.note.images[index],
                       fit: BoxFit.contain,
@@ -121,6 +124,15 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
               setState(() {});
             },
           ),
+          if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
+            IconButton(
+              icon: const Icon(Icons.share_outlined),
+              padding: EdgeInsets.zero,
+              tooltip: LocaleStrings.mainPage.selectionBarShare,
+              onPressed: () async {
+                Share.shareFiles([widget.note.images[currentPage].path]);
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.delete_outline),
             padding: EdgeInsets.zero,
