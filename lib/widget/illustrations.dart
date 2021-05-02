@@ -96,6 +96,19 @@ class IllustrationPalette {
     invertedContrast: Color(0xFF6B6B6B),
     base: Color(0xFF979797),
   );
+
+  @override
+  bool operator ==(Object? other) {
+    if (other is IllustrationPalette) {
+      return contrast.value == other.contrast.value &&
+          invertedContrast.value == other.invertedContrast.value &&
+          base.value == other.base.value;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => hashValues(contrast, invertedContrast, base);
 }
 
 @immutable

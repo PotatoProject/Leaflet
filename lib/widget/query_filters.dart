@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -36,7 +35,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           secondary: const Icon(Icons.format_size),
           title: Text(LocaleStrings.common.caseSensitive),
           value: widget.query.caseSensitive,
-          activeColor: context.theme.accentColor,
+          activeColor: context.theme.colorScheme.secondary,
           onChanged: (value) {
             setState(() => widget.query.caseSensitive = value);
             widget.filterChangedCallback?.call();
@@ -46,7 +45,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           secondary: const Icon(Icons.favorite_border),
           title: const Text("Favourites only"),
           value: widget.query.onlyFavourites,
-          activeColor: context.theme.accentColor,
+          activeColor: context.theme.colorScheme.secondary,
           onChanged: (value) {
             setState(() => widget.query.onlyFavourites = value);
             widget.filterChangedCallback?.call();
@@ -76,9 +75,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           trailing: Icon(
             Icons.brightness_1,
             size: 28,
-            color: Color(
-              NoteColors.colorList[widget.query.color].dynamicColor(context),
-            ),
+            color: context.notePalette.colors[widget.query.color].color,
           ),
           onTap: () async {
             final int? queryColor = await Utils.showModalBottomSheet(

@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       LocaleStrings.settings.debugShowSetupScreen,
                     ),
                     value: !prefs.welcomePageSeen,
-                    activeColor: context.theme.accentColor,
+                    activeColor: context.theme.colorScheme.secondary,
                     onChanged: (value) async {
                       prefs.welcomePageSeen = !value;
                     },
@@ -262,7 +262,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settings.personalizationUseAmoled),
               icon: const Icon(Icons.brightness_2_outlined),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
             ),
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(
@@ -274,7 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   LocaleStrings.settings.personalizationUseCustomAccent,
                 ),
                 icon: const Icon(Icons.color_lens_outlined),
-                activeColor: context.theme.accentColor,
+                activeColor: context.theme.colorScheme.secondary,
               ),
             SettingsTile(
               title: Text(
@@ -300,7 +300,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 final int? result = await Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
-                    initialColor: context.theme.accentColor,
+                    initialColor: context.theme.colorScheme.secondary,
                   ),
                 );
 
@@ -318,7 +318,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settings.personalizationUseGrid),
               icon: const Icon(Icons.dashboard_outlined),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
             ),
             SettingsTile(
               icon: const Icon(Icons.translate),
@@ -427,7 +427,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               icon: const Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settings.privacyUseMasterPass),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               subtitle:
                   removingMasterPass ? const LinearProgressIndicator() : null,
             ),

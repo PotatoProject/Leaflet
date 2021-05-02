@@ -8,11 +8,15 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/note_color_palette.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:potato_notes/widget/illustrations.dart';
+import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:recase/recase.dart';
 
 extension NoteX on Note {
@@ -271,6 +275,10 @@ extension SafeGetList<T> on List<T> {
 
 extension ContextProviders on BuildContext {
   ThemeData get theme => Theme.of(this);
+  LeafletThemeData get leafletTheme => LeafletTheme.of(this);
+  NoteColorPalette get notePalette => leafletTheme.notePalette;
+  IllustrationPalette get illustrationPalette =>
+      leafletTheme.illustrationPalette;
 
   MediaQueryData get mediaQuery => MediaQuery.of(this);
   Size get mSize => mediaQuery.size;
@@ -295,4 +303,31 @@ extension ContextProviders on BuildContext {
   DismissibleRouteState? get dismissibleRoute => DismissibleRoute.maybeOf(this);
 
   OverlayState? get overlay => Overlay.of(this);
+}
+
+extension NoteColorX on NoteColor {
+  String get label {
+    switch (type) {
+      case NoteColorType.empty:
+        return LocaleStrings.common.colorNone;
+      case NoteColorType.red:
+        return LocaleStrings.common.colorRed;
+      case NoteColorType.orange:
+        return LocaleStrings.common.colorOrange;
+      case NoteColorType.yellow:
+        return LocaleStrings.common.colorYellow;
+      case NoteColorType.green:
+        return LocaleStrings.common.colorGreen;
+      case NoteColorType.cyan:
+        return LocaleStrings.common.colorCyan;
+      case NoteColorType.lightBlue:
+        return LocaleStrings.common.colorLightBlue;
+      case NoteColorType.blue:
+        return LocaleStrings.common.colorBlue;
+      case NoteColorType.purple:
+        return LocaleStrings.common.colorPurple;
+      case NoteColorType.pink:
+        return LocaleStrings.common.colorPink;
+    }
+  }
 }

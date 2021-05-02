@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -51,7 +50,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = widget.note.color != 0
-        ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
+        ? context.notePalette.colors[widget.note.color].color
         : context.theme.cardColor;
     final Color borderColor =
         widget.selected ? context.theme.iconTheme.color! : Colors.transparent;
@@ -90,7 +89,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           width: 2,
         ),
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: widget.note.images.isNotEmpty ? Clip.antiAlias : Clip.none,
       elevation: _elevation,
       shadowColor: Colors.black.withOpacity(0.4),
       margin: Constants.cardPadding,
@@ -272,8 +271,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         (index) {
           final ListItem item = widget.note.listContent[index];
           final Color backgroundColor = widget.note.color != 0
-              ? Color(
-                  NoteColors.colorList[widget.note.color].dynamicColor(context))
+              ? context.notePalette.colors[widget.note.color].color
               : context.theme.cardColor;
           final bool showMoreItem = index == 5;
           final Widget icon = showMoreItem
@@ -282,7 +280,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   value: item.status,
                   activeColor: widget.note.color != 0
                       ? context.theme.textTheme.caption!.color
-                      : context.theme.accentColor,
+                      : context.theme.colorScheme.secondary,
                   checkColor: backgroundColor,
                   onChanged: (value) {
                     widget.note.listContent[index].status = value!;

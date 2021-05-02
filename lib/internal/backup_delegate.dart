@@ -215,9 +215,7 @@ class BackupDelegate with LoggerProvider {
             p.join(tempDir, "${image.id}${image.fileExtension}");
         final String newImagePath =
             p.join(imagesDirectory.path, "${image.id}${image.fileExtension}");
-        try {
-          await File(imagePath).copy(newImagePath);
-        } catch (e) {}
+        await File(imagePath).copy(newImagePath);
       }
     }
   }

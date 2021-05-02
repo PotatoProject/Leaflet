@@ -46,7 +46,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             leading: NoteViewCheckbox(
               value: tags.contains(filteredTags[index].id),
               checkColor: context.theme.scaffoldBackgroundColor,
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               onChanged: (value) =>
                   _onChangeValue(value!, filteredTags[index].id),
             ),

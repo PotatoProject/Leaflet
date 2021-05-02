@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:potato_notes/widget/leaflet_theme.dart';
 
 /// [NotesApp] uses this [TextStyle] as its [DefaultTextStyle] to encourage
 /// developers to be intentional about their [DefaultTextStyle].
@@ -162,6 +163,8 @@ class NotesApp extends StatefulWidget {
     this.darkTheme,
     this.highContrastTheme,
     this.highContrastDarkTheme,
+    required this.leafletTheme,
+    required this.leafletDarkTheme,
     this.themeMode = ThemeMode.system,
     this.locale,
     this.localizationsDelegates,
@@ -200,6 +203,8 @@ class NotesApp extends StatefulWidget {
     this.darkTheme,
     this.highContrastTheme,
     this.highContrastDarkTheme,
+    required this.leafletTheme,
+    required this.leafletDarkTheme,
     this.themeMode = ThemeMode.system,
     this.locale,
     this.localizationsDelegates,
@@ -363,6 +368,10 @@ class NotesApp extends StatefulWidget {
   ///  * [MediaQueryData.highContrast], which indicates the platform's
   ///    desire to increase contrast.
   final ThemeData? highContrastDarkTheme;
+
+  final LeafletThemeData leafletTheme;
+
+  final LeafletThemeData leafletDarkTheme;
 
   /// Determines which theme will be used by the application if both [theme]
   /// and [darkTheme] are provided.
@@ -762,28 +771,39 @@ class _NotesAppState extends State<NotesApp> {
     }
     theme ??= widget.theme ?? ThemeData.light();
 
+    late LeafletThemeData leafletTheme;
+
+    if (useDarkTheme && widget.darkTheme != null) {
+      leafletTheme = widget.leafletDarkTheme;
+    } else {
+      leafletTheme = widget.leafletTheme;
+    }
+
     return ScaffoldMessenger(
       key: widget.scaffoldMessengerKey,
       child: AnimatedTheme(
         data: theme,
-        child: widget.builder != null
-            ? Builder(
-                builder: (BuildContext context) {
-                  // Why are we surrounding a builder with a builder?
-                  //
-                  // The widget.builder may contain code that invokes
-                  // Theme.of(), which should return the theme we selected
-                  // above in AnimatedTheme. However, if we invoke
-                  // widget.builder() directly as the child of AnimatedTheme
-                  // then there is no Context separating them, and the
-                  // widget.builder() will not find the theme. Therefore, we
-                  // surround widget.builder with yet another builder so that
-                  // a context separates them and Theme.of() correctly
-                  // resolves to the theme we passed to AnimatedTheme.
-                  return widget.builder!(context, child);
-                },
-              )
-            : child!,
+        child: LeafletTheme(
+          data: leafletTheme,
+          child: widget.builder != null
+              ? Builder(
+                  builder: (BuildContext context) {
+                    // Why are we surrounding a builder with a builder?
+                    //
+                    // The widget.builder may contain code that invokes
+                    // Theme.of(), which should return the theme we selected
+                    // above in AnimatedTheme. However, if we invoke
+                    // widget.builder() directly as the child of AnimatedTheme
+                    // then there is no Context separating them, and the
+                    // widget.builder() will not find the theme. Therefore, we
+                    // surround widget.builder with yet another builder so that
+                    // a context separates them and Theme.of() correctly
+                    // resolves to the theme we passed to AnimatedTheme.
+                    return widget.builder!(context, child);
+                  },
+                )
+              : child!,
+        ),
       ),
     );
   }

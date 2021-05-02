@@ -54,7 +54,7 @@ class BasePageNavigationBar extends StatelessWidget {
               currentIndex: index,
               onTap: onPageChanged,
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: context.theme.accentColor,
+              selectedItemColor: context.theme.colorScheme.secondary,
               unselectedItemColor: context.theme.textTheme.caption!.color,
               elevation: 0,
             ),

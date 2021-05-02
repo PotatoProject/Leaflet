@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -176,9 +175,8 @@ class _NotePageState extends State<NotePage> {
   }
 
   ThemeData get notePageThemeData {
-    final Color? noteColor = note.color != 0
-        ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-        : null;
+    final Color? noteColor =
+        note.color != 0 ? context.notePalette.colors[note.color].color : null;
     final Color? foregroundColor =
         note.color != 0 ? context.theme.textTheme.caption!.color : null;
 
@@ -192,12 +190,14 @@ class _NotePageState extends State<NotePage> {
       appBarTheme: context.theme.appBarTheme.copyWith(
         color: noteColor?.withOpacity(0.9),
       ),
-      toggleableActiveColor: foregroundColor ?? context.theme.accentColor,
+      toggleableActiveColor:
+          foregroundColor ?? context.theme.colorScheme.secondary,
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: foregroundColor ?? context.theme.accentColor,
-        selectionColor:
-            (foregroundColor ?? context.theme.accentColor).withOpacity(0.3),
-        selectionHandleColor: foregroundColor ?? context.theme.accentColor,
+        cursorColor: foregroundColor ?? context.theme.colorScheme.secondary,
+        selectionColor: (foregroundColor ?? context.theme.colorScheme.secondary)
+            .withOpacity(0.3),
+        selectionHandleColor:
+            foregroundColor ?? context.theme.colorScheme.secondary,
       ),
     );
   }
@@ -327,7 +327,7 @@ class _NotePageState extends State<NotePage> {
         notifyNoteChanged();
       },
       checkColor: note.color != 0
-          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
+          ? context.notePalette.colors[note.color].color
           : context.theme.scaffoldBackgroundColor,
     );
   }
@@ -536,7 +536,7 @@ class _NotePageState extends State<NotePage> {
                     () => note = note.copyWith(hideContent: !note.hideContent));
                 notifyNoteChanged();
               },
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               secondary: const Icon(Icons.remove_red_eye_outlined),
               title: Text(LocaleStrings.notePage.privacyHideContent),
             ),
@@ -554,7 +554,7 @@ class _NotePageState extends State<NotePage> {
                       }
                     }
                   : null,
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               secondary: const Icon(Icons.lock_outlined),
               title: Text(LocaleStrings.notePage.privacyLockNote),
               subtitle: prefs.masterPass == ""
@@ -585,7 +585,7 @@ class _NotePageState extends State<NotePage> {
                         }
                       }
                     : null,
-                activeColor: context.theme.accentColor,
+                activeColor: context.theme.colorScheme.secondary,
                 secondary: const Icon(Icons.fingerprint_outlined),
                 title: Text(LocaleStrings.notePage.privacyUseBiometrics),
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -143,7 +143,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                           icon: Icon(e.icon),
                           tooltip: e.title,
                           color: widget.toolIndex == i
-                              ? context.theme.accentColor
+                              ? context.theme.colorScheme.secondary
                               : null,
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           onPressed: widget.toolIndex == i
@@ -351,7 +351,7 @@ class _ColorStrip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(
-            NoteColors.colorList.length,
+            context.notePalette.colors.length,
             (index) {
               Color color;
 
@@ -371,14 +371,14 @@ class _ColorStrip extends StatelessWidget {
               } else {
                 switch (type) {
                   case ColorType.dark:
-                    color = Color(NoteColors.colorList[index].darkColor!);
+                    color = NoteColorPalette.dark().colors[index].color;
                     break;
                   case ColorType.light:
-                    color = Color(NoteColors.colorList[index].lightColor!);
+                    color = NoteColorPalette.light().colors[index].color;
                     break;
                   case ColorType.normal:
                   default:
-                    color = Color(NoteColors.colorList[index].color);
+                    color = NoteColorPalette.neutral().colors[index].color;
                     break;
                 }
               }

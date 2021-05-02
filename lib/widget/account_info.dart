@@ -67,7 +67,7 @@ class AccountInfo extends StatelessWidget {
                           ? snapshot.data!.used / snapshot.data!.limit
                           : null,
                       backgroundColor:
-                          context.theme.accentColor.withOpacity(0.2),
+                          context.theme.colorScheme.secondary.withOpacity(0.2),
                     ),
                     trailing: Text(
                       snapshot.hasData

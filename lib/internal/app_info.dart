@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -86,6 +87,8 @@ abstract class _AppInfoBase with Store {
 
   Future<void> loadData() async {
     tempDirectory = await getTemporaryDirectory();
+    final String backupDir = await BackupDelegate.getOutputDir();
+    Directory(backupDir).create();
 
     if (!DeviceInfo.isDesktopOrWeb) {
       _initNotifications();

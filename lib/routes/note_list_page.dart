@@ -5,7 +5,6 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/global_key_registry.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -112,7 +111,7 @@ class NoteListPageState extends State<NoteListPage> {
 
   Widget get fab {
     return MenuFab(
-      backgroundColor: context.theme.accentColor,
+      backgroundColor: context.theme.colorScheme.secondary,
       foregroundColor: context.theme.colorScheme.onPrimary,
       fabShape: const CircleBorder(),
       menuShape: RoundedRectangleBorder(
@@ -202,7 +201,6 @@ class NoteListPageState extends State<NoteListPage> {
     final Note note = notes[index];
 
     return NoteView(
-      key: GlobalKeyRegistry.get(note.id),
       note: note,
       onTap: () => _onNoteTap(context, note),
       onLongPress: () => _onNoteLongPress(context, note),

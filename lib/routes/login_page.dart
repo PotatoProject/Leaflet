@@ -250,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                               TextSpan(
                                 text: register ? "Login." : "Register.",
                                 style: TextStyle(
-                                  color: context.theme.accentColor,
+                                  color: context.theme.colorScheme.secondary,
                                 ),
                               ),
                             ],

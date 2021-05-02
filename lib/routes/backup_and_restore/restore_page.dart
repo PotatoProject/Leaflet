@@ -62,6 +62,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
     if (backups != null) {
       if (backups!.isNotEmpty) {
         content = ListView.builder(
+          padding: EdgeInsets.zero,
           itemBuilder: (context, index) {
             final MetadataExtractionResult metadata =
                 backups!.values.toList()[index];
@@ -110,7 +111,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
                 initialDirectory: await BackupDelegate.getOutputDir(),
               );
 
-              if (file != null) {
+              if (file != null && p.extension(file) == ".backup") {
                 final MetadataExtractionResult? metadataResult =
                     await BackupDelegate.extractMetadataFromFile(file);
 
@@ -265,13 +266,13 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
             children: [
               Icon(
                 Icons.check,
-                color: context.theme.accentColor,
+                color: context.theme.colorScheme.secondary,
               ),
               const SizedBox(width: 8),
               Text(
                 "Notes loaded successfully",
                 style: TextStyle(
-                  color: context.theme.accentColor,
+                  color: context.theme.colorScheme.secondary,
                 ),
               ),
             ],
@@ -394,8 +395,8 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                   color: context.theme.textTheme.bodyText2!.color,
                 ),
                 padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 16,
+                  left: 2,
+                  right: 8,
                 ),
               ),
               onPressed: () => setState(
@@ -406,7 +407,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                   value: replaceExistingNotes,
                   onChanged: (value) {},
                   checkColor: context.theme.scaffoldBackgroundColor,
-                  activeColor: context.theme.accentColor,
+                  activeColor: context.theme.colorScheme.secondary,
                 ),
               ),
               label: Text(

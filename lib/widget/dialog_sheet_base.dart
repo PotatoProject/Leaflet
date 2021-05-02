@@ -27,41 +27,35 @@ class DialogSheetBase extends StatelessWidget {
       );
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      //print(constraints);
-      return Padding(
-        padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-        child: ConstrainedBox(
-          constraints: constraints,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (title != null)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: DefaultTextStyle(
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    child: title!,
-                  ),
+    return Padding(
+      padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: DefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: context.theme.textTheme.bodyText2!.color,
                 ),
-              if (_content != null) _content,
-              if (actions != null)
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: actionsAlignment,
-                    children: actions!,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    });
+                child: title!,
+              ),
+            ),
+          if (_content != null) _content,
+          if (actions != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Row(
+                mainAxisAlignment: actionsAlignment,
+                children: actions!,
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }

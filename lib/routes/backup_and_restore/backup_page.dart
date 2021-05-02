@@ -24,6 +24,7 @@ class _BackupPageState extends State<BackupPage> {
   String name = "";
   String password = "";
   bool useMasterPass = false;
+  bool showPass = false;
 
   @override
   void initState() {
@@ -55,7 +56,15 @@ class _BackupPageState extends State<BackupPage> {
                   child: Column(
                     children: [
                       TextField(
+                        obscureText: !showPass,
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: Icon(showPass
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            onPressed: () =>
+                                setState(() => showPass = !showPass),
+                          ),
                           hintText: "Password",
                           hintStyle: TextStyle(
                             color: context.theme.hintColor

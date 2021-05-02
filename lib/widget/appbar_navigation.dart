@@ -36,7 +36,7 @@ class AppbarNavigation extends StatelessWidget {
               (index) => _NavigationButton(
                 item: items[index],
                 selected: this.index == index,
-                selectedColor: context.theme.accentColor,
+                selectedColor: context.theme.colorScheme.secondary,
                 onTap: () => onPageChanged?.call(index),
               ),
             ),

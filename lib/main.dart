@@ -18,6 +18,7 @@ import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
+import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:quick_actions/quick_actions.dart';
 
@@ -75,6 +76,14 @@ class PotatoNotes extends StatelessWidget {
           title: "Leaflet",
           theme: themes.light,
           darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+          leafletTheme: LeafletThemeData(
+            notePalette: themes.leafletLight.notePalette,
+            illustrationPalette: themes.leafletLight.illustrationPalette,
+          ),
+          leafletDarkTheme: LeafletThemeData(
+            notePalette: themes.leafletDark.notePalette,
+            illustrationPalette: themes.leafletDark.illustrationPalette,
+          ),
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,

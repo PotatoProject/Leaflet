@@ -58,7 +58,7 @@ class _DrawerListTileState extends State<DrawerListTile>
 
     final TextTheme textTheme = context.theme.textTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
-    final Color _activeColor = context.theme.accentColor;
+    final Color _activeColor = context.theme.colorScheme.secondary;
     final VisualDensity visualDensity = context.theme.visualDensity;
     final Offset baseDensity = visualDensity.baseSizeAdjustment;
     final double height = 56 + baseDensity.dy;

@@ -13,7 +13,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -57,7 +57,7 @@ class _DrawPageState extends State<DrawPage>
       icon: MdiIcons.marker,
       title: LocaleStrings.drawing.toolsMarker,
       toolType: DrawTool.marker,
-      color: Color(NoteColors.yellow.color),
+      color: NoteColorPalette.neutral().yellow.color,
       size: ToolSize.twelve,
     ),
     DrawingTool(

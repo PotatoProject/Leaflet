@@ -1,5 +1,5 @@
-import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
@@ -30,7 +30,7 @@ class RestoreConfirmationDialog extends StatelessWidget {
                 Text("Backup name: ${metadata.name}"),
                 const SizedBox(height: 4),
                 Text(
-                  "Creation date: ${metadata.createdAt.format("d M Y H:i")}",
+                  "Creation date: ${DateFormat("dd MMM yyyy HH:mm").format(metadata.createdAt)}",
                 ),
                 const SizedBox(height: 4),
                 Text("App version: ${metadata.appVersion}"),

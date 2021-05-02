@@ -33,7 +33,7 @@ class SettingsCategory extends StatelessWidget {
         builder: (context) => Text(
           text.toUpperCase(),
           style: TextStyle(
-            color: context.theme.accentColor,
+            color: context.theme.colorScheme.secondary,
             fontWeight: FontWeight.bold,
             fontSize: 12,
             letterSpacing: 2,
