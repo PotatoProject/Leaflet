@@ -48,15 +48,15 @@ class NoteColorPalette {
   NoteColorPalette.light()
       : this(
           empty: const Color(0x00000000),
-          red: const Color(0xFFF7786E),
-          orange: const Color(0xFFF5AF51),
-          yellow: const Color(0xFFF5E551),
-          green: const Color(0xFF51F558),
-          cyan: const Color(0xFF51F5E0),
-          lightBlue: const Color(0xFF6ECCF7),
-          blue: const Color(0xFF9EAEFA),
-          purple: const Color(0xFFB281F8),
-          pink: const Color(0xFFF881CD),
+          red: const Color(0xFFF88E86),
+          orange: const Color(0xFFF9B066),
+          yellow: const Color(0xFFFFD166),
+          green: const Color(0xFF94CF96),
+          cyan: const Color(0xFF7DDDE9),
+          lightBlue: const Color(0xFF68CBF8),
+          blue: const Color(0xFF78B8EF),
+          purple: const Color(0xFFC47DD0),
+          pink: const Color(0xFFF278A1),
         );
 
   NoteColorPalette.neutral()
@@ -66,7 +66,7 @@ class NoteColorPalette {
           orange: const Color(0xFFF57C00),
           yellow: const Color(0xFFFFB300),
           green: const Color(0xFF4CAF50),
-          cyan: const Color(0xFF00ACC1),
+          cyan: const Color(0xFF26C6DA),
           lightBlue: const Color(0xFF03A9F4),
           blue: const Color(0xFF1E88E5),
           purple: const Color(0xFF9C27B0),
@@ -76,15 +76,15 @@ class NoteColorPalette {
   NoteColorPalette.dark()
       : this(
           empty: const Color(0x00000000),
-          red: const Color(0xFF5B2925),
-          orange: const Color(0xFF5B4325),
-          yellow: const Color(0xFF5B5525),
-          green: const Color(0xFF255B27),
-          cyan: const Color(0xFF255B53),
-          lightBlue: const Color(0xFF254A5B),
-          blue: const Color(0xFF252E5B),
-          purple: const Color(0xFF3A255B),
-          pink: const Color(0xFF5B2547),
+          red: const Color(0xFF7A211B),
+          orange: const Color(0xFF7A3E00),
+          yellow: const Color(0xFF805900),
+          green: const Color(0xFF265728),
+          cyan: const Color(0xFF13636D),
+          lightBlue: const Color(0xFF01547A),
+          blue: const Color(0xFF0F4472),
+          purple: const Color(0xFF4E1358),
+          pink: const Color(0xFF740F31),
         );
 
   @override
