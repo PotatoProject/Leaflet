@@ -12,6 +12,7 @@ dependencies:
 
   back_button_interceptor: ^5.0.0
   biometric_storage: ^2.0.2
+  bitsdojo_window: ^0.1.0+1
   blurhash_dart: ^1.0.2
 
   collection: ^1.15.0

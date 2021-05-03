@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -20,6 +21,7 @@ import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:potato_notes/widget/notes_app.dart';
+import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 Future<void> main() async {
@@ -42,6 +44,13 @@ Future<void> main() async {
       ),
     ),
   );
+
+  doWhenWindowReady(() {
+    appWindow.minSize = const Size(480, 480);
+    appWindow.size = const Size(960, 600);
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 class PotatoNotes extends StatelessWidget {
@@ -126,7 +135,7 @@ class PotatoNotes extends StatelessWidget {
               ),
             );
 
-            return child!;
+            return WindowFrame(child: child!);
           },
           themeMode: prefs.themeMode,
           home: BasePage(),

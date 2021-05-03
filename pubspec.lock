@@ -71,6 +71,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  bitsdojo_window:
+    dependency: "direct main"
+    description:
+      name: bitsdojo_window
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
+  bitsdojo_window_linux:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
+  bitsdojo_window_macos:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  bitsdojo_window_platform_interface:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  bitsdojo_window_windows:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   blurhash_dart:
     dependency: "direct main"
     description:
@@ -931,7 +966,7 @@ packages:
     description:
       path: sqlcipher_flutter_libs
       ref: HEAD
-      resolved-ref: b82c9693ffa4b6fdf73acd4089cb0165aee431aa
+      resolved-ref: c51176fd1aae2e95a3440284da68869839cb63e6
       url: "https://github.com/simolus3/sqlite3.dart.git"
     source: git
     version: "0.0.1"
@@ -941,7 +976,7 @@ packages:
       name: sqlite3
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   sqlparser:
     dependency: transitive
     description:
