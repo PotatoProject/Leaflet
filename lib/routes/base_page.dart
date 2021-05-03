@@ -336,14 +336,16 @@ class BasePageState extends State<BasePage>
                 ),
                 Visibility(
                   visible: useDynamicDrawer,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: decelerateEasing,
-                    width: _collapsedDrawer
-                        ? _drawerClosedWidth
-                        : _drawerOpenedWidth,
-                    child: Material(
-                      elevation: 12,
+                  child: Material(
+                    elevation: 12,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: decelerateEasing,
+                      width: _collapsedDrawer
+                          ? _drawerClosedWidth
+                          : _drawerOpenedWidth,
+                      margin: EdgeInsetsDirectional.only(
+                          start: context.viewPaddingDirectional.start),
                       child: DrawerList(
                         items: _items,
                         currentIndex: _currentPage,
@@ -441,48 +443,53 @@ class _SecondaryAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: context.viewInsets.bottom,
-      ),
-      child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 1),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animationController,
-            curve: accelerateEasing,
-            reverseCurve: decelerateEasing,
-          ),
+    return MediaQuery.removeViewPadding(
+      context: context,
+      removeLeft: true,
+      removeRight: true,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: context.viewInsets.bottom,
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 16,
-            bottom: 16,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(
+              parent: animationController,
+              curve: accelerateEasing,
+              reverseCurve: decelerateEasing,
+            ),
           ),
-          child: ConstrainedWidthAppbar(
-            width: min(640, context.mSize.width - 32),
-            child: Material(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-              color: context.theme.cardColor,
-              clipBehavior: Clip.antiAlias,
-              elevation: 8,
-              child: SizedBox(
-                height: 48,
-                child: Theme(
-                  data: context.theme.copyWith(
-                    appBarTheme: context.theme.appBarTheme.copyWith(
-                      color: context.theme.cardColor,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              bottom: 16,
+            ),
+            child: ConstrainedWidthAppbar(
+              width: min(640, context.mSize.width - 32),
+              child: Material(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                color: context.theme.cardColor,
+                clipBehavior: Clip.antiAlias,
+                elevation: 8,
+                child: SizedBox(
+                  height: 48,
+                  child: Theme(
+                    data: context.theme.copyWith(
+                      appBarTheme: context.theme.appBarTheme.copyWith(
+                        color: context.theme.cardColor,
+                      ),
                     ),
-                  ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 150),
-                    switchInCurve: decelerateEasing,
-                    switchOutCurve: decelerateEasing,
-                    child: child ?? Container(),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 150),
+                      switchInCurve: decelerateEasing,
+                      switchOutCurve: decelerateEasing,
+                      child: child ?? Container(),
+                    ),
                   ),
                 ),
               ),

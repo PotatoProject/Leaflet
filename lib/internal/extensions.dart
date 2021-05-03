@@ -285,6 +285,24 @@ extension ContextProviders on BuildContext {
   EdgeInsets get padding => mediaQuery.padding;
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
   EdgeInsets get viewPadding => mediaQuery.viewPadding;
+  EdgeInsetsDirectional get viewPaddingDirectional {
+    switch (directionality) {
+      case TextDirection.ltr:
+        return EdgeInsetsDirectional.fromSTEB(
+          viewPadding.left,
+          viewPadding.top,
+          viewPadding.right,
+          viewPadding.bottom,
+        );
+      case TextDirection.rtl:
+        return EdgeInsetsDirectional.fromSTEB(
+          viewPadding.right,
+          viewPadding.top,
+          viewPadding.left,
+          viewPadding.bottom,
+        );
+    }
+  }
 
   BasePageState? get basePage => BasePage.maybeOf(this);
   TextDirection get directionality => Directionality.of(this);

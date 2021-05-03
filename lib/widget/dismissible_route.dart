@@ -375,9 +375,12 @@ class DismissibleRouteState extends State<DismissibleRoute> {
                 data: context.mediaQuery.copyWith(
                   padding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
                       ? EdgeInsets.zero
-                      : context.mediaQuery.padding,
-                  viewInsets: context.mediaQuery.viewInsets.copyWith(
-                    bottom: context.mediaQuery.viewInsets.bottom -
+                      : context.padding,
+                  viewPadding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
+                      ? EdgeInsets.zero
+                      : context.viewPadding,
+                  viewInsets: context.viewInsets.copyWith(
+                    bottom: context.viewInsets.bottom -
                         ((context.mSize.height - height) / 2),
                   ),
                 ),

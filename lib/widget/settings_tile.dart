@@ -58,10 +58,10 @@ class SettingsTile extends StatelessWidget {
     return Visibility(
       visible: visible,
       child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(
-          16 + context.viewPadding.left,
+        contentPadding: EdgeInsetsDirectional.fromSTEB(
+          16 + context.viewPaddingDirectional.start,
           0,
-          16 + context.viewPadding.right,
+          16 + context.viewPaddingDirectional.end,
           0,
         ),
         leading: icon,

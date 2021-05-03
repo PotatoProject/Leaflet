@@ -29,10 +29,10 @@ class NoteListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets padding = EdgeInsets.fromLTRB(
-      4 + context.viewPadding.left,
+    final EdgeInsetsDirectional padding = EdgeInsetsDirectional.fromSTEB(
+      4 + context.viewPaddingDirectional.start,
       4 + context.padding.top,
-      4 + context.viewPadding.right,
+      4 + context.viewPaddingDirectional.end,
       4 + 80.0 + context.viewInsets.bottom,
     );
     Widget child;

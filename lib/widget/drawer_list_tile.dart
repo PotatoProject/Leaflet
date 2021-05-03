@@ -89,6 +89,7 @@ class _DrawerListTileState extends State<DrawerListTile>
                   alignment: AlignmentDirectional.topCenter,
                   widthFactor: _curvedAc.value,
                   child: ListView(
+                    padding: EdgeInsets.zero,
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [

@@ -45,12 +45,14 @@ Future<void> main() async {
     ),
   );
 
-  doWhenWindowReady(() {
-    appWindow.minSize = const Size(400, 480);
-    appWindow.size = const Size(960, 600);
-    appWindow.alignment = Alignment.center;
-    appWindow.show();
-  });
+  if (DeviceInfo.isDesktop) {
+    doWhenWindowReady(() {
+      appWindow.minSize = const Size(400, 480);
+      appWindow.size = const Size(960, 600);
+      appWindow.alignment = Alignment.center;
+      appWindow.show();
+    });
+  }
 }
 
 class PotatoNotes extends StatelessWidget {

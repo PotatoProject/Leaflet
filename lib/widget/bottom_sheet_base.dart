@@ -179,18 +179,18 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                             bottom:
                                 !_useDesktopLayout ? context.padding.bottom : 0,
                           ),
-                          child: MediaQuery.removeViewPadding(
-                            context: context,
-                            removeLeft: _useDesktopLayout,
-                            removeRight: _useDesktopLayout,
-                            child: MediaQuery(
-                              data: context.mediaQuery.copyWith(
-                                viewInsets: context.viewInsets.copyWith(
-                                  bottom: _useDesktopLayout
-                                      ? 0
-                                      : context.viewInsets.bottom,
-                                ),
+                          child: MediaQuery(
+                            data: context.mediaQuery.copyWith(
+                              viewInsets: context.viewInsets.copyWith(
+                                bottom: _useDesktopLayout
+                                    ? 0
+                                    : context.viewInsets.bottom,
                               ),
+                            ),
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeLeft: _useDesktopLayout,
+                              removeRight: _useDesktopLayout,
                               child: widget.child,
                             ),
                           ),

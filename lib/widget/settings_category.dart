@@ -16,8 +16,8 @@ class SettingsCategory extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(
-            context.viewPadding.left + 16,
+          padding: EdgeInsetsDirectional.fromSTEB(
+            context.viewPaddingDirectional.start + 16,
             8,
             16,
             8,
