@@ -253,8 +253,11 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         !widget.note.hideContent) {
       items.add(
         Padding(
-          padding:
-              EdgeInsets.only(top: 16 + context.theme.visualDensity.vertical),
+          padding: EdgeInsets.only(
+            top: widget.note.title != "" || widget.note.content != ""
+                ? 16 + context.theme.visualDensity.vertical
+                : 0,
+          ),
           child: SeparatedList(
             separator: const SizedBox(height: 8),
             children: listContentWidgets,

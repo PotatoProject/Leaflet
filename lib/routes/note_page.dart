@@ -430,35 +430,37 @@ class _NotePageState extends State<NotePage> {
             Utils.showModalBottomSheet(
               context: context,
               builder: (context) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        note.list
-                            ? Icons.check_circle
-                            : Icons.check_circle_outline,
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          note.list
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline,
+                        ),
+                        title: Text(LocaleStrings.notePage.toggleList),
+                        onTap: () => handleAddItemTap(context, 'list'),
                       ),
-                      title: Text(LocaleStrings.notePage.toggleList),
-                      onTap: () => handleAddItemTap(context, 'list'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.photo_outlined),
-                      title: Text(LocaleStrings.notePage.imageGallery),
-                      onTap: () => handleAddItemTap(context, 'image'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.camera_outlined),
-                      enabled: !DeviceInfo.isDesktop,
-                      title: Text(LocaleStrings.notePage.imageCamera),
-                      onTap: () => handleAddItemTap(context, 'camera'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.brush_outlined),
-                      title: Text(LocaleStrings.notePage.drawing),
-                      onTap: () => handleAddItemTap(context, 'drawing'),
-                    ),
-                  ],
+                      ListTile(
+                        leading: const Icon(Icons.photo_outlined),
+                        title: Text(LocaleStrings.notePage.imageGallery),
+                        onTap: () => handleAddItemTap(context, 'image'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.camera_outlined),
+                        enabled: !DeviceInfo.isDesktop,
+                        title: Text(LocaleStrings.notePage.imageCamera),
+                        onTap: () => handleAddItemTap(context, 'camera'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.brush_outlined),
+                        title: Text(LocaleStrings.notePage.drawing),
+                        onTap: () => handleAddItemTap(context, 'drawing'),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -526,71 +528,74 @@ class _NotePageState extends State<NotePage> {
       context: context,
       backgroundColor: context.theme.bottomSheetTheme.backgroundColor,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              value: note.hideContent,
-              onChanged: (value) {
-                setState(
-                    () => note = note.copyWith(hideContent: !note.hideContent));
-                notifyNoteChanged();
-              },
-              activeColor: context.theme.colorScheme.secondary,
-              secondary: const Icon(Icons.remove_red_eye_outlined),
-              title: Text(LocaleStrings.notePage.privacyHideContent),
-            ),
-            SwitchListTile(
-              value: note.lockNote,
-              onChanged: prefs.masterPass != ""
-                  ? (value) async {
-                      final bool confirm =
-                          await Utils.showPassChallengeSheet(context) ?? false;
-
-                      if (confirm) {
-                        setState(() =>
-                            note = note.copyWith(lockNote: !note.lockNote));
-                        notifyNoteChanged();
-                      }
-                    }
-                  : null,
-              activeColor: context.theme.colorScheme.secondary,
-              secondary: const Icon(Icons.lock_outlined),
-              title: Text(LocaleStrings.notePage.privacyLockNote),
-              subtitle: prefs.masterPass == ""
-                  ? Text(
-                      LocaleStrings.notePage.privacyLockNoteMissingPass,
-                      style: const TextStyle(color: Colors.red),
-                    )
-                  : null,
-            ),
-            Visibility(
-              visible: deviceInfo.canCheckBiometrics,
-              child: SwitchListTile(
-                value: note.usesBiometrics,
-                onChanged: note.lockNote
+        builder: (context, setState) => SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile.adaptive(
+                value: note.hideContent,
+                onChanged: (value) {
+                  setState(() =>
+                      note = note.copyWith(hideContent: !note.hideContent));
+                  notifyNoteChanged();
+                },
+                activeColor: context.theme.colorScheme.secondary,
+                secondary: const Icon(Icons.remove_red_eye_outlined),
+                title: Text(LocaleStrings.notePage.privacyHideContent),
+              ),
+              SwitchListTile.adaptive(
+                value: note.lockNote,
+                onChanged: prefs.masterPass != ""
                     ? (value) async {
-                        bool confirm;
-
-                        try {
-                          confirm = await Utils.showBiometricPrompt();
-                        } on PlatformException {
-                          confirm = false;
-                        }
+                        final bool confirm =
+                            await Utils.showPassChallengeSheet(context) ??
+                                false;
 
                         if (confirm) {
                           setState(() =>
-                              note = note.copyWith(usesBiometrics: value));
+                              note = note.copyWith(lockNote: !note.lockNote));
                           notifyNoteChanged();
                         }
                       }
                     : null,
                 activeColor: context.theme.colorScheme.secondary,
-                secondary: const Icon(Icons.fingerprint_outlined),
-                title: Text(LocaleStrings.notePage.privacyUseBiometrics),
+                secondary: const Icon(Icons.lock_outlined),
+                title: Text(LocaleStrings.notePage.privacyLockNote),
+                subtitle: prefs.masterPass == ""
+                    ? Text(
+                        LocaleStrings.notePage.privacyLockNoteMissingPass,
+                        style: const TextStyle(color: Colors.red),
+                      )
+                    : null,
               ),
-            ),
-          ],
+              Visibility(
+                visible: deviceInfo.canCheckBiometrics,
+                child: SwitchListTile.adaptive(
+                  value: note.usesBiometrics,
+                  onChanged: note.lockNote
+                      ? (value) async {
+                          bool confirm;
+
+                          try {
+                            confirm = await Utils.showBiometricPrompt();
+                          } on PlatformException {
+                            confirm = false;
+                          }
+
+                          if (confirm) {
+                            setState(() =>
+                                note = note.copyWith(usesBiometrics: value));
+                            notifyNoteChanged();
+                          }
+                        }
+                      : null,
+                  activeColor: context.theme.colorScheme.secondary,
+                  secondary: const Icon(Icons.fingerprint_outlined),
+                  title: Text(LocaleStrings.notePage.privacyUseBiometrics),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
