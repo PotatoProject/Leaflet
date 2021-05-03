@@ -46,7 +46,7 @@ Future<void> main() async {
   );
 
   doWhenWindowReady(() {
-    appWindow.minSize = const Size(480, 480);
+    appWindow.minSize = const Size(400, 480);
     appWindow.size = const Size(960, 600);
     appWindow.alignment = Alignment.center;
     appWindow.show();

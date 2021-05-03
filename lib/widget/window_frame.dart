@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class WindowFrame extends StatelessWidget {
   final Widget child;
@@ -15,17 +16,19 @@ class WindowFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!DeviceInfo.isDesktop) return child;
 
+    final double toolbarHeight = UniversalPlatform.isMacOS ? 28 : 32;
+
     return Stack(
       children: [
         MediaQuery(
           data: context.mediaQuery.copyWith(
-            padding: context.padding.copyWith(top: 32),
+            padding: context.padding.copyWith(top: toolbarHeight),
           ),
           child: Positioned.fill(child: child),
         ),
         Positioned(
           top: 0,
-          height: 32,
+          height: toolbarHeight,
           width: context.mSize.width,
           child: _WindowTitlebar(),
         ),
@@ -45,6 +48,8 @@ class _WindowTitlebar extends StatelessWidget {
       opacity = 0.05;
     }
 
+    final bool showButtons = !UniversalPlatform.isMacOS;
+
     return SizedBox.expand(
       child: AnimatedContainer(
         color: deviceInfo.uiSizeFactor < 4
@@ -55,6 +60,7 @@ class _WindowTitlebar extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: Row(
+            textDirection: TextDirection.ltr,
             children: [
               Expanded(
                 child: GestureDetector(
@@ -62,20 +68,23 @@ class _WindowTitlebar extends StatelessWidget {
                   onDoubleTap: appWindow.maximizeOrRestore,
                 ),
               ),
-              _TitlebarButton(
-                onTap: appWindow.minimize,
-                child: const Icon(Icons.remove),
-              ),
-              _TitlebarButton(
-                onTap: appWindow.maximizeOrRestore,
-                child: appWindow.isMaximized
-                    ? const Icon(Icons.flip_to_front_outlined)
-                    : const Icon(Icons.crop_square),
-              ),
-              _TitlebarButton(
-                onTap: appWindow.close,
-                child: const Icon(Icons.close),
-              ),
+              if (showButtons)
+                _TitlebarButton(
+                  onTap: appWindow.minimize,
+                  child: const Icon(Icons.remove),
+                ),
+              if (showButtons)
+                _TitlebarButton(
+                  onTap: appWindow.maximizeOrRestore,
+                  child: appWindow.isMaximized
+                      ? const Icon(Icons.flip_to_front_outlined)
+                      : const Icon(Icons.crop_square),
+                ),
+              if (showButtons)
+                _TitlebarButton(
+                  onTap: appWindow.close,
+                  child: const Icon(Icons.close),
+                ),
             ],
           ),
         ),

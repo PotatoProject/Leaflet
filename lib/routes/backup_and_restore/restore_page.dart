@@ -422,8 +422,8 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
               onPressed: selectedNotes.isNotEmpty
                   ? () async {
                       if (replaceExistingNotes) {
-                        helper.deleteAllNotes();
-                        tagHelper.deleteAllTags();
+                        await helper.deleteAllNotes();
+                        await tagHelper.deleteAllTags();
                       }
 
                       for (final String id in selectedNotes) {

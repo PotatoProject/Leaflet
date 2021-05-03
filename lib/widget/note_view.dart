@@ -169,7 +169,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     width: 64,
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
-                        center: Alignment.topRight,
+                        center: AlignmentDirectional.topEnd,
                         colors: [
                           Colors.grey.shade900.withOpacity(
                             widget.note.images.isNotEmpty &&
