@@ -255,75 +255,84 @@ class BasePageState extends State<BasePage>
                     ),
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
-                    child: Scaffold(
-                      backgroundColor: Colors.transparent,
-                      appBar: ConstrainedWidthAppbar(
-                        width: 1920,
-                        child: !useDynamicDrawer
-                            ? !deviceInfo.isLandscape
-                                ? _appBar
-                                : DefaultAppBar(
-                                    extraActions: [
-                                      AppbarNavigation(
-                                        items: _items,
-                                        index: _currentPage,
-                                        enabled: _bottomBarEnabled,
-                                        onPageChanged: setCurrentPage,
-                                      ),
-                                    ],
-                                  )
-                            : null,
-                      ),
-                      extendBody: useDesktopLayout,
-                      extendBodyBehindAppBar: true,
-                      body: PageTransitionSwitcher(
-                        transitionBuilder: (
-                          child,
-                          primaryAnimation,
-                          secondaryAnimation,
-                        ) =>
-                            FadeThroughTransition(
-                          animation: primaryAnimation,
-                          secondaryAnimation: secondaryAnimation,
-                          fillColor: Colors.transparent,
-                          child: MediaQuery(
-                            data: context.mediaQuery.copyWith(
-                              padding: context.padding.copyWith(
-                                top: useDynamicDrawer
-                                    ? context.padding.top
-                                    : context.padding.top + 56,
+                    child: MediaQuery.removeViewPadding(
+                      context: context,
+                      removeLeft: true,
+                      removeRight: true,
+                      child: Scaffold(
+                        backgroundColor: Colors.transparent,
+                        appBar: ConstrainedWidthAppbar(
+                          width: 1920,
+                          mediaQueryData: context.mediaQuery,
+                          child: !useDynamicDrawer
+                              ? !deviceInfo.isLandscape
+                                  ? _appBar
+                                  : DefaultAppBar(
+                                      extraActions: [
+                                        AppbarNavigation(
+                                          items: _items,
+                                          index: _currentPage,
+                                          enabled: _bottomBarEnabled,
+                                          onPageChanged: setCurrentPage,
+                                        ),
+                                      ],
+                                    )
+                              : null,
+                        ),
+                        extendBody: useDesktopLayout,
+                        extendBodyBehindAppBar: true,
+                        body: PageTransitionSwitcher(
+                          transitionBuilder: (
+                            child,
+                            primaryAnimation,
+                            secondaryAnimation,
+                          ) =>
+                              FadeThroughTransition(
+                            animation: primaryAnimation,
+                            secondaryAnimation: secondaryAnimation,
+                            fillColor: Colors.transparent,
+                            child: MediaQuery(
+                              data: context.mediaQuery.copyWith(
+                                padding: context.padding.copyWith(
+                                  top: useDynamicDrawer
+                                      ? context.padding.top
+                                      : context.padding.top + 56,
+                                ),
+                                viewPadding: useDynamicDrawer
+                                    ? EdgeInsetsDirectional.only(
+                                        top: context.viewPaddingDirectional.top,
+                                        bottom: context
+                                            .viewPaddingDirectional.bottom,
+                                        end: context.viewPaddingDirectional.end,
+                                      ).resolve(context.directionality)
+                                    : null,
                               ),
-                              viewPadding: useDynamicDrawer
-                                  ? EdgeInsetsDirectional.only(
-                                      top: context.viewPaddingDirectional.top,
-                                      bottom:
-                                          context.viewPaddingDirectional.bottom,
-                                      end: context.viewPaddingDirectional.end,
-                                    ).resolve(context.directionality)
-                                  : null,
-                            ),
-                            child: PageStorage(
-                              bucket: _bucket,
-                              child: child,
+                              child: PageStorage(
+                                bucket: _bucket,
+                                child: child,
+                              ),
                             ),
                           ),
+                          child: _pages.get(_currentPage),
                         ),
-                        child: _pages.get(_currentPage),
+                        resizeToAvoidBottomInset: false,
+                        bottomNavigationBar: MediaQuery(
+                          data: context.mediaQuery,
+                          child: !useDesktopLayout
+                              ? BasePageNavigationBar(
+                                  items: _items,
+                                  index: _currentPage,
+                                  enabled: _bottomBarEnabled,
+                                  onPageChanged: setCurrentPage,
+                                )
+                              : _SecondaryAppBar(
+                                  animationController: _ac,
+                                  child: _secondaryAppBar,
+                                ),
+                        ),
+                        floatingActionButton:
+                            !useDesktopLayout ? _floatingActionButton : null,
                       ),
-                      resizeToAvoidBottomInset: false,
-                      bottomNavigationBar: !useDesktopLayout
-                          ? BasePageNavigationBar(
-                              items: _items,
-                              index: _currentPage,
-                              enabled: _bottomBarEnabled,
-                              onPageChanged: setCurrentPage,
-                            )
-                          : _SecondaryAppBar(
-                              animationController: _ac,
-                              child: _secondaryAppBar,
-                            ),
-                      floatingActionButton:
-                          !useDesktopLayout ? _floatingActionButton : null,
                     ),
                   ),
                 ),

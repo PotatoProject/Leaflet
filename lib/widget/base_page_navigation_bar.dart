@@ -33,30 +33,36 @@ class BasePageNavigationBar extends StatelessWidget {
       ),
       child: Material(
         color: context.theme.canvasColor,
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: AnimatedOpacity(
-            opacity: enabled ? 1.0 : 0.5,
-            duration: const Duration(milliseconds: 300),
-            child: BottomNavigationBar(
-              items: items
-                  .map(
-                    (e) => BottomNavigationBarItem(
-                      icon: e.icon,
-                      label: e.label,
-                      activeIcon: e.activeIcon,
-                      tooltip: "",
-                    ),
-                  )
-                  .toList(),
-              backgroundColor: Colors.transparent,
-              selectedFontSize: 12,
-              currentIndex: index,
-              onTap: onPageChanged,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: context.theme.colorScheme.secondary,
-              unselectedItemColor: context.theme.textTheme.caption!.color,
-              elevation: 0,
+        child: Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: context.viewPaddingDirectional.start,
+            end: context.viewPaddingDirectional.end,
+          ),
+          child: IgnorePointer(
+            ignoring: !enabled,
+            child: AnimatedOpacity(
+              opacity: enabled ? 1.0 : 0.5,
+              duration: const Duration(milliseconds: 300),
+              child: BottomNavigationBar(
+                items: items
+                    .map(
+                      (e) => BottomNavigationBarItem(
+                        icon: e.icon,
+                        label: e.label,
+                        activeIcon: e.activeIcon,
+                        tooltip: "",
+                      ),
+                    )
+                    .toList(),
+                backgroundColor: Colors.transparent,
+                selectedFontSize: 12,
+                currentIndex: index,
+                onTap: onPageChanged,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: context.theme.colorScheme.secondary,
+                unselectedItemColor: context.theme.textTheme.caption!.color,
+                elevation: 0,
+              ),
             ),
           ),
         ),

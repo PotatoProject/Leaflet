@@ -20,6 +20,7 @@ import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 import 'package:potato_notes/widget/drawing_toolbar.dart';
 import 'package:potato_notes/widget/fake_appbar.dart';
@@ -319,9 +320,9 @@ class _DrawPageState extends State<DrawPage>
 
     Future<void> _internal() async {
       if (!_controller.saved) {
-        final bool? exit = await showDialog(
+        final bool? exit = await Utils.showModalBottomSheet(
           context: _globalContext!,
-          builder: (context) => AlertDialog(
+          builder: (context) => DialogSheetBase(
             title: Text(LocaleStrings.common.areYouSure),
             content: Text(LocaleStrings.drawing.exitPrompt),
             actions: [
