@@ -22,17 +22,13 @@ class PassChallenge extends StatefulWidget {
 }
 
 class _PassChallengeState extends State<PassChallenge> {
-  late TextEditingController controller;
+  final TextEditingController controller = TextEditingController();
 
   bool showPass = false;
   String? status;
 
   @override
   void initState() {
-    controller = TextEditingController(
-      text: widget.editMode ? prefs.masterPass : "",
-    );
-
     controller.addListener(() => setState(() {}));
     super.initState();
   }
