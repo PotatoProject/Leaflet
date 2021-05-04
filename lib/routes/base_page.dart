@@ -467,6 +467,7 @@ class _SecondaryAppBar extends StatelessWidget {
       ),
       child: MediaQuery.removeViewPadding(
         context: context,
+        removeTop: true,
         removeLeft: true,
         removeRight: true,
         child: Padding(

@@ -281,6 +281,7 @@ class _NotePageState extends State<NotePage> {
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               onTap: showNewItemButton ? () => addListContentItem() : null,
+              horizontalTitleGap: 8,
             ),
           ),
       ],
@@ -701,7 +702,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                       context.theme.scaffoldBackgroundColor,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 24),
               Expanded(
                 child: TextField(
                   controller: widget.controller,
