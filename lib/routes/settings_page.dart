@@ -69,10 +69,21 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: const Text("Backup"),
                   description: const Text("Create a local copy of your notes"),
                   onTap: () async {
-                    await Utils.showModalBottomSheet(
-                      context: context,
-                      builder: (context) => BackupPage(),
-                    );
+                    final List<Note> notes =
+                        await helper.listNotes(ReturnMode.local);
+                    if (notes.isNotEmpty) {
+                      await Utils.showModalBottomSheet(
+                        context: context,
+                        builder: (context) => BackupPage(),
+                      );
+                    } else {
+                      await Utils.showAlertDialog(
+                        context: context,
+                        title: const Text("No notes to restore!"),
+                        content:
+                            const Text("There are no saved notes to backup."),
+                      );
+                    }
                   },
                 ),
                 SettingsTile(
