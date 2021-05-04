@@ -12,9 +12,15 @@ class InAppUpdater {
   const InAppUpdater._();
 
   static BuildType get buildType {
-    if (UniversalPlatform.isWeb) {
-      // Users always get the latest version as long as they refresh and
+    if (UniversalPlatform.isWeb ||
+        UniversalPlatform.isIOS ||
+        UniversalPlatform.isMacOS) {
+      // For web, users always get the latest version as long as they refresh and
       // other stuff we cant really manipulate (at least idk how to do that)
+      //
+      // On apple OSes instead i just couldn't care less about their shenanigans,
+      // apple shall resolve those by their own
+
       return BuildType.unsupported;
     }
 
@@ -23,16 +29,11 @@ class InAppUpdater {
       return BuildType.gitHub;
     }
 
-    return _getBuildType(
-      const String.fromEnvironment(
-        "build_type",
-        defaultValue: "github",
-      ),
-    );
+    return _getBuildType(appConfig.buildType);
   }
 
-  static BuildType _getBuildType(String buildTypeFromEnv) {
-    switch (buildTypeFromEnv.toLowerCase()) {
+  static BuildType _getBuildType(String buildTypeString) {
+    switch (buildTypeString.toLowerCase()) {
       case 'playstore':
         return BuildType.playStore;
       case 'github':

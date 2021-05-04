@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/app_config.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
@@ -18,6 +19,7 @@ class _ProvidersSingleton {
 
   late Keystore _keystore;
   late SharedPrefs _sharedPrefs;
+  late AppConfig _appConfig;
   late AppInfo _appInfo;
   late DeviceInfo _deviceInfo;
   late Preferences _prefs;
@@ -37,6 +39,7 @@ class _ProvidersSingleton {
 
   Future<void> initProviders(AppDatabase _db) async {
     _sharedPrefs = await SharedPrefs.newInstance();
+    _appConfig = await AppConfig.load();
     _helper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
     _dio = Dio();
@@ -58,6 +61,8 @@ Future<void> initProviders(AppDatabase _db) async =>
     _ProvidersSingleton.instance.initProviders(_db);
 
 Keystore get keystore => _ProvidersSingleton.instance._keystore;
+
+AppConfig get appConfig => _ProvidersSingleton.instance._appConfig;
 
 SharedPrefs get sharedPrefs => _ProvidersSingleton.instance._sharedPrefs;
 

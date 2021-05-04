@@ -90,6 +90,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - config.json
   fonts:
     - family: CustomIcons
       fonts:

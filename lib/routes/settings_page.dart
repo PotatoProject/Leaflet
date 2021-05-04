@@ -43,8 +43,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  static const String bugReportUrl = String.fromEnvironment('bug_report_url');
-
   bool removingMasterPass = false;
 
   @override
@@ -133,9 +131,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SettingsTile(
                   icon: const Icon(Icons.bug_report_outlined),
-                  visible: bugReportUrl != '',
+                  visible: appConfig.bugReportUrl != null,
                   title: const Text("Report a bug"),
-                  onTap: () => Utils.launchUrl(bugReportUrl),
+                  onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
                 ),
               ],
             ),
