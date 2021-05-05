@@ -262,8 +262,8 @@ class _$BackupRestoreLocaleStrings {
   final String backupCompleteSuccess = "backup_restore.backup.complete.success".tr();
   final String backupCompleteFailure = "backup_restore.backup.complete.failure".tr();
   /// At the end of the phrase the path to the file will be appended
-  final String backupCompleteDescSuccessNoFile = "backup_restore.backup.complete_desc.success.no_file".tr();
   final String backupCompleteDescSuccess = "backup_restore.backup.complete_desc.success".tr();
+  final String backupCompleteDescSuccessNoFile = "backup_restore.backup.complete_desc.success.no_file".tr();
   final String backupCompleteDescFailure = "backup_restore.backup.complete_desc.failure".tr();
   final String restoreTitle = "backup_restore.restore.title".tr();
   final String restoreFileOpen = "backup_restore.restore.file_open".tr();

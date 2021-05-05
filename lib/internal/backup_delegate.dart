@@ -75,7 +75,7 @@ class BackupDelegate with LoggerProvider {
     final String outputDir = data['outputDir']! as String;
     final String name = data['name']! as String;
     final List<Map<String, dynamic>> rawTags =
-        data['tags']! as List<Map<String, dynamic>>;
+        Utils.asList<Map<String, dynamic>>(data['tags']);
     final List<Tag> tags = _decodeTags(rawTags);
 
     final Directory noteDir = Directory(p.join(baseDir, "${note.id}-export"));

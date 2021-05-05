@@ -270,8 +270,8 @@
     <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Backing up note %s of %s</string>
     <string name="backup_restore.backup.complete.success">Backup completed successfully!</string>
     <string name="backup_restore.backup.complete.failure">Backup process was interrupted</string>
-    <string name="backup_restore.backup.complete_desc.success.no_file" comment="At the end of the phrase the path to the file will be appended">The backup process was a success! You can find the backup at </string>
-    <string name="backup_restore.backup.complete_desc.success">The backup process was a success! You can now close this dialog</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">The backup process was a success! You can find the backup at </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">The backup process was a success! You can now close this dialog</string>
     <string name="backup_restore.backup.complete_desc.failure">Something went wrong or you aborted the save process. You can retry the backup process anytime</string>
     <string name="backup_restore.restore.title">Select backup to restore</string>
     <string name="backup_restore.restore.file_open">Open file</string>
