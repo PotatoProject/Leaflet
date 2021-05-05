@@ -72,12 +72,20 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
             final bool fromFile = key.startsWith("file-");
             String cleanName =
                 metadata.metadata.name!.replaceAll(".backup", "");
-            if (fromFile) cleanName += " (From file)";
+            if (fromFile) {
+              cleanName =
+                  LocaleStrings.backupRestore.restoreFromFile(cleanName);
+            }
             return ListTile(
               leading: const Icon(Icons.description_outlined),
               title: Text(cleanName),
               subtitle: Text(
-                  "Note count: ${metadata.metadata.noteCount}, Tag count: ${metadata.metadata.tags.length}\nCreated on $formattedDate"),
+                LocaleStrings.backupRestore.restoreInfo(
+                  metadata.metadata.noteCount,
+                  metadata.metadata.tags.length,
+                  formattedDate,
+                ),
+              ),
               isThreeLine: true,
               trailing: selectedBackup == key ? const Icon(Icons.check) : null,
               selected: selectedBackup == key,
@@ -88,8 +96,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
           shrinkWrap: true,
         );
       } else {
-        content = const Text(
-            "There are no backups available. Try opening a file instead.");
+        content = Text(LocaleStrings.backupRestore.restoreNoBackups);
       }
     } else {
       content = const SizedBox(
@@ -101,7 +108,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
     return DialogSheetBase(
       title: Row(
         children: [
-          const Text("Select backup to restore"),
+          Text(LocaleStrings.backupRestore.restoreTitle),
           const Spacer(),
           IconButton(
             icon: const Icon(Icons.note_add_outlined),
@@ -128,7 +135,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
               }
             },
             padding: EdgeInsets.zero,
-            tooltip: "Open file",
+            tooltip: LocaleStrings.backupRestore.restoreFileOpen,
             splashRadius: 24,
           ),
         ],
@@ -179,7 +186,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
   void _unableToRestore(RestoreResultStatus status) {
     Utils.showAlertDialog(
       context: context,
-      title: const Text("Unable to restore backup"),
+      title: Text(LocaleStrings.backupRestore.restoreFailure),
       content: Text(
         Utils.getMessageFromRestoreStatus(status),
       ),
@@ -214,12 +221,12 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: const Text("Select import origin"),
+      title: Text(LocaleStrings.backupRestore.importTitle),
       content: Column(
         children: [
           ListTile(
             leading: const Icon(Icons.file_present_outlined),
-            title: const Text("Open PotatoNotes backup file"),
+            title: Text(LocaleStrings.backupRestore.importOpenDb),
             onTap: () async {
               final String? pickedFilePath = await Utils.pickFile(
                 allowedExtensions: ["db"],
@@ -242,7 +249,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
           ),
           ListTile(
             leading: const Icon(MdiIcons.databaseOutline),
-            title: const Text("Open previous version database"),
+            title: Text(LocaleStrings.backupRestore.importOpenPrevious),
             enabled: canUseOldDbFile,
             onTap: () async {
               final String file = await MigrationTask.v1DatabasePath;
@@ -270,7 +277,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
               ),
               const SizedBox(width: 8),
               Text(
-                "Notes loaded successfully",
+                LocaleStrings.backupRestore.importNotesLoaded,
                 style: TextStyle(
                   color: context.theme.colorScheme.secondary,
                 ),
@@ -303,10 +310,12 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
 
   String _getErrorText() {
     if (!UniversalPlatform.isAndroid) {
-      return "Only Android supports loading from previous version";
+      return LocaleStrings.backupRestore.importOpenPreviousUnsupportedPlatform;
     }
 
-    if (canUseOldDbFile) return "There was no database found from old version";
+    if (canUseOldDbFile) {
+      return LocaleStrings.backupRestore.importOpenPreviousNoFile;
+    }
 
     return "";
   }
@@ -345,7 +354,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Select notes to import"),
+        title: Text(LocaleStrings.backupRestore.selectNotes),
       ),
       body: Observer(
         builder: (context) {
@@ -411,7 +420,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 ),
               ),
               label: Text(
-                "Replace existing notes",
+                LocaleStrings.backupRestore.replaceExisting,
                 style: TextStyle(
                   color: context.theme.textTheme.bodyText2!.color,
                 ),

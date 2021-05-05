@@ -63,18 +63,22 @@ class XmlFileParser {
         final String routeName = splittedName.first;
         splittedName.removeAt(0);
         final String normalizedName = splittedName.join(".");
+        final String? comment = element.getAttribute("comment");
 
         returnMap[routeName] ??= {};
 
         if (element.name.toString() == "string") {
           if (element.text.contains("%s")) {
             returnMap[routeName]![normalizedName] ??= ArgumentString()
+              ..comment = comment
               ..argNum = _argumentNum(element.text);
           } else {
-            returnMap[routeName]![normalizedName] ??= CommonString();
+            returnMap[routeName]![normalizedName] ??= CommonString()
+              ..comment = comment;
           }
         } else if (element.name.toString() == "plurals") {
-          returnMap[routeName]![normalizedName] ??= PluralString();
+          returnMap[routeName]![normalizedName] ??= PluralString()
+            ..comment = comment;
         }
       }
     }
@@ -104,7 +108,9 @@ class XmlFileParser {
   }
 }
 
-class StringInfo {}
+class StringInfo {
+  String? comment;
+}
 
 class CommonString extends StringInfo {}
 

@@ -12,7 +12,6 @@ import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class BackupPage extends StatefulWidget {
   @override
@@ -40,7 +39,7 @@ class _BackupPageState extends State<BackupPage> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: const Text("Create backup"),
+      title: Text(LocaleStrings.backupRestore.backupTitle),
       content: Column(
         children: [
           Padding(
@@ -65,7 +64,7 @@ class _BackupPageState extends State<BackupPage> {
                             onPressed: () =>
                                 setState(() => showPass = !showPass),
                           ),
-                          hintText: "Password",
+                          hintText: LocaleStrings.backupRestore.backupPassword,
                           hintStyle: TextStyle(
                             color: context.theme.hintColor
                                 .withOpacity(useMasterPass ? 0.2 : 0.6),
@@ -83,8 +82,8 @@ class _BackupPageState extends State<BackupPage> {
                         enabled: !useMasterPass,
                       ),
                       TextField(
-                        decoration: const InputDecoration(
-                          hintText: "Name (optional)",
+                        decoration: InputDecoration(
+                          hintText: LocaleStrings.backupRestore.backupName,
                         ),
                         maxLength: 64,
                         onChanged: (value) {
@@ -100,7 +99,7 @@ class _BackupPageState extends State<BackupPage> {
           const SizedBox(height: 16),
           CheckboxListTile(
             value: useMasterPass,
-            title: const Text("Use master pass as password"),
+            title: Text(LocaleStrings.common.backupPasswordUseMasterPass),
             secondary: const Icon(Icons.vpn_key_outlined),
             onChanged: prefs.masterPass != ""
                 ? (value) => setState(() => useMasterPass = value!)
@@ -117,7 +116,7 @@ class _BackupPageState extends State<BackupPage> {
       contentPadding: EdgeInsets.zero,
       actions: [
         Text(
-          "Notes to be included in backup: ${notes.length}",
+          LocaleStrings.backupRestore.backupNumOfNotes(notes.length),
           style: TextStyle(
             color: context.theme.iconTheme.color,
           ),
@@ -125,7 +124,7 @@ class _BackupPageState extends State<BackupPage> {
         const Spacer(),
         TextButton(
           onPressed: password.length >= 4 || useMasterPass ? _onSubmit : null,
-          child: Text("Create".toUpperCase()),
+          child: Text(LocaleStrings.common.create.toUpperCase()),
         ),
       ],
     );
@@ -142,7 +141,7 @@ class _BackupPageState extends State<BackupPage> {
         showBiometrics: promptForBiometrics,
         description: useMasterPass
             ? null
-            : "Some notes are locked, require password to proceed.",
+            : LocaleStrings.backupRestore.backupProtectedNotesPrompt,
       );
     }
     if (status) {
@@ -224,11 +223,11 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(16),
+        Padding(
+          padding: const EdgeInsets.all(16),
           child: Text(
-            "Generating backup",
-            style: TextStyle(
+            LocaleStrings.backupRestore.backupCreating,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
@@ -236,7 +235,10 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
         ),
         ListTile(
           leading: const Icon(Icons.save_alt),
-          title: Text("Backing up note $currentNote of ${widget.notes.length}"),
+          title: Text(LocaleStrings.backupRestore.backupCreatingProgress(
+            currentNote,
+            widget.notes.length,
+          )),
           trailing: const SizedBox(
             height: 24,
             width: 24,
@@ -260,13 +262,13 @@ class _BackupCompletePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String title = !cancelled
-        ? "Backup completed successfully!"
-        : "Backup process was interrupted";
+        ? LocaleStrings.backupRestore.backupCompleteSuccess
+        : LocaleStrings.backupRestore.backupCompleteFailure;
     final String description = !cancelled
         ? backupFile != null
-            ? "The backup process was a success! You can find the backup at "
-            : "The backup process was a success! You can now close this dialog."
-        : "Something went wrong or you aborted the save process. You can retry the backup process anytime.";
+            ? LocaleStrings.backupRestore.backupCompleteDescSuccess
+            : LocaleStrings.backupRestore.backupCompleteDescSuccessNoFile
+        : LocaleStrings.backupRestore.backupCompleteDescFailure;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,7 +301,7 @@ class _BackupCompletePage extends StatelessWidget {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        launch("file://${backupFile!.parent.path}/");
+                        Utils.launchUrl("file://${backupFile!.parent.path}/");
                       },
                   ),
               ],
@@ -315,7 +317,7 @@ class _BackupCompletePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Close".toUpperCase()),
+                child: Text(LocaleStrings.common.close.toUpperCase()),
               ),
             ],
           ),

@@ -150,7 +150,7 @@ class AboutPage extends StatelessWidget {
       case SocialLinkType.instagram:
         return "Instagram";
       case SocialLinkType.steam:
-        return "Steaj";
+        return "Steam";
       default:
         throw ArgumentError.notNull("type");
     }

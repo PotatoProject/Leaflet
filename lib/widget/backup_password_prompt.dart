@@ -27,7 +27,7 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: const Text("Input backup password"),
+      title: Text(LocaleStrings.common.backupPasswordTitle),
       content: Column(
         children: [
           Padding(
@@ -61,7 +61,7 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
           if (!widget.confirmationMode)
             CheckboxListTile(
               value: useMasterPass,
-              title: const Text("Use master pass as password"),
+              title: Text(LocaleStrings.common.backupPasswordUseMasterPass),
               secondary: const Icon(Icons.vpn_key_outlined),
               onChanged: prefs.masterPass != ""
                   ? (value) => setState(() => _useMasterPass = value!)
@@ -82,7 +82,7 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
                   ? prefs.masterPass
                   : Utils.hashedPass(controller.text))
               : null,
-          child: const Text("Confirm"),
+          child: Text(LocaleStrings.common.confirm),
         ),
       ],
       contentPadding: EdgeInsets.zero,

@@ -39,6 +39,15 @@ class Constants {
       ],
     ),
     ContributorInfo(
+      name: "Akshit Garg",
+      role: LocaleStrings.about.contributorsAkshit,
+      avatarUrl: "https://avatars.githubusercontent.com/u/15605299",
+      socialLinks: const [
+        SocialLink(SocialLinkType.github, "gargakshit"),
+        SocialLink(SocialLinkType.twitter, "thepotatokitty"),
+      ],
+    ),
+    ContributorInfo(
       name: "SphericalKat",
       role: LocaleStrings.about.contributorsKat,
       avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
@@ -63,11 +72,11 @@ class Constants {
         SocialLink(SocialLinkType.twitter, "RshBfn"),
       ],
     ),
-    const ContributorInfo(
+    ContributorInfo(
       name: "Elias Gagnef",
-      role: "Leaflet brand name",
+      role: LocaleStrings.about.contributorsElias,
       avatarUrl: "https://avatars.githubusercontent.com/u/46574798",
-      socialLinks: [
+      socialLinks: const [
         SocialLink(SocialLinkType.twitter, "EliasGagnef"),
         SocialLink(SocialLinkType.github, "EliasGagnef"),
         SocialLink(SocialLinkType.steam, "Gagnef"),

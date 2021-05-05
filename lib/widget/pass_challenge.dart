@@ -71,7 +71,11 @@ class _PassChallengeState extends State<PassChallenge> {
       actions: [
         TextButton(
           onPressed: controller.text.length >= 4 ? _onConfirm : null,
-          child: Text(widget.editMode ? "Save" : "Confirm"),
+          child: Text(
+            widget.editMode
+                ? LocaleStrings.common.save
+                : LocaleStrings.common.confirm,
+          ),
         ),
       ],
     );

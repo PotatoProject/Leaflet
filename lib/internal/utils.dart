@@ -163,18 +163,18 @@ class Utils {
     required BuildContext context,
     Widget? title,
     Widget? content,
-    List<Widget>? actions,
+    List<Widget>? Function(BuildContext)? actions,
   }) {
     return Utils.showModalBottomSheet(
       context: context,
       builder: (context) => DialogSheetBase(
         title: title,
         content: content,
-        actions: actions ??
+        actions: actions?.call(context) ??
             [
               TextButton(
                 onPressed: () => context.pop(),
-                child: const Text("Ok"),
+                child: Text(LocaleStrings.common.ok),
               ),
             ],
       ),
@@ -197,14 +197,14 @@ class Utils {
         final bool showUnpin = notes.firstOrNull?.pinned ?? false;
 
         return [
-          const SelectionOptionEntry(
-            title: "Select",
+          SelectionOptionEntry(
+            title: LocaleStrings.mainPage.selectionBarSelect,
             icon: Icons.check,
             value: 'select',
             showOnlyOnRightClickMenu: true,
           ),
-          const SelectionOptionEntry(
-            title: "Select all",
+          SelectionOptionEntry(
+            title: LocaleStrings.mainPage.selectionBarSelectAll,
             icon: Icons.select_all_outlined,
             value: 'selectall',
             showOnlyOnRightClickMenu: true,
@@ -230,7 +230,9 @@ class Utils {
               value: 'archive',
             ),
           SelectionOptionEntry(
-            title: LocaleStrings.mainPage.selectionBarDelete,
+            title: mode == ReturnMode.trash
+                ? LocaleStrings.mainPage.selectionBarPermaDelete
+                : LocaleStrings.mainPage.selectionBarDelete,
             icon: Icons.delete_outline,
             value: mode == ReturnMode.trash ? 'perma_delete' : 'delete',
           ),
@@ -245,13 +247,14 @@ class Utils {
               UniversalPlatform.isMacOS)
             SelectionOptionEntry(
               icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
-              title:
-                  showUnpin ? "Unpin" : LocaleStrings.mainPage.selectionBarPin,
+              title: showUnpin
+                  ? LocaleStrings.mainPage.selectionBarUnpin
+                  : LocaleStrings.mainPage.selectionBarPin,
               value: 'pin',
               oneNoteOnly: true,
             ),
-          const SelectionOptionEntry(
-            title: "Save locally",
+          SelectionOptionEntry(
+            title: LocaleStrings.mainPage.selectionBarSave,
             icon: Icons.save_alt_outlined,
             value: 'export',
             oneNoteOnly: true,
@@ -378,7 +381,7 @@ class Utils {
         final bool deleted = await Utils.deleteNotes(
           context: context,
           notes: List.from(notesToBeDeleted),
-          reason: LocaleStrings.mainPage.notesDeleted(notes.length),
+          reason: LocaleStrings.mainPage.notesPermaDeleted(notes.length),
           permaDelete: true,
         );
 
@@ -500,7 +503,7 @@ class Utils {
   static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
     switch (mode) {
       case ReturnMode.normal:
-        return LocaleStrings.mainPage.titleHome;
+        return LocaleStrings.mainPage.titleNotes;
       case ReturnMode.archive:
         return LocaleStrings.mainPage.titleArchive;
       case ReturnMode.trash:
@@ -924,15 +927,15 @@ class Utils {
   static String getMessageFromRestoreStatus(RestoreResultStatus status) {
     switch (status) {
       case RestoreResultStatus.success:
-        return "The note was successfuly restored.";
+        return LocaleStrings.settings.backupRestoreRestoreStatusSuccess;
       case RestoreResultStatus.wrongFormat:
-        return "The specified file is not a valid Leaflet backup.";
+        return LocaleStrings.settings.backupRestoreRestoreStatusWrongFormat;
       case RestoreResultStatus.wrongPassword:
-        return "The password you inserted was unable to decrypt the backup.";
+        return LocaleStrings.settings.backupRestoreRestoreStatusWrongPassword;
       case RestoreResultStatus.alreadyExists:
-        return "The note inside the backups is already present in the database.";
+        return LocaleStrings.settings.backupRestoreRestoreStatusAlreadyExists;
       case RestoreResultStatus.unknown:
-        return "There was an issue while importing the note.";
+        return LocaleStrings.settings.backupRestoreRestoreStatusUnknown;
     }
   }
 }

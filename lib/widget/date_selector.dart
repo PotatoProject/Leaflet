@@ -24,12 +24,12 @@ class DateFilterSelector extends StatefulWidget {
   static String stringFromDateMode(DateFilterMode mode) {
     switch (mode) {
       case DateFilterMode.after:
-        return LocaleStrings.common.dateFilterModeAfter;
+        return LocaleStrings.search.noteFiltersDateModeAfter;
       case DateFilterMode.before:
-        return LocaleStrings.common.dateFilterModeBefore;
+        return LocaleStrings.search.noteFiltersDateModeBefore;
       case DateFilterMode.only:
       default:
-        return LocaleStrings.common.dateFilterModeExact;
+        return LocaleStrings.search.noteFiltersDateModeExact;
     }
   }
 }
@@ -62,7 +62,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
           onDateChanged: (date) => setState(() => selectedDate = date),
         ),
         ListTile(
-          title: Text(LocaleStrings.common.dateFilterMode),
+          title: Text(LocaleStrings.search.noteFiltersDateModeTitle),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           trailing: DropdownButton<DateFilterMode>(
             items: [

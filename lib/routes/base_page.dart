@@ -138,9 +138,9 @@ class BasePageState extends State<BasePage>
       context.scaffoldMessenger.showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
-        const BottomNavigationBarItem(
-          icon: Icon(CustomIcons.notes),
-          label: "Notes",
+        BottomNavigationBarItem(
+          icon: const Icon(CustomIcons.notes),
+          label: LocaleStrings.mainPage.titleNotes,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.inventory_2_outlined),
@@ -411,7 +411,9 @@ class BasePageState extends State<BasePage>
                                 : Icons.chevron_left,
                           ),
                           title: Text(
-                            _collapsedDrawer ? "Expand" : "Collapse",
+                            _collapsedDrawer
+                                ? LocaleStrings.common.expand
+                                : LocaleStrings.common.collapse,
                           ),
                           onTap: () => setState(
                               () => _collapsedDrawer = !_collapsedDrawer),

@@ -10,7 +10,7 @@ class NewNoteBar extends StatelessWidget {
     return AppBar(
       title: IgnorePointer(
         child: Text(
-          "Write a note",
+          LocaleStrings.mainPage.writeNote,
           style: TextStyle(
             fontSize: 16,
             color: context.theme.textTheme.bodyText1!.color!.withOpacity(0.7),
@@ -39,7 +39,7 @@ class NewNoteBar extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(Icons.note_add_outlined),
-          tooltip: "Import",
+          tooltip: LocaleStrings.common.importNote,
           onPressed: () => Utils.importNotes(context),
         ),
       ],

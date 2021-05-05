@@ -6,6 +6,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
@@ -295,7 +296,8 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   width: 16,
                 );
           final String text = showMoreItem
-              ? "${(widget.note.listContent.length) - 5} more items"
+              ? LocaleStrings.mainPage
+                  .noteListXMoreItems((widget.note.listContent.length) - 5)
               : item.text;
 
           return LayoutBuilder(

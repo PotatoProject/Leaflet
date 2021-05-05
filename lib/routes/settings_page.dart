@@ -60,12 +60,13 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             commonSettings,
             SettingsCategory(
-              header: "Backup & Restore",
+              header: LocaleStrings.settings.backupRestoreTitle,
               children: [
                 SettingsTile(
                   icon: const Icon(Icons.save_outlined),
-                  title: const Text("Backup"),
-                  description: const Text("Create a local copy of your notes"),
+                  title: Text(LocaleStrings.settings.backupRestoreBackup),
+                  description:
+                      Text(LocaleStrings.settings.backupRestoreBackupDesc),
                   onTap: () async {
                     final List<Note> notes =
                         await helper.listNotes(ReturnMode.local);
@@ -77,18 +78,24 @@ class _SettingsPageState extends State<SettingsPage> {
                     } else {
                       await Utils.showAlertDialog(
                         context: context,
-                        title: const Text("No notes to restore!"),
-                        content:
-                            const Text("There are no saved notes to backup."),
+                        title: Text(
+                          LocaleStrings.settings
+                              .backupRestoreBackupNothingToRestoreTitle,
+                        ),
+                        content: Text(
+                          LocaleStrings
+                              .settings.backupRestoreBackupNothingToRestoreDesc,
+                        ),
                       );
                     }
                   },
                 ),
                 SettingsTile(
                   icon: const Icon(Icons.restart_alt_rounded),
-                  title: const Text("Restore"),
-                  description: const Text(
-                      "Restore a backup created from a version of Leaflet"),
+                  title: Text(LocaleStrings.settings.backupRestoreRestore),
+                  description: Text(
+                    LocaleStrings.settings.backupRestoreRestoreDesc,
+                  ),
                   onTap: () async {
                     await Utils.showModalBottomSheet(
                       context: context,
@@ -98,9 +105,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SettingsTile(
                   icon: const Icon(Icons.file_present_outlined),
-                  title: const Text("Migrate"),
+                  title: Text(LocaleStrings.settings.backupRestoreImport),
                   description:
-                      const Text("Import notes from a version of PotatoNotes"),
+                      Text(LocaleStrings.settings.backupRestoreImportDesc),
                   onTap: () async {
                     await Utils.showModalBottomSheet(
                       context: context,
@@ -123,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SettingsTile(
                   icon: const Icon(Icons.update_outlined),
-                  title: const Text("Check for app updates"),
+                  title: Text(LocaleStrings.settings.infoUpdateCheck),
                   onTap: () => InAppUpdater.checkForUpdate(
                     context,
                     showNoUpdatesAvailable: true,
@@ -132,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsTile(
                   icon: const Icon(Icons.bug_report_outlined),
                   visible: appConfig.bugReportUrl != null,
-                  title: const Text("Report a bug"),
+                  title: Text(LocaleStrings.settings.infoBugReport),
                   onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
                 ),
               ],
@@ -156,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(Icons.timer),
-                    title: const Text("Test loading overlay"),
+                    title: Text(LocaleStrings.settings.debugLoadingOverlay),
                     onTap: () {
                       Utils.showLoadingOverlay(context);
                       Future.delayed(
@@ -178,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(MdiIcons.databasePlusOutline),
-                    title: const Text("Generate trash"),
+                    title: Text(LocaleStrings.settings.debugGenerateTrash),
                     onTap: () async {
                       for (int i = 0; i < 100; i++) {
                         final Random r = Random();
@@ -355,7 +362,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         ? firstLetterToUppercase(
                             localeNativeNames[locale.languageCode]!,
                           )
-                        : "Device default";
+                        : LocaleStrings
+                            .settings.personalizationLocaleDeviceDefault;
                     final bool selected = context.savedLocale == locale;
 
                     return dropDownTile(
@@ -380,7 +388,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ? firstLetterToUppercase(
                         localeNativeNames[context.savedLocale!.languageCode]!,
                       )
-                    : "Device default",
+                    : LocaleStrings.settings.personalizationLocaleDeviceDefault,
               ),
             ),
             SettingsTile(

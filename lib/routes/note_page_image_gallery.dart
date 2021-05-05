@@ -128,7 +128,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             IconButton(
               icon: const Icon(Icons.share_outlined),
               padding: EdgeInsets.zero,
-              tooltip: LocaleStrings.mainPage.selectionBarShare,
+              tooltip: LocaleStrings.common.share,
               onPressed: () async {
                 Share.shareFiles([widget.note.images[currentPage].path]);
               },

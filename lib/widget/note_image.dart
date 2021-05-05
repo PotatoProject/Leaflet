@@ -68,42 +68,41 @@ class _NoteImageState extends State<NoteImage> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<QueueItemStatus>(
-        valueListenable:
-            queueItem?.status ?? ValueNotifier(QueueItemStatus.complete),
-        builder: (context, value, _) {
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NoteImage.getProvider(widget.savedImage),
-                fit: widget.fit,
-              ),
+      valueListenable:
+          queueItem?.status ?? ValueNotifier(QueueItemStatus.complete),
+      builder: (context, value, _) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NoteImage.getProvider(widget.savedImage),
+              fit: widget.fit,
             ),
-            child: SizedBox.expand(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Visibility(
-                  visible: value == QueueItemStatus.ongoing,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox.fromSize(
-                      size: const Size.square(32),
-                      child: Card(
-                        margin: EdgeInsets.zero,
-                        elevation: 4,
-                        shape: const CircleBorder(),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: ValueListenableBuilder<double?>(
-                              valueListenable: queueItem?.progress ??
-                                  ValueNotifier<double?>(null),
-                              builder: (context, value, _) {
-                                return CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  value: value,
-                                );
-                              },
-                            ),
+          ),
+          child: SizedBox.expand(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Visibility(
+                visible: value == QueueItemStatus.ongoing,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox.fromSize(
+                    size: const Size.square(32),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      elevation: 4,
+                      shape: const CircleBorder(),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ValueListenableBuilder<double?>(
+                            valueListenable: queueItem?.progress ??
+                                ValueNotifier<double?>(null),
+                            builder: (context, value, _) {
+                              return CircularProgressIndicator(
+                                strokeWidth: 2,
+                                value: value,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -112,7 +111,9 @@ class _NoteImageState extends State<NoteImage> {
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
