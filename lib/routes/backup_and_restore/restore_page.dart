@@ -355,6 +355,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleStrings.backupRestore.selectNotes),
+        textTheme: context.theme.textTheme,
       ),
       body: Observer(
         builder: (context) {
