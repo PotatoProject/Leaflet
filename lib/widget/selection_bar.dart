@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {

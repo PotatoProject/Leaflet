@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/account_info.dart';
 import 'package:potato_notes/widget/illustrations.dart';

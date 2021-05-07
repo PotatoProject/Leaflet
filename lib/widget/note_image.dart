@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/queue_item.dart';
 
 class NoteImage extends StatefulWidget {
   final SavedImage savedImage;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/note_color_palette.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 
 class DrawingToolbar extends StatefulWidget {

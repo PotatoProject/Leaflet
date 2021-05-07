@@ -13,12 +13,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/logger_provider.dart';
-import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/logger_provider.dart';
+import 'package:potato_notes/internal/note_color_palette.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/drawing_board.dart';

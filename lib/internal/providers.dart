@@ -3,16 +3,16 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_config.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/keystore.dart';
+import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:potato_notes/internal/sync/image/image_helper.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';
-import 'package:potato_notes/internal/app_info.dart';
-import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/preferences.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
 import 'package:potato_notes/internal/sync/request_interceptor.dart';
+import 'package:potato_notes/internal/sync/sync_routine.dart';
 
 class _ProvidersSingleton {
   _ProvidersSingleton._();

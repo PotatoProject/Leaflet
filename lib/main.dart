@@ -10,10 +10,10 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
-import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -47,9 +47,7 @@ Future<void> main() async {
 
   if (DeviceInfo.isDesktop) {
     doWhenWindowReady(() {
-      appWindow.minSize = const Size(400, 480);
-      appWindow.size = const Size(960, 600);
-      appWindow.alignment = Alignment.center;
+      appWindow.minSize = const Size(360, 400);
       appWindow.show();
     });
   }

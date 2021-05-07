@@ -10,16 +10,16 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
