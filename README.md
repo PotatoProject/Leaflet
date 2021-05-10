@@ -1,6 +1,6 @@
 # Leaflet
 
-<img src="https://i.imgur.com/4Fm8gSc.png">
+<img src="https://i.imgur.com/dvmKX8d.png">
 
 POSP official notes application, written in flutter, beautiful, fast and secure.
 
@@ -8,23 +8,22 @@ POSP official notes application, written in flutter, beautiful, fast and secure.
 
 ## Main features
 - Material design
-- Multi device online sync
+- Completely cross platform
 - List/grid view for notes
-- Multiple note extras, such as lists, images and remainders
-- Lock notes with a pin or password for hiding them on main menu
-- Search notes for content/title with various filters
+- Multiple note extras, such as lists, images and drawings
+- Lock notes with a pin or password or biometrics
+- Hide notes content on the main page
+- Search notes with various filters
 - Complete theme personalization
-- Local backup/restore functionality
+- Local backup/restore functionality with encryption
 - Trash and archive for notes
+- Database encryption
+- Tags for notes
 
 ## Planned features
-- [x] Note tags
-- [ ] Launcher widget
-- [ ] Quick note QS tile
-- [ ] Partial markdown support
-- [x] Multiple image loading
-- [ ] Voice notes
-- [x] Drawings
+- [ ] New sync api integration
+- [ ] Folders
+- [ ] Refined UI for desktop platforms
 
 ## Compiling the app
 Before anything, be sure to have a working flutter sdk setup.
@@ -42,7 +41,7 @@ After that, building is simple as this:
 ~$ flutter pub get
 
 ~$ flutter run           # for debug
-~$ flutter build apk     # release build (fat apk)
+~$ flutter build apk --flavor dev     # release build with dev flavor (available flavors are dev, production and ci)
 ```
 
 ## Generating locales
@@ -57,6 +56,6 @@ This will generate and update the required files
 The entire app and even the [online sync api](https://github.com/broodroosterdev/potatosync-rust) is completely open source.  
 Feel free to open a PR to suggest fixes, features or whatever you want, just remember that PRs are subjected to manual review so you gotta wait for actual people to look at your contributions
 
-For translations, head over to our [Crowdin](https://crowdin.com/project/potatonotes).
+For translations, head over to our [Crowdin](https://potatoproject.crowdin.com/leaflet).
 
 If you want to receive the latest news head over to our [Telegram channel](https://t.me/potatonotesnews), if you want to chat we even got the [Telegram group](https://t.me/potatonotes).
