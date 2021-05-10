@@ -12,11 +12,11 @@
     <string name="common.edit">Editar</string>
     <string name="common.go_on">Continuar</string>
     <string name="common.exit">Salir</string>
-    <string name="common.ok">Ok</string>
-    <string name="common.share">Share</string>
-    <string name="common.not_now">Not now</string>
-    <string name="common.update">Update</string>
-    <string name="common.expand">Expand</string>
+    <string name="common.ok">Aceptar</string>
+    <string name="common.share">Compartir</string>
+    <string name="common.not_now">Ahora no</string>
+    <string name="common.update">Actualización</string>
+    <string name="common.expand">Desplegar</string>
     <string name="common.collapse">Collapse</string>
     <string name="common.create">Create</string>
     <string name="common.close">Close</string>
