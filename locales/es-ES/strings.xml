@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
     <string name="common.cancel">Cancelar</string>
@@ -11,29 +12,40 @@
     <string name="common.edit">Editar</string>
     <string name="common.go_on">Continuar</string>
     <string name="common.exit">Salir</string>
+    <string name="common.ok">Ok</string>
+    <string name="common.share">Share</string>
+    <string name="common.not_now">Not now</string>
+    <string name="common.update">Update</string>
+    <string name="common.expand">Expand</string>
+    <string name="common.collapse">Collapse</string>
+    <string name="common.create">Create</string>
+    <string name="common.close">Close</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s de %s</string>
     <string name="common.new_note">Nueva nota</string>
     <string name="common.new_list">Nueva lista</string>
     <string name="common.new_image">Nueva imagen</string>
     <string name="common.new_drawing">Nuevo dibujo</string>
+    <string name="common.import_note">Import note</string>
     <string name="common.biometrics_prompt">Confirmar reconocimiento biométrico</string>
     <string name="common.master_pass.modify">Modificar contraseña maestra</string>
     <string name="common.master_pass.confirm">Confirmar contraseña maestra</string>
+    <string name="common.master_pass.incorrect">Incorrect master pass</string>
+    <string name="common.backup_password.title">Input backup password</string>
+    <string name="common.backup_password.use_master_pass">Use master pass as password</string>
+    <string name="common.restore_dialog.title">Confirm note restoration</string>
+    <string name="common.restore_dialog.backup_name">Backup name: %s</string>
+    <string name="common.restore_dialog.creation_date">Creation date: %s</string>
+    <string name="common.restore_dialog.app_version">App version: %s</string>
+    <string name="common.restore_dialog.note_count">Note count: %s</string>
+    <string name="common.restore_dialog.tag_count">Tag count: %s</string>
     <string name="common.are_you_sure">¿Estás seguro/a?</string>
-    <string name="common.case_sensitive">Distinguir mayúsculas y minúsculas</string>
-    <string name="common.color_filter">Filtro de color</string>
-    <string name="common.date_filter">Filtro de fecha</string>
-    <string name="common.date_filter_mode">Modo de filtro</string>
-    <string name="common.date_filter_mode.after">Después de la fecha</string>
-    <string name="common.date_filter_mode.exact">Fecha exacta</string>
-    <string name="common.date_filter_mode.before">Antes de la fecha</string>
     <string name="common.color.none">Nada</string>
     <string name="common.color.red">Rojo</string>
     <string name="common.color.orange">Naranja</string>
     <string name="common.color.yellow">Amarillo</string>
     <string name="common.color.green">Verde</string>
     <string name="common.color.cyan">Cian</string>
-    <string name="common.color.light_blue">Azul claro</string>
+    <string name="common.color.light_blue">Celeste</string>
     <string name="common.color.blue">Azul</string>
     <string name="common.color.purple">Morado</string>
     <string name="common.color.pink">Rosa</string>
@@ -43,8 +55,8 @@
     <string name="common.tag.new">Nueva etiqueta</string>
     <string name="common.tag.modify">Modificar etiqueta</string>
     <string name="common.tag.textbox_hint">Nombre</string>
-
     <!-- Main page -->
+    <string name="main_page.write_note">Write a note</string>
     <string name="main_page.settings">Ajustes</string>
     <string name="main_page.search">Buscar</string>
     <string name="main_page.account">Cuenta</string>
@@ -56,24 +68,37 @@
     <string name="main_page.empty_state.archive">El archivo está vacío</string>
     <string name="main_page.empty_state.trash">La papelera está vacía</string>
     <string name="main_page.empty_state.favourites">No hay favoritos todavía</string>
-    <string name="main_page.empty_state.tag">No hay notas con esta etiqueta</string>
-    <string name="main_page.title.home">Inicio</string>
-    <string name="main_page.title.archive">Archivo</string>
+    <string name="main_page.empty_state.tag">No existen notas con esta etiqueta</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="one">%s more item</item>
+        <item quantity="other">%s more items</item>
+    </plurals>
+    <string name="main_page.title.notes">Notes</string>
+    <string name="main_page.title.archive">Archivar</string>
     <string name="main_page.title.trash">Papelera</string>
     <string name="main_page.title.favourites">Favoritos</string>
     <string name="main_page.title.tag">Etiqueta</string>
     <string name="main_page.title.all">Todo</string>
     <string name="main_page.selection_bar.close">Cerrar</string>
+    <string name="main_page.selection_bar.select">Select</string>
+    <string name="main_page.selection_bar.select_all">Select all</string>
     <string name="main_page.selection_bar.add_favourites">Añadir a favoritos</string>
     <string name="main_page.selection_bar.remove_favourites">Eliminar de favoritos</string>
     <string name="main_page.selection_bar.change_color">Cambiar color</string>
-    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archivo</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archivar</string>
     <string name="main_page.selection_bar.delete">Mover a la papelera</string>
+    <string name="main_page.selection_bar.perma_delete">Delete</string>
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fijar</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Unpin</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Save locally</string>
     <string name="main_page.selection_bar.share">Compartir</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s nota movida a la papelera</item>
         <item quantity="other">%s notas movidas a la papelera</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="one">%s note deleted</item>
+        <item quantity="other">%s notes deleted</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="one">%s nota archivada</item>
@@ -83,9 +108,10 @@
         <item quantity="one">%s nota restaurada</item>
         <item quantity="other">%s notas restauradas</item>
     </plurals>
-
+    <string name="main_page.export.success">Note successfully exported</string>
+    <string name="main_page.export.failure">Something went wrong while exporting</string>
     <!-- Note page -->
-    <string name="note_page.title_hint">Titulo</string>
+    <string name="note_page.title_hint">Título</string>
     <string name="note_page.content_hint">Contenido</string>
     <string name="note_page.list_item_hint">Entrada</string>
     <string name="note_page.add_entry_hint">Añadir entrada</string>
@@ -93,7 +119,7 @@
     <string name="note_page.toolbar.color">Cambiar color</string>
     <string name="note_page.toolbar.add_item">Añadir elemento</string>
     <string name="note_page.privacy.title">Opciones de privacidad</string>
-    <string name="note_page.privacy.hide_content">Ocultar contenido de nota en la página principal</string>
+    <string name="note_page.privacy.hide_content">Ocultar contenido en la página principal</string>
     <string name="note_page.privacy.lock_note">Proteger nota</string>
     <string name="note_page.privacy.lock_note.missing_pass">Debe establecer una contraseña maestra desde configuración</string>
     <string name="note_page.privacy.use_biometrics">Usar datos biométricos para desbloquear</string>
@@ -103,7 +129,6 @@
     <string name="note_page.drawing">Añadir un dibujo</string>
     <string name="note_page.added_favourites">Nota agregada a favoritos</string>
     <string name="note_page.removed_favourites">Nota eliminada de favoritos</string>
-
     <!-- Settings page -->
     <string name="settings.title">Ajustes</string>
     <string name="settings.personalization.title">Personalización</string>
@@ -116,20 +141,38 @@
     <string name="settings.personalization.custom_accent">Elegir un color personalizado</string>
     <string name="settings.personalization.use_grid">Vista de cuadrícula para notas</string>
     <string name="settings.personalization.locale">Idioma de aplicación</string>
+    <string name="settings.personalization.locale.device_default">Device default</string>
     <string name="settings.privacy.title">Privacidad</string>
     <string name="settings.privacy.use_master_pass">Usar contraseña maestra</string>
-    <string name="settings.privacy.use_master_pass.disclaimer">Advertencia: si olvidas la contraseña, no podrás restablecerla: tendrás que desinstalar la aplicación, borrando todas las notas, y reinstalarla. Apúntala en algún sitio.</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can\'t reset it, you\'ll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere</string>
     <string name="settings.privacy.modify_master_pass">Modificar contraseña maestra</string>
+    <string name="settings.backup_restore.title">Backup and Restore</string>
+    <string name="settings.backup_restore.backup">Backup</string>
+    <string name="settings.backup_restore.backup_desc">Create a local copy of your notes</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">No notes to restore!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">There are no saved notes to backup</string>
+    <string name="settings.backup_restore.restore">Restore</string>
+    <string name="settings.backup_restore.restore_desc">Restore a backup created from a version of Leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">The note was successfuly restored</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">The specified file is not a valid Leaflet backup</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">The password you inserted was unable to decrypt the backup</string>
+    <string name="settings.backup_restore.restore.status.already_exists">The note inside the backup is already present in the database</string>
+    <string name="settings.backup_restore.restore.status.unknown">There was an issue while importing the note</string>
+    <string name="settings.backup_restore.import">Import</string>
+    <string name="settings.backup_restore.import_desc">Import notes from a version of PotatoNotes</string>
     <string name="settings.info.title">Información</string>
-    <string name="settings.info.about_app">Acerca de PotatoNotes</string>
+    <string name="settings.info.about_app">About Leaflet</string>
+    <string name="settings.info.update_check">Check for app updates</string>
+    <string name="settings.info.bug_report">Report a bug</string>
     <string name="settings.debug.title">Depuración</string>
     <string name="settings.debug.show_setup_screen">Mostrar la pantalla de configuración en el próximo inicio</string>
+    <string name="settings.debug.loading_overlay">Test loading overlay</string>
     <string name="settings.debug.clear_database">Limpiar base de datos</string>
-    <string name="settings.debug.migrate_database">Migrar base de dato</string>
-    <string name="settings.debug.log_level">Nivel de log</string>
-
+    <string name="settings.debug.migrate_database">Migrar base de datos</string>
+    <string name="settings.debug.generate_trash">Generate trash</string>
+    <string name="settings.debug.log_level">Nivel de registro</string>
     <!-- About page -->
-    <string name="about.title">Ajustes</string>
+    <string name="about.title">Acerca de</string>
     <string name="about.pwa_version">Versión PWA</string>
     <string name="about.links">Enlaces</string>
     <string name="about.contributors">Colaboradores</string>
@@ -139,29 +182,85 @@
     <string name="about.contributors.kat">API sync antiguo</string>
     <string name="about.contributors.rohit">Illustraciones y colores de nota</string>
     <string name="about.contributors.rshbfn">Icono de la aplicación y color principal</string>
-
+    <string name="about.contributors.elias">Leaflet brand name</string>
+    <string name="about.contributors.akshit">Security and backend help</string>
     <!-- Search page-->
     <string name="search.textbox_hint">Buscar</string>
+    <string name="search.tag_create_empty_hint">Create new tag</string>
     <string name="search.tag_create_hint">Crear etiqueta \"%s\"</string>
     <string name="search.type_to_search">Escribe para empezar a buscar</string>
     <string name="search.nothing_found">No se encontró nada...</string>
-
+    <string name="search.note.filters.case_sensitive">Case sensitive</string>
+    <string name="search.note.filters.favourites">Favourites only</string>
+    <string name="search.note.filters.locations">Note locations</string>
+    <string name="search.note.filters.locations.normal">Normal</string>
+    <string name="search.note.filters.locations.archive">Archive</string>
+    <string name="search.note.filters.locations.trash">Trash</string>
+    <string name="search.note.filters.locations.normal_title">Normal notes</string>
+    <string name="search.note.filters.locations.archive_title">Archived notes</string>
+    <string name="search.note.filters.locations.trash_title">Deleted notes</string>
+    <string name="search.note.filters.color">Color filter</string>
+    <string name="search.note.filters.date">Date filter</string>
+    <string name="search.note.filters.date.mode_title">Filter mode</string>
+    <string name="search.note.filters.date.mode_after">After date</string>
+    <string name="search.note.filters.date.mode_exact">Exact date</string>
+    <string name="search.note.filters.date.mode_before">Before date</string>
+    <string name="search.note.filters.tags">Tags</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="one">%s selected</item>
+        <item quantity="other">%s selected</item>
+    </plurals>
+    <string name="search.note.filters.clear">Clear filters</string>
     <!-- Draw page -->
     <string name="drawing.color_black">Negro</string>
     <string name="drawing.exit_prompt">Se perderán todos los datos no guardados. ¿Quieres salir?</string>
+    <string name="drawing.clear_canvas_warning">This operation can\'t be undone. Continue?</string>
     <string name="drawing.tools.brush">Pincel</string>
     <string name="drawing.tools.eraser">Borrador</string>
-    <string name="drawing.tools.marker">Marcador</string>
+    <string name="drawing.tools.marker">Rotulador</string>
     <string name="drawing.tools.color_picker">Color</string>
     <string name="drawing.tools.radius_picker">Tamaño</string>
-
     <!-- Setup page -->
     <string name="setup.button.get_started">Para comenzar</string>
     <string name="setup.button.finish">Finalizar</string>
     <string name="setup.button.next">Siguiente</string>
     <string name="setup.button.back">Atrás</string>
+    <string name="setup.welcome.catchphrase">Tu nueva aplicación de notas favorita</string>
     <string name="setup.basic_customization.title">Personalización básica</string>
-    <string name="setup.welcome.catchphrase">Tu nueva aplicación de notas favoritas</string>
+    <string name="setup.restore_import.title">Restore and import</string>
+    <string name="setup.restore_import.desc">You can choose to restore notes from either another version of Leaflet or from an older version of PotatoNotes</string>
     <string name="setup.finish.title">¡Todo listo!</string>
-    <string name="setup.finish.last_words">Ya puedes disfrutar de PotatoNotes al máximo. \nSi quieres personalizarla más, ve a la página de configuración en el panel lateral. Si lo que quieres es administrar tu cuenta de PotatoSync, haz clic en tu avatar en la barra superior.</string>
+    <string name="setup.finish.last_words">You\'ve completed Leaflet setup, now the app should be ready for the first use. If you ever want to change something, head over to the settings. I hope you\'ll enjoy Leaflet as much as i do!</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">Create backup</string>
+    <string name="backup_restore.backup.password">Password</string>
+    <string name="backup_restore.backup.name">Name (optional)</string>
+    <string name="backup_restore.backup.num_of_notes">Number of notes in the backup: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">Some notes are locked, require password to proceed</string>
+    <string name="backup_restore.backup.creating">Creating backup</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Backing up note %s of %s</string>
+    <string name="backup_restore.backup.complete.success">Backup completed successfully!</string>
+    <string name="backup_restore.backup.complete.failure">Backup process was interrupted</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">The backup process was a success! You can find the backup at </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">The backup process was a success! You can now close this dialog</string>
+    <string name="backup_restore.backup.complete_desc.failure">Something went wrong or you aborted the save process. You can retry the backup process anytime</string>
+    <string name="backup_restore.restore.title">Select backup to restore</string>
+    <string name="backup_restore.restore.file_open">Open file</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (From file)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">Note count: %s, Tag count: %s\nCreated on %s</string>
+    <string name="backup_restore.restore.no_backups">There are no backups available. Try opening a file instead</string>
+    <string name="backup_restore.restore.failure">Unable to restore backup</string>
+    <string name="backup_restore.import.title">Select import origin</string>
+    <string name="backup_restore.import.open_db">Open PotatoNotes backup file</string>
+    <string name="backup_restore.import.open_previous">Open previous version database</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">Only Android supports loading from previous version</string>
+    <string name="backup_restore.import.open_previous.no_file">There was no database found from old version</string>
+    <string name="backup_restore.import.notes_loaded">Notes loaded successfully</string>
+    <string name="backup_restore.select_notes">Select notes to restore</string>
+    <string name="backup_restore.replace_existing">Replace existing notes</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">Update available!</string>
+    <string name="miscellaneous.updater.update_available_desc">A new update is available to download, click update to download the update</string>
+    <string name="miscellaneous.updater.already_on_latest">Latest version</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">You\'re already on the latest app version</string>
 </resources>
