@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +9,8 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/setup/basic_customization_page.dart';
 import 'package:potato_notes/routes/setup/finish_page.dart';
+import 'package:potato_notes/routes/setup/restore_import_page.dart';
 import 'package:potato_notes/routes/setup/welcome_page.dart';
-import 'package:potato_notes/widget/flat_icon_button.dart';
 
 class SetupPage extends StatefulWidget {
   @override
@@ -18,6 +21,7 @@ class _SetupPagetate extends State<SetupPage> {
   final List<Widget> pages = [
     WelcomePage(),
     BasicCustomizationPage(),
+    BackupRestorePage(),
     FinishPage(),
   ];
 
@@ -51,64 +55,56 @@ class _SetupPagetate extends State<SetupPage> {
     return WillPopScope(
       onWillPop: () async => pageIndex == (pages.length - 1),
       child: Scaffold(
-        body: GestureDetector(
-          onHorizontalDragEnd: (details) {
-            final double sign = textDirection == TextDirection.rtl
-                ? -details.primaryVelocity!.sign
-                : details.primaryVelocity!.sign;
-
-            if (details.primaryVelocity!.abs() > 320) {
-              if (sign == 1) {
-                if (pageIndex != 0) {
-                  prevPage();
-                }
-              } else {
-                if (pageIndex != (pages.length - 1)) {
-                  nextPage();
-                }
-              }
-            }
-          },
-          child: PageTransitionSwitcher(
-            reverse: textDirection == TextDirection.rtl ? !reverse : reverse,
-            transitionBuilder: (
-              child,
-              primaryAnimation,
-              secondaryAnimation,
-            ) =>
-                SharedAxisTransition(
-              animation: primaryAnimation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              fillColor: Colors.transparent,
-              child: child,
-            ),
-            child: pages[pageIndex],
+        body: PageTransitionSwitcher(
+          reverse: textDirection == TextDirection.rtl ? !reverse : reverse,
+          transitionBuilder: (
+            child,
+            primaryAnimation,
+            secondaryAnimation,
+          ) =>
+              SharedAxisTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: SharedAxisTransitionType.horizontal,
+            fillColor: Colors.transparent,
+            child: child,
           ),
+          child: pages[pageIndex],
         ),
         bottomNavigationBar: Material(
+          color: context.theme.appBarTheme.color,
           child: Container(
-            height: 56,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             margin: EdgeInsets.only(
               bottom: context.padding.bottom,
             ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  tooltip: LocaleStrings.setup.buttonBack,
-                  onPressed: pageIndex != 0 ? prevPage : null,
+                AnimatedOpacity(
+                  opacity: pageIndex != 0 ? 1 : 0,
+                  duration: const Duration(milliseconds: 250),
+                  child: IgnorePointer(
+                    ignoring: pageIndex == 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      tooltip: LocaleStrings.setup.buttonBack,
+                      onPressed: pageIndex != 0 ? prevPage : null,
+                    ),
+                  ),
                 ),
                 const Spacer(),
-                FlatIconButton(
+                _TextButtonWithEndIcon(
                   onPressed: pageIndex != (pages.length - 1)
                       ? nextPage
                       : () {
                           prefs.welcomePageSeen = true;
                           context.pop();
                         },
-                  text: Text(
+                  style: TextButton.styleFrom(
+                    alignment: AlignmentDirectional.centerEnd,
+                  ),
+                  label: Text(
                     buttonText.toUpperCase(),
                     style: const TextStyle(
                       letterSpacing: 1,
@@ -125,6 +121,7 @@ class _SetupPagetate extends State<SetupPage> {
             ),
           ),
         ),
+        extendBody: true,
       ),
     );
   }
@@ -141,5 +138,63 @@ class _SetupPagetate extends State<SetupPage> {
       reverse = true;
       pageIndex--;
     });
+  }
+}
+
+class _TextButtonWithEndIcon extends TextButton {
+  _TextButtonWithEndIcon({
+    Key? key,
+    required VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    ButtonStyle? style,
+    FocusNode? focusNode,
+    bool? autofocus,
+    Clip? clipBehavior,
+    required Widget icon,
+    required Widget label,
+  }) : super(
+          key: key,
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          style: style,
+          focusNode: focusNode,
+          autofocus: autofocus ?? false,
+          clipBehavior: clipBehavior ?? Clip.none,
+          child: _TextButtonWithIconChild(icon: icon, label: label),
+        );
+
+  @override
+  ButtonStyle defaultStyleOf(BuildContext context) {
+    final EdgeInsetsGeometry scaledPadding = ButtonStyleButton.scaledPadding(
+      const EdgeInsets.all(8),
+      const EdgeInsets.symmetric(horizontal: 4),
+      const EdgeInsets.symmetric(horizontal: 4),
+      MediaQuery.maybeOf(context)?.textScaleFactor ?? 1,
+    );
+    return super.defaultStyleOf(context).copyWith(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(scaledPadding),
+        );
+  }
+}
+
+class _TextButtonWithIconChild extends StatelessWidget {
+  const _TextButtonWithIconChild({
+    Key? key,
+    required this.label,
+    required this.icon,
+  }) : super(key: key);
+
+  final Widget label;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final double scale = MediaQuery.maybeOf(context)?.textScaleFactor ?? 1;
+    final double gap =
+        scale <= 1 ? 8 : lerpDouble(8, 4, math.min(scale - 1, 1))!;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[Flexible(child: label), SizedBox(width: gap), icon],
+    );
   }
 }

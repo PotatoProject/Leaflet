@@ -70,6 +70,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                 note: results[index],
                 onTap: () => openNote(context, results[index]),
               ),
+              gridView: prefs.useGrid,
               noteCount: results.length,
               customIllustration: illustration,
             );

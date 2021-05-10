@@ -255,8 +255,10 @@
     <string name="setup.button.finish">Finish</string>
     <string name="setup.button.next">Next</string>
     <string name="setup.button.back">Back</string>
-    <string name="setup.basic_customization.title">Basic customization</string>
     <string name="setup.welcome.catchphrase">Your new favourite notes app</string>
+    <string name="setup.basic_customization.title">Basic customization</string>
+    <string name="setup.restore_import.title">Restore and import</string>
+    <string name="setup.restore_import.desc">You can choose to restore notes from either another version of Leaflet or from an older version of PotatoNotes</string>
     <string name="setup.finish.title">All set!</string>
     <string name="setup.finish.last_words">You've completed Leaflet setup, now the app should be ready for the first use. If you ever want to change something, head over to the settings. I hope you'll enjoy Leaflet as much as i do!</string>
 

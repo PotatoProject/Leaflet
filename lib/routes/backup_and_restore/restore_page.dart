@@ -360,6 +360,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
       body: Observer(
         builder: (context) {
           return NoteListWidget(
+            gridView: true,
             itemBuilder: (context, index) {
               final Note note = widget.notes[index];
 

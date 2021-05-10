@@ -17,6 +17,7 @@ class BasicCustomizationPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           top: 56 + context.padding.top,
+          bottom: context.padding.bottom,
         ),
         child: const SettingsPage(trimmed: true),
       ),

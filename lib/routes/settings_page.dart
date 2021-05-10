@@ -57,6 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
             top: context.padding.top,
             bottom: context.viewInsets.bottom,
           ),
+          controller: ScrollController(),
           children: [
             commonSettings,
             SettingsCategory(

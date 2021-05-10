@@ -244,8 +244,10 @@ class _$SetupLocaleStrings {
   final String buttonFinish = "setup.button.finish".tr();
   final String buttonNext = "setup.button.next".tr();
   final String buttonBack = "setup.button.back".tr();
-  final String basicCustomizationTitle = "setup.basic_customization.title".tr();
   final String welcomeCatchphrase = "setup.welcome.catchphrase".tr();
+  final String basicCustomizationTitle = "setup.basic_customization.title".tr();
+  final String restoreImportTitle = "setup.restore_import.title".tr();
+  final String restoreImportDesc = "setup.restore_import.desc".tr();
   final String finishTitle = "setup.finish.title".tr();
   final String finishLastWords = "setup.finish.last_words".tr();
 }

@@ -11,6 +11,7 @@ class NoteListWidget extends StatelessWidget {
   final TransitionBuilder? builder;
   final IndexedWidgetBuilder itemBuilder;
   final int noteCount;
+  final bool gridView;
   final ReturnMode? noteKind;
   final ScrollController? scrollController;
   final Widget? customIllustration;
@@ -21,6 +22,7 @@ class NoteListWidget extends StatelessWidget {
     this.builder,
     required this.itemBuilder,
     required this.noteCount,
+    this.gridView = false,
     this.noteKind,
     this.scrollController,
     this.customIllustration,
@@ -41,7 +43,7 @@ class NoteListWidget extends StatelessWidget {
         scrollController ?? ScrollController();
 
     if (noteCount > 0) {
-      if (prefs.useGrid) {
+      if (gridView) {
         child = WaterfallFlow.builder(
           gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
             crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,

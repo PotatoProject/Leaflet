@@ -95,6 +95,7 @@ class NoteListPageState extends State<NoteListPage> {
 
             return NoteListWidget(
               itemBuilder: (_, index) => _buildNoteList(context, notes, index),
+              gridView: prefs.useGrid,
               noteCount: notes.length,
               noteKind: widget.noteKind,
             );
