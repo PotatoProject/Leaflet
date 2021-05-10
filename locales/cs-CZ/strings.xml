@@ -12,22 +12,33 @@
     <string name="common.edit">Upravit</string>
     <string name="common.go_on">Přejít na</string>
     <string name="common.exit">Odejít</string>
+    <string name="common.ok">Ok</string>
+    <string name="common.share">Share</string>
+    <string name="common.not_now">Not now</string>
+    <string name="common.update">Update</string>
+    <string name="common.expand">Expand</string>
+    <string name="common.collapse">Collapse</string>
+    <string name="common.create">Create</string>
+    <string name="common.close">Close</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s z %s</string>
     <string name="common.new_note">Nová poznámka</string>
     <string name="common.new_list">Nový seznam</string>
     <string name="common.new_image">Nový obrázek</string>
     <string name="common.new_drawing">Nový výkres</string>
+    <string name="common.import_note">Import note</string>
     <string name="common.biometrics_prompt">Potvrdit biometrikou</string>
     <string name="common.master_pass.modify">Upravit hlavní heslo</string>
     <string name="common.master_pass.confirm">Potvrdit master heslo</string>
+    <string name="common.master_pass.incorrect">Incorrect master pass</string>
+    <string name="common.backup_password.title">Input backup password</string>
+    <string name="common.backup_password.use_master_pass">Use master pass as password</string>
+    <string name="common.restore_dialog.title">Confirm note restoration</string>
+    <string name="common.restore_dialog.backup_name">Backup name: %s</string>
+    <string name="common.restore_dialog.creation_date">Creation date: %s</string>
+    <string name="common.restore_dialog.app_version">App version: %s</string>
+    <string name="common.restore_dialog.note_count">Note count: %s</string>
+    <string name="common.restore_dialog.tag_count">Tag count: %s</string>
     <string name="common.are_you_sure">Opravdu?</string>
-    <string name="common.case_sensitive">Rozlišit malá a velká písmena</string>
-    <string name="common.color_filter">Barevný filtr</string>
-    <string name="common.date_filter">Datumový filtr</string>
-    <string name="common.date_filter_mode">Režim filtru</string>
-    <string name="common.date_filter_mode.after">Po datu</string>
-    <string name="common.date_filter_mode.exact">Přesné datum</string>
-    <string name="common.date_filter_mode.before">Před datem</string>
     <string name="common.color.none">Nic</string>
     <string name="common.color.red">Červená</string>
     <string name="common.color.orange">Oranžová</string>
@@ -45,6 +56,7 @@
     <string name="common.tag.modify">Upravit štítek</string>
     <string name="common.tag.textbox_hint">Jméno</string>
     <!-- Main page -->
+    <string name="main_page.write_note">Write a note</string>
     <string name="main_page.settings">Nastavení</string>
     <string name="main_page.search">Hledat</string>
     <string name="main_page.account">Účet</string>
@@ -57,25 +69,42 @@
     <string name="main_page.empty_state.trash">Koš je prázdný</string>
     <string name="main_page.empty_state.favourites">Zatím žádné oblíbené poznámky</string>
     <string name="main_page.empty_state.tag">Žádné poznámky s tímto štítkem</string>
-    <string name="main_page.title.home">Domů</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="one">%s more item</item>
+        <item quantity="few">%s more items</item>
+        <item quantity="many">%s more items</item>
+        <item quantity="other">%s more items</item>
+    </plurals>
+    <string name="main_page.title.notes">Notes</string>
     <string name="main_page.title.archive">Archiv</string>
     <string name="main_page.title.trash">Koš</string>
     <string name="main_page.title.favourites">Oblíbené</string>
     <string name="main_page.title.tag">Štítek</string>
     <string name="main_page.title.all">Vše</string>
     <string name="main_page.selection_bar.close">Zavřít</string>
+    <string name="main_page.selection_bar.select">Select</string>
+    <string name="main_page.selection_bar.select_all">Select all</string>
     <string name="main_page.selection_bar.add_favourites">Přidat do oblíbených</string>
     <string name="main_page.selection_bar.remove_favourites">Odebrat z oblíbených</string>
     <string name="main_page.selection_bar.change_color">Změnit barvu</string>
     <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archiv</string>
     <string name="main_page.selection_bar.delete">Přesunout do koše</string>
+    <string name="main_page.selection_bar.perma_delete">Delete</string>
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Připnout</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Unpin</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Save locally</string>
     <string name="main_page.selection_bar.share">Sdílet</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s poznámka byla přesunuta do koše</item>
         <item quantity="few">%s poznámka byla přesunuta do koše</item>
         <item quantity="many">%s poznámek přesunuto do koše</item>
         <item quantity="other">%s poznámek přesunuto do koše</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="one">%s note deleted</item>
+        <item quantity="few">%s notes deleted</item>
+        <item quantity="many">%s notes deleted</item>
+        <item quantity="other">%s notes deleted</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="one">Archivováno %s poznámek</item>
@@ -89,6 +118,8 @@
         <item quantity="many">Obnoveno %s poznámek</item>
         <item quantity="other">Obnoveno %s poznámek</item>
     </plurals>
+    <string name="main_page.export.success">Note successfully exported</string>
+    <string name="main_page.export.failure">Something went wrong while exporting</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titulek</string>
     <string name="note_page.content_hint">Obsah</string>
@@ -120,16 +151,35 @@
     <string name="settings.personalization.custom_accent">Vybrat vlastní odstín</string>
     <string name="settings.personalization.use_grid">Zobrazení mřížky pro poznámky</string>
     <string name="settings.personalization.locale">Lokalizace aplikace</string>
+    <string name="settings.personalization.locale.device_default">Device default</string>
     <string name="settings.privacy.title">Soukromí</string>
     <string name="settings.privacy.use_master_pass">Použít hlavní heslo</string>
-    <string name="settings.privacy.use_master_pass.disclaimer">Varování: Pokud jste někdy zapomněli heslo, nemůžete jej resetovat, budete muset aplikaci odinstalovat, takže všechny poznámky budou vymazány a přeinstalovány. Prosím někde si to zapište.</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can\'t reset it, you\'ll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere</string>
     <string name="settings.privacy.modify_master_pass">Upravit hlavní heslo</string>
+    <string name="settings.backup_restore.title">Backup and Restore</string>
+    <string name="settings.backup_restore.backup">Backup</string>
+    <string name="settings.backup_restore.backup_desc">Create a local copy of your notes</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">No notes to restore!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">There are no saved notes to backup</string>
+    <string name="settings.backup_restore.restore">Restore</string>
+    <string name="settings.backup_restore.restore_desc">Restore a backup created from a version of Leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">The note was successfuly restored</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">The specified file is not a valid Leaflet backup</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">The password you inserted was unable to decrypt the backup</string>
+    <string name="settings.backup_restore.restore.status.already_exists">The note inside the backup is already present in the database</string>
+    <string name="settings.backup_restore.restore.status.unknown">There was an issue while importing the note</string>
+    <string name="settings.backup_restore.import">Import</string>
+    <string name="settings.backup_restore.import_desc">Import notes from a version of PotatoNotes</string>
     <string name="settings.info.title">Info</string>
-    <string name="settings.info.about_app">O PotatoNotes</string>
+    <string name="settings.info.about_app">About Leaflet</string>
+    <string name="settings.info.update_check">Check for app updates</string>
+    <string name="settings.info.bug_report">Report a bug</string>
     <string name="settings.debug.title">Ladění</string>
     <string name="settings.debug.show_setup_screen">Zobrazit obrazovku nastavení při příštím spuštění</string>
+    <string name="settings.debug.loading_overlay">Test loading overlay</string>
     <string name="settings.debug.clear_database">Vymazat databázi</string>
     <string name="settings.debug.migrate_database">Migrovat databázi</string>
+    <string name="settings.debug.generate_trash">Generate trash</string>
     <string name="settings.debug.log_level">Úroveň logu</string>
     <!-- About page -->
     <string name="about.title">O aplikaci</string>
@@ -142,14 +192,41 @@
     <string name="about.contributors.kat">Staré synchronizační API</string>
     <string name="about.contributors.rohit">Ilustrace a barvy poznámek</string>
     <string name="about.contributors.rshbfn">Ikona aplikace a hlavní zvýraznění</string>
+    <string name="about.contributors.elias">Leaflet brand name</string>
+    <string name="about.contributors.akshit">Security and backend help</string>
     <!-- Search page-->
     <string name="search.textbox_hint">Hledat</string>
+    <string name="search.tag_create_empty_hint">Create new tag</string>
     <string name="search.tag_create_hint">Vytvořit štítek \"%s\"</string>
     <string name="search.type_to_search">Psaním začnete vyhledávat</string>
     <string name="search.nothing_found">Nic nenalezeno...</string>
+    <string name="search.note.filters.case_sensitive">Case sensitive</string>
+    <string name="search.note.filters.favourites">Favourites only</string>
+    <string name="search.note.filters.locations">Note locations</string>
+    <string name="search.note.filters.locations.normal">Normal</string>
+    <string name="search.note.filters.locations.archive">Archive</string>
+    <string name="search.note.filters.locations.trash">Trash</string>
+    <string name="search.note.filters.locations.normal_title">Normal notes</string>
+    <string name="search.note.filters.locations.archive_title">Archived notes</string>
+    <string name="search.note.filters.locations.trash_title">Deleted notes</string>
+    <string name="search.note.filters.color">Color filter</string>
+    <string name="search.note.filters.date">Date filter</string>
+    <string name="search.note.filters.date.mode_title">Filter mode</string>
+    <string name="search.note.filters.date.mode_after">After date</string>
+    <string name="search.note.filters.date.mode_exact">Exact date</string>
+    <string name="search.note.filters.date.mode_before">Before date</string>
+    <string name="search.note.filters.tags">Tags</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="one">%s selected</item>
+        <item quantity="few">%s selected</item>
+        <item quantity="many">%s selected</item>
+        <item quantity="other">%s selected</item>
+    </plurals>
+    <string name="search.note.filters.clear">Clear filters</string>
     <!-- Draw page -->
     <string name="drawing.color_black">Černá</string>
     <string name="drawing.exit_prompt">Všechny neuložené změny budou ztraceny. Chcete idejít?</string>
+    <string name="drawing.clear_canvas_warning">This operation can\'t be undone. Continue?</string>
     <string name="drawing.tools.brush">Štětec</string>
     <string name="drawing.tools.eraser">Guma</string>
     <string name="drawing.tools.marker">Zvýrazňovač</string>
@@ -160,8 +237,42 @@
     <string name="setup.button.finish">Dokončit</string>
     <string name="setup.button.next">Další</string>
     <string name="setup.button.back">Zpět</string>
-    <string name="setup.basic_customization.title">Základní přizpůsobení</string>
     <string name="setup.welcome.catchphrase">Vaše nová oblíbená aplikace pro poznámky</string>
+    <string name="setup.basic_customization.title">Základní přizpůsobení</string>
+    <string name="setup.restore_import.title">Restore and import</string>
+    <string name="setup.restore_import.desc">You can choose to restore notes from either another version of Leaflet or from an older version of PotatoNotes</string>
     <string name="setup.finish.title">Vše nastaveno!</string>
-    <string name="setup.finish.last_words">Nyní jste připraveni vychutnat si PotatoNotes v plném rozsahu. \nPokud chcete více přizpůsobit hlavičku na stránku nastavení v bočním panelu, místo toho, pokud chcete spravovat svůj účet PotatoSync, klikněte na avatara v horním panelu.</string>
+    <string name="setup.finish.last_words">You\'ve completed Leaflet setup, now the app should be ready for the first use. If you ever want to change something, head over to the settings. I hope you\'ll enjoy Leaflet as much as i do!</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">Create backup</string>
+    <string name="backup_restore.backup.password">Password</string>
+    <string name="backup_restore.backup.name">Name (optional)</string>
+    <string name="backup_restore.backup.num_of_notes">Number of notes in the backup: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">Some notes are locked, require password to proceed</string>
+    <string name="backup_restore.backup.creating">Creating backup</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Backing up note %s of %s</string>
+    <string name="backup_restore.backup.complete.success">Backup completed successfully!</string>
+    <string name="backup_restore.backup.complete.failure">Backup process was interrupted</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">The backup process was a success! You can find the backup at </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">The backup process was a success! You can now close this dialog</string>
+    <string name="backup_restore.backup.complete_desc.failure">Something went wrong or you aborted the save process. You can retry the backup process anytime</string>
+    <string name="backup_restore.restore.title">Select backup to restore</string>
+    <string name="backup_restore.restore.file_open">Open file</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (From file)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">Note count: %s, Tag count: %s\nCreated on %s</string>
+    <string name="backup_restore.restore.no_backups">There are no backups available. Try opening a file instead</string>
+    <string name="backup_restore.restore.failure">Unable to restore backup</string>
+    <string name="backup_restore.import.title">Select import origin</string>
+    <string name="backup_restore.import.open_db">Open PotatoNotes backup file</string>
+    <string name="backup_restore.import.open_previous">Open previous version database</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">Only Android supports loading from previous version</string>
+    <string name="backup_restore.import.open_previous.no_file">There was no database found from old version</string>
+    <string name="backup_restore.import.notes_loaded">Notes loaded successfully</string>
+    <string name="backup_restore.select_notes">Select notes to restore</string>
+    <string name="backup_restore.replace_existing">Replace existing notes</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">Update available!</string>
+    <string name="miscellaneous.updater.update_available_desc">A new update is available to download, click update to download the update</string>
+    <string name="miscellaneous.updater.already_on_latest">Latest version</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">You\'re already on the latest app version</string>
 </resources>
