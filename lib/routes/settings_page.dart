@@ -27,7 +27,6 @@ import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
 import 'package:recase/recase.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -511,10 +510,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return Utils.showModalBottomSheet(
       context: context,
       builder: (context) => scrollable
-          ? ScrollablePositionedList.builder(
+          ? ListView.builder(
               itemBuilder: itemBuilder,
               itemCount: itemCount,
-              initialScrollIndex: initialIndex,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
             )
           : Column(
               mainAxisSize: MainAxisSize.min,

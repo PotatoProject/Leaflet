@@ -37,7 +37,6 @@ import 'package:potato_notes/widget/restore_confirmation_dialog.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/utils/utils.dart' as utils;
-import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
