@@ -57,7 +57,10 @@ class _NewTagState extends State<TagEditor> {
             labelText: LocaleStrings.common.tagTextboxHint,
             border: const UnderlineInputBorder(),
           ),
+          autofocus: true,
           initialValue: tag.name,
+          onFieldSubmitted:
+              tag.name.trim().isNotEmpty ? (text) => _onSubmit(text) : null,
           maxLength: 30,
           onChanged: (text) => setState(() => tag = tag.copyWith(name: text)),
         ),
@@ -69,14 +72,17 @@ class _NewTagState extends State<TagEditor> {
             child: Text(LocaleStrings.common.delete),
           ),
         TextButton(
-          onPressed: tag.name.trim().isNotEmpty
-              ? () => widget.onSave?.call(
-                    tag.copyWith(name: tag.name.trim()),
-                  )
-              : null,
+          onPressed:
+              tag.name.trim().isNotEmpty ? () => _onSubmit(tag.name) : null,
           child: Text(LocaleStrings.common.save),
         ),
       ],
+    );
+  }
+
+  void _onSubmit(String text) {
+    widget.onSave?.call(
+      tag.copyWith(name: text.trim()),
     );
   }
 }

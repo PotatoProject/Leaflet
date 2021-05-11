@@ -108,8 +108,13 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
     return DialogSheetBase(
       title: Row(
         children: [
-          Text(LocaleStrings.backupRestore.restoreTitle),
-          const Spacer(),
+          Expanded(
+            child: Text(
+              LocaleStrings.backupRestore.restoreTitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.note_add_outlined),
             onPressed: () async {
