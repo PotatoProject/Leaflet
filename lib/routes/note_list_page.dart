@@ -98,6 +98,7 @@ class NoteListPageState extends State<NoteListPage> {
               gridView: prefs.useGrid,
               noteCount: notes.length,
               noteKind: widget.noteKind,
+              primary: true,
             );
           },
         ),

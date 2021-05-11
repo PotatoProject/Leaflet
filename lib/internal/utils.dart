@@ -16,6 +16,7 @@ import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -242,9 +243,7 @@ class Utils {
               title: LocaleStrings.common.restore,
               value: 'restore',
             ),
-          if (UniversalPlatform.isAndroid ||
-              UniversalPlatform.isIOS ||
-              UniversalPlatform.isMacOS)
+          if (AppInfo.supportsNotePinning)
             SelectionOptionEntry(
               icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
               title: showUnpin
@@ -463,7 +462,7 @@ class Utils {
     }
   }
 
-  static void handlePinNotes(BuildContext context, Note note) {
+  static Future<void> handlePinNotes(BuildContext context, Note note) async {
     if (note.pinned) {
       appInfo.notifications?.cancel(note.notificationId);
     } else {
@@ -487,7 +486,11 @@ class Utils {
             presentBadge: true,
             presentSound: true,
           ),
-          macOS: const MacOSNotificationDetails(),
+          macOS: const MacOSNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
         ),
         payload: json.encode(
           NotificationPayload(

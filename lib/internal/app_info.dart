@@ -13,6 +13,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 part 'app_info.g.dart';
 
@@ -22,6 +23,9 @@ class AppInfo extends _AppInfoBase with _$AppInfo {
   /// This bool defines whether the app is ready to
   /// support the notes api in a production environment
   static bool supportsNotesApi = false;
+
+  static bool supportsNotePinning =
+      UniversalPlatform.isAndroid || UniversalPlatform.isIOS;
 }
 
 abstract class _AppInfoBase with Store {
@@ -51,7 +55,7 @@ abstract class _AppInfoBase with Store {
 
   List<ActiveNotification> get activeNotifications => _activeNotificationsValue;
 
-  Future<void> _initNotifications() {
+  Future<void> _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
@@ -65,8 +69,12 @@ abstract class _AppInfoBase with Store {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    return notifications!.initialize(initializationSettings,
+    await notifications!.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
+    /* notifications!
+        .resolvePlatformSpecificImplementation<
+            MacOSFlutterLocalNotificationsPlugin>()!
+        .requestPermissions(); */
   }
 
   Future<dynamic> _handleNotificationTap(String? payload) async {
@@ -90,7 +98,7 @@ abstract class _AppInfoBase with Store {
     final String backupDir = await BackupDelegate.getOutputDir();
     Directory(backupDir).create();
 
-    if (!DeviceInfo.isDesktopOrWeb) {
+    if (AppInfo.supportsNotePinning) {
       _initNotifications();
     }
     packageInfo = await PackageInfo.fromPlatform();

@@ -116,10 +116,26 @@ class Themes {
         modalBackgroundColor: scheme.surface,
         shape: const RoundedRectangleBorder(),
       ),
+      scrollbarTheme: ScrollbarThemeData(
+        isAlwaysShown: true,
+        thickness: MaterialStateProperty.resolveWith((states) {
+          if ([
+            MaterialState.hovered,
+            MaterialState.dragged,
+            MaterialState.focused,
+            MaterialState.pressed,
+          ].fold(false, (val, el) => val || states.contains(el))) {
+            return 8;
+          } else {
+            return 4;
+          }
+        }),
+        crossAxisMargin: 0,
+        radius: Radius.zero,
+      ),
       scaffoldBackgroundColor: scheme.background,
       cardColor: scheme.surface,
       canvasColor: scheme.surface,
-      buttonColor: scheme.primary,
       primaryColor: scheme.primary,
       backgroundColor: scheme.primary,
       iconTheme: IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
