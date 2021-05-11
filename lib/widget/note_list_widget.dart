@@ -13,6 +13,7 @@ class NoteListWidget extends StatelessWidget {
   final int noteCount;
   final bool gridView;
   final ReturnMode? noteKind;
+  final bool primary;
   final ScrollController? scrollController;
   final Widget? customIllustration;
   final int? gridColumns;
@@ -24,6 +25,7 @@ class NoteListWidget extends StatelessWidget {
     required this.noteCount,
     this.gridView = false,
     this.noteKind,
+    this.primary = false,
     this.scrollController,
     this.customIllustration,
     this.gridColumns,
@@ -51,7 +53,8 @@ class NoteListWidget extends StatelessWidget {
           itemBuilder: itemBuilder,
           itemCount: noteCount,
           padding: padding,
-          controller: _scrollController,
+          primary: primary,
+          controller: !primary ? _scrollController : null,
           physics: const AlwaysScrollableScrollPhysics(),
         );
       } else {
@@ -59,7 +62,8 @@ class NoteListWidget extends StatelessWidget {
           itemBuilder: itemBuilder,
           itemCount: noteCount,
           padding: padding,
-          controller: _scrollController,
+          primary: primary,
+          controller: !primary ? _scrollController : null,
           physics: const AlwaysScrollableScrollPhysics(),
         );
       }
