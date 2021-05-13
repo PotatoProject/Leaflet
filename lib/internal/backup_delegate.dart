@@ -92,6 +92,7 @@ class BackupDelegate with LoggerProvider {
     final List<int> fileBytes = encoder.close();
     await noteDir.delete(recursive: true);
     final NoteBackupMetadata metadata = NoteBackupMetadata(
+      name: name,
       createdAt: DateTime.now(),
       appVersion: buildNumber,
       noteCount: 1,
@@ -531,7 +532,7 @@ enum RestoreResultStatus {
 }
 
 class NoteBackupMetadata {
-  final String? name;
+  final String name;
   final DateTime createdAt;
   final int noteCount;
   final int appVersion;
@@ -542,11 +543,11 @@ class NoteBackupMetadata {
     required this.appVersion,
     required this.noteCount,
     this.tags = const <Tag>[],
-    this.name,
+    required this.name,
   });
 
   factory NoteBackupMetadata.fromJson(Map<String, dynamic> json) {
-    final String? name = json['name'] as String?;
+    final String name = json['name']! as String;
     final int noteCount = json['noteCount']! as int;
     final int createdAt = json['createdAt']! as int;
     final int appVersion = json['appVersion']! as int;
@@ -569,7 +570,7 @@ class NoteBackupMetadata {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {};
 
-    if (name != null) json['name'] = name;
+    json['name'] = name;
     json['noteCount'] = noteCount;
     json['createdAt'] = createdAt.millisecondsSinceEpoch;
     json['appVersion'] = appVersion;

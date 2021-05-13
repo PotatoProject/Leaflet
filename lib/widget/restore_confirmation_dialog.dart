@@ -26,7 +26,7 @@ class RestoreConfirmationDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  LocaleStrings.common.restoreDialogBackupName(metadata.name!),
+                  LocaleStrings.common.restoreDialogBackupName(metadata.name),
                 ),
                 const SizedBox(height: 4),
                 Text(

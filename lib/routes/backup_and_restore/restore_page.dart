@@ -70,8 +70,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
             final String formattedDate = DateFormat('dd MMM yyyy HH:mm')
                 .format(metadata.metadata.createdAt);
             final bool fromFile = key.startsWith("file-");
-            String cleanName =
-                metadata.metadata.name!.replaceAll(".backup", "");
+            String cleanName = metadata.metadata.name.replaceAll(".backup", "");
             if (fromFile) {
               cleanName =
                   LocaleStrings.backupRestore.restoreFromFile(cleanName);
