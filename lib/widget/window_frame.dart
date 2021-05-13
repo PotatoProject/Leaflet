@@ -16,7 +16,14 @@ class WindowFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!DeviceInfo.isDesktop) return child;
 
-    final double toolbarHeight = UniversalPlatform.isMacOS ? 28 : 32;
+    late final double toolbarHeight;
+    if (UniversalPlatform.isLinux) {
+      toolbarHeight = 0;
+    } else if (UniversalPlatform.isMacOS) {
+      toolbarHeight = 28;
+    } else {
+      toolbarHeight = 32;
+    }
 
     return Stack(
       children: [
@@ -48,7 +55,8 @@ class _WindowTitlebar extends StatelessWidget {
       opacity = 0.05;
     }
 
-    final bool showButtons = !UniversalPlatform.isMacOS;
+    final bool showButtons =
+        !UniversalPlatform.isMacOS && !UniversalPlatform.isLinux;
 
     return SizedBox.expand(
       child: AnimatedContainer(

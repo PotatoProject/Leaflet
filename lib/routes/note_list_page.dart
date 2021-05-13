@@ -17,6 +17,7 @@ import 'package:potato_notes/widget/new_note_bar.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class NoteListPage extends StatefulWidget {
   final ReturnMode noteKind;
@@ -98,7 +99,7 @@ class NoteListPageState extends State<NoteListPage> {
               gridView: prefs.useGrid,
               noteCount: notes.length,
               noteKind: widget.noteKind,
-              primary: true,
+              primary: UniversalPlatform.isIOS,
             );
           },
         ),
