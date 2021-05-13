@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class DrawerListTile extends StatefulWidget {
   final Widget icon;
@@ -58,7 +58,7 @@ class _DrawerListTileState extends State<DrawerListTile>
 
     final TextTheme textTheme = context.theme.textTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
-    final Color _activeColor = context.theme.accentColor;
+    final Color _activeColor = context.theme.colorScheme.secondary;
     final VisualDensity visualDensity = context.theme.visualDensity;
     final Offset baseDensity = visualDensity.baseSizeAdjustment;
     final double height = 56 + baseDensity.dy;
@@ -89,6 +89,7 @@ class _DrawerListTileState extends State<DrawerListTile>
                   alignment: AlignmentDirectional.topCenter,
                   widthFactor: _curvedAc.value,
                   child: ListView(
+                    padding: EdgeInsets.zero,
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [

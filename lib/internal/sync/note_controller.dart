@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';

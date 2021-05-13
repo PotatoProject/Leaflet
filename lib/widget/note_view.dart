@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/internal/colors.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
-import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_view_statusbar.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
@@ -23,6 +24,7 @@ class NoteView extends StatefulWidget {
   final bool selected;
   final ValueChanged<bool?>? onCheckboxChanged;
   final bool allowSelection;
+  final List<Tag>? overrideTags;
 
   const NoteView({
     Key? key,
@@ -33,6 +35,7 @@ class NoteView extends StatefulWidget {
     this.selected = false,
     this.onCheckboxChanged,
     this.allowSelection = false,
+    this.overrideTags,
   }) : super(key: key);
 
   @override
@@ -48,7 +51,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = widget.note.color != 0
-        ? Color(NoteColors.colorList[widget.note.color].dynamicColor(context))
+        ? context.notePalette.colors[widget.note.color].color
         : context.theme.cardColor;
     final Color borderColor =
         widget.selected ? context.theme.iconTheme.color! : Colors.transparent;
@@ -81,16 +84,16 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
     return Card(
       color: backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kCardBorderRadius),
+        borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
         side: BorderSide(
           color: borderColor,
           width: 2,
         ),
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: widget.note.images.isNotEmpty ? Clip.antiAlias : Clip.none,
       elevation: _elevation,
       shadowColor: Colors.black.withOpacity(0.4),
-      margin: kCardPadding,
+      margin: Constants.cardPadding,
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
         child: InkWell(
@@ -108,7 +111,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
               ? widget.onLongPress
               : null,
           splashFactory: InkRipple.splashFactory,
-          borderRadius: BorderRadius.circular(kCardBorderRadius),
+          borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
           child: Stack(
             fit: StackFit.passthrough,
             children: [
@@ -150,6 +153,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                             vertical: 16 + context.theme.visualDensity.vertical,
                           )
                         : null,
+                    overrideTags: widget.overrideTags,
                   ),
                 ],
               ),
@@ -166,7 +170,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     width: 64,
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
-                        center: Alignment.topRight,
+                        center: AlignmentDirectional.topEnd,
                         colors: [
                           Colors.grey.shade900.withOpacity(
                             widget.note.images.isNotEmpty &&
@@ -250,8 +254,11 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         !widget.note.hideContent) {
       items.add(
         Padding(
-          padding:
-              EdgeInsets.only(top: 16 + context.theme.visualDensity.vertical),
+          padding: EdgeInsets.only(
+            top: widget.note.title != "" || widget.note.content != ""
+                ? 8 + context.theme.visualDensity.vertical
+                : 0,
+          ),
           child: SeparatedList(
             separator: const SizedBox(height: 8),
             children: listContentWidgets,
@@ -268,8 +275,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         (index) {
           final ListItem item = widget.note.listContent[index];
           final Color backgroundColor = widget.note.color != 0
-              ? Color(
-                  NoteColors.colorList[widget.note.color].dynamicColor(context))
+              ? context.notePalette.colors[widget.note.color].color
               : context.theme.cardColor;
           final bool showMoreItem = index == 5;
           final Widget icon = showMoreItem
@@ -278,7 +284,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   value: item.status,
                   activeColor: widget.note.color != 0
                       ? context.theme.textTheme.caption!.color
-                      : context.theme.accentColor,
+                      : context.theme.colorScheme.secondary,
                   checkColor: backgroundColor,
                   onChanged: (value) {
                     widget.note.listContent[index].status = value!;
@@ -290,7 +296,8 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   width: 16,
                 );
           final String text = showMoreItem
-              ? "${(widget.note.listContent.length) - 5} more items"
+              ? LocaleStrings.mainPage
+                  .noteListXMoreItems((widget.note.listContent.length) - 5)
               : item.text;
 
           return LayoutBuilder(

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher">#212C21</color>
-    <color name="shortcut_bg">#212C21</color>
+    <color name="ic_launcher">#FFFFFF</color>
+    <color name="shortcut_bg">#FFFFFF</color>
     <color name="shortcut_fg">#66BB6A</color>
     <color name="splash_screen_bg">#FFFFFF</color>
     <color name="splash_screen_fg">#212121</color>

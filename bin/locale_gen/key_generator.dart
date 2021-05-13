@@ -53,6 +53,9 @@ class KeyGenerator {
 
       currentBuffer.writeln("class ${getClassNameFromRouteFile(routeFile)} {");
       keyStringInfo.forEach((key, stringInfo) {
+        if (stringInfo.comment != null) {
+          currentBuffer.writeln('  /// ${stringInfo.comment}');
+        }
         if (stringInfo is CommonString) {
           final String varName = ReCase(key).camelCase;
           currentBuffer

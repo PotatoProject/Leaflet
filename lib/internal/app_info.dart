@@ -8,10 +8,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 part 'app_info.g.dart';
 
@@ -21,11 +23,16 @@ class AppInfo extends _AppInfoBase with _$AppInfo {
   /// This bool defines whether the app is ready to
   /// support the notes api in a production environment
   static bool supportsNotesApi = false;
+
+  static bool supportsNotePinning =
+      UniversalPlatform.isAndroid || UniversalPlatform.isIOS;
 }
 
 abstract class _AppInfoBase with Store {
   static const EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
+  static const MethodChannel backupPromptChannel =
+      MethodChannel('potato_notes_backup_prompt');
 
   _AppInfoBase() {
     loadData();
@@ -48,7 +55,7 @@ abstract class _AppInfoBase with Store {
 
   List<ActiveNotification> get activeNotifications => _activeNotificationsValue;
 
-  Future<void> _initNotifications() {
+  Future<void> _initNotifications() async {
     notifications = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
@@ -62,8 +69,12 @@ abstract class _AppInfoBase with Store {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    return notifications!.initialize(initializationSettings,
+    await notifications!.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
+    /* notifications!
+        .resolvePlatformSpecificImplementation<
+            MacOSFlutterLocalNotificationsPlugin>()!
+        .requestPermissions(); */
   }
 
   Future<dynamic> _handleNotificationTap(String? payload) async {
@@ -84,8 +95,10 @@ abstract class _AppInfoBase with Store {
 
   Future<void> loadData() async {
     tempDirectory = await getTemporaryDirectory();
+    final String backupDir = await BackupDelegate.getOutputDir();
+    Directory(backupDir).create();
 
-    if (!DeviceInfo.isDesktopOrWeb) {
+    if (AppInfo.supportsNotePinning) {
       _initNotifications();
     }
     packageInfo = await PackageInfo.fromPlatform();
@@ -115,5 +128,13 @@ abstract class _AppInfoBase with Store {
           ?.getActiveNotifications();
       _activeNotificationsValue = _activeNotifications ?? [];
     });
+  }
+
+  Future<String?> requestBackupExport(String name, String path) async {
+    final String? result = await backupPromptChannel.invokeMethod<String>(
+      'requestBackupExport',
+      {'name': name, 'path': path},
+    );
+    return result;
   }
 }

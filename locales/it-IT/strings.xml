@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
     <string name="common.cancel">Annulla</string>
@@ -11,22 +12,33 @@
     <string name="common.edit">Modifica</string>
     <string name="common.go_on">Prosegui</string>
     <string name="common.exit">Esci</string>
+    <string name="common.ok">Ok</string>
+    <string name="common.share">Condividi</string>
+    <string name="common.not_now">Non ora</string>
+    <string name="common.update">Aggiorna</string>
+    <string name="common.expand">Espandi</string>
+    <string name="common.collapse">Contrai</string>
+    <string name="common.create">Crea</string>
+    <string name="common.close">Chiudi</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s di %s</string>
     <string name="common.new_note">Nuovo appunto</string>
     <string name="common.new_list">Nuovo elenco</string>
     <string name="common.new_image">Nuova immagine</string>
     <string name="common.new_drawing">Nuovo disegno</string>
+    <string name="common.import_note">Importa appunto</string>
     <string name="common.biometrics_prompt">Conferma biometria</string>
     <string name="common.master_pass.modify">Modifica pass principale</string>
     <string name="common.master_pass.confirm">Conferma pass principale</string>
+    <string name="common.master_pass.incorrect">Pass principale errato</string>
+    <string name="common.backup_password.title">Inserisci la password del backup</string>
+    <string name="common.backup_password.use_master_pass">Utilizza il pass principale come password</string>
+    <string name="common.restore_dialog.title">Conferma ripristino dell\'appunto</string>
+    <string name="common.restore_dialog.backup_name">Nome backup: %s</string>
+    <string name="common.restore_dialog.creation_date">Data di creazione: %s</string>
+    <string name="common.restore_dialog.app_version">Versione dell\'app: %s</string>
+    <string name="common.restore_dialog.note_count">Numero di appunti: %s</string>
+    <string name="common.restore_dialog.tag_count">Numero di etichette: %s</string>
     <string name="common.are_you_sure">Sei sicuro?</string>
-    <string name="common.case_sensitive">Sensibile alle maiuscole</string>
-    <string name="common.color_filter">Colore</string>
-    <string name="common.date_filter">Data</string>
-    <string name="common.date_filter_mode">Modalità filtro</string>
-    <string name="common.date_filter_mode.after">Dopo la data</string>
-    <string name="common.date_filter_mode.exact">Data esatta</string>
-    <string name="common.date_filter_mode.before">Prima della data</string>
     <string name="common.color.none">Nessuno</string>
     <string name="common.color.red">Rosso</string>
     <string name="common.color.orange">Arancione</string>
@@ -43,8 +55,8 @@
     <string name="common.tag.new">Nuova etichetta</string>
     <string name="common.tag.modify">Modifica etichetta</string>
     <string name="common.tag.textbox_hint">Nome</string>
-
     <!-- Main page -->
+    <string name="main_page.write_note">Scrivi un appunto</string>
     <string name="main_page.settings">Impostazioni</string>
     <string name="main_page.search">Cerca</string>
     <string name="main_page.account">Profilo</string>
@@ -57,23 +69,36 @@
     <string name="main_page.empty_state.trash">Il cestino è vuoto</string>
     <string name="main_page.empty_state.favourites">Nessun preferito per ora</string>
     <string name="main_page.empty_state.tag">Nessun appunto con questa etichetta</string>
-    <string name="main_page.title.home">Appunti</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="one">%s altro elemento</item>
+        <item quantity="other">%s altri elementi</item>
+    </plurals>
+    <string name="main_page.title.notes">Appunti</string>
     <string name="main_page.title.archive">Archivio</string>
     <string name="main_page.title.trash">Cestino</string>
     <string name="main_page.title.favourites">Preferiti</string>
     <string name="main_page.title.tag">Etichetta</string>
     <string name="main_page.title.all">Tutti</string>
     <string name="main_page.selection_bar.close">Chiudi</string>
+    <string name="main_page.selection_bar.select">Seleziona</string>
+    <string name="main_page.selection_bar.select_all">Seleziona tutto</string>
     <string name="main_page.selection_bar.add_favourites">Aggiungi ai preferiti</string>
     <string name="main_page.selection_bar.remove_favourites">Rimuovi dai preferiti</string>
     <string name="main_page.selection_bar.change_color">Cambia colore</string>
     <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archivio</string>
     <string name="main_page.selection_bar.delete">Sposta nel cestino</string>
+    <string name="main_page.selection_bar.perma_delete">Elimina</string>
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fissa</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Stacca</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Salva localmente</string>
     <string name="main_page.selection_bar.share">Condividi</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s appunto spostato nel cestino</item>
         <item quantity="other">%s appunti spostati nel cestino</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="one">%s appunto eliminato</item>
+        <item quantity="other">%s appunti eliminati</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="one">%s appunto archiviato</item>
@@ -83,7 +108,8 @@
         <item quantity="one">%s appunto ripristinato</item>
         <item quantity="other">%s appunti ripristinati</item>
     </plurals>
-
+    <string name="main_page.export.success">Appunto esportato con successo</string>
+    <string name="main_page.export.failure">Qualcosa è andato storto durante l\'esportazione</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titolo</string>
     <string name="note_page.content_hint">Contenuto</string>
@@ -103,7 +129,6 @@
     <string name="note_page.drawing">Aggiungi un disegno</string>
     <string name="note_page.added_favourites">Appunto aggiunto ai preferiti</string>
     <string name="note_page.removed_favourites">Appunto rimosso dai preferiti</string>
-
     <!-- Settings page -->
     <string name="settings.title">Impostazioni</string>
     <string name="settings.personalization.title">Personalizzazione</string>
@@ -116,20 +141,38 @@
     <string name="settings.personalization.custom_accent">Scegli un accento personalizzato</string>
     <string name="settings.personalization.use_grid">Vista a griglia per gli appunti</string>
     <string name="settings.personalization.locale">Linguaggio dell\'app</string>
+    <string name="settings.personalization.locale.device_default">Predefinito del dispositivo</string>
     <string name="settings.privacy.title">Privacy</string>
     <string name="settings.privacy.use_master_pass">Usa pass principale</string>
-    <string name="settings.privacy.use_master_pass.disclaimer">Attenzione: se mai dovessi dimenticare il pass non potrai reimpostarlo. Avrai bisogno di disinstallare l\'app, di conseguenza perdendo tutti gli appunti, e reinstallarla. Per favore, annota il pass da qualche parte.</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Attenzione: se mai dovessi dimenticare il pass non potrai reimpostarlo. Avrai bisogno di disinstallare l\'app, di conseguenza perdendo tutti gli appunti, e reinstallarla. Per favore, annota il pass da qualche parte</string>
     <string name="settings.privacy.modify_master_pass">Modifica pass principale</string>
+    <string name="settings.backup_restore.title">Backup e Ripristino</string>
+    <string name="settings.backup_restore.backup">Backup</string>
+    <string name="settings.backup_restore.backup_desc">Crea una copia locale dei tuoi appunti</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">Nessun\'appunto da ripristinare!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">Non ci sono appunti per eseguire il backup</string>
+    <string name="settings.backup_restore.restore">Ripristina</string>
+    <string name="settings.backup_restore.restore_desc">Ripristina un backup creato in una versione di Leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">L\'appunto è stato ripristinato con successo</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">Il file specificato non è un file di backup valido</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">La password inserita non è riuscita a decriptare il backup</string>
+    <string name="settings.backup_restore.restore.status.already_exists">L\'appunto all\'interno del backup è già presente nel database</string>
+    <string name="settings.backup_restore.restore.status.unknown">Si è verificato un problema durante l\'importazione dell\'appunto</string>
+    <string name="settings.backup_restore.import">Importa</string>
+    <string name="settings.backup_restore.import_desc">Importa gli appunti da una versione di PotatoNotes</string>
     <string name="settings.info.title">Info</string>
-    <string name="settings.info.about_app">Informazioni su PotatoNotes</string>
+    <string name="settings.info.about_app">Informazioni su Leaflet</string>
+    <string name="settings.info.update_check">Controlla aggiornamenti</string>
+    <string name="settings.info.bug_report">Segnala un bug</string>
     <string name="settings.debug.title">Debug</string>
     <string name="settings.debug.show_setup_screen">Mostra la schermata iniziale al prossimo avvio</string>
+    <string name="settings.debug.loading_overlay">Prova l\'overlay di caricamento</string>
     <string name="settings.debug.clear_database">Pulisci database</string>
     <string name="settings.debug.migrate_database">Migra database</string>
+    <string name="settings.debug.generate_trash">Genera spazzatura</string>
     <string name="settings.debug.log_level">Livello di log</string>
-
     <!-- About page -->
-    <string name="about.title">Impostazioni</string>
+    <string name="about.title">Crediti</string>
     <string name="about.pwa_version">Versione PWA</string>
     <string name="about.links">Collegamenti</string>
     <string name="about.contributors">Collaboratori</string>
@@ -139,29 +182,85 @@
     <string name="about.contributors.kat">API sync precedente</string>
     <string name="about.contributors.rohit">Illustrazioni e colori degli appunti</string>
     <string name="about.contributors.rshbfn">Icon dell\'app e colore principale</string>
-
+    <string name="about.contributors.elias">Ideazione marchio Leaflet</string>
+    <string name="about.contributors.akshit">Aiuto con la sicurezza e con il backend dell\'app</string>
     <!-- Search page-->
     <string name="search.textbox_hint">Cerca</string>
+    <string name="search.tag_create_empty_hint">Crea nuova etichetta</string>
     <string name="search.tag_create_hint">Crea etichetta \"%s\"</string>
     <string name="search.type_to_search">Digita per iniziare la ricerca</string>
     <string name="search.nothing_found">Nessun risultato...</string>
-
+    <string name="search.note.filters.case_sensitive">Distingui maiuscole</string>
+    <string name="search.note.filters.favourites">Solo appunti preferiti</string>
+    <string name="search.note.filters.locations">Posizione appunti</string>
+    <string name="search.note.filters.locations.normal">Principale</string>
+    <string name="search.note.filters.locations.archive">Archivio</string>
+    <string name="search.note.filters.locations.trash">Cestino</string>
+    <string name="search.note.filters.locations.normal_title">Appunti principali</string>
+    <string name="search.note.filters.locations.archive_title">Appunti archiviati</string>
+    <string name="search.note.filters.locations.trash_title">Appunti nel cestino</string>
+    <string name="search.note.filters.color">Colore</string>
+    <string name="search.note.filters.date">Data</string>
+    <string name="search.note.filters.date.mode_title">Modalità filtro</string>
+    <string name="search.note.filters.date.mode_after">Dopo la data</string>
+    <string name="search.note.filters.date.mode_exact">Data esatta</string>
+    <string name="search.note.filters.date.mode_before">Prima della data</string>
+    <string name="search.note.filters.tags">Etichette</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="one">%s selezionata</item>
+        <item quantity="other">%s selezionate</item>
+    </plurals>
+    <string name="search.note.filters.clear">Cancella filtri</string>
     <!-- Draw page -->
     <string name="drawing.color_black">Nero</string>
     <string name="drawing.exit_prompt">Le modifiche non salvate andranno perse. Vuoi uscire?</string>
+    <string name="drawing.clear_canvas_warning">Questa operazione non può essere annullata. Continuare?</string>
     <string name="drawing.tools.brush">Pennello</string>
     <string name="drawing.tools.eraser">Gomma</string>
     <string name="drawing.tools.marker">Evidenziatore</string>
     <string name="drawing.tools.color_picker">Colore</string>
     <string name="drawing.tools.radius_picker">Dimensione</string>
-
     <!-- Setup page -->
     <string name="setup.button.get_started">Iniziamo</string>
     <string name="setup.button.finish">Termina</string>
     <string name="setup.button.next">Prossimo</string>
     <string name="setup.button.back">Precedente</string>
-    <string name="setup.basic_customization.title">Personalizzazione di base</string>
     <string name="setup.welcome.catchphrase">La tua nuova app per gli appunti preferita</string>
+    <string name="setup.basic_customization.title">Personalizzazione di base</string>
+    <string name="setup.restore_import.title">Ripristina e importa</string>
+    <string name="setup.restore_import.desc">Puoi scegliere di ripristinare gli appunti da un\'altra versione di Leaflet o da una versione precedente di PotatoNotes</string>
     <string name="setup.finish.title">Tutto pronto!</string>
-    <string name="setup.finish.last_words">Ora sei pronto a goderti PotatoNotes al massimo. \nSe desideri personalizzare altri aspetti dell\'app apri le impostazioni nel riquadro laterale, invece se vuoi gestire il tuo account PotatoSync fai clic sul tuo avatar nella barra in alto.</string>
+    <string name="setup.finish.last_words">Hai completato il setup per Leaflet, ora l\'app dovrebbe essere pronta per il primo utilizzo. Se mai volessi cambiare qualcosa, puoi andare sulle impostazioni. Spero che apprezzerai Leaflet quanto me!</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">Crea backup</string>
+    <string name="backup_restore.backup.password">Password</string>
+    <string name="backup_restore.backup.name">Nome (opzionale)</string>
+    <string name="backup_restore.backup.num_of_notes">Numero di appunti nel backup: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">Alcuni appunti sono bloccati, inserisci il pass principale per continuare</string>
+    <string name="backup_restore.backup.creating">Creazione backup</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Backup dell\'appunti %s di %s</string>
+    <string name="backup_restore.backup.complete.success">Backup completato con successo!</string>
+    <string name="backup_restore.backup.complete.failure">Il processo di backup è stato interrotto</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">Il processo di backup è stato un successo! Puoi trovare il backup a </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">Il processo di backup è stato un successo! Ora puoi chiudere questa finestra</string>
+    <string name="backup_restore.backup.complete_desc.failure">Qualcosa è andato storto o hai interrotto il processo di salvataggio. Puoi riavviare il processo di backup in qualsiasi momento</string>
+    <string name="backup_restore.restore.title">Seleziona un backup da ripristinare</string>
+    <string name="backup_restore.restore.file_open">Apri file</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (Da file)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">Numero appunti: %s, Numero etichette: %s\nCreato il %s</string>
+    <string name="backup_restore.restore.no_backups">Non ci sono backup disponibili. Prova ad aprire un file</string>
+    <string name="backup_restore.restore.failure">Impossibile ripristinare il backup</string>
+    <string name="backup_restore.import.title">Seleziona origine importazione</string>
+    <string name="backup_restore.import.open_db">Apri file di backup PotatoNotes</string>
+    <string name="backup_restore.import.open_previous">Apri il database della versione precedente</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">Solo Android supporta il caricamento da versione precedente</string>
+    <string name="backup_restore.import.open_previous.no_file">Non è stato trovato nessun database dalla versione precedente</string>
+    <string name="backup_restore.import.notes_loaded">Appunti caricati con successo</string>
+    <string name="backup_restore.select_notes">Seleziona appunti da ripristinare</string>
+    <string name="backup_restore.replace_existing">Sostituisci appunti esistenti</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">Aggiornamento disponibile!</string>
+    <string name="miscellaneous.updater.update_available_desc">È disponibile una nuova versione per il download, clicca aggiorna per scaricare il file di aggiornamento</string>
+    <string name="miscellaneous.updater.already_on_latest">Ultima versione</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">Sei già sull\'ultima versione dell\'app</string>
 </resources>

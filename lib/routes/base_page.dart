@@ -5,15 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
-import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -49,10 +49,9 @@ class BasePage extends StatefulWidget {
 
 class BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
-  static const double drawerClosedWidth = 72.0;
-  static const double drawerOpenedWidth = 300.0;
+  static const double _drawerClosedWidth = 72.0;
+  static const double _drawerOpenedWidth = 300.0;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _pages = [
     NoteListPage(
@@ -117,11 +116,17 @@ class BasePageState extends State<BasePage>
       if (secondaryAppBar is DefaultAppBar || secondaryAppBar == null) {
         await _ac.animateBack(0);
       } else {
-        await _ac.animateBack(0);
-        _ac.animateTo(1);
+        if (_ac.value == 0) {
+          _ac.animateTo(1);
+        }
       }
     }
-    _secondaryAppBar = secondaryAppBar;
+    _secondaryAppBar = secondaryAppBar != null
+        ? KeyedSubtree(
+            key: ValueKey(secondaryAppBar.runtimeType),
+            child: secondaryAppBar,
+          )
+        : null;
 
     WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
@@ -133,12 +138,12 @@ class BasePageState extends State<BasePage>
       context.scaffoldMessenger.showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
-        const BottomNavigationBarItem(
-          icon: Icon(CustomIcons.notes),
-          label: "Notes",
+        BottomNavigationBarItem(
+          icon: const Icon(CustomIcons.notes),
+          label: LocaleStrings.mainPage.titleNotes,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(MdiIcons.archiveOutline),
+          icon: const Icon(Icons.inventory_2_outlined),
           label: LocaleStrings.mainPage.titleArchive,
         ),
         BottomNavigationBarItem(
@@ -178,7 +183,7 @@ class BasePageState extends State<BasePage>
 
     _ac = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 75),
     );
 
     InAppUpdater.checkForUpdate(context);
@@ -240,77 +245,94 @@ class BasePageState extends State<BasePage>
                   child: AnimatedPadding(
                     padding: EdgeInsetsDirectional.only(
                       start: useDynamicDrawer
-                          ? _defaultDrawerMode == DefaultDrawerMode.expanded
-                              ? _collapsedDrawer
-                                  ? drawerClosedWidth
-                                  : drawerOpenedWidth
-                              : drawerClosedWidth
+                          ? (_defaultDrawerMode == DefaultDrawerMode.expanded
+                                  ? _collapsedDrawer
+                                      ? _drawerClosedWidth
+                                      : _drawerOpenedWidth
+                                  : _drawerClosedWidth) +
+                              context.viewPaddingDirectional.start
                           : 0,
                     ),
                     duration: const Duration(milliseconds: 200),
                     curve: decelerateEasing,
-                    child: Scaffold(
-                      key: _scaffoldKey,
-                      backgroundColor: Colors.transparent,
-                      appBar: ConstrainedWidthAppbar(
-                        width: 1920,
-                        child: !useDynamicDrawer
-                            ? !deviceInfo.isLandscape
-                                ? _appBar
-                                : DefaultAppBar(
-                                    extraActions: [
-                                      AppbarNavigation(
-                                        items: _items,
-                                        index: _currentPage,
-                                        enabled: _bottomBarEnabled,
-                                        onPageChanged: setCurrentPage,
-                                      ),
-                                    ],
-                                  )
-                            : null,
-                      ),
-                      extendBody: useDesktopLayout,
-                      extendBodyBehindAppBar: true,
-                      body: PageTransitionSwitcher(
-                        transitionBuilder: (
-                          child,
-                          primaryAnimation,
-                          secondaryAnimation,
-                        ) =>
-                            FadeThroughTransition(
-                          animation: primaryAnimation,
-                          secondaryAnimation: secondaryAnimation,
-                          fillColor: Colors.transparent,
-                          child: MediaQuery(
-                            data: context.mediaQuery.copyWith(
-                              padding: context.padding.copyWith(
-                                top: useDynamicDrawer
-                                    ? context.padding.top
-                                    : context.padding.top + 56,
+                    child: MediaQuery.removeViewPadding(
+                      context: context,
+                      removeLeft: true,
+                      removeRight: true,
+                      child: Scaffold(
+                        backgroundColor: Colors.transparent,
+                        appBar: ConstrainedWidthAppbar(
+                          width: 1920,
+                          mediaQueryData: context.mediaQuery,
+                          child: !useDynamicDrawer
+                              ? !deviceInfo.isLandscape
+                                  ? _appBar
+                                  : DefaultAppBar(
+                                      extraActions: [
+                                        AppbarNavigation(
+                                          items: _items,
+                                          index: _currentPage,
+                                          enabled: _bottomBarEnabled,
+                                          onPageChanged: setCurrentPage,
+                                        ),
+                                      ],
+                                    )
+                              : null,
+                        ),
+                        extendBody: useDesktopLayout,
+                        extendBodyBehindAppBar: true,
+                        body: PageTransitionSwitcher(
+                          transitionBuilder: (
+                            child,
+                            primaryAnimation,
+                            secondaryAnimation,
+                          ) =>
+                              FadeThroughTransition(
+                            animation: primaryAnimation,
+                            secondaryAnimation: secondaryAnimation,
+                            fillColor: Colors.transparent,
+                            child: MediaQuery(
+                              data: context.mediaQuery.copyWith(
+                                padding: context.padding.copyWith(
+                                  top: useDynamicDrawer
+                                      ? context.padding.top
+                                      : context.padding.top + 56,
+                                ),
+                                viewPadding: useDynamicDrawer
+                                    ? EdgeInsetsDirectional.only(
+                                        top: context.viewPaddingDirectional.top,
+                                        bottom: context
+                                            .viewPaddingDirectional.bottom,
+                                        end: context.viewPaddingDirectional.end,
+                                      ).resolve(context.directionality)
+                                    : null,
+                              ),
+                              child: PageStorage(
+                                bucket: _bucket,
+                                child: child,
                               ),
                             ),
-                            child: PageStorage(
-                              bucket: _bucket,
-                              child: child,
-                            ),
                           ),
+                          child: _pages.get(_currentPage),
                         ),
-                        child: _pages.get(_currentPage),
+                        resizeToAvoidBottomInset: false,
+                        bottomNavigationBar: MediaQuery(
+                          data: context.mediaQuery,
+                          child: !useDesktopLayout
+                              ? BasePageNavigationBar(
+                                  items: _items,
+                                  index: _currentPage,
+                                  enabled: _bottomBarEnabled,
+                                  onPageChanged: setCurrentPage,
+                                )
+                              : _SecondaryAppBar(
+                                  animationController: _ac,
+                                  child: _secondaryAppBar,
+                                ),
+                        ),
+                        floatingActionButton:
+                            !useDesktopLayout ? _floatingActionButton : null,
                       ),
-                      resizeToAvoidBottomInset: false,
-                      bottomNavigationBar: !useDesktopLayout
-                          ? BasePageNavigationBar(
-                              items: _items,
-                              index: _currentPage,
-                              enabled: _bottomBarEnabled,
-                              onPageChanged: setCurrentPage,
-                            )
-                          : _SecondaryAppBar(
-                              animationController: _ac,
-                              child: _secondaryAppBar,
-                            ),
-                      floatingActionButton:
-                          !useDesktopLayout ? _floatingActionButton : null,
                     ),
                   ),
                 ),
@@ -332,14 +354,16 @@ class BasePageState extends State<BasePage>
                 ),
                 Visibility(
                   visible: useDynamicDrawer,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: decelerateEasing,
-                    width: _collapsedDrawer
-                        ? drawerClosedWidth
-                        : drawerOpenedWidth,
-                    child: Material(
-                      elevation: 12,
+                  child: Material(
+                    elevation: 12,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: decelerateEasing,
+                      width: _collapsedDrawer
+                          ? _drawerClosedWidth
+                          : _drawerOpenedWidth,
+                      margin: EdgeInsetsDirectional.only(
+                          start: context.viewPaddingDirectional.start),
                       child: DrawerList(
                         items: _items,
                         currentIndex: _currentPage,
@@ -371,7 +395,7 @@ class BasePageState extends State<BasePage>
                                       : LocaleStrings.mainPage.account,
                                 ),
                                 onTap: () {
-                                  Utils.showNotesModalBottomSheet(
+                                  Utils.showModalBottomSheet(
                                     context: context,
                                     builder: (context) => AccountInfo(),
                                   );
@@ -387,7 +411,9 @@ class BasePageState extends State<BasePage>
                                 : Icons.chevron_left,
                           ),
                           title: Text(
-                            _collapsedDrawer ? "Expand" : "Collapse",
+                            _collapsedDrawer
+                                ? LocaleStrings.common.expand
+                                : LocaleStrings.common.collapse,
                           ),
                           onTap: () => setState(
                               () => _collapsedDrawer = !_collapsedDrawer),
@@ -438,43 +464,59 @@ class _SecondaryAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: context.viewInsets.bottom,
+      padding: EdgeInsetsDirectional.only(
+        end: context.viewPaddingDirectional.end,
       ),
-      child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 1),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animationController,
-            curve: accelerateEasing,
-            reverseCurve: decelerateEasing,
-          ),
-        ),
+      child: MediaQuery.removeViewPadding(
+        context: context,
+        removeTop: true,
+        removeLeft: true,
+        removeRight: true,
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 16,
-            bottom: 16,
+          padding: EdgeInsets.only(
+            bottom: context.viewInsets.bottom,
           ),
-          child: ConstrainedWidthAppbar(
-            width: min(640, context.mSize.width - 32),
-            child: Material(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animationController,
+                curve: accelerateEasing,
+                reverseCurve: decelerateEasing,
               ),
-              color: context.theme.cardColor,
-              clipBehavior: Clip.antiAlias,
-              elevation: 8,
-              child: SizedBox(
-                height: 48,
-                child: Theme(
-                  data: context.theme.copyWith(
-                    appBarTheme: context.theme.appBarTheme.copyWith(
-                      color: context.theme.cardColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 16,
+                bottom: 16,
+              ),
+              child: ConstrainedWidthAppbar(
+                width: min(640, context.mSize.width - 32),
+                child: Material(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  color: context.theme.cardColor,
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 8,
+                  child: SizedBox(
+                    height: 48,
+                    child: Theme(
+                      data: context.theme.copyWith(
+                        appBarTheme: context.theme.appBarTheme.copyWith(
+                          color: context.theme.cardColor,
+                        ),
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 150),
+                        switchInCurve: decelerateEasing,
+                        switchOutCurve: decelerateEasing,
+                        child: child ?? Container(),
+                      ),
                     ),
                   ),
-                  child: child ?? Container(),
                 ),
               ),
             ),

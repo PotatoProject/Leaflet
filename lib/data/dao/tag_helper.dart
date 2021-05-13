@@ -24,6 +24,14 @@ class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
     }
   }
 
+  Future<List<Tag>> getTagsById(List<String> ids) {
+    final SimpleSelectStatement<$TagsTable, Tag> selectQuery = select(tags);
+    selectQuery.where(
+      (table) => table.id.contains("-synced").not() & table.id.isIn(ids),
+    );
+    return selectQuery.get();
+  }
+
   Stream<List<Tag>> watchTags(TagReturnMode returnMode) {
     SimpleSelectStatement<$TagsTable, Tag> selectQuery;
     switch (returnMode) {

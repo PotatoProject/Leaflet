@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/account_info.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -37,35 +39,31 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
           )
         : title;
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: context.viewPadding.left,
-        right: context.viewPadding.right,
-      ),
-      child: AppBar(
-        leading: _leading,
-        titleSpacing: 0,
-        title: _title,
-        textTheme: context.theme.textTheme,
-        centerTitle: false,
-        actions: [
-          Visibility(
-            visible: state != null && AppInfo.supportsNotesApi,
-            child: IconButton(
-              padding: const EdgeInsets.all(16),
-              icon: const AccountAvatar(),
-              splashRadius: 28,
-              tooltip: LocaleStrings.mainPage.account,
-              onPressed: () {
-                Utils.showNotesModalBottomSheet(
-                  context: context,
-                  builder: (context) => AccountInfo(),
-                );
-              },
-            ),
+    return AppBar(
+      leading: _leading,
+      titleSpacing: 0,
+      title: _title,
+      textTheme: context.theme.textTheme,
+      centerTitle: (context.theme.platform == TargetPlatform.iOS ||
+              context.theme.platform == TargetPlatform.macOS) &&
+          deviceInfo.uiSizeFactor < 3,
+      actions: [
+        Visibility(
+          visible: state != null && AppInfo.supportsNotesApi,
+          child: IconButton(
+            padding: const EdgeInsets.all(16),
+            icon: const AccountAvatar(),
+            splashRadius: 28,
+            tooltip: LocaleStrings.mainPage.account,
+            onPressed: () {
+              Utils.showModalBottomSheet(
+                context: context,
+                builder: (context) => AccountInfo(),
+              );
+            },
           ),
-        ]..insertAll(0, extraActions),
-      ),
+        ),
+      ]..insertAll(0, extraActions),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class SettingsCategory extends StatelessWidget {
   final String header;
@@ -16,8 +16,8 @@ class SettingsCategory extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(
-            context.viewPadding.left + 16,
+          padding: EdgeInsetsDirectional.fromSTEB(
+            context.viewPaddingDirectional.start + 16,
             8,
             16,
             8,
@@ -33,7 +33,7 @@ class SettingsCategory extends StatelessWidget {
         builder: (context) => Text(
           text.toUpperCase(),
           style: TextStyle(
-            color: context.theme.accentColor,
+            color: context.theme.colorScheme.secondary,
             fontWeight: FontWeight.bold,
             fontSize: 12,
             letterSpacing: 2,

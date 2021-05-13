@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
@@ -45,7 +46,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
             leading: NoteViewCheckbox(
               value: tags.contains(filteredTags[index].id),
               checkColor: context.theme.scaffoldBackgroundColor,
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               onChanged: (value) =>
                   _onChangeValue(value!, filteredTags[index].id),
             ),
@@ -54,7 +55,7 @@ class TagSearchDelegate extends CustomSearchDelegate {
               icon: const Icon(Icons.edit_outlined),
               padding: EdgeInsets.zero,
               splashRadius: 24,
-              onPressed: () => Utils.showNotesModalBottomSheet(
+              onPressed: () => Utils.showModalBottomSheet(
                 context: context,
                 builder: (context) => TagEditor(
                   initialInput: query,
@@ -84,9 +85,13 @@ class TagSearchDelegate extends CustomSearchDelegate {
         ),
         ListTile(
           leading: const Icon(Icons.add),
-          title: Text(LocaleStrings.search.tagCreateHint(query)),
+          title: Text(
+            query.isNotEmpty
+                ? LocaleStrings.search.tagCreateHint(query)
+                : LocaleStrings.search.tagCreateEmptyHint,
+          ),
           onTap: () async {
-            final bool? result = await Utils.showNotesModalBottomSheet<bool>(
+            final bool? result = await Utils.showModalBottomSheet<bool>(
               context: context,
               builder: (context) => TagEditor(
                 initialInput: query,

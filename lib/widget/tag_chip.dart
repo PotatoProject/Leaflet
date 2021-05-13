@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class TagChip extends StatelessWidget {
   final String title;
@@ -29,7 +29,7 @@ class TagChip extends StatelessWidget {
             ),
           ),
           constraints: BoxConstraints(
-            maxWidth: constraints.maxWidth,
+            maxWidth: constraints.normalize().maxWidth,
           ),
           padding: EdgeInsets.symmetric(
             vertical: shrink ? 4 : 6,
@@ -41,7 +41,7 @@ class TagChip extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: shrink ? 4 : 6),
                 constraints: BoxConstraints(
-                  maxWidth: constraints.maxWidth -
+                  maxWidth: constraints.normalize().maxWidth -
                       (shrink ? 10 : 16) -
                       (shrink ? 8 : 12) -
                       (shrink ? 12 : 16),

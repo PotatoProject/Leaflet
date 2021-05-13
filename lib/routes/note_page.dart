@@ -8,18 +8,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/colors.dart';
 import 'package:potato_notes/internal/device_info.dart';
-import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
 import 'package:potato_notes/routes/note_page_image_gallery.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/note_images.dart';
+import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/tag_chip.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
@@ -175,9 +175,8 @@ class _NotePageState extends State<NotePage> {
   }
 
   ThemeData get notePageThemeData {
-    final Color? noteColor = note.color != 0
-        ? Color(NoteColors.colorList[note.color].dynamicColor(context))
-        : null;
+    final Color? noteColor =
+        note.color != 0 ? context.notePalette.colors[note.color].color : null;
     final Color? foregroundColor =
         note.color != 0 ? context.theme.textTheme.caption!.color : null;
 
@@ -191,12 +190,14 @@ class _NotePageState extends State<NotePage> {
       appBarTheme: context.theme.appBarTheme.copyWith(
         color: noteColor?.withOpacity(0.9),
       ),
-      toggleableActiveColor: foregroundColor ?? context.theme.accentColor,
+      toggleableActiveColor:
+          foregroundColor ?? context.theme.colorScheme.secondary,
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: foregroundColor ?? context.theme.accentColor,
-        selectionColor:
-            (foregroundColor ?? context.theme.accentColor).withOpacity(0.3),
-        selectionHandleColor: foregroundColor ?? context.theme.accentColor,
+        cursorColor: foregroundColor ?? context.theme.colorScheme.secondary,
+        selectionColor: (foregroundColor ?? context.theme.colorScheme.secondary)
+            .withOpacity(0.3),
+        selectionHandleColor:
+            foregroundColor ?? context.theme.colorScheme.secondary,
       ),
     );
   }
@@ -205,6 +206,7 @@ class _NotePageState extends State<NotePage> {
     final bool showNewItemButton =
         note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
             note.listContent.isEmpty;
+    final List<String> actualTags = note.getActualTags();
 
     return ListView(
       padding: EdgeInsets.only(
@@ -217,7 +219,7 @@ class _NotePageState extends State<NotePage> {
             height: imageWidgetSize,
             child: getImageWidget(Axis.horizontal),
           ),
-        if (note.actualTags.isNotEmpty)
+        if (actualTags.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(8),
             width: context.mSize.width,
@@ -225,10 +227,10 @@ class _NotePageState extends State<NotePage> {
               spacing: 8,
               runSpacing: 8,
               children: List.generate(
-                note.actualTags.length,
+                actualTags.length,
                 (index) {
                   final Tag tag = prefs.tags.firstWhere(
-                    (tag) => tag.id == note.actualTags[index],
+                    (tag) => tag.id == actualTags[index],
                   );
 
                   return TagChip(
@@ -279,6 +281,7 @@ class _NotePageState extends State<NotePage> {
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               onTap: showNewItemButton ? () => addListContentItem() : null,
+              horizontalTitleGap: 8,
             ),
           ),
       ],
@@ -325,7 +328,7 @@ class _NotePageState extends State<NotePage> {
         notifyNoteChanged();
       },
       checkColor: note.color != 0
-          ? Color(NoteColors.colorList[note.color].dynamicColor(context))
+          ? context.notePalette.colors[note.color].color
           : context.theme.scaffoldBackgroundColor,
     );
   }
@@ -406,7 +409,7 @@ class _NotePageState extends State<NotePage> {
           icon: const Icon(Icons.color_lens_outlined),
           padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarColor,
-          onPressed: () => Utils.showNotesModalBottomSheet(
+          onPressed: () => Utils.showModalBottomSheet(
             context: context,
             backgroundColor: context.theme.cardColor,
             builder: (context) => NoteColorSelector(
@@ -425,38 +428,40 @@ class _NotePageState extends State<NotePage> {
           padding: const EdgeInsets.all(0),
           tooltip: LocaleStrings.notePage.toolbarAddItem,
           onPressed: () async {
-            Utils.showNotesModalBottomSheet(
+            Utils.showModalBottomSheet(
               context: context,
               builder: (context) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        note.list
-                            ? Icons.check_circle
-                            : Icons.check_circle_outline,
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          note.list
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline,
+                        ),
+                        title: Text(LocaleStrings.notePage.toggleList),
+                        onTap: () => handleAddItemTap(context, 'list'),
                       ),
-                      title: Text(LocaleStrings.notePage.toggleList),
-                      onTap: () => handleAddItemTap(context, 'list'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.photo_outlined),
-                      title: Text(LocaleStrings.notePage.imageGallery),
-                      onTap: () => handleAddItemTap(context, 'image'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.camera_outlined),
-                      enabled: !DeviceInfo.isDesktop,
-                      title: Text(LocaleStrings.notePage.imageCamera),
-                      onTap: () => handleAddItemTap(context, 'camera'),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.brush_outlined),
-                      title: Text(LocaleStrings.notePage.drawing),
-                      onTap: () => handleAddItemTap(context, 'drawing'),
-                    ),
-                  ],
+                      ListTile(
+                        leading: const Icon(Icons.photo_outlined),
+                        title: Text(LocaleStrings.notePage.imageGallery),
+                        onTap: () => handleAddItemTap(context, 'image'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.camera_outlined),
+                        enabled: !DeviceInfo.isDesktop,
+                        title: Text(LocaleStrings.notePage.imageCamera),
+                        onTap: () => handleAddItemTap(context, 'camera'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.brush_outlined),
+                        title: Text(LocaleStrings.notePage.drawing),
+                        onTap: () => handleAddItemTap(context, 'drawing'),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -520,75 +525,78 @@ class _NotePageState extends State<NotePage> {
   }
 
   void showPrivacyOptionSheet() {
-    Utils.showNotesModalBottomSheet(
+    Utils.showModalBottomSheet(
       context: context,
       backgroundColor: context.theme.bottomSheetTheme.backgroundColor,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SwitchListTile(
-              value: note.hideContent,
-              onChanged: (value) {
-                setState(
-                    () => note = note.copyWith(hideContent: !note.hideContent));
-                notifyNoteChanged();
-              },
-              activeColor: context.theme.accentColor,
-              secondary: const Icon(Icons.remove_red_eye_outlined),
-              title: Text(LocaleStrings.notePage.privacyHideContent),
-            ),
-            SwitchListTile(
-              value: note.lockNote,
-              onChanged: prefs.masterPass != ""
-                  ? (value) async {
-                      final bool confirm =
-                          await Utils.showPassChallengeSheet(context) ?? false;
-
-                      if (confirm) {
-                        setState(() =>
-                            note = note.copyWith(lockNote: !note.lockNote));
-                        notifyNoteChanged();
-                      }
-                    }
-                  : null,
-              activeColor: context.theme.accentColor,
-              secondary: const Icon(Icons.lock_outlined),
-              title: Text(LocaleStrings.notePage.privacyLockNote),
-              subtitle: prefs.masterPass == ""
-                  ? Text(
-                      LocaleStrings.notePage.privacyLockNoteMissingPass,
-                      style: const TextStyle(color: Colors.red),
-                    )
-                  : null,
-            ),
-            Visibility(
-              visible: deviceInfo.canCheckBiometrics,
-              child: SwitchListTile(
-                value: note.usesBiometrics,
-                onChanged: note.lockNote
+        builder: (context, setState) => SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchListTile.adaptive(
+                value: note.hideContent,
+                onChanged: (value) {
+                  setState(() =>
+                      note = note.copyWith(hideContent: !note.hideContent));
+                  notifyNoteChanged();
+                },
+                activeColor: context.theme.colorScheme.secondary,
+                secondary: const Icon(Icons.remove_red_eye_outlined),
+                title: Text(LocaleStrings.notePage.privacyHideContent),
+              ),
+              SwitchListTile.adaptive(
+                value: note.lockNote,
+                onChanged: prefs.masterPass != ""
                     ? (value) async {
-                        bool confirm;
-
-                        try {
-                          confirm = await Utils.showBiometricPrompt();
-                        } on PlatformException {
-                          confirm = false;
-                        }
+                        final bool confirm =
+                            await Utils.showPassChallengeSheet(context) ??
+                                false;
 
                         if (confirm) {
                           setState(() =>
-                              note = note.copyWith(usesBiometrics: value));
+                              note = note.copyWith(lockNote: !note.lockNote));
                           notifyNoteChanged();
                         }
                       }
                     : null,
-                activeColor: context.theme.accentColor,
-                secondary: const Icon(Icons.fingerprint_outlined),
-                title: Text(LocaleStrings.notePage.privacyUseBiometrics),
+                activeColor: context.theme.colorScheme.secondary,
+                secondary: const Icon(Icons.lock_outlined),
+                title: Text(LocaleStrings.notePage.privacyLockNote),
+                subtitle: prefs.masterPass == ""
+                    ? Text(
+                        LocaleStrings.notePage.privacyLockNoteMissingPass,
+                        style: const TextStyle(color: Colors.red),
+                      )
+                    : null,
               ),
-            ),
-          ],
+              Visibility(
+                visible: deviceInfo.canCheckBiometrics,
+                child: SwitchListTile.adaptive(
+                  value: note.usesBiometrics,
+                  onChanged: note.lockNote
+                      ? (value) async {
+                          bool confirm;
+
+                          try {
+                            confirm = await Utils.showBiometricPrompt();
+                          } on PlatformException {
+                            confirm = false;
+                          }
+
+                          if (confirm) {
+                            setState(() =>
+                                note = note.copyWith(usesBiometrics: value));
+                            notifyNoteChanged();
+                          }
+                        }
+                      : null,
+                  activeColor: context.theme.colorScheme.secondary,
+                  secondary: const Icon(Icons.fingerprint_outlined),
+                  title: Text(LocaleStrings.notePage.privacyUseBiometrics),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -694,7 +702,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                       context.theme.scaffoldBackgroundColor,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 24),
               Expanded(
                 child: TextField(
                   controller: widget.controller,
@@ -756,9 +764,9 @@ class _NotePageTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: 16 + context.viewPadding.left,
-        right: 16 + context.viewPadding.right,
+      padding: EdgeInsetsDirectional.only(
+        start: 16 + context.viewPaddingDirectional.start,
+        end: 16 + context.viewPaddingDirectional.end,
       ),
       child: TextFormField(
         controller: controller,

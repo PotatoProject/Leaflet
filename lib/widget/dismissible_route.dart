@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 
 bool _gestureStartAllowed = false;
 
@@ -375,9 +375,12 @@ class DismissibleRouteState extends State<DismissibleRoute> {
                 data: context.mediaQuery.copyWith(
                   padding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
                       ? EdgeInsets.zero
-                      : context.mediaQuery.padding,
-                  viewInsets: context.mediaQuery.viewInsets.copyWith(
-                    bottom: context.mediaQuery.viewInsets.bottom -
+                      : context.padding,
+                  viewPadding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
+                      ? EdgeInsets.zero
+                      : context.viewPadding,
+                  viewInsets: context.viewInsets.copyWith(
+                    bottom: context.viewInsets.bottom -
                         ((context.mSize.height - height) / 2),
                   ),
                 ),

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -11,9 +13,15 @@ class InAppUpdater {
   const InAppUpdater._();
 
   static BuildType get buildType {
-    if (UniversalPlatform.isWeb) {
-      // Users always get the latest version as long as they refresh and
+    if (UniversalPlatform.isWeb ||
+        UniversalPlatform.isIOS ||
+        UniversalPlatform.isMacOS) {
+      // For web, users always get the latest version as long as they refresh and
       // other stuff we cant really manipulate (at least idk how to do that)
+      //
+      // On apple OSes instead i just couldn't care less about their shenanigans,
+      // apple shall resolve those by their own
+
       return BuildType.unsupported;
     }
 
@@ -22,16 +30,11 @@ class InAppUpdater {
       return BuildType.gitHub;
     }
 
-    return _getBuildType(
-      const String.fromEnvironment(
-        "build_type",
-        defaultValue: "github",
-      ),
-    );
+    return _getBuildType(appConfig.buildType);
   }
 
-  static BuildType _getBuildType(String buildTypeFromEnv) {
-    switch (buildTypeFromEnv.toLowerCase()) {
+  static BuildType _getBuildType(String buildTypeString) {
+    switch (buildTypeString.toLowerCase()) {
       case 'playstore':
         return BuildType.playStore;
       case 'github':
@@ -92,17 +95,16 @@ class InAppUpdater {
       );
     } else {
       if (showNoUpdatesAvailable) {
-        showDialog(
+        Utils.showAlertDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            content: const Text("You're already on the latest app version"),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text("Close"),
-              ),
-            ],
-          ),
+          title: Text(LocaleStrings.miscellaneous.updaterAlreadyOnLatest),
+          content: Text(LocaleStrings.miscellaneous.updaterAlreadyOnLatestDesc),
+          actions: (context) => [
+            TextButton(
+              onPressed: () => context.pop(),
+              child: Text(LocaleStrings.common.close),
+            ),
+          ],
         );
       }
     }
@@ -142,25 +144,23 @@ class InAppUpdater {
       builder: (context) {
         return AlertDialog(
           title: Row(
-            children: const [
-              Illustration.leaflet(
+            children: [
+              const Illustration.leaflet(
                 height: 24,
               ),
-              SizedBox(width: 16),
-              Text("Update available!"),
+              const SizedBox(width: 16),
+              Text(LocaleStrings.miscellaneous.updaterUpdateAvailable),
             ],
           ),
-          content: const Text(
-            "A new update is available to download, click update to download the update.",
-          ),
+          content: Text(LocaleStrings.miscellaneous.updaterUpdateAvailableDesc),
           actions: [
             TextButton(
               onPressed: () => context.pop(false),
-              child: Text("Not now".toUpperCase()),
+              child: Text(LocaleStrings.common.notNow.toUpperCase()),
             ),
             TextButton(
               onPressed: () => context.pop(true),
-              child: Text("Update".toUpperCase()),
+              child: Text(LocaleStrings.common.update.toUpperCase()),
             ),
           ],
         );

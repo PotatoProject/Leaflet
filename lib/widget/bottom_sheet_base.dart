@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 
@@ -15,7 +15,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
     this.shape = const RoundedRectangleBorder(),
     this.clipBehavior = Clip.none,
     this.maintainState = true,
-    this.childHandlesScroll = false,
     this.enableDismiss = true,
   });
 
@@ -24,7 +23,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final double? elevation;
   final ShapeBorder? shape;
   final Clip? clipBehavior;
-  final bool childHandlesScroll;
   final bool enableDismiss;
 
   @override
@@ -42,7 +40,6 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
-      childHandlesScroll: childHandlesScroll,
       child: child,
     );
   }
@@ -70,7 +67,6 @@ class _BottomSheetBase extends StatefulWidget {
   final double? elevation;
   final ShapeBorder? shape;
   final Clip? clipBehavior;
-  final bool childHandlesScroll;
 
   const _BottomSheetBase({
     required this.child,
@@ -79,7 +75,6 @@ class _BottomSheetBase extends StatefulWidget {
     this.elevation,
     this.shape,
     this.clipBehavior,
-    this.childHandlesScroll = false,
   });
 
   @override
@@ -108,12 +103,11 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
 
             final BoxConstraints _constraints = BoxConstraints(
               maxWidth: roundedShortestSide.toDouble(),
-              maxHeight: min(
-                600.0 + context.viewInsets.bottom,
-                context.mSize.height,
-              ),
+              maxHeight:
+                  min(600.0 + context.viewInsets.bottom, context.mSize.height),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
+            //print(_constraints);
 
             return GestureDetector(
               onVerticalDragStart: !_useDesktopLayout
@@ -185,23 +179,19 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                             bottom:
                                 !_useDesktopLayout ? context.padding.bottom : 0,
                           ),
-                          child: MediaQuery.removeViewPadding(
-                            context: context,
-                            removeLeft: _useDesktopLayout,
-                            removeRight: _useDesktopLayout,
-                            child: MediaQuery(
-                              data: context.mediaQuery.copyWith(
-                                viewInsets: context.viewInsets.copyWith(
-                                  bottom: _useDesktopLayout
-                                      ? 0
-                                      : context.viewInsets.bottom,
-                                ),
+                          child: MediaQuery(
+                            data: context.mediaQuery.copyWith(
+                              viewInsets: context.viewInsets.copyWith(
+                                bottom: _useDesktopLayout
+                                    ? 0
+                                    : context.viewInsets.bottom,
                               ),
-                              child: !widget.childHandlesScroll
-                                  ? SingleChildScrollView(
-                                      child: widget.child,
-                                    )
-                                  : widget.child,
+                            ),
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeLeft: _useDesktopLayout,
+                              removeRight: _useDesktopLayout,
+                              child: widget.child,
                             ),
                           ),
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/colors.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class NoteColorSelector extends StatefulWidget {
   final int selectedColor;
@@ -19,7 +18,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
       builder: (context, constraints) {
         return Wrap(
           children: List.generate(
-            NoteColors.colorList.length,
+            context.notePalette.colors.length,
             (index) => noteColorItem(
               index: index,
               size: constraints.maxWidth / 5,
@@ -48,11 +47,11 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     return Builder(
       builder: (context) {
         return Material(
-          color: Color(NoteColors.colorList[index].dynamicColor(context)),
+          color: context.notePalette.colors[index].color,
           child: SizedBox.fromSize(
             size: Size.square(size),
             child: Tooltip(
-              message: NoteColors.colorList[index].label,
+              message: context.notePalette.colors[index].label,
               child: InkWell(
                 onTap: () => widget.onColorSelect?.call(index),
                 child: Center(

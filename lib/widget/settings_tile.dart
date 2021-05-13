@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class SettingsTile extends StatelessWidget {
   final Widget title;
@@ -57,19 +57,24 @@ class SettingsTile extends StatelessWidget {
 
     return Visibility(
       visible: visible,
-      child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(
-          16 + context.viewPadding.left,
-          0,
-          16 + context.viewPadding.right,
-          0,
+      child: MediaQuery.removeViewPadding(
+        context: context,
+        removeLeft: true,
+        removeRight: true,
+        child: ListTile(
+          contentPadding: EdgeInsetsDirectional.fromSTEB(
+            16 + context.viewPaddingDirectional.start,
+            0,
+            16 + context.viewPaddingDirectional.end,
+            0,
+          ),
+          leading: icon,
+          title: title,
+          trailing: trailing ?? _subtitle,
+          subtitle: description,
+          enabled: enabled,
+          onTap: onTap,
         ),
-        leading: icon,
-        title: title,
-        trailing: trailing ?? _subtitle,
-        subtitle: description,
-        enabled: enabled,
-        onTap: onTap,
       ),
     );
   }

@@ -1,7 +1,7 @@
 name: potato_notes
 description: Official POSP notes app
-publish_to: 'none'
-version: 2.0.0-beta1+16
+publish_to: "none"
+version: 2.0.0-beta2+17
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -12,9 +12,11 @@ dependencies:
 
   back_button_interceptor: ^5.0.0
   biometric_storage: ^2.0.2
+  bitsdojo_window: ^0.1.0+1
   blurhash_dart: ^1.0.2
 
   collection: ^1.15.0
+  cryptography: ^2.0.1
 
   dio: ^4.0.0
 
@@ -29,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_blurhash: ^0.6.0
-  flutter_local_notifications: ^5.0.0
+  flutter_local_notifications: ^5.0.0+4
   flutter_mobx: ^2.0.0
 
   http: ^0.13.1
@@ -88,6 +90,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - config.json
   fonts:
     - family: CustomIcons
       fonts:

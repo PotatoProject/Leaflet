@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -7,7 +8,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/db/stub.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
@@ -16,7 +19,9 @@ import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
+import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:potato_notes/widget/notes_app.dart';
+import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 Future<void> main() async {
@@ -39,6 +44,13 @@ Future<void> main() async {
       ),
     ),
   );
+
+  if (DeviceInfo.isDesktop) {
+    doWhenWindowReady(() {
+      appWindow.minSize = const Size(360, 400);
+      appWindow.show();
+    });
+  }
 }
 
 class PotatoNotes extends StatelessWidget {
@@ -62,7 +74,7 @@ class PotatoNotes extends StatelessWidget {
         }
 
         if (prefs.useCustomAccent || !canUseSystemAccent) {
-          accentColor = prefs.customAccent ?? Utils.defaultAccent;
+          accentColor = prefs.customAccent ?? Constants.defaultAccent;
         } else {
           accentColor = Color(appInfo.accentData);
         }
@@ -73,6 +85,14 @@ class PotatoNotes extends StatelessWidget {
           title: "Leaflet",
           theme: themes.light,
           darkTheme: prefs.useAmoled ? themes.black : themes.dark,
+          leafletTheme: LeafletThemeData(
+            notePalette: themes.leafletLight.notePalette,
+            illustrationPalette: themes.leafletLight.illustrationPalette,
+          ),
+          leafletDarkTheme: LeafletThemeData(
+            notePalette: themes.leafletDark.notePalette,
+            illustrationPalette: themes.leafletDark.illustrationPalette,
+          ),
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
@@ -115,11 +135,12 @@ class PotatoNotes extends StatelessWidget {
               ),
             );
 
-            return child!;
+            return WindowFrame(child: child!);
           },
           themeMode: prefs.themeMode,
           home: BasePage(),
           debugShowCheckedModeBanner: false,
+          color: Utils.getMainColorFromTheme(),
         );
       },
     );

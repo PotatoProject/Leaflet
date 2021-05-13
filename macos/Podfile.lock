@@ -1,92 +1,85 @@
 PODS:
-  - crayola (0.0.1):
+  - biometric_storage (0.0.1):
+    - FlutterMacOS
+  - bitsdojo_window_macos (0.0.1):
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
   - flutter_local_notifications (0.0.1):
     - FlutterMacOS
-  - FlutterMacOS (1.22.4)
+  - FlutterMacOS (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - package_info_plus (0.4.5):
-    - FlutterMacOS
   - package_info_plus_macos (0.0.1):
     - FlutterMacOS
-  - path_provider (0.0.1)
   - path_provider_macos (0.0.1):
     - FlutterMacOS
-  - shared_preferences (0.0.1)
+  - share_plus_macos (0.0.1):
+    - FlutterMacOS
   - shared_preferences_macos (0.0.1):
     - FlutterMacOS
   - sqflite (0.0.2):
     - FlutterMacOS
     - FMDB (>= 2.7.5)
-  - url_launcher (0.0.1)
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
 
 DEPENDENCIES:
-  - crayola (from `Flutter/ephemeral/.symlinks/plugins/crayola/macos`)
+  - biometric_storage (from `Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos`)
+  - bitsdojo_window_macos (from `Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
-  - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
-  - path_provider (from `Flutter/ephemeral/.symlinks/plugins/path_provider/macos`)
   - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
-  - shared_preferences (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences/macos`)
+  - share_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/share_plus_macos/macos`)
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/macos`)
-  - url_launcher (from `Flutter/ephemeral/.symlinks/plugins/url_launcher/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
 
 SPEC REPOS:
   trunk:
-    - FlutterMacOS
     - FMDB
 
 EXTERNAL SOURCES:
-  crayola:
-    :path: Flutter/ephemeral/.symlinks/plugins/crayola/macos
+  biometric_storage:
+    :path: Flutter/ephemeral/.symlinks/plugins/biometric_storage/macos
+  bitsdojo_window_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   flutter_local_notifications:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos
-  package_info_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
   package_info_plus_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos
-  path_provider:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider/macos
   path_provider_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
-  shared_preferences:
-    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences/macos
+  share_plus_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/share_plus_macos/macos
   shared_preferences_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos
   sqflite:
     :path: Flutter/ephemeral/.symlinks/plugins/sqflite/macos
-  url_launcher:
-    :path: Flutter/ephemeral/.symlinks/plugins/url_launcher/macos
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
 
 SPEC CHECKSUMS:
-  crayola: 24527d1859aa605e6d41c349db1c1a30d127f523
+  biometric_storage: 43caa6e7ef00e8e19c074216e7e1786dacda9e76
+  bitsdojo_window_macos: 7e9b1bbb09bdce418d9657ead7fc9d824203ff0d
   file_selector_macos: ff6dc948d4ddd34e8602a1f60b7d0b4cc6051a47
   flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
-  FlutterMacOS: ac210ef71944b3f04789076d70d4c72c7ec0c619
+  FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  package_info_plus: 6f669407bbeed2ee9da0a1730fd13e0259ce96e2
   package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c
-  path_provider: e0848572d1d38b9a7dd099e79cf83f5b7e2cde9f
   path_provider_macos: a0a3fd666cb7cd0448e936fb4abad4052961002b
-  shared_preferences: 9fec34d1bd906196a4da48fcf6c3ad521cc00b8d
+  share_plus_macos: 853ee48e7dce06b633998ca0735d482dd671ade4
   shared_preferences_macos: 480ce071d0666e37cef23fe6c702293a3d21799e
   sqflite: a5789cceda41d54d23f31d6de539d65bb14100ea
-  url_launcher: af78307ef9bafff91273b34f1c6c0c86a0004fd7
   url_launcher_macos: 45af3d61de06997666568a7149c1be98b41c95d4
 
-PODFILE CHECKSUM: d8ba9b3e9e93c62c74a660b46c6fcb09f03991a7
+PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
 
 COCOAPODS: 1.10.0

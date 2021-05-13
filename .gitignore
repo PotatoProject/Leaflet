@@ -76,3 +76,8 @@ firebase.json
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 android/local.properties
+
+# Web generated registrant
+lib/generated_plugin_registrant.dart
+
+config.json

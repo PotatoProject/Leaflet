@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common -->
     <string name="common.cancel">Anuluj</string>
@@ -11,22 +12,33 @@
     <string name="common.edit">Edytuj</string>
     <string name="common.go_on">Kontynuuj</string>
     <string name="common.exit">Zakończ</string>
+    <string name="common.ok">Ok</string>
+    <string name="common.share">Udostępnij</string>
+    <string name="common.not_now">Nie teraz</string>
+    <string name="common.update">Aktualizuj</string>
+    <string name="common.expand">Rozwiń</string>
+    <string name="common.collapse">Zwiń</string>
+    <string name="common.create">Utwórz</string>
+    <string name="common.close">Zamknij</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s z %s</string>
     <string name="common.new_note">Nowa notatka</string>
     <string name="common.new_list">Nowa lista</string>
     <string name="common.new_image">Nowy obraz</string>
     <string name="common.new_drawing">Nowy rysunek</string>
+    <string name="common.import_note">Importuj notatkę</string>
     <string name="common.biometrics_prompt">Potwierdź dane biometryczne</string>
     <string name="common.master_pass.modify">Modyfikuj hasło główne</string>
     <string name="common.master_pass.confirm">Potwierdź hasło główne</string>
+    <string name="common.master_pass.incorrect">Niepoprawne hasło główne</string>
+    <string name="common.backup_password.title">Wprowadź hasło kopii zapasowej</string>
+    <string name="common.backup_password.use_master_pass">Użyj głównego hasła jako hasła</string>
+    <string name="common.restore_dialog.title">Potwierdź przywracanie notatki</string>
+    <string name="common.restore_dialog.backup_name">Nazwa kopii zapasowej: %s</string>
+    <string name="common.restore_dialog.creation_date">Data utworzenia: %s</string>
+    <string name="common.restore_dialog.app_version">Wersja aplikacji: %s</string>
+    <string name="common.restore_dialog.note_count">Liczba notatek: %s</string>
+    <string name="common.restore_dialog.tag_count">Liczba etykiet: %s</string>
     <string name="common.are_you_sure">Na pewno?</string>
-    <string name="common.case_sensitive">Wielkość liter ma znaczenie</string>
-    <string name="common.color_filter">Filtr kolorów</string>
-    <string name="common.date_filter">Filtr daty</string>
-    <string name="common.date_filter_mode">Tryb filtrowania</string>
-    <string name="common.date_filter_mode.after">Po dacie</string>
-    <string name="common.date_filter_mode.exact">Dokładna data</string>
-    <string name="common.date_filter_mode.before">Przed datą</string>
     <string name="common.color.none">Brak</string>
     <string name="common.color.red">Czerwony</string>
     <string name="common.color.orange">Pomarańczowy</string>
@@ -43,8 +55,8 @@
     <string name="common.tag.new">Nowa etykieta</string>
     <string name="common.tag.modify">Modyfikuj etykietę</string>
     <string name="common.tag.textbox_hint">Nazwa</string>
-
     <!-- Main page -->
+    <string name="main_page.write_note">Napisz notatkę</string>
     <string name="main_page.settings">Beállítások</string>
     <string name="main_page.search">Szukaj</string>
     <string name="main_page.account">Konto</string>
@@ -57,25 +69,42 @@
     <string name="main_page.empty_state.trash">Kosz jest pusty</string>
     <string name="main_page.empty_state.favourites">Brak ulubionych na razie</string>
     <string name="main_page.empty_state.tag">Brak notatek z tą etykietą</string>
-    <string name="main_page.title.home">Strona główna</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="one">%s więcej przedmiotów</item>
+        <item quantity="few">%s więcej przedmiotów</item>
+        <item quantity="many">%s więcej przedmiotów</item>
+        <item quantity="other">%s więcej przedmiotów</item>
+    </plurals>
+    <string name="main_page.title.notes">Notatki</string>
     <string name="main_page.title.archive">Archiwum</string>
     <string name="main_page.title.trash">Kosz</string>
     <string name="main_page.title.favourites">Ulubione</string>
     <string name="main_page.title.tag">Etykieta</string>
     <string name="main_page.title.all">Wszystko</string>
     <string name="main_page.selection_bar.close">Zamknij</string>
+    <string name="main_page.selection_bar.select">Wybierz</string>
+    <string name="main_page.selection_bar.select_all">Wybierz wszystko</string>
     <string name="main_page.selection_bar.add_favourites">Dodaj do ulubionych</string>
     <string name="main_page.selection_bar.remove_favourites">Usuń z ulubionych</string>
     <string name="main_page.selection_bar.change_color">Szín változtatása</string>
     <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Archiwum</string>
     <string name="main_page.selection_bar.delete">Przenieś do kosza</string>
+    <string name="main_page.selection_bar.perma_delete">Usuń</string>
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Przypnij</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Odepnij</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Zapisz lokalnie</string>
     <string name="main_page.selection_bar.share">Udostępnij</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s notatka została przeniesiona do kosza</item>
         <item quantity="few">%s notatek zostało przeniesionych do kosza</item>
         <item quantity="many">%s notatek zostało przeniesionych do kosza</item>
         <item quantity="other">%s notatek zostało przeniesionych do kosza</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="one">%s notatka usunięta</item>
+        <item quantity="few">%s notatki usunięte</item>
+        <item quantity="many">%s notatek usuniętych</item>
+        <item quantity="other">%s notatek usuniętych</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="one">Zarchiwizowano %s notatkę</item>
@@ -89,13 +118,14 @@
         <item quantity="many">Przywrócono %s notatek</item>
         <item quantity="other">Przywrócono %s notatek</item>
     </plurals>
-
+    <string name="main_page.export.success">Notatka pomyślnie wyeksportowana</string>
+    <string name="main_page.export.failure">Coś poszło nie tak podczas eksportu</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Cím</string>
     <string name="note_page.content_hint">Tartalom</string>
     <string name="note_page.list_item_hint">Bemenet</string>
     <string name="note_page.add_entry_hint">Bejegyzés hozzáadása</string>
-    <string name="note_page.toolbar.tags">Címkék kezelése</string>
+    <string name="note_page.toolbar.tags">Zarządzaj etykietami</string>
     <string name="note_page.toolbar.color">Szín változtatása</string>
     <string name="note_page.toolbar.add_item">Elem hozzáadása</string>
     <string name="note_page.privacy.title">Adatvédelmi beállítások</string>
@@ -109,7 +139,6 @@
     <string name="note_page.drawing">Rajz hozzáadása</string>
     <string name="note_page.added_favourites">Feljegyzés hozzáadva a kedvencekhez</string>
     <string name="note_page.removed_favourites">Feljegyzés eltávolítva a kedvencek közül</string>
-
     <!-- Settings page -->
     <string name="settings.title">Beállítások</string>
     <string name="settings.personalization.title">Testreszabás</string>
@@ -122,18 +151,36 @@
     <string name="settings.personalization.custom_accent">Egyéni szín választása</string>
     <string name="settings.personalization.use_grid">Rács megjelenítes a feljegyzésekhez</string>
     <string name="settings.personalization.locale">Helyszín</string>
+    <string name="settings.personalization.locale.device_default">Domyślne urządzenia</string>
     <string name="settings.privacy.title">Adatvédelem</string>
     <string name="settings.privacy.use_master_pass">Mesterjelszó használata</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Figyelmeztetés : Ha a jövőben elfelejted a jelszavadat nem tudod visszaállítani , újra kell telepítened az alkalmazást , a biztonság kedvéért írja fel jelszavát valahova.</string>
     <string name="settings.privacy.modify_master_pass">Modyfikuj hasło główne</string>
+    <string name="settings.backup_restore.title">Kopia zapasowa i przywracanie</string>
+    <string name="settings.backup_restore.backup">Kopia zapasowa</string>
+    <string name="settings.backup_restore.backup_desc">Utwórz lokalną kopię notatek</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">Brak notatek do przywrócenia!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">Brak zapisanych notatek, by zrobić kopię zapasową</string>
+    <string name="settings.backup_restore.restore">Przywróć</string>
+    <string name="settings.backup_restore.restore_desc">Przywróć kopię zapasową utworzoną z wersji Leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">Notatka została pomyślnie przywrócona</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">Podany plik nie jest poprawną kopią zapasową Leaflet</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">Wprowadzone hasło nie było w stanie odszyfrować kopii zapasowej</string>
+    <string name="settings.backup_restore.restore.status.already_exists">Notatka wewnątrz kopii zapasowej jest już obecna w bazie danych</string>
+    <string name="settings.backup_restore.restore.status.unknown">Wystąpił problem podczas importowania notatki</string>
+    <string name="settings.backup_restore.import">Importuj</string>
+    <string name="settings.backup_restore.import_desc">Importuj notatki z wersji PotatoNotes</string>
     <string name="settings.info.title">Tudnivaló</string>
     <string name="settings.info.about_app">A PotatoNotes - ről</string>
+    <string name="settings.info.update_check">Sprawdź dostępność aktualizacji aplikacji</string>
+    <string name="settings.info.bug_report">Zgłoś błąd</string>
     <string name="settings.debug.title">Hibakeresés</string>
     <string name="settings.debug.show_setup_screen">A beállítás menü megjelenítése következő indításkor</string>
+    <string name="settings.debug.loading_overlay">Test ładowania nakładki</string>
     <string name="settings.debug.clear_database">Databázis kitisztítása</string>
     <string name="settings.debug.migrate_database">Databázis költöztetése</string>
+    <string name="settings.debug.generate_trash">Generuj kosz</string>
     <string name="settings.debug.log_level">Naplózási szint</string>
-
     <!-- About page -->
     <string name="about.title">Ustawienia</string>
     <string name="about.pwa_version">Wersja PWA</string>
@@ -145,29 +192,87 @@
     <string name="about.contributors.kat">Stara synchronizacja API</string>
     <string name="about.contributors.rohit">Ilustracje i kolory notatek</string>
     <string name="about.contributors.rshbfn">Ikona aplikacji i główny akcent</string>
-
-    <!-- Search page -->
+    <string name="about.contributors.elias">Nazwa marki Leaflet</string>
+    <string name="about.contributors.akshit">Pomoc w zakresie bezpieczeństwa i zaplecza</string>
+    <!-- Search page-->
     <string name="search.textbox_hint">Szukaj</string>
+    <string name="search.tag_create_empty_hint">Utwórz nową etykietę</string>
     <string name="search.tag_create_hint">Utwórz etykietę \"%s\"</string>
     <string name="search.type_to_search">Pisz, aby rozpocząć wyszukiwanie</string>
     <string name="search.nothing_found">Nic nie znaleziono...</string>
-
+    <string name="search.note.filters.case_sensitive">Wielkość liter ma znaczenie</string>
+    <string name="search.note.filters.favourites">Tylko ulubione</string>
+    <string name="search.note.filters.locations">Lokalizacje notatki</string>
+    <string name="search.note.filters.locations.normal">Normalny</string>
+    <string name="search.note.filters.locations.archive">Archiwum</string>
+    <string name="search.note.filters.locations.trash">Kosz</string>
+    <string name="search.note.filters.locations.normal_title">Normalne notatki</string>
+    <string name="search.note.filters.locations.archive_title">Zarchiwizowane notatki</string>
+    <string name="search.note.filters.locations.trash_title">Usunięte notatki</string>
+    <string name="search.note.filters.color">Filtr kolorów</string>
+    <string name="search.note.filters.date">Filtr daty</string>
+    <string name="search.note.filters.date.mode_title">Tryb filtrowania</string>
+    <string name="search.note.filters.date.mode_after">Po dacie</string>
+    <string name="search.note.filters.date.mode_exact">Dokładna data</string>
+    <string name="search.note.filters.date.mode_before">Przed datą</string>
+    <string name="search.note.filters.tags">Etykiety</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="one">%s wybrana</item>
+        <item quantity="few">%s wybranych</item>
+        <item quantity="many">%s wybranych</item>
+        <item quantity="other">%s wybranych</item>
+    </plurals>
+    <string name="search.note.filters.clear">Wyczyść filtry</string>
     <!-- Draw page -->
     <string name="drawing.color_black">Czarny</string>
     <string name="drawing.exit_prompt">Wszelkie niezapisane zmiany zostaną utracone, czy na pewno chcesz opuścić?</string>
+    <string name="drawing.clear_canvas_warning">Tej operacji nie można cofnąć. Kontynuować?</string>
     <string name="drawing.tools.brush">Pędzel</string>
     <string name="drawing.tools.eraser">Gumka</string>
     <string name="drawing.tools.marker">Marker</string>
     <string name="drawing.tools.color_picker">Kolor</string>
     <string name="drawing.tools.radius_picker">Promień</string>
-
     <!-- Setup page -->
     <string name="setup.button.get_started">Zaczynajmy</string>
     <string name="setup.button.finish">Zakończ</string>
     <string name="setup.button.next">Dalej</string>
     <string name="setup.button.back">Wstecz</string>
-    <string name="setup.basic_customization.title">Podstawowe dostosowywanie</string>
     <string name="setup.welcome.catchphrase">Twoja nowa ulubiona aplikacja do notatek</string>
+    <string name="setup.basic_customization.title">Podstawowe dostosowywanie</string>
+    <string name="setup.restore_import.title">Przywróć i importuj</string>
+    <string name="setup.restore_import.desc">Możesz przywrócić notatki z innej wersji Leaflet lub ze starszej wersji PotatoNotes</string>
     <string name="setup.finish.title">Wszystko gotowe!</string>
-    <string name="setup.finish.last_words">Teraz jesteś gotowy, aby w pełni cieszyć się z PotatoNotes \nJeśli chcesz dostosować więcej nagłówków do ustawień w bocznej szufladzie, Zamiast tego, jeśli chcesz zarządzać kontem PotatoSync kliknij na awatar na górnym pasku.</string>
+    <string name="setup.finish.last_words">Ukończyłeś konfigurację Leaflet, teraz aplikacja powinna być gotowa do pierwszego użycia. Jeśli kiedykolwiek chcesz coś zmienić, przejdź do ustawień. Mam nadzieję, że będziesz zadowolony z Leaflet tak bardzo, jak ja!</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">Utwórz kopię zapasową</string>
+    <string name="backup_restore.backup.password">Hasło</string>
+    <string name="backup_restore.backup.name">Nazwa (opcjonalnie)</string>
+    <string name="backup_restore.backup.num_of_notes">Liczba notatek w kopii zapasowej: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">Niektóre notatki są zablokowane, aby kontynuować wymagają hasła</string>
+    <string name="backup_restore.backup.creating">Tworzenie kopii zapasowej</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Tworzenie kopii zapasowej notatki %s z %s</string>
+    <string name="backup_restore.backup.complete.success">Proces tworzenia kopii zapasowej został zakończony pomyślnie!</string>
+    <string name="backup_restore.backup.complete.failure">Proces tworzenia kopii zapasowej został przerwany</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">Proces tworzenia kopii zapasowej zakończył się sukcesem! Kopię zapasową można znaleźć w </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">Proces tworzenia kopii zapasowej zakończył się sukcesem! Teraz możesz zamknąć to okno</string>
+    <string name="backup_restore.backup.complete_desc.failure">Coś poszło nie tak lub przerwałeś proces zapisu. Możesz spróbować ponownie w dowolnym momencie</string>
+    <string name="backup_restore.restore.title">Wybierz kopię zapasową do przywrócenia</string>
+    <string name="backup_restore.restore.file_open">Otwórz plik</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (Z pliku)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">Liczba notatek: %s, liczba etykiet: %s\nUtworzono %s</string>
+    <string name="backup_restore.restore.no_backups">Brak dostępnych kopii zapasowych. Spróbuj otworzyć plik</string>
+    <string name="backup_restore.restore.failure">Nie można przywrócić kopii zapasowej</string>
+    <string name="backup_restore.import.title">Wybierz źródło importu</string>
+    <string name="backup_restore.import.open_db">Otwórz plik kopii zapasowej PotatoNotes</string>
+    <string name="backup_restore.import.open_previous">Otwórz bazę danych poprzedniej wersji</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">Tylko Android obsługuje ładowanie z poprzedniej wersji</string>
+    <string name="backup_restore.import.open_previous.no_file">Nie znaleziono żadnej bazy danych ze starej wersji</string>
+    <string name="backup_restore.import.notes_loaded">Notatki pomyślnie załadowane</string>
+    <string name="backup_restore.select_notes">Wybierz notatki do przywrócenia</string>
+    <string name="backup_restore.replace_existing">Zastąp istniejące notatki</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">Aktualizacja jest dostępna!</string>
+    <string name="miscellaneous.updater.update_available_desc">Nowa aktualizacja jest dostępna do pobrania, kliknij przycisk Aktualizuj, aby pobrać aktualizację</string>
+    <string name="miscellaneous.updater.already_on_latest">Najnowsza wersja</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">Masz już najnowszą wersję aplikacji</string>
 </resources>

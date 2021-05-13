@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -10,7 +11,9 @@ class NoteListWidget extends StatelessWidget {
   final TransitionBuilder? builder;
   final IndexedWidgetBuilder itemBuilder;
   final int noteCount;
+  final bool gridView;
   final ReturnMode? noteKind;
+  final bool primary;
   final ScrollController? scrollController;
   final Widget? customIllustration;
   final int? gridColumns;
@@ -20,7 +23,9 @@ class NoteListWidget extends StatelessWidget {
     this.builder,
     required this.itemBuilder,
     required this.noteCount,
+    this.gridView = false,
     this.noteKind,
+    this.primary = false,
     this.scrollController,
     this.customIllustration,
     this.gridColumns,
@@ -28,10 +33,10 @@ class NoteListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets padding = EdgeInsets.fromLTRB(
-      4 + context.viewPadding.left,
+    final EdgeInsetsDirectional padding = EdgeInsetsDirectional.fromSTEB(
+      4 + context.viewPaddingDirectional.start,
       4 + context.padding.top,
-      4 + context.viewPadding.right,
+      4 + context.viewPaddingDirectional.end,
       4 + 80.0 + context.viewInsets.bottom,
     );
     Widget child;
@@ -40,7 +45,7 @@ class NoteListWidget extends StatelessWidget {
         scrollController ?? ScrollController();
 
     if (noteCount > 0) {
-      if (prefs.useGrid) {
+      if (gridView) {
         child = WaterfallFlow.builder(
           gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
             crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,
@@ -48,7 +53,8 @@ class NoteListWidget extends StatelessWidget {
           itemBuilder: itemBuilder,
           itemCount: noteCount,
           padding: padding,
-          controller: _scrollController,
+          primary: primary,
+          controller: !primary ? _scrollController : null,
           physics: const AlwaysScrollableScrollPhysics(),
         );
       } else {
@@ -56,7 +62,8 @@ class NoteListWidget extends StatelessWidget {
           itemBuilder: itemBuilder,
           itemCount: noteCount,
           padding: padding,
-          controller: _scrollController,
+          primary: primary,
+          controller: !primary ? _scrollController : null,
           physics: const AlwaysScrollableScrollPhysics(),
         );
       }

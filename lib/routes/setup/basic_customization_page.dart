@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 
 class BasicCustomizationPage extends StatelessWidget {
@@ -17,6 +17,7 @@ class BasicCustomizationPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           top: 56 + context.padding.top,
+          bottom: context.padding.bottom,
         ),
         child: const SettingsPage(trimmed: true),
       ),

@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 
 class MenuFab extends StatefulWidget {
   final MenuFabEntry mainEntry;
@@ -85,22 +85,6 @@ class _MenuFabState extends State<MenuFab> {
     final ThemeData theme = context.theme;
     final FloatingActionButtonThemeData floatingActionButtonTheme =
         theme.floatingActionButtonTheme;
-
-    if (widget.foregroundColor == null &&
-        floatingActionButtonTheme.foregroundColor == null) {
-      final bool accentIsDark = theme.accentColorBrightness == Brightness.dark;
-      final Color defaultAccentIconThemeColor =
-          accentIsDark ? Colors.white : Colors.black;
-      if (theme.accentIconTheme.color != defaultAccentIconThemeColor) {
-        debugPrint('Warning: '
-            'The support for configuring the foreground color of '
-            'FloatingActionButtons using ThemeData.accentIconTheme '
-            'has been deprecated. Please use ThemeData.floatingActionButtonTheme '
-            'instead. See '
-            'https://flutter.dev/go/remove-fab-accent-theme-dependency. '
-            'This feature was deprecated after v1.13.2.');
-      }
-    }
 
     foregroundColor = widget.foregroundColor ??
         floatingActionButtonTheme.foregroundColor ??

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,17 +8,18 @@ import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
-import 'package:potato_notes/internal/locales/native_names.dart';
-import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
-import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/locales/native_names.dart';
+import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/backup_page.dart';
-import 'package:potato_notes/routes/backup_and_restore/import_page.dart';
+import 'package:potato_notes/routes/backup_and_restore/restore_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -27,7 +27,6 @@ import 'package:potato_notes/widget/settings_category.dart';
 import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
 import 'package:recase/recase.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -57,47 +56,63 @@ class _SettingsPageState extends State<SettingsPage> {
             top: context.padding.top,
             bottom: context.viewInsets.bottom,
           ),
+          primary: UniversalPlatform.isIOS,
+          controller: !UniversalPlatform.isIOS ? ScrollController() : null,
           children: [
             commonSettings,
             SettingsCategory(
-              header: "Backup & Restore",
+              header: LocaleStrings.settings.backupRestoreTitle,
               children: [
                 SettingsTile(
-                  icon: const Icon(MdiIcons.contentSaveOutline),
-                  title: const Text("Backup"),
-                  description: const Text("Create a local copy of your notes"),
-                  onTap: () async {
-                    await Utils.showNotesModalBottomSheet(
-                      context: context,
-                      builder: (context) => BackupPage(),
-                    );
-                  },
-                ),
-                SettingsTile(
-                  icon: const Icon(MdiIcons.restore),
-                  title: const Text("Restore"),
-                  description: const Text(
-                      "Restore a backup created from a version of Leaflet"),
-                  onTap: () {
-                    context.scaffoldMessenger.removeCurrentSnackBar();
-                    context.scaffoldMessenger.showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            "This feature is not yet available on this version."),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  },
-                ),
-                SettingsTile(
-                  icon: const Icon(MdiIcons.fileImportOutline),
-                  title: const Text("Migrate"),
+                  icon: const Icon(Icons.save_outlined),
+                  title: Text(LocaleStrings.settings.backupRestoreBackup),
                   description:
-                      const Text("Import notes from a version of PotatoNotes"),
+                      Text(LocaleStrings.settings.backupRestoreBackupDesc),
                   onTap: () async {
-                    await Utils.showSecondaryRoute(
-                      context,
-                      ImportPage(),
+                    final List<Note> notes =
+                        await helper.listNotes(ReturnMode.local);
+                    if (notes.isNotEmpty) {
+                      await Utils.showModalBottomSheet(
+                        context: context,
+                        builder: (context) => BackupPage(),
+                      );
+                    } else {
+                      await Utils.showAlertDialog(
+                        context: context,
+                        title: Text(
+                          LocaleStrings.settings
+                              .backupRestoreBackupNothingToRestoreTitle,
+                        ),
+                        content: Text(
+                          LocaleStrings
+                              .settings.backupRestoreBackupNothingToRestoreDesc,
+                        ),
+                      );
+                    }
+                  },
+                ),
+                SettingsTile(
+                  icon: const Icon(Icons.restart_alt_rounded),
+                  title: Text(LocaleStrings.settings.backupRestoreRestore),
+                  description: Text(
+                    LocaleStrings.settings.backupRestoreRestoreDesc,
+                  ),
+                  onTap: () async {
+                    await Utils.showModalBottomSheet(
+                      context: context,
+                      builder: (context) => const RestoreNotesPage(),
+                    );
+                  },
+                ),
+                SettingsTile(
+                  icon: const Icon(Icons.file_present_outlined),
+                  title: Text(LocaleStrings.settings.backupRestoreImport),
+                  description:
+                      Text(LocaleStrings.settings.backupRestoreImportDesc),
+                  onTap: () async {
+                    await Utils.showModalBottomSheet(
+                      context: context,
+                      builder: (context) => const ImportNotesPage(),
                     );
                   },
                 ),
@@ -116,11 +131,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SettingsTile(
                   icon: const Icon(Icons.update_outlined),
-                  title: const Text("Check for app updates"),
+                  title: Text(LocaleStrings.settings.infoUpdateCheck),
                   onTap: () => InAppUpdater.checkForUpdate(
                     context,
                     showNoUpdatesAvailable: true,
                   ),
+                ),
+                SettingsTile(
+                  icon: const Icon(Icons.bug_report_outlined),
+                  visible: appConfig.bugReportUrl != null,
+                  title: Text(LocaleStrings.settings.infoBugReport),
+                  onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
                 ),
               ],
             ),
@@ -131,14 +152,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 header: LocaleStrings.settings.debugTitle,
                 children: [
                   SettingsTile.withSwitch(
-                    icon: const Icon(MdiIcons.humanGreeting),
+                    icon: const Icon(Icons.emoji_people_outlined),
                     title: Text(
                       LocaleStrings.settings.debugShowSetupScreen,
                     ),
                     value: !prefs.welcomePageSeen,
-                    activeColor: context.theme.accentColor,
+                    activeColor: context.theme.colorScheme.secondary,
                     onChanged: (value) async {
                       prefs.welcomePageSeen = !value;
+                    },
+                  ),
+                  SettingsTile(
+                    icon: const Icon(Icons.timer),
+                    title: Text(LocaleStrings.settings.debugLoadingOverlay),
+                    onTap: () {
+                      Utils.showLoadingOverlay(context);
+                      Future.delayed(
+                        const Duration(milliseconds: 5000),
+                        () async => Utils.hideLoadingOverlay(context),
+                      );
                     },
                   ),
                   SettingsTile(
@@ -154,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(MdiIcons.databasePlusOutline),
-                    title: const Text("Generate trash"),
+                    title: Text(LocaleStrings.settings.debugGenerateTrash),
                     onTap: () async {
                       for (int i = 0; i < 100; i++) {
                         final Random r = Random();
@@ -173,16 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                           starred: r.nextBool(),
-                          //archived: r.nextBool(),
                           color: r.nextInt(10),
-                          images: List.generate(
-                            2,
-                            (index) => SavedImage.fromJson(
-                              json.decode(
-                                      '{"id": "fe4fbad3-8f4e-4bbd-95ca-b3ed12490ba8","storageLocation": "local","hash": null,"blurHash": null,"fileExtension": ".png","encrypted": false,"width": 708.0,"height": 491.0,"uploaded": false}')
-                                  as Map<String, dynamic>,
-                            ),
-                          ),
                         );
                         await helper.saveNote(n);
                       }
@@ -238,8 +261,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     final ThemeMode themeMode = ThemeMode.values[index];
 
                     if (themeMode == ThemeMode.system &&
-                            UniversalPlatform.isWindows ||
-                        UniversalPlatform.isLinux) {
+                        UniversalPlatform.isWindows) {
                       return const SizedBox();
                     }
                     final bool selected = prefs.themeMode == themeMode;
@@ -265,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settings.personalizationUseAmoled),
               icon: const Icon(Icons.brightness_2_outlined),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
             ),
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(
@@ -277,7 +299,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   LocaleStrings.settings.personalizationUseCustomAccent,
                 ),
                 icon: const Icon(Icons.color_lens_outlined),
-                activeColor: context.theme.accentColor,
+                activeColor: context.theme.colorScheme.secondary,
               ),
             SettingsTile(
               title: Text(
@@ -294,16 +316,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   width: 60,
                   child: Icon(
                     Icons.brightness_1,
-                    color: prefs.customAccent ?? Utils.defaultAccent,
+                    color: prefs.customAccent ?? Constants.defaultAccent,
                     size: 28,
                   ),
                 ),
               ),
               onTap: () async {
-                final int? result = await Utils.showNotesModalBottomSheet(
+                final int? result = await Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
-                    initialColor: context.theme.accentColor,
+                    initialColor: context.theme.colorScheme.secondary,
                   ),
                 );
 
@@ -321,7 +343,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) => prefs.useGrid = value,
               title: Text(LocaleStrings.settings.personalizationUseGrid),
               icon: const Icon(Icons.dashboard_outlined),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
             ),
             SettingsTile(
               icon: const Icon(Icons.translate),
@@ -341,7 +363,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         ? firstLetterToUppercase(
                             localeNativeNames[locale.languageCode]!,
                           )
-                        : "Device default";
+                        : LocaleStrings
+                            .settings.personalizationLocaleDeviceDefault;
                     final bool selected = context.savedLocale == locale;
 
                     return dropDownTile(
@@ -366,7 +389,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ? firstLetterToUppercase(
                         localeNativeNames[context.savedLocale!.languageCode]!,
                       )
-                    : "Device default",
+                    : LocaleStrings.settings.personalizationLocaleDeviceDefault,
               ),
             ),
             SettingsTile(
@@ -381,7 +404,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   buttonAction: LocaleStrings.common.goOn,
                 );
                 if (status ?? false) {
-                  Utils.showNotesModalBottomSheet(
+                  Utils.showModalBottomSheet(
                     context: context,
                     builder: (context) => SyncUrlEditor(),
                   );
@@ -430,12 +453,12 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               icon: const Icon(Icons.vpn_key_outlined),
               title: Text(LocaleStrings.settings.privacyUseMasterPass),
-              activeColor: context.theme.accentColor,
+              activeColor: context.theme.colorScheme.secondary,
               subtitle:
                   removingMasterPass ? const LinearProgressIndicator() : null,
             ),
             SettingsTile(
-              icon: const Icon(MdiIcons.formTextboxPassword),
+              icon: const Icon(Icons.password_outlined),
               title: Text(LocaleStrings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
@@ -455,7 +478,7 @@ class _SettingsPageState extends State<SettingsPage> {
     required String content,
     required String buttonAction,
   }) async {
-    return await Utils.showNotesModalBottomSheet(
+    return await Utils.showModalBottomSheet(
           context: context,
           builder: (context) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -484,14 +507,14 @@ class _SettingsPageState extends State<SettingsPage> {
     int initialIndex = 0,
     bool scrollable = false,
   }) async {
-    return Utils.showNotesModalBottomSheet(
+    return Utils.showModalBottomSheet(
       context: context,
-      childHandlesScroll: scrollable,
       builder: (context) => scrollable
-          ? ScrollablePositionedList.builder(
+          ? ListView.builder(
               itemBuilder: itemBuilder,
               itemCount: itemCount,
-              initialScrollIndex: initialIndex,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
@@ -533,7 +556,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<bool?> showPassChallengeSheet(BuildContext context,
       [bool editMode = true]) async {
-    return Utils.showNotesModalBottomSheet(
+    return Utils.showModalBottomSheet(
       context: context,
       builder: (context) => PassChallenge(
         editMode: editMode,

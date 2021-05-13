@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/settings_category.dart';
 
@@ -57,9 +59,9 @@ class AboutPage extends StatelessWidget {
               SettingsCategory(
                 header: LocaleStrings.about.contributors,
                 children: List.generate(
-                  Utils.contributors.length,
+                  Constants.contributors.length,
                   (index) =>
-                      contributorTile(context, Utils.contributors[index]),
+                      contributorTile(context, Constants.contributors[index]),
                 ),
               ),
             ],
@@ -79,7 +81,7 @@ class AboutPage extends StatelessWidget {
   }
 
   void openLinkBottomSheet(BuildContext context, List<SocialLink> links) {
-    Utils.showNotesModalBottomSheet(
+    Utils.showModalBottomSheet(
       context: context,
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -148,7 +150,7 @@ class AboutPage extends StatelessWidget {
       case SocialLinkType.instagram:
         return "Instagram";
       case SocialLinkType.steam:
-        return "Steaj";
+        return "Steam";
       default:
         throw ArgumentError.notNull("type");
     }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/utils.dart';
 
 class NewNoteBar extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class NewNoteBar extends StatelessWidget {
     return AppBar(
       title: IgnorePointer(
         child: Text(
-          "Write a note",
+          LocaleStrings.mainPage.writeNote,
           style: TextStyle(
             fontSize: 16,
             color: context.theme.textTheme.bodyText1!.color!.withOpacity(0.7),
@@ -38,7 +39,7 @@ class NewNoteBar extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(Icons.note_add_outlined),
-          tooltip: "Import",
+          tooltip: LocaleStrings.common.importNote,
           onPressed: () => Utils.importNotes(context),
         ),
       ],

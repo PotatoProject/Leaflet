@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/utils.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 
 const double _logoHeight = 64;
@@ -23,16 +23,22 @@ class WelcomePage extends StatelessWidget {
                 Positioned(
                   top: (height / 2) - (_logoHeight / 2),
                   child: Row(
-                    children: const [
-                      Illustration.leaflet(
-                        height: _logoHeight,
+                    children: [
+                      SizedBox.fromSize(
+                        size: const Size.square(_logoHeight),
+                        child: const Center(
+                            child: Illustration.leaflet(height: _logoHeight)),
                       ),
-                      SizedBox(width: 32),
-                      Text(
-                        "leaflet",
-                        style: TextStyle(
-                          fontFamily: "ValeraRound",
-                          fontSize: 48,
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          left: 16,
+                        ),
+                        child: Text(
+                          "leaflet",
+                          style: TextStyle(
+                            fontFamily: "ValeraRound",
+                            fontSize: 48,
+                          ),
                         ),
                       ),
                     ],

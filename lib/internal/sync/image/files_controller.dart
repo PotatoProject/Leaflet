@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
