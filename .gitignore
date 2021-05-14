@@ -81,3 +81,5 @@ android/local.properties
 lib/generated_plugin_registrant.dart
 
 config.json
+
+**/*.AppImage*
