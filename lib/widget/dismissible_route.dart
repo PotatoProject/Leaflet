@@ -135,6 +135,7 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
         controller: route.controller!,
         navigator: route.navigator!,
         isFirst: route.isFirst,
+        isCurrent: route.isCurrent,
         child: child,
       ),
     );
@@ -257,6 +258,7 @@ class DismissibleRoute extends StatefulWidget {
   final AnimationController controller;
   final NavigatorState navigator;
   final bool isFirst;
+  final bool isCurrent;
 
   const DismissibleRoute({
     required this.child,
@@ -265,6 +267,7 @@ class DismissibleRoute extends StatefulWidget {
     required this.controller,
     required this.navigator,
     this.isFirst = false,
+    this.isCurrent = false,
   });
 
   @override
@@ -292,6 +295,31 @@ class DismissibleRouteState extends State<DismissibleRoute> {
     WidgetsBinding.instance!.addPostFrameCallback(
       (_) => setState(() => _requestDisableGestures = disable),
     );
+  }
+
+  final FocusScopeNode _focusScopeNode =
+      FocusScopeNode(debugLabel: '$DismissibleRouteState Focus Scope');
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isCurrent) {
+      widget.navigator.focusScopeNode.setFirstFocus(_focusScopeNode);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant DismissibleRoute oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isCurrent) {
+      widget.navigator.focusScopeNode.setFirstFocus(_focusScopeNode);
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusScopeNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -359,32 +387,41 @@ class DismissibleRouteState extends State<DismissibleRoute> {
 
     return _DismissibleRouteInheritedWidget(
       state: this,
-      child: GestureDetector(
-        onTap: () {
-          if (_barrierDismissible) widget.navigator.pop();
+      child: Actions(
+        actions: {
+          DismissIntent: _DismissModalAction(this),
         },
-        child: AnimatedContainer(
-          color: Colors.black45,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-          child: Center(
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: MediaQuery(
-                data: context.mediaQuery.copyWith(
-                  padding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
-                      ? EdgeInsets.zero
-                      : context.padding,
-                  viewPadding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
-                      ? EdgeInsets.zero
-                      : context.viewPadding,
-                  viewInsets: context.viewInsets.copyWith(
-                    bottom: context.viewInsets.bottom -
-                        ((context.mSize.height - height) / 2),
+        child: FocusScope(
+          node: _focusScopeNode,
+          child: GestureDetector(
+            onTap: () {
+              if (_barrierDismissible) widget.navigator.pop();
+            },
+            child: AnimatedContainer(
+              color: Colors.black45,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              child: Center(
+                child: SizedBox(
+                  width: width,
+                  height: height,
+                  child: MediaQuery(
+                    data: context.mediaQuery.copyWith(
+                      padding: deviceInfo.uiSizeFactor > 3 && !widget.isFirst
+                          ? EdgeInsets.zero
+                          : context.padding,
+                      viewPadding:
+                          deviceInfo.uiSizeFactor > 3 && !widget.isFirst
+                              ? EdgeInsets.zero
+                              : context.viewPadding,
+                      viewInsets: context.viewInsets.copyWith(
+                        bottom: context.viewInsets.bottom -
+                            ((context.mSize.height - height) / 2),
+                      ),
+                    ),
+                    child: content,
                   ),
                 ),
-                child: content,
               ),
             ),
           ),
@@ -406,5 +443,21 @@ class _DismissibleRouteInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(_DismissibleRouteInheritedWidget oldWidget) {
     return oldWidget.state != state;
+  }
+}
+
+class _DismissModalAction extends DismissAction {
+  _DismissModalAction(this.state);
+
+  final DismissibleRouteState state;
+
+  @override
+  bool isEnabled(DismissIntent intent) {
+    return state.widget.isCurrent;
+  }
+
+  @override
+  Object invoke(DismissIntent intent) {
+    return state.widget.navigator.maybePop();
   }
 }
