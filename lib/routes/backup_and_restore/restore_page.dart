@@ -61,38 +61,41 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
 
     if (backups != null) {
       if (backups!.isNotEmpty) {
-        content = ListView.builder(
-          padding: EdgeInsets.zero,
-          itemBuilder: (context, index) {
-            final MetadataExtractionResult metadata =
-                backups!.values.toList()[index];
-            final String key = backups!.keys.toList()[index];
-            final String formattedDate = DateFormat('dd MMM yyyy HH:mm')
-                .format(metadata.metadata.createdAt);
-            final bool fromFile = key.startsWith("file-");
-            String cleanName = metadata.metadata.name.replaceAll(".backup", "");
-            if (fromFile) {
-              cleanName =
-                  LocaleStrings.backupRestore.restoreFromFile(cleanName);
-            }
-            return ListTile(
-              leading: const Icon(Icons.description_outlined),
-              title: Text(cleanName),
-              subtitle: Text(
-                LocaleStrings.backupRestore.restoreInfo(
-                  metadata.metadata.noteCount,
-                  metadata.metadata.tags.length,
-                  formattedDate,
+        content = Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              final MetadataExtractionResult metadata =
+                  backups!.values.toList()[index];
+              final String key = backups!.keys.toList()[index];
+              final String formattedDate = DateFormat('dd MMM yyyy HH:mm')
+                  .format(metadata.metadata.createdAt);
+              final bool fromFile = key.startsWith("file-");
+              String cleanName =
+                  metadata.metadata.name.replaceAll(".backup", "");
+              if (fromFile) {
+                cleanName =
+                    LocaleStrings.backupRestore.restoreFromFile(cleanName);
+              }
+              return ListTile(
+                leading: const Icon(Icons.description_outlined),
+                title: Text(cleanName),
+                subtitle: Text(
+                  LocaleStrings.backupRestore.restoreInfo(
+                    metadata.metadata.noteCount,
+                    metadata.metadata.tags.length,
+                    formattedDate,
+                  ),
                 ),
-              ),
-              isThreeLine: true,
-              trailing: selectedBackup == key ? const Icon(Icons.check) : null,
-              selected: selectedBackup == key,
-              onTap: () => setState(() => selectedBackup = key),
-            );
-          },
-          itemCount: backups!.length,
-          shrinkWrap: true,
+                isThreeLine: true,
+                trailing:
+                    selectedBackup == key ? const Icon(Icons.check) : null,
+                selected: selectedBackup == key,
+                onTap: () => setState(() => selectedBackup = key),
+              );
+            },
+            itemCount: backups!.length,
+          ),
         );
       } else {
         content = Text(LocaleStrings.backupRestore.restoreNoBackups);
@@ -402,6 +405,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
       bottomNavigationBar: Container(
         height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.only(bottom: context.padding.bottom),
         child: Row(
           children: [
             TextButton.icon(

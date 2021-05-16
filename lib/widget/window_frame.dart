@@ -28,9 +28,8 @@ class WindowFrame extends StatelessWidget {
     return Stack(
       children: [
         MediaQuery(
-          data: context.mediaQuery.copyWith(
-            padding: context.padding.copyWith(top: toolbarHeight),
-          ),
+          data: context.mediaQuery
+              .copyWith(padding: context.padding.copyWith(top: toolbarHeight)),
           child: Positioned.fill(child: child),
         ),
         Positioned(
