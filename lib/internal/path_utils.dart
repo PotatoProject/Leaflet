@@ -10,14 +10,16 @@ class PathCache {
 
   final Map<String, Path> _cache = {};
 
-  Path getPath(String name, String path) {
-    if (_cache.containsKey(name)) {
-      return _cache[name]!;
-    }
+  Path? getPath(String name) {
+    return _cache[name];
+  }
 
-    final Path parsedPath = parseSvgPathData(path);
-    _cache[name] = parsedPath;
-    return parsedPath;
+  void setPath(String name, Path path) {
+    _cache[name] = path;
+  }
+
+  bool containsPathInCache(String name) {
+    return _cache.containsKey(name);
   }
 }
 
@@ -104,8 +106,16 @@ class PathInfoPainter extends CustomPainter {
 
     for (int i = 0; i < info.data.length; i++) {
       final PathData pathData = info.data[i];
-      final Path path = PathCache.instance
-          .getPath("${info.name}_path${i + 1}", pathData.path);
+      final String pathName = "${info.name}_path${i + 1}";
+      late final Path path;
+
+      if (PathCache.instance.containsPathInCache(pathName)) {
+        path = PathCache.instance.getPath(pathName)!;
+      } else {
+        path = parseSvgPathData(pathData.path);
+        PathCache.instance.setPath(pathName, path);
+      }
+
       final Paint paint = Paint()
         ..color = info.tint ?? pathData.color ?? const Color(0xFF000000);
 

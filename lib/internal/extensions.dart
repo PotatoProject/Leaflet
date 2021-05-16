@@ -247,7 +247,7 @@ extension ResponseX on Response {
   }
 }
 
-extension SafeGetList<T> on List<T> {
+extension ListX<T> on List<T> {
   T get(int index) {
     if (index >= length) {
       return last;

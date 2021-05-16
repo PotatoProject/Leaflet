@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/path_utils.dart';
 
 class DrawingBoard extends StatefulWidget {
   final Key? repaintKey;
@@ -207,10 +208,16 @@ class DrawObject {
   DrawObject(this.paint, this.points);
 
   void render(Canvas canvas) {
+    final String name = "DrawObject$hashCode";
     if (points.length > 1) {
-      final Path path = Path();
+      late final Path path;
 
-      path.addPolygon(points, false);
+      if (PathCache.instance.containsPathInCache(name)) {
+        path = PathCache.instance.getPath(name)!;
+      } else {
+        path = Path()..addPolygon(points, false);
+        PathCache.instance.setPath(name, path);
+      }
 
       canvas.drawPath(path, paint..style = PaintingStyle.stroke);
     } else {
