@@ -39,8 +39,8 @@ class ImageHelper with LoggerProvider {
 
   Future<SavedImage> copyToCache(File file) async {
     final SavedImage savedImage = SavedImage.empty();
-    final String path =
-        join(appInfo.tempDirectory.path, savedImage.id + extension(file.path));
+    final String path = join(appDirectories.imagesDirectory.path,
+        savedImage.id + extension(file.path));
     file.copy(path);
     savedImage.storageLocation = prefs.accessToken != null
         ? StorageLocation.sync
@@ -147,7 +147,7 @@ class ImageHelper with LoggerProvider {
     data["blurhash"] = blurHash;
     logger.d("Saving image");
     saveImage(
-        compressedImage, "${parameters["tempDirectory"]}/${data["hash"]}.jpg");
+        compressedImage, "${parameters["directory"]}/${data["hash"]}.jpg");
     return jsonEncode(data);
   }
 }

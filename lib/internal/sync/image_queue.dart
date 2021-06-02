@@ -96,12 +96,12 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
   }
 
   Future<void> process() async {
-    final String tempDirectory = appInfo.tempDirectory.path;
+    final String imagesDirectory = appDirectories.imagesDirectory.path;
 
     logger.d("UploadQueue has ${uploadQueue.length} items queued");
     logger.d("Started processing uploads");
     await Future.wait(
-        uploadQueue.map((item) => uploadItem(item, tempDirectory)));
+        uploadQueue.map((item) => uploadItem(item, imagesDirectory)));
 
     //Update items that are uploaded in notes
     for (final UploadQueueItem item in uploadQueue) {
@@ -137,8 +137,8 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
     }
   }
 
-  Future<void> uploadItem(UploadQueueItem item, String tempDirectory) async {
-    await item.process(tempDirectory);
+  Future<void> uploadItem(UploadQueueItem item, String directory) async {
+    await item.process(directory);
     if (item.storageLocation == StorageLocation.sync &&
         await hasDuplicates(item.savedImage)) {
       item.savedImage.uploaded = true;

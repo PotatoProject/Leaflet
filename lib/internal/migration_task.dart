@@ -86,8 +86,8 @@ class MigrationTask {
           v1Note.imagePath!,
           options: Options(responseType: ResponseType.bytes),
         );
-        final File file = File(join(appInfo.tempDirectory.path, "$id.jpg"))
-          ..create();
+        final File file =
+            File(join(appDirectories.tempDirectory.path, "$id.jpg"))..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
         savedImage = await imageHelper.copyToCache(file);
         await file.delete();

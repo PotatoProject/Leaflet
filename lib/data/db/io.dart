@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,7 +36,7 @@ QueryExecutor constructDb({bool logStatements = false}) {
 
   final LazyDatabase executor = LazyDatabase(() async {
     final Directory dataDir = DeviceInfo.isDesktop
-        ? await path_provider.getApplicationSupportDirectory()
+        ? appDirectories.supportDirectory
         : Directory(await getDatabasesPath());
     final File dbFile = File(p.join(dataDir.path, 'notes.sqlite'));
 

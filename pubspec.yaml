@@ -34,13 +34,13 @@ dependencies:
     sdk: flutter
   flutter_blurhash: ^0.6.0
   flutter_keyboard_visibility: ^5.0.2
-  flutter_local_notifications: ^5.0.0+4
+  flutter_local_notifications: ^6.0.0
   flutter_mobx: ^2.0.0
 
   http: ^0.13.1
 
   image: ^3.0.2
-  image_picker: ^0.7.4
+  image_picker: ^0.8.0
   image_picker_for_web: ^2.0.0
   image_size_getter: ^1.0.0
   in_app_update: ^2.0.0

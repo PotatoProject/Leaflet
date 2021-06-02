@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/image_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
@@ -29,7 +28,7 @@ import 'package:universal_platform/universal_platform.dart';
 class BackupDelegate with LoggerProvider {
   Future<bool> saveNote(Note note, String password) async {
     try {
-      final String outputDir = await getOutputDir();
+      final String outputDir = appDirectories.backupDirectory.path;
       final String formattedDate =
           DateFormat("dd_MM_yyyy-HH_mm_ss").format(DateTime.now());
       final String name = "note-$formattedDate.note";
@@ -37,7 +36,7 @@ class BackupDelegate with LoggerProvider {
         'note': note.toJson(serializer: const _TypeAwareValueSerializer()),
         'password': password,
         'buildNumber': appInfo.packageInfo.buildNumberInt,
-        'baseDir': appInfo.tempDirectory.path,
+        'baseDir': appDirectories.tempDirectory.path,
         'outputDir': outputDir,
         'name': name,
         'tags': _encodeTags(await tagHelper.getTagsById(note.tags)),
@@ -116,7 +115,7 @@ class BackupDelegate with LoggerProvider {
   }) async {
     final ReceivePort progressPort = ReceivePort();
     final ReceivePort returnPort = ReceivePort();
-    final String outDir = await getOutputDir();
+    final String outDir = appDirectories.backupDirectory.path;
     final List<Tag> tags = [];
     for (final Note note in notes) {
       tags.addAll(await tagHelper.getTagsById(note.tags));
@@ -128,7 +127,7 @@ class BackupDelegate with LoggerProvider {
       notes: notes,
       password: password,
       outDir: outDir,
-      baseDir: appInfo.tempDirectory.path,
+      baseDir: appDirectories.tempDirectory.path,
       appVersion: appInfo.packageInfo.buildNumberInt,
       name: name,
       tags: tags,
@@ -227,7 +226,7 @@ class BackupDelegate with LoggerProvider {
       'data': extractionResult.data,
       'tags': _encodeTags(extractionResult.metadata.tags),
       'password': password,
-      'baseDir': appInfo.tempDirectory.path,
+      'baseDir': appDirectories.tempDirectory.path,
     };
 
     try {
@@ -300,16 +299,6 @@ class BackupDelegate with LoggerProvider {
       tags: tags,
       status: RestoreResultStatus.success,
     ).toJsonString();
-  }
-
-  static Future<String> getOutputDir() async {
-    if (UniversalPlatform.isAndroid) {
-      final List<Directory>? directories =
-          await getExternalStorageDirectories(type: StorageDirectory.documents);
-      return p.join(directories!.first.path, "LeafletBackups");
-    }
-    return p.join(
-        (await getApplicationDocumentsDirectory()).path, "LeafletBackups");
   }
 
   static List<int> _combineMetadata(

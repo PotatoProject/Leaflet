@@ -25,7 +25,8 @@ class SavedImage {
 
   @observable
   bool get existsLocally => File(path).existsSync();
-  String get path => join(appInfo.tempDirectory.path, "$id$fileExtension");
+  String get path =>
+      join(appDirectories.imagesDirectory.path, "$id$fileExtension");
 
   SavedImage({
     required this.id,

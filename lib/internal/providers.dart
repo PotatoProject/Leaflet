@@ -3,6 +3,7 @@ import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_config.dart';
+import 'package:potato_notes/internal/app_directories.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -21,6 +22,7 @@ class _ProvidersSingleton {
   late SharedPrefs _sharedPrefs;
   late AppConfig _appConfig;
   late AppInfo _appInfo;
+  late AppDirectories _appDirectories;
   late DeviceInfo _deviceInfo;
   late Preferences _prefs;
   late BackupDelegate _backupDelegate;
@@ -40,6 +42,7 @@ class _ProvidersSingleton {
   Future<void> initProviders(AppDatabase _db) async {
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
+    _appDirectories = await AppDirectories.initWithDefaults();
     _helper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
     _dio = Dio();
@@ -67,6 +70,9 @@ AppConfig get appConfig => _ProvidersSingleton.instance._appConfig;
 SharedPrefs get sharedPrefs => _ProvidersSingleton.instance._sharedPrefs;
 
 AppInfo get appInfo => _ProvidersSingleton.instance._appInfo;
+
+AppDirectories get appDirectories =>
+    _ProvidersSingleton.instance._appDirectories;
 
 DeviceInfo get deviceInfo => _ProvidersSingleton.instance._deviceInfo;
 

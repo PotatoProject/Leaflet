@@ -38,7 +38,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
   }
 
   Future<void> _loadMetadata() async {
-    final Directory dir = Directory(await BackupDelegate.getOutputDir());
+    final Directory dir = appDirectories.backupDirectory;
     final Map<String, MetadataExtractionResult> backupsTemp = {};
     await for (final FileSystemEntity entity in dir.list()) {
       if (entity is File && p.extension(entity.path) == ".backup") {
@@ -122,7 +122,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
             onPressed: () async {
               final String? file = await Utils.pickFile(
                 allowedExtensions: [".backup"],
-                initialDirectory: await BackupDelegate.getOutputDir(),
+                initialDirectory: appDirectories.backupDirectory.path,
               );
 
               if (file != null && p.extension(file) == ".backup") {

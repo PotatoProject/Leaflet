@@ -10,10 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -366,11 +364,7 @@ class _DrawPageState extends State<DrawPage>
       context.locale.toLanguageTag(),
     ).format(now);
 
-    final Directory drawingsDirectory = DeviceInfo.isDesktop
-        ? await getApplicationSupportDirectory()
-        : await getApplicationDocumentsDirectory();
-
-    drawing = "${drawingsDirectory.path}/drawing-$timestamp.png";
+    drawing = "${appDirectories.imagesDirectory.path}/drawing-$timestamp.png";
     if (_filePath == null) {
       _filePath = drawing;
     } else {

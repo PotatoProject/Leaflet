@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -38,7 +35,6 @@ abstract class _AppInfoBase with Store {
     loadData();
   }
 
-  late Directory tempDirectory;
   FlutterLocalNotificationsPlugin? notifications;
   QuickActions? quickActions;
   late PackageInfo packageInfo;
@@ -59,11 +55,14 @@ abstract class _AppInfoBase with Store {
     notifications = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('notes_icon');
-    const IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings();
+    final IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings(
+      onDidReceiveLocalNotification: (id, title, body, payload) =>
+          _handleNotificationTap(payload),
+    );
     const MacOSInitializationSettings initializationSettingsMacOS =
         MacOSInitializationSettings();
-    const InitializationSettings initializationSettings =
+    final InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
@@ -71,10 +70,6 @@ abstract class _AppInfoBase with Store {
     );
     await notifications!.initialize(initializationSettings,
         onSelectNotification: _handleNotificationTap);
-    /* notifications!
-        .resolvePlatformSpecificImplementation<
-            MacOSFlutterLocalNotificationsPlugin>()!
-        .requestPermissions(); */
   }
 
   Future<dynamic> _handleNotificationTap(String? payload) async {
@@ -94,10 +89,6 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<void> loadData() async {
-    tempDirectory = await getTemporaryDirectory();
-    final String backupDir = await BackupDelegate.getOutputDir();
-    Directory(backupDir).create();
-
     if (AppInfo.supportsNotePinning) {
       _initNotifications();
     }

@@ -22,11 +22,11 @@ class UploadQueueItem extends QueueItem {
   }) : super(localPath: localPath, savedImage: savedImage);
 
   @action
-  Future<void> process(String tempDirectory) async {
+  Future<void> process(String directory) async {
     status.value = QueueItemStatus.ongoing;
     final Map<String, String> data = {
       "original": localPath,
-      "tempDirectory": tempDirectory
+      "directory": directory
     };
     final String resultJson =
         await compute(imageHelper.processImage, jsonEncode(data));
