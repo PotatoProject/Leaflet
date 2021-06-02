@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -335,7 +336,7 @@ class Utils {
           selectedColor = await Utils.showModalBottomSheet<int>(
             context: context,
             builder: (context) => NoteColorSelector(
-              selectedColor: selectedColor!,
+              selectedColor: selectedColor,
               onColorSelect: (color) {
                 context.pop(color);
               },
@@ -940,6 +941,9 @@ class Utils {
         return LocaleStrings.settings.backupRestoreRestoreStatusUnknown;
     }
   }
+
+  static Future<void> popKeyboard() =>
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
 
 class SuspendedCurve extends Curve {

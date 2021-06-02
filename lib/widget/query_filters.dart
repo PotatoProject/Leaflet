@@ -7,6 +7,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/date_selector.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/return_mode_sheet.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
@@ -73,28 +74,56 @@ class _QueryFiltersState extends State<QueryFilters> {
           ListTile(
             leading: const Icon(Icons.color_lens_outlined),
             title: Text(LocaleStrings.search.noteFiltersColor),
-            trailing: Icon(
-              Icons.brightness_1,
-              size: 28,
-              color: context.notePalette.colors[widget.query.color].color,
+            trailing: Container(
+              width: 28,
+              height: 28,
+              decoration: ShapeDecoration(
+                shape: CircleBorder(
+                  side: widget.query.color == 0
+                      ? BorderSide(
+                          color: context.theme.textTheme.bodyText1!.color!
+                              .withOpacity(0.3),
+                          width: 2,
+                        )
+                      : BorderSide.none,
+                ),
+                color:
+                    context.notePalette.colors[widget.query.color ?? 0].color,
+              ),
             ),
             onTap: () async {
+              int? selectedColor = widget.query.color;
               final int? queryColor = await Utils.showModalBottomSheet(
                 context: context,
-                builder: (context) => NoteColorSelector(
-                  selectedColor: widget.query.color,
-                  onColorSelect: (color) {
-                    if (color == 0) {
-                      context.pop(-1);
-                    } else {
-                      context.pop(color);
-                    }
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setState) {
+                    return DialogSheetBase(
+                      content: NoteColorSelector(
+                        selectedColor: selectedColor,
+                        onColorSelect: (color) =>
+                            setState(() => selectedColor = color),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      actions: [
+                        TextButton(
+                          onPressed: () => context.pop(-1),
+                          child: Text(LocaleStrings.common.reset),
+                        ),
+                        TextButton(
+                          onPressed: () => context.pop(selectedColor),
+                          child: Text(LocaleStrings.common.confirm),
+                        ),
+                      ],
+                    );
                   },
                 ),
               );
 
               if (queryColor != null) {
-                setState(() => widget.query.color = queryColor);
+                setState(
+                  () =>
+                      widget.query.color = queryColor != -1 ? queryColor : null,
+                );
               }
               widget.filterChangedCallback?.call();
             },

@@ -208,83 +208,88 @@ class _NotePageState extends State<NotePage> {
             note.listContent.isEmpty;
     final List<String> actualTags = note.getActualTags();
 
-    return ListView(
-      padding: EdgeInsets.only(
-        top: context.padding.top + 56,
-        bottom: 16,
-      ),
-      children: [
-        if (note.images.isNotEmpty && !deviceInfo.isLandscape)
-          SizedBox(
-            height: imageWidgetSize,
-            child: getImageWidget(Axis.horizontal),
-          ),
-        if (actualTags.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.all(8),
-            width: context.mSize.width,
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List.generate(
-                actualTags.length,
-                (index) {
-                  final Tag tag = prefs.tags.firstWhere(
-                    (tag) => tag.id == actualTags[index],
-                  );
-
-                  return TagChip(
-                    title: tag.name,
-                    shrink: !(Platform.isAndroid || Platform.isIOS),
-                  );
-                },
-              ),
+    return GestureDetector(
+      onTap: () {
+        context.focusScope.requestFocus(contentFocusNode);
+      },
+      child: ListView(
+        padding: EdgeInsets.only(
+          top: context.padding.top + 56,
+          bottom: 16,
+        ),
+        children: [
+          if (note.images.isNotEmpty && !deviceInfo.isLandscape)
+            SizedBox(
+              height: imageWidgetSize,
+              child: getImageWidget(Axis.horizontal),
             ),
-          ),
-        _NotePageTextFormField(
-          hintText: LocaleStrings.notePage.titleHint,
-          controller: titleController,
-          focusNode: titleFocusNode,
-          onChanged: (text) {
-            note = note.copyWith(title: text);
-            notifyNoteChanged();
-          },
-          onSubmitted: (value) =>
-              context.focusScope.requestFocus(contentFocusNode),
-        ),
-        _NotePageTextFormField(
-          contentField: true,
-          hintText: LocaleStrings.notePage.contentHint,
-          controller: contentController,
-          focusNode: contentFocusNode,
-          onChanged: (text) {
-            note = note.copyWith(content: text);
+          if (actualTags.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(8),
+              width: context.mSize.width,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List.generate(
+                  actualTags.length,
+                  (index) {
+                    final Tag tag = prefs.tags.firstWhere(
+                      (tag) => tag.id == actualTags[index],
+                    );
 
-            notifyNoteChanged();
-          },
-        ),
-        if (note.list)
-          ...List.generate(note.listContent.length, generateListItem),
-        if (note.list)
-          AnimatedOpacity(
-            opacity: showNewItemButton ? 1 : 0,
-            duration: showNewItemButton
-                ? const Duration(milliseconds: 300)
-                : Duration.zero,
-            child: ListTile(
-              leading: const Icon(Icons.add),
-              title: Text(
-                LocaleStrings.notePage.addEntryHint,
-                style: TextStyle(
-                  color: context.theme.iconTheme.color,
+                    return TagChip(
+                      title: tag.name,
+                      shrink: !(Platform.isAndroid || Platform.isIOS),
+                    );
+                  },
                 ),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              onTap: showNewItemButton ? () => addListContentItem() : null,
-              horizontalTitleGap: 8,
             ),
+          _NotePageTextFormField(
+            hintText: LocaleStrings.notePage.titleHint,
+            controller: titleController,
+            focusNode: titleFocusNode,
+            onChanged: (text) {
+              note = note.copyWith(title: text);
+              notifyNoteChanged();
+            },
+            onSubmitted: (value) =>
+                context.focusScope.requestFocus(contentFocusNode),
           ),
-      ],
+          _NotePageTextFormField(
+            contentField: true,
+            hintText: LocaleStrings.notePage.contentHint,
+            controller: contentController,
+            focusNode: contentFocusNode,
+            onChanged: (text) {
+              note = note.copyWith(content: text);
+
+              notifyNoteChanged();
+            },
+          ),
+          if (note.list)
+            ...List.generate(note.listContent.length, generateListItem),
+          if (note.list)
+            AnimatedOpacity(
+              opacity: showNewItemButton ? 1 : 0,
+              duration: showNewItemButton
+                  ? const Duration(milliseconds: 300)
+                  : Duration.zero,
+              child: ListTile(
+                leading: const Icon(Icons.add),
+                title: Text(
+                  LocaleStrings.notePage.addEntryHint,
+                  style: TextStyle(
+                    color: context.theme.iconTheme.color,
+                  ),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                onTap: showNewItemButton ? () => addListContentItem() : null,
+                horizontalTitleGap: 8,
+              ),
+            ),
+        ],
+      ),
     );
   }
 

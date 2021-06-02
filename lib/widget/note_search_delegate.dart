@@ -1,6 +1,9 @@
+import 'package:animated_vector/animated_vector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -16,6 +19,23 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   final SearchQuery searchQuery = SearchQuery();
 
   NoteSearchDelegate();
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    if (!DeviceInfo.isMobile) return const Icon(Icons.search);
+
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) => IconButton(
+        icon: _AnimatedIconTwoVectors(
+          start: AnimatedVectors.searchToClose,
+          end: AnimatedVectors.closeToSearch,
+          duration: const Duration(milliseconds: 350),
+          swap: isKeyboardVisible,
+        ),
+        onPressed: isKeyboardVisible ? () => Utils.popKeyboard() : null,
+      ),
+    );
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -105,7 +125,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         !searchQuery.onlyFavourites &&
         searchQuery.date == null &&
         searchQuery.tags.isEmpty &&
-        searchQuery.color == 0) {
+        searchQuery.color == null) {
       return [];
     }
 
@@ -116,7 +136,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       final bool dateMatch =
           searchQuery.date != null ? _getDateBool(note.creationDate) : true;
       final bool colorMatch =
-          searchQuery.color != 0 ? _getColorBool(note.color) : true;
+          searchQuery.color != null ? _getColorBool(note.color) : true;
       final bool tagMatch =
           searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
       final bool favouriteMatch =
@@ -199,5 +219,89 @@ class NoteSearchDelegate extends CustomSearchDelegate {
         !note.archived && note.deleted && searchQuery.returnMode.fromTrash;
 
     return normal || archived || deleted;
+  }
+}
+
+class _AnimatedIconTwoVectors extends StatefulWidget {
+  final bool swap;
+  final AnimatedVectorData start;
+  final AnimatedVectorData end;
+  final Duration duration;
+
+  const _AnimatedIconTwoVectors({
+    this.swap = false,
+    required this.start,
+    required this.end,
+    this.duration = const Duration(milliseconds: 300),
+  });
+
+  @override
+  _AnimatedIconTwoVectorsState createState() => _AnimatedIconTwoVectorsState();
+}
+
+class _AnimatedIconTwoVectorsState extends State<_AnimatedIconTwoVectors>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimatedVectorData currentVector;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+    currentVector = widget.start;
+  }
+
+  @override
+  void didUpdateWidget(covariant _AnimatedIconTwoVectors old) {
+    super.didUpdateWidget(old);
+
+    if (widget.swap != old.swap) {
+      _updateController(widget.swap);
+    }
+  }
+
+  Future<void> _updateController(bool status) async {
+    _controller.duration = widget.duration;
+    if (_controller.isAnimating) {
+      _controller.stop();
+      if (status) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    } else {
+      if (status) {
+        await _controller.forward();
+        currentVector = widget.end;
+        _controller.value = 0;
+      } else {
+        await _controller.forward();
+        currentVector = widget.start;
+        _controller.value = 0;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return AnimatedVector(
+          vector: currentVector,
+          progress: _controller,
+          applyColor: true,
+        );
+      },
+    );
   }
 }

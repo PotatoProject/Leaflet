@@ -26,6 +26,12 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
     return false;
   }
 
+  static bool get isMobile {
+    if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) return true;
+
+    return false;
+  }
+
   static bool get isAndroid {
     if (kIsWeb) return false;
 

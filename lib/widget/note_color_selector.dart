@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
 
 class NoteColorSelector extends StatefulWidget {
-  final int selectedColor;
+  final int? selectedColor;
   final void Function(int)? onColorSelect;
 
   const NoteColorSelector({required this.selectedColor, this.onColorSelect});

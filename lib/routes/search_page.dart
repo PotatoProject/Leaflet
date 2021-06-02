@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 
 class SearchPage extends StatefulWidget {
@@ -24,14 +26,14 @@ class _SearchPageState<T> extends State<SearchPage> {
   void initState() {
     super.initState();
     widget.delegate._queryTextController.addListener(_onQueryChanged);
-    widget.delegate._focusNode = focusNode;
+    widget.delegate.focusNode = focusNode;
     widget.delegate._setState = setState;
   }
 
   @override
   void dispose() {
     widget.delegate._queryTextController.removeListener(_onQueryChanged);
-    widget.delegate._focusNode = null;
+    widget.delegate.focusNode = null;
     focusNode.dispose();
     super.dispose();
   }
@@ -55,24 +57,32 @@ class _SearchPageState<T> extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final Widget body = widget.delegate.buildResults(context);
+    final Widget? leading = widget.delegate.buildLeading(context);
 
-    return DependentScaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: widget.delegate._queryTextController,
-          focusNode: focusNode,
-          decoration: InputDecoration.collapsed(
-            hintText: LocaleStrings.search.textboxHint,
+    return Observer(builder: (context) {
+      return DependentScaffold(
+        appBar: AppBar(
+          leading: leading,
+          title: TextField(
+            controller: widget.delegate._queryTextController,
+            focusNode: focusNode,
+            decoration: InputDecoration.collapsed(
+              hintText: LocaleStrings.search.textboxHint,
+            ),
+            autofocus: true,
+            onChanged: (value) => _onSearchBodyChanged(),
           ),
-          autofocus: true,
-          onChanged: (value) => _onSearchBodyChanged(),
+          titleSpacing: leading != null &&
+                  (deviceInfo.uiSizeFactor > 3 || deviceInfo.isLandscape)
+              ? 0
+              : null,
+          actions: widget.delegate.buildActions(context),
         ),
-        actions: widget.delegate.buildActions(context),
-      ),
-      resizeToAvoidBottomInset: false,
-      useAppBarAsSecondary: true,
-      body: body,
-    );
+        resizeToAvoidBottomInset: false,
+        useAppBarAsSecondary: true,
+        body: body,
+      );
+    });
   }
 }
 
@@ -87,13 +97,15 @@ abstract class CustomSearchDelegate<T> {
 
   List<Widget> buildActions(BuildContext context);
 
+  Widget? buildLeading(BuildContext context) => null;
+
   String get query => _queryTextController.text;
   set query(String value) {
     _queryTextController.text = value;
   }
 
   void close(BuildContext context) {
-    _focusNode?.unfocus();
+    focusNode?.unfocus();
     context.pop();
   }
 
@@ -105,7 +117,7 @@ abstract class CustomSearchDelegate<T> {
 
   Animation<double> get transitionAnimation => _proxyAnimation;
 
-  FocusNode? _focusNode;
+  FocusNode? focusNode;
 
   final TextEditingController _queryTextController = TextEditingController();
 

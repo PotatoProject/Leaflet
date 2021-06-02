@@ -45,47 +45,47 @@ class Note extends DataClass implements Insertable<Note> {
       required this.deleted,
       required this.archived,
       required this.synced});
+  // ignore: avoid_unused_constructor_parameters
   factory Note.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
-    final boolType = db.typeSystem.forDartType<bool>();
-    final dateTimeType = db.typeSystem.forDartType<DateTime>();
-    final intType = db.typeSystem.forDartType<int>();
     return Note(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      title:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      content: stringType
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      title: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      content: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
-      starred:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}starred'])!,
-      creationDate: dateTimeType
+      starred: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}starred'])!,
+      creationDate: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}creation_date'])!,
-      lastModifyDate: dateTimeType
+      lastModifyDate: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date'])!,
-      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
-      images: $NotesTable.$converter0.mapToDart(stringType
+      color: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
+      images: $NotesTable.$converter0.mapToDart(const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}images']))!,
-      list: boolType.mapFromDatabaseResponse(data['${effectivePrefix}list'])!,
-      listContent: $NotesTable.$converter1.mapToDart(stringType
+      list: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}list'])!,
+      listContent: $NotesTable.$converter1.mapToDart(const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}list_content']))!,
-      reminders: $NotesTable.$converter2.mapToDart(stringType
+      reminders: $NotesTable.$converter2.mapToDart(const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}reminders']))!,
-      tags: $NotesTable.$converter3.mapToDart(
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}tags']))!,
-      hideContent: boolType
+      tags: $NotesTable.$converter3.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tags']))!,
+      hideContent: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}hide_content'])!,
-      lockNote: boolType
+      lockNote: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}lock_note'])!,
-      usesBiometrics: boolType
+      usesBiometrics: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}uses_biometrics'])!,
-      deleted:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}deleted'])!,
-      archived:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}archived'])!,
-      synced:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
+      deleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}deleted'])!,
+      archived: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}archived'])!,
+      synced: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
     );
   }
   @override
@@ -301,7 +301,7 @@ class Note extends DataClass implements Insertable<Note> {
                                                                       synced
                                                                           .hashCode))))))))))))))))));
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Note &&
           other.id == this.id &&
@@ -862,8 +862,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Note map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Note.fromData(data, _db, prefix: effectivePrefix);
+    return Note.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
@@ -886,15 +886,16 @@ class Tag extends DataClass implements Insertable<Tag> {
   final String name;
   final DateTime lastModifyDate;
   Tag({required this.id, required this.name, required this.lastModifyDate});
+  // ignore: avoid_unused_constructor_parameters
   factory Tag.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
-    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Tag(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      lastModifyDate: dateTimeType
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      lastModifyDate: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modify_date'])!,
     );
   }
@@ -953,7 +954,7 @@ class Tag extends DataClass implements Insertable<Tag> {
   int get hashCode =>
       $mrjf($mrjc(id.hashCode, $mrjc(name.hashCode, lastModifyDate.hashCode)));
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Tag &&
           other.id == this.id &&
@@ -974,7 +975,7 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     required String id,
     required String name,
     required DateTime lastModifyDate,
-  })   : id = Value(id),
+  })  : id = Value(id),
         name = Value(name),
         lastModifyDate = Value(lastModifyDate);
   static Insertable<Tag> custom({
@@ -1104,8 +1105,8 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Tag.fromData(data, _db, prefix: effectivePrefix);
+    return Tag.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override

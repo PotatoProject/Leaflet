@@ -141,26 +141,16 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
 
 class SearchQuery {
   bool caseSensitive;
-  int _color;
+  int? color;
   DateTime? date;
   DateFilterMode dateMode;
   List<String> tags = [];
   bool onlyFavourites;
   SearchReturnMode returnMode;
 
-  int get color => _color;
-
-  set color(int value) {
-    if (value == -1) {
-      _color = 0;
-    } else {
-      _color = value;
-    }
-  }
-
   SearchQuery({
     this.caseSensitive = false,
-    int color = 0,
+    this.color,
     this.date,
     this.dateMode = DateFilterMode.only,
     this.onlyFavourites = false,
@@ -169,13 +159,14 @@ class SearchQuery {
       fromArchive: true,
       fromTrash: true,
     ),
-  }) : _color = color;
+  });
 
   void reset() {
     caseSensitive = false;
-    _color = 0;
+    color = null;
     date = null;
     dateMode = DateFilterMode.only;
+    tags = [];
     onlyFavourites = false;
     returnMode = const SearchReturnMode(
       fromNormal: true,
