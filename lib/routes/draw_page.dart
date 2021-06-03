@@ -180,8 +180,7 @@ class _DrawPageState extends State<DrawPage>
                       shape: const RoundedRectangleBorder(),
                       elevation: 0,
                       title: Text(LocaleStrings.common.areYouSure),
-                      content: const Text(
-                          "This operation can't be undone. Continue?"),
+                      content: Text(LocaleStrings.drawing.clearCanvasWarning),
                       actions: [
                         TextButton(
                           onPressed: () => context.pop(),

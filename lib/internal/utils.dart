@@ -414,11 +414,9 @@ class Utils {
       case 'export':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
-          showBiometrics: notes.any((n) => n.usesBiometrics),
-          description: notes.length > 1
-              ? "Some notes are locked, master pass is required."
-              : "The note is locked, master pass is required.",
+          showLock: notes.first.lockNote && !notes.first.isEmpty,
+          showBiometrics: notes.first.usesBiometrics,
+          description: LocaleStrings.mainPage.selectionBarSaveNoteLocked,
         );
 
         if (unlocked) {
@@ -434,9 +432,11 @@ class Utils {
             context.basePage?.hideCurrentSnackBar();
             context.basePage?.showSnackBar(
               SnackBar(
-                content: Text(exported
-                    ? "Note successfully exported."
-                    : "Something went wrong while exporting."),
+                content: Text(
+                  exported
+                      ? LocaleStrings.mainPage.selectionBarSaveSuccess
+                      : LocaleStrings.mainPage.selectionBarSaveOopsie,
+                ),
                 behavior: SnackBarBehavior.floating,
                 width: min(640, context.mSize.width - 32),
               ),

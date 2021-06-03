@@ -167,7 +167,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                       }),
                       IconButton(
                         icon: const Icon(Icons.delete_outline),
-                        tooltip: "Clear canvas",
+                        tooltip: LocaleStrings.drawing.toolsClear,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         onPressed: widget.clearCanvas,
                       ),

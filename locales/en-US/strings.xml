@@ -95,6 +95,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Pin</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Unpin</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Save locally</string>
+    <string name="main_page.selection_bar.save.note_locked">The note is locked, master pass is required</string>
+    <string name="main_page.selection_bar.save.success">Note successfully exported</string>
+    <string name="main_page.selection_bar.save.oopsie">Something went wrong while exporting or operation cancelled</string>
     <string name="main_page.selection_bar.share">Share</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="zero">%s notes moved to trash</item>
@@ -249,6 +252,7 @@
     <string name="drawing.tools.marker">Marker</string>
     <string name="drawing.tools.color_picker">Color</string>
     <string name="drawing.tools.radius_picker">Radius</string>
+    <string name="drawing.tools.clear">Clear canvas</string>
 
     <!-- Setup page -->
     <string name="setup.button.get_started">Get started</string>

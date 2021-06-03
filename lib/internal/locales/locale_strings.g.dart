@@ -45,6 +45,7 @@ class _$CommonLocaleStrings {
   final String newDrawing = "common.new_drawing".tr();
   final String importNote = "common.import_note".tr();
   final String biometricsPrompt = "common.biometrics_prompt".tr();
+  final String warningCantUndo = "common.warning_cant_undo".tr();
   final String masterPassModify = "common.master_pass.modify".tr();
   final String masterPassConfirm = "common.master_pass.confirm".tr();
   final String masterPassIncorrect = "common.master_pass.incorrect".tr();
@@ -113,6 +114,9 @@ class _$MainPageLocaleStrings {
   final String selectionBarUnpin = "main_page.selection_bar.unpin".tr();
   /// Option to export note to local storage
   final String selectionBarSave = "main_page.selection_bar.save".tr();
+  final String selectionBarSaveNoteLocked = "main_page.selection_bar.save.note_locked".tr();
+  final String selectionBarSaveSuccess = "main_page.selection_bar.save.success".tr();
+  final String selectionBarSaveOopsie = "main_page.selection_bar.save.oopsie".tr();
   final String selectionBarShare = "main_page.selection_bar.share".tr();
   String notesDeleted(num value) => "main_page.notes_deleted".plural(value);
   String notesPermaDeleted(num value) => "main_page.notes_perma_deleted".plural(value);
@@ -237,6 +241,7 @@ class _$DrawingLocaleStrings {
   final String toolsMarker = "drawing.tools.marker".tr();
   final String toolsColorPicker = "drawing.tools.color_picker".tr();
   final String toolsRadiusPicker = "drawing.tools.radius_picker".tr();
+  final String toolsClear = "drawing.tools.clear".tr();
 }
 
 class _$SetupLocaleStrings {
