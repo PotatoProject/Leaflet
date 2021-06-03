@@ -6,11 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class BackupPage extends StatefulWidget {
@@ -195,23 +195,22 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
       name: name,
       onProgress: (value) => setState(() => currentNote = value),
     );
-    if (UniversalPlatform.isIOS) {
-      await Share.shareFiles([backup]);
+    final String? backupPath = await FileSystemHelper.saveFile(
+      inputFile: backup,
+      outputPath: appDirectories.backupDirectory.path,
+      name: name,
+    );
+
+    if (backupPath != null) {
+      await File(backup).copy(backupPath);
     }
-    bool cancelled = false;
-    if (UniversalPlatform.isAndroid) {
-      final String? exportPath =
-          await appInfo.requestBackupExport(name, backup);
-      cancelled = exportPath == null;
-    }
+
     Navigator.pop(context);
     Utils.showModalBottomSheet(
       context: context,
       builder: (context) => _BackupCompletePage(
-        backupFile: !UniversalPlatform.isAndroid && !UniversalPlatform.isIOS
-            ? File(backup)
-            : null,
-        cancelled: cancelled,
+        backupFile: backupPath != null ? File(backupPath) : null,
+        cancelled: backupPath == null && !UniversalPlatform.isIOS,
       ),
       enableDismiss: false,
     );

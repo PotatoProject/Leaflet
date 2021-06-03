@@ -10,6 +10,7 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -120,7 +121,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
           IconButton(
             icon: const Icon(Icons.note_add_outlined),
             onPressed: () async {
-              final String? file = await Utils.pickFile(
+              final String? file = await FileSystemHelper.getFile(
                 allowedExtensions: [".backup"],
                 initialDirectory: appDirectories.backupDirectory.path,
               );
@@ -235,7 +236,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
             leading: const Icon(Icons.file_present_outlined),
             title: Text(LocaleStrings.backupRestore.importOpenDb),
             onTap: () async {
-              final String? pickedFilePath = await Utils.pickFile(
+              final String? pickedFilePath = await FileSystemHelper.getFile(
                 allowedExtensions: ["db"],
               );
 

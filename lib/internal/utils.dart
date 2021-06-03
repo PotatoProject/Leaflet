@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +21,7 @@ import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -764,7 +764,7 @@ class Utils {
   }
 
   static Future<void> importNotes(BuildContext context) async {
-    final String? pickedFile = await Utils.pickFile(
+    final String? pickedFile = await FileSystemHelper.getFile(
       allowedExtensions: ['note'],
     );
     if (pickedFile == null || p.extension(pickedFile) != ".note") return;
@@ -846,46 +846,6 @@ class Utils {
     }
 
     return path != null ? File(path) : null;
-  }
-
-  static Future<String?> pickFile({
-    List<String>? allowedExtensions,
-    String? initialDirectory,
-  }) async {
-    final dynamic asyncFile = DeviceInfo.isDesktop
-        ? await openFile(
-            acceptedTypeGroups: [
-              XTypeGroup(
-                extensions: allowedExtensions,
-              ),
-            ],
-            initialDirectory: initialDirectory,
-          )
-        : (await FilePicker.platform.pickFiles())?.files.first;
-
-    if (asyncFile == null) return null;
-
-    return asyncFile.path as String;
-  }
-
-  static Future<List<String>?> pickFiles({
-    List<String>? allowedExtensions,
-    String? initialDirectory,
-  }) async {
-    final List<dynamic>? asyncFiles = DeviceInfo.isDesktop
-        ? await openFiles(
-            acceptedTypeGroups: [
-              XTypeGroup(
-                extensions: allowedExtensions,
-              ),
-            ],
-            initialDirectory: initialDirectory,
-          )
-        : (await FilePicker.platform.pickFiles(allowMultiple: true))?.files;
-
-    if (asyncFiles == null) return null;
-
-    return asyncFiles.map((e) => e.path as String).toList();
   }
 
   static Future<bool> launchUrl(

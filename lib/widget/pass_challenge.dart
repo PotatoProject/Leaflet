@@ -43,6 +43,7 @@ class _PassChallengeState extends State<PassChallenge> {
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.description != null) Text(widget.description!),
           Padding(

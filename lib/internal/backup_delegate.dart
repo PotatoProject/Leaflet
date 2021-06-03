@@ -19,10 +19,10 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class BackupDelegate with LoggerProvider {
@@ -45,15 +45,18 @@ class BackupDelegate with LoggerProvider {
 
       final String filePath = await compute(_rawSaveNote, json.encode(payload));
 
-      if (UniversalPlatform.isAndroid) {
-        final String? exportPath =
-            await appInfo.requestBackupExport(name, filePath);
-        return exportPath != null;
+      final String? outputFile = await FileSystemHelper.saveFile(
+        inputFile: filePath,
+        outputPath: appDirectories.backupDirectory.path,
+        name: name,
+      );
+
+      if (outputFile != null) {
+        await File(filePath).copy(outputFile);
+        return true;
+      } else {
+        return UniversalPlatform.isIOS;
       }
-      if (UniversalPlatform.isIOS) {
-        await Share.shareFiles([filePath]);
-      }
-      return true;
     } catch (e) {
       logger.e(e);
       return false;

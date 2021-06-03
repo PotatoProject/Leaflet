@@ -24,10 +24,10 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
-    var backupResult: ActivityResultLauncher<BackupInputPayload> =
-        activity.registerForActivityResult(CreateCustomDocument()) { payload: BackupOutputPayload ->
+    var fileResult: ActivityResultLauncher<FileInputPayload> =
+        activity.registerForActivityResult(CreateCustomDocument()) { payload: FileOutputPayload ->
             if (payload.outputUri != null) {
-                FileTools.cloneOriginToResult(activity, payload.inputUri, payload.outputUri);
+                //FileTools.cloneOriginToResult(activity, payload.inputUri, payload.outputUri);
 
                 payload.result.success(payload.outputUri.toString())
             } else {
@@ -42,15 +42,15 @@ class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
 
         MethodChannel(
             binding.binaryMessenger,
-            "potato_notes_backup_prompt"
+            "potato_notes_file_prompt"
         ).setMethodCallHandler { call, result ->
-            if (call.method == "requestBackupExport") {
+            if (call.method == "requestFileExport") {
                 val name: String? = call.argument<String>("name")
                 val inputPath: String? = call.argument<String>("path");
 
                 if (name != null && inputPath != null) {
-                    backupResult.launch(
-                        BackupInputPayload(
+                    fileResult.launch(
+                        FileInputPayload(
                             name,
                             Uri.fromFile(File(inputPath)),
                             result
@@ -149,11 +149,11 @@ class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
         }
     }
 
-    class CreateCustomDocument : ActivityResultContract<BackupInputPayload, BackupOutputPayload>() {
+    class CreateCustomDocument : ActivityResultContract<FileInputPayload, FileOutputPayload>() {
         private lateinit var result: MethodChannel.Result
         private lateinit var inputUri: Uri
 
-        override fun createIntent(context: Context, input: BackupInputPayload): Intent {
+        override fun createIntent(context: Context, input: FileInputPayload): Intent {
             result = input.result
             inputUri = input.inputUri
 
@@ -164,25 +164,25 @@ class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
 
         override fun getSynchronousResult(
             context: Context,
-            input: BackupInputPayload
-        ): SynchronousResult<BackupOutputPayload>? {
+            input: FileInputPayload
+        ): SynchronousResult<FileOutputPayload>? {
             return null
         }
 
-        override fun parseResult(resultCode: Int, intent: Intent?): BackupOutputPayload {
+        override fun parseResult(resultCode: Int, intent: Intent?): FileOutputPayload {
             val uri: Uri? =
                 if (intent == null || resultCode != Activity.RESULT_OK) null else intent.data
-            return BackupOutputPayload(inputUri, uri, result)
+            return FileOutputPayload(inputUri, uri, result)
         }
     }
 
-    data class BackupInputPayload(
+    data class FileInputPayload(
         val name: String,
         val inputUri: Uri,
         val result: MethodChannel.Result
     )
 
-    data class BackupOutputPayload(
+    data class FileOutputPayload(
         val inputUri: Uri,
         val outputUri: Uri?,
         val result: MethodChannel.Result
