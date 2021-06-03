@@ -24,6 +24,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Required for taking pictures from camera on notes.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Required to unlock notes using biometrics.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Required for adding pictures to notes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
