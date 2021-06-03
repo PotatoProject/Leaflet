@@ -83,11 +83,14 @@ class Utils {
   static Future<bool> showBiometricPrompt() async {
     try {
       return await LocalAuthentication().authenticate(
-        localizedReason: "",
+        localizedReason: LocaleStrings.common.biometricsPrompt,
         biometricOnly: true,
         stickyAuth: true,
         androidAuthStrings: AndroidAuthMessages(
           signInTitle: LocaleStrings.common.biometricsPrompt,
+          cancelButton: LocaleStrings.common.cancel,
+        ),
+        iOSAuthStrings: IOSAuthMessages(
           cancelButton: LocaleStrings.common.cancel,
         ),
       );
