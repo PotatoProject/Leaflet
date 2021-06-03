@@ -48,7 +48,7 @@ class FileSystemHelper {
     return asyncFiles?.map((e) => e.path as String).toList();
   }
 
-  static Future<String?> saveFile({
+  static Future<SaveFileResult> saveFile({
     required String inputFile,
     String? outputPath,
     String? name,
@@ -56,17 +56,18 @@ class FileSystemHelper {
     final File input = File(inputFile);
     if (UniversalPlatform.isIOS) {
       await Share.shareFiles([inputFile]);
-      return null;
+      return const SaveFileResult._(path: null, success: true);
     }
     if (UniversalPlatform.isMacOS) {
       final String? savePath = await getSavePath(
         initialDirectory: outputPath ?? input.parent.path,
         suggestedName: name,
       );
-      return savePath;
+
+      return SaveFileResult._(path: savePath, success: savePath != null);
     }
     if (UniversalPlatform.isAndroid) {
-      final String? result = await filePromptChannel.invokeMethod<String>(
+      final String? savePath = await filePromptChannel.invokeMethod<String>(
         'requestFileExport',
         {
           'name': name ?? basename(inputFile),
@@ -74,13 +75,24 @@ class FileSystemHelper {
         },
       );
 
-      return result;
+      return SaveFileResult._(path: null, success: savePath != null);
     }
 
     if (outputPath != null) {
-      return join(outputPath, basename(inputFile));
+      return SaveFileResult._(
+          path: join(outputPath, basename(inputFile)), success: true);
     } else {
-      return inputFile;
+      return SaveFileResult._(path: inputFile, success: true);
     }
   }
+}
+
+class SaveFileResult {
+  final String? path;
+  final bool success;
+
+  const SaveFileResult._({
+    required this.path,
+    required this.success,
+  });
 }

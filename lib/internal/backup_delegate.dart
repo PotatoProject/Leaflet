@@ -23,7 +23,6 @@ import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 class BackupDelegate with LoggerProvider {
   Future<bool> saveNote(Note note, String password) async {
@@ -45,17 +44,17 @@ class BackupDelegate with LoggerProvider {
 
       final String filePath = await compute(_rawSaveNote, json.encode(payload));
 
-      final String? outputFile = await FileSystemHelper.saveFile(
+      final SaveFileResult outputFile = await FileSystemHelper.saveFile(
         inputFile: filePath,
         outputPath: appDirectories.backupDirectory.path,
         name: name,
       );
 
-      if (outputFile != null) {
-        await File(filePath).copy(outputFile);
+      if (outputFile.success && outputFile.path != null) {
+        await File(filePath).copy(outputFile.path!);
         return true;
       } else {
-        return UniversalPlatform.isIOS;
+        return outputFile.success;
       }
     } catch (e) {
       logger.e(e);

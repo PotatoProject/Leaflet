@@ -27,7 +27,7 @@ class NotesPlugin(private val activity: MainActivity) : FlutterPlugin {
     var fileResult: ActivityResultLauncher<FileInputPayload> =
         activity.registerForActivityResult(CreateCustomDocument()) { payload: FileOutputPayload ->
             if (payload.outputUri != null) {
-                //FileTools.cloneOriginToResult(activity, payload.inputUri, payload.outputUri);
+                FileTools.cloneOriginToResult(activity, payload.inputUri, payload.outputUri);
 
                 payload.result.success(payload.outputUri.toString())
             } else {
