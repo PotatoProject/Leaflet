@@ -29,11 +29,24 @@ class Locales {
     _$LocalePlPL().locale: _$LocalePlPL().data,
     _$LocaleRuRU().locale: _$LocaleRuRU().data,
   };
+
+  static Map<String, int> get stringData => {
+    _$LocaleDeDE().locale: _$LocaleDeDE().translatedStrings,
+    _$LocaleEnUS().locale: _$LocaleEnUS().translatedStrings,
+    _$LocaleEsES().locale: _$LocaleEsES().translatedStrings,
+    _$LocaleFrFR().locale: _$LocaleFrFR().translatedStrings,
+    _$LocaleGlGL().locale: _$LocaleGlGL().translatedStrings,
+    _$LocaleItIT().locale: _$LocaleItIT().translatedStrings,
+    _$LocaleNlNL().locale: _$LocaleNlNL().translatedStrings,
+    _$LocalePlPL().locale: _$LocalePlPL().translatedStrings,
+    _$LocaleRuRU().locale: _$LocaleRuRU().translatedStrings,
+  };
 }
 
 abstract class _$LocaleBase {
   String? locale;
   Map<String, String>? data;
+  int? translatedStrings;
 }
 
 class _$LocaleDeDE extends _$LocaleBase {
@@ -284,6 +297,9 @@ class _$LocaleDeDE extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Neueste Version",
     "miscellaneous.updater.already_on_latest_desc": "Du bist bereits auf der neuesten App-Version",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -319,7 +335,6 @@ class _$LocaleEnUS extends _$LocaleBase {
     "common.new_drawing": "New drawing",
     "common.import_note": "Import note",
     "common.biometrics_prompt": "Confirm biometrics",
-    "common.warning_cant_undo": "This operation can't be undone. Continue?",
     "common.master_pass.modify": "Modify master pass",
     "common.master_pass.confirm": "Confirm master pass",
     "common.master_pass.incorrect": "Incorrect master pass",
@@ -445,6 +460,7 @@ class _$LocaleEnUS extends _$LocaleBase {
     "settings.personalization.use_grid": "Grid view for notes",
     "settings.personalization.locale": "App locale",
     "settings.personalization.locale.device_default": "Device default",
+    "settings.personalization.locale.x_translated": "{}% translated",
     "settings.privacy.title": "Privacy",
     "settings.privacy.use_master_pass": "Use master pass",
     "settings.privacy.use_master_pass.disclaimer": "Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere",
@@ -564,6 +580,9 @@ class _$LocaleEnUS extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Latest version",
     "miscellaneous.updater.already_on_latest_desc": "You're already on the latest app version",
   };
+
+  @override
+  int get translatedStrings => 240;
 }
 
 
@@ -815,6 +834,9 @@ class _$LocaleEsES extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Última versión",
     "miscellaneous.updater.already_on_latest_desc": "Ya estás en la última versión de la aplicación",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -1066,6 +1088,9 @@ class _$LocaleFrFR extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Dernière version",
     "miscellaneous.updater.already_on_latest_desc": "Vous êtes déjà sur la dernière version de l'application",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -1317,6 +1342,9 @@ class _$LocaleGlGL extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Última versión",
     "miscellaneous.updater.already_on_latest_desc": "Xa estás na última versión da aplicación",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -1568,6 +1596,9 @@ class _$LocaleItIT extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Ultima versione",
     "miscellaneous.updater.already_on_latest_desc": "Sei già sull'ultima versione dell'app",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -1819,6 +1850,9 @@ class _$LocaleNlNL extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Laatste versie",
     "miscellaneous.updater.already_on_latest_desc": "Je hebt al de laatste versie van de app",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -2082,6 +2116,9 @@ class _$LocalePlPL extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Najnowsza wersja",
     "miscellaneous.updater.already_on_latest_desc": "Masz już najnowszą wersję aplikacji",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 
 
@@ -2345,5 +2382,8 @@ class _$LocaleRuRU extends _$LocaleBase {
     "miscellaneous.updater.already_on_latest": "Последняя версия",
     "miscellaneous.updater.already_on_latest_desc": "Вы уже используете последнюю версию приложения",
   };
+
+  @override
+  int get translatedStrings => 235;
 }
 

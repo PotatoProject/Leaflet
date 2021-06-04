@@ -13,6 +13,7 @@ import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
@@ -366,9 +367,26 @@ class _SettingsPageState extends State<SettingsPage> {
                         : LocaleStrings
                             .settings.personalizationLocaleDeviceDefault;
                     final bool selected = context.savedLocale == locale;
+                    double? translationPercentage;
+                    if (locale != null) {
+                      translationPercentage =
+                          Locales.stringData[locale.toLanguageTag()]! /
+                              Locales.stringData["en-US"]!;
+                    } else {
+                      translationPercentage = Locales.stringData[
+                              context.deviceLocale.toLanguageTag()]! /
+                          Locales.stringData["en-US"]!;
+                    }
 
                     return dropDownTile(
                       title: Text(nativeName),
+                      subtitle: Text(
+                        locale != null
+                            ? LocaleStrings.settings
+                                .personalizationLocaleXTranslated(
+                                    (translationPercentage * 100).round())
+                            : "${localeNativeNames[context.deviceLocale.languageCode]!.sentenceCase} \u2022 ${(translationPercentage * 100).round()}%",
+                      ),
                       selected: selected,
                       onTap: () {
                         if (locale == null) {

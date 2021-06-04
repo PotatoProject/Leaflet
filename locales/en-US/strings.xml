@@ -167,6 +167,7 @@
     <string name="settings.personalization.use_grid">Grid view for notes</string>
     <string name="settings.personalization.locale">App locale</string>
     <string name="settings.personalization.locale.device_default">Device default</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% translated</string>
     <string name="settings.privacy.title">Privacy</string>
     <string name="settings.privacy.use_master_pass">Use master pass</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Warning: if you ever forget the pass you can't reset it, you'll need to uninstall the app, hence getting all the notes erased, and reinstall it. Please write it down somewhere</string>

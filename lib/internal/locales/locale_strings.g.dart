@@ -45,7 +45,6 @@ class _$CommonLocaleStrings {
   final String newDrawing = "common.new_drawing".tr();
   final String importNote = "common.import_note".tr();
   final String biometricsPrompt = "common.biometrics_prompt".tr();
-  final String warningCantUndo = "common.warning_cant_undo".tr();
   final String masterPassModify = "common.master_pass.modify".tr();
   final String masterPassConfirm = "common.master_pass.confirm".tr();
   final String masterPassIncorrect = "common.master_pass.incorrect".tr();
@@ -160,6 +159,8 @@ class _$SettingsLocaleStrings {
   final String personalizationUseGrid = "settings.personalization.use_grid".tr();
   final String personalizationLocale = "settings.personalization.locale".tr();
   final String personalizationLocaleDeviceDefault = "settings.personalization.locale.device_default".tr();
+  /// Used to tell the user how much a certain language is translated, like 50% translated or so
+  String personalizationLocaleXTranslated(Object arg1) => "settings.personalization.locale.x_translated".tr(args: [arg1.toString()]);
   final String privacyTitle = "settings.privacy.title".tr();
   final String privacyUseMasterPass = "settings.privacy.use_master_pass".tr();
   final String privacyUseMasterPassDisclaimer = "settings.privacy.use_master_pass.disclaimer".tr();

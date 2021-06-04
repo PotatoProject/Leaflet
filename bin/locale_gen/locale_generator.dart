@@ -53,12 +53,24 @@ class LocaleGenerator {
     for (int i = 0; i < locales.length; i++) {
       final String locale = locales[i];
       final File path = paths[i];
-      final Map<String, String> result = await XmlFileParser.load(path, locale);
+      final ParseResult result = await XmlFileParser.load(path, locale);
 
       buffer.writeln();
       buffer.writeln(getLocaleClass(result, locale));
       final String classInstance = "${getClassNameFromLocale(locale)}()";
       localesBuffer.writeln('    $classInstance.locale: $classInstance.data,');
+    }
+    localesBuffer.writeln("  };");
+    localesBuffer.writeln();
+    localesBuffer.writeln(
+      "  static Map<String, int> get stringData => {",
+    );
+    for (int i = 0; i < locales.length; i++) {
+      final String locale = locales[i];
+
+      final String classInstance = "${getClassNameFromLocale(locale)}()";
+      localesBuffer.writeln(
+          '    $classInstance.locale: $classInstance.translatedStrings,');
     }
     localesBuffer.writeln("  };");
     localesBuffer.writeln("}");
@@ -84,10 +96,11 @@ String _baseLocaleClass = """
 abstract class _\$LocaleBase {
   String? locale;
   Map<String, String>? data;
+  int? translatedStrings;
 }
 """;
 
-String getLocaleClass(Map<String, String> data, String locale) {
+String getLocaleClass(ParseResult result, String locale) {
   final StringBuffer buffer = StringBuffer();
   buffer.writeln(
       "class ${getClassNameFromLocale(locale)} extends _\$LocaleBase {");
@@ -96,12 +109,15 @@ String getLocaleClass(Map<String, String> data, String locale) {
   buffer.writeln();
   buffer.writeln("  @override");
   buffer.writeln("  Map<String, String> get data => {");
-  data.forEach((key, value) {
+  result.data.forEach((key, value) {
     final String encodedKey = json.encode(key);
     final String encodedValue = json.encode(value);
     buffer.writeln('    $encodedKey: $encodedValue,');
   });
   buffer.writeln("  };");
+  buffer.writeln();
+  buffer.writeln("  @override");
+  buffer.writeln('  int get translatedStrings => ${result.uniqueStrings};');
   buffer.writeln("}");
 
   return buffer.toString();

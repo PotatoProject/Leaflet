@@ -5,8 +5,9 @@ import 'package:xml/xml.dart';
 class XmlFileParser {
   const XmlFileParser._();
 
-  static Future<Map<String, String>> load(File file, String locale) async {
+  static Future<ParseResult> load(File file, String locale) async {
     final Map<String, String> returnMap = {};
+    int stringCount = 0;
 
     final String fileContent = await file.readAsString();
     final XmlDocument document = XmlDocument.parse(fileContent);
@@ -22,8 +23,10 @@ class XmlFileParser {
         if (name == null) continue;
 
         if (element.name.toString() == "string") {
+          stringCount++;
           returnMap[name] = _replacer(element.text);
         } else if (element.name.toString() == "plurals") {
+          stringCount++;
           for (final XmlNode plural in element.children) {
             if (plural is XmlElement) {
               final XmlElement pluralElement = plural;
@@ -40,7 +43,7 @@ class XmlFileParser {
       }
     }
 
-    return returnMap;
+    return ParseResult(data: returnMap, uniqueStrings: stringCount);
   }
 
   static Future<Map<String, Map<String, StringInfo>>> loadWithStringInfo(
@@ -118,4 +121,14 @@ class PluralString extends StringInfo {}
 
 class ArgumentString extends StringInfo {
   late int argNum;
+}
+
+class ParseResult {
+  final Map<String, String> data;
+  final int uniqueStrings;
+
+  const ParseResult({
+    required this.data,
+    required this.uniqueStrings,
+  });
 }
