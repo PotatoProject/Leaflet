@@ -93,6 +93,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Przypnij</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Odepnij</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Zapisz lokalnie</string>
+    <string name="main_page.selection_bar.save.note_locked">Notatka jest zablokowana, wymagane jest hasło główne</string>
+    <string name="main_page.selection_bar.save.success">Notatka pomyślnie wyeksportowana</string>
+    <string name="main_page.selection_bar.save.oopsie">Coś poszło nie tak podczas eksportowania lub operacja została anulowana</string>
     <string name="main_page.selection_bar.share">Udostępnij</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s notatka została przeniesiona do kosza</item>
@@ -152,6 +155,7 @@
     <string name="settings.personalization.use_grid">Widok siatki dla notatek</string>
     <string name="settings.personalization.locale">Język aplikacji</string>
     <string name="settings.personalization.locale.device_default">Domyślny urządzenia</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% przetłumaczone</string>
     <string name="settings.privacy.title">Prywatność</string>
     <string name="settings.privacy.use_master_pass">Użyj hasła głównego</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Ostrzeżenie: jeśli kiedykolwiek zapomnisz hasła, nie będziesz mógł go zresetować - będziesz musiał odinstalować aplikację, usuwając w tym procesie wszystkie notatki, a następnie zainstalować ją ponownie. Zapisz je gdzieś</string>
@@ -232,6 +236,7 @@
     <string name="drawing.tools.marker">Marker</string>
     <string name="drawing.tools.color_picker">Kolor</string>
     <string name="drawing.tools.radius_picker">Promień</string>
+    <string name="drawing.tools.clear">Wyczyść płótno</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Zaczynajmy</string>
     <string name="setup.button.finish">Zakończ</string>

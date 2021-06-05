@@ -384,7 +384,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         locale != null
                             ? LocaleStrings.settings
                                 .personalizationLocaleXTranslated(
-                                    (translationPercentage * 100).round())
+                                (translationPercentage * 100).round(),
+                              )
                             : "${localeNativeNames[context.deviceLocale.languageCode]!.sentenceCase} \u2022 ${(translationPercentage * 100).round()}%",
                       ),
                       selected: selected,

@@ -91,6 +91,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Vastzetten</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Losmaken</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Lokaal opslaan</string>
+    <string name="main_page.selection_bar.save.note_locked">Notitie is vergrendeld, hoofdwachtwoord is vereist</string>
+    <string name="main_page.selection_bar.save.success">Notitie succesvol geëxporteerd</string>
+    <string name="main_page.selection_bar.save.oopsie">Er ging iets mis tijdens het exporteren of bewerking geannuleerd</string>
     <string name="main_page.selection_bar.share">Delen</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s notitie verplaatst naar de prullenbak</item>
@@ -142,6 +145,7 @@
     <string name="settings.personalization.use_grid">Rasterweergave voor notities</string>
     <string name="settings.personalization.locale">App lokalisatie</string>
     <string name="settings.personalization.locale.device_default">Standaardinstelling van apparaat</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% vertaald</string>
     <string name="settings.privacy.title">Privacy</string>
     <string name="settings.privacy.use_master_pass">Gebruik hoofdwachtwoord</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Waarschuwing: als je ooit het hoofdwachtwoord vergeet kun je deze niet opnieuw instellen, je moet de app opnieuw installeren, waardoor alle notities worden gewist. Schrijf het alsjeblieft ergens op</string>
@@ -220,6 +224,7 @@
     <string name="drawing.tools.marker">Markeerstift</string>
     <string name="drawing.tools.color_picker">Kleur</string>
     <string name="drawing.tools.radius_picker">Straal</string>
+    <string name="drawing.tools.clear">Leeg canvas</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Aan de slag</string>
     <string name="setup.button.finish">Voltooi</string>

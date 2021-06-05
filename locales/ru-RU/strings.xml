@@ -93,6 +93,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Закрепить</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Открепить</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Сохранить локально</string>
+    <string name="main_page.selection_bar.save.note_locked">Заметка заблокирована, требуется мастер-пароль</string>
+    <string name="main_page.selection_bar.save.success">Заметка успешно экспортирована</string>
+    <string name="main_page.selection_bar.save.oopsie">Что-то пошло не так во время экспорта или операция была отменена</string>
     <string name="main_page.selection_bar.share">Поделиться</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s заметка перемещена в корзину</item>
@@ -152,6 +155,7 @@
     <string name="settings.personalization.use_grid">Вид сетки для заметок</string>
     <string name="settings.personalization.locale">Язык</string>
     <string name="settings.personalization.locale.device_default">По умолчанию</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">Переведено на %s%</string>
     <string name="settings.privacy.title">Конфиденциальность</string>
     <string name="settings.privacy.use_master_pass">Использовать мастер-пароль</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Предупреждение: если вы когда-нибудь забудете мастер-пароль, вы не сможете сбросить его, вам будет нужно удалить приложение, следовательно, все заметки будут удалены и переустановить его. Пожалуйста, запишите его где-нибудь</string>
@@ -232,6 +236,7 @@
     <string name="drawing.tools.marker">Маркер</string>
     <string name="drawing.tools.color_picker">Цвет</string>
     <string name="drawing.tools.radius_picker">Радиус</string>
+    <string name="drawing.tools.clear">Очистить холст</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Начать</string>
     <string name="setup.button.finish">Готово</string>

@@ -91,6 +91,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Anheften</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Lösen</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Lokal speichern</string>
+    <string name="main_page.selection_bar.save.note_locked">Diese Notiz ist gesperrt, Master-Pass wird benötigt</string>
+    <string name="main_page.selection_bar.save.success">Notiz erfolgreich exportiert</string>
+    <string name="main_page.selection_bar.save.oopsie">Beim Exportieren ist etwas schiefgelaufen oder der Vorgang wurde abgebrochen</string>
     <string name="main_page.selection_bar.share">Teilen</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s Element in den Papierkorb verschoben</item>
@@ -142,6 +145,7 @@
     <string name="settings.personalization.use_grid">Rasteransicht für Notizen</string>
     <string name="settings.personalization.locale">Lokalisierung</string>
     <string name="settings.personalization.locale.device_default">Gerätestandard</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% übersetzt</string>
     <string name="settings.privacy.title">Datenschutz</string>
     <string name="settings.privacy.use_master_pass">Master-Pass verwenden</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Warnung: Falls sie den Master-Pass vergessen, können sie ihn NICHT zurücksetzen. Nur wenn sie die App löschen und neu installieren. Dabei werden alle Daten gelöscht. Bitte schreiben Sie ihn auf und bewahren sie ihn sicher auf.</string>
@@ -220,6 +224,7 @@
     <string name="drawing.tools.marker">Filzstift</string>
     <string name="drawing.tools.color_picker">Farbe</string>
     <string name="drawing.tools.radius_picker">Radius</string>
+    <string name="drawing.tools.clear">Leinwand leeren</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Los geht\'s</string>
     <string name="setup.button.finish">Abschließen</string>

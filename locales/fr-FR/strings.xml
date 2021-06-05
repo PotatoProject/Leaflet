@@ -91,6 +91,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Épingler</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Désépingler</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Sauvegarder localement</string>
+    <string name="main_page.selection_bar.save.note_locked">La note est verrouillée, le mot de passe maître est requis</string>
+    <string name="main_page.selection_bar.save.success">Note exportée avec succès</string>
+    <string name="main_page.selection_bar.save.oopsie">Une erreur s\'est produite lors de l\'export ou l\'opération a été annulée</string>
     <string name="main_page.selection_bar.share">Partager</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s note a été déplaçée vers la corbeille</item>
@@ -220,6 +223,7 @@
     <string name="drawing.tools.marker">Marqueur</string>
     <string name="drawing.tools.color_picker">Couleur </string>
     <string name="drawing.tools.radius_picker">Rayon</string>
+    <string name="drawing.tools.clear">Nettoyer le tableau</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Commencer</string>
     <string name="setup.button.finish">Terminer</string>

@@ -26,7 +26,7 @@
     <string name="common.new_image">Nueva imagen</string>
     <string name="common.new_drawing">Nuevo dibujo</string>
     <string name="common.import_note">Importar nota</string>
-    <string name="common.biometrics_prompt">Confirmar reconocimiento biométrico</string>
+    <string name="common.biometrics_prompt">Confirmar datos biométricos</string>
     <string name="common.master_pass.modify">Modificar contraseña maestra</string>
     <string name="common.master_pass.confirm">Confirmar contraseña maestra</string>
     <string name="common.master_pass.incorrect">Contraseña maestra incorrecta</string>
@@ -44,8 +44,8 @@
     <string name="common.color.orange">Naranja</string>
     <string name="common.color.yellow">Amarillo</string>
     <string name="common.color.green">Verde</string>
-    <string name="common.color.cyan">Cian</string>
-    <string name="common.color.light_blue">Azul claro</string>
+    <string name="common.color.cyan">Turquesa</string>
+    <string name="common.color.light_blue">Celeste</string>
     <string name="common.color.blue">Azul</string>
     <string name="common.color.purple">Morado</string>
     <string name="common.color.pink">Rosa</string>
@@ -91,6 +91,7 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fijar</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Desfijar</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Guardar localmente</string>
+    <string name="main_page.selection_bar.save.success">Nota exportada correctamente</string>
     <string name="main_page.selection_bar.share">Compartir</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s nota movida a la papelera</item>
@@ -161,7 +162,7 @@
     <string name="settings.backup_restore.import">Importar</string>
     <string name="settings.backup_restore.import_desc">Importar notas de una versión de PotatoNotes</string>
     <string name="settings.info.title">Información</string>
-    <string name="settings.info.about_app">Acerca de PotatoNotes</string>
+    <string name="settings.info.about_app">Acerca de Leaflet</string>
     <string name="settings.info.update_check">Buscar actualizaciones de la aplicación</string>
     <string name="settings.info.bug_report">Reportar un error</string>
     <string name="settings.debug.title">Depuración</string>

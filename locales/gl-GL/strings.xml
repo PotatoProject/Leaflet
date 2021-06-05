@@ -91,6 +91,7 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fixar</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Desfixar</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Gardar localmente</string>
+    <string name="main_page.selection_bar.save.success">Nota exportada correctamente</string>
     <string name="main_page.selection_bar.share">Compartir</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s nota movida ó lixo</item>
