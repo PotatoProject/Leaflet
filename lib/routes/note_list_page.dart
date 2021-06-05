@@ -77,10 +77,7 @@ class NoteListPageState extends State<NoteListPage> {
             state: _selectionState,
             child: _selectionState.selecting
                 ? const SelectionBar()
-                : DefaultAppBar(
-                    extraActions: appBarButtons,
-                    title: Text(Utils.getNameFromMode(widget.noteKind)),
-                  ),
+                : DefaultAppBar(extraActions: appBarButtons),
           ),
         ),
         useAppBarAsSecondary: _selectionState.selecting,

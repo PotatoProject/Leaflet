@@ -58,43 +58,39 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   Widget buildResults(BuildContext context) {
     return StreamBuilder<List<Note>>(
       stream: helper.noteStream(ReturnMode.local),
+      initialData: const [],
       builder: (context, snapshot) {
-        return FutureBuilder<List<Note>>(
-          future: getNotesForQuery(snapshot.data ?? []),
-          initialData: const [],
-          builder: (context, snapshot) {
-            final Brightness brightness = context.theme.brightness;
-            final Widget illustration = query.isEmpty
-                ? Utils.quickIllustration(
-                    context,
-                    Illustration.typeToSearch(
-                      brightness: brightness,
-                      height: 72,
-                    ),
-                    LocaleStrings.search.typeToSearch,
-                  )
-                : Utils.quickIllustration(
-                    context,
-                    Illustration.nothingFound(
-                      brightness: brightness,
-                      height: 72,
-                    ),
-                    LocaleStrings.search.nothingFound,
-                  );
-            final List<Note> results = List<Note>.from(snapshot.data!);
+        final Brightness brightness = context.theme.brightness;
+        final Widget illustration = query.isEmpty
+            ? Utils.quickIllustration(
+                context,
+                Illustration.typeToSearch(
+                  brightness: brightness,
+                  height: 72,
+                ),
+                LocaleStrings.search.typeToSearch,
+              )
+            : Utils.quickIllustration(
+                context,
+                Illustration.nothingFound(
+                  brightness: brightness,
+                  height: 72,
+                ),
+                LocaleStrings.search.nothingFound,
+              );
+        final List<Note> results =
+            searchQuery.filterNotes(query, snapshot.data!);
 
-            results.sort((a, b) => b.creationDate.compareTo(a.creationDate));
+        results.sort((a, b) => b.creationDate.compareTo(a.creationDate));
 
-            return NoteListWidget(
-              itemBuilder: (context, index) => NoteView(
-                note: results[index],
-                onTap: () => openNote(context, results[index]),
-              ),
-              gridView: prefs.useGrid,
-              noteCount: results.length,
-              customIllustration: illustration,
-            );
-          },
+        return NoteListWidget(
+          itemBuilder: (context, index) => NoteView(
+            note: results[index],
+            onTap: () => openNote(context, results[index]),
+          ),
+          gridView: prefs.useGrid,
+          noteCount: results.length,
+          customIllustration: illustration,
         );
       },
     );
@@ -116,109 +112,6 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       );
       Utils.handleNotePagePop(note);
     }
-  }
-
-  Future<List<Note>> getNotesForQuery(List<Note> notes) async {
-    final List<Note> results = [];
-
-    if (query.trim().isEmpty &&
-        !searchQuery.onlyFavourites &&
-        searchQuery.date == null &&
-        searchQuery.tags.isEmpty &&
-        searchQuery.color == null) {
-      return [];
-    }
-
-    for (final Note note in notes) {
-      final bool titleMatch = _getTextBool(note.title);
-      final bool contentMatch =
-          !note.hideContent ? _getTextBool(note.content) : false;
-      final bool dateMatch =
-          searchQuery.date != null ? _getDateBool(note.creationDate) : true;
-      final bool colorMatch =
-          searchQuery.color != null ? _getColorBool(note.color) : true;
-      final bool tagMatch =
-          searchQuery.tags.isNotEmpty ? _getTagBool(note.tags) : true;
-      final bool favouriteMatch =
-          searchQuery.onlyFavourites ? note.starred : true;
-      final bool modesMatch = _getModesBool(note);
-
-      if (tagMatch &&
-          colorMatch &&
-          dateMatch &&
-          favouriteMatch &&
-          (titleMatch || contentMatch) &&
-          modesMatch) {
-        results.add(note);
-      }
-    }
-
-    return results;
-  }
-
-  bool _getColorBool(int noteColor) {
-    return noteColor == searchQuery.color;
-  }
-
-  bool _getDateBool(DateTime noteDate) {
-    if (searchQuery.date == null) return false;
-
-    final DateTime sanitizedNoteDate = DateTime(
-      noteDate.year,
-      noteDate.month,
-      noteDate.day,
-    );
-
-    final DateTime sanitizedQueryDate = DateTime(
-      searchQuery.date!.year,
-      searchQuery.date!.month,
-      searchQuery.date!.day,
-    );
-
-    switch (searchQuery.dateMode) {
-      case DateFilterMode.after:
-        return sanitizedNoteDate.isAfter(sanitizedQueryDate);
-      case DateFilterMode.before:
-        return sanitizedNoteDate.isBefore(sanitizedQueryDate);
-      case DateFilterMode.only:
-      default:
-        return sanitizedNoteDate.isAtSameMomentAs(sanitizedQueryDate);
-    }
-  }
-
-  bool _getTextBool(String text) {
-    final String sanitizedQuery =
-        searchQuery.caseSensitive ? query : query.toLowerCase();
-
-    final String sanitizedText =
-        searchQuery.caseSensitive ? text : text.toLowerCase();
-
-    return sanitizedText.contains(sanitizedQuery);
-  }
-
-  bool _getTagBool(List<String> tags) {
-    bool? matchResult;
-
-    for (final String tag in searchQuery.tags) {
-      if (matchResult != null) {
-        matchResult = matchResult && tags.any((element) => element == tag);
-      } else {
-        matchResult = tags.any((element) => element == tag);
-      }
-    }
-
-    return matchResult!;
-  }
-
-  bool _getModesBool(Note note) {
-    final bool normal =
-        !note.archived && !note.deleted && searchQuery.returnMode.fromNormal;
-    final bool archived =
-        note.archived && !note.deleted && searchQuery.returnMode.fromArchive;
-    final bool deleted =
-        !note.archived && note.deleted && searchQuery.returnMode.fromTrash;
-
-    return normal || archived || deleted;
   }
 }
 

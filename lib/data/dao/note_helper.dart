@@ -174,6 +174,112 @@ class SearchQuery {
       fromTrash: true,
     );
   }
+
+  List<Note> filterNotes(
+    String textQuery,
+    List<Note> notes, {
+    bool returnNothingOnEmptyQuery = true,
+  }) {
+    final List<Note> results = [];
+
+    if (textQuery.trim().isEmpty &&
+        !onlyFavourites &&
+        date == null &&
+        tags.isEmpty &&
+        color == null) {
+      if (returnNothingOnEmptyQuery) {
+        return [];
+      } else {
+        return notes;
+      }
+    }
+
+    for (final Note note in notes) {
+      final bool titleMatch = _getTextBool(textQuery, note.title);
+      final bool contentMatch =
+          !note.hideContent ? _getTextBool(textQuery, note.content) : false;
+      final bool dateMatch =
+          date != null ? _getDateBool(note.creationDate) : true;
+      final bool colorMatch = color != null ? _getColorBool(note.color) : true;
+      final bool tagMatch = tags.isNotEmpty ? _getTagBool(note.tags) : true;
+      final bool favouriteMatch = onlyFavourites ? note.starred : true;
+      final bool modesMatch = _getModesBool(note);
+
+      if (tagMatch &&
+          colorMatch &&
+          dateMatch &&
+          favouriteMatch &&
+          (titleMatch || contentMatch) &&
+          modesMatch) {
+        results.add(note);
+      }
+    }
+
+    return results;
+  }
+
+  bool _getColorBool(int noteColor) {
+    return noteColor == color;
+  }
+
+  bool _getDateBool(DateTime noteDate) {
+    if (date == null) return false;
+
+    final DateTime sanitizedNoteDate = DateTime(
+      noteDate.year,
+      noteDate.month,
+      noteDate.day,
+    );
+
+    final DateTime sanitizedQueryDate = DateTime(
+      date!.year,
+      date!.month,
+      date!.day,
+    );
+
+    switch (dateMode) {
+      case DateFilterMode.after:
+        return sanitizedNoteDate.isAfter(sanitizedQueryDate);
+      case DateFilterMode.before:
+        return sanitizedNoteDate.isBefore(sanitizedQueryDate);
+      case DateFilterMode.only:
+      default:
+        return sanitizedNoteDate.isAtSameMomentAs(sanitizedQueryDate);
+    }
+  }
+
+  bool _getTextBool(String textQuery, String text) {
+    final String sanitizedQuery =
+        caseSensitive ? textQuery : textQuery.toLowerCase();
+
+    final String sanitizedText = caseSensitive ? text : text.toLowerCase();
+
+    return sanitizedText.contains(sanitizedQuery);
+  }
+
+  bool _getTagBool(List<String> tags) {
+    bool? matchResult;
+
+    for (final String tag in tags) {
+      if (matchResult != null) {
+        matchResult = matchResult && tags.any((element) => element == tag);
+      } else {
+        matchResult = tags.any((element) => element == tag);
+      }
+    }
+
+    return matchResult ?? false;
+  }
+
+  bool _getModesBool(Note note) {
+    final bool normal =
+        !note.archived && !note.deleted && returnMode.fromNormal;
+    final bool archived =
+        note.archived && !note.deleted && returnMode.fromArchive;
+    final bool deleted = !note.archived && note.deleted && returnMode.fromTrash;
+
+    return normal || archived || deleted;
+  }
 }
 
 class SearchReturnMode {

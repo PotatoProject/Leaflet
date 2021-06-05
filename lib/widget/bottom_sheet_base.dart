@@ -107,7 +107,6 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                   min(600.0 + context.viewInsets.bottom, context.mSize.height),
             );
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
-            //print(_constraints);
 
             return GestureDetector(
               onVerticalDragStart: !_useDesktopLayout

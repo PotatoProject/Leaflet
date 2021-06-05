@@ -33,10 +33,11 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
           )
         : null;
     final Widget? _title = state != null
-        ? const Text(
-            "leaflet",
-            style: TextStyle(fontFamily: "ValeraRound"),
-          )
+        ? title ??
+            const Text(
+              "leaflet",
+              style: TextStyle(fontFamily: "ValeraRound"),
+            )
         : title;
 
     return AppBar(
