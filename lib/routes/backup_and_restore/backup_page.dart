@@ -11,6 +11,7 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class BackupPage extends StatefulWidget {
   @override
@@ -208,7 +209,9 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
     Utils.showModalBottomSheet(
       context: context,
       builder: (context) => _BackupCompletePage(
-        backupFile: backupPath.path != null ? File(backupPath.path!) : null,
+        backupFile: backupPath.path != null && !UniversalPlatform.isMacOS
+            ? File(backupPath.path!)
+            : null,
         cancelled: !backupPath.success,
       ),
       enableDismiss: false,
