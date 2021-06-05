@@ -367,15 +367,20 @@ class _SettingsPageState extends State<SettingsPage> {
                         : LocaleStrings
                             .settings.personalizationLocaleDeviceDefault;
                     final bool selected = context.savedLocale == locale;
+                    final Locale deviceLocale =
+                        Locales.supported.contains(context.deviceLocale)
+                            ? context.deviceLocale
+                            : const Locale("en", "US");
+
                     double? translationPercentage;
                     if (locale != null) {
                       translationPercentage =
                           Locales.stringData[locale.toLanguageTag()]! /
                               Locales.stringData["en-US"]!;
                     } else {
-                      translationPercentage = Locales.stringData[
-                              context.deviceLocale.toLanguageTag()]! /
-                          Locales.stringData["en-US"]!;
+                      translationPercentage =
+                          Locales.stringData[deviceLocale.toLanguageTag()]! /
+                              Locales.stringData["en-US"]!;
                     }
 
                     return dropDownTile(
@@ -386,7 +391,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 .personalizationLocaleXTranslated(
                                 (translationPercentage * 100).round(),
                               )
-                            : "${localeNativeNames[context.deviceLocale.languageCode]!.sentenceCase} \u2022 ${(translationPercentage * 100).round()}%",
+                            : "${localeNativeNames[deviceLocale.languageCode]!.sentenceCase} \u2022 ${(translationPercentage * 100).round()}%",
                       ),
                       selected: selected,
                       onTap: () {
