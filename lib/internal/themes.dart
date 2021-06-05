@@ -93,7 +93,7 @@ class Themes {
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: scheme.primary,
         selectionHandleColor: scheme.primary,
-        selectionColor: scheme.primary,
+        selectionColor: scheme.primary.withOpacity(0.4),
       ),
       colorScheme: scheme,
       appBarTheme: AppBarTheme(
