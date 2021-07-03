@@ -145,6 +145,7 @@
     <string name="settings.personalization.use_grid">Vue en mode grille</string>
     <string name="settings.personalization.locale">Langue de l\'application</string>
     <string name="settings.personalization.locale.device_default">Appareil par défaut</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% traduits</string>
     <string name="settings.privacy.title">Vie privée</string>
     <string name="settings.privacy.use_master_pass">Utiliser un mot de passe</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Attention : si vous oubliez votre mot de passe vous ne pourrez pas le réinitialiser. Vous devrez désinstaller l\'application, ce qui supprimera toutes vos notes, et la réinstaller. Notez votre mot de passe quelque part</string>

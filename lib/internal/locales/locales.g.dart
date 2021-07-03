@@ -1183,6 +1183,7 @@ class _$LocaleFrFR extends _$LocaleBase {
     "settings.personalization.use_grid": "Vue en mode grille",
     "settings.personalization.locale": "Langue de l'application",
     "settings.personalization.locale.device_default": "Appareil par défaut",
+    "settings.personalization.locale.x_translated": "{}% traduits",
     "settings.privacy.title": "Vie privée",
     "settings.privacy.use_master_pass": "Utiliser un mot de passe",
     "settings.privacy.use_master_pass.disclaimer": "Attention : si vous oubliez votre mot de passe vous ne pourrez pas le réinitialiser. Vous devrez désinstaller l'application, ce qui supprimera toutes vos notes, et la réinstaller. Notez votre mot de passe quelque part",
@@ -1300,7 +1301,7 @@ class _$LocaleFrFR extends _$LocaleBase {
   };
 
   @override
-  int get translatedStrings => 239;
+  int get translatedStrings => 240;
 }
 
 
