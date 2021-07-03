@@ -183,7 +183,6 @@ class _NotePageState extends State<NotePage> {
     return context.theme.copyWith(
       scaffoldBackgroundColor: noteColor,
       cardColor: noteColor,
-      accentColor: foregroundColor,
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: foregroundColor,
       ),

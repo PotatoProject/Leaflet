@@ -27,7 +27,7 @@ class FileSystemHelper {
           )
         : (await FilePicker.platform.pickFiles())?.files.first;
 
-    return asyncFile?.path as String;
+    return asyncFile?.path as String?;
   }
 
   static Future<List<String>?> getFiles({

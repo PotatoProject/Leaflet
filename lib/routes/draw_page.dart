@@ -176,9 +176,7 @@ class _DrawPageState extends State<DrawPage>
                 clearCanvas: () {
                   Utils.showModalBottomSheet(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      shape: const RoundedRectangleBorder(),
-                      elevation: 0,
+                    builder: (context) => DialogSheetBase(
                       title: Text(LocaleStrings.common.areYouSure),
                       content: Text(LocaleStrings.drawing.clearCanvasWarning),
                       actions: [

@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/widget/note_image.dart';
@@ -66,11 +65,7 @@ class _ImageGrid extends StatelessWidget {
             : _groupedImages.length;
         for (int i = 0; i < _forLength; i++) {
           _rows.add(
-            buildImageRow(
-              _groupedImages[i],
-              constraints.maxWidth,
-              i,
-            ),
+            buildImageRow(_groupedImages[i], constraints.maxWidth, i),
           );
         }
 
@@ -86,11 +81,8 @@ class _ImageGrid extends StatelessWidget {
       List<SavedImage> images, double baseWidth, int forLoopIndex) {
     assert(images.isNotEmpty && images.length <= 3);
 
-    final List<Size> _sizes = images
-        .map(
-          (image) => Size(image.width!, image.height!),
-        )
-        .toList();
+    final List<Size> _sizes =
+        images.map((image) => Size(image.width!, image.height!)).toList();
 
     final double _height = _getMinHeight(_sizes);
     final List<double> _transformedWidths =
@@ -180,11 +172,11 @@ class _ImageStrip extends StatelessWidget {
             builder: (context, constraints) {
               return ScrollConfiguration(
                 behavior: ScrollConfiguration.of(context).copyWith(
-                  dragDevices: {
+                    /* dragDevices: {
                     PointerDeviceKind.mouse,
                     PointerDeviceKind.touch,
-                  },
-                ),
+                  }, */
+                    ),
                 child: ListView.separated(
                   itemBuilder: (context, index) {
                     final SavedImage _image = images[index];

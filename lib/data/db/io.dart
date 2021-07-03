@@ -10,9 +10,11 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/utils/utils.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqlcipher_flutter_libs/sqlcipher_flutter_libs.dart';
 import 'package:sqlite3/open.dart';
 
 QueryExecutor constructDb({bool logStatements = false}) {
+  applyWorkaroundToOpenSqlCipherOnOldAndroidVersions();
   open.overrideFor(
     OperatingSystem.windows,
     () => DynamicLibrary.open('sqlcipher.dll'),
@@ -30,7 +32,7 @@ QueryExecutor constructDb({bool logStatements = false}) {
   });
   open.overrideFor(
     OperatingSystem.android,
-    () => DynamicLibrary.open('libsqlcipher.so'),
+    openCipherOnAndroid,
   );
   sqfliteFfiInit();
 

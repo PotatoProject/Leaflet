@@ -89,7 +89,6 @@ class Themes {
         : ThemeData.light();
 
     return base.copyWith(
-      accentColor: scheme.primary,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: scheme.primary,
         selectionHandleColor: scheme.primary,

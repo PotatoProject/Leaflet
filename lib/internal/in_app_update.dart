@@ -71,16 +71,8 @@ class InAppUpdater {
         );
       case BuildType.unsupported:
       default:
-        return AppUpdateInfo(
-          UpdateAvailability.updateNotAvailable,
-          false,
-          false,
-          -1,
-          -1,
-          "com.potatoproject.notes",
-          0,
-          -1,
-        );
+        return AppUpdateInfo(UpdateAvailability.updateNotAvailable, false,
+            false, -1, -1, "com.potatoproject.notes", 0, -1);
     }
   }
 
@@ -117,11 +109,8 @@ class InAppUpdater {
   }) async {
     switch (buildType) {
       case BuildType.playStore:
-        if (flexibleUpdateAllowed) {
-          await InAppUpdate.startFlexibleUpdate();
-        } else {
-          await InAppUpdate.performImmediateUpdate();
-        }
+        //for now support only immediate
+        await InAppUpdate.performImmediateUpdate();
         break;
       case BuildType.gitHub:
         final bool shouldUpdate = await _showUpdateDialog(context);

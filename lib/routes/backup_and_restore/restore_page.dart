@@ -224,6 +224,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
 
     canUseOldDbFile =
         !DeviceInfo.isDesktop && await MigrationTask.isMigrationAvailable(file);
+    setState(() {});
   }
 
   @override

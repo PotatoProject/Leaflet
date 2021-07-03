@@ -6,7 +6,7 @@ part of 'database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this, annotate_overrides, avoid_redundant_argument_values, avoid_unused_constructor_parameters
 class Note extends DataClass implements Insertable<Note> {
   final String id;
   final String title;
@@ -45,7 +45,6 @@ class Note extends DataClass implements Insertable<Note> {
       required this.deleted,
       required this.archived,
       required this.synced});
-  // ignore: avoid_unused_constructor_parameters
   factory Note.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -570,182 +569,112 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   final String? _alias;
   $NotesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedTextColumn id = _constructId();
-  GeneratedTextColumn _constructId() {
-    return GeneratedTextColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedTextColumn title = _constructTitle();
-  GeneratedTextColumn _constructTitle() {
-    return GeneratedTextColumn(
-      'title',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+      'title', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _contentMeta = const VerificationMeta('content');
-  @override
-  late final GeneratedTextColumn content = _constructContent();
-  GeneratedTextColumn _constructContent() {
-    return GeneratedTextColumn(
-      'content',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
+      'content', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _starredMeta = const VerificationMeta('starred');
-  @override
-  late final GeneratedBoolColumn starred = _constructStarred();
-  GeneratedBoolColumn _constructStarred() {
-    return GeneratedBoolColumn('starred', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> starred = GeneratedColumn<bool?>(
+      'starred', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (starred IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _creationDateMeta =
       const VerificationMeta('creationDate');
-  @override
-  late final GeneratedDateTimeColumn creationDate = _constructCreationDate();
-  GeneratedDateTimeColumn _constructCreationDate() {
-    return GeneratedDateTimeColumn(
-      'creation_date',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<DateTime?> creationDate =
+      GeneratedColumn<DateTime?>('creation_date', aliasedName, false,
+          typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
-  @override
-  late final GeneratedDateTimeColumn lastModifyDate =
-      _constructLastModifyDate();
-  GeneratedDateTimeColumn _constructLastModifyDate() {
-    return GeneratedDateTimeColumn(
-      'last_modify_date',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<DateTime?> lastModifyDate =
+      GeneratedColumn<DateTime?>('last_modify_date', aliasedName, false,
+          typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
-  @override
-  late final GeneratedIntColumn color = _constructColor();
-  GeneratedIntColumn _constructColor() {
-    return GeneratedIntColumn('color', $tableName, false,
-        defaultValue: const Constant(0));
-  }
-
+  late final GeneratedColumn<int?> color = GeneratedColumn<int?>(
+      'color', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   final VerificationMeta _imagesMeta = const VerificationMeta('images');
-  @override
-  late final GeneratedTextColumn images = _constructImages();
-  GeneratedTextColumn _constructImages() {
-    return GeneratedTextColumn(
-      'images',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<SavedImage>, String?>
+      images = GeneratedColumn<String?>('images', aliasedName, false,
+              typeName: 'TEXT', requiredDuringInsert: true)
+          .withConverter<List<SavedImage>>($NotesTable.$converter0);
   final VerificationMeta _listMeta = const VerificationMeta('list');
-  @override
-  late final GeneratedBoolColumn list = _constructList();
-  GeneratedBoolColumn _constructList() {
-    return GeneratedBoolColumn('list', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> list = GeneratedColumn<bool?>(
+      'list', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (list IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _listContentMeta =
       const VerificationMeta('listContent');
-  @override
-  late final GeneratedTextColumn listContent = _constructListContent();
-  GeneratedTextColumn _constructListContent() {
-    return GeneratedTextColumn(
-      'list_content',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<ListItem>, String?>
+      listContent = GeneratedColumn<String?>('list_content', aliasedName, false,
+              typeName: 'TEXT', requiredDuringInsert: true)
+          .withConverter<List<ListItem>>($NotesTable.$converter1);
   final VerificationMeta _remindersMeta = const VerificationMeta('reminders');
-  @override
-  late final GeneratedTextColumn reminders = _constructReminders();
-  GeneratedTextColumn _constructReminders() {
-    return GeneratedTextColumn(
-      'reminders',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<DateTime>, String?>
+      reminders = GeneratedColumn<String?>('reminders', aliasedName, false,
+              typeName: 'TEXT', requiredDuringInsert: true)
+          .withConverter<List<DateTime>>($NotesTable.$converter2);
   final VerificationMeta _tagsMeta = const VerificationMeta('tags');
-  @override
-  late final GeneratedTextColumn tags = _constructTags();
-  GeneratedTextColumn _constructTags() {
-    return GeneratedTextColumn(
-      'tags',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumnWithTypeConverter<List<String>, String?> tags =
+      GeneratedColumn<String?>('tags', aliasedName, false,
+              typeName: 'TEXT', requiredDuringInsert: true)
+          .withConverter<List<String>>($NotesTable.$converter3);
   final VerificationMeta _hideContentMeta =
       const VerificationMeta('hideContent');
-  @override
-  late final GeneratedBoolColumn hideContent = _constructHideContent();
-  GeneratedBoolColumn _constructHideContent() {
-    return GeneratedBoolColumn('hide_content', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> hideContent = GeneratedColumn<bool?>(
+      'hide_content', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (hide_content IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _lockNoteMeta = const VerificationMeta('lockNote');
-  @override
-  late final GeneratedBoolColumn lockNote = _constructLockNote();
-  GeneratedBoolColumn _constructLockNote() {
-    return GeneratedBoolColumn('lock_note', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> lockNote = GeneratedColumn<bool?>(
+      'lock_note', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (lock_note IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _usesBiometricsMeta =
       const VerificationMeta('usesBiometrics');
-  @override
-  late final GeneratedBoolColumn usesBiometrics = _constructUsesBiometrics();
-  GeneratedBoolColumn _constructUsesBiometrics() {
-    return GeneratedBoolColumn('uses_biometrics', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> usesBiometrics = GeneratedColumn<bool?>(
+      'uses_biometrics', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (uses_biometrics IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _deletedMeta = const VerificationMeta('deleted');
-  @override
-  late final GeneratedBoolColumn deleted = _constructDeleted();
-  GeneratedBoolColumn _constructDeleted() {
-    return GeneratedBoolColumn('deleted', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> deleted = GeneratedColumn<bool?>(
+      'deleted', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (deleted IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _archivedMeta = const VerificationMeta('archived');
-  @override
-  late final GeneratedBoolColumn archived = _constructArchived();
-  GeneratedBoolColumn _constructArchived() {
-    return GeneratedBoolColumn('archived', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> archived = GeneratedColumn<bool?>(
+      'archived', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (archived IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
-  @override
-  late final GeneratedBoolColumn synced = _constructSynced();
-  GeneratedBoolColumn _constructSynced() {
-    return GeneratedBoolColumn('synced', $tableName, false,
-        defaultValue: const Constant(false));
-  }
-
+  late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
+      'synced', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (synced IN (0, 1))',
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -768,11 +697,9 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         synced
       ];
   @override
-  $NotesTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'notes';
   @override
-  String get $tableName => _alias ?? 'notes';
-  @override
-  final String actualTableName = 'notes';
+  String get actualTableName => 'notes';
   @override
   VerificationContext validateIntegrity(Insertable<Note> instance,
       {bool isInserting = false}) {
@@ -886,7 +813,6 @@ class Tag extends DataClass implements Insertable<Tag> {
   final String name;
   final DateTime lastModifyDate;
   Tag({required this.id, required this.name, required this.lastModifyDate});
-  // ignore: avoid_unused_constructor_parameters
   factory Tag.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1032,48 +958,24 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   final String? _alias;
   $TagsTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedTextColumn id = _constructId();
-  GeneratedTextColumn _constructId() {
-    return GeneratedTextColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedTextColumn name = _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
-  @override
-  late final GeneratedDateTimeColumn lastModifyDate =
-      _constructLastModifyDate();
-  GeneratedDateTimeColumn _constructLastModifyDate() {
-    return GeneratedDateTimeColumn(
-      'last_modify_date',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<DateTime?> lastModifyDate =
+      GeneratedColumn<DateTime?>('last_modify_date', aliasedName, false,
+          typeName: 'INTEGER', requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, name, lastModifyDate];
   @override
-  $TagsTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'tags';
   @override
-  String get $tableName => _alias ?? 'tags';
-  @override
-  final String actualTableName = 'tags';
+  String get actualTableName => 'tags';
   @override
   VerificationContext validateIntegrity(Insertable<Tag> instance,
       {bool isInserting = false}) {

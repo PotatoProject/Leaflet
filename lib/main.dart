@@ -39,9 +39,7 @@ Future<void> main() async {
       useFallbackTranslations: true,
       assetLoader: GeneratedAssetLoader(),
       path: "assets/locales",
-      child: SplashPage(
-        child: PotatoNotes(),
-      ),
+      child: SplashPage(child: PotatoNotes()),
     ),
   );
 
@@ -124,10 +122,7 @@ class PotatoNotes extends StatelessWidget {
               ]);
             }
 
-            deviceInfo.updateDeviceInfo(
-              context.mediaQuery,
-              canUseSystemAccent,
-            );
+            deviceInfo.updateDeviceInfo(context.mediaQuery, canUseSystemAccent);
 
             SystemChrome.setSystemUIOverlayStyle(
               const SystemUiOverlayStyle(
