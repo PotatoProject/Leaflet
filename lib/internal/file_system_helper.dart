@@ -69,10 +69,7 @@ class FileSystemHelper {
     if (UniversalPlatform.isAndroid) {
       final String? savePath = await filePromptChannel.invokeMethod<String>(
         'requestFileExport',
-        {
-          'name': name ?? basename(inputFile),
-          'path': outputPath ?? input.parent.path
-        },
+        {'name': name ?? basename(inputFile), 'path': inputFile},
       );
 
       return SaveFileResult._(path: null, success: savePath != null);
