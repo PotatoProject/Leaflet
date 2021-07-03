@@ -6,3 +6,5 @@ linter:
     avoid_catching_errors: false
     avoid_positional_boolean_parameters: false
     avoid_setters_without_getters: false
+    empty_catches: false
+    implementation_imports: false

@@ -36,6 +36,7 @@ class BackupDelegate with LoggerProvider {
         'password': password,
         'buildNumber': appInfo.packageInfo.buildNumberInt,
         'baseDir': appDirectories.tempDirectory.path,
+        'imagesDir': appDirectories.imagesDirectory.path,
         'outputDir': outputDir,
         'name': name,
         'tags': _encodeTags(await tagHelper.getTagsById(note.tags)),
@@ -73,6 +74,7 @@ class BackupDelegate with LoggerProvider {
     final String password = data['password']! as String;
     final int buildNumber = data['buildNumber']! as int;
     final String baseDir = data['baseDir']! as String;
+    final String imagesDir = data['imagesDir']! as String;
     final String outputDir = data['outputDir']! as String;
     final String name = data['name']! as String;
     final List<Map<String, dynamic>> rawTags =
@@ -83,7 +85,7 @@ class BackupDelegate with LoggerProvider {
     await _createNoteFolderStructure(
       note: note,
       baseDir: noteDir,
-      tempDir: baseDir,
+      imagesDir: imagesDir,
     );
     final Directory outDir = Directory(outputDir);
     if (!await outDir.exists()) await outDir.create();
@@ -130,6 +132,7 @@ class BackupDelegate with LoggerProvider {
       password: password,
       outDir: outDir,
       baseDir: appDirectories.tempDirectory.path,
+      imagesDir: appDirectories.imagesDirectory.path,
       appVersion: appInfo.packageInfo.buildNumberInt,
       name: name,
       tags: tags,
@@ -149,6 +152,7 @@ class BackupDelegate with LoggerProvider {
     final String password = payload.password;
     final String outDir = payload.outDir;
     final String tempDir = payload.baseDir;
+    final String imagesDir = payload.imagesDir;
     final int appVersion = payload.appVersion;
     final String name = payload.name;
     final List<Tag> tags = payload.tags;
@@ -168,7 +172,7 @@ class BackupDelegate with LoggerProvider {
       await _createNoteFolderStructure(
         note: note,
         baseDir: noteDir,
-        tempDir: tempDir,
+        imagesDir: imagesDir,
       );
       progressPort.send(i + 1);
     }
@@ -199,7 +203,7 @@ class BackupDelegate with LoggerProvider {
   static Future<void> _createNoteFolderStructure({
     required Note note,
     required Directory baseDir,
-    required String tempDir,
+    required String imagesDir,
   }) async {
     await baseDir.create();
     final File noteDataFile = File(p.join(baseDir.path, "note.data"));
@@ -214,10 +218,12 @@ class BackupDelegate with LoggerProvider {
       await imagesDirectory.create();
       for (final SavedImage image in note.images) {
         final String imagePath =
-            p.join(tempDir, "${image.id}${image.fileExtension}");
+            p.join(imagesDir, "${image.id}${image.fileExtension}");
         final String newImagePath =
             p.join(imagesDirectory.path, "${image.id}${image.fileExtension}");
-        await File(imagePath).copy(newImagePath);
+        try {
+          await File(imagePath).copy(newImagePath);
+        } on FileSystemException {}
       }
     }
   }
@@ -420,6 +426,7 @@ class _BackupPayload {
   final String password;
   final String outDir;
   final String baseDir;
+  final String imagesDir;
   final int appVersion;
   final String name;
   final List<Tag> tags;
@@ -431,6 +438,7 @@ class _BackupPayload {
     required this.password,
     required this.outDir,
     required this.baseDir,
+    required this.imagesDir,
     required this.appVersion,
     required this.name,
     required this.tags,
