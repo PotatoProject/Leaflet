@@ -201,7 +201,9 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
       name: name,
     );
 
-    if (backupPath.success && backupPath.path != null) {
+    if (backupPath.success &&
+        backupPath.path != null &&
+        (!UniversalPlatform.isLinux && !UniversalPlatform.isWindows)) {
       await File(backup).copy(backupPath.path!);
     }
 

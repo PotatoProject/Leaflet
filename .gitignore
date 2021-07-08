@@ -83,3 +83,5 @@ lib/generated_plugin_registrant.dart
 config.json
 
 **/*.AppImage*
+
+.fvm

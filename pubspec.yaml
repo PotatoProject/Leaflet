@@ -1,7 +1,7 @@
 name: potato_notes
 description: Official POSP notes app
 publish_to: "none"
-version: 2.0.0-rc1+19
+version: 2.0.0+20
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
