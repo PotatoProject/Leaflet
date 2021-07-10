@@ -31,9 +31,7 @@ class DrawerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: context.theme.brightness == Brightness.dark
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
+      value: context.theme.appBarTheme.systemOverlayStyle!,
       child: Column(
         children: [
           Expanded(

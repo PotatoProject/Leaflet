@@ -154,9 +154,11 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
     if (widget.note.hideContent) icons.add('visible');
 
-    if (widget.note.lockNote) icons.add('locked');
+    if (widget.note.lockNote && prefs.masterPass != "") icons.add('locked');
 
-    if (widget.note.usesBiometrics) icons.add('hasBiometrics');
+    if (widget.note.usesBiometrics && prefs.masterPass != "") {
+      icons.add('hasBiometrics');
+    }
 
     if (widget.note.reminders.isNotEmpty) icons.add('hasReminders');
 

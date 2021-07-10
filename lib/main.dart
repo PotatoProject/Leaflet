@@ -124,11 +124,9 @@ class PotatoNotes extends StatelessWidget {
 
             deviceInfo.updateDeviceInfo(context.mediaQuery, canUseSystemAccent);
 
+            SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             SystemChrome.setSystemUIOverlayStyle(
-              const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-              ),
-            );
+                context.theme.appBarTheme.systemOverlayStyle!);
 
             return WindowFrame(child: child!);
           },

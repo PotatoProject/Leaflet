@@ -349,3 +349,14 @@ extension NoteColorX on NoteColor {
     }
   }
 }
+
+extension BrightnessX on Brightness {
+  Brightness get reverse {
+    switch (this) {
+      case Brightness.light:
+        return Brightness.dark;
+      case Brightness.dark:
+        return Brightness.light;
+    }
+  }
+}

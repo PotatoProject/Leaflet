@@ -234,7 +234,7 @@ class BackupDelegate with LoggerProvider {
       'data': extractionResult.data,
       'tags': _encodeTags(extractionResult.metadata.tags),
       'password': password,
-      'baseDir': appDirectories.tempDirectory.path,
+      'imagesDir': appDirectories.imagesDirectory.path,
     };
 
     try {
@@ -256,7 +256,7 @@ class BackupDelegate with LoggerProvider {
     final List<Tag> tags =
         _decodeTags(Utils.asList<Map<String, dynamic>>(data['tags']));
     final String password = data['password']! as String;
-    final String baseDir = data['baseDir']! as String;
+    final String imagesDir = data['imagesDir']! as String;
 
     late final List<int> decryptedBytes;
     late final List<ArchiveFile> files;
@@ -293,7 +293,7 @@ class BackupDelegate with LoggerProvider {
         } else if (file.name.contains("images/")) {
           final File image = File(
             p.join(
-              baseDir,
+              imagesDir,
               file.name.replaceAll(RegExp(".*images/"), ""),
             ),
           );

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -98,10 +100,19 @@ class Themes {
       appBarTheme: AppBarTheme(
         color: scheme.background.withOpacity(0.7),
         elevation: 0,
+        titleTextStyle: TextStyle(color: scheme.onSurface, fontSize: 20),
         iconTheme: IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
         actionsIconTheme:
             IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
-        brightness: scheme.brightness,
+        backwardsCompatibility: false,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+          statusBarIconBrightness: scheme.brightness.reverse,
+          systemNavigationBarIconBrightness: scheme.brightness.reverse,
+          systemNavigationBarContrastEnforced: true,
+          systemStatusBarContrastEnforced: false,
+        ),
       ),
       dialogTheme: DialogTheme(
         backgroundColor: scheme.surface,

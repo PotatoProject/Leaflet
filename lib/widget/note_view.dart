@@ -224,7 +224,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
             fontWeight: FontWeight.w500,
             color: context.theme.textTheme.caption!.color!.withOpacity(0.7),
           ),
-          maxLines: 1,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
       );
