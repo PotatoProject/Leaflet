@@ -108,6 +108,7 @@ class Themes {
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.transparent,
+          statusBarBrightness: scheme.brightness,
           statusBarIconBrightness: scheme.brightness.reverse,
           systemNavigationBarIconBrightness: scheme.brightness.reverse,
           systemNavigationBarContrastEnforced: true,
