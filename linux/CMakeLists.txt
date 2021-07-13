@@ -116,3 +116,4 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 install(FILES "libs/libsqlcipher.so" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+install(FILES "libs/libwebcrypto.so" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
