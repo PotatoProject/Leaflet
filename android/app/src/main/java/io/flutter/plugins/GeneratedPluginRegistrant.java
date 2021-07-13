@@ -100,5 +100,10 @@ public final class GeneratedPluginRegistrant {
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin url_launcher, io.flutter.plugins.urllauncher.UrlLauncherPlugin", e);
     }
+    try {
+      flutterEngine.getPlugins().add(new com.example.webcrypto.WebcryptoPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin webcrypto, com.example.webcrypto.WebcryptoPlugin", e);
+    }
   }
 }

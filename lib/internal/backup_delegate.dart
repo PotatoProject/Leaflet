@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
-import 'package:cryptography/cryptography.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +16,9 @@ import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
+import 'package:potato_notes/internal/encryption/base.dart';
+import 'package:potato_notes/internal/encryption/boringssl.dart';
+import 'package:potato_notes/internal/encryption/dart.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -105,7 +106,8 @@ class BackupDelegate with LoggerProvider {
     await File(filePath).writeAsBytes(
       _combineMetadata(
         metadata,
-        await _encryptBytes(fileBytes, password),
+        await _figureOutEncryptionUtils(buildNumber)
+            .encryptBytes(fileBytes, password),
       ),
     );
     return filePath;
@@ -194,7 +196,8 @@ class BackupDelegate with LoggerProvider {
     File(backupPath).writeAsBytes(
       _combineMetadata(
         metadata,
-        await _encryptBytes(fileBytes, password),
+        await _figureOutEncryptionUtils(appVersion)
+            .encryptBytes(fileBytes, password),
       ),
     );
     payload.returnPort.send(backupPath);
@@ -235,6 +238,7 @@ class BackupDelegate with LoggerProvider {
       'tags': _encodeTags(extractionResult.metadata.tags),
       'password': password,
       'imagesDir': appDirectories.imagesDirectory.path,
+      'appVersion': extractionResult.metadata.appVersion,
     };
 
     try {
@@ -257,12 +261,14 @@ class BackupDelegate with LoggerProvider {
         _decodeTags(Utils.asList<Map<String, dynamic>>(data['tags']));
     final String password = data['password']! as String;
     final String imagesDir = data['imagesDir']! as String;
+    final int appVersion = data['appVersion']! as int;
 
     late final List<int> decryptedBytes;
     late final List<ArchiveFile> files;
 
     try {
-      decryptedBytes = await _decryptBytes(fileData, password);
+      decryptedBytes = await _figureOutEncryptionUtils(appVersion)
+          .decryptBytes(fileData, password);
     } catch (e) {
       return const RestoreResult.fromStatus(RestoreResultStatus.wrongPassword)
           .toJsonString();
@@ -348,44 +354,6 @@ class BackupDelegate with LoggerProvider {
     }
   }
 
-  static Future<List<int>> _encryptBytes(
-      List<int> origin, String password) async {
-    final keySalt = _generateNonce();
-    final key = await _deriveKey(password, keySalt);
-
-    final aes = AesGcm.with256bits();
-    final ciphertext = await aes.encrypt(origin, secretKey: key);
-
-    return [
-      ...keySalt,
-      ...ciphertext.nonce,
-      ...ciphertext.mac.bytes,
-      ...ciphertext.cipherText,
-    ];
-  }
-
-  static Future<List<int>> _decryptBytes(
-      List<int> origin, String password) async {
-    final keySalt = origin.sublist(0, 16);
-    final aesNonce = origin.sublist(16, 28);
-    final macBytes = origin.sublist(28, 44);
-    final payload = origin.sublist(44);
-
-    final key = await _deriveKey(password, keySalt);
-
-    final aes = AesGcm.with256bits();
-    final plaintext = await aes.decrypt(
-      SecretBox(
-        payload,
-        nonce: aesNonce,
-        mac: Mac(macBytes),
-      ),
-      secretKey: key,
-    );
-
-    return plaintext;
-  }
-
   static List<Map<String, dynamic>> _encodeTags(List<Tag> tags) {
     return tags
         .map((e) => e.toJson(serializer: const _TypeAwareValueSerializer()))
@@ -399,23 +367,12 @@ class BackupDelegate with LoggerProvider {
         .toList();
   }
 
-  static List<int> _generateNonce([int length = 16]) => List.generate(
-        length,
-        (index) => Random.secure().nextInt(255),
-      );
-
-  static Future<SecretKey> _deriveKey(String password, List<int> nonce) async {
-    final kdf = Pbkdf2(
-      bits: 256,
-      iterations: 100000,
-      macAlgorithm: Hmac.sha512(),
-    );
-    final key = await kdf.deriveKey(
-      secretKey: SecretKey(password.codeUnits),
-      nonce: nonce,
-    );
-
-    return key;
+  static EncryptionUtilsBase _figureOutEncryptionUtils(int version) {
+    if (version > 20) {
+      return BoringSSLEncryptionUtils();
+    } else {
+      return DartEncryptionUtils();
+    }
   }
 }
 
