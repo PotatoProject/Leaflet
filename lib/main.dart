@@ -96,7 +96,7 @@ class PotatoNotes extends StatelessWidget {
           locale: context.locale,
           builder: (context, child) {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
-              appInfo.quickActions = QuickActions();
+              appInfo.quickActions = const QuickActions();
 
               appInfo.quickActions!.setShortcutItems([
                 ShortcutItem(

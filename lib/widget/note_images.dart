@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/widget/note_image.dart';
@@ -172,11 +174,11 @@ class _ImageStrip extends StatelessWidget {
             builder: (context, constraints) {
               return ScrollConfiguration(
                 behavior: ScrollConfiguration.of(context).copyWith(
-                    /* dragDevices: {
+                  dragDevices: {
                     PointerDeviceKind.mouse,
                     PointerDeviceKind.touch,
-                  }, */
-                    ),
+                  },
+                ),
                 child: ListView.separated(
                   itemBuilder: (context, index) {
                     final SavedImage _image = images[index];
