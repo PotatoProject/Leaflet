@@ -368,11 +368,8 @@ class BackupDelegate with LoggerProvider {
   }
 
   static EncryptionUtilsBase _figureOutEncryptionUtils(int version) {
-    if (version > 20) {
-      return BoringSSLEncryptionUtils();
-    } else {
-      return DartEncryptionUtils();
-    }
+    // For now use only the dart encryption utils
+    return DartEncryptionUtils();
   }
 }
 
