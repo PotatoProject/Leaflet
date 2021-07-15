@@ -16,6 +16,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
     this.clipBehavior = Clip.none,
     this.maintainState = true,
     this.enableDismiss = true,
+    this.enableGestures = true,
   });
 
   final Widget child;
@@ -24,6 +25,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   final ShapeBorder? shape;
   final Clip? clipBehavior;
   final bool enableDismiss;
+  final bool enableGestures;
 
   @override
   Color get barrierColor => Colors.black54;
@@ -40,6 +42,7 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
+      enableGestures: enableGestures,
       child: child,
     );
   }
@@ -67,6 +70,7 @@ class _BottomSheetBase extends StatefulWidget {
   final double? elevation;
   final ShapeBorder? shape;
   final Clip? clipBehavior;
+  final bool enableGestures;
 
   const _BottomSheetBase({
     required this.child,
@@ -75,6 +79,7 @@ class _BottomSheetBase extends StatefulWidget {
     this.elevation,
     this.shape,
     this.clipBehavior,
+    this.enableGestures = true,
   });
 
   @override
@@ -109,18 +114,18 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
             final bool _useDesktopLayout = deviceInfo.uiSizeFactor > 3;
 
             return GestureDetector(
-              onVerticalDragStart: !_useDesktopLayout
+              onVerticalDragStart: !_useDesktopLayout && widget.enableGestures
                   ? (details) {
                       _curve = Curves.linear;
                     }
                   : null,
-              onVerticalDragUpdate: !_useDesktopLayout
+              onVerticalDragUpdate: !_useDesktopLayout && widget.enableGestures
                   ? (details) {
                       widget.route.controller!.value -=
                           details.primaryDelta! / _childHeight;
                     }
                   : null,
-              onVerticalDragEnd: !_useDesktopLayout
+              onVerticalDragEnd: !_useDesktopLayout && widget.enableGestures
                   ? (details) {
                       _curve = SuspendedCurve(
                         widget.route.animation!.value,

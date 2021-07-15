@@ -6,7 +6,7 @@ part of 'database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this, annotate_overrides, avoid_redundant_argument_values, avoid_unused_constructor_parameters
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Note extends DataClass implements Insertable<Note> {
   final String id;
   final String title;

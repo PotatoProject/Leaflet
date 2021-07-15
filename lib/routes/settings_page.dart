@@ -139,6 +139,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 SettingsTile(
+                  icon: const Icon(MdiIcons.translate),
+                  title: Text(LocaleStrings.settings.infoTranslate),
+                  onTap: () => Utils.launchUrl(
+                    "https://crowdin.potatoproject.co/leaflet",
+                  ),
+                ),
+                SettingsTile(
                   icon: const Icon(Icons.bug_report_outlined),
                   visible: appConfig.bugReportUrl != null,
                   title: Text(LocaleStrings.settings.infoBugReport),

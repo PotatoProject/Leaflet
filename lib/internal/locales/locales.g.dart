@@ -534,6 +534,7 @@ class _$LocaleEnUS extends _$LocaleBase {
     "common.create": "Create",
     "common.close": "Close",
     "common.x_of_y": "{} of {}",
+    "common.quick_tip": "Quick tip",
     "common.new_note": "New note",
     "common.new_list": "New list",
     "common.new_image": "New image",
@@ -635,6 +636,7 @@ class _$LocaleEnUS extends _$LocaleBase {
     "main_page.notes_restored.other": "Restored {} notes",
     "main_page.export.success": "Note successfully exported",
     "main_page.export.failure": "Something went wrong while exporting",
+    "main_page.import_psa": "If you can't find your older notes from PotatoNotes you can restore them by going to\n\n{}\n\nand from there select \"{}\"",
     "note_page.title_hint": "Title",
     "note_page.content_hint": "Content",
     "note_page.list_item_hint": "Input",
@@ -687,6 +689,7 @@ class _$LocaleEnUS extends _$LocaleBase {
     "settings.info.title": "Info",
     "settings.info.about_app": "About Leaflet",
     "settings.info.update_check": "Check for app updates",
+    "settings.info.translate": "Translate the app",
     "settings.info.bug_report": "Report a bug",
     "settings.debug.title": "Debug",
     "settings.debug.show_setup_screen": "Show setup screen on next startup",
@@ -751,7 +754,9 @@ class _$LocaleEnUS extends _$LocaleBase {
     "setup.welcome.catchphrase": "Your new favourite notes app",
     "setup.basic_customization.title": "Basic customization",
     "setup.restore_import.title": "Restore and import",
-    "setup.restore_import.desc": "You can choose to restore notes from either another version of Leaflet or from an older version of PotatoNotes",
+    "setup.restore_import.desc": "You can choose to restore notes from another version of Leaflet or import notes from an older version of PotatoNotes",
+    "setup.restore_import.restore_btn": "Restore from Leaflet",
+    "setup.restore_import.import_btn": "Import from PotatoNotes",
     "setup.finish.title": "All set!",
     "setup.finish.last_words": "You've completed Leaflet setup, now the app should be ready for the first use. If you ever want to change something, head over to the settings. I hope you'll enjoy Leaflet as much as i do!",
     "backup_restore.backup.title": "Create backup",
@@ -787,7 +792,7 @@ class _$LocaleEnUS extends _$LocaleBase {
   };
 
   @override
-  int get translatedStrings => 240;
+  int get translatedStrings => 245;
 }
 
 

@@ -150,6 +150,7 @@ class Utils {
     Clip? clipBehavior,
     Color? barrierColor,
     bool enableDismiss = true,
+    bool enableGestures = true,
   }) async {
     return context.push<T?>(
       BottomSheetRoute(
@@ -159,6 +160,7 @@ class Utils {
         shape: shape,
         clipBehavior: clipBehavior,
         enableDismiss: enableDismiss,
+        enableGestures: enableGestures,
       ),
     );
   }

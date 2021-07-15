@@ -120,6 +120,23 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$_migrationInfoShownValueAtom =
+      Atom(name: '_PreferencesBase._migrationInfoShownValue');
+
+  @override
+  bool get _migrationInfoShownValue {
+    _$_migrationInfoShownValueAtom.reportRead();
+    return super._migrationInfoShownValue;
+  }
+
+  @override
+  set _migrationInfoShownValue(bool value) {
+    _$_migrationInfoShownValueAtom
+        .reportWrite(value, super._migrationInfoShownValue, () {
+      super._migrationInfoShownValue = value;
+    });
+  }
+
   final _$_protectBackupsValueAtom =
       Atom(name: '_PreferencesBase._protectBackupsValue');
 

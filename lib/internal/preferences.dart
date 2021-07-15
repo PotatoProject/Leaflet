@@ -38,6 +38,9 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   bool _welcomePageSeenValue = sharedPrefs.welcomePageSeen;
 
   @observable
+  bool _migrationInfoShownValue = sharedPrefs.migrationInfoShown;
+
+  @observable
   bool _protectBackupsValue = sharedPrefs.protectBackups;
 
   @observable
@@ -83,6 +86,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   bool get useGrid => _useGridValue;
   bool get useCustomAccent => _useCustomAccentValue;
   bool get welcomePageSeen => _welcomePageSeenValue;
+  bool get migrationInfoShown => _migrationInfoShownValue;
   bool get protectBackups => _protectBackupsValue;
   String get apiUrl => _apiUrlValue;
   String? get accessToken => _accessTokenValue;
@@ -132,6 +136,11 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   set welcomePageSeen(bool value) {
     _welcomePageSeenValue = value;
     sharedPrefs.welcomePageSeen = value;
+  }
+
+  set migrationInfoShown(bool value) {
+    _migrationInfoShownValue = value;
+    sharedPrefs.migrationInfoShown = value;
   }
 
   set protectBackups(bool value) {

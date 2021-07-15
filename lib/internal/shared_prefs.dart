@@ -103,6 +103,14 @@ class SharedPrefs {
     setBool("welcome_page_seen_v2", value);
   }
 
+  bool get migrationInfoShown {
+    return prefs.getBool("migration_info_shown") ?? false;
+  }
+
+  set migrationInfoShown(bool value) {
+    setBool("migration_info_shown", value);
+  }
+
   bool get protectBackups {
     return prefs.getBool("protect_backups") ?? false;
   }

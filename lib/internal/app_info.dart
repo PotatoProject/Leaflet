@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -36,6 +37,7 @@ abstract class _AppInfoBase with Store {
   FlutterLocalNotificationsPlugin? notifications;
   QuickActions? quickActions;
   late PackageInfo packageInfo;
+  late final bool migrationAvailable;
 
   @observable
   @protected
@@ -87,6 +89,12 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<void> loadData() async {
+    if (UniversalPlatform.isAndroid) {
+      migrationAvailable = await MigrationTask.isMigrationAvailable(
+          await MigrationTask.v1DatabasePath);
+    } else {
+      migrationAvailable = false;
+    }
     if (AppInfo.supportsNotePinning) {
       _initNotifications();
     }

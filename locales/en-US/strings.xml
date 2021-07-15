@@ -20,6 +20,7 @@
     <string name="common.create">Create</string>
     <string name="common.close">Close</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s of %s</string>
+    <string name="common.quick_tip">Quick tip</string>
     <string name="common.new_note">New note</string>
     <string name="common.new_list">New list</string>
     <string name="common.new_image">New image</string>
@@ -133,6 +134,7 @@
     </plurals>
     <string name="main_page.export.success">Note successfully exported</string>
     <string name="main_page.export.failure">Something went wrong while exporting</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings > Backup and Restore > Import. Second argument is the translated string for the 'Open from previous version database' string.">If you can't find your older notes from PotatoNotes you can restore them by going to\n\n%s\n\nand from there select "%s"</string>
 
     <!-- Note page -->
     <string name="note_page.title_hint">Title</string>
@@ -189,6 +191,7 @@
     <string name="settings.info.title">Info</string>
     <string name="settings.info.about_app">About Leaflet</string>
     <string name="settings.info.update_check">Check for app updates</string>
+    <string name="settings.info.translate">Translate the app</string>
     <string name="settings.info.bug_report">Report a bug</string>
     <string name="settings.debug.title">Debug</string>
     <string name="settings.debug.show_setup_screen">Show setup screen on next startup</string>
@@ -263,7 +266,9 @@
     <string name="setup.welcome.catchphrase">Your new favourite notes app</string>
     <string name="setup.basic_customization.title">Basic customization</string>
     <string name="setup.restore_import.title">Restore and import</string>
-    <string name="setup.restore_import.desc">You can choose to restore notes from either another version of Leaflet or from an older version of PotatoNotes</string>
+    <string name="setup.restore_import.desc">You can choose to restore notes from another version of Leaflet or import notes from an older version of PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Restore from Leaflet</string>
+    <string name="setup.restore_import.import_btn">Import from PotatoNotes</string>
     <string name="setup.finish.title">All set!</string>
     <string name="setup.finish.last_words">You've completed Leaflet setup, now the app should be ready for the first use. If you ever want to change something, head over to the settings. I hope you'll enjoy Leaflet as much as i do!</string>
 

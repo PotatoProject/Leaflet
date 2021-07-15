@@ -13,6 +13,7 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -25,6 +26,7 @@ import 'package:potato_notes/widget/appbar_navigation.dart';
 import 'package:potato_notes/widget/base_page_navigation_bar.dart';
 import 'package:potato_notes/widget/constrained_width_appbar.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
+import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/drawer_list.dart';
 import 'package:potato_notes/widget/drawer_list_tile.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -190,11 +192,40 @@ class BasePageState extends State<BasePage>
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (!prefs.welcomePageSeen) {
-        Utils.showSecondaryRoute(
+        await Utils.showSecondaryRoute(
           context,
           SetupPage(),
           allowGestures: false,
           pushImmediate: true,
+        );
+      }
+      if (!prefs.migrationInfoShown && appInfo.migrationAvailable) {
+        await Utils.showModalBottomSheet(
+          context: context,
+          enableDismiss: false,
+          enableGestures: false,
+          builder: (context) => DialogSheetBase(
+            title: Text(LocaleStrings.common.quickTip),
+            content: Text(
+              LocaleStrings.mainPage.importPsa(
+                [
+                  LocaleStrings.settings.title,
+                  LocaleStrings.settings.backupRestoreTitle,
+                  LocaleStrings.settings.backupRestoreImport,
+                ].join(" > "),
+                LocaleStrings.backupRestore.importOpenPrevious,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  prefs.migrationInfoShown = true;
+                  Navigator.pop(context);
+                },
+                child: Text(LocaleStrings.common.ok),
+              ),
+            ],
+          ),
         );
       }
     });

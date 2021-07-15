@@ -39,6 +39,7 @@ class _$CommonLocaleStrings {
   final String close = "common.close".tr();
   /// First arg is current page, second arg is number of pages, ex. (page) 1 of 8
   String xOfY(Object arg1, Object arg2) => "common.x_of_y".tr(args: [arg1.toString(), arg2.toString()]);
+  final String quickTip = "common.quick_tip".tr();
   final String newNote = "common.new_note".tr();
   final String newList = "common.new_list".tr();
   final String newImage = "common.new_image".tr();
@@ -123,6 +124,8 @@ class _$MainPageLocaleStrings {
   String notesRestored(num value) => "main_page.notes_restored".plural(value);
   final String exportSuccess = "main_page.export.success".tr();
   final String exportFailure = "main_page.export.failure".tr();
+  /// First argument is the path to reach the setting to import notes, in english it will be Settings > Backup and Restore > Import. Second argument is the translated string for the 'Open from previous version database' string.
+  String importPsa(Object arg1, Object arg2) => "main_page.import_psa".tr(args: [arg1.toString(), arg2.toString()]);
 }
 
 class _$NotePageLocaleStrings {
@@ -182,6 +185,7 @@ class _$SettingsLocaleStrings {
   final String infoTitle = "settings.info.title".tr();
   final String infoAboutApp = "settings.info.about_app".tr();
   final String infoUpdateCheck = "settings.info.update_check".tr();
+  final String infoTranslate = "settings.info.translate".tr();
   final String infoBugReport = "settings.info.bug_report".tr();
   final String debugTitle = "settings.debug.title".tr();
   final String debugShowSetupScreen = "settings.debug.show_setup_screen".tr();
@@ -254,6 +258,8 @@ class _$SetupLocaleStrings {
   final String basicCustomizationTitle = "setup.basic_customization.title".tr();
   final String restoreImportTitle = "setup.restore_import.title".tr();
   final String restoreImportDesc = "setup.restore_import.desc".tr();
+  final String restoreImportRestoreBtn = "setup.restore_import.restore_btn".tr();
+  final String restoreImportImportBtn = "setup.restore_import.import_btn".tr();
   final String finishTitle = "setup.finish.title".tr();
   final String finishLastWords = "setup.finish.last_words".tr();
 }
