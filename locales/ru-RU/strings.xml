@@ -21,6 +21,7 @@
     <string name="common.create">Создать</string>
     <string name="common.close">Закрыть</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s из %s</string>
+    <string name="common.quick_tip">Подсказка</string>
     <string name="common.new_note">Новая заметка</string>
     <string name="common.new_list">Новый список</string>
     <string name="common.new_image">Новое изображение</string>
@@ -123,6 +124,7 @@
     </plurals>
     <string name="main_page.export.success">Заметка успешно экспортирована</string>
     <string name="main_page.export.failure">Что-то пошло не так при экспорте</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Если вы не можете найти ваши старые заметки из PotatoNotes вы можете восстановить их, зайдя в\n\n%s\n\nи выбрав там \"%s\"</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Заголовок</string>
     <string name="note_page.content_hint">Содержимое</string>
@@ -177,6 +179,7 @@
     <string name="settings.info.title">Информация</string>
     <string name="settings.info.about_app">О Leaflet</string>
     <string name="settings.info.update_check">Проверить наличие обновлений</string>
+    <string name="settings.info.translate">Перевести приложение</string>
     <string name="settings.info.bug_report">Сообщить об ошибке</string>
     <string name="settings.debug.title">Отладка</string>
     <string name="settings.debug.show_setup_screen">Показать экран настройки при следующем запуске</string>
@@ -245,7 +248,9 @@
     <string name="setup.welcome.catchphrase">Ваше новое любимое приложение для заметок</string>
     <string name="setup.basic_customization.title">Основные настройки</string>
     <string name="setup.restore_import.title">Восстановление и импорт</string>
-    <string name="setup.restore_import.desc">Вы можете выбрать восстановление заметок или из другой версии Leaflet, или из более старой версии PotatoNotes</string>
+    <string name="setup.restore_import.desc">Вы можете выбрать восстановление заметок из другой версии Leaflet или импортировать заметки из более старой версии PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Восстановить из Leaflet</string>
+    <string name="setup.restore_import.import_btn">Импортировать из PotatoNotes</string>
     <string name="setup.finish.title">Всё готово!</string>
     <string name="setup.finish.last_words">Вы завершили настройку Leaflet, теперь приложение должно быть готово для первого использования. Если вы захотите что-то изменить, переходите в настройки. Надеюсь Leaflet вам понравится так же как и мне!</string>
     <!-- Backup and restore-->

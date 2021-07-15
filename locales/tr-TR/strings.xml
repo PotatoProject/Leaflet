@@ -21,6 +21,7 @@
     <string name="common.create">Oluştur</string>
     <string name="common.close">Kapat</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s / %s</string>
+    <string name="common.quick_tip">Hızlı ipucu</string>
     <string name="common.new_note">Yeni not</string>
     <string name="common.new_list">Yeni liste</string>
     <string name="common.new_image">Yeni görüntü</string>
@@ -113,6 +114,7 @@
     </plurals>
     <string name="main_page.export.success">Not başarıyla dışa aktarıldı</string>
     <string name="main_page.export.failure">Dışa aktarırken bir şeyler yanlış gitti</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">PotatoNotes\'taki eski notlarınızı bulamıyorsanız, onları \n\n%s\n\n\'a gidip \"%s\"ı seçerek geri yükleyebilirsiniz</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Başlık</string>
     <string name="note_page.content_hint">İçerik</string>
@@ -167,6 +169,7 @@
     <string name="settings.info.title">Bilgi</string>
     <string name="settings.info.about_app">Leaflet hakkında</string>
     <string name="settings.info.update_check">Uygulama güncellemelerini kontrol et</string>
+    <string name="settings.info.translate">Uygulamayı Çevir</string>
     <string name="settings.info.bug_report">Hata bildir</string>
     <string name="settings.debug.title">Hata ayıklama</string>
     <string name="settings.debug.show_setup_screen">Bir sonraki açılışta kurulum ekranını göster</string>
@@ -234,6 +237,8 @@
     <string name="setup.basic_customization.title">Temel kişiselleştirme</string>
     <string name="setup.restore_import.title">Geri yükle ve içeri aktar</string>
     <string name="setup.restore_import.desc">Leaflet\'in herhangi bir sürümünden ya da PotatoNotes\'ın eski bir sürümünden notlarını geri yüklemeyi seçebilirsin</string>
+    <string name="setup.restore_import.restore_btn">Leaflet\'ten geri yükle</string>
+    <string name="setup.restore_import.import_btn">PotatoNotes\'tan içeri aktar</string>
     <string name="setup.finish.title">Her şey hazır!</string>
     <string name="setup.finish.last_words">Leaflet kurulumunu tamamladın, uygulama ilk kullanım için hazır durumda olmalı. Eğer bir şeyi değiştirmek istersen, ayarlara git. Umarım siz de Leaflet\'ten benim kadar keyif alırsınız!</string>
     <!-- Backup and restore-->

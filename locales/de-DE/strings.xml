@@ -21,6 +21,7 @@
     <string name="common.create">Neu</string>
     <string name="common.close">Schließen</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s von %s</string>
+    <string name="common.quick_tip">Tipp</string>
     <string name="common.new_note">Neue Notiz</string>
     <string name="common.new_list">Neue Liste</string>
     <string name="common.new_image">Neues Bild</string>
@@ -113,6 +114,7 @@
     </plurals>
     <string name="main_page.export.success">Notiz erfolgreich exportiert</string>
     <string name="main_page.export.failure">Beim Exportieren ist etwas schief gelaufen</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Wenn du deine älteren Notizen aus PotatoNotes nicht findest, kannst du sie wiederherstellen, indem du zu\n\n%s\n\ngehst und dort \"%s \" auswählst</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titel</string>
     <string name="note_page.content_hint">Inhalt</string>
@@ -152,7 +154,7 @@
     <string name="settings.privacy.modify_master_pass">Master-Pass ändern</string>
     <string name="settings.backup_restore.title">Sichern und Wiederherstellen</string>
     <string name="settings.backup_restore.backup">Sichern</string>
-    <string name="settings.backup_restore.backup_desc">Erstellen Sie eine lokale Kopie Ihrer Notizen</string>
+    <string name="settings.backup_restore.backup_desc">Erstelle eine lokale Kopie deiner Notizen</string>
     <string name="settings.backup_restore.backup.nothing_to_restore.title">Keine Notizen zum Wiederherstellen!</string>
     <string name="settings.backup_restore.backup.nothing_to_restore.desc">Keine gespeicherten Notizen zum Sichern vorhanden</string>
     <string name="settings.backup_restore.restore">Wiederherstellen</string>
@@ -167,6 +169,7 @@
     <string name="settings.info.title">Info</string>
     <string name="settings.info.about_app">Über PotatoNotes</string>
     <string name="settings.info.update_check">Auf App-Updates prüfen</string>
+    <string name="settings.info.translate">Übersetze die App</string>
     <string name="settings.info.bug_report">Bug melden</string>
     <string name="settings.debug.title">Fehlerbeseitigung</string>
     <string name="settings.debug.show_setup_screen">Erststartmenü bei nächstem Start</string>
@@ -233,7 +236,9 @@
     <string name="setup.welcome.catchphrase">Ihre neue Lieblings-Notiz-App</string>
     <string name="setup.basic_customization.title">Grundlegende Anpassungen</string>
     <string name="setup.restore_import.title">Wiederherstellen und importieren</string>
-    <string name="setup.restore_import.desc">Sie können die Notizen entweder aus einer anderen Version von Leaflet oder aus einer älteren Version von PotatoNotes wiederherstellen</string>
+    <string name="setup.restore_import.desc">Du kannst entweder Notizen von einer anderen Leaflet Version wiederherstellen oder Notizen von einer älteren PotatoNotes Version importieren</string>
+    <string name="setup.restore_import.restore_btn">Von Leaflet wiederherstellen</string>
+    <string name="setup.restore_import.import_btn">Von PotatoNotes importieren</string>
     <string name="setup.finish.title">Alles erledigt!</string>
     <string name="setup.finish.last_words">Sie haben die Leaflet Einrichtung abgeschlossen, jetzt sollte die App für die erste Verwendung bereit sein. Wenn du jemals etwas ändern möchtest, gehe zu den Einstellungen. Ich hoffe, du wirst Leaflet genauso gerne nutzen wie ich!</string>
     <!-- Backup and restore-->

@@ -139,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 SettingsTile(
-                  icon: const Icon(MdiIcons.translate),
+                  icon: const Icon(Icons.translate),
                   title: Text(LocaleStrings.settings.infoTranslate),
                   onTap: () => Utils.launchUrl(
                     "https://crowdin.potatoproject.co/leaflet",
@@ -354,7 +354,7 @@ class _SettingsPageState extends State<SettingsPage> {
               activeColor: context.theme.colorScheme.secondary,
             ),
             SettingsTile(
-              icon: const Icon(Icons.translate),
+              icon: const Icon(Icons.language),
               title: Text(LocaleStrings.settings.personalizationLocale),
               onTap: () {
                 showDropdownSheet(

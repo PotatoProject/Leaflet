@@ -43,12 +43,10 @@ class BackupRestorePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 40,
         margin: EdgeInsets.only(bottom: context.padding.bottom),
         color: context.theme.appBarTheme.color,
-        child: ButtonBar(
-          layoutBehavior: ButtonBarLayoutBehavior.constrained,
-          alignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextButton.icon(
               onPressed: () async {
@@ -58,10 +56,11 @@ class BackupRestorePage extends StatelessWidget {
                 );
               },
               label: Text(
-                LocaleStrings.settings.backupRestoreRestore.toUpperCase(),
+                LocaleStrings.setup.restoreImportRestoreBtn.toUpperCase(),
               ),
               icon: const Icon(Icons.restart_alt_rounded),
             ),
+            const SizedBox(height: 16),
             TextButton.icon(
               onPressed: () async {
                 await Utils.showModalBottomSheet(
@@ -70,7 +69,7 @@ class BackupRestorePage extends StatelessWidget {
                 );
               },
               label: Text(
-                LocaleStrings.settings.backupRestoreImport.toUpperCase(),
+                LocaleStrings.setup.restoreImportImportBtn.toUpperCase(),
               ),
               icon: const Icon(Icons.file_present_outlined),
             ),

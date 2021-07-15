@@ -210,21 +210,11 @@ class ImportNotesPage extends StatefulWidget {
 }
 
 class _ImportNotesPageState extends State<ImportNotesPage> {
-  bool canUseOldDbFile = false;
   List<Note>? notes;
 
   @override
   void initState() {
     super.initState();
-    _checkIfCanMigrateFromOldDbFile();
-  }
-
-  Future<void> _checkIfCanMigrateFromOldDbFile() async {
-    final String file = await MigrationTask.v1DatabasePath;
-
-    canUseOldDbFile =
-        !DeviceInfo.isDesktop && await MigrationTask.isMigrationAvailable(file);
-    setState(() {});
   }
 
   @override
@@ -259,14 +249,14 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
           ListTile(
             leading: const Icon(MdiIcons.databaseOutline),
             title: Text(LocaleStrings.backupRestore.importOpenPrevious),
-            enabled: canUseOldDbFile,
+            enabled: appInfo.migrationAvailable,
             onTap: () async {
               final String file = await MigrationTask.v1DatabasePath;
               notes = await MigrationTask.migrate(file);
 
               setState(() {});
             },
-            subtitle: !canUseOldDbFile
+            subtitle: !appInfo.migrationAvailable
                 ? Text(
                     _getErrorText(),
                     style: const TextStyle(color: Colors.red),
@@ -322,7 +312,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
       return LocaleStrings.backupRestore.importOpenPreviousUnsupportedPlatform;
     }
 
-    if (canUseOldDbFile) {
+    if (appInfo.migrationAvailable) {
       return LocaleStrings.backupRestore.importOpenPreviousNoFile;
     }
 

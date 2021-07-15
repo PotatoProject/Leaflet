@@ -21,6 +21,7 @@
     <string name="common.create">Utwórz</string>
     <string name="common.close">Zamknij</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s z %s</string>
+    <string name="common.quick_tip">Szybka porada</string>
     <string name="common.new_note">Nowa notatka</string>
     <string name="common.new_list">Nowa lista</string>
     <string name="common.new_image">Nowy obraz</string>
@@ -123,6 +124,7 @@
     </plurals>
     <string name="main_page.export.success">Notatka pomyślnie wyeksportowana</string>
     <string name="main_page.export.failure">Coś poszło nie tak podczas eksportu</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Jeśli nie możesz znaleźć swoich starszych notatek z PotatoNotes możesz je przywrócić, przechodząc do\n\n%s\n\n, a następnie wybierając \"%s\"</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Tytuł</string>
     <string name="note_page.content_hint">Zawartość</string>
@@ -177,6 +179,7 @@
     <string name="settings.info.title">Informacje</string>
     <string name="settings.info.about_app">O PotatoNotes</string>
     <string name="settings.info.update_check">Sprawdź dostępność aktualizacji aplikacji</string>
+    <string name="settings.info.translate">Przetłumacz aplikację</string>
     <string name="settings.info.bug_report">Zgłoś błąd</string>
     <string name="settings.debug.title">Debugowanie</string>
     <string name="settings.debug.show_setup_screen">Pokaż ekran wstępnej konfiguracji przy następnym uruchomieniu</string>
@@ -246,6 +249,8 @@
     <string name="setup.basic_customization.title">Podstawowe dostosowywanie</string>
     <string name="setup.restore_import.title">Przywróć i importuj</string>
     <string name="setup.restore_import.desc">Możesz przywrócić notatki z innej wersji Leaflet lub ze starszej wersji PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Przywróć kopię zapasową Leaflet</string>
+    <string name="setup.restore_import.import_btn">Przywróć kopię zapasową PotatoNotes</string>
     <string name="setup.finish.title">Wszystko gotowe!</string>
     <string name="setup.finish.last_words">Ukończyłeś konfigurację Leaflet, teraz aplikacja powinna być gotowa do pierwszego użycia. Jeśli kiedykolwiek chcesz coś zmienić, przejdź do ustawień. Mam nadzieję, że będziesz zadowolony z Leaflet tak bardzo, jak ja!</string>
     <!-- Backup and restore-->

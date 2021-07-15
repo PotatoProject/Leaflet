@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">Ακύρωση</string>
+    <string name="common.reset">Επαναφορά</string>
+    <string name="common.restore">Αποκατάσταση</string>
+    <string name="common.confirm">Επιβεβαίωση</string>
+    <string name="common.save">Αποθήκευση</string>
+    <string name="common.delete">Διαγραφή</string>
+    <string name="common.undo">Αναίρεση</string>
+    <string name="common.redo">Επανάληψη</string>
+    <string name="common.edit">Επεξεργασία</string>
+    <string name="common.go_on">Μετάβαση στο</string>
+    <string name="common.exit">Έξοδος</string>
+    <string name="common.ok">Εντάξει</string>
+    <string name="common.share">Κοινή χρήση</string>
+    <string name="common.not_now">Όχι τώρα</string>
+    <string name="common.update">Ενημέρωση</string>
+    <string name="common.expand">Επέκταση</string>
+    <string name="common.collapse">Σύμπτυξη</string>
+    <string name="common.create">Δημιουργία</string>
+    <string name="common.close">Κλείσιμο</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s από %s</string>
+    <string name="common.quick_tip">Γρήγορη συμβουλή</string>
+    <string name="common.new_note">Νέα σημείωση</string>
+    <string name="common.new_list">Νέα λίστα</string>
+    <string name="common.new_image">Νέα εικόνα</string>
+    <string name="common.new_drawing">Νέο σχέδιο</string>
+    <string name="common.import_note">Εισαγωγή σημείωσης</string>
+    <string name="common.biometrics_prompt">Επιβεβαίωση βιομετρικών στοιχείων</string>
+    <string name="common.master_pass.modify">Τροποποίηση κύριου κωδικού πρόσβασης</string>
+    <string name="common.master_pass.confirm">Επιβεβαίωση κύριου κωδικού πρόσβασης</string>
+    <string name="common.master_pass.incorrect">Εσφαλμένος κύριος κωδικός πρόσβασης</string>
+    <string name="common.backup_password.title">Εισαγωγή εφεδρικού κωδικού πρόσβασης</string>
+    <string name="common.backup_password.use_master_pass">Χρήση κύριου κωδικού πρόσβασης ως συνθηματικό</string>
+    <string name="common.restore_dialog.title">Επιβεβαίωση επαναφοράς σημείωσης</string>
+    <string name="common.restore_dialog.backup_name">Όνομα αντιγράφου ασφαλείας: %s</string>
+    <string name="common.restore_dialog.creation_date">Ημερομηνία δημιουργίας: %s</string>
+    <string name="common.restore_dialog.app_version">Έκδοση εφαρμογής: %s</string>
+    <string name="common.restore_dialog.note_count">Αριθμός σημειώσεων: %s</string>
+    <string name="common.restore_dialog.tag_count">Αριθμός σημειώσεων: %s</string>
+    <string name="common.are_you_sure">Είστε σίγουροι;</string>
+    <string name="common.color.none">Κανένα</string>
+    <string name="common.color.red">Κόκκινο</string>
+    <string name="common.color.orange">Πορτοκαλί</string>
+    <string name="common.color.yellow">Κίτρινο</string>
+    <string name="common.color.green">Πράσινο</string>
+    <string name="common.color.cyan">Κυανό</string>
+    <string name="common.color.light_blue">Ανοιχτό μπλε</string>
+    <string name="common.color.blue">Μπλε</string>
+    <string name="common.color.purple">Μωβ</string>
+    <string name="common.color.pink">Ροζ</string>
+    <string name="common.notification.default_title">Καρφιτσωμένη ειδοποίηση</string>
+    <string name="common.notification.details_title">Καρφιτσωμένες ειδοποιήσεις</string>
+    <string name="common.notification.details_desc">Καρφιτσωμένες ειδοποιήσεις χρηστών</string>
+    <string name="common.tag.new">Νέα ετικέτα</string>
+    <string name="common.tag.modify">Τροποποίηση ετικέτας</string>
+    <string name="common.tag.textbox_hint">Όνομα</string>
+    <!-- Main page -->
+    <string name="main_page.write_note">Γράψτε μια σημείωση</string>
+    <string name="main_page.settings">Ρυθμίσεις</string>
+    <string name="main_page.search">Αναζήτηση</string>
+    <string name="main_page.account">Λογαριασμός</string>
+    <string name="main_page.restore_prompt.archive">Θέλετε να επαναφέρετε κάθε σημείωση από το αρχείο;</string>
+    <string name="main_page.restore_prompt.trash">Θέλετε να επαναφέρετε κάθε σημείωση από τον κάδο απορριμάτων;</string>
+    <string name="main_page.tag_delete_prompt">Αυτή η ετικέτα θα χαθεί για πάντα εάν την διαγράψετε</string>
+    <string name="main_page.deleted_empty_note">Διαγράφηκε κενή σημείωση</string>
+    <string name="main_page.empty_state.home">Δεν έχουν προστεθεί ακόμα σημειώσεις</string>
+    <string name="main_page.empty_state.archive">Το αρχείο είναι άδειο</string>
+    <string name="main_page.empty_state.trash">Ο κάδος απορριμάτων είναι άδειος</string>
+    <string name="main_page.empty_state.favourites">Δεν υπάρχουν αγαπημένα προς το παρόν</string>
+    <string name="main_page.empty_state.tag">Δεν υπάρχουν σημειώσεις με αυτήν την ετικέτα</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="one">%s ακόμη αντικείμενα</item>
+        <item quantity="other">%s ακόμη αντικείμενα</item>
+    </plurals>
+    <string name="main_page.title.notes">Σημειώσεις</string>
+    <string name="main_page.title.archive">Αρχείο</string>
+    <string name="main_page.title.trash">Κάδος</string>
+    <string name="main_page.title.favourites">Αγαπημένα</string>
+    <string name="main_page.title.tag">Ετικέτα</string>
+    <string name="main_page.title.all">Όλες</string>
+    <string name="main_page.selection_bar.close">Κλείσιμο</string>
+    <string name="main_page.selection_bar.select">Επιλογή</string>
+    <string name="main_page.selection_bar.select_all">Επιλογή όλων</string>
+    <string name="main_page.selection_bar.add_favourites">Προσθήκη στα αγαπημένα</string>
+    <string name="main_page.selection_bar.remove_favourites">Αφαίρεση από τα αγαπημένα</string>
+    <string name="main_page.selection_bar.change_color">Αλλαγή χρώματος</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">Αρχείο</string>
+    <string name="main_page.selection_bar.delete">Μετακίνηση στον κάδο απορριμμάτων</string>
+    <string name="main_page.selection_bar.perma_delete">Διαγραφή</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Καρφίτσωμα</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Ξεκαρφίτσωμα</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Τοπική αποθήκευση</string>
+    <string name="main_page.selection_bar.save.note_locked">Η σημείωση είναι κλειδωμένη, απαιτείται ο κύριος κωδικός πρόσβασης</string>
+    <string name="main_page.selection_bar.save.success">Η σημείωση εξήχθη επιτυχώς</string>
+    <string name="main_page.selection_bar.save.oopsie">Κάτι πήγε στραβά κατά την εξαγωγή ή η διαδικασία διακόπηκε</string>
+    <string name="main_page.selection_bar.share">Κοινή χρήση</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="one">%s σημείωση μετακινήθηκε στον κάδο απορριμμάτων</item>
+        <item quantity="other">%s σημειώσεις μετακινήθηκαν στον κάδο απορριμμάτων</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="one">%s σημείωσεις διαγράφηκε</item>
+        <item quantity="other">%s σημειώσεις διαγράφηκαν</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="one">Αρχειοθετήθηκε %s σημείωσεις</item>
+        <item quantity="other">Αρχειοθετήθηκαν %s σημειώσεις</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="one">Επαναφέρθηκαν %s σημείωσεις</item>
+        <item quantity="other">Επαναφέρθηκαν %s σημειώσεις</item>
+    </plurals>
+    <string name="main_page.export.success">Η σημείωση εξήχθη επιτυχώς</string>
+    <string name="main_page.export.failure">Κάτι πήγε στραβά κατά την εξαγωγή</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Αν δεν μπορείτε να βρείτε τις παλαιότερες σημειώσεις σας από το PotatoNotes, μπορείτε να τις επαναφέρετε πηγαίνοντας στο\n\n%s\n\nκαι από εκεί επιλέξτε \"%s\"</string>
+    <!-- Note page -->
+    <string name="note_page.title_hint">Τίτλος</string>
+    <string name="note_page.content_hint">Περιεχόμενο</string>
+    <string name="note_page.list_item_hint">Εισαγωγή</string>
+    <string name="note_page.add_entry_hint">Προσθήκη καταχώρησης</string>
+    <string name="note_page.toolbar.tags">Διαχείριση ετικετών</string>
+    <string name="note_page.toolbar.color">Αλλαγή χρώματος</string>
+    <string name="note_page.toolbar.add_item">Προσθήκη στοιχείου</string>
+    <string name="note_page.privacy.title">Επιλογές απορρήτου</string>
+    <string name="note_page.privacy.hide_content">Απόκρυψη περιεχομένου στην κύρια σελίδα</string>
+    <string name="note_page.privacy.lock_note">Κλείδωμα σημείωσης</string>
+    <string name="note_page.privacy.lock_note.missing_pass">Πρέπει να ορίσετε ένα κύριο κωδικό πρόσβασης από τις ρυθμίσεις</string>
+    <string name="note_page.privacy.use_biometrics">Χρήση βιομετρικών στοιχείων για ξεκλείδωμα</string>
+    <string name="note_page.toggle_list">Εμφάνιση λίστας</string>
+    <string name="note_page.image_gallery">Εικόνα από τη συλλογή</string>
+    <string name="note_page.image_camera">Λήψη φωτογραφίας</string>
+    <string name="note_page.drawing">Προσθήκη σχεδίου</string>
+    <string name="note_page.added_favourites">Η σημείωση προστέθηκε στα αγαπημένα</string>
+    <string name="note_page.removed_favourites">Η σημείωση αφαιρέθηκε από τα αγαπημένα</string>
+    <!-- Settings page -->
+    <string name="settings.title">Ρυθμίσεις</string>
+    <string name="settings.personalization.title">Εξατομίκευση</string>
+    <string name="settings.personalization.theme_mode">Λειτουργία θέματος</string>
+    <string name="settings.personalization.theme_mode.system">Σύστημα</string>
+    <string name="settings.personalization.theme_mode.light">Φωτεινό</string>
+    <string name="settings.personalization.theme_mode.dark">Σκοτεινό</string>
+    <string name="settings.personalization.use_amoled">Χρήση μαύρου θέματος</string>
+    <string name="settings.personalization.use_custom_accent">Ακολουθήστε την απόχρωση του συστήματος</string>
+    <string name="settings.personalization.custom_accent">Επιλέξτε μια προσαρμοσμένη απόχρωση</string>
+    <string name="settings.personalization.use_grid">Προβολή πλέγματος για σημειώσεις</string>
+    <string name="settings.personalization.locale">Γλώσσα εφαρμογής</string>
+    <string name="settings.personalization.locale.device_default">Προεπιλογή συσκευής</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% μεταφρασμένο</string>
+    <string name="settings.privacy.title">Απόρρητο</string>
+    <string name="settings.privacy.use_master_pass">Χρήση κύριου κωδικού πρόσβασης</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">Προειδοποίηση: Εαν ξεχάσετε ποτέ τον κύριο κωδικό πρόσβασης, δεν θα μπορεσετε να τον επαναφέρετε, θα χρειαστεί να απεγκαταστήσετε την εφαρμογή και κατα συνέπεια να καταργήσετε όλες τις σημειώσεις σας και να την επανεγκαταστήσετε. Παρακαλώ σημειώστε τον κάπου</string>
+    <string name="settings.privacy.modify_master_pass">Τροποποίηση κύριου κωδικού πρόσβασης</string>
+    <string name="settings.backup_restore.title">Αντίγραφα ασφαλείας και επαναφορά</string>
+    <string name="settings.backup_restore.backup">Αντίγραφα Ασφαλείας</string>
+    <string name="settings.backup_restore.backup_desc">Δημιουργία τοπικού αντιγράφου των σημειώσεων σας</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">Δεν υπάρχουν σημειώσεις για επαναφορά!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">Δεν υπάρχουν αποθηκευμένες σημειώσεις για δημιουργία αντιγράφου ασφαλείας</string>
+    <string name="settings.backup_restore.restore">Αποκατάσταση</string>
+    <string name="settings.backup_restore.restore_desc">Επαναφορά ενός αντιγράφου ασφαλείας που δημιουργήθηκε από μια έκδοση του Leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">Η σημείωση αποκαταστάθηκε με επιτυχία</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">Το επιλεγμένο αρχείο δεν είναι έγκυρο αντίγραφο ασφαλείας του Leaflet</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">Ο κωδικός πρόσβασης που εισάγατε δεν μπόρεσε να αποκρυπτογραφήσει το αντίγραφο ασφαλείας</string>
+    <string name="settings.backup_restore.restore.status.already_exists">Η σημείωση του αντιγράφου ασφαλείας είναι ήδη παρούσα στη βάση δεδομένων</string>
+    <string name="settings.backup_restore.restore.status.unknown">Υπήρξε ένα πρόβλημα κατά την εισαγωγή της σημείωσης</string>
+    <string name="settings.backup_restore.import">Εισαγωγή</string>
+    <string name="settings.backup_restore.import_desc">Εισαγωγή σημειώσεων από μια έκδοση του PotatoNotes</string>
+    <string name="settings.info.title">Πληροφορίες</string>
+    <string name="settings.info.about_app">Σχετικά με το Leaflet</string>
+    <string name="settings.info.update_check">Έλεγχος για ενημερώσεις</string>
+    <string name="settings.info.translate">Μεταφράστε την εφαρμογή</string>
+    <string name="settings.info.bug_report">Αναφορά σφάλματος</string>
+    <string name="settings.debug.title">Αποσφαλμάτωση</string>
+    <string name="settings.debug.show_setup_screen">Εμφάνιση οθόνης ρύθμισης στην επόμενη εκκίνηση της εφαρμογης</string>
+    <string name="settings.debug.loading_overlay">Έλεγχος επικάλυψης φόρτωσης</string>
+    <string name="settings.debug.clear_database">Εκκαθάριση βάσης δεδομένων</string>
+    <string name="settings.debug.migrate_database">Μεταφορά βάσης δεδομένων</string>
+    <string name="settings.debug.generate_trash">Δημιουργία σκουπιδιών</string>
+    <string name="settings.debug.log_level">Επίπεδο καταγραφής</string>
+    <!-- About page -->
+    <string name="about.title">Πληροφορίες</string>
+    <string name="about.pwa_version">Έκδοση PWA</string>
+    <string name="about.links">Σύνδεσμοι</string>
+    <string name="about.contributors">Συνεισφορές</string>
+    <string name="about.contributors.hrx">Επικεφαλής προγραμματιστής και σχεδιαστής της εφαρμογής</string>
+    <string name="about.contributors.bas">API συγχρονισμού και εφαρμογή</string>
+    <string name="about.contributors.nico">API συγχρονισμού</string>
+    <string name="about.contributors.kat">Παλιό API συγχρονισμού</string>
+    <string name="about.contributors.rohit">Εικονογράφηση εφαρμογής και χρώματα σημειώσεων</string>
+    <string name="about.contributors.rshbfn">Εικονίδιο εφαρμογής και κύρια απόχρωση</string>
+    <string name="about.contributors.elias">Επωνυμία της εφαρμογής</string>
+    <string name="about.contributors.akshit">Ασφάλεια και υποστήριξη</string>
+    <!-- Search page-->
+    <string name="search.textbox_hint">Αναζήτηση</string>
+    <string name="search.tag_create_empty_hint">Δημιουργία νέας ετικέτας</string>
+    <string name="search.tag_create_hint">Δημιουργία ετικέτας \"%s\"</string>
+    <string name="search.type_to_search">Πληκτρολογήστε για αναζήτηση</string>
+    <string name="search.nothing_found">Δεν βρέθηκε τίποτα...</string>
+    <string name="search.note.filters.case_sensitive">Διάκριση πεζών και κεφαλαίων</string>
+    <string name="search.note.filters.favourites">Μόνο τα αγαπημένα</string>
+    <string name="search.note.filters.locations">Τοποθεσίες σημειώσεων</string>
+    <string name="search.note.filters.locations.normal">Κανονική</string>
+    <string name="search.note.filters.locations.archive">Αρχείο</string>
+    <string name="search.note.filters.locations.trash">Κάδος</string>
+    <string name="search.note.filters.locations.normal_title">Κανονικές σημειώσεις</string>
+    <string name="search.note.filters.locations.archive_title">Αρχειοθετημένες σημειώσεις</string>
+    <string name="search.note.filters.locations.trash_title">Διεγραμμένες σημειώσεις</string>
+    <string name="search.note.filters.color">Φίλτρο χρώματος</string>
+    <string name="search.note.filters.date">Φίλτρο ημερομηνίας</string>
+    <string name="search.note.filters.date.mode_title">Λειτουργία φίλτρου</string>
+    <string name="search.note.filters.date.mode_after">Μετά την ημερομηνία</string>
+    <string name="search.note.filters.date.mode_exact">Ίδια ημερομηνία</string>
+    <string name="search.note.filters.date.mode_before">Πριν την ημερομηνία</string>
+    <string name="search.note.filters.tags">Ετικέτες</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="one">%s επιλέχθηκαν</item>
+        <item quantity="other">%s επιλέχθηκαν</item>
+    </plurals>
+    <string name="search.note.filters.clear">Εκκαθάριση φίλτρων</string>
+    <!-- Draw page -->
+    <string name="drawing.color_black">Μαύρο</string>
+    <string name="drawing.exit_prompt">Οποιαδήποτε μη αποθηκευμένη αλλαγή θα χαθεί. Θέλετε να εξέλθετε;</string>
+    <string name="drawing.clear_canvas_warning">Αυτή η λειτουργία δεν μπορεί να αναιρεθεί. Συνέχεια;</string>
+    <string name="drawing.tools.brush">Πινέλο</string>
+    <string name="drawing.tools.eraser">Γόμα</string>
+    <string name="drawing.tools.marker">Μαρκαδόρος</string>
+    <string name="drawing.tools.color_picker">Χρώμα</string>
+    <string name="drawing.tools.radius_picker">Ακτίνα</string>
+    <string name="drawing.tools.clear">Εκκαθάριση καμβά</string>
+    <!-- Setup page -->
+    <string name="setup.button.get_started">Ας ξεκινήσουμε</string>
+    <string name="setup.button.finish">Ολοκλήρωση</string>
+    <string name="setup.button.next">Επόμενο</string>
+    <string name="setup.button.back">Επιστροφή</string>
+    <string name="setup.welcome.catchphrase">Η καινούρια σας αγαπημένη εφαρμογή για σημειώσεις</string>
+    <string name="setup.basic_customization.title">Βασικές προσαρμογές</string>
+    <string name="setup.restore_import.title">Επαναφορά και εισαγωγή</string>
+    <string name="setup.restore_import.desc">Μπορείτε να επιλέξετε να επαναφέρετε σημειώσεις από άλλη έκδοση του Leaflet ή να εισάγετε σημειώσεις από μια παλαιότερη έκδοση του PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Επαναφορά από το Leaflet</string>
+    <string name="setup.restore_import.import_btn">Εισαγωγή από PotatoNotes</string>
+    <string name="setup.finish.title">Όλα είναι έτοιμα!</string>
+    <string name="setup.finish.last_words">Έχετε ολοκληρώσει τη ρύθμιση του Leaflet, τώρα η εφαρμογή είναι έτοιμη για την πρώτη χρήση. Αν ποτέ θέλετε να αλλάξετε κάτι, πηγαίνετε στις ρυθμίσεις. Ελπίζω ότι θα απολαύσετε το Leaflet όσο και εγώ!</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">Δημιουργία αντιγράφου ασφαλείας</string>
+    <string name="backup_restore.backup.password">Κωδικός</string>
+    <string name="backup_restore.backup.name">Όνομα (προαιρετικό)</string>
+    <string name="backup_restore.backup.num_of_notes">Αριθμός σημειώσεων στο αντίγραφο ασφαλείας: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">Ορισμένες σημειώσεις είναι κλειδωμένες, απαιτούν κωδικό πρόσβασης για να προχωρήσετε</string>
+    <string name="backup_restore.backup.creating">Δημιουργία αντιγράφου ασφαλείας</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">Δημιουργία αντιγράφου ασφαλείας της σημείωσης %s από %s</string>
+    <string name="backup_restore.backup.complete.success">Το αντίγραφο ασφαλείας ολοκληρώθηκε επιτυχώς!</string>
+    <string name="backup_restore.backup.complete.failure">Η διαδικασία δημιουργίας αντιγράφου ασφαλείας διακόπηκε</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">Η διαδικασία αντιγράφου ασφαλείας ήταν επιτυχής! Μπορείτε να βρείτε το αντίγραφο ασφαλείας στο </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">Η διαδικασία αντιγράφου ασφαλείας ήταν επιτυχημένη! Μπορείτε τώρα να κλείσετε αυτό το παράθυρο</string>
+    <string name="backup_restore.backup.complete_desc.failure">Κάτι πήγε στραβά ή ακυρώσατε τη διαδικασία αποθήκευσης. Μπορείτε να επαναλάβετε τη διαδικασία δημιουργίας αντιγράφων ασφαλείας ανά πάσα στιγμή</string>
+    <string name="backup_restore.restore.title">Επιλέξτε αντίγραφο ασφαλείας για επαναφορά</string>
+    <string name="backup_restore.restore.file_open">Άνοιγμα αρχείου</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (Από αρχείο)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">Αριθμός σημειώσεων: %s, Αριθμός ετικετών: %s\nΔημιουργήθηκε στις %s</string>
+    <string name="backup_restore.restore.no_backups">Δεν υπάρχουν διαθέσιμα αντίγραφα ασφαλείας. Δοκιμάστε να ανοίξετε ένα αρχείο</string>
+    <string name="backup_restore.restore.failure">Αδυναμία επαναφοράς αντιγράφου ασφαλείας</string>
+    <string name="backup_restore.import.title">Επιλέξτε την προέλευση της εισαγωγής</string>
+    <string name="backup_restore.import.open_db">Άνοιγμα αντιγράφου ασφαλείας PotatoNotes</string>
+    <string name="backup_restore.import.open_previous">Άνοιγμα βάσης δεδομένων προηγούμενης έκδοσης</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">Μόνο το Android υποστηρίζει φόρτωση από προηγούμενη έκδοση</string>
+    <string name="backup_restore.import.open_previous.no_file">Δεν βρέθηκε βάση δεδομένων από παλιά έκδοση</string>
+    <string name="backup_restore.import.notes_loaded">Επιτυχής φόρτωση σημειώσεων</string>
+    <string name="backup_restore.select_notes">Επιλέξτε σημειώσεις για επαναφορά</string>
+    <string name="backup_restore.replace_existing">Αντικατάσταση υπαρχουσών σημειώσεων</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">Υπάρχει διαθέσιμη ενημέρωση!</string>
+    <string name="miscellaneous.updater.update_available_desc">Μια νέα ενημέρωση είναι διαθέσιμη για λήψη, κάντε κλικ στο αντίστοιχο κουμπί για να την κατεβάσετε</string>
+    <string name="miscellaneous.updater.already_on_latest">Τελευταία έκδοση</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">Είστε ήδη στην τελευταία έκδοση της εφαρμογής</string>
+</resources>

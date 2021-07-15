@@ -12,7 +12,7 @@
     <string name="common.edit">Editar</string>
     <string name="common.go_on">Continuar</string>
     <string name="common.exit">Salir</string>
-    <string name="common.ok">Ok</string>
+    <string name="common.ok">Aceptar</string>
     <string name="common.share">Compartir</string>
     <string name="common.not_now">Ahora no</string>
     <string name="common.update">Actualizar</string>
@@ -21,6 +21,7 @@
     <string name="common.create">Crear</string>
     <string name="common.close">Cerrar</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s de %s</string>
+    <string name="common.quick_tip">Consejo rápido</string>
     <string name="common.new_note">Nueva nota</string>
     <string name="common.new_list">Nueva lista</string>
     <string name="common.new_image">Nueva imagen</string>
@@ -91,7 +92,9 @@
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">Fijar</string>
     <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">Desfijar</string>
     <string name="main_page.selection_bar.save" comment="Option to export note to local storage">Guardar localmente</string>
+    <string name="main_page.selection_bar.save.note_locked">La nota está bloqueada, se necesita la contraseña maestra</string>
     <string name="main_page.selection_bar.save.success">Nota exportada correctamente</string>
+    <string name="main_page.selection_bar.save.oopsie">Algo falló mientras se exportaba, o la operación fue cancelada</string>
     <string name="main_page.selection_bar.share">Compartir</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="one">%s nota movida a la papelera</item>
@@ -111,6 +114,7 @@
     </plurals>
     <string name="main_page.export.success">Nota exportada correctamente</string>
     <string name="main_page.export.failure">Algo salió mal mientras se exportaba</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Si no puede encontrar sus notas antiguas de PotatoNotes, puede restaurarlo yendo a \n\n%s\n\ny seleccionando desde ahí \"%s\"</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titulo</string>
     <string name="note_page.content_hint">Contenido</string>
@@ -143,6 +147,7 @@
     <string name="settings.personalization.use_grid">Vista de cuadrícula para notas</string>
     <string name="settings.personalization.locale">Idioma de aplicación</string>
     <string name="settings.personalization.locale.device_default">Dispositivo predeterminado</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">%s% traducido</string>
     <string name="settings.privacy.title">Privacidad</string>
     <string name="settings.privacy.use_master_pass">Usar contraseña maestra</string>
     <string name="settings.privacy.use_master_pass.disclaimer">Advertencia: si olvidas la contraseña, no podrás restablecerla: tendrás que desinstalar la aplicación, borrando todas las notas, y reinstalarla. Apúntala en algún sitio.</string>
@@ -164,6 +169,7 @@
     <string name="settings.info.title">Información</string>
     <string name="settings.info.about_app">Acerca de Leaflet</string>
     <string name="settings.info.update_check">Buscar actualizaciones de la aplicación</string>
+    <string name="settings.info.translate">Traduce la app</string>
     <string name="settings.info.bug_report">Reportar un error</string>
     <string name="settings.debug.title">Depuración</string>
     <string name="settings.debug.show_setup_screen">Mostrar la pantalla de configuración en el próximo inicio</string>
@@ -221,6 +227,7 @@
     <string name="drawing.tools.marker">Marcador</string>
     <string name="drawing.tools.color_picker">Color</string>
     <string name="drawing.tools.radius_picker">Tamaño</string>
+    <string name="drawing.tools.clear">Limpiar lienzo</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">Para comenzar</string>
     <string name="setup.button.finish">Finalizar</string>
@@ -229,7 +236,9 @@
     <string name="setup.welcome.catchphrase">Tu nueva aplicación de notas favoritas</string>
     <string name="setup.basic_customization.title">Personalización básica</string>
     <string name="setup.restore_import.title">Restaurar e importar</string>
-    <string name="setup.restore_import.desc">Puede optar por restaurar notas desde otra versión de Leaflet o desde una versión anterior de PotatoNotes</string>
+    <string name="setup.restore_import.desc">Puede optar a restaurar notas de una versión previa de Leaflet, o importarlas de una versión previa de PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Restaurar de Leaflet</string>
+    <string name="setup.restore_import.import_btn">Importar de PotatoNotes</string>
     <string name="setup.finish.title">¡Todo listo!</string>
     <string name="setup.finish.last_words">Ha completado la configuración de Leaflet, ahora la aplicación debería estar lista para el primer uso. Si alguna vez quieres cambiar algo, dirígete a la configuración. ¡Espero que disfrutes de Leaflet tanto como yo!</string>
     <!-- Backup and restore-->

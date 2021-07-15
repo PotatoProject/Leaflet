@@ -21,6 +21,7 @@
     <string name="common.create">إنشاء</string>
     <string name="common.close">إغلاق</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s من %s</string>
+    <string name="common.quick_tip">نصائح سريعة</string>
     <string name="common.new_note">ملاحظة جديدة</string>
     <string name="common.new_list">قائمة جديدة</string>
     <string name="common.new_image">صورة جديدة</string>
@@ -29,6 +30,15 @@
     <string name="common.biometrics_prompt">تأكيد القياسات الحيوية</string>
     <string name="common.master_pass.modify">تعديل المرور الرئيسي</string>
     <string name="common.master_pass.confirm">تأكيد المرور الرئيسي</string>
+    <string name="common.master_pass.incorrect">تصريح المرور الرئيسي غير صحيح</string>
+    <string name="common.backup_password.title">ادخل كلمة المرور الاحتياطية</string>
+    <string name="common.backup_password.use_master_pass">استخدام تصريح المرور الرئيسي ككلمة مرور</string>
+    <string name="common.restore_dialog.title">تأكيد استعادة الملاحظة</string>
+    <string name="common.restore_dialog.backup_name">اسم النسخة الاحتياطية: %s</string>
+    <string name="common.restore_dialog.creation_date">تاريخ الإنشاء: %s</string>
+    <string name="common.restore_dialog.app_version">إصدار التطبيق: %s</string>
+    <string name="common.restore_dialog.note_count">عدد الملاحظات: %s</string>
+    <string name="common.restore_dialog.tag_count">عدد العلامات: %s</string>
     <string name="common.are_you_sure">هل أنت متأكد؟</string>
     <string name="common.color.none">لا شيء</string>
     <string name="common.color.red">أحمر</string>
@@ -47,6 +57,7 @@
     <string name="common.tag.modify">تعديل العلامة</string>
     <string name="common.tag.textbox_hint">الإسم</string>
     <!-- Main page -->
+    <string name="main_page.write_note">كتابة ملاحظة</string>
     <string name="main_page.settings">الإعدادات</string>
     <string name="main_page.search">بحث</string>
     <string name="main_page.account">الحساب</string>
@@ -59,12 +70,23 @@
     <string name="main_page.empty_state.trash">المهملات فارغة</string>
     <string name="main_page.empty_state.favourites">لا مفضلات إلى الآن</string>
     <string name="main_page.empty_state.tag">لا توجد ملاحظات بهذه العلامة</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="zero">%s عنصر إضافي</item>
+        <item quantity="one">%s عنصر إضافي</item>
+        <item quantity="two">%s المزيد من العناصر</item>
+        <item quantity="few">%s عنصر إضافي</item>
+        <item quantity="many">%s عنصر آخر</item>
+        <item quantity="other">%s المزيد من العناصر</item>
+    </plurals>
+    <string name="main_page.title.notes">ملاحظات</string>
     <string name="main_page.title.archive">الأرشيف</string>
     <string name="main_page.title.trash">سلّة المهملات</string>
     <string name="main_page.title.favourites">المفضلات</string>
     <string name="main_page.title.tag">علامة</string>
     <string name="main_page.title.all">الكل</string>
     <string name="main_page.selection_bar.close">إغلاق</string>
+    <string name="main_page.selection_bar.select">اختر</string>
+    <string name="main_page.selection_bar.select_all">اختيار الكل</string>
     <string name="main_page.selection_bar.add_favourites">إضافة إلى المفضلة</string>
     <string name="main_page.selection_bar.remove_favourites">إزالة من المفضلة</string>
     <string name="main_page.selection_bar.change_color">تغيير اللون</string>
@@ -72,6 +94,11 @@
     <string name="main_page.selection_bar.delete">نقل إلى المهملات</string>
     <string name="main_page.selection_bar.perma_delete">حذف</string>
     <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">تثبيت</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">إلغاء التثبيت</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">الحفظ محليا</string>
+    <string name="main_page.selection_bar.save.note_locked">الملاحظة مغلقة، تصريح المرور مطلوب</string>
+    <string name="main_page.selection_bar.save.success">تم تصدير الملاحظة بنجاح</string>
+    <string name="main_page.selection_bar.save.oopsie">حدث خطأ أثناء عملية التصدير أو تم إلغاء العملية</string>
     <string name="main_page.selection_bar.share">مشاركة</string>
     <plurals name="main_page.notes_deleted">
         <item quantity="zero">%s ملاحظات نُقلت للمهملات</item>
@@ -80,6 +107,14 @@
         <item quantity="few">%s ملاحظات نُقلت للمهملات</item>
         <item quantity="many">%s ملاحظات نُقلت للمهملات</item>
         <item quantity="other">%s ملاحظات نُقلت للمهملات</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="zero">تم حذف %s ملاحظة</item>
+        <item quantity="one">تم حذف %s ملاحظة</item>
+        <item quantity="two">تم حذف %s ملاحظة</item>
+        <item quantity="few">تم حذف %s ملاحظة</item>
+        <item quantity="many">تم حذف %s ملاحظة</item>
+        <item quantity="other">%s ملاحظات حذفت</item>
     </plurals>
     <plurals name="main_page.notes_archived">
         <item quantity="zero">تم أرشفة%s ملاحظة</item>
@@ -97,6 +132,9 @@
         <item quantity="many">تم إستعادة %s ملاحظات</item>
         <item quantity="other">إستعادة %s ملاحظات</item>
     </plurals>
+    <string name="main_page.export.success">تم تصدير الملاحظة بنجاح</string>
+    <string name="main_page.export.failure">حدث خطأ أثناء التصدير</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">اذا لم تتكمن من العثور على ملاحظاتك القديمة من PotatoNotes يمكنك استعادة الملاحظات عن طريق الذهاب الى \n\n %s \n\n و من هناك قم باختيار %s</string>
     <!-- Note page -->
     <string name="note_page.title_hint">العنوان</string>
     <string name="note_page.content_hint">المحتوى</string>
@@ -128,17 +166,37 @@
     <string name="settings.personalization.custom_accent">إختيار لون رئيسي خاص</string>
     <string name="settings.personalization.use_grid">عرض الشبكة للملاحظات</string>
     <string name="settings.personalization.locale">موضع التطبيق</string>
+    <string name="settings.personalization.locale.device_default">الجهاز الافتراضي</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">تمت ترجمة %s%</string>
     <string name="settings.privacy.title">الخصوصية</string>
     <string name="settings.privacy.use_master_pass">استخدام التصريح الرئيسي</string>
     <string name="settings.privacy.use_master_pass.disclaimer">تحذير: إذا كنت قد نسيت المرور لا يمكنك إعادة تعيينه، سوف تحتاج إلى إلغاء تثبيت التطبيق، وبالتالي يتم مسح جميع الملاحظات، وإعادة تثبيتها. من فضلك قم بكتابتها في مكان ما.</string>
     <string name="settings.privacy.modify_master_pass">تعديل المرور الرئيسي</string>
+    <string name="settings.backup_restore.title">النسخ الاحتياطي والاستعادة</string>
+    <string name="settings.backup_restore.backup">النسخ الاحتياطي</string>
+    <string name="settings.backup_restore.backup_desc">إنشاء نسخة محلية من ملاحظاتك</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">لا توجد ملاحظات للاستعادة!</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">لا توجد ملاحظات محفوظة في النسخ الاحتياطي</string>
     <string name="settings.backup_restore.restore">إستعادة</string>
+    <string name="settings.backup_restore.restore_desc">استعادة نسخة احتياطية من نسخة سابقة من leaflet</string>
+    <string name="settings.backup_restore.restore.status.success">تم إستعادة الملاحظة بنجاح</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">الملف المحدد ليس نسخة احتياطية صالحة</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">كلمة المرور التي أدخلتها غير قادرة على فك تشفير النسخة الاحتياطية</string>
+    <string name="settings.backup_restore.restore.status.already_exists">الملاحظة داخل النسخة الاحتياطية موجودة بالفعل في قاعدة البيانات</string>
+    <string name="settings.backup_restore.restore.status.unknown">حدثت مشكلة أثناء استيراد الملاحظة</string>
+    <string name="settings.backup_restore.import">استيراد</string>
+    <string name="settings.backup_restore.import_desc">استيراد ملاحظات من نسخة من PotatoNotes</string>
     <string name="settings.info.title">معلومات</string>
     <string name="settings.info.about_app">حول PotatoNotes</string>
+    <string name="settings.info.update_check">تحقق من وجود تحديثات للتطبيق</string>
+    <string name="settings.info.translate">ترجمة التطبيق</string>
+    <string name="settings.info.bug_report">أبلغ عن خلل</string>
     <string name="settings.debug.title">Debug</string>
     <string name="settings.debug.show_setup_screen">إظهار شاشة الإعداد عند بدء التشغيل التالي</string>
+    <string name="settings.debug.loading_overlay">اختبار محمل التراكبات</string>
     <string name="settings.debug.clear_database">مسح قاعدة البيانات</string>
     <string name="settings.debug.migrate_database">دمج قاعدة البيانات</string>
+    <string name="settings.debug.generate_trash">إنشاء سلة المهملات</string>
     <string name="settings.debug.log_level">مستوى التسجيل</string>
     <!-- About page -->
     <string name="about.title">الإعدادات</string>
@@ -151,21 +209,49 @@
     <string name="about.contributors.kat">المزامنة القديمة</string>
     <string name="about.contributors.rohit">الرسوم وألوان الملاحظات</string>
     <string name="about.contributors.rshbfn">أيقونة التطبيق واللون العام</string>
+    <string name="about.contributors.elias">اسم العلامة التجارية Leaflet</string>
+    <string name="about.contributors.akshit">مساعدة الأمان والخلفية</string>
     <!-- Search page-->
     <string name="search.textbox_hint">بحث</string>
+    <string name="search.tag_create_empty_hint">إنشاء وسم جديد</string>
     <string name="search.tag_create_hint">إنشاء علامة \"%s\"</string>
     <string name="search.type_to_search">اكتب لبدء البحث</string>
     <string name="search.nothing_found">لم يتم العثور على شيء...</string>
+    <string name="search.note.filters.case_sensitive">حساسية الحالة</string>
+    <string name="search.note.filters.favourites">المفضلة فقط</string>
+    <string name="search.note.filters.locations">مواقع الملاحظات</string>
+    <string name="search.note.filters.locations.normal">عادي</string>
     <string name="search.note.filters.locations.archive">الأرشيف</string>
     <string name="search.note.filters.locations.trash">سلّة المهملات</string>
+    <string name="search.note.filters.locations.normal_title">ملاحظات عادية</string>
+    <string name="search.note.filters.locations.archive_title">الملاحظات المؤرشفة</string>
+    <string name="search.note.filters.locations.trash_title">الملاحظات المحذوفة</string>
+    <string name="search.note.filters.color">فلتر اللون</string>
+    <string name="search.note.filters.date">فلتر التاريخ</string>
+    <string name="search.note.filters.date.mode_title">وضع التصفية</string>
+    <string name="search.note.filters.date.mode_after">بعد تاريخ</string>
+    <string name="search.note.filters.date.mode_exact">تاريخ محدد</string>
+    <string name="search.note.filters.date.mode_before">قبل التاريخ</string>
+    <string name="search.note.filters.tags">الوسوم</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="zero">%s محدد</item>
+        <item quantity="one">%s المحدد</item>
+        <item quantity="two">%s المحدد</item>
+        <item quantity="few">تم تحديدها %s</item>
+        <item quantity="many">%s محددة</item>
+        <item quantity="other">%s محدد</item>
+    </plurals>
+    <string name="search.note.filters.clear">مسح عوامل التصفية</string>
     <!-- Draw page -->
     <string name="drawing.color_black">أسود</string>
     <string name="drawing.exit_prompt">سيتم فقدان أي تغيير غير محفوظ. هل تريد الخروج؟</string>
+    <string name="drawing.clear_canvas_warning">لا يمكن التراجع عن هذه العملية. هل تريد المتابعة؟</string>
     <string name="drawing.tools.brush">فرشاة</string>
     <string name="drawing.tools.eraser">ممحاة</string>
     <string name="drawing.tools.marker">المحدد</string>
     <string name="drawing.tools.color_picker">لون</string>
     <string name="drawing.tools.radius_picker">نصف قُطر</string>
+    <string name="drawing.tools.clear">امسح اللوحة</string>
     <!-- Setup page -->
     <string name="setup.button.get_started">ابدأ الاستخدام</string>
     <string name="setup.button.finish">إنهاء</string>
@@ -173,7 +259,42 @@
     <string name="setup.button.back">رجوع</string>
     <string name="setup.welcome.catchphrase">تطبيق ملاحظاتك المفضل الجديد</string>
     <string name="setup.basic_customization.title">التخصيص البسيط</string>
+    <string name="setup.restore_import.title">الاستعادة والاستيراد</string>
+    <string name="setup.restore_import.desc">يمكنك اختيار استعادة الملاحظات من إصدار آخر من Leaflet أو استيراد الملاحظات من إصدار قديم من PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">الاستعادة من Leaflet</string>
+    <string name="setup.restore_import.import_btn">استيراد من PotatoNotes</string>
     <string name="setup.finish.title">كل شيء جاهز!</string>
+    <string name="setup.finish.last_words">لقد أكملت إعداد Leaflet، الآن يجب أن يكون التطبيق جاهزا للاستخدام الأول. إذا كنت ترغب في تغيير شيء ما، انتقل إلى الإعدادات. آمل أن تستمتع Leaflet بقدر ما أفعل!</string>
     <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">إنشاء نسخة احتياطية</string>
+    <string name="backup_restore.backup.password">كلمة المرور</string>
+    <string name="backup_restore.backup.name">الاسم (اختياري)</string>
+    <string name="backup_restore.backup.num_of_notes">عدد الملاحظات في النسخة الاحتياطية: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">بعض الملاحظات مقفلة، تحتاج إلى كلمة المرور للمضي قدما</string>
+    <string name="backup_restore.backup.creating">إنشاء نسخة احتياطية</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">النسخ الاحتياطي للملاحظة %s من %s</string>
+    <string name="backup_restore.backup.complete.success">اكتمل النسخ الاحتياطي بنجاح!</string>
+    <string name="backup_restore.backup.complete.failure">تمت مقاطعة عملية النسخ الاحتياطي</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">عملية النسخ الاحتياطي كانت ناجحة! يمكنك العثور على النسخة الاحتياطية في </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">عملية النسخ الاحتياطي كانت ناجحة! يمكنك الآن إغلاق مربع الحوار هذا</string>
+    <string name="backup_restore.backup.complete_desc.failure">حدث خطأ ما أو أغلقت عملية الحفظ. يمكنك إعادة محاولة عملية النسخ الاحتياطي في أي وقت</string>
+    <string name="backup_restore.restore.title">حدد نسخة احتياطية للاستعادة</string>
+    <string name="backup_restore.restore.file_open">فتح ملف</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (من ملف)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">عدد الملاحظات: %s، عدد العلامات: %s\nتم إنشاؤها في %s</string>
+    <string name="backup_restore.restore.no_backups">لا توجد نسخ احتياطية متاحة. حاول فتح ملف بدلا من ذلك</string>
+    <string name="backup_restore.restore.failure">غير قادر على استعادة النسخة الاحتياطية</string>
+    <string name="backup_restore.import.title">تحديد مصدر الاستيراد</string>
+    <string name="backup_restore.import.open_db">فتح ملف النسخ الاحتياطي PotatoNotes</string>
+    <string name="backup_restore.import.open_previous">فتح قاعدة بيانات الإصدار السابق</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">فقط Android يدعم التحميل من الإصدار السابق</string>
+    <string name="backup_restore.import.open_previous.no_file">لم يتم العثور على قاعدة بيانات من الإصدار القديم</string>
+    <string name="backup_restore.import.notes_loaded">تم تحميل الملاحظات بنجاح</string>
+    <string name="backup_restore.select_notes">حدد ملاحظات للاستعادة</string>
+    <string name="backup_restore.replace_existing">استبدال الملاحظات الموجودة</string>
     <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">التحديث متوفر!</string>
+    <string name="miscellaneous.updater.update_available_desc">يتوفر تحديث جديد للتنزيل، انقر على التحديث لتنزيل التحديث</string>
+    <string name="miscellaneous.updater.already_on_latest">أحدث نسخة</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">أنت بالفعل على أحدث إصدار من التطبيق</string>
 </resources>

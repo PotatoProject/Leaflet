@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common.cancel">取消</string>
+    <string name="common.reset">重設</string>
+    <string name="common.restore">還原</string>
+    <string name="common.confirm">確定</string>
+    <string name="common.save">儲存</string>
+    <string name="common.delete">刪除</string>
+    <string name="common.undo">復原</string>
+    <string name="common.redo">取消復原</string>
+    <string name="common.edit">編輯</string>
+    <string name="common.go_on">繼續</string>
+    <string name="common.exit">退出</string>
+    <string name="common.ok">確定</string>
+    <string name="common.share">分享</string>
+    <string name="common.not_now">稍後</string>
+    <string name="common.update">更新</string>
+    <string name="common.expand">展開</string>
+    <string name="common.collapse">收合</string>
+    <string name="common.create">建立</string>
+    <string name="common.close">關閉</string>
+    <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">第 %s / %s 頁</string>
+    <string name="common.quick_tip">提醒</string>
+    <string name="common.new_note">新增筆記</string>
+    <string name="common.new_list">新增清單</string>
+    <string name="common.new_image">新增圖片</string>
+    <string name="common.new_drawing">新增繪圖</string>
+    <string name="common.import_note">匯入筆記</string>
+    <string name="common.biometrics_prompt">生物辨識</string>
+    <string name="common.master_pass.modify">更改主密碼</string>
+    <string name="common.master_pass.confirm">確認主密碼</string>
+    <string name="common.master_pass.incorrect">錯誤主密碼</string>
+    <string name="common.backup_password.title">輸入救援密碼</string>
+    <string name="common.backup_password.use_master_pass">使用主密碼為密碼</string>
+    <string name="common.restore_dialog.title">確認筆記還原</string>
+    <string name="common.restore_dialog.backup_name">備份名稱: %s</string>
+    <string name="common.restore_dialog.creation_date">建立日期: %s</string>
+    <string name="common.restore_dialog.app_version">應用程式版本: %s</string>
+    <string name="common.restore_dialog.note_count">筆記數量: %s</string>
+    <string name="common.restore_dialog.tag_count">標籤數量: %s</string>
+    <string name="common.are_you_sure">是否確定？</string>
+    <string name="common.color.none">無</string>
+    <string name="common.color.red">紅色</string>
+    <string name="common.color.orange">橘色</string>
+    <string name="common.color.yellow">黃色</string>
+    <string name="common.color.green">綠色</string>
+    <string name="common.color.cyan">青色</string>
+    <string name="common.color.light_blue">淺藍色</string>
+    <string name="common.color.blue">藍色</string>
+    <string name="common.color.purple">紫色</string>
+    <string name="common.color.pink">粉紅色</string>
+    <string name="common.notification.default_title">釘選筆記通知</string>
+    <string name="common.notification.details_title">釘選筆記通知</string>
+    <string name="common.notification.details_desc">使用者釘選筆記通知</string>
+    <string name="common.tag.new">新增標籤</string>
+    <string name="common.tag.modify">修改標籤</string>
+    <string name="common.tag.textbox_hint">名稱</string>
+    <!-- Main page -->
+    <string name="main_page.write_note">撰寫筆記</string>
+    <string name="main_page.settings">設定</string>
+    <string name="main_page.search">搜尋</string>
+    <string name="main_page.account">帳號</string>
+    <string name="main_page.restore_prompt.archive">確定還原所有已封存的筆記？</string>
+    <string name="main_page.restore_prompt.trash">確定還原所有已刪除的筆記？</string>
+    <string name="main_page.tag_delete_prompt">此標籤將永久刪除</string>
+    <string name="main_page.deleted_empty_note">刪除空白的筆記</string>
+    <string name="main_page.empty_state.home">尚未新增筆記</string>
+    <string name="main_page.empty_state.archive">尚無封存的筆記</string>
+    <string name="main_page.empty_state.trash">尚無刪除的筆記</string>
+    <string name="main_page.empty_state.favourites">尚無最愛的筆記</string>
+    <string name="main_page.empty_state.tag">尚無使用此標籤的筆記</string>
+    <plurals name="main_page.note_list_x_more_items" comment="Gets displayed when the note has overflowing list items">
+        <item quantity="other">還有 %s 則筆記</item>
+    </plurals>
+    <string name="main_page.title.notes">筆記</string>
+    <string name="main_page.title.archive">封存</string>
+    <string name="main_page.title.trash">回收桶</string>
+    <string name="main_page.title.favourites">最愛</string>
+    <string name="main_page.title.tag">標籤</string>
+    <string name="main_page.title.all">全部</string>
+    <string name="main_page.selection_bar.close">關閉</string>
+    <string name="main_page.selection_bar.select">選取</string>
+    <string name="main_page.selection_bar.select_all">選取全部</string>
+    <string name="main_page.selection_bar.add_favourites">新增至最愛</string>
+    <string name="main_page.selection_bar.remove_favourites">從最愛移除</string>
+    <string name="main_page.selection_bar.change_color">更改色彩</string>
+    <string name="main_page.selection_bar.archive" comment="Verb not noun, to archive">封存</string>
+    <string name="main_page.selection_bar.delete">移動至回收桶</string>
+    <string name="main_page.selection_bar.perma_delete">刪除</string>
+    <string name="main_page.selection_bar.pin" comment="Pin to notifications shade">釘選</string>
+    <string name="main_page.selection_bar.unpin" comment="Unpin from notifications shade">取消釘選</string>
+    <string name="main_page.selection_bar.save" comment="Option to export note to local storage">儲存至畚箕</string>
+    <string name="main_page.selection_bar.save.note_locked">此筆記已鎖定，請輸入主密碼</string>
+    <string name="main_page.selection_bar.save.success">匯出筆記成功</string>
+    <string name="main_page.selection_bar.save.oopsie">匯出時發生錯誤或作業已取消</string>
+    <string name="main_page.selection_bar.share">分享</string>
+    <plurals name="main_page.notes_deleted">
+        <item quantity="other">已移動 %s 則筆記至回收桶</item>
+    </plurals>
+    <plurals name="main_page.notes_perma_deleted">
+        <item quantity="other">已刪除 %s 則筆記</item>
+    </plurals>
+    <plurals name="main_page.notes_archived">
+        <item quantity="other">已封存 %s 則筆記</item>
+    </plurals>
+    <plurals name="main_page.notes_restored">
+        <item quantity="other">已還原 %s 則筆記</item>
+    </plurals>
+    <string name="main_page.export.success">匯出筆記成功</string>
+    <string name="main_page.export.failure">匯出時發生錯誤</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">若無法存取來自 PotatoNotes 的舊筆記，可至 \n\n%s\n\n 並選取「%s」以還原您的筆記。</string>
+    <!-- Note page -->
+    <string name="note_page.title_hint">標題</string>
+    <string name="note_page.content_hint">內容</string>
+    <string name="note_page.list_item_hint">輸入</string>
+    <string name="note_page.add_entry_hint">新增條目</string>
+    <string name="note_page.toolbar.tags">管理標籤</string>
+    <string name="note_page.toolbar.color">更改色彩</string>
+    <string name="note_page.toolbar.add_item">新增項目</string>
+    <string name="note_page.privacy.title">隱私權設定</string>
+    <string name="note_page.privacy.hide_content">在主頁面隱藏內容</string>
+    <string name="note_page.privacy.lock_note">鎖定筆記</string>
+    <string name="note_page.privacy.lock_note.missing_pass">需先設定主密碼</string>
+    <string name="note_page.privacy.use_biometrics">使用生物辨識解鎖</string>
+    <string name="note_page.toggle_list">切換清單</string>
+    <string name="note_page.image_gallery">從圖片庫選擇圖片</string>
+    <string name="note_page.image_camera">拍照</string>
+    <string name="note_page.drawing">繪圖</string>
+    <string name="note_page.added_favourites">筆記已新增至最愛</string>
+    <string name="note_page.removed_favourites">筆記已從最愛移除</string>
+    <!-- Settings page -->
+    <string name="settings.title">設定</string>
+    <string name="settings.personalization.title">個人化</string>
+    <string name="settings.personalization.theme_mode">主題模式</string>
+    <string name="settings.personalization.theme_mode.system">系統</string>
+    <string name="settings.personalization.theme_mode.light">亮色</string>
+    <string name="settings.personalization.theme_mode.dark">暗色</string>
+    <string name="settings.personalization.use_amoled">使用黑色主題</string>
+    <string name="settings.personalization.use_custom_accent">跟隨系統強調色</string>
+    <string name="settings.personalization.custom_accent">選擇自訂強調色</string>
+    <string name="settings.personalization.use_grid">格狀檢視筆記</string>
+    <string name="settings.personalization.locale">應用程式語言</string>
+    <string name="settings.personalization.locale.device_default">裝置預設</string>
+    <string name="settings.personalization.locale.x_translated" comment="Used to tell the user how much a certain language is translated, like 50% translated or so">已完成 %s% 翻譯</string>
+    <string name="settings.privacy.title">隱私權</string>
+    <string name="settings.privacy.use_master_pass">使用主密碼</string>
+    <string name="settings.privacy.use_master_pass.disclaimer">注意: 忘記密碼將無法重設，您將需要重新安裝此應用程式，所有筆記皆會被刪除。請牢記您的密碼。</string>
+    <string name="settings.privacy.modify_master_pass">更改主密碼</string>
+    <string name="settings.backup_restore.title">備份與還原</string>
+    <string name="settings.backup_restore.backup">備份</string>
+    <string name="settings.backup_restore.backup_desc">在本機建立筆記副本</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.title">尚無可還原的筆記</string>
+    <string name="settings.backup_restore.backup.nothing_to_restore.desc">尚無可備份的筆記</string>
+    <string name="settings.backup_restore.restore">還原</string>
+    <string name="settings.backup_restore.restore_desc">還原 Leaflet 備份</string>
+    <string name="settings.backup_restore.restore.status.success">還原筆記成功</string>
+    <string name="settings.backup_restore.restore.status.wrong_format">此檔案非 Leaflet 備份格式</string>
+    <string name="settings.backup_restore.restore.status.wrong_password">此密碼無法解密備份檔案</string>
+    <string name="settings.backup_restore.restore.status.already_exists">備份檔案中的筆記與資料庫重複</string>
+    <string name="settings.backup_restore.restore.status.unknown">匯入筆記時發生錯誤</string>
+    <string name="settings.backup_restore.import">匯入</string>
+    <string name="settings.backup_restore.import_desc">匯入 PotatoNotes 筆記</string>
+    <string name="settings.info.title">資訊</string>
+    <string name="settings.info.about_app">關於 Leaflet</string>
+    <string name="settings.info.update_check">檢查應用程式更新</string>
+    <string name="settings.info.translate">翻譯此應用程式</string>
+    <string name="settings.info.bug_report">回報問題</string>
+    <string name="settings.debug.title">除錯</string>
+    <string name="settings.debug.show_setup_screen">在下一次啟動時顯示初始設定畫面</string>
+    <string name="settings.debug.loading_overlay">測試載入疊加層</string>
+    <string name="settings.debug.clear_database">清除資料庫</string>
+    <string name="settings.debug.migrate_database">轉移資料庫</string>
+    <string name="settings.debug.generate_trash">建立垃圾</string>
+    <string name="settings.debug.log_level">Log 等級</string>
+    <!-- About page -->
+    <string name="about.title">關於</string>
+    <string name="about.pwa_version">PWA 版本</string>
+    <string name="about.links">連結</string>
+    <string name="about.contributors">貢獻者</string>
+    <string name="about.contributors.hrx">主要開發者與介面設計</string>
+    <string name="about.contributors.bas">同步 API 與應用程式</string>
+    <string name="about.contributors.nico">同步 API</string>
+    <string name="about.contributors.kat">舊版同步 API</string>
+    <string name="about.contributors.rohit">插畫與筆記色彩</string>
+    <string name="about.contributors.rshbfn">應用程式圖示與主要強調色</string>
+    <string name="about.contributors.elias">Leaflet 品牌名稱</string>
+    <string name="about.contributors.akshit">安全性與後端支援</string>
+    <!-- Search page-->
+    <string name="search.textbox_hint">搜尋</string>
+    <string name="search.tag_create_empty_hint">建立新標籤</string>
+    <string name="search.tag_create_hint">建立標籤「%s」</string>
+    <string name="search.type_to_search">輸入以開始搜尋</string>
+    <string name="search.nothing_found">無結果</string>
+    <string name="search.note.filters.case_sensitive">區分大小寫</string>
+    <string name="search.note.filters.favourites">僅搜尋最愛</string>
+    <string name="search.note.filters.locations">筆記位置</string>
+    <string name="search.note.filters.locations.normal">普通</string>
+    <string name="search.note.filters.locations.archive">封存</string>
+    <string name="search.note.filters.locations.trash">回收桶</string>
+    <string name="search.note.filters.locations.normal_title">普通筆記</string>
+    <string name="search.note.filters.locations.archive_title">封存的筆記</string>
+    <string name="search.note.filters.locations.trash_title">刪除的筆記</string>
+    <string name="search.note.filters.color">以色彩篩選</string>
+    <string name="search.note.filters.date">以日期篩選</string>
+    <string name="search.note.filters.date.mode_title">篩選模式</string>
+    <string name="search.note.filters.date.mode_after">之後</string>
+    <string name="search.note.filters.date.mode_exact">當日</string>
+    <string name="search.note.filters.date.mode_before">之前</string>
+    <string name="search.note.filters.tags">標籤</string>
+    <plurals name="search.note.filters.tags.selected">
+        <item quantity="other">已選擇 %s 項</item>
+    </plurals>
+    <string name="search.note.filters.clear">清除篩選</string>
+    <!-- Draw page -->
+    <string name="drawing.color_black">黑色</string>
+    <string name="drawing.exit_prompt">所有未儲存的變更將遺失。是否確認退出？</string>
+    <string name="drawing.clear_canvas_warning">此作業無法還原。繼續？</string>
+    <string name="drawing.tools.brush">筆刷</string>
+    <string name="drawing.tools.eraser">橡皮擦</string>
+    <string name="drawing.tools.marker">螢光筆</string>
+    <string name="drawing.tools.color_picker">色彩</string>
+    <string name="drawing.tools.radius_picker">大小</string>
+    <string name="drawing.tools.clear">清除畫布</string>
+    <!-- Setup page -->
+    <string name="setup.button.get_started">開始</string>
+    <string name="setup.button.finish">完成</string>
+    <string name="setup.button.next">下一步</string>
+    <string name="setup.button.back">上一步</string>
+    <string name="setup.welcome.catchphrase">一用就愛上的筆記軟體</string>
+    <string name="setup.basic_customization.title">基本個人化</string>
+    <string name="setup.restore_import.title">還原與匯入</string>
+    <string name="setup.restore_import.desc">可選擇從其它版本的 Leaflet 或舊版 PotatoNotes 匯入</string>
+    <string name="setup.restore_import.restore_btn">從 Leaflet 還原</string>
+    <string name="setup.restore_import.import_btn">從 PotatoNotes 匯入</string>
+    <string name="setup.finish.title">大功告成！</string>
+    <string name="setup.finish.last_words">已完成 Leaflet 初始設定，您可以開始使用了。若想要變更任何選項，請至設定頁面。希望您會喜歡 Leaflet！</string>
+    <!-- Backup and restore-->
+    <string name="backup_restore.backup.title">建立備份</string>
+    <string name="backup_restore.backup.password">密碼</string>
+    <string name="backup_restore.backup.name">名稱 (選填)</string>
+    <string name="backup_restore.backup.num_of_notes">備份中的筆記數量: %s</string>
+    <string name="backup_restore.backup.protected_notes_prompt">部分筆記已鎖定，請輸入密碼以解鎖。</string>
+    <string name="backup_restore.backup.creating">正在建立備份</string>
+    <string name="backup_restore.backup.creating_progress" comment="First argument is current progress, second argument is total progress, so like 1 of 100">正在備份第 %s / %s 則筆記</string>
+    <string name="backup_restore.backup.complete.success">備份成功！</string>
+    <string name="backup_restore.backup.complete.failure">備份已中斷</string>
+    <string name="backup_restore.backup.complete_desc.success" comment="At the end of the phrase the path to the file will be appended">備份成功！備份檔案已儲存至 </string>
+    <string name="backup_restore.backup.complete_desc.success.no_file">備份成功！您可關閉此視窗</string>
+    <string name="backup_restore.backup.complete_desc.failure">發生錯誤或已中斷。您隨時可重新開始備份</string>
+    <string name="backup_restore.restore.title">選擇欲還原的備份檔案</string>
+    <string name="backup_restore.restore.file_open">開啟檔案</string>
+    <string name="backup_restore.restore.from_file" comment="The argument is the backup name">%s (從檔案)</string>
+    <string name="backup_restore.restore.info" comment="First argument is the note count in backup, second argument is tag count and third arg is creation date">筆記數量: %s、標籤數量: %s\n建立日期: %s</string>
+    <string name="backup_restore.restore.no_backups">無可用備份。請嘗試開啟檔案</string>
+    <string name="backup_restore.restore.failure">無法還原備份</string>
+    <string name="backup_restore.import.title">選擇匯入起始點</string>
+    <string name="backup_restore.import.open_db">開啟 PotatoNotes 備份檔案</string>
+    <string name="backup_restore.import.open_previous">開啟舊版本資料庫</string>
+    <string name="backup_restore.import.open_previous.unsupported_platform">僅限 Android 支援從舊版本匯入</string>
+    <string name="backup_restore.import.open_previous.no_file">找不到舊版本資料庫</string>
+    <string name="backup_restore.import.notes_loaded">載入筆記成功</string>
+    <string name="backup_restore.select_notes">選擇欲還原的筆記</string>
+    <string name="backup_restore.replace_existing">替換已存在的筆記</string>
+    <!-- Miscellaneous -->
+    <string name="miscellaneous.updater.update_available">有可用更新！</string>
+    <string name="miscellaneous.updater.update_available_desc">新版本已發布可供下載，輕觸更新以下載更新</string>
+    <string name="miscellaneous.updater.already_on_latest">最新版本</string>
+    <string name="miscellaneous.updater.already_on_latest_desc">您已更新至最新版本</string>
+</resources>

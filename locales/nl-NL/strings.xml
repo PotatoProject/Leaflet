@@ -21,6 +21,7 @@
     <string name="common.create">Maken</string>
     <string name="common.close">Sluiten</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s van %s</string>
+    <string name="common.quick_tip">Snelle tip</string>
     <string name="common.new_note">Nieuwe notitie</string>
     <string name="common.new_list">Nieuwe lijst</string>
     <string name="common.new_image">Nieuwe afbeelding</string>
@@ -113,6 +114,7 @@
     </plurals>
     <string name="main_page.export.success">Notitie succesvol geëxporteerd</string>
     <string name="main_page.export.failure">Er ging iets mis tijdens het exporteren</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Als je oudere notities vanuit PotatoNotes niet kunt vinden kun je ze herstellen door naar\n\n%s\n\nte gaan en uit daar \"%s\" te kiezen</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titel</string>
     <string name="note_page.content_hint">Inhoud</string>
@@ -167,6 +169,7 @@
     <string name="settings.info.title">Info</string>
     <string name="settings.info.about_app">Over Leaflet</string>
     <string name="settings.info.update_check">Controleren op app-updates</string>
+    <string name="settings.info.translate">Vertaal de app</string>
     <string name="settings.info.bug_report">Rapporteer een bug</string>
     <string name="settings.debug.title">Debug</string>
     <string name="settings.debug.show_setup_screen">Setup-scherm bij volgende start weergeven</string>
@@ -233,7 +236,9 @@
     <string name="setup.welcome.catchphrase">Je nieuwe favoriete app voor notities</string>
     <string name="setup.basic_customization.title">Basis personalisatie</string>
     <string name="setup.restore_import.title">Herstel en importeer</string>
-    <string name="setup.restore_import.desc">U kunt notities herstellen vanuit een andere versie van Leaflet of vanuit een oudere versie van PotatoNotes</string>
+    <string name="setup.restore_import.desc">Je kunt notities herstellen vanuit een andere versie van Leaflet of vanuit een oudere versie van PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Herstellen vanuit Leaflet</string>
+    <string name="setup.restore_import.import_btn">Importeren uit PotatoNotes</string>
     <string name="setup.finish.title">Klaar!</string>
     <string name="setup.finish.last_words">Je hebt de installatie van Leaflet voltooid, nu moet de app klaar zijn voor eerste gebruik. Als je ooit iets wilt veranderen, ga dan naar de instellingen. Ik hoop dat je net zo veel van Leaflet zult genieten als ik!</string>
     <!-- Backup and restore-->

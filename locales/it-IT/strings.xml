@@ -21,6 +21,7 @@
     <string name="common.create">Crea</string>
     <string name="common.close">Chiudi</string>
     <string name="common.x_of_y" comment="First arg is current page, second arg is number of pages, ex. (page) 1 of 8">%s di %s</string>
+    <string name="common.quick_tip">Suggerimento</string>
     <string name="common.new_note">Nuovo appunto</string>
     <string name="common.new_list">Nuovo elenco</string>
     <string name="common.new_image">Nuova immagine</string>
@@ -113,6 +114,7 @@
     </plurals>
     <string name="main_page.export.success">Appunto esportato con successo</string>
     <string name="main_page.export.failure">Qualcosa è andato storto durante l\'esportazione</string>
+    <string name="main_page.import_psa" comment="First argument is the path to reach the setting to import notes, in english it will be Settings &gt; Backup and Restore &gt; Import. Second argument is the translated string for the 'Open from previous version database' string.">Se non ritrovi gli appunti della versione precedente di PotatoNotes puoi ripristinarli andando su\n\n%s\n\ne da lì seleziona \"%s\"</string>
     <!-- Note page -->
     <string name="note_page.title_hint">Titolo</string>
     <string name="note_page.content_hint">Contenuto</string>
@@ -167,6 +169,7 @@
     <string name="settings.info.title">Info</string>
     <string name="settings.info.about_app">Informazioni su Leaflet</string>
     <string name="settings.info.update_check">Controlla aggiornamenti</string>
+    <string name="settings.info.translate">Traduci l\'app</string>
     <string name="settings.info.bug_report">Segnala un bug</string>
     <string name="settings.debug.title">Debug</string>
     <string name="settings.debug.show_setup_screen">Mostra la schermata iniziale al prossimo avvio</string>
@@ -233,7 +236,9 @@
     <string name="setup.welcome.catchphrase">La tua nuova app per gli appunti preferita</string>
     <string name="setup.basic_customization.title">Personalizzazione di base</string>
     <string name="setup.restore_import.title">Ripristina e importa</string>
-    <string name="setup.restore_import.desc">Puoi scegliere di ripristinare gli appunti da un\'altra versione di Leaflet o da una versione precedente di PotatoNotes</string>
+    <string name="setup.restore_import.desc">Puoi scegliere di ripristinare gli appunti da un\'altra versione di Leaflet o importare gli appunti da una versione precedente di PotatoNotes</string>
+    <string name="setup.restore_import.restore_btn">Ripristina da Leaflet</string>
+    <string name="setup.restore_import.import_btn">Importa da PotatoNotes</string>
     <string name="setup.finish.title">Tutto pronto!</string>
     <string name="setup.finish.last_words">Hai completato il setup per Leaflet, ora l\'app dovrebbe essere pronta per il primo utilizzo. Se mai volessi cambiare qualcosa, puoi andare sulle impostazioni. Spero che apprezzerai Leaflet quanto me!</string>
     <!-- Backup and restore-->
