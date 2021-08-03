@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
@@ -48,7 +49,12 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
 
   void addDownload(SavedImage data, String noteId) {
     final DownloadQueueItem item = DownloadQueueItem(
-        savedImage: data, noteId: noteId, localPath: data.path);
+      savedImage: data,
+      noteId: noteId,
+      temporaryPath: join(
+          appInfo.tempDirectory.path, "${data.id}-temp${data.fileExtension}"),
+      localPath: data.path,
+    );
     downloadQueue.add(item);
     notifyListeners();
   }
