@@ -190,7 +190,7 @@ class _AnimatedIconTwoVectorsState extends State<_AnimatedIconTwoVectors>
       animation: _controller,
       builder: (context, child) {
         return AnimatedVector(
-          vector: currentVector,
+          vector: DirectAnimatedVectorData(currentVector),
           progress: _controller,
           applyColor: true,
         );

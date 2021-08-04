@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
@@ -34,6 +36,7 @@ abstract class _AppInfoBase with Store {
     loadData();
   }
 
+  late Directory tempDirectory;
   FlutterLocalNotificationsPlugin? notifications;
   QuickActions? quickActions;
   late PackageInfo packageInfo;
@@ -89,6 +92,7 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<void> loadData() async {
+    tempDirectory = await getTemporaryDirectory();
     if (UniversalPlatform.isAndroid) {
       migrationAvailable = await MigrationTask.isMigrationAvailable(
           await MigrationTask.v1DatabasePath);
