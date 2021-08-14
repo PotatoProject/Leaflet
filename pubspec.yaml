@@ -4,7 +4,7 @@ publish_to: "none"
 version: 2.0.1+21
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
   animated_vector:
@@ -52,6 +52,7 @@ dependencies:
 
   material_design_icons_flutter: ^5.0.5955-rc.1
   mobx: ^2.0.1
+  monet: ^0.1.0
   moor: ^4.4.0
 
   package_info_plus: ^1.0.3

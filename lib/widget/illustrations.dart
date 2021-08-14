@@ -25,39 +25,39 @@ class Illustration extends StatelessWidget {
         tint = null;
 
   Illustration.archive({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).archive,
+  })  : info = IllustrationPaths(palette: palette).archive,
         tint = null;
 
   Illustration.trash({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).trash,
+  })  : info = IllustrationPaths(palette: palette).trash,
         tint = null;
 
   Illustration.noNotes({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).noNotes,
+  })  : info = IllustrationPaths(palette: palette).noNotes,
         tint = null;
 
   Illustration.nothingFound({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).nothingFound,
+  })  : info = IllustrationPaths(palette: palette).nothingFound,
         tint = null;
 
   Illustration.typeToSearch({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).typeToSearch,
+  })  : info = IllustrationPaths(palette: palette).typeToSearch,
         tint = null;
 
   Illustration.backupRestore({
-    Brightness brightness = Brightness.light,
+    IllustrationPalette palette = IllustrationPalette.light,
     this.height,
-  })  : info = IllustrationPaths.fromBrightness(brightness).backupRestore,
+  })  : info = IllustrationPaths(palette: palette).backupRestore,
         tint = null;
 
   @override

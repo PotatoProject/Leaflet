@@ -33,7 +33,7 @@ class BackupRestorePage extends StatelessWidget {
               child: LayoutBuilder(builder: (context, constraints) {
                 return Align(
                   child: Illustration.backupRestore(
-                    brightness: context.theme.brightness,
+                    palette: context.leafletTheme.illustrationPalette,
                     height: min(constraints.maxHeight, 260),
                   ),
                 );

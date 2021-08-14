@@ -68,7 +68,12 @@ class SettingsTile extends StatelessWidget {
             16 + context.viewPaddingDirectional.end,
             0,
           ),
-          leading: icon,
+          leading: icon != null
+              ? IconTheme.merge(
+                  data: context.theme.iconTheme,
+                  child: icon!,
+                )
+              : null,
           title: title,
           trailing: trailing ?? _subtitle,
           subtitle: description,

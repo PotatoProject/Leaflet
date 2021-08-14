@@ -61,6 +61,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin loggy, hrx.loggy.LoggyPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new hrx.plugin.monet.MonetPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin monet, hrx.plugin.monet.MonetPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin package_info_plus, dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin", e);

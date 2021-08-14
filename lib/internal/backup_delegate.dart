@@ -17,7 +17,6 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/encryption/base.dart';
-import 'package:potato_notes/internal/encryption/boringssl.dart';
 import 'package:potato_notes/internal/encryption/dart.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';

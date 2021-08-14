@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:monet/monet.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/note_color_palette.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/leaflet_theme.dart';
@@ -13,6 +15,7 @@ class Themes {
   const Themes(this._mainColor);
 
   Color get mainColor => _mainColor ?? Colors.blueAccent;
+  MonetColors get monetColors => monet.getColors(mainColor);
 
   static const Color lightColor = Color(0xFFFFFFFF);
   static const Color lightSecondaryColor = Color(0xFFFAFAFA);
@@ -75,22 +78,81 @@ class Themes {
         ),
       );
 
+  ThemeData get lightMonet {
+    return getThemeFromScheme(
+      scheme: ColorScheme(
+        primary: monetColors.accent1.shade600,
+        primaryVariant: monetColors.accent1.shade600,
+        secondary: monetColors.accent1.shade600,
+        secondaryVariant: monetColors.accent1.shade600,
+        surface: monetColors.accent2.shade50,
+        background: monetColors.accent2.shade100,
+        error: Colors.red.shade500,
+        onPrimary: monetColors.accent2.shade50,
+        onSecondary: monetColors.accent2.shade50,
+        onSurface: monetColors.accent2.shade900,
+        onBackground: monetColors.accent2.shade900,
+        onError: Colors.grey.shade900,
+        brightness: Brightness.light,
+      ),
+    );
+  }
+
+  ThemeData get darkMonet {
+    return getThemeFromScheme(
+      scheme: ColorScheme(
+        primary: monetColors.accent1.shade300,
+        primaryVariant: monetColors.accent1.shade300,
+        secondary: monetColors.accent1.shade300,
+        secondaryVariant: monetColors.accent1.shade300,
+        surface: monetColors.accent2.shade800,
+        background: monetColors.accent2.shade900,
+        error: Colors.red.shade400,
+        onPrimary: monetColors.accent2.shade800,
+        onSecondary: monetColors.accent2.shade800,
+        onSurface: monetColors.accent2.shade50,
+        onBackground: monetColors.accent2.shade50,
+        onError: Colors.grey.shade900,
+        brightness: Brightness.dark,
+      ),
+    );
+  }
+
   LeafletThemeData get leafletLight => LeafletThemeData(
         notePalette: NoteColorPalette.light(),
         illustrationPalette: IllustrationPalette.light,
       );
+
+  LeafletThemeData get leafletLightMonet {
+    return LeafletThemeData(
+      notePalette: NoteColorPalette.light(),
+      illustrationPalette: IllustrationPalette(
+        base: monetColors.accent2.shade600,
+        contrast: monetColors.accent2.shade800,
+        invertedContrast: monetColors.accent2.shade300,
+      ),
+    );
+  }
 
   LeafletThemeData get leafletDark => LeafletThemeData(
         notePalette: NoteColorPalette.dark(),
         illustrationPalette: IllustrationPalette.dark,
       );
 
-  static ThemeData getThemeFromScheme({required ColorScheme scheme}) {
-    final ThemeData base = scheme.brightness == Brightness.dark
-        ? ThemeData.dark()
-        : ThemeData.light();
+  LeafletThemeData get leafletDarkMonet {
+    return LeafletThemeData(
+      notePalette: NoteColorPalette.dark(),
+      illustrationPalette: IllustrationPalette(
+        base: monetColors.accent2.shade400,
+        contrast: monetColors.accent2.shade200,
+        invertedContrast: monetColors.accent2.shade600,
+      ),
+    );
+  }
 
-    return base.copyWith(
+  static ThemeData getThemeFromScheme({required ColorScheme scheme}) {
+    return ThemeData(
+      brightness: scheme.brightness,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: scheme.primary,
         selectionHandleColor: scheme.primary,
@@ -104,7 +166,6 @@ class Themes {
         iconTheme: IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
         actionsIconTheme:
             IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
-        backwardsCompatibility: false,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.transparent,
@@ -151,7 +212,7 @@ class Themes {
       backgroundColor: scheme.primary,
       iconTheme: IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
       disabledColor: scheme.onSurface.withOpacity(0.4),
-      shadowColor: Colors.black.withOpacity(0.5),
+      shadowColor: Colors.black.withOpacity(0),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           primary: scheme.primary,

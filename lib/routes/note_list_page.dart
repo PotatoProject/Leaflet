@@ -113,9 +113,11 @@ class NoteListPageState extends State<NoteListPage> {
     return MenuFab(
       backgroundColor: context.theme.colorScheme.secondary,
       foregroundColor: context.theme.colorScheme.onPrimary,
-      fabShape: const CircleBorder(),
-      menuShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
+      fabShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      menuShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       mainEntry: MenuFabEntry(
         icon: const Icon(Icons.edit_outlined),

@@ -19,7 +19,6 @@ import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
-import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -51,7 +50,18 @@ Future<void> main() async {
   }
 }
 
-class PotatoNotes extends StatelessWidget {
+class PotatoNotes extends StatefulWidget {
+  @override
+  State<PotatoNotes> createState() => _PotatoNotesState();
+}
+
+class _PotatoNotesState extends State<PotatoNotes> {
+  @override
+  void initState() {
+    super.initState();
+    monet.addListener(() => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Observer(
@@ -81,19 +91,16 @@ class PotatoNotes extends StatelessWidget {
 
         return NotesApp(
           title: "Leaflet",
-          theme: themes.light,
-          darkTheme: prefs.useAmoled ? themes.black : themes.dark,
-          leafletTheme: LeafletThemeData(
-            notePalette: themes.leafletLight.notePalette,
-            illustrationPalette: themes.leafletLight.illustrationPalette,
-          ),
-          leafletDarkTheme: LeafletThemeData(
-            notePalette: themes.leafletDark.notePalette,
-            illustrationPalette: themes.leafletDark.illustrationPalette,
-          ),
+          theme: themes.lightMonet,
+          darkTheme: themes.darkMonet,
+          leafletTheme: themes.leafletLightMonet,
+          leafletDarkTheme: themes.leafletDarkMonet,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
+          scrollBehavior: const MaterialScrollBehavior(
+            androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+          ),
           builder: (context, child) {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = const QuickActions();
