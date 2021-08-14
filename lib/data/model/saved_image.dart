@@ -39,7 +39,7 @@ class SavedImage {
   });
   SavedImage.empty();
 
-  Size get size => Size(width!, height!);
+  Size get size => Size(width! > 0 ? width! : 480, height! > 0 ? height! : 480);
 
   factory SavedImage.fromJson(Map<String, dynamic> json) =>
       _$SavedImageFromJson(
