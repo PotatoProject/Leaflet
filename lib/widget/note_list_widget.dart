@@ -34,10 +34,10 @@ class NoteListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EdgeInsetsDirectional padding = EdgeInsetsDirectional.fromSTEB(
-      4 + context.viewPaddingDirectional.start,
-      4 + context.padding.top,
-      4 + context.viewPaddingDirectional.end,
-      4 + 80.0 + context.viewInsets.bottom,
+      8 + context.viewPaddingDirectional.start,
+      8 + context.padding.top,
+      8 + context.viewPaddingDirectional.end,
+      8 + 80.0 + context.viewInsets.bottom,
     );
     Widget child;
 
@@ -78,8 +78,10 @@ class NoteListWidget extends StatelessWidget {
             child: customIllustration ??
                 Utils.quickIllustration(
                   context,
-                  getInfoOnCurrentMode(context.theme.brightness).key,
-                  getInfoOnCurrentMode(context.theme.brightness).value,
+                  getInfoOnCurrentMode(context.leafletTheme.illustrationPalette)
+                      .key,
+                  getInfoOnCurrentMode(context.leafletTheme.illustrationPalette)
+                      .value,
                 ),
           );
         },
@@ -89,23 +91,23 @@ class NoteListWidget extends StatelessWidget {
     return builder?.call(context, child) ?? child;
   }
 
-  MapEntry<Widget, String> getInfoOnCurrentMode(Brightness themeBrightness) {
+  MapEntry<Widget, String> getInfoOnCurrentMode(IllustrationPalette palette) {
     switch (noteKind) {
       case ReturnMode.archive:
         return MapEntry(
-          Illustration.archive(brightness: themeBrightness, height: 128),
+          Illustration.archive(palette: palette, height: 128),
           LocaleStrings.mainPage.emptyStateArchive,
         );
       case ReturnMode.trash:
         return MapEntry(
-          Illustration.trash(brightness: themeBrightness, height: 128),
+          Illustration.trash(palette: palette, height: 128),
           LocaleStrings.mainPage.emptyStateTrash,
         );
       case ReturnMode.all:
       case ReturnMode.normal:
       default:
         return MapEntry(
-          Illustration.noNotes(brightness: themeBrightness, height: 128),
+          Illustration.noNotes(palette: palette, height: 128),
           LocaleStrings.mainPage.emptyStateHome,
         );
     }

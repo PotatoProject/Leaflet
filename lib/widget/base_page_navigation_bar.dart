@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/widget/navigation_bar.dart';
 
 class BasePageNavigationBar extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
@@ -17,7 +18,7 @@ class BasePageNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      /* decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 0.5),
@@ -30,7 +31,7 @@ class BasePageNavigationBar extends StatelessWidget {
             color: Colors.black.withOpacity(0.19),
           ),
         ],
-      ),
+      ), */
       child: Material(
         color: context.theme.canvasColor,
         child: Padding(
@@ -43,24 +44,24 @@ class BasePageNavigationBar extends StatelessWidget {
             child: AnimatedOpacity(
               opacity: enabled ? 1.0 : 0.5,
               duration: const Duration(milliseconds: 300),
-              child: BottomNavigationBar(
-                items: items
+              child: NavigationBar(
+                destinations: items
                     .map(
-                      (e) => BottomNavigationBarItem(
-                        icon: e.icon,
-                        label: e.label,
-                        activeIcon: e.activeIcon,
-                        tooltip: "",
+                      (e) => NavigationBarDestination(
+                        unselectedIcon: e.icon,
+                        label: e.label ?? "",
+                        icon: e.activeIcon,
+                        //tooltip: "",
                       ),
                     )
                     .toList(),
                 backgroundColor: Colors.transparent,
-                selectedFontSize: 12,
-                currentIndex: index,
+                //selectedFontSize: 12,
+                selectedIndex: index,
                 onTap: onPageChanged,
-                type: BottomNavigationBarType.fixed,
+                /* type: BottomNavigationBarType.fixed,
                 selectedItemColor: context.theme.colorScheme.secondary,
-                unselectedItemColor: context.theme.textTheme.caption!.color,
+                unselectedItemColor: context.theme.iconTheme.color, */
                 elevation: 0,
               ),
             ),

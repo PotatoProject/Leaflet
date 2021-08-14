@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:monet/monet.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
@@ -19,6 +20,7 @@ class _ProvidersSingleton {
   _ProvidersSingleton._();
 
   late Keystore _keystore;
+  late MonetProvider _monet;
   late SharedPrefs _sharedPrefs;
   late AppConfig _appConfig;
   late AppInfo _appInfo;
@@ -40,6 +42,7 @@ class _ProvidersSingleton {
   }
 
   Future<void> initProviders(AppDatabase _db) async {
+    _monet = await MonetProvider.newInstance();
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
     _appDirectories = await AppDirectories.initWithDefaults();
@@ -64,6 +67,8 @@ Future<void> initProviders(AppDatabase _db) async =>
     _ProvidersSingleton.instance.initProviders(_db);
 
 Keystore get keystore => _ProvidersSingleton.instance._keystore;
+
+MonetProvider get monet => _ProvidersSingleton.instance._monet;
 
 AppConfig get appConfig => _ProvidersSingleton.instance._appConfig;
 

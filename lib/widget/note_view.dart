@@ -91,7 +91,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       ),
       clipBehavior: widget.note.images.isNotEmpty ? Clip.antiAlias : Clip.none,
       elevation: _elevation,
-      shadowColor: Colors.black.withOpacity(0.4),
+      //shadowColor: Colors.black.withOpacity(0.4),
       margin: Constants.cardPadding,
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,

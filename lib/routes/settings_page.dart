@@ -335,7 +335,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 final int? result = await Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => RGBColorPicker(
-                    initialColor: context.theme.colorScheme.secondary,
+                    initialColor: prefs.customAccent ?? Constants.defaultAccent,
                   ),
                 );
 

@@ -29,16 +29,14 @@ class BackupRestorePage extends StatelessWidget {
           children: [
             Text(LocaleStrings.setup.restoreImportDesc),
             Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Align(
-                    child: Illustration.backupRestore(
-                      brightness: context.theme.brightness,
-                      height: min(constraints.maxHeight, 260),
-                    ),
-                  );
-                },
-              ),
+              child: LayoutBuilder(builder: (context, constraints) {
+                return Align(
+                  child: Illustration.backupRestore(
+                    palette: context.leafletTheme.illustrationPalette,
+                    height: min(constraints.maxHeight, 260),
+                  ),
+                );
+              }),
             ),
           ],
         ),

@@ -60,12 +60,13 @@ class NoteSearchDelegate extends CustomSearchDelegate {
       stream: helper.noteStream(ReturnMode.local),
       initialData: const [],
       builder: (context, snapshot) {
-        final Brightness brightness = context.theme.brightness;
+        final IllustrationPalette palette =
+            context.leafletTheme.illustrationPalette;
         final Widget illustration = query.isEmpty
             ? Utils.quickIllustration(
                 context,
                 Illustration.typeToSearch(
-                  brightness: brightness,
+                  palette: palette,
                   height: 72,
                 ),
                 LocaleStrings.search.typeToSearch,
@@ -73,7 +74,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
             : Utils.quickIllustration(
                 context,
                 Illustration.nothingFound(
-                  brightness: brightness,
+                  palette: palette,
                   height: 72,
                 ),
                 LocaleStrings.search.nothingFound,
