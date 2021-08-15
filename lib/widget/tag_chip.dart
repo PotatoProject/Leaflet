@@ -21,7 +21,7 @@ class TagChip extends StatelessWidget {
         return Container(
           decoration: ShapeDecoration(
             color: Colors.transparent,
-            shape: StadiumBorder(
+            shape: context.leafletTheme.shapes.chipShape.copyWith(
               side: BorderSide(
                 color: contrast,
                 width: 2,

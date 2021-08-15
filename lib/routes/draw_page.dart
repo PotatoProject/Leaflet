@@ -15,8 +15,8 @@ import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
-import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
@@ -56,7 +56,7 @@ class _DrawPageState extends State<DrawPage>
       icon: MdiIcons.marker,
       title: LocaleStrings.drawing.toolsMarker,
       toolType: DrawTool.marker,
-      color: NoteColorPalette.neutral().yellow.color,
+      color: NoteColorPalette.neutral.yellow,
       size: ToolSize.twelve,
     ),
     DrawingTool(

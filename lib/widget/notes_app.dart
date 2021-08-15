@@ -7,8 +7,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/theme/data.dart';
+import 'package:potato_notes/internal/theme/theme.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
-import 'package:potato_notes/widget/leaflet_theme.dart';
 
 /// [NotesApp] uses this [TextStyle] as its [DefaultTextStyle] to encourage
 /// developers to be intentional about their [DefaultTextStyle].
@@ -159,12 +160,8 @@ class NotesApp extends StatefulWidget {
     this.title = '',
     this.onGenerateTitle,
     this.color,
-    this.theme,
-    this.darkTheme,
-    this.highContrastTheme,
-    this.highContrastDarkTheme,
-    required this.leafletTheme,
-    required this.leafletDarkTheme,
+    required this.theme,
+    required this.darkTheme,
     this.themeMode = ThemeMode.system,
     this.locale,
     this.localizationsDelegates,
@@ -199,12 +196,8 @@ class NotesApp extends StatefulWidget {
     this.title = '',
     this.onGenerateTitle,
     this.color,
-    this.theme,
-    this.darkTheme,
-    this.highContrastTheme,
-    this.highContrastDarkTheme,
-    required this.leafletTheme,
-    required this.leafletDarkTheme,
+    required this.theme,
+    required this.darkTheme,
     this.themeMode = ThemeMode.system,
     this.locale,
     this.localizationsDelegates,
@@ -316,7 +309,7 @@ class NotesApp extends StatefulWidget {
   ///    and [darkTheme] in [NotesApp].
   ///  * [ThemeData.brightness], which indicates the [Brightness] of a theme's
   ///    colors.
-  final ThemeData? theme;
+  final LeafletThemeData theme;
 
   /// The [ThemeData] to use when a 'dark mode' is requested by the system.
   ///
@@ -338,40 +331,7 @@ class NotesApp extends StatefulWidget {
   ///    and [darkTheme] in [NotesApp].
   ///  * [ThemeData.brightness], which is typically set to the value of
   ///    [MediaQueryData.platformBrightness].
-  final ThemeData? darkTheme;
-
-  /// The [ThemeData] to use when 'high contrast' is requested by the system.
-  ///
-  /// Some host platforms (for example, iOS) allow the users to increase
-  /// contrast through an accessibility setting.
-  ///
-  /// Uses [theme] instead when null.
-  ///
-  /// See also:
-  ///
-  ///  * [MediaQueryData.highContrast], which indicates the platform's
-  ///    desire to increase contrast.
-  final ThemeData? highContrastTheme;
-
-  /// The [ThemeData] to use when a 'dark mode' and 'high contrast' is requested
-  /// by the system.
-  ///
-  /// Some host platforms (for example, iOS) allow the users to increase
-  /// contrast through an accessibility setting.
-  ///
-  /// This theme should have a [ThemeData.brightness] set to [Brightness.dark].
-  ///
-  /// Uses [darkTheme] instead when null.
-  ///
-  /// See also:
-  ///
-  ///  * [MediaQueryData.highContrast], which indicates the platform's
-  ///    desire to increase contrast.
-  final ThemeData? highContrastDarkTheme;
-
-  final LeafletThemeData leafletTheme;
-
-  final LeafletThemeData leafletDarkTheme;
+  final LeafletThemeData darkTheme;
 
   /// Determines which theme will be used by the application if both [theme]
   /// and [darkTheme] are provided.
@@ -688,32 +648,20 @@ class _NotesAppState extends State<NotesApp> {
         MediaQuery.platformBrightnessOf(context);
     final bool useDarkTheme = mode == ThemeMode.dark ||
         (mode == ThemeMode.system && platformBrightness == ui.Brightness.dark);
-    final bool highContrast = MediaQuery.highContrastOf(context);
-    ThemeData? theme;
+    late LeafletThemeData theme;
 
-    if (useDarkTheme && highContrast && widget.highContrastDarkTheme != null) {
-      theme = widget.highContrastDarkTheme;
-    } else if (useDarkTheme && widget.darkTheme != null) {
+    if (useDarkTheme) {
       theme = widget.darkTheme;
-    } else if (highContrast && widget.highContrastTheme != null) {
-      theme = widget.highContrastTheme;
-    }
-    theme ??= widget.theme ?? ThemeData.light();
-
-    late LeafletThemeData leafletTheme;
-
-    if (useDarkTheme && widget.darkTheme != null) {
-      leafletTheme = widget.leafletDarkTheme;
     } else {
-      leafletTheme = widget.leafletTheme;
+      theme = widget.theme;
     }
 
     return ScaffoldMessenger(
       key: widget.scaffoldMessengerKey,
       child: AnimatedTheme(
-        data: theme,
-        child: LeafletTheme(
-          data: leafletTheme,
+        data: theme.materialTheme,
+        child: AnimatedLeafletTheme(
+          data: theme,
           child: widget.builder != null
               ? Builder(
                   builder: (BuildContext context) {
@@ -746,7 +694,7 @@ class _NotesAppState extends State<NotesApp> {
     //
     // blue is the primary color of the default theme.
     final Color materialColor =
-        widget.color ?? widget.theme?.primaryColor ?? Colors.blue;
+        widget.color ?? widget.theme.materialTheme.primaryColor;
     if (_usesRouter) {
       return WidgetsApp.router(
         key: GlobalObjectKey(this),

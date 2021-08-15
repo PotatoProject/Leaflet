@@ -170,10 +170,9 @@ class _BottomSheetBaseState extends State<_BottomSheetBase> {
                         key: _childKey,
                         color: widget.backgroundColor,
                         shape: _useDesktopLayout
-                            ? RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              )
-                            : widget.shape,
+                            ? context.theme.dialogTheme.shape
+                            : widget.shape ??
+                                context.theme.bottomSheetTheme.shape,
                         elevation: widget.elevation ?? 1,
                         clipBehavior: widget.clipBehavior ?? Clip.antiAlias,
                         child: AnimatedPadding(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/note_color_palette.dart';
+import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
 
@@ -371,14 +371,14 @@ class _ColorStrip extends StatelessWidget {
               } else {
                 switch (type) {
                   case ColorType.dark:
-                    color = NoteColorPalette.dark().colors[index].color;
+                    color = NoteColorPalette.dark.colors[index];
                     break;
                   case ColorType.light:
-                    color = NoteColorPalette.light().colors[index].color;
+                    color = NoteColorPalette.light.colors[index];
                     break;
                   case ColorType.normal:
                   default:
-                    color = NoteColorPalette.neutral().colors[index].color;
+                    color = NoteColorPalette.neutral.colors[index];
                     break;
                 }
               }

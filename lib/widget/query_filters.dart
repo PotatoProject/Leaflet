@@ -87,8 +87,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                         )
                       : BorderSide.none,
                 ),
-                color:
-                    context.notePalette.colors[widget.query.color ?? 0].color,
+                color: context.notePalette.colors[widget.query.color ?? 0],
               ),
             ),
             onTap: () async {

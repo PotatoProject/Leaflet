@@ -5,8 +5,7 @@ import 'package:potato_notes/routes/about_page.dart';
 class Constants {
   Constants._();
 
-  static const double cardBorderRadius = 16;
-  static const EdgeInsets cardPadding = EdgeInsets.all(8);
+  static const double cardPadding = 4;
   static const Color defaultAccent = Color(0xFF66BB6A);
 
   static List<ContributorInfo> get contributors => [

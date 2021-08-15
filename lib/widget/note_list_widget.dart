@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -34,10 +36,10 @@ class NoteListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EdgeInsetsDirectional padding = EdgeInsetsDirectional.fromSTEB(
-      8 + context.viewPaddingDirectional.start,
-      8 + context.padding.top,
-      8 + context.viewPaddingDirectional.end,
-      8 + 80.0 + context.viewInsets.bottom,
+      Constants.cardPadding + context.viewPaddingDirectional.start,
+      Constants.cardPadding + context.padding.top,
+      Constants.cardPadding + context.viewPaddingDirectional.end,
+      Constants.cardPadding + 80.0 + context.viewInsets.bottom,
     );
     Widget child;
 

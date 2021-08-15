@@ -59,30 +59,28 @@ class _SearchPageState<T> extends State<SearchPage> {
     final Widget body = widget.delegate.buildResults(context);
     final Widget? leading = widget.delegate.buildLeading(context);
 
-    return Observer(builder: (context) {
-      return DependentScaffold(
-        appBar: AppBar(
-          leading: leading,
-          title: TextField(
-            controller: widget.delegate._queryTextController,
-            focusNode: focusNode,
-            decoration: InputDecoration.collapsed(
-              hintText: LocaleStrings.search.textboxHint,
-            ),
-            autofocus: true,
-            onChanged: (value) => _onSearchBodyChanged(),
+    return DependentScaffold(
+      appBar: AppBar(
+        leading: leading,
+        title: TextField(
+          controller: widget.delegate._queryTextController,
+          focusNode: focusNode,
+          decoration: InputDecoration.collapsed(
+            hintText: LocaleStrings.search.textboxHint,
           ),
-          titleSpacing: leading != null &&
-                  (deviceInfo.uiSizeFactor > 3 || deviceInfo.isLandscape)
-              ? 0
-              : null,
-          actions: widget.delegate.buildActions(context),
+          autofocus: true,
+          onChanged: (value) => _onSearchBodyChanged(),
         ),
-        resizeToAvoidBottomInset: false,
-        useAppBarAsSecondary: true,
-        body: body,
-      );
-    });
+        titleSpacing: leading != null &&
+                (deviceInfo.uiSizeFactor > 3 || deviceInfo.isLandscape)
+            ? 0
+            : null,
+        actions: widget.delegate.buildActions(context),
+      ),
+      resizeToAvoidBottomInset: false,
+      useAppBarAsSecondary: true,
+      body: body,
+    );
   }
 }
 

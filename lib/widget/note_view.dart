@@ -51,7 +51,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = widget.note.color != 0
-        ? context.notePalette.colors[widget.note.color].color
+        ? context.notePalette.colors[widget.note.color]
         : context.theme.cardColor;
     final Color borderColor =
         widget.selected ? context.theme.iconTheme.color! : Colors.transparent;
@@ -83,8 +83,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
 
     return Card(
       color: backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
+      shape: (context.theme.cardTheme.shape! as OutlinedBorder).copyWith(
         side: BorderSide(
           color: borderColor,
           width: 2,
@@ -92,8 +91,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       ),
       clipBehavior: widget.note.images.isNotEmpty ? Clip.antiAlias : Clip.none,
       elevation: _elevation,
-      //shadowColor: Colors.black.withOpacity(0.4),
-      margin: Constants.cardPadding,
+      margin: const EdgeInsets.all(Constants.cardPadding),
       child: GestureDetector(
         onSecondaryTapDown: !widget.selectorOpen ? showOptionsMenu : null,
         child: InkWell(
@@ -111,7 +109,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
               ? widget.onLongPress
               : null,
           splashFactory: InkRipple.splashFactory,
-          borderRadius: BorderRadius.circular(Constants.cardBorderRadius),
+          customBorder: context.theme.cardTheme.shape,
           child: Stack(
             fit: StackFit.passthrough,
             children: [
@@ -275,7 +273,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
         (index) {
           final ListItem item = widget.note.listContent[index];
           final Color backgroundColor = widget.note.color != 0
-              ? context.notePalette.colors[widget.note.color].color
+              ? context.notePalette.colors[widget.note.color]
               : context.theme.cardColor;
           final bool showMoreItem = index == 5;
           final Widget icon = showMoreItem
