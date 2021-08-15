@@ -6,7 +6,7 @@ class MenuFab extends StatefulWidget {
   final MenuFabEntry mainEntry;
   final List<MenuFabEntry> entries;
   final ShapeBorder? fabShape;
-  final ShapeBorder menuShape;
+  final ShapeBorder? menuShape;
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? focusColor;
@@ -28,8 +28,8 @@ class MenuFab extends StatefulWidget {
     Key? key,
     required this.mainEntry,
     required this.entries,
-    this.fabShape = const StadiumBorder(),
-    this.menuShape = const RoundedRectangleBorder(),
+    this.fabShape,
+    this.menuShape,
     this.backgroundColor,
     this.foregroundColor,
     this.focusColor,
@@ -73,6 +73,7 @@ class _MenuFabState extends State<MenuFab> {
   late MaterialTapTargetSize materialTapTargetSize;
   late TextStyle textStyle;
   late ShapeBorder shape;
+  late ShapeBorder menuShape;
 
   bool _hovered = false;
   bool _focused = false;
@@ -123,6 +124,9 @@ class _MenuFabState extends State<MenuFab> {
       fontWeight: FontWeight.normal,
     );
     shape = widget.fabShape ?? floatingActionButtonTheme.shape!;
+    menuShape = widget.menuShape ??
+        context.leafletTheme.shapes.menuShapeOverride ??
+        context.leafletTheme.shapes.mediumComponents;
   }
 
   @override
@@ -221,8 +225,8 @@ class _MenuFabState extends State<MenuFab> {
           fabOnTap: widget.mainEntry.onTap,
           heroTag: heroTag,
           entries: widget.entries,
-          beginShape: widget.fabShape ?? const CircleBorder(),
-          endShape: widget.menuShape,
+          beginShape: shape,
+          endShape: menuShape,
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           focusColor: focusColor,
@@ -385,11 +389,15 @@ class _MenuFabRoute extends StatelessWidget {
           shape: endShape,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              children: entries,
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                children: entries,
+              ),
             ),
           ),
         ),

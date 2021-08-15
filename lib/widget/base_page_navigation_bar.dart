@@ -18,20 +18,20 @@ class BasePageNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      /* decoration: BoxDecoration(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 0.5),
             blurRadius: 5,
-            color: Colors.black.withOpacity(0.039),
+            color: context.theme.shadowColor.withOpacity(0.039),
           ),
           BoxShadow(
             offset: const Offset(0, 3.75),
             blurRadius: 11,
-            color: Colors.black.withOpacity(0.19),
+            color: context.theme.shadowColor.withOpacity(0.19),
           ),
         ],
-      ), */
+      ),
       child: Material(
         color: context.theme.canvasColor,
         child: Padding(

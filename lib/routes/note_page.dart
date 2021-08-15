@@ -220,7 +220,7 @@ class _NotePageState extends State<NotePage> {
 
   ThemeData get notePageThemeData {
     final Color? noteColor =
-        note.color != 0 ? context.notePalette.colors[note.color].color : null;
+        note.color != 0 ? context.notePalette.colors[note.color] : null;
     final Color? foregroundColor =
         note.color != 0 ? context.theme.colorScheme.onBackground : null;
 
@@ -415,7 +415,7 @@ class _NotePageState extends State<NotePage> {
         notifyNoteChanged();
       },
       checkColor: note.color != 0
-          ? context.notePalette.colors[note.color].color
+          ? context.notePalette.colors[note.color]
           : context.theme.scaffoldBackgroundColor,
     );
   }

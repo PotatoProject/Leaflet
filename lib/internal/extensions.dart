@@ -9,14 +9,14 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/note_color_palette.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
+import 'package:potato_notes/internal/theme/colors.dart';
+import 'package:potato_notes/internal/theme/data.dart';
+import 'package:potato_notes/internal/theme/theme.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
-import 'package:potato_notes/widget/illustrations.dart';
-import 'package:potato_notes/widget/leaflet_theme.dart';
 import 'package:recase/recase.dart';
 
 extension NoteX on Note {
@@ -359,5 +359,126 @@ extension BrightnessX on Brightness {
       case Brightness.dark:
         return Brightness.light;
     }
+  }
+}
+
+extension OutlinedBorderX on OutlinedBorder {
+  OutlinedBorder excludeCorners({
+    bool excludeTopStart = false,
+    bool excludeTopEnd = false,
+    bool excludeBottomStart = false,
+    bool excludeBottomEnd = false,
+  }) {
+    if (this is RoundedRectangleBorder) {
+      final RoundedRectangleBorder shape = this as RoundedRectangleBorder;
+      return shape.copyWith(
+        borderRadius: shape.borderRadius.excludeCorners(
+          excludeTopStart: excludeTopStart,
+          excludeTopEnd: excludeTopEnd,
+          excludeBottomStart: excludeBottomStart,
+          excludeBottomEnd: excludeBottomEnd,
+        ),
+      );
+    }
+
+    if (this is BeveledRectangleBorder) {
+      final BeveledRectangleBorder shape = this as BeveledRectangleBorder;
+      return shape.copyWith(
+        borderRadius: shape.borderRadius.excludeCorners(
+          excludeTopStart: excludeTopStart,
+          excludeTopEnd: excludeTopEnd,
+          excludeBottomStart: excludeBottomStart,
+          excludeBottomEnd: excludeBottomEnd,
+        ),
+      );
+    }
+
+    if (this is ContinuousRectangleBorder) {
+      final ContinuousRectangleBorder shape = this as ContinuousRectangleBorder;
+      return shape.copyWith(
+        borderRadius: shape.borderRadius.excludeCorners(
+          excludeTopStart: excludeTopStart,
+          excludeTopEnd: excludeTopEnd,
+          excludeBottomStart: excludeBottomStart,
+          excludeBottomEnd: excludeBottomEnd,
+        ),
+      );
+    }
+
+    return this;
+  }
+}
+
+extension BorderRadiusGeometryX on BorderRadiusGeometry {
+  BorderRadiusGeometry excludeCorners({
+    bool excludeTopStart = false,
+    bool excludeTopEnd = false,
+    bool excludeBottomStart = false,
+    bool excludeBottomEnd = false,
+  }) {
+    if (this is BorderRadius) {
+      final BorderRadius border = this as BorderRadius;
+      return border.copyWith(
+        topLeft: !excludeTopStart ? border.topLeft : Radius.zero,
+        topRight: !excludeTopEnd ? border.topRight : Radius.zero,
+        bottomLeft: !excludeBottomStart ? border.bottomLeft : Radius.zero,
+        bottomRight: !excludeBottomEnd ? border.bottomRight : Radius.zero,
+      );
+    }
+
+    if (this is BorderRadiusDirectional) {
+      final BorderRadiusDirectional border = this as BorderRadiusDirectional;
+      return border.copyWith(
+        topStart: !excludeTopStart ? border.topStart : Radius.zero,
+        topEnd: !excludeTopEnd ? border.topEnd : Radius.zero,
+        bottomStart: !excludeBottomStart ? border.bottomStart : Radius.zero,
+        bottomEnd: !excludeBottomEnd ? border.bottomEnd : Radius.zero,
+      );
+    }
+
+    return this;
+  }
+
+  BorderRadiusGeometry borderCopyWith({
+    Radius? topStart,
+    Radius? topEnd,
+    Radius? bottomStart,
+    Radius? bottomEnd,
+  }) {
+    if (this is BorderRadius) {
+      return (this as BorderRadius).copyWith(
+        topLeft: topStart,
+        topRight: topEnd,
+        bottomLeft: bottomStart,
+        bottomRight: bottomEnd,
+      );
+    }
+
+    if (this is BorderRadiusDirectional) {
+      return (this as BorderRadiusDirectional).copyWith(
+        topStart: topStart,
+        topEnd: topEnd,
+        bottomStart: bottomStart,
+        bottomEnd: bottomEnd,
+      );
+    }
+
+    return this;
+  }
+}
+
+extension BorderRadiusDirectionalX on BorderRadiusDirectional {
+  BorderRadiusDirectional copyWith({
+    Radius? topStart,
+    Radius? topEnd,
+    Radius? bottomStart,
+    Radius? bottomEnd,
+  }) {
+    return BorderRadiusDirectional.only(
+      topStart: topStart ?? this.topStart,
+      topEnd: topEnd ?? this.topEnd,
+      bottomStart: bottomStart ?? this.bottomStart,
+      bottomEnd: bottomEnd ?? this.bottomEnd,
+    );
   }
 }

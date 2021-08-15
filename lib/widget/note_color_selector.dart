@@ -47,7 +47,7 @@ class _NoteColorSelectorState extends State<NoteColorSelector> {
     return Builder(
       builder: (context) {
         return Material(
-          color: context.notePalette.colors[index].color,
+          color: context.notePalette.colors[index],
           child: SizedBox.fromSize(
             size: Size.square(size),
             child: Tooltip(

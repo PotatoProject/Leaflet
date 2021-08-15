@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:potato_notes/internal/path_utils.dart';
+import 'package:potato_notes/internal/theme/colors.dart';
 
 class Illustration extends StatelessWidget {
   final PathInfo info;
@@ -77,44 +78,6 @@ class Illustration extends StatelessWidget {
       ),
     );
   }
-}
-
-@immutable
-class IllustrationPalette {
-  final Color contrast;
-  final Color invertedContrast;
-  final Color base;
-
-  const IllustrationPalette({
-    required this.contrast,
-    required this.invertedContrast,
-    required this.base,
-  });
-
-  static const IllustrationPalette light = IllustrationPalette(
-    invertedContrast: Color(0xFFD1D1D1),
-    contrast: Color(0xFF6B6B6B),
-    base: Color(0xFF979797),
-  );
-
-  static const IllustrationPalette dark = IllustrationPalette(
-    contrast: Color(0xFFD1D1D1),
-    invertedContrast: Color(0xFF6B6B6B),
-    base: Color(0xFF979797),
-  );
-
-  @override
-  bool operator ==(Object? other) {
-    if (other is IllustrationPalette) {
-      return contrast.value == other.contrast.value &&
-          invertedContrast.value == other.invertedContrast.value &&
-          base.value == other.base.value;
-    }
-    return false;
-  }
-
-  @override
-  int get hashCode => hashValues(contrast, invertedContrast, base);
 }
 
 @immutable

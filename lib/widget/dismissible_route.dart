@@ -356,7 +356,8 @@ class DismissibleRouteState extends State<DismissibleRoute> {
       elevation: 16,
       shape: !widget.isFirst
           ? deviceInfo.uiSizeFactor > 3
-              ? context.theme.dialogTheme.shape
+              ? context.leafletTheme.shapes.pageShapeOverride ??
+                  context.leafletTheme.shapes.largeComponents
               : const RoundedRectangleBorder()
           : const RoundedRectangleBorder(),
       clipBehavior: Clip.antiAlias,

@@ -256,7 +256,7 @@ class NavigationBarDestination extends StatelessWidget {
                 color: animation.isForwardOrCompleted
                     ? colorScheme.secondary
                     : colorScheme.onSurface,
-                letterSpacing: 0.6,
+                letterSpacing: 0,
                 fontSize: 12,
                 fontWeight: animation.isForwardOrCompleted
                     ? FontWeight.bold

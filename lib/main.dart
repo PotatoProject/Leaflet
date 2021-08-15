@@ -91,10 +91,8 @@ class _PotatoNotesState extends State<PotatoNotes> {
 
         return NotesApp(
           title: "Leaflet",
-          theme: themes.lightMonet,
-          darkTheme: themes.darkMonet,
-          leafletTheme: themes.leafletLightMonet,
-          leafletDarkTheme: themes.leafletDarkMonet,
+          theme: themes.light,
+          darkTheme: themes.dark,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
