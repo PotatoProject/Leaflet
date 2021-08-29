@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/widget/navigation_bar.dart';
 
 class BasePageNavigationBar extends StatelessWidget {
   final List<BottomNavigationBarItem> items;
@@ -47,22 +46,17 @@ class BasePageNavigationBar extends StatelessWidget {
               child: NavigationBar(
                 destinations: items
                     .map(
-                      (e) => NavigationBarDestination(
-                        unselectedIcon: e.icon,
+                      (e) => NavigationDestination(
                         label: e.label ?? "",
-                        icon: e.activeIcon,
-                        //tooltip: "",
+                        icon: e.icon,
+                        selectedIcon: e.activeIcon,
                       ),
                     )
                     .toList(),
                 backgroundColor: Colors.transparent,
-                //selectedFontSize: 12,
                 selectedIndex: index,
-                onTap: onPageChanged,
-                /* type: BottomNavigationBarType.fixed,
-                selectedItemColor: context.theme.colorScheme.secondary,
-                unselectedItemColor: context.theme.iconTheme.color, */
-                elevation: 0,
+                onDestinationSelected: onPageChanged,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               ),
             ),
           ),

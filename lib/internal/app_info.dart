@@ -6,9 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
+import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -40,13 +43,33 @@ abstract class _AppInfoBase with Store {
   late final bool migrationAvailable;
 
   @observable
-  @protected
-  int _accentDataValue = Colors.blue.value;
+  int _systemAccentDataValue = Colors.blue.value;
 
-  int get accentData => _accentDataValue;
+  int get systemAccentData => _systemAccentDataValue;
 
   @observable
-  @protected
+  Color _accentDataValue = Colors.blue;
+
+  Color get accentData => _accentDataValue;
+
+  late List<AppTheme> _availableThemes;
+  List<AppTheme> get availableThemes => _availableThemes;
+
+  @observable
+  LeafletThemeData? _lightThemeValue;
+  late AppTheme _lightAppTheme;
+
+  LeafletThemeData get lightTheme => _lightThemeValue!;
+  AppTheme get lightAppTheme => _lightAppTheme;
+
+  @observable
+  LeafletThemeData? _darkThemeValue;
+  late AppTheme _darkAppTheme;
+
+  LeafletThemeData get darkTheme => _darkThemeValue!;
+  AppTheme get darkAppTheme => _darkAppTheme;
+
+  @observable
   List<ActiveNotification> _activeNotificationsValue = [];
 
   List<ActiveNotification> get activeNotifications => _activeNotificationsValue;
@@ -91,6 +114,21 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<void> loadData() async {
+    _availableThemes = [
+      BundledTheme("themes/light.toml"),
+      BundledTheme("themes/dark.toml"),
+      BundledTheme("themes/black.toml"),
+      BundledTheme("themes/monet_light.toml"),
+      BundledTheme("themes/monet_dark.toml"),
+    ];
+    for (final AppTheme theme in _availableThemes) {
+      await theme.load();
+    }
+    _lightAppTheme = _availableThemes[0];
+    _darkAppTheme = _availableThemes[1];
+
+    _updateAccent();
+
     if (UniversalPlatform.isAndroid) {
       migrationAvailable = await MigrationTask.isMigrationAvailable(
         await MigrationTask.v1DatabasePath,
@@ -106,7 +144,7 @@ abstract class _AppInfoBase with Store {
     if (DeviceInfo.isAndroid) {
       accentStreamChannel.receiveBroadcastStream().listen(updateAccent);
     } else {
-      _accentDataValue = -1;
+      _systemAccentDataValue = -1;
     }
 
     if (DeviceInfo.isAndroid) {
@@ -116,7 +154,7 @@ abstract class _AppInfoBase with Store {
 
   @action
   void updateAccent(dynamic event) {
-    _accentDataValue = event as int;
+    _systemAccentDataValue = event as int;
   }
 
   @action
@@ -127,6 +165,54 @@ abstract class _AppInfoBase with Store {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.getActiveNotifications();
       _activeNotificationsValue = _activeNotifications ?? [];
+    });
+  }
+
+  void loadLightTheme(AppTheme theme) {
+    _lightAppTheme = theme;
+    refreshThemes();
+  }
+
+  void loadDarkTheme(AppTheme theme) {
+    _darkAppTheme = theme;
+    refreshThemes();
+  }
+
+  @action
+  void refreshThemes() {
+    for (final AppTheme theme in _availableThemes) {
+      theme.reparse();
+    }
+    _lightThemeValue = _lightAppTheme.data;
+    _darkThemeValue = _darkAppTheme.data;
+  }
+
+  @action
+  void _updateAccent() {
+    autorun((_) {
+      Color accentColor;
+      bool canUseSystemAccent = true;
+
+      if (DeviceInfo.isAndroid) {
+        if (appInfo.systemAccentData == -1) {
+          canUseSystemAccent = false;
+        } else {
+          canUseSystemAccent = true;
+        }
+      } else {
+        canUseSystemAccent = false;
+      }
+
+      if (prefs.useCustomAccent || !canUseSystemAccent) {
+        accentColor = prefs.customAccent ?? Constants.defaultAccent;
+      } else {
+        accentColor = Color(appInfo.systemAccentData);
+      }
+
+      deviceInfo.setCanUseSystemAccent(canUseSystemAccent);
+      _accentDataValue = accentColor.withOpacity(1);
+
+      refreshThemes();
     });
   }
 }

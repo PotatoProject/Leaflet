@@ -428,8 +428,9 @@ class DismissibleRouteState extends State<DismissibleRoute> {
                               ? EdgeInsets.zero
                               : context.viewPadding,
                       viewInsets: context.viewInsets.copyWith(
-                        bottom: context.viewInsets.bottom -
-                            ((context.mSize.height - height) / 2),
+                        bottom: (context.viewInsets.bottom -
+                                ((context.mSize.height - height) / 2))
+                            .clamp(0, double.infinity),
                       ),
                     ),
                     child: content,

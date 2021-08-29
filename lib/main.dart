@@ -8,14 +8,12 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/db/stub.dart';
-import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
@@ -59,7 +57,10 @@ class _PotatoNotesState extends State<PotatoNotes> {
   @override
   void initState() {
     super.initState();
-    monet.addListener(() => setState(() {}));
+    monet.addListener(() {
+      appInfo.refreshThemes();
+      setState(() {});
+    });
   }
 
   @override
@@ -68,31 +69,12 @@ class _PotatoNotesState extends State<PotatoNotes> {
       builder: (context) {
         Loggy.instance.logLevel = LogLevel.values[prefs.logLevel];
 
-        Color accentColor;
-        bool canUseSystemAccent = true;
-
-        if (DeviceInfo.isAndroid) {
-          if (appInfo.accentData == -1) {
-            canUseSystemAccent = false;
-          } else {
-            canUseSystemAccent = true;
-          }
-        } else {
-          canUseSystemAccent = false;
-        }
-
-        if (prefs.useCustomAccent || !canUseSystemAccent) {
-          accentColor = prefs.customAccent ?? Constants.defaultAccent;
-        } else {
-          accentColor = Color(appInfo.accentData);
-        }
-
-        final Themes themes = Themes(accentColor.withOpacity(1));
+        //final Themes themes = Themes(appInfo.accentData);
 
         return NotesApp(
           title: "Leaflet",
-          theme: themes.light,
-          darkTheme: themes.dark,
+          theme: appInfo.lightTheme,
+          darkTheme: appInfo.darkTheme,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
@@ -127,7 +109,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
               ]);
             }
 
-            deviceInfo.updateDeviceInfo(context.mediaQuery, canUseSystemAccent);
+            deviceInfo.updateDeviceInfo(context.mediaQuery, true);
 
             SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             SystemChrome.setSystemUIOverlayStyle(

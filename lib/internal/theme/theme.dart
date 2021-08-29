@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 
 class LeafletTheme extends StatelessWidget {

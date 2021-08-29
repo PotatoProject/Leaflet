@@ -103,6 +103,7 @@ flutter:
   uses-material-design: true
   assets:
     - config.json
+    - themes/
   fonts:
     - family: CustomIcons
       fonts:

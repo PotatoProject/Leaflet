@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:monet/monet.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
