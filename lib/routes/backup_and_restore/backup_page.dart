@@ -58,9 +58,11 @@ class _BackupPageState extends State<BackupPage> {
                         obscureText: !showPass,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
-                            icon: Icon(showPass
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
+                            icon: Icon(
+                              showPass
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
                             onPressed: () =>
                                 setState(() => showPass = !showPass),
                           ),
@@ -144,8 +146,8 @@ class _BackupPageState extends State<BackupPage> {
             : LocaleStrings.backupRestore.backupProtectedNotesPrompt,
       );
     }
-    if (status) {
-      Navigator.pop(context);
+    if (status && mounted) {
+      context.pop();
       Utils.showModalBottomSheet(
         context: context,
         builder: (context) => _BackupProgressPage(
@@ -207,7 +209,8 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
       await File(backup).copy(backupPath.path!);
     }
 
-    Navigator.pop(context);
+    if (!mounted) return;
+    context.pop();
     Utils.showModalBottomSheet(
       context: context,
       builder: (context) => _BackupCompletePage(
@@ -238,10 +241,12 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
         ),
         ListTile(
           leading: const Icon(Icons.save_alt),
-          title: Text(LocaleStrings.backupRestore.backupCreatingProgress(
-            currentNote,
-            widget.notes.length,
-          )),
+          title: Text(
+            LocaleStrings.backupRestore.backupCreatingProgress(
+              currentNote,
+              widget.notes.length,
+            ),
+          ),
           trailing: const SizedBox(
             height: 24,
             width: 24,

@@ -80,7 +80,9 @@ class TagSearchDelegate extends CustomSearchDelegate {
               ),
             ),
             onTap: () => _onChangeValue(
-                !tags.contains(filteredTags[index].id), filteredTags[index].id),
+              !tags.contains(filteredTags[index].id),
+              filteredTags[index].id,
+            ),
           ),
         ),
         ListTile(

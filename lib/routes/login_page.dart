@@ -118,32 +118,34 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       const SizedBox(height: 16),
-      Builder(builder: (context) {
-        return TextFormField(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            labelText: "Password",
-            errorText: passwordError,
-            suffixIcon: IconButton(
-              icon: Icon(
-                obscurePass
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
+      Builder(
+        builder: (context) {
+          return TextFormField(
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: "Password",
+              errorText: passwordError,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  obscurePass
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+                onPressed: () => setState(() => obscurePass = !obscurePass),
               ),
-              onPressed: () => setState(() => obscurePass = !obscurePass),
             ),
-          ),
-          focusNode: passwordFocusNode,
-          onFieldSubmitted: enabledCondition
-              ? (text) => onSubmit(context)
-              : (text) => context.focusScope.unfocus(),
-          autofillHints: const [AutofillHints.password],
-          controller: passwordController,
-          keyboardType: TextInputType.visiblePassword,
-          obscureText: obscurePass,
-          onChanged: (_) => setState(() {}),
-        );
-      }),
+            focusNode: passwordFocusNode,
+            onFieldSubmitted: enabledCondition
+                ? (text) => onSubmit(context)
+                : (text) => context.focusScope.unfocus(),
+            autofillHints: const [AutofillHints.password],
+            controller: passwordController,
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: obscurePass,
+            onChanged: (_) => setState(() {}),
+          );
+        },
+      ),
       const SizedBox(height: 16),
       Row(
         children: <Widget>[
@@ -153,7 +155,8 @@ class _LoginPageState extends State<LoginPage> {
               flex: 12,
               child: TextButton(
                 onPressed: () => Utils.launchUrl(
-                    "${prefs.apiUrl}/account/password-forgotten"),
+                  "${prefs.apiUrl}/account/password-forgotten",
+                ),
                 child: const Text(
                   "Forgot password",
                   textAlign: TextAlign.center,
@@ -181,7 +184,6 @@ class _LoginPageState extends State<LoginPage> {
         Scaffold(
           appBar: AppBar(
             title: Text(register ? "Register" : "Login"),
-            textTheme: context.theme.textTheme,
           ),
           body: Center(
             child: SingleChildScrollView(

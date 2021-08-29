@@ -87,8 +87,10 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                 _ac.value -= details.primaryDelta! / _panelHeight;
               },
               onVerticalDragEnd: (details) {
-                setState(() => _curve =
-                    SuspendedCurve(_ac.value, curve: decelerateEasing));
+                setState(
+                  () => _curve =
+                      SuspendedCurve(_ac.value, curve: decelerateEasing),
+                );
 
                 if (details.primaryVelocity! > 350) {
                   final bool _animForward =

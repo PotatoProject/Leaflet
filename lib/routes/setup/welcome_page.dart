@@ -27,7 +27,8 @@ class WelcomePage extends StatelessWidget {
                       SizedBox.fromSize(
                         size: const Size.square(_logoHeight),
                         child: const Center(
-                            child: Illustration.leaflet(height: _logoHeight)),
+                          child: Illustration.leaflet(height: _logoHeight),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(

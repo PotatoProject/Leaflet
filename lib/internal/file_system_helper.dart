@@ -9,6 +9,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class FileSystemHelper {
+  const FileSystemHelper._();
+
   static const MethodChannel filePromptChannel =
       MethodChannel('potato_notes_file_prompt');
 
@@ -77,7 +79,9 @@ class FileSystemHelper {
 
     if (outputPath != null) {
       return SaveFileResult._(
-          path: join(outputPath, basename(inputFile)), success: true);
+        path: join(outputPath, basename(inputFile)),
+        success: true,
+      );
     } else {
       return SaveFileResult._(path: inputFile, success: true);
     }

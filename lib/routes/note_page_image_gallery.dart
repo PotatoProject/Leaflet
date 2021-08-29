@@ -96,7 +96,6 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
         ],
       ),
       appBar: AppBar(
-        textTheme: context.theme.textTheme,
         title: Text(
           LocaleStrings.common.xOfY(
             currentPage + 1,
@@ -139,8 +138,10 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             tooltip: LocaleStrings.common.delete,
             onPressed: () {
               imageQueue.addDelete(widget.note.images[currentPage]);
-              widget.note.images.removeWhere((savedImage) =>
-                  widget.note.images[currentPage].id == savedImage.id);
+              widget.note.images.removeWhere(
+                (savedImage) =>
+                    widget.note.images[currentPage].id == savedImage.id,
+              );
               helper.saveNote(widget.note.markChanged());
               context.pop();
             },

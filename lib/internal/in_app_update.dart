@@ -71,13 +71,23 @@ class InAppUpdater {
         );
       case BuildType.unsupported:
       default:
-        return AppUpdateInfo(UpdateAvailability.updateNotAvailable, false,
-            false, -1, -1, "com.potatoproject.notes", 0, -1);
+        return AppUpdateInfo(
+          UpdateAvailability.updateNotAvailable,
+          false,
+          false,
+          -1,
+          -1,
+          "com.potatoproject.notes",
+          0,
+          -1,
+        );
     }
   }
 
-  static Future<void> checkForUpdate(BuildContext context,
-      {bool showNoUpdatesAvailable = false}) async {
+  static Future<void> checkForUpdate(
+    BuildContext context, {
+    bool showNoUpdatesAvailable = false,
+  }) async {
     final AppUpdateInfo updateInfo = await _internalCheckForUpdate();
     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
       update(
@@ -118,7 +128,8 @@ class InAppUpdater {
         if (!shouldUpdate) return;
 
         await Utils.launchUrl(
-            "https://github.com/PotatoProject/Leaflet/releases/latest");
+          "https://github.com/PotatoProject/Leaflet/releases/latest",
+        );
         break;
       case BuildType.unsupported:
       default:

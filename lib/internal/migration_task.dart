@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
@@ -89,7 +90,7 @@ class MigrationTask {
         final File file =
             File(join(appDirectories.tempDirectory.path, "$id.jpg"))..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
-        savedImage = await imageHelper.copyToCache(file);
+        savedImage = await imageHelper.copyToCache(XFile(file.path));
         await file.delete();
         imageQueue.addUpload(savedImage, id);
       }

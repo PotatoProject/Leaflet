@@ -47,7 +47,9 @@ class XmlFileParser {
   }
 
   static Future<Map<String, Map<String, StringInfo>>> loadWithStringInfo(
-      File file, String locale) async {
+    File file,
+    String locale,
+  ) async {
     final Map<String, Map<String, StringInfo>> returnMap = {};
 
     final String fileContent = await file.readAsString();

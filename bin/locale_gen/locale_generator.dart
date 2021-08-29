@@ -43,7 +43,8 @@ class LocaleGenerator {
     for (final String locale in locales) {
       final List<String> splittedLocale = locale.split("-");
       localesBuffer.writeln(
-          '    const Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),');
+        '    const Locale("${splittedLocale[0]}", "${splittedLocale[1]}"),',
+      );
     }
     localesBuffer.writeln("  ];");
     localesBuffer.writeln();
@@ -70,7 +71,8 @@ class LocaleGenerator {
 
       final String classInstance = "${getClassNameFromLocale(locale)}()";
       localesBuffer.writeln(
-          '    $classInstance.locale: $classInstance.translatedStrings,');
+        '    $classInstance.locale: $classInstance.translatedStrings,',
+      );
     }
     localesBuffer.writeln("  };");
     localesBuffer.writeln("}");
@@ -103,7 +105,8 @@ abstract class _\$LocaleBase {
 String getLocaleClass(ParseResult result, String locale) {
   final StringBuffer buffer = StringBuffer();
   buffer.writeln(
-      "class ${getClassNameFromLocale(locale)} extends _\$LocaleBase {");
+    "class ${getClassNameFromLocale(locale)} extends _\$LocaleBase {",
+  );
   buffer.writeln("  @override");
   buffer.writeln('  String get locale => "$locale";');
   buffer.writeln();

@@ -34,9 +34,11 @@ class NotePage extends StatefulWidget {
     this.focusTitle = false,
     this.openWithList = false,
     this.openWithDrawing = false,
-  }) : assert((openWithList && !openWithDrawing) ||
-            (!openWithList && openWithDrawing) ||
-            (!openWithList && !openWithDrawing));
+  }) : assert(
+          (openWithList && !openWithDrawing) ||
+              (!openWithList && openWithDrawing) ||
+              (!openWithList && !openWithDrawing),
+        );
 
   @override
   _NotePageState createState() => _NotePageState();
@@ -359,8 +361,8 @@ class _NotePageState extends State<NotePage> {
     helper.saveNote(note);
   }
 
-  Future<void> handleImageAdd(String path) async {
-    final SavedImage savedImage = await imageHelper.copyToCache(File(path));
+  Future<void> handleImageAdd(XFile file) async {
+    final SavedImage savedImage = await imageHelper.copyToCache(file);
     setState(() => note.images.add(savedImage));
     imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
@@ -393,7 +395,7 @@ class _NotePageState extends State<NotePage> {
       return [
         IconButton(
           icon: const Icon(Icons.local_offer_outlined),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           tooltip: LocaleStrings.notePage.toolbarTags,
           onPressed: () async {
             await Utils.showSecondaryRoute(
@@ -411,7 +413,7 @@ class _NotePageState extends State<NotePage> {
         ),
         IconButton(
           icon: const Icon(Icons.color_lens_outlined),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           tooltip: LocaleStrings.notePage.toolbarColor,
           onPressed: () => Utils.showModalBottomSheet(
             context: context,
@@ -429,7 +431,7 @@ class _NotePageState extends State<NotePage> {
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           tooltip: LocaleStrings.notePage.toolbarAddItem,
           onPressed: () async {
             Utils.showModalBottomSheet(
@@ -482,19 +484,23 @@ class _NotePageState extends State<NotePage> {
         toggleList();
         break;
       case 'image':
-        final File? image = await Utils.pickImage();
+        final XFile? image = await Utils.pickImage();
 
         if (image != null) {
-          await handleImageAdd(image.path);
+          await handleImageAdd(image);
+
+          if (!mounted) return;
           context.pop();
         }
         break;
       case 'camera':
-        final PickedFile? image =
-            await ImagePicker().getImage(source: ImageSource.camera);
+        final XFile? image =
+            await ImagePicker().pickImage(source: ImageSource.camera);
 
         if (image != null) {
-          handleImageAdd(image.path);
+          await handleImageAdd(image);
+
+          if (!mounted) return;
           context.pop();
         }
         break;
@@ -540,8 +546,9 @@ class _NotePageState extends State<NotePage> {
               SwitchListTile.adaptive(
                 value: note.hideContent,
                 onChanged: (value) {
-                  setState(() =>
-                      note = note.copyWith(hideContent: !note.hideContent));
+                  setState(
+                    () => note = note.copyWith(hideContent: !note.hideContent),
+                  );
                   notifyNoteChanged();
                 },
                 activeColor: context.theme.colorScheme.secondary,
@@ -557,8 +564,10 @@ class _NotePageState extends State<NotePage> {
                                 false;
 
                         if (confirm) {
-                          setState(() =>
-                              note = note.copyWith(lockNote: !note.lockNote));
+                          setState(
+                            () =>
+                                note = note.copyWith(lockNote: !note.lockNote),
+                          );
                           notifyNoteChanged();
                         }
                       }
@@ -588,8 +597,9 @@ class _NotePageState extends State<NotePage> {
                           }
 
                           if (confirm) {
-                            setState(() =>
-                                note = note.copyWith(usesBiometrics: value));
+                            setState(
+                              () => note = note.copyWith(usesBiometrics: value),
+                            );
                             notifyNoteChanged();
                           }
                         }

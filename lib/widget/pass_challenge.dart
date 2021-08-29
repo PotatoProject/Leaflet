@@ -56,9 +56,11 @@ class _PassChallengeState extends State<PassChallenge> {
               onChanged: (_) => setState(() => status = null),
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  icon: Icon(showPass
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined),
+                  icon: Icon(
+                    showPass
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
                   onPressed: () => setState(() => showPass = !showPass),
                 ),
                 errorText: status,

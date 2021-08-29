@@ -72,7 +72,7 @@ class _SetupPagetate extends State<SetupPage> {
           child: pages[pageIndex],
         ),
         bottomNavigationBar: Material(
-          color: context.theme.appBarTheme.color,
+          color: context.theme.appBarTheme.backgroundColor,
           child: Container(
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 8),

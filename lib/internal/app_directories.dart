@@ -39,6 +39,8 @@ class AppDirectories {
       return p.join(directories!.first.path, "LeafletBackups");
     }
     return p.join(
-        (await getApplicationDocumentsDirectory()).path, "LeafletBackups");
+      (await getApplicationDocumentsDirectory()).path,
+      "LeafletBackups",
+    );
   }
 }

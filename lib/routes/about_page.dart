@@ -14,7 +14,6 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleStrings.about.title),
-        textTheme: context.theme.textTheme,
       ),
       extendBodyBehindAppBar: true,
       body: LayoutBuilder(

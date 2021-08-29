@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:blurhash_dart/blurhash_dart.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 import 'package:image/image.dart';
 import 'package:image_size_getter/file_input.dart';
@@ -37,11 +38,14 @@ class ImageHelper with LoggerProvider {
     await imageQueue.processDownloads();
   }
 
-  Future<SavedImage> copyToCache(File file) async {
+  Future<SavedImage> copyToCache(XFile xfile) async {
     final SavedImage savedImage = SavedImage.empty();
-    final String path = join(appDirectories.imagesDirectory.path,
-        savedImage.id + extension(file.path));
-    file.copy(path);
+    final String path = join(
+      appDirectories.imagesDirectory.path,
+      savedImage.id + extension(xfile.path),
+    );
+    final File file = File(path);
+    await xfile.saveTo(file.path);
     savedImage.storageLocation = prefs.accessToken != null
         ? StorageLocation.sync
         : StorageLocation.local;
@@ -57,8 +61,7 @@ class ImageHelper with LoggerProvider {
     final Blake2 blake2b = Blake2();
     blake2b.update(rawBytes);
     final Uint8List rawDigest = blake2b.digest();
-    final String hash =
-        rawDigest.map((n) => n.toRadixString(16).toString()).join();
+    final String hash = rawDigest.map((n) => n.toRadixString(16)).join();
     logger.d(hash);
     return hash;
   }
@@ -147,7 +150,9 @@ class ImageHelper with LoggerProvider {
     data["blurhash"] = blurHash;
     logger.d("Saving image");
     saveImage(
-        compressedImage, "${parameters["directory"]}/${data["hash"]}.jpg");
+      compressedImage,
+      "${parameters["directory"]}/${data["hash"]}.jpg",
+    );
     return jsonEncode(data);
   }
 }

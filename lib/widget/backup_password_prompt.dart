@@ -40,9 +40,11 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
               onChanged: (value) => setState(() {}),
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  icon: Icon(showPass
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined),
+                  icon: Icon(
+                    showPass
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
                   onPressed: () => setState(() => showPass = !showPass),
                 ),
               ),
@@ -53,7 +55,10 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
               enabled: !useMasterPass,
               onFieldSubmitted: controller.text.length >= 4 || useMasterPass
                   ? (text) => _onSubmit(
-                      useMasterPass ? prefs.masterPass : Utils.hashedPass(text))
+                        useMasterPass
+                            ? prefs.masterPass
+                            : Utils.hashedPass(text),
+                      )
                   : null,
               maxLength: 64,
             ),
@@ -78,9 +83,11 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
       actions: [
         TextButton(
           onPressed: controller.text.length >= 4 || useMasterPass
-              ? () => _onSubmit(useMasterPass
-                  ? prefs.masterPass
-                  : Utils.hashedPass(controller.text))
+              ? () => _onSubmit(
+                    useMasterPass
+                        ? prefs.masterPass
+                        : Utils.hashedPass(controller.text),
+                  )
               : null,
           child: Text(LocaleStrings.common.confirm),
         ),

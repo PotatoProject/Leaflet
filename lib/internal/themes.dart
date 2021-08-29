@@ -104,7 +104,6 @@ class Themes {
         iconTheme: IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
         actionsIconTheme:
             IconThemeData(color: scheme.onSurface.withOpacity(0.7)),
-        backwardsCompatibility: false,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.transparent,

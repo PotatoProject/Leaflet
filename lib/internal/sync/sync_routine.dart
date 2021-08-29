@@ -364,21 +364,25 @@ class SyncRoutine with LoggerProvider {
     final List<Note> syncedNotes = await helper.listNotes(ReturnMode.synced);
     for (final Note localNote in _localNotes) {
       final int syncedIndex = syncedNotes.indexWhere(
-          (syncedNote) => "${localNote.id}-synced" == syncedNote.id);
+        (syncedNote) => "${localNote.id}-synced" == syncedNote.id,
+      );
       if (syncedIndex == -1) {
         _addedNotes.add(localNote);
       } else {
         final Note syncedNote = syncedNotes.elementAt(syncedIndex);
         if (!localNote.synced) {
           _updatedNotes.putIfAbsent(
-              localNote, () => _getNoteDelta(localNote, syncedNote));
+            localNote,
+            () => _getNoteDelta(localNote, syncedNote),
+          );
         }
       }
     }
     if (syncedNotes.isNotEmpty) {
       for (final Note syncedNote in syncedNotes) {
         final int localIndex = _localNotes.indexWhere(
-            (localNote) => "${localNote.id}-synced" == syncedNote.id);
+          (localNote) => "${localNote.id}-synced" == syncedNote.id,
+        );
         if (localIndex == -1) {
           _deletedNotes.add(syncedNote);
         }
@@ -398,7 +402,9 @@ class SyncRoutine with LoggerProvider {
         if (syncedTag.lastModifyDate.millisecondsSinceEpoch <
             localTag.lastModifyDate.millisecondsSinceEpoch) {
           _updatedTags.putIfAbsent(
-              localTag, () => _getTagDelta(localTag, syncedTag));
+            localTag,
+            () => _getTagDelta(localTag, syncedTag),
+          );
         }
       }
     }

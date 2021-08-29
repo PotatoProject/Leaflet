@@ -8,7 +8,9 @@ linter:
     avoid_setters_without_getters: false
     empty_catches: false
     implementation_imports: false
+    use_build_context_synchronously: false
 
 analyzer:
   exclude:
     - lib/**/*.g.dart
+    - lib/generated_plugin_registrant.dart

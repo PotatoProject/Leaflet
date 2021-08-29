@@ -27,10 +27,11 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
 
   void addUpload(SavedImage data, String noteId) {
     final UploadQueueItem item = UploadQueueItem(
-        localPath: data.path,
-        noteId: noteId,
-        savedImage: data,
-        storageLocation: data.storageLocation);
+      localPath: data.path,
+      noteId: noteId,
+      savedImage: data,
+      storageLocation: data.storageLocation,
+    );
     uploadQueue.add(item);
     notifyListeners();
   }
@@ -48,7 +49,10 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
 
   void addDownload(SavedImage data, String noteId) {
     final DownloadQueueItem item = DownloadQueueItem(
-        savedImage: data, noteId: noteId, localPath: data.path);
+      savedImage: data,
+      noteId: noteId,
+      localPath: data.path,
+    );
     downloadQueue.add(item);
     notifyListeners();
   }
@@ -63,7 +67,8 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
 
     for (final Note note in notes) {
       if (note.images.indexWhere(
-              (e) => e.id != data.id && e.uploaded && e.hash == data.hash) !=
+            (e) => e.id != data.id && e.uploaded && e.hash == data.hash,
+          ) !=
           -1) return true;
     }
     return false;
@@ -101,7 +106,8 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
     logger.d("UploadQueue has ${uploadQueue.length} items queued");
     logger.d("Started processing uploads");
     await Future.wait(
-        uploadQueue.map((item) => uploadItem(item, imagesDirectory)));
+      uploadQueue.map((item) => uploadItem(item, imagesDirectory)),
+    );
 
     //Update items that are uploaded in notes
     for (final UploadQueueItem item in uploadQueue) {
@@ -111,13 +117,15 @@ class ImageQueue extends ChangeNotifier with LoggerProvider {
 
     logger.d("DeleteQueue has ${downloadQueue.length} items queued");
     logger.d("Started processing uploads");
-    await Future.wait(deleteQueue.map((item) async {
-      if (await hasDuplicates(item.savedImage)) {
-        item.status.value = QueueItemStatus.complete;
-      } else {
-        return item.deleteImage();
-      }
-    }));
+    await Future.wait(
+      deleteQueue.map((item) async {
+        if (await hasDuplicates(item.savedImage)) {
+          item.status.value = QueueItemStatus.complete;
+        } else {
+          return item.deleteImage();
+        }
+      }),
+    );
 
     //Remove the items from the queue
     uploadQueue

@@ -8,7 +8,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -159,7 +158,9 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
 
                   Utils.showLoadingOverlay(context);
                   final RestoreResult result = await backupDelegate.restoreNote(
-                      backups![selectedBackup]!, password);
+                    backups![selectedBackup]!,
+                    password,
+                  );
                   Utils.hideLoadingOverlay(context);
 
                   if (result.status == RestoreResultStatus.success) {
@@ -354,7 +355,6 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleStrings.backupRestore.selectNotes),
-        textTheme: context.theme.textTheme,
       ),
       body: Observer(
         builder: (context) {

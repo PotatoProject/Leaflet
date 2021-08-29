@@ -674,7 +674,10 @@ class MaterialScrollBehavior extends ScrollBehavior {
 
   @override
   Widget buildScrollbar(
-      BuildContext context, Widget child, ScrollableDetails details) {
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     // When modifying this function, consider modifying the implementation in
     // the base class as well.
     switch (axisDirectionToAxis(details.direction)) {
@@ -699,7 +702,10 @@ class MaterialScrollBehavior extends ScrollBehavior {
 
   @override
   Widget buildOverscrollIndicator(
-      BuildContext context, Widget child, ScrollableDetails details) {
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     // When modifying this function, consider modifying the implementation in
     // the base class as well.
     switch (getPlatform(context)) {
@@ -744,7 +750,9 @@ class _NotesAppState extends State<NotesApp> {
   }
 
   Widget _inspectorSelectButtonBuilder(
-      BuildContext context, VoidCallback onPressed) {
+    BuildContext context,
+    VoidCallback onPressed,
+  ) {
     return FloatingActionButton(
       onPressed: onPressed,
       mini: true,
@@ -886,17 +894,19 @@ class _NotesAppState extends State<NotesApp> {
   Widget build(BuildContext context) {
     Widget result = _buildWidgetApp(context);
 
-    assert(() {
-      if (widget.debugShowMaterialGrid) {
-        result = GridPaper(
-          color: const Color(0xE0F9BBE0),
-          interval: 8.0,
-          subdivisions: 1,
-          child: result,
-        );
-      }
-      return true;
-    }());
+    assert(
+      () {
+        if (widget.debugShowMaterialGrid) {
+          result = GridPaper(
+            color: const Color(0xE0F9BBE0),
+            interval: 8.0,
+            subdivisions: 1,
+            child: result,
+          );
+        }
+        return true;
+      }(),
+    );
 
     return ScrollConfiguration(
       behavior: widget.scrollBehavior ?? const MaterialScrollBehavior(),

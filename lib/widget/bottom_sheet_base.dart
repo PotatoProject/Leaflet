@@ -34,8 +34,11 @@ class BottomSheetRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     return _BottomSheetBase(
       route: this,
       backgroundColor: backgroundColor,

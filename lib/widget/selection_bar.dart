@@ -30,7 +30,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.close),
-        padding: const EdgeInsets.all(0),
+        padding: EdgeInsets.zero,
         onPressed: state.closeSelection,
         tooltip: LocaleStrings.mainPage.selectionBarClose,
       ),
@@ -78,13 +78,20 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 typedef SelectionOptionsCallback = List<SelectionOptionEntry> Function(
-    BuildContext context, List<Note> notes);
+  BuildContext context,
+  List<Note> notes,
+);
 
 typedef SelectionOneNoteOptionsCallback = List<SelectionOptionEntry> Function(
-    BuildContext context, Note note);
+  BuildContext context,
+  Note note,
+);
 
 typedef SelectedCallback = Future<void> Function(
-    BuildContext context, List<Note> notes, String value);
+  BuildContext context,
+  List<Note> notes,
+  String value,
+);
 
 @immutable
 class SelectionOptions {

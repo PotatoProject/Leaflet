@@ -13,7 +13,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -394,7 +393,8 @@ class BasePageState extends State<BasePage>
                           ? _drawerClosedWidth
                           : _drawerOpenedWidth,
                       margin: EdgeInsetsDirectional.only(
-                          start: context.viewPaddingDirectional.start),
+                        start: context.viewPaddingDirectional.start,
+                      ),
                       child: DrawerList(
                         items: _items,
                         currentIndex: _currentPage,
@@ -447,7 +447,8 @@ class BasePageState extends State<BasePage>
                                 : LocaleStrings.common.collapse,
                           ),
                           onTap: () => setState(
-                              () => _collapsedDrawer = !_collapsedDrawer),
+                            () => _collapsedDrawer = !_collapsedDrawer,
+                          ),
                           showTitle: !_collapsedDrawer,
                         ),
                       ),

@@ -17,7 +17,6 @@ import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/encryption/base.dart';
-import 'package:potato_notes/internal/encryption/boringssl.dart';
 import 'package:potato_notes/internal/encryption/dart.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
@@ -232,7 +231,9 @@ class BackupDelegate with LoggerProvider {
   }
 
   Future<RestoreResult> restoreNote(
-      MetadataExtractionResult extractionResult, String password) async {
+    MetadataExtractionResult extractionResult,
+    String password,
+  ) async {
     final Map<String, dynamic> payload = {
       'data': extractionResult.data,
       'tags': _encodeTags(extractionResult.metadata.tags),
@@ -316,7 +317,9 @@ class BackupDelegate with LoggerProvider {
   }
 
   static List<int> _combineMetadata(
-      NoteBackupMetadata metadata, List<int> data) {
+    NoteBackupMetadata metadata,
+    List<int> data,
+  ) {
     final List<int> metadataBytes = metadata.toJsonString().codeUnits;
 
     final ByteData byteData = ByteData(2);
@@ -330,7 +333,8 @@ class BackupDelegate with LoggerProvider {
   }
 
   static Future<MetadataExtractionResult?> extractMetadataFromFile(
-      String path) async {
+    String path,
+  ) async {
     return extractMetadata(File(path).readAsBytesSync());
   }
 
@@ -362,8 +366,9 @@ class BackupDelegate with LoggerProvider {
 
   static List<Tag> _decodeTags(List<Map<String, dynamic>> tags) {
     return tags
-        .map((e) =>
-            Tag.fromJson(e, serializer: const _TypeAwareValueSerializer()))
+        .map(
+          (e) => Tag.fromJson(e, serializer: const _TypeAwareValueSerializer()),
+        )
         .toList();
   }
 
@@ -453,7 +458,8 @@ class RestoreResult {
 
   factory RestoreResult.fromJsonString(String jsonString) {
     return RestoreResult.fromJson(
-        json.decode(jsonString) as Map<String, dynamic>);
+      json.decode(jsonString) as Map<String, dynamic>,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -517,7 +523,8 @@ class NoteBackupMetadata {
 
   factory NoteBackupMetadata.fromJsonString(String jsonString) {
     return NoteBackupMetadata.fromJson(
-        json.decode(jsonString) as Map<String, dynamic>);
+      json.decode(jsonString) as Map<String, dynamic>,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -638,7 +645,10 @@ class ZipByteEncoder {
   void addFile(File file, [String? filename, int? level = gzip]) {
     final InputFileStream fileStream = InputFileStream.file(file);
     final ArchiveFile archiveFile = ArchiveFile.stream(
-        filename ?? p.basename(file.path), file.lengthSync(), fileStream);
+      filename ?? p.basename(file.path),
+      file.lengthSync(),
+      fileStream,
+    );
 
     if (level == store) {
       archiveFile.compress = false;

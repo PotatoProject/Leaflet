@@ -84,8 +84,9 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
                               if (text.length == 6) {
                                 final Color newColor =
                                     Color(int.parse(text, radix: 16));
-                                setState(() =>
-                                    currentColor = newColor.withAlpha(0xFF));
+                                setState(
+                                  () => currentColor = newColor.withAlpha(0xFF),
+                                );
                               }
                             },
                             decoration: InputDecoration(

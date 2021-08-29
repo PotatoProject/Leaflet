@@ -48,8 +48,10 @@ class RequestInterceptor extends InterceptorsWrapper with LoggerProvider {
           sendTimeout: err.requestOptions.sendTimeout,
           receiveTimeout: err.requestOptions.receiveTimeout,
           extra: err.requestOptions.extra,
-          headers: Utils.asMap<String, dynamic>(err.requestOptions.headers
-              .update("Authorization", (value) => prefs.getToken())),
+          headers: Utils.asMap<String, dynamic>(
+            err.requestOptions.headers
+                .update("Authorization", (value) => prefs.getToken()),
+          ),
           responseType: err.requestOptions.responseType,
           contentType: err.requestOptions.contentType,
           validateStatus: err.requestOptions.validateStatus,

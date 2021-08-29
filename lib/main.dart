@@ -126,7 +126,8 @@ class PotatoNotes extends StatelessWidget {
 
             SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             SystemChrome.setSystemUIOverlayStyle(
-                context.theme.appBarTheme.systemOverlayStyle!);
+              context.theme.appBarTheme.systemOverlayStyle!,
+            );
 
             return WindowFrame(child: child!);
           },

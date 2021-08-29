@@ -52,8 +52,9 @@ class SettingController extends Controller {
       NoteController.handleResponse(getResult);
       final Map<String, dynamic> data =
           Utils.asMap<String, dynamic>(getResult.data);
-      return data
-          .map((key, value) => MapEntry(key.toString(), value.toString()));
+      return data.map(
+        (key, value) => MapEntry(key, value.toString()),
+      );
     } on SocketException {
       throw "Could not connect to server";
     }

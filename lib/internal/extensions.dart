@@ -98,7 +98,8 @@ extension NoteX on Note {
   }
 
   static Map<String, dynamic> fillInMissingFields(
-      Map<String, dynamic> original) {
+    Map<String, dynamic> original,
+  ) {
     final Map<String, dynamic> derivated = Map.from(original);
     derivated.putIfAbsent('id', () => '');
     derivated.putIfAbsent('title', () => '');

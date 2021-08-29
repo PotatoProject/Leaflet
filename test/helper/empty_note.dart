@@ -1,6 +1,8 @@
 import 'package:potato_notes/data/database.dart';
 
 class EmptyNote {
+  const EmptyNote._();
+
   static Note get() {
     return Note(
       id: "",

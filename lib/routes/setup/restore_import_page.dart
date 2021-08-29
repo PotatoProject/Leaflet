@@ -15,7 +15,6 @@ class BackupRestorePage extends StatelessWidget {
       appBar: AppBar(
         leading: const Icon(MdiIcons.zipBoxOutline),
         title: Text(LocaleStrings.setup.restoreImportTitle),
-        textTheme: context.theme.textTheme,
       ),
       extendBodyBehindAppBar: true,
       body: Padding(
@@ -30,21 +29,23 @@ class BackupRestorePage extends StatelessWidget {
           children: [
             Text(LocaleStrings.setup.restoreImportDesc),
             Expanded(
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Align(
-                  child: Illustration.backupRestore(
-                    brightness: context.theme.brightness,
-                    height: min(constraints.maxHeight, 260),
-                  ),
-                );
-              }),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Align(
+                    child: Illustration.backupRestore(
+                      brightness: context.theme.brightness,
+                      height: min(constraints.maxHeight, 260),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: Container(
         margin: EdgeInsets.only(bottom: context.padding.bottom),
-        color: context.theme.appBarTheme.color,
+        color: context.theme.appBarTheme.backgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

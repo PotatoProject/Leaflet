@@ -80,11 +80,13 @@ class _ImageGrid extends StatelessWidget {
   }
 
   Widget buildImageRow(
-      List<SavedImage> images, double baseWidth, int forLoopIndex) {
+    List<SavedImage> images,
+    double baseWidth,
+    int forLoopIndex,
+  ) {
     assert(images.isNotEmpty && images.length <= 3);
 
-    final List<Size> _sizes =
-        images.map((image) => Size(image.width!, image.height!)).toList();
+    final List<Size> _sizes = images.map((image) => image.size).toList();
 
     final double _height = _getMinHeight(_sizes);
     final List<double> _transformedWidths =

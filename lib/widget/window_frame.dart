@@ -119,27 +119,29 @@ class _TitlebarButtonState extends State<_TitlebarButton> {
   @override
   Widget build(BuildContext context) {
     final Color _fgColor = context.theme.disabledColor.withOpacity(0.1);
-    return LayoutBuilder(builder: (context, constraints) {
-      return SizedBox.fromSize(
-        size: Size.square(constraints.maxHeight),
-        child: InkWell(
-          onTap: widget.onTap,
-          onHover: (value) => setState(() => hovering = value),
-          splashColor: _fgColor,
-          highlightColor: _fgColor,
-          focusColor: _fgColor,
-          hoverColor: _fgColor,
-          child: IconTheme.merge(
-            data: IconThemeData(
-              size: 20,
-              color: hovering
-                  ? context.theme.iconTheme.color!.withOpacity(1)
-                  : context.theme.iconTheme.color!.withOpacity(0.5),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox.fromSize(
+          size: Size.square(constraints.maxHeight),
+          child: InkWell(
+            onTap: widget.onTap,
+            onHover: (value) => setState(() => hovering = value),
+            splashColor: _fgColor,
+            highlightColor: _fgColor,
+            focusColor: _fgColor,
+            hoverColor: _fgColor,
+            child: IconTheme.merge(
+              data: IconThemeData(
+                size: 20,
+                color: hovering
+                    ? context.theme.iconTheme.color!.withOpacity(1)
+                    : context.theme.iconTheme.color!.withOpacity(0.5),
+              ),
+              child: widget.child,
             ),
-            child: widget.child,
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

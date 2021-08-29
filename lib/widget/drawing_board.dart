@@ -63,7 +63,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
     if (widget.path != null) {
       final ImageProvider image = FileImage(File(widget.path!));
 
-      image.resolve(const ImageConfiguration()).addListener(
+      image.resolve(ImageConfiguration.empty).addListener(
         ImageStreamListener((image, synchronousCall) {
           _image = image.image;
           setState(() {});
@@ -221,8 +221,11 @@ class DrawObject {
 
       canvas.drawPath(path, paint..style = PaintingStyle.stroke);
     } else {
-      canvas.drawCircle(points.last, paint.strokeWidth / 2,
-          paint..style = PaintingStyle.fill);
+      canvas.drawCircle(
+        points.last,
+        paint.strokeWidth / 2,
+        paint..style = PaintingStyle.fill,
+      );
     }
   }
 

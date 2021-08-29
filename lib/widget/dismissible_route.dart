@@ -93,8 +93,11 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   }
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     final Widget child = builder(context);
     final Widget result = Semantics(
       scopesRoute: true,
@@ -105,8 +108,12 @@ class DismissiblePageRoute<T> extends PageRoute<T> {
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     return buildPageTransitions(
       this,
       context,
@@ -248,7 +255,12 @@ class DismissiblePageTransitionsBuilder extends PageTransitionsBuilder {
     Widget child,
   ) =>
       DismissiblePageRoute.buildPageTransitions(
-          route, context, animation, secondaryAnimation, child);
+        route,
+        context,
+        animation,
+        secondaryAnimation,
+        child,
+      );
 }
 
 class DismissibleRoute extends StatefulWidget {

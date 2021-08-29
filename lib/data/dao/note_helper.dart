@@ -17,24 +17,30 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
         return select(notes).get();
       case ReturnMode.normal:
         return (select(notes)
-              ..where((table) =>
-                  table.archived.not() &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) =>
+                    table.archived.not() &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not(),
+              ))
             .get();
       case ReturnMode.archive:
         return (select(notes)
-              ..where((table) =>
-                  table.archived &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) =>
+                    table.archived &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not(),
+              ))
             .get();
       case ReturnMode.trash:
         return (select(notes)
-              ..where((table) =>
-                  table.archived.not() &
-                  table.deleted &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) =>
+                    table.archived.not() &
+                    table.deleted &
+                    table.id.contains("-synced").not(),
+              ))
             .get();
       case ReturnMode.synced:
         return (select(notes)..where((table) => table.id.contains("-synced")))
@@ -46,11 +52,13 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
             .get();
       case ReturnMode.favourites:
         return (select(notes)
-              ..where((table) =>
-                  table.starred &
-                  table.archived.not() &
-                  table.deleted.not() &
-                  table.id.contains("-synced").not()))
+              ..where(
+                (table) =>
+                    table.starred &
+                    table.archived.not() &
+                    table.deleted.not() &
+                    table.id.contains("-synced").not(),
+              ))
             .get();
 
       default:
@@ -67,32 +75,40 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
         break;
       case ReturnMode.normal:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived.not() &
-              table.deleted.not() &
-              table.id.contains("-synced").not());
+          ..where(
+            (table) =>
+                table.archived.not() &
+                table.deleted.not() &
+                table.id.contains("-synced").not(),
+          );
         break;
       case ReturnMode.archive:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived &
-              table.deleted.not() &
-              table.id.contains("-synced").not());
+          ..where(
+            (table) =>
+                table.archived &
+                table.deleted.not() &
+                table.id.contains("-synced").not(),
+          );
         break;
       case ReturnMode.favourites:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.starred &
-              table.archived.not() &
-              table.deleted.not() &
-              table.id.contains("-synced").not());
+          ..where(
+            (table) =>
+                table.starred &
+                table.archived.not() &
+                table.deleted.not() &
+                table.id.contains("-synced").not(),
+          );
         break;
       case ReturnMode.trash:
         selectQuery = select(notes)
-          ..where((table) =>
-              table.archived.not() &
-              table.deleted &
-              table.id.contains("-synced").not());
+          ..where(
+            (table) =>
+                table.archived.not() &
+                table.deleted &
+                table.id.contains("-synced").not(),
+          );
         break;
       case ReturnMode.synced:
         selectQuery = select(notes)
@@ -108,7 +124,9 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
     return (selectQuery
           ..orderBy([
             (table) => OrderingTerm(
-                expression: table.creationDate, mode: OrderingMode.desc)
+                  expression: table.creationDate,
+                  mode: OrderingMode.desc,
+                )
           ]))
         .watch();
   }

@@ -10,7 +10,10 @@ class AccountController extends Controller {
   // used for registering a user, all it needs is username, email, password.
   // When there is an error it throws an exception which needs to be catched
   Future<AuthResponse> register(
-      String username, String email, String password) async {
+    String username,
+    String email,
+    String password,
+  ) async {
     final Map<String, String> body = {
       "username": username,
       "email": email,

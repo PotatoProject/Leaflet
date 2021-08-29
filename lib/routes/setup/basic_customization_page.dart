@@ -11,7 +11,6 @@ class BasicCustomizationPage extends StatelessWidget {
       appBar: AppBar(
         leading: const Icon(CustomIcons.settings_outline),
         title: Text(LocaleStrings.setup.basicCustomizationTitle),
-        textTheme: context.theme.textTheme,
       ),
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(

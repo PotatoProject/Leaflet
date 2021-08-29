@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -276,7 +275,10 @@ class Utils {
   }
 
   static Future<void> _onSelected(
-      BuildContext context, List<Note> notes, String value) async {
+    BuildContext context,
+    List<Note> notes,
+    String value,
+  ) async {
     final state = context.selectionState;
 
     switch (value) {
@@ -408,7 +410,7 @@ class Utils {
         );
 
         if (unlocked) {
-          handlePinNotes(context, notes.first);
+          await handlePinNotes(context, notes.first);
 
           state.closeSelection();
         }
@@ -548,13 +550,15 @@ class Utils {
     for (final Note note in notes) {
       if (archive) {
         await helper.saveNote(
-            note.markChanged().copyWith(deleted: false, archived: true));
+          note.markChanged().copyWith(deleted: false, archived: true),
+        );
       } else {
         if (permaDelete) {
           Utils.deleteNoteSafely(note);
         } else {
           await helper.saveNote(
-              note.markChanged().copyWith(deleted: true, archived: false));
+            note.markChanged().copyWith(deleted: true, archived: false),
+          );
         }
       }
     }
@@ -597,7 +601,8 @@ class Utils {
 
     for (final Note note in notes) {
       await helper.saveNote(
-          note.markChanged().copyWith(deleted: false, archived: false));
+        note.markChanged().copyWith(deleted: false, archived: false),
+      );
     }
 
     final List<Note> backupNotes = List.from(notes);
@@ -640,7 +645,10 @@ class Utils {
   }
 
   static Widget quickIllustration(
-      BuildContext context, Widget illustration, String text) {
+    BuildContext context,
+    Widget illustration,
+    String text,
+  ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -707,11 +715,10 @@ class Utils {
 
   static Future<void> newImage(BuildContext context, ImageSource source) async {
     Note note = NoteX.emptyNote;
-    final File? image = await pickImage();
+    final XFile? image = await pickImage();
 
     if (image != null) {
-      final SavedImage savedImage =
-          await imageHelper.copyToCache(File(image.path));
+      final SavedImage savedImage = await imageHelper.copyToCache(image);
       note.images.add(savedImage);
 
       final int currentLength =
@@ -821,11 +828,9 @@ class Utils {
     );
   }
 
-  static Future<File?> pickImage() async {
-    String? path;
-
+  static Future<XFile?> pickImage() {
     if (DeviceInfo.isDesktop) {
-      final XFile? image = await openFile(
+      return openFile(
         acceptedTypeGroups: [
           XTypeGroup(
             label: 'images',
@@ -838,16 +843,9 @@ class Utils {
           ),
         ],
       );
-
-      path = image?.path;
     } else {
-      final PickedFile? image =
-          await ImagePicker().getImage(source: ImageSource.gallery);
-
-      path = image?.path;
+      return ImagePicker().pickImage(source: ImageSource.gallery);
     }
-
-    return path != null ? File(path) : null;
   }
 
   static Future<bool> launchUrl(

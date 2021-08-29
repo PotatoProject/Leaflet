@@ -378,7 +378,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
       ],
     );
 
-    if (value != null) {
+    if (value != null && mounted) {
       selectionOptions.onSelected?.call(context, [widget.note], value);
     }
   }

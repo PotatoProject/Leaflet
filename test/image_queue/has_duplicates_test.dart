@@ -21,8 +21,10 @@ void main() {
     final SavedImage otherImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "test";
-    expect(await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
-        true);
+    expect(
+      await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
+      true,
+    );
   });
   test(
       'returns true when image is uploaded and other uploaded images exist with different hash',
@@ -33,8 +35,10 @@ void main() {
     final SavedImage otherImage = SavedImage.empty()
       ..uploaded = true
       ..hash = "nottest";
-    expect(await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
-        false);
+    expect(
+      await hasDuplicatesWith(fakeImage..id = "1", otherImage..id = "2"),
+      false,
+    );
   });
 }
 

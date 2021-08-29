@@ -63,7 +63,8 @@ class KeyGenerator {
         } else if (stringInfo is PluralString) {
           final String varName = ReCase(key).camelCase;
           currentBuffer.writeln(
-              '  String $varName(num value) => "$routeFile.$key".plural(value);');
+            '  String $varName(num value) => "$routeFile.$key".plural(value);',
+          );
         } else if (stringInfo is ArgumentString) {
           final String varName = ReCase(key).camelCase;
           final int argNum = stringInfo.argNum;
@@ -88,7 +89,8 @@ class KeyGenerator {
 
       final String className = getClassNameFromRouteFile(routeFile);
       commonBuffer.writeln(
-          "  static $className get $recasedRouteFile => $className();");
+        "  static $className get $recasedRouteFile => $className();",
+      );
     });
     commonBuffer.writeln("}");
 

@@ -44,7 +44,6 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: _leading,
       titleSpacing: 0,
       title: _title,
-      textTheme: context.theme.textTheme,
       centerTitle: (context.theme.platform == TargetPlatform.iOS ||
               context.theme.platform == TargetPlatform.macOS) &&
           deviceInfo.uiSizeFactor < 3,

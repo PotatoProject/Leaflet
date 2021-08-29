@@ -32,7 +32,8 @@ class DeleteQueueItem extends QueueItem {
       DeleteQueueItem(
         localPath: json['localPath'] as String,
         savedImage: SavedImage.fromJson(
-            Utils.asMap<String, dynamic>(json['savedImage'])),
+          Utils.asMap<String, dynamic>(json['savedImage']),
+        ),
         storageLocation: StorageLocation.values[json['storageLocation'] as int],
       )
         ..status = ValueNotifier(QueueItemStatus.values[json['status'] as int])

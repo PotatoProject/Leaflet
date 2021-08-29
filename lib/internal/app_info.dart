@@ -68,8 +68,10 @@ abstract class _AppInfoBase with Store {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacOS,
     );
-    await notifications!.initialize(initializationSettings,
-        onSelectNotification: _handleNotificationTap);
+    await notifications!.initialize(
+      initializationSettings,
+      onSelectNotification: _handleNotificationTap,
+    );
   }
 
   Future<dynamic> _handleNotificationTap(String? payload) async {
@@ -91,7 +93,8 @@ abstract class _AppInfoBase with Store {
   Future<void> loadData() async {
     if (UniversalPlatform.isAndroid) {
       migrationAvailable = await MigrationTask.isMigrationAvailable(
-          await MigrationTask.v1DatabasePath);
+        await MigrationTask.v1DatabasePath,
+      );
     } else {
       migrationAvailable = false;
     }

@@ -334,7 +334,10 @@ class _MenuFabRoute extends StatelessWidget {
               Positioned.fill(
                 child: animate
                     ? transitionBuilder?.call(
-                            child, animation, secondaryAnimation) ??
+                          child,
+                          animation,
+                          secondaryAnimation,
+                        ) ??
                         FadeThroughTransition(
                           animation: animation,
                           secondaryAnimation: secondaryAnimation,
@@ -553,7 +556,11 @@ class _AnimatedShapeShadowPainter extends CustomPainter {
     final Path path = shape.getOuterPath(rect);
 
     canvas.drawShadow(
-        path, Colors.black.withOpacity(elevationOpacity), elevation, true);
+      path,
+      Colors.black.withOpacity(elevationOpacity),
+      elevation,
+      true,
+    );
   }
 
   @override

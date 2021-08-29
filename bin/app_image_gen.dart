@@ -31,15 +31,20 @@ Future<void> main(List<String> args) async {
 
   if (!await appImageTool.exists()) {
     Loggy.defaultLogger.d("AppImageTool missing, downloading...");
-    final Response response = await get(Uri.parse(
-        "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"));
+    final Response response = await get(
+      Uri.parse(
+        "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage",
+      ),
+    );
     await appImageTool.create();
     await appImageTool.writeAsBytes(response.bodyBytes);
   }
 
   final ProcessResult result = await Process.run(
-      appImageTool.absolute.path, [appDir.absolute.path],
-      environment: {"ARCH": "x86_64"});
+    appImageTool.absolute.path,
+    [appDir.absolute.path],
+    environment: {"ARCH": "x86_64"},
+  );
 
   if (result.exitCode != 0) {
     Loggy.defaultLogger

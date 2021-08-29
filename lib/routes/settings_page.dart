@@ -51,205 +51,207 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return DependentScaffold(
       resizeToAvoidBottomInset: false,
-      body: Observer(builder: (context) {
-        return ListView(
-          padding: EdgeInsets.only(
-            top: context.padding.top,
-            bottom: context.viewInsets.bottom,
-          ),
-          primary: UniversalPlatform.isIOS,
-          controller: !UniversalPlatform.isIOS ? ScrollController() : null,
-          children: [
-            commonSettings,
-            SettingsCategory(
-              header: LocaleStrings.settings.backupRestoreTitle,
-              children: [
-                SettingsTile(
-                  icon: const Icon(Icons.save_outlined),
-                  title: Text(LocaleStrings.settings.backupRestoreBackup),
-                  description:
-                      Text(LocaleStrings.settings.backupRestoreBackupDesc),
-                  onTap: () async {
-                    final List<Note> notes =
-                        await helper.listNotes(ReturnMode.local);
-                    if (notes.isNotEmpty) {
+      body: Observer(
+        builder: (context) {
+          return ListView(
+            padding: EdgeInsets.only(
+              top: context.padding.top,
+              bottom: context.viewInsets.bottom,
+            ),
+            primary: UniversalPlatform.isIOS,
+            controller: !UniversalPlatform.isIOS ? ScrollController() : null,
+            children: [
+              commonSettings,
+              SettingsCategory(
+                header: LocaleStrings.settings.backupRestoreTitle,
+                children: [
+                  SettingsTile(
+                    icon: const Icon(Icons.save_outlined),
+                    title: Text(LocaleStrings.settings.backupRestoreBackup),
+                    description:
+                        Text(LocaleStrings.settings.backupRestoreBackupDesc),
+                    onTap: () async {
+                      final List<Note> notes =
+                          await helper.listNotes(ReturnMode.local);
+                      if (notes.isNotEmpty) {
+                        await Utils.showModalBottomSheet(
+                          context: context,
+                          builder: (context) => BackupPage(),
+                        );
+                      } else {
+                        await Utils.showAlertDialog(
+                          context: context,
+                          title: Text(
+                            LocaleStrings.settings
+                                .backupRestoreBackupNothingToRestoreTitle,
+                          ),
+                          content: Text(
+                            LocaleStrings.settings
+                                .backupRestoreBackupNothingToRestoreDesc,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  SettingsTile(
+                    icon: const Icon(Icons.restart_alt_rounded),
+                    title: Text(LocaleStrings.settings.backupRestoreRestore),
+                    description: Text(
+                      LocaleStrings.settings.backupRestoreRestoreDesc,
+                    ),
+                    onTap: () async {
                       await Utils.showModalBottomSheet(
                         context: context,
-                        builder: (context) => BackupPage(),
-                      );
-                    } else {
-                      await Utils.showAlertDialog(
-                        context: context,
-                        title: Text(
-                          LocaleStrings.settings
-                              .backupRestoreBackupNothingToRestoreTitle,
-                        ),
-                        content: Text(
-                          LocaleStrings
-                              .settings.backupRestoreBackupNothingToRestoreDesc,
-                        ),
-                      );
-                    }
-                  },
-                ),
-                SettingsTile(
-                  icon: const Icon(Icons.restart_alt_rounded),
-                  title: Text(LocaleStrings.settings.backupRestoreRestore),
-                  description: Text(
-                    LocaleStrings.settings.backupRestoreRestoreDesc,
-                  ),
-                  onTap: () async {
-                    await Utils.showModalBottomSheet(
-                      context: context,
-                      builder: (context) => const RestoreNotesPage(),
-                    );
-                  },
-                ),
-                SettingsTile(
-                  icon: const Icon(Icons.file_present_outlined),
-                  title: Text(LocaleStrings.settings.backupRestoreImport),
-                  description:
-                      Text(LocaleStrings.settings.backupRestoreImportDesc),
-                  onTap: () async {
-                    await Utils.showModalBottomSheet(
-                      context: context,
-                      builder: (context) => const ImportNotesPage(),
-                    );
-                  },
-                ),
-              ],
-            ),
-            SettingsCategory(
-              header: LocaleStrings.settings.infoTitle,
-              children: <Widget>[
-                SettingsTile(
-                  icon: const Icon(Icons.info_outline),
-                  title: Text(LocaleStrings.settings.infoAboutApp),
-                  onTap: () => Utils.showSecondaryRoute(
-                    context,
-                    AboutPage(),
-                  ),
-                ),
-                SettingsTile(
-                  icon: const Icon(Icons.update_outlined),
-                  title: Text(LocaleStrings.settings.infoUpdateCheck),
-                  onTap: () => InAppUpdater.checkForUpdate(
-                    context,
-                    showNoUpdatesAvailable: true,
-                  ),
-                ),
-                SettingsTile(
-                  icon: const Icon(Icons.translate),
-                  title: Text(LocaleStrings.settings.infoTranslate),
-                  onTap: () => Utils.launchUrl(
-                    "https://crowdin.potatoproject.co/leaflet",
-                  ),
-                ),
-                SettingsTile(
-                  icon: const Icon(Icons.bug_report_outlined),
-                  visible: appConfig.bugReportUrl != null,
-                  title: Text(LocaleStrings.settings.infoBugReport),
-                  onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
-                ),
-              ],
-            ),
-            Visibility(
-              // ignore: avoid_redundant_argument_values
-              visible: kDebugMode,
-              child: SettingsCategory(
-                header: LocaleStrings.settings.debugTitle,
-                children: [
-                  SettingsTile.withSwitch(
-                    icon: const Icon(Icons.emoji_people_outlined),
-                    title: Text(
-                      LocaleStrings.settings.debugShowSetupScreen,
-                    ),
-                    value: !prefs.welcomePageSeen,
-                    activeColor: context.theme.colorScheme.secondary,
-                    onChanged: (value) async {
-                      prefs.welcomePageSeen = !value;
-                    },
-                  ),
-                  SettingsTile(
-                    icon: const Icon(Icons.timer),
-                    title: Text(LocaleStrings.settings.debugLoadingOverlay),
-                    onTap: () {
-                      Utils.showLoadingOverlay(context);
-                      Future.delayed(
-                        const Duration(milliseconds: 5000),
-                        () async => Utils.hideLoadingOverlay(context),
+                        builder: (context) => const RestoreNotesPage(),
                       );
                     },
                   ),
                   SettingsTile(
-                    icon: const Icon(MdiIcons.databaseRemoveOutline),
-                    title: Text(LocaleStrings.settings.debugClearDatabase),
+                    icon: const Icon(Icons.file_present_outlined),
+                    title: Text(LocaleStrings.settings.backupRestoreImport),
+                    description:
+                        Text(LocaleStrings.settings.backupRestoreImportDesc),
                     onTap: () async {
-                      await helper.deleteAllNotes();
-                      if (AppInfo.supportsNotesApi &&
-                          prefs.accessToken != null) {
-                        await Controller.note.deleteAll();
-                      }
-                    },
-                  ),
-                  SettingsTile(
-                    icon: const Icon(MdiIcons.databasePlusOutline),
-                    title: Text(LocaleStrings.settings.debugGenerateTrash),
-                    onTap: () async {
-                      for (int i = 0; i < 100; i++) {
-                        final Random r = Random();
-                        final Note n = NoteX.emptyNote.copyWith(
-                          id: Utils.generateId(),
-                          title: String.fromCharCodes(
-                            List.generate(
-                              32,
-                              (index) => 33 + r.nextInt(126 - 33),
-                            ),
-                          ),
-                          content: String.fromCharCodes(
-                            List.generate(
-                              128,
-                              (index) => 33 + r.nextInt(126 - 33),
-                            ),
-                          ),
-                          starred: r.nextBool(),
-                          color: r.nextInt(10),
-                        );
-                        await helper.saveNote(n);
-                      }
-                    },
-                  ),
-                  SettingsTile(
-                    icon: const Icon(Icons.text_snippet_outlined),
-                    title: Text(LocaleStrings.settings.debugLogLevel),
-                    onTap: () {
-                      showDropdownSheet(
+                      await Utils.showModalBottomSheet(
                         context: context,
-                        itemBuilder: (context, index) {
-                          final bool selected = prefs.logLevel == index;
-
-                          return dropDownTile(
-                            selected: selected,
-                            title: Text(
-                              LogLevel.values[index].name,
-                            ),
-                            onTap: () {
-                              prefs.logLevel = index;
-                              context.pop();
-                            },
-                          );
-                        },
-                        itemCount: LogLevel.values.length,
+                        builder: (context) => const ImportNotesPage(),
                       );
                     },
-                    subtitle: Text(LogLevel.values[prefs.logLevel].name),
                   ),
                 ],
               ),
-            ),
-          ],
-        );
-      }),
+              SettingsCategory(
+                header: LocaleStrings.settings.infoTitle,
+                children: <Widget>[
+                  SettingsTile(
+                    icon: const Icon(Icons.info_outline),
+                    title: Text(LocaleStrings.settings.infoAboutApp),
+                    onTap: () => Utils.showSecondaryRoute(
+                      context,
+                      AboutPage(),
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: const Icon(Icons.update_outlined),
+                    title: Text(LocaleStrings.settings.infoUpdateCheck),
+                    onTap: () => InAppUpdater.checkForUpdate(
+                      context,
+                      showNoUpdatesAvailable: true,
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: const Icon(Icons.translate),
+                    title: Text(LocaleStrings.settings.infoTranslate),
+                    onTap: () => Utils.launchUrl(
+                      "https://crowdin.potatoproject.co/leaflet",
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: const Icon(Icons.bug_report_outlined),
+                    visible: appConfig.bugReportUrl != null,
+                    title: Text(LocaleStrings.settings.infoBugReport),
+                    onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
+                  ),
+                ],
+              ),
+              Visibility(
+                // ignore: avoid_redundant_argument_values
+                visible: kDebugMode,
+                child: SettingsCategory(
+                  header: LocaleStrings.settings.debugTitle,
+                  children: [
+                    SettingsTile.withSwitch(
+                      icon: const Icon(Icons.emoji_people_outlined),
+                      title: Text(
+                        LocaleStrings.settings.debugShowSetupScreen,
+                      ),
+                      value: !prefs.welcomePageSeen,
+                      activeColor: context.theme.colorScheme.secondary,
+                      onChanged: (value) async {
+                        prefs.welcomePageSeen = !value;
+                      },
+                    ),
+                    SettingsTile(
+                      icon: const Icon(Icons.timer),
+                      title: Text(LocaleStrings.settings.debugLoadingOverlay),
+                      onTap: () {
+                        Utils.showLoadingOverlay(context);
+                        Future.delayed(
+                          const Duration(milliseconds: 5000),
+                          () async => Utils.hideLoadingOverlay(context),
+                        );
+                      },
+                    ),
+                    SettingsTile(
+                      icon: const Icon(MdiIcons.databaseRemoveOutline),
+                      title: Text(LocaleStrings.settings.debugClearDatabase),
+                      onTap: () async {
+                        await helper.deleteAllNotes();
+                        if (AppInfo.supportsNotesApi &&
+                            prefs.accessToken != null) {
+                          await Controller.note.deleteAll();
+                        }
+                      },
+                    ),
+                    SettingsTile(
+                      icon: const Icon(MdiIcons.databasePlusOutline),
+                      title: Text(LocaleStrings.settings.debugGenerateTrash),
+                      onTap: () async {
+                        for (int i = 0; i < 100; i++) {
+                          final Random r = Random();
+                          final Note n = NoteX.emptyNote.copyWith(
+                            id: Utils.generateId(),
+                            title: String.fromCharCodes(
+                              List.generate(
+                                32,
+                                (index) => 33 + r.nextInt(126 - 33),
+                              ),
+                            ),
+                            content: String.fromCharCodes(
+                              List.generate(
+                                128,
+                                (index) => 33 + r.nextInt(126 - 33),
+                              ),
+                            ),
+                            starred: r.nextBool(),
+                            color: r.nextInt(10),
+                          );
+                          await helper.saveNote(n);
+                        }
+                      },
+                    ),
+                    SettingsTile(
+                      icon: const Icon(Icons.text_snippet_outlined),
+                      title: Text(LocaleStrings.settings.debugLogLevel),
+                      onTap: () {
+                        showDropdownSheet(
+                          context: context,
+                          itemBuilder: (context, index) {
+                            final bool selected = prefs.logLevel == index;
+
+                            return dropDownTile(
+                              selected: selected,
+                              title: Text(
+                                LogLevel.values[index].name,
+                              ),
+                              onTap: () {
+                                prefs.logLevel = index;
+                                context.pop();
+                              },
+                            );
+                          },
+                          itemCount: LogLevel.values.length,
+                        );
+                      },
+                      subtitle: Text(LogLevel.values[prefs.logLevel].name),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -495,7 +497,9 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () async {
                 final bool? confirm =
                     await showPassChallengeSheet(context, false);
-                if (confirm ?? false) showPassChallengeSheet(context);
+                if ((confirm ?? false) && mounted) {
+                  showPassChallengeSheet(context);
+                }
               },
             ),
           ],
@@ -585,8 +589,10 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<bool?> showPassChallengeSheet(BuildContext context,
-      [bool editMode = true]) async {
+  Future<bool?> showPassChallengeSheet(
+    BuildContext context, [
+    bool editMode = true,
+  ]) async {
     return Utils.showModalBottomSheet(
       context: context,
       builder: (context) => PassChallenge(

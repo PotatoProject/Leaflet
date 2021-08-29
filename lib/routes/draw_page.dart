@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -131,7 +132,7 @@ class _DrawPageState extends State<DrawPage>
                     builder: (context) {
                       return IconButton(
                         icon: const Icon(Icons.save_outlined),
-                        padding: const EdgeInsets.all(0),
+                        padding: EdgeInsets.zero,
                         tooltip: LocaleStrings.common.save,
                         onPressed: !_controller.saved ? _saveImage : null,
                       );
@@ -376,7 +377,7 @@ class _DrawPageState extends State<DrawPage>
       widget.note.images
           .removeWhere((savedImage) => savedImage.id == _savedImage!.id);
     }
-    _savedImage = await imageHelper.copyToCache(imgFile);
+    _savedImage = await imageHelper.copyToCache(XFile(imgFile.path));
 
     widget.note.images.add(_savedImage!);
     helper.saveNote(widget.note.markChanged());

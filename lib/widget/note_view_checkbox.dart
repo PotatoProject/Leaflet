@@ -343,7 +343,9 @@ class _CheckboxState extends State<NoteViewCheckbox>
         MaterialStateProperty.resolveWith<MouseCursor>(
             (Set<MaterialState> states) {
       return MaterialStateProperty.resolveAs<MouseCursor?>(
-              widget.mouseCursor, states) ??
+            widget.mouseCursor,
+            states,
+          ) ??
           themeData.checkboxTheme.mouseCursor?.resolve(states) ??
           MaterialStateMouseCursor.clickable.resolve(states);
     });
@@ -426,7 +428,8 @@ class _CheckboxState extends State<NoteViewCheckbox>
           ..shape = widget.shape ??
               themeData.checkboxTheme.shape ??
               const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(2.0)))
+                borderRadius: BorderRadius.all(Radius.circular(2.0)),
+              )
           ..side = widget.side ?? themeData.checkboxTheme.side
           ..width = widget.width,
       ),
@@ -531,7 +534,8 @@ class _CheckboxPainter extends ToggleablePainter {
     OutlinedBorder resolvedShape = shape;
     if (side == null) {
       resolvedShape = resolvedShape.copyWith(
-          side: BorderSide(width: 2, color: paint.color));
+        side: BorderSide(width: 2, color: paint.color),
+      );
     }
     resolvedShape.copyWith(side: side).paint(canvas, outer);
   }

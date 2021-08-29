@@ -17,7 +17,6 @@ class NewNoteBar extends StatelessWidget {
           ),
         ),
       ),
-      textTheme: context.theme.textTheme,
       flexibleSpace: InkWell(
         onTap: () => Utils.newNote(context),
       ),

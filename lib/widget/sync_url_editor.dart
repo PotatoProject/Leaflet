@@ -43,6 +43,8 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
           onPressed: () async {
             prefs.apiUrl = Constants.defaultApiUrl;
             await helper.deleteAllNotes();
+
+            if (!mounted) return;
             context.pop();
           },
           child: Text(LocaleStrings.common.reset),
@@ -60,6 +62,8 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
   Future<void> _onSubmit(String text) async {
     prefs.apiUrl = text;
     await helper.deleteAllNotes();
+
+    if (!mounted) return;
     context.pop();
   }
 }

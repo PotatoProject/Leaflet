@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 
 class FinishPage extends StatelessWidget {
@@ -9,7 +8,6 @@ class FinishPage extends StatelessWidget {
       appBar: AppBar(
         leading: const Icon(Icons.check),
         title: Text(LocaleStrings.setup.finishTitle),
-        textTheme: context.theme.textTheme,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
