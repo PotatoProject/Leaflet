@@ -104,6 +104,17 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
       ActionController(name: '_DeviceInfoBase');
 
   @override
+  void setCanUseSystemAccent(bool value) {
+    final _$actionInfo = _$_DeviceInfoBaseActionController.startAction(
+        name: '_DeviceInfoBase.setCanUseSystemAccent');
+    try {
+      return super.setCanUseSystemAccent(value);
+    } finally {
+      _$_DeviceInfoBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
     final _$actionInfo = _$_DeviceInfoBaseActionController.startAction(
         name: '_DeviceInfoBase.updateDeviceInfo');

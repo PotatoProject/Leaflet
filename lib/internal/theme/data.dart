@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
+import 'package:potato_notes/internal/theme/parser.dart';
 import 'package:potato_notes/internal/theme/shapes.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 
@@ -184,4 +187,51 @@ class LeafletThemeDataTween extends Tween<LeafletThemeData> {
 
   @override
   LeafletThemeData lerp(double t) => LeafletThemeData.lerp(begin!, end!, t);
+}
+
+abstract class AppTheme {
+  ThemeParser? _parser;
+  LeafletThemeData? _data;
+
+  Future<void> load() async {
+    _parser = await _getThemeParser();
+    _data = _parser!.parse();
+  }
+
+  void reparse() => _data = _parser!.parse();
+
+  LeafletThemeData get data {
+    if (_parser == null || _data == null) {
+      throw Exception("The theme must be loaded before, call load()");
+    }
+
+    return _data!;
+  }
+
+  Future<ThemeParser> _getThemeParser();
+}
+
+class BundledTheme extends AppTheme {
+  final String assetName;
+
+  BundledTheme(this.assetName);
+
+  @override
+  Future<ThemeParser> _getThemeParser() async {
+    final String themeContents = await rootBundle.loadString(assetName);
+    final ThemeParser parser = ThemeParser.fromString(themeContents);
+
+    return parser;
+  }
+}
+
+class ImportedTheme extends AppTheme {
+  final String filePath;
+
+  ImportedTheme(this.filePath);
+
+  @override
+  Future<ThemeParser> _getThemeParser() {
+    return ThemeParser.fromFile(File(filePath));
+  }
 }

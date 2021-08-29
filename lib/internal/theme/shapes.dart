@@ -42,7 +42,7 @@ class ShapeTheme {
   OutlinedBorder get snackbarShape => snackbarShapeOverride ?? smallComponents;
   OutlinedBorder get tooltipShape => tooltipShapeOverride ?? smallComponents;
 
-  OutlinedBorder get cardShape => tooltipShapeOverride ?? mediumComponents;
+  OutlinedBorder get cardShape => cardShapeOverride ?? mediumComponents;
   OutlinedBorder get dialogShape => dialogShapeOverride ?? mediumComponents;
   OutlinedBorder get imageShape => imageShapeOverride ?? mediumComponents;
   OutlinedBorder get menuShape => menuShapeOverride ?? mediumComponents;
@@ -91,7 +91,7 @@ class ShapeTheme {
     return false;
   }
 
-  static ShapeTheme lerp(ShapeTheme a, ShapeTheme b, double t) {
+  factory ShapeTheme.lerp(ShapeTheme a, ShapeTheme b, double t) {
     return ShapeTheme(
       smallComponents: ShapeBorder.lerp(
         a.smallComponents,

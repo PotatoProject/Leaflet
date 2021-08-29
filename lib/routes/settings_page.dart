@@ -17,10 +17,12 @@ import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/backup_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/restore_page.dart';
+import 'package:potato_notes/routes/theme_picker_page.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 import 'package:potato_notes/widget/pass_challenge.dart';
 import 'package:potato_notes/widget/rgb_color_picker.dart';
@@ -260,7 +262,7 @@ class _SettingsPageState extends State<SettingsPage> {
           header: LocaleStrings.settings.personalizationTitle,
           children: [
             SettingsTile(
-              icon: const Icon(Icons.brightness_medium_outlined),
+              icon: const Icon(Icons.brightness_4_outlined),
               title: Text(LocaleStrings.settings.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
@@ -290,12 +292,38 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               subtitle: Text(getThemeModeName(prefs.themeMode)),
             ),
-            SettingsTile.withSwitch(
+            /* SettingsTile.withSwitch(
               value: prefs.useAmoled,
               onChanged: (value) => prefs.useAmoled = value,
               title: Text(LocaleStrings.settings.personalizationUseAmoled),
               icon: const Icon(Icons.brightness_2_outlined),
               activeColor: context.theme.colorScheme.secondary,
+            ), */
+            SettingsTile(
+              icon: const Icon(Icons.light_mode_outlined),
+              title: const Text("Light theme"),
+              subtitle: Text(
+                "${appInfo.lightTheme.name} \u2022 ${appInfo.lightTheme.author}",
+              ),
+              onTap: () {
+                Utils.showSecondaryRoute(
+                  context,
+                  const ThemePickerPage(pickerMode: Brightness.light),
+                );
+              },
+            ),
+            SettingsTile(
+              icon: const Icon(Icons.dark_mode_outlined),
+              title: const Text("Dark theme"),
+              subtitle: Text(
+                "${appInfo.darkTheme.name} \u2022 ${appInfo.darkTheme.author}",
+              ),
+              onTap: () {
+                Utils.showSecondaryRoute(
+                  context,
+                  const ThemePickerPage(pickerMode: Brightness.dark),
+                );
+              },
             ),
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(

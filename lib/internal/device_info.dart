@@ -73,6 +73,10 @@ abstract class _DeviceInfoBase with Store {
   int get uiSizeFactor => _uiSizeFactorValue;
 
   @action
+  // ignore: use_setters_to_change_properties
+  void setCanUseSystemAccent(bool value) => _canUseSystemAccentValue = value;
+
+  @action
   Future<void> _loadInitialData() async {
     if (!DeviceInfo.isDesktopOrWeb) {
       _canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
@@ -86,7 +90,6 @@ abstract class _DeviceInfoBase with Store {
 
   @action
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
-    _canUseSystemAccentValue = canUseSystemAccent;
     _isLandscapeValue = mq.orientation == Orientation.landscape;
     final double width = mq.size.width;
 

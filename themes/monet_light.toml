@@ -1,0 +1,54 @@
+[info]
+name = "Monet light"
+author = "HrX03"
+version = 1
+brightness = "light"
+
+[shapes.smallComponents]
+type = "rounded"
+radius.all = 4
+
+[shapes.mediumComponents]
+type = "rounded"
+radius.all = 4
+
+[shapes.largeComponents]
+type = "rounded"
+radius.all = 16
+
+[shapes.fabOverride]
+type = "rounded"
+radius.all = 16
+
+[shapes.bottomSheetOverride]
+type = "rounded"
+
+[shapes.dialogOverride]
+type = "rounded"
+radius.all = 8
+
+[shapes.chipOverride]
+type = "stadium"
+
+[shapes.menuOverride]
+type = "rounded"
+radius.all = 16
+
+[shapes.cardOverride]
+type = "rounded"
+radius.all = 16
+
+[colors]
+primary = "monet.accent1.600"
+surface = "monet.accent2.50"
+background = "monet.accent2.100"
+error = "color.red"
+onPrimary = "monet.accent2.50"
+onSurface = "monet.accent2.900"
+onBackground = "monet.accent2.900"
+onError = "color.grey.900"
+
+[colors.illustrations]
+base = "monet.accent2.600"
+contrast = "monet.accent2.800"
+invertedContrast = "monet.accent2.300"

@@ -481,3 +481,9 @@ extension BorderRadiusDirectionalX on BorderRadiusDirectional {
     );
   }
 }
+
+extension DynamicX on dynamic {
+  T toType<T>() {
+    return this as T;
+  }
+}

@@ -1,0 +1,40 @@
+[info]
+name = "Default black"
+author = "HrX03"
+version = 1
+brightness = "dark"
+
+[shapes.smallComponents]
+type = "rounded"
+radius.all = 4
+
+[shapes.mediumComponents]
+type = "rounded"
+radius.all = 4
+
+[shapes.largeComponents]
+type = "rounded"
+radius.all = 16
+
+[shapes.fabOverride]
+type = "circle"
+
+[shapes.bottomSheetOverride]
+type = "rounded"
+
+[shapes.dialogOverride]
+type = "rounded"
+radius.all = 8
+
+[shapes.chipOverride]
+type = "stadium"
+
+[colors]
+primary = "system"
+surface = "#12"
+background = "#00"
+error = "color.red.400"
+onPrimary = "color.grey.900"
+onSurface = "#ff"
+onBackground = "#ff"
+onError = "color.grey.900"
