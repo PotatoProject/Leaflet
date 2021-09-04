@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -37,7 +38,7 @@ class WelcomePage extends StatelessWidget {
                         child: Text(
                           "leaflet",
                           style: TextStyle(
-                            fontFamily: "ValeraRound",
+                            fontFamily: Constants.leafletLogoFontFamily,
                             fontSize: 48,
                           ),
                         ),

@@ -54,7 +54,7 @@ class NoteListPageState extends State<NoteListPage> {
       options: widget.selectionOptions,
       noteKind: widget.noteKind,
       onSelectionChanged: (value) {
-        context.basePage!.setBottomBarEnabled(!value);
+        context.basePage!.setNavigationEnabled(!value);
       },
     );
     _selectionState.selectingNotifier.addListener(() => setState(() {}));
@@ -214,7 +214,7 @@ class NoteListPageState extends State<NoteListPage> {
           _state.selecting = true;
           _state.addSelectedNote(note);
         }
-        context.basePage!.setBottomBarEnabled(!_state.selecting);
+        context.basePage!.setNavigationEnabled(!_state.selecting);
       },
       allowSelection: true,
     );

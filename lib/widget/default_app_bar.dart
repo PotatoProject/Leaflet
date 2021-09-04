@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -36,7 +37,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
         ? title ??
             const Text(
               "leaflet",
-              style: TextStyle(fontFamily: "ValeraRound"),
+              style: TextStyle(fontFamily: Constants.leafletLogoFontFamily),
             )
         : title;
 

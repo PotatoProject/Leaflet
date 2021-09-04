@@ -8,6 +8,10 @@ class Constants {
   static const double cardBorderRadius = 4;
   static const EdgeInsets cardPadding = EdgeInsets.all(4);
   static const Color defaultAccent = Color(0xFF66BB6A);
+  static const double drawerClosedWidth = 72.0;
+  static const double drawerOpenedWidth = 300.0;
+  static const Duration drawerAnimationDuration = Duration(milliseconds: 200);
+  static const String leafletLogoFontFamily = "ValeraRound";
 
   static List<ContributorInfo> get contributors => [
         ContributorInfo(

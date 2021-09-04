@@ -471,7 +471,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         await helper.listNotes(ReturnMode.local);
 
                     setState(() => removingMasterPass = true);
-                    context.basePage!.setBottomBarEnabled(false);
+                    context.basePage!.setNavigationEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
                       final Note note = notes[i];
                       if (note.lockNote) {
@@ -480,7 +480,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         );
                       }
                     }
-                    context.basePage!.setBottomBarEnabled(true);
+                    context.basePage!.setNavigationEnabled(true);
                   }
                 }
               },

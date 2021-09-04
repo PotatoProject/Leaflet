@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/internal/app_info.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -50,9 +51,6 @@ class BasePage extends StatefulWidget {
 
 class BasePageState extends State<BasePage>
     with SingleTickerProviderStateMixin {
-  static const double _drawerClosedWidth = 72.0;
-  static const double _drawerOpenedWidth = 300.0;
-
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _pages = [
     NoteListPage(
@@ -78,7 +76,7 @@ class BasePageState extends State<BasePage>
   ];
 
   int _currentPage = 0;
-  bool _bottomBarEnabled = true;
+  bool _navigationEnabled = true;
   Widget? _floatingActionButton;
   Widget? _appBar;
   Widget? _secondaryAppBar;
@@ -98,8 +96,8 @@ class BasePageState extends State<BasePage>
     setState(() {});
   }
 
-  void setBottomBarEnabled(bool enabled) {
-    setState(() => _bottomBarEnabled = enabled);
+  void setNavigationEnabled(bool enabled) {
+    setState(() => _navigationEnabled = enabled);
   }
 
   void setFAB(Widget? fab) {
@@ -133,9 +131,7 @@ class BasePageState extends State<BasePage>
   }
 
   void hideCurrentSnackBar() => context.scaffoldMessenger.hideCurrentSnackBar();
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
-    SnackBar snackBar,
-  ) =>
+  ScaffoldFeatureController showSnackBar(SnackBar snackBar) =>
       context.scaffoldMessenger.showSnackBar(snackBar);
 
   List<BottomNavigationBarItem> get _items => [
@@ -271,53 +267,51 @@ class BasePageState extends State<BasePage>
             color: context.theme.scaffoldBackgroundColor,
             child: Stack(
               children: [
-                Positioned.fill(
-                  child: AnimatedPadding(
-                    padding: EdgeInsetsDirectional.only(
-                      start: useDynamicDrawer
-                          ? (_defaultDrawerMode == DefaultDrawerMode.expanded
-                                  ? _collapsedDrawer
-                                      ? _drawerClosedWidth
-                                      : _drawerOpenedWidth
-                                  : _drawerClosedWidth) +
-                              context.viewPaddingDirectional.start
-                          : 0,
-                    ),
-                    duration: const Duration(milliseconds: 200),
-                    curve: decelerateEasing,
-                    child: MediaQuery.removeViewPadding(
-                      context: context,
-                      removeLeft: true,
-                      removeRight: true,
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        appBar: ConstrainedWidthAppbar(
-                          width: 1920,
-                          mediaQueryData: context.mediaQuery,
-                          child: !useDynamicDrawer
-                              ? !deviceInfo.isLandscape
-                                  ? _appBar
-                                  : DefaultAppBar(
-                                      extraActions: [
-                                        AppbarNavigation(
-                                          items: _items,
-                                          index: _currentPage,
-                                          enabled: _bottomBarEnabled,
-                                          onPageChanged: setCurrentPage,
-                                        ),
-                                      ],
+                AnimatedPadding(
+                  padding: EdgeInsetsDirectional.only(
+                    start: getDrawerWidth(useDynamicDrawer),
+                  ),
+                  duration: Constants.drawerAnimationDuration,
+                  curve: decelerateEasing,
+                  child: MediaQuery.removeViewPadding(
+                    context: context,
+                    removeLeft: true,
+                    removeRight: true,
+                    child: Scaffold(
+                      backgroundColor: Colors.transparent,
+                      appBar: ConstrainedWidthAppbar(
+                        width: 1920,
+                        mediaQueryData: context.mediaQuery,
+                        child: !useDynamicDrawer
+                            ? !deviceInfo.isLandscape
+                                ? _appBar
+                                : DefaultAppBar(
+                                    extraActions: [
+                                      AppbarNavigation(
+                                        items: _items,
+                                        index: _currentPage,
+                                        enabled: _navigationEnabled,
+                                        onPageChanged: setCurrentPage,
+                                      ),
+                                    ],
+                                  )
+                            : null,
+                      ),
+                      extendBody: useDesktopLayout,
+                      extendBodyBehindAppBar: true,
+                      body: PageTransitionSwitcher(
+                        transitionBuilder:
+                            (child, primaryAnimation, secondaryAnimation) {
+                          final EdgeInsetsDirectional? viewPadding =
+                              useDynamicDrawer
+                                  ? EdgeInsetsDirectional.only(
+                                      top: context.viewPaddingDirectional.top,
+                                      bottom:
+                                          context.viewPaddingDirectional.bottom,
+                                      end: context.viewPaddingDirectional.end,
                                     )
-                              : null,
-                        ),
-                        extendBody: useDesktopLayout,
-                        extendBodyBehindAppBar: true,
-                        body: PageTransitionSwitcher(
-                          transitionBuilder: (
-                            child,
-                            primaryAnimation,
-                            secondaryAnimation,
-                          ) =>
-                              FadeThroughTransition(
+                                  : null;
+                          return FadeThroughTransition(
                             animation: primaryAnimation,
                             secondaryAnimation: secondaryAnimation,
                             fillColor: Colors.transparent,
@@ -328,41 +322,35 @@ class BasePageState extends State<BasePage>
                                       ? context.padding.top
                                       : context.padding.top + 56,
                                 ),
-                                viewPadding: useDynamicDrawer
-                                    ? EdgeInsetsDirectional.only(
-                                        top: context.viewPaddingDirectional.top,
-                                        bottom: context
-                                            .viewPaddingDirectional.bottom,
-                                        end: context.viewPaddingDirectional.end,
-                                      ).resolve(context.directionality)
-                                    : null,
+                                viewPadding: viewPadding
+                                    ?.resolve(context.directionality),
                               ),
                               child: PageStorage(
                                 bucket: _bucket,
                                 child: child,
                               ),
                             ),
-                          ),
-                          child: _pages.get(_currentPage),
-                        ),
-                        resizeToAvoidBottomInset: false,
-                        bottomNavigationBar: MediaQuery(
-                          data: context.mediaQuery,
-                          child: !useDesktopLayout
-                              ? BasePageNavigationBar(
-                                  items: _items,
-                                  index: _currentPage,
-                                  enabled: _bottomBarEnabled,
-                                  onPageChanged: setCurrentPage,
-                                )
-                              : _SecondaryAppBar(
-                                  animationController: _ac,
-                                  child: _secondaryAppBar,
-                                ),
-                        ),
-                        floatingActionButton:
-                            !useDesktopLayout ? _floatingActionButton : null,
+                          );
+                        },
+                        child: _pages.get(_currentPage),
                       ),
+                      resizeToAvoidBottomInset: false,
+                      bottomNavigationBar: MediaQuery(
+                        data: context.mediaQuery,
+                        child: !useDesktopLayout
+                            ? BasePageNavigationBar(
+                                items: _items,
+                                index: _currentPage,
+                                enabled: _navigationEnabled,
+                                onPageChanged: setCurrentPage,
+                              )
+                            : _SecondaryAppBar(
+                                animationController: _ac,
+                                child: _secondaryAppBar,
+                              ),
+                      ),
+                      floatingActionButton:
+                          !useDesktopLayout ? _floatingActionButton : null,
                     ),
                   ),
                 ),
@@ -373,7 +361,7 @@ class BasePageState extends State<BasePage>
                     child: GestureDetector(
                       onTap: () => setState(() => _collapsedDrawer = true),
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
+                        duration: Constants.drawerAnimationDuration,
                         curve: decelerateEasing,
                         color: _collapsedDrawer
                             ? Colors.transparent
@@ -384,75 +372,14 @@ class BasePageState extends State<BasePage>
                 ),
                 Visibility(
                   visible: useDynamicDrawer,
-                  child: Material(
-                    elevation: 12,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: decelerateEasing,
-                      width: _collapsedDrawer
-                          ? _drawerClosedWidth
-                          : _drawerOpenedWidth,
-                      margin: EdgeInsetsDirectional.only(
-                        start: context.viewPaddingDirectional.start,
-                      ),
-                      child: DrawerList(
-                        items: _items,
-                        currentIndex: _currentPage,
-                        onTap: setCurrentPage,
-                        showTitles: !_collapsedDrawer,
-                        enabled: _bottomBarEnabled,
-                        header: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: DrawerListTile(
-                                icon: const Illustration.leaflet(height: 32),
-                                title: const Text(
-                                  "leaflet",
-                                  style: TextStyle(
-                                    fontFamily: "ValeraRound",
-                                    fontSize: 22,
-                                  ),
-                                ),
-                                showTitle: !_collapsedDrawer,
-                              ),
-                            ),
-                            if (AppInfo.supportsNotesApi)
-                              DrawerListTile(
-                                icon: const AccountAvatar(),
-                                title: Text(
-                                  prefs.accessToken != null
-                                      ? prefs.username ?? "Guest"
-                                      : LocaleStrings.mainPage.account,
-                                ),
-                                onTap: () {
-                                  Utils.showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => AccountInfo(),
-                                  );
-                                },
-                                showTitle: !_collapsedDrawer,
-                              ),
-                          ],
-                        ),
-                        footer: DrawerListTile(
-                          icon: Icon(
-                            _collapsedDrawer
-                                ? Icons.chevron_right
-                                : Icons.chevron_left,
-                          ),
-                          title: Text(
-                            _collapsedDrawer
-                                ? LocaleStrings.common.expand
-                                : LocaleStrings.common.collapse,
-                          ),
-                          onTap: () => setState(
-                            () => _collapsedDrawer = !_collapsedDrawer,
-                          ),
-                          showTitle: !_collapsedDrawer,
-                        ),
-                      ),
-                    ),
+                  child: _NavigationDrawer(
+                    items: _items,
+                    currentPage: _currentPage,
+                    onPageChanged: setCurrentPage,
+                    collapsed: _collapsedDrawer,
+                    enabled: _navigationEnabled,
+                    onExpandChanged: (value) =>
+                        setState(() => _collapsedDrawer = value),
                   ),
                 ),
               ],
@@ -461,6 +388,27 @@ class BasePageState extends State<BasePage>
         );
       },
     );
+  }
+
+  double getDrawerWidth(bool useDynamicDrawer) {
+    if (!useDynamicDrawer) return 0;
+
+    final double baseWidth;
+
+    switch (_defaultDrawerMode) {
+      case DefaultDrawerMode.expanded:
+        if (_collapsedDrawer) {
+          baseWidth = Constants.drawerClosedWidth;
+        } else {
+          baseWidth = Constants.drawerOpenedWidth;
+        }
+        break;
+      case DefaultDrawerMode.collapsed:
+        baseWidth = Constants.drawerClosedWidth;
+        break;
+    }
+
+    return baseWidth + context.viewPaddingDirectional.start;
   }
 }
 
@@ -482,6 +430,94 @@ class BasePageInheritedWidget extends InheritedWidget {
 enum DefaultDrawerMode {
   collapsed,
   expanded,
+}
+
+class _NavigationDrawer extends StatelessWidget {
+  final List<BottomNavigationBarItem> items;
+  final int currentPage;
+  final ValueChanged<int>? onPageChanged;
+  final bool collapsed;
+  final bool enabled;
+  final ValueChanged<bool>? onExpandChanged;
+
+  const _NavigationDrawer({
+    required this.items,
+    required this.currentPage,
+    this.onPageChanged,
+    this.collapsed = true,
+    this.enabled = true,
+    this.onExpandChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 12,
+      child: AnimatedContainer(
+        duration: Constants.drawerAnimationDuration,
+        curve: decelerateEasing,
+        width: collapsed
+            ? Constants.drawerClosedWidth
+            : Constants.drawerOpenedWidth,
+        margin: EdgeInsetsDirectional.only(
+          start: context.viewPaddingDirectional.start,
+        ),
+        child: DrawerList(
+          items: items,
+          currentIndex: currentPage,
+          onTap: onPageChanged,
+          showTitles: !collapsed,
+          enabled: enabled,
+          header: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: DrawerListTile(
+                  icon: const Illustration.leaflet(height: 32),
+                  title: const Text(
+                    "leaflet",
+                    style: TextStyle(
+                      fontFamily: Constants.leafletLogoFontFamily,
+                      fontSize: 22,
+                    ),
+                  ),
+                  showTitle: !collapsed,
+                ),
+              ),
+              if (AppInfo.supportsNotesApi)
+                DrawerListTile(
+                  icon: const AccountAvatar(),
+                  title: Text(
+                    prefs.accessToken != null
+                        ? prefs.username ?? "Guest"
+                        : LocaleStrings.mainPage.account,
+                  ),
+                  onTap: () {
+                    Utils.showModalBottomSheet(
+                      context: context,
+                      builder: (context) => AccountInfo(),
+                    );
+                  },
+                  showTitle: !collapsed,
+                ),
+            ],
+          ),
+          footer: DrawerListTile(
+            icon: Icon(
+              collapsed ? Icons.chevron_right : Icons.chevron_left,
+            ),
+            title: Text(
+              collapsed
+                  ? LocaleStrings.common.expand
+                  : LocaleStrings.common.collapse,
+            ),
+            onTap: () => onExpandChanged?.call(!collapsed),
+            showTitle: !collapsed,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _SecondaryAppBar extends StatelessWidget {
