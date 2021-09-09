@@ -115,7 +115,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                   DateFormat("d MMMM y", context.locale.toString())
                       .format(widget.note.creationDate),
                   style: TextStyle(
-                    color: context.theme.iconTheme.color!.withOpacity(0.5),
+                    color: context.theme.iconTheme.color!.withOpacity(0.7),
                     fontSize: 12,
                   ),
                 ),

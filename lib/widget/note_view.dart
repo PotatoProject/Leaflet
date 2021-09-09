@@ -222,7 +222,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
-            color: context.theme.textTheme.caption!.color!.withOpacity(0.7),
+            color: context.theme.textTheme.caption!.color!.withOpacity(1),
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -241,7 +241,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
           widget.note.content,
           style: TextStyle(
             fontSize: 16,
-            color: context.theme.textTheme.caption!.color!.withOpacity(0.5),
+            color: context.theme.textTheme.caption!.color!.withOpacity(0.7),
           ),
           maxLines: 8,
           overflow: TextOverflow.ellipsis,
@@ -322,7 +322,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                       style: TextStyle(
                         color:
                             context.theme.textTheme.caption!.color!.withOpacity(
-                          item.status && !showMoreItem ? 0.5 : 0.7,
+                          item.status && !showMoreItem ? 0.5 : 1,
                         ),
                         decoration: item.status && !showMoreItem
                             ? TextDecoration.lineThrough

@@ -106,23 +106,24 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            padding: EdgeInsets.zero,
-            tooltip: LocaleStrings.common.edit,
-            onPressed: () async {
-              await Utils.showSecondaryRoute(
-                context,
-                DrawPage(
-                  note: widget.note,
-                  savedImage: widget.note.images[currentPage],
-                ),
-                allowGestures: false,
-              );
+          if (!widget.note.deleted)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              padding: EdgeInsets.zero,
+              tooltip: LocaleStrings.common.edit,
+              onPressed: () async {
+                await Utils.showSecondaryRoute(
+                  context,
+                  DrawPage(
+                    note: widget.note,
+                    savedImage: widget.note.images[currentPage],
+                  ),
+                  allowGestures: false,
+                );
 
-              setState(() {});
-            },
-          ),
+                setState(() {});
+              },
+            ),
           if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
             IconButton(
               icon: const Icon(Icons.share_outlined),
@@ -132,20 +133,21 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
                 Share.shareFiles([widget.note.images[currentPage].path]);
               },
             ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            padding: EdgeInsets.zero,
-            tooltip: LocaleStrings.common.delete,
-            onPressed: () {
-              imageQueue.addDelete(widget.note.images[currentPage]);
-              widget.note.images.removeWhere(
-                (savedImage) =>
-                    widget.note.images[currentPage].id == savedImage.id,
-              );
-              helper.saveNote(widget.note.markChanged());
-              context.pop();
-            },
-          ),
+          if (!widget.note.deleted)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              padding: EdgeInsets.zero,
+              tooltip: LocaleStrings.common.delete,
+              onPressed: () {
+                imageQueue.addDelete(widget.note.images[currentPage]);
+                widget.note.images.removeWhere(
+                  (savedImage) =>
+                      widget.note.images[currentPage].id == savedImage.id,
+                );
+                helper.saveNote(widget.note.markChanged());
+                context.pop();
+              },
+            ),
         ],
       ),
     );

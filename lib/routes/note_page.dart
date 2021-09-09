@@ -114,34 +114,94 @@ class _NotePageState extends State<NotePage> {
       data: notePageThemeData,
       child: Builder(
         builder: (context) {
+          Widget? bottomBar;
+
+          if (note.deleted) {
+            bottomBar = Material(
+              color: context.theme.colorScheme.surface,
+              elevation: 8,
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 48),
+                margin: EdgeInsets.only(
+                  bottom: max(
+                    context.viewInsets.bottom + context.padding.bottom,
+                    0,
+                  ),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.warning_amber_outlined, size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        "Deleted notes can be opened only for reading",
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        primary: context.theme.colorScheme.secondary,
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() => note = note.copyWith(deleted: false));
+                        notifyNoteChanged();
+                      },
+                      child: Text(LocaleStrings.common.restore.toUpperCase()),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (!deviceInfo.isLandscape) {
+            bottomBar = Material(
+              color: context.theme.colorScheme.surface,
+              elevation: 8,
+              child: Container(
+                height: 48,
+                margin: EdgeInsets.only(
+                  bottom: context.viewInsets.bottom + context.padding.bottom,
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: getToolbarButtons(),
+                ),
+              ),
+            );
+          }
+
           return Scaffold(
             appBar: AppBar(
               actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.remove_red_eye_outlined),
-                  padding: EdgeInsets.zero,
-                  tooltip: LocaleStrings.notePage.privacyTitle,
-                  onPressed: showPrivacyOptionSheet,
-                ),
-                IconButton(
-                  icon: Icon(
-                    note.starred ? Icons.favorite : Icons.favorite_border,
+                if (!note.deleted)
+                  IconButton(
+                    icon: const Icon(Icons.remove_red_eye_outlined),
+                    padding: EdgeInsets.zero,
+                    tooltip: LocaleStrings.notePage.privacyTitle,
+                    onPressed: showPrivacyOptionSheet,
                   ),
-                  padding: EdgeInsets.zero,
-                  tooltip: note.starred
-                      ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                      : LocaleStrings.mainPage.selectionBarAddFavourites,
-                  onPressed: () => setStarred(!note.starred),
-                ),
+                if (!note.deleted)
+                  IconButton(
+                    icon: Icon(
+                      note.starred ? Icons.favorite : Icons.favorite_border,
+                    ),
+                    padding: EdgeInsets.zero,
+                    tooltip: note.starred
+                        ? LocaleStrings.mainPage.selectionBarRemoveFavourites
+                        : LocaleStrings.mainPage.selectionBarAddFavourites,
+                    onPressed: () => setStarred(!note.starred),
+                  ),
                 ...getToolbarButtons(returnNothing: !deviceInfo.isLandscape),
               ],
             ),
             extendBodyBehindAppBar: true,
             body: Row(
               children: <Widget>[
-                Expanded(
-                  child: mainBody,
-                ),
+                Expanded(child: getMainBody(context)),
                 if (note.images.isNotEmpty && deviceInfo.isLandscape)
                   Container(
                     padding: EdgeInsets.only(
@@ -152,24 +212,7 @@ class _NotePageState extends State<NotePage> {
                   ),
               ],
             ),
-            bottomNavigationBar: !deviceInfo.isLandscape
-                ? Material(
-                    color: context.theme.cardColor,
-                    elevation: 8,
-                    child: Container(
-                      height: 48,
-                      margin: EdgeInsets.only(
-                        bottom:
-                            context.viewInsets.bottom + context.padding.bottom,
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: getToolbarButtons(),
-                      ),
-                    ),
-                  )
-                : null,
+            bottomNavigationBar: bottomBar,
           );
         },
       ),
@@ -180,7 +223,7 @@ class _NotePageState extends State<NotePage> {
     final Color? noteColor =
         note.color != 0 ? context.notePalette.colors[note.color].color : null;
     final Color? foregroundColor =
-        note.color != 0 ? context.theme.textTheme.caption!.color : null;
+        note.color != 0 ? context.theme.colorScheme.onBackground : null;
 
     return context.theme.copyWith(
       scaffoldBackgroundColor: noteColor,
@@ -200,10 +243,30 @@ class _NotePageState extends State<NotePage> {
         selectionHandleColor:
             foregroundColor ?? context.theme.colorScheme.secondary,
       ),
+      iconTheme: IconThemeData(
+        color: foregroundColor ?? context.theme.iconTheme.color,
+      ),
+      colorScheme: ColorScheme(
+        primary: foregroundColor ?? context.theme.colorScheme.primary,
+        primaryVariant:
+            foregroundColor ?? context.theme.colorScheme.primaryVariant,
+        secondary: foregroundColor ?? context.theme.colorScheme.secondary,
+        secondaryVariant:
+            foregroundColor ?? context.theme.colorScheme.secondaryVariant,
+        surface: noteColor ?? context.theme.colorScheme.surface,
+        background: noteColor ?? context.theme.colorScheme.background,
+        error: noteColor ?? context.theme.colorScheme.error,
+        onPrimary: noteColor ?? context.theme.colorScheme.onPrimary,
+        onSecondary: noteColor ?? context.theme.colorScheme.onSecondary,
+        onSurface: foregroundColor ?? context.theme.colorScheme.onSurface,
+        onBackground: foregroundColor ?? context.theme.colorScheme.onBackground,
+        onError: foregroundColor ?? context.theme.colorScheme.onError,
+        brightness: context.theme.brightness,
+      ),
     );
   }
 
-  Widget get mainBody {
+  Widget getMainBody(BuildContext context) {
     final bool showNewItemButton =
         note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
             note.listContent.isEmpty;
@@ -219,6 +282,22 @@ class _NotePageState extends State<NotePage> {
           bottom: 16,
         ),
         children: [
+          /* if (note.deleted)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 8,
+                bottom: 8,
+              ),
+              child: Row(
+                children: const [
+                  Icon(Icons.warning_amber_outlined, size: 16),
+                  SizedBox(width: 8),
+                  Text("Deleted notes can be opened only for reading"),
+                ],
+              ),
+            ), */
           if (note.images.isNotEmpty && !deviceInfo.isLandscape)
             SizedBox(
               height: imageWidgetSize,
@@ -256,6 +335,7 @@ class _NotePageState extends State<NotePage> {
             },
             onSubmitted: (value) =>
                 context.focusScope.requestFocus(contentFocusNode),
+            enabled: !note.deleted,
           ),
           _NotePageTextFormField(
             contentField: true,
@@ -267,10 +347,11 @@ class _NotePageState extends State<NotePage> {
 
               notifyNoteChanged();
             },
+            enabled: !note.deleted,
           ),
           if (note.list)
             ...List.generate(note.listContent.length, generateListItem),
-          if (note.list)
+          if (note.list && !note.deleted)
             AnimatedOpacity(
               opacity: showNewItemButton ? 1 : 0,
               duration: showNewItemButton
@@ -281,12 +362,12 @@ class _NotePageState extends State<NotePage> {
                 title: Text(
                   LocaleStrings.notePage.addEntryHint,
                   style: TextStyle(
-                    color: context.theme.iconTheme.color,
+                    color: context.theme.colorScheme.onBackground,
                   ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 onTap: showNewItemButton ? () => addListContentItem() : null,
-                horizontalTitleGap: 8,
+                horizontalTitleGap: 12,
               ),
             ),
         ],
@@ -308,6 +389,7 @@ class _NotePageState extends State<NotePage> {
       item: currentItem,
       controller: listContentControllers[index],
       focusNode: listContentNodes[index],
+      enabled: !note.deleted,
       onDismissed: (_) => setState(() {
         note.listContent.removeAt(index);
         listContentControllers.removeAt(index);
@@ -389,7 +471,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   List<Widget> getToolbarButtons({bool returnNothing = false}) {
-    if (returnNothing) {
+    if (note.deleted || returnNothing) {
       return [];
     } else {
       return [
@@ -657,6 +739,7 @@ class _NoteListEntryItem extends StatefulWidget {
   final VoidCallback? onEditingComplete;
   final ValueChanged<bool?>? onCheckChanged;
   final Color? checkColor;
+  final bool enabled;
 
   const _NoteListEntryItem({
     Key? key,
@@ -668,6 +751,7 @@ class _NoteListEntryItem extends StatefulWidget {
     this.onEditingComplete,
     this.onCheckChanged,
     this.checkColor,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -709,11 +793,14 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                 width: 24,
                 height: 24,
                 alignment: Alignment.center,
-                child: NoteViewCheckbox(
-                  value: widget.item.status,
-                  onChanged: widget.onCheckChanged,
-                  checkColor: widget.checkColor ??
-                      context.theme.scaffoldBackgroundColor,
+                child: IgnorePointer(
+                  ignoring: !widget.enabled,
+                  child: NoteViewCheckbox(
+                    value: widget.item.status,
+                    onChanged: widget.onCheckChanged,
+                    checkColor: widget.checkColor ??
+                        context.theme.scaffoldBackgroundColor,
+                  ),
                 ),
               ),
               const SizedBox(width: 24),
@@ -726,7 +813,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(
                     color: context.theme.iconTheme.color!.withOpacity(
-                      widget.item.status ? 0.3 : 0.7,
+                      widget.item.status ? 0.7 : 1,
                     ),
                     decoration:
                         widget.item.status ? TextDecoration.lineThrough : null,
@@ -735,19 +822,23 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                   onChanged: widget.onTextChanged,
                   focusNode: widget.focusNode,
                   textInputAction: TextInputAction.next,
+                  readOnly: !widget.enabled,
                 ),
               ),
-              AnimatedOpacity(
-                opacity: showDeleteButton ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: showDeleteButton
-                      ? () =>
-                          widget.onDismissed?.call(DismissDirection.endToStart)
-                      : null,
-                  padding: EdgeInsets.zero,
-                  splashRadius: 24,
+              Visibility(
+                visible: widget.enabled,
+                child: AnimatedOpacity(
+                  opacity: showDeleteButton ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: showDeleteButton
+                        ? () => widget.onDismissed
+                            ?.call(DismissDirection.endToStart)
+                        : null,
+                    padding: EdgeInsets.zero,
+                    splashRadius: 24,
+                  ),
                 ),
               ),
             ],
@@ -765,6 +856,7 @@ class _NotePageTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final bool enabled;
 
   const _NotePageTextFormField({
     this.contentField = false,
@@ -773,6 +865,7 @@ class _NotePageTextFormField extends StatelessWidget {
     this.focusNode,
     this.onChanged,
     this.onSubmitted,
+    this.enabled = true,
   });
 
   @override
@@ -790,7 +883,7 @@ class _NotePageTextFormField extends StatelessWidget {
           hintText: hintText,
           hintStyle: TextStyle(
             color: context.theme.textTheme.caption!.color!
-                .withOpacity(contentField ? 0.3 : 0.5),
+                .withOpacity(contentField ? 0.5 : 0.7),
           ),
           isDense: contentField,
         ),
@@ -798,13 +891,14 @@ class _NotePageTextFormField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         style: TextStyle(
           fontSize: contentField ? 16 : 18,
-          fontWeight: contentField ? FontWeight.normal : FontWeight.w500,
+          fontWeight: contentField ? FontWeight.normal : FontWeight.bold,
           color: context.theme.textTheme.caption!.color!
-              .withOpacity(contentField ? 0.5 : 0.7),
+              .withOpacity(contentField ? 1 : 1),
         ),
         onChanged: onChanged,
         onFieldSubmitted: onSubmitted,
         maxLines: contentField ? null : 1,
+        readOnly: !enabled,
       ),
     );
   }
