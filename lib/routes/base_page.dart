@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:animations/animations.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
@@ -314,7 +313,7 @@ class BasePageState extends State<BasePage>
                           return FadeThroughTransition(
                             animation: primaryAnimation,
                             secondaryAnimation: secondaryAnimation,
-                            fillColor: Colors.transparent,
+                            fillColor: context.theme.colorScheme.background,
                             child: MediaQuery(
                               data: context.mediaQuery.copyWith(
                                 padding: context.padding.copyWith(

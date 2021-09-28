@@ -483,7 +483,7 @@ class Utils {
           android: AndroidNotificationDetails(
             'pinned_notifications',
             LocaleStrings.common.notificationDetailsTitle,
-            LocaleStrings.common.notificationDetailsDesc,
+            channelDescription: LocaleStrings.common.notificationDetailsDesc,
             color: Constants.defaultAccent,
             ongoing: true,
             priority: Priority.max,

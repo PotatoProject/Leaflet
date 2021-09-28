@@ -1,6 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:potato_notes/internal/extensions.dart';
 
 class MenuFab extends StatefulWidget {

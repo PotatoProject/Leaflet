@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:potato_notes/internal/extensions.dart';
 
 class PopupMenuItemWithIcon<T> extends PopupMenuEntry<T> {
@@ -74,8 +73,8 @@ class _PopupMenuItemWithIconState<T> extends State<PopupMenuItemWithIcon<T>> {
         opacity: widget.enabled
             ? 1.0
             : isDark
-            ? 0.58
-            : 0.38,
+                ? 0.58
+                : 0.38,
       ),
       child: item,
     );
