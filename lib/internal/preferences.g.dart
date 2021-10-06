@@ -40,6 +40,37 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$_lightThemeValueAtom =
+      Atom(name: '_PreferencesBase._lightThemeValue');
+
+  @override
+  String get _lightThemeValue {
+    _$_lightThemeValueAtom.reportRead();
+    return super._lightThemeValue;
+  }
+
+  @override
+  set _lightThemeValue(String value) {
+    _$_lightThemeValueAtom.reportWrite(value, super._lightThemeValue, () {
+      super._lightThemeValue = value;
+    });
+  }
+
+  final _$_darkThemeValueAtom = Atom(name: '_PreferencesBase._darkThemeValue');
+
+  @override
+  String get _darkThemeValue {
+    _$_darkThemeValueAtom.reportRead();
+    return super._darkThemeValue;
+  }
+
+  @override
+  set _darkThemeValue(String value) {
+    _$_darkThemeValueAtom.reportWrite(value, super._darkThemeValue, () {
+      super._darkThemeValue = value;
+    });
+  }
+
   final _$_customAccentValueAtom =
       Atom(name: '_PreferencesBase._customAccentValue');
 

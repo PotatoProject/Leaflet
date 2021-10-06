@@ -6,20 +6,19 @@ part of 'saved_image.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SavedImage _$SavedImageFromJson(Map<String, dynamic> json) {
-  return SavedImage(
-    id: json['id'] as String,
-    storageLocation:
-        _$enumDecode(_$StorageLocationEnumMap, json['storageLocation']),
-    hash: json['hash'] as String?,
-    fileExtension: json['fileExtension'] as String?,
-    encrypted: json['encrypted'] as bool,
-    width: (json['width'] as num?)?.toDouble(),
-    height: (json['height'] as num?)?.toDouble(),
-  )
-    ..blurHash = json['blurHash'] as String?
-    ..uploaded = json['uploaded'] as bool;
-}
+SavedImage _$SavedImageFromJson(Map<String, dynamic> json) => SavedImage(
+      id: json['id'] as String,
+      storageLocation: _$enumDecodeNullable(
+              _$StorageLocationEnumMap, json['storageLocation']) ??
+          StorageLocation.local,
+      hash: json['hash'] as String?,
+      fileExtension: json['fileExtension'] as String?,
+      encrypted: json['encrypted'] as bool? ?? false,
+      width: (json['width'] as num?)?.toDouble(),
+      height: (json['height'] as num?)?.toDouble(),
+    )
+      ..blurHash = json['blurHash'] as String?
+      ..uploaded = json['uploaded'] as bool;
 
 Map<String, dynamic> _$SavedImageToJson(SavedImage instance) =>
     <String, dynamic>{
@@ -58,6 +57,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$StorageLocationEnumMap = {

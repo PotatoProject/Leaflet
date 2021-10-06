@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/constants.dart';
-import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -10,9 +9,11 @@ import 'package:universal_platform/universal_platform.dart';
 
 class SplashPage extends StatefulWidget {
   final Widget child;
+  final Future<void> Function() future;
 
   const SplashPage({
     required this.child,
+    required this.future,
   });
 
   @override
@@ -41,14 +42,24 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 350),
       value: 1,
     );
-    Timer(
+    /* Timer(
       Duration(milliseconds: DeviceInfo.isDesktop ? 600 : 250),
       () => _elementsAc.forward(),
     );
-    Timer(const Duration(milliseconds: 1400), () => _transitionAc.reverse());
+    Timer(const Duration(milliseconds: 1400), () => _transitionAc.reverse()); */
     _transitionAc.addListener(_transitionListener);
     _elementsAc.addListener(_elementsListener);
+    _awaitForFuture();
     super.initState();
+  }
+
+  Future<void> _awaitForFuture() async {
+    await widget.future();
+    await _elementsAc.forward();
+    Future.delayed(
+      const Duration(milliseconds: 600),
+      () async => _transitionAc.reverse(),
+    );
   }
 
   @override
@@ -72,8 +83,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     final MediaQueryData data =
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
-    final ThemeMode themeMode = prefs.themeMode;
-    final bool useAmoled = prefs.useAmoled;
+    final ThemeMode themeMode = sharedPrefs.themeMode;
+    final bool useAmoled = sharedPrefs.useAmoled;
 
     Color color = Themes.lightColor;
 

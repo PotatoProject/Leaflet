@@ -12,15 +12,17 @@ part 'preferences.g.dart';
 class Preferences = _PreferencesBase with _$Preferences;
 
 abstract class _PreferencesBase with Store, LoggerProvider {
-  _PreferencesBase() {
-    loadData();
-  }
-
   @observable
   String _masterPassValue = "";
 
   @observable
   ThemeMode _themeModeValue = sharedPrefs.themeMode;
+
+  @observable
+  String _lightThemeValue = sharedPrefs.lightTheme;
+
+  @observable
+  String _darkThemeValue = sharedPrefs.darkTheme;
 
   @observable
   Color? _customAccentValue = sharedPrefs.customAccent;
@@ -81,6 +83,8 @@ abstract class _PreferencesBase with Store, LoggerProvider {
 
   String get masterPass => _masterPassValue;
   ThemeMode get themeMode => _themeModeValue;
+  String get lightTheme => _lightThemeValue;
+  String get darkTheme => _darkThemeValue;
   Color? get customAccent => _customAccentValue;
   bool get useAmoled => _useAmoledValue;
   bool get useGrid => _useGridValue;
@@ -111,6 +115,16 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   set themeMode(ThemeMode value) {
     _themeModeValue = value;
     sharedPrefs.themeMode = value;
+  }
+
+  set lightTheme(String value) {
+    _lightThemeValue = value;
+    sharedPrefs.lightTheme = value;
+  }
+
+  set darkTheme(String value) {
+    _darkThemeValue = value;
+    sharedPrefs.darkTheme = value;
   }
 
   set customAccent(Color? value) {

@@ -8,26 +8,31 @@ class AppDirectories {
   final Directory tempDirectory;
   final Directory supportDirectory;
   final Directory imagesDirectory;
+  final Directory themesDirectory;
   final Directory backupDirectory;
 
   const AppDirectories({
     required this.tempDirectory,
     required this.supportDirectory,
     required this.imagesDirectory,
+    required this.themesDirectory,
     required this.backupDirectory,
   });
 
   static Future<AppDirectories> initWithDefaults() async {
     final Directory support = await getApplicationSupportDirectory();
     final Directory images = Directory(p.join(support.path, "images"));
+    final Directory themes = Directory(p.join(support.path, "themes"));
     final Directory backup = Directory(await _getBackupsDir());
     images.create();
+    themes.create();
     backup.create();
 
     return AppDirectories(
       tempDirectory: await getTemporaryDirectory(),
       supportDirectory: support,
-      imagesDirectory: Directory(p.join(support.path, "images")),
+      imagesDirectory: images,
+      themesDirectory: themes,
       backupDirectory: backup,
     );
   }

@@ -92,12 +92,11 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_loadInitialDataAsyncAction =
-      AsyncAction('_DeviceInfoBase._loadInitialData');
+  final _$loadDataAsyncAction = AsyncAction('_DeviceInfoBase.loadData');
 
   @override
-  Future<void> _loadInitialData() {
-    return _$_loadInitialDataAsyncAction.run(() => super._loadInitialData());
+  Future<void> loadData() {
+    return _$loadDataAsyncAction.run(() => super.loadData());
   }
 
   final _$_DeviceInfoBaseActionController =

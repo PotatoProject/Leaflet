@@ -7,6 +7,7 @@ import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/theme/parser.dart';
 import 'package:potato_notes/internal/theme/shapes.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
+import 'package:recase/recase.dart';
 
 class LeafletThemeData {
   final String name;
@@ -47,6 +48,8 @@ class LeafletThemeData {
         shapes,
         colors,
       );
+
+  String get id => name.snakeCase;
 
   factory LeafletThemeData.lerp(
     LeafletThemeData a,
@@ -209,6 +212,18 @@ abstract class AppTheme {
   }
 
   Future<ThemeParser> _getThemeParser();
+
+  @override
+  int get hashCode => data.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is AppTheme) {
+      return _data == other._data;
+    }
+
+    return false;
+  }
 }
 
 class BundledTheme extends AppTheme {
@@ -223,6 +238,23 @@ class BundledTheme extends AppTheme {
 
     return parser;
   }
+
+  @override
+  int get hashCode => Object.hash(assetName.hashCode, super.hashCode);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is BundledTheme) {
+      return assetName == other.assetName && super == other;
+    }
+
+    return false;
+  }
+
+  @override
+  String toString() {
+    return "BundledTheme($assetName)";
+  }
 }
 
 class ImportedTheme extends AppTheme {
@@ -233,5 +265,22 @@ class ImportedTheme extends AppTheme {
   @override
   Future<ThemeParser> _getThemeParser() {
     return ThemeParser.fromFile(File(filePath));
+  }
+
+  @override
+  int get hashCode => Object.hash(filePath.hashCode, super.hashCode);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ImportedTheme) {
+      return filePath == other.filePath && super == other;
+    }
+
+    return false;
+  }
+
+  @override
+  String toString() {
+    return "ImportedTheme($filePath)";
   }
 }

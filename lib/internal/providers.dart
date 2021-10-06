@@ -41,19 +41,27 @@ class _ProvidersSingleton {
     _keystore = await Keystore.newInstance();
   }
 
-  Future<void> initProviders(AppDatabase _db) async {
+  Future<void> initCriticalProviders(AppDatabase _db) async {
     _monet = await MonetProvider.newInstance();
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
     _appDirectories = await AppDirectories.initWithDefaults();
     _helper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
+  }
+
+  Future<void> initProviders() async {
     _dio = Dio();
     _dio.interceptors.add(RequestInterceptor());
+
     _prefs = Preferences();
+    await _prefs.loadData();
     _deviceInfo = DeviceInfo();
-    _imageQueue = ImageQueue();
+    await _deviceInfo.loadData();
     _appInfo = AppInfo();
+    await _appInfo.loadData();
+
+    _imageQueue = ImageQueue();
     _backupDelegate = BackupDelegate();
     _syncRoutine = SyncRoutine();
     _imageHelper = ImageHelper();
@@ -63,8 +71,11 @@ class _ProvidersSingleton {
 Future<void> initKeystore() async =>
     _ProvidersSingleton.instance.initKeystore();
 
-Future<void> initProviders(AppDatabase _db) async =>
-    _ProvidersSingleton.instance.initProviders(_db);
+Future<void> initCriticalProviders(AppDatabase _db) async =>
+    _ProvidersSingleton.instance.initCriticalProviders(_db);
+
+Future<void> initProviders() async =>
+    _ProvidersSingleton.instance.initProviders();
 
 Keystore get keystore => _ProvidersSingleton.instance._keystore;
 

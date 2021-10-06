@@ -53,6 +53,7 @@ class BasePageNavigationBar extends StatelessWidget {
                       ),
                     )
                     .toList(),
+                height: 64,
                 backgroundColor: Colors.transparent,
                 selectedIndex: index,
                 onDestinationSelected: onPageChanged,

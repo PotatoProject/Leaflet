@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/migration_task.dart';
@@ -21,6 +24,12 @@ part 'app_info.g.dart';
 class AppInfo extends _AppInfoBase with _$AppInfo {
   AppInfo();
 
+  static Future<AppInfo> load() async {
+    final AppInfo instance = AppInfo();
+    await instance.loadData();
+    return instance;
+  }
+
   /// This bool defines whether the app is ready to
   /// support the notes api in a production environment
   static bool supportsNotesApi = false;
@@ -32,10 +41,6 @@ class AppInfo extends _AppInfoBase with _$AppInfo {
 abstract class _AppInfoBase with Store {
   static const EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
-
-  _AppInfoBase() {
-    loadData();
-  }
 
   FlutterLocalNotificationsPlugin? notifications;
   QuickActions? quickActions;
@@ -52,8 +57,8 @@ abstract class _AppInfoBase with Store {
 
   Color get accentData => _accentDataValue;
 
-  late List<AppTheme> _availableThemes;
-  List<AppTheme> get availableThemes => _availableThemes;
+  List<AppTheme>? _availableThemes;
+  List<AppTheme> get availableThemes => List.unmodifiable(_availableThemes!);
 
   @observable
   LeafletThemeData? _lightThemeValue;
@@ -114,19 +119,7 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<void> loadData() async {
-    _availableThemes = [
-      BundledTheme("themes/light.toml"),
-      BundledTheme("themes/dark.toml"),
-      BundledTheme("themes/black.toml"),
-      BundledTheme("themes/monet_light.toml"),
-      BundledTheme("themes/monet_dark.toml"),
-    ];
-    for (final AppTheme theme in _availableThemes) {
-      await theme.load();
-    }
-    _lightAppTheme = _availableThemes[0];
-    _darkAppTheme = _availableThemes[1];
-
+    await refetchThemes();
     _updateAccent();
 
     if (UniversalPlatform.isAndroid) {
@@ -136,9 +129,11 @@ abstract class _AppInfoBase with Store {
     } else {
       migrationAvailable = false;
     }
+
     if (AppInfo.supportsNotePinning) {
       _initNotifications();
     }
+
     packageInfo = await PackageInfo.fromPlatform();
 
     if (DeviceInfo.isAndroid) {
@@ -150,6 +145,24 @@ abstract class _AppInfoBase with Store {
     if (DeviceInfo.isAndroid) {
       pollForActiveNotifications();
     }
+  }
+
+  final List<BundledTheme> _bundledThemes = [
+    BundledTheme("themes/light.toml"),
+    BundledTheme("themes/dark.toml"),
+    BundledTheme("themes/black.toml"),
+    BundledTheme("themes/monet_light.toml"),
+    BundledTheme("themes/monet_dark.toml"),
+  ];
+
+  Future<Iterable<ImportedTheme>> get _importedThemes async {
+    final List<FileSystemEntity> entities =
+        await appDirectories.themesDirectory.list().toList();
+    final Iterable<File> themes = entities
+        .where((e) => e is File && extension(e.path) == ".toml")
+        .cast<File>();
+
+    return themes.map((e) => ImportedTheme(e.path));
   }
 
   @action
@@ -168,19 +181,88 @@ abstract class _AppInfoBase with Store {
     });
   }
 
+  Future<DiffResult> refetchThemes() async {
+    final List<AppTheme> prevThemes = List.from(_availableThemes ?? []);
+
+    _availableThemes = [
+      ..._bundledThemes,
+      ...await _importedThemes,
+    ];
+
+    for (final AppTheme theme in _availableThemes!) {
+      await theme.load();
+    }
+    _lightAppTheme = _availableThemes!.firstWhere(
+      (e) => e.data.id == prefs.lightTheme,
+      orElse: () {
+        prefs.lightTheme = "light";
+        return availableThemes[0];
+      },
+    );
+    _darkAppTheme = _availableThemes!.firstWhere(
+      (e) => e.data.id == prefs.darkTheme,
+      orElse: () {
+        prefs.lightTheme = "dark";
+        return availableThemes[1];
+      },
+    );
+    _updateAccent();
+
+    final DiffResult diffThemes = calculateListDiff<AppTheme>(
+      prevThemes,
+      _availableThemes!,
+      detectMoves: false,
+      equalityChecker: (p0, p1) => p0.data.id == p1.data.id,
+    );
+
+    return diffThemes;
+  }
+
   void loadLightTheme(AppTheme theme) {
     _lightAppTheme = theme;
+    prefs.lightTheme = theme.data.id;
     refreshThemes();
   }
 
   void loadDarkTheme(AppTheme theme) {
     _darkAppTheme = theme;
+    prefs.darkTheme = theme.data.id;
     refreshThemes();
+  }
+
+  Future<ImportedTheme?> addTheme(File themeFile) async {
+    final String ext = extension(themeFile.path);
+    if (ext != ".toml") return null;
+
+    final String newPath = join(
+      appDirectories.themesDirectory.path,
+      basename(themeFile.path),
+    );
+    await themeFile.copy(newPath);
+
+    final ImportedTheme theme = ImportedTheme(newPath);
+    await theme.load();
+    _availableThemes!.add(theme);
+    refreshThemes();
+
+    return theme;
+  }
+
+  Future<void> removeTheme(String id) async {
+    final AppTheme? theme = _availableThemes!.cast<AppTheme?>().firstWhere(
+          (e) => e!.data.id == id,
+          orElse: () => null,
+        );
+
+    if (theme is ImportedTheme) {
+      await File(theme.filePath).delete();
+      _availableThemes!.remove(theme);
+    }
   }
 
   @action
   void refreshThemes() {
-    for (final AppTheme theme in _availableThemes) {
+    for (final AppTheme theme in _availableThemes!) {
       theme.reparse();
     }
     _lightThemeValue = _lightAppTheme.data;

@@ -27,7 +27,7 @@ Future<void> main() async {
   await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
   final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  await initProviders(_db);
+  await initCriticalProviders(_db);
 
   runApp(
     EasyLocalization(
@@ -36,7 +36,10 @@ Future<void> main() async {
       useFallbackTranslations: true,
       assetLoader: GeneratedAssetLoader(),
       path: "assets/locales",
-      child: SplashPage(child: PotatoNotes()),
+      child: SplashPage(
+        child: PotatoNotes(),
+        future: () => initProviders(),
+      ),
     ),
   );
 
@@ -68,8 +71,6 @@ class _PotatoNotesState extends State<PotatoNotes> {
     return Observer(
       builder: (context) {
         Loggy.instance.logLevel = LogLevel.values[prefs.logLevel];
-
-        //final Themes themes = Themes(appInfo.accentData);
 
         return NotesApp(
           title: "Leaflet",

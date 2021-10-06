@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:diffutil_dart/diffutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +13,14 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
+import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
 import 'package:potato_notes/routes/backup_and_restore/backup_page.dart';
@@ -260,7 +264,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       children: <Widget>[
         SettingsCategory(
-          header: LocaleStrings.settings.personalizationTitle,
+          header: "Themes",
           children: [
             SettingsTile(
               icon: const Icon(Icons.brightness_4_outlined),
@@ -270,11 +274,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   itemBuilder: (context, index) {
                     final ThemeMode themeMode = ThemeMode.values[index];
-
-                    if (themeMode == ThemeMode.system &&
-                        UniversalPlatform.isWindows) {
-                      return const SizedBox();
-                    }
                     final bool selected = prefs.themeMode == themeMode;
 
                     return dropDownTile(
@@ -293,13 +292,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               subtitle: Text(getThemeModeName(prefs.themeMode)),
             ),
-            /* SettingsTile.withSwitch(
-              value: prefs.useAmoled,
-              onChanged: (value) => prefs.useAmoled = value,
-              title: Text(LocaleStrings.settings.personalizationUseAmoled),
-              icon: const Icon(Icons.brightness_2_outlined),
-              activeColor: context.theme.colorScheme.secondary,
-            ), */
             SettingsTile(
               icon: const Icon(Icons.light_mode_outlined),
               title: const Text("Light theme"),
@@ -307,9 +299,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 "${appInfo.lightTheme.name} \u2022 ${appInfo.lightTheme.author}",
               ),
               onTap: () {
-                Utils.showSecondaryRoute(
-                  context,
-                  const ThemePickerPage(pickerMode: Brightness.light),
+                Utils.showModalBottomSheet(
+                  context: context,
+                  builder: (context) => const ThemePickerPage(
+                    pickerMode: Brightness.light,
+                  ),
                 );
               },
             ),
@@ -320,12 +314,93 @@ class _SettingsPageState extends State<SettingsPage> {
                 "${appInfo.darkTheme.name} \u2022 ${appInfo.darkTheme.author}",
               ),
               onTap: () {
-                Utils.showSecondaryRoute(
-                  context,
-                  const ThemePickerPage(pickerMode: Brightness.dark),
+                Utils.showModalBottomSheet(
+                  context: context,
+                  builder: (context) => const ThemePickerPage(
+                    pickerMode: Brightness.dark,
+                  ),
                 );
               },
             ),
+            SettingsTile(
+              icon: const Icon(Icons.note_add_outlined),
+              title: const Text("Import theme from file"),
+              onTap: () async {
+                final String? themePath = await FileSystemHelper.getFile();
+
+                if (themePath == null) return;
+
+                final ImportedTheme? theme =
+                    await appInfo.addTheme(File(themePath));
+
+                if (theme != null) {
+                  final String themeVariant;
+                  switch (theme.data.colors.brightness) {
+                    case Brightness.light:
+                      themeVariant = "Light";
+                      break;
+                    case Brightness.dark:
+                      themeVariant = "Dark";
+                      break;
+                  }
+
+                  context.scaffoldMessenger.removeCurrentSnackBar();
+                  context.scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Theme "${theme.data.name}" by ${theme.data.author} added to $themeVariant themes',
+                      ),
+                      width: min(640, context.mSize.width - 32),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  context.scaffoldMessenger.removeCurrentSnackBar();
+                  context.scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      content: const Text('Invalid theme file selected'),
+                      width: min(640, context.mSize.width - 32),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              },
+            ),
+            SettingsTile(
+              icon: const Icon(Icons.refresh),
+              title: const Text("Reload all themes"),
+              onTap: () async {
+                final DiffResult themeDiffs = await appInfo.refetchThemes();
+                final List<DiffUpdate> updates =
+                    themeDiffs.getUpdates().toList();
+                int insertions = 0;
+                int removals = 0;
+
+                for (final DiffUpdate update in updates) {
+                  if (update is Insert) {
+                    insertions += update.count;
+                  } else if (update is Remove) {
+                    removals += update.count;
+                  }
+                }
+
+                context.scaffoldMessenger.removeCurrentSnackBar();
+                context.scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Reloaded every theme. Added $insertions themes and removed $removals.',
+                    ),
+                    width: min(640, context.mSize.width - 32),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        SettingsCategory(
+          header: LocaleStrings.settings.personalizationTitle,
+          children: [
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(
                 value: !deviceInfo.canUseSystemAccent

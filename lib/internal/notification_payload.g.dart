@@ -6,13 +6,12 @@ part of 'notification_payload.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
-  return NotificationPayload(
-    id: json['id'] as int,
-    noteId: json['noteId'] as String,
-    action: _$enumDecode(_$NotificationActionEnumMap, json['action']),
-  );
-}
+NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) =>
+    NotificationPayload(
+      id: json['id'] as int,
+      noteId: json['noteId'] as String,
+      action: _$enumDecode(_$NotificationActionEnumMap, json['action']),
+    );
 
 Map<String, dynamic> _$NotificationPayloadToJson(
         NotificationPayload instance) =>

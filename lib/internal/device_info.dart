@@ -7,8 +7,6 @@ import 'package:universal_platform/universal_platform.dart';
 part 'device_info.g.dart';
 
 class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
-  DeviceInfo();
-
   static bool get isDesktopOrWeb {
     if (UniversalPlatform.isLinux ||
         UniversalPlatform.isWindows ||
@@ -39,6 +37,26 @@ class DeviceInfo extends _DeviceInfoBase with _$DeviceInfo {
 
     return false;
   }
+
+  static int getColumnsForWidth(double width) {
+    if (width >= 1920) {
+      return 8;
+    } else if (width >= 1600) {
+      return 7;
+    } else if (width >= 1460) {
+      return 6;
+    } else if (width >= 1280) {
+      return 5;
+    } else if (width >= 900) {
+      return 4;
+    } else if (width >= 600) {
+      return 3;
+    } else if (width >= 360) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
 }
 
 abstract class _DeviceInfoBase with Store {
@@ -62,10 +80,6 @@ abstract class _DeviceInfoBase with Store {
   @protected
   int _uiSizeFactorValue = 2;
 
-  _DeviceInfoBase() {
-    _loadInitialData();
-  }
-
   bool get canCheckBiometrics => _canCheckBiometricsValue;
   List<BiometricType> get availableBiometrics => _availableBiometricsValue;
   bool get canUseSystemAccent => _canUseSystemAccentValue;
@@ -77,7 +91,7 @@ abstract class _DeviceInfoBase with Store {
   void setCanUseSystemAccent(bool value) => _canUseSystemAccentValue = value;
 
   @action
-  Future<void> _loadInitialData() async {
+  Future<void> loadData() async {
     if (!DeviceInfo.isDesktopOrWeb) {
       _canCheckBiometricsValue = await LocalAuthentication().canCheckBiometrics;
       _availableBiometricsValue =
@@ -92,23 +106,6 @@ abstract class _DeviceInfoBase with Store {
   void updateDeviceInfo(MediaQueryData mq, bool canUseSystemAccent) {
     _isLandscapeValue = mq.orientation == Orientation.landscape;
     final double width = mq.size.width;
-
-    if (width >= 1920) {
-      _uiSizeFactorValue = 8;
-    } else if (width >= 1600) {
-      _uiSizeFactorValue = 7;
-    } else if (width >= 1460) {
-      _uiSizeFactorValue = 6;
-    } else if (width >= 1280) {
-      _uiSizeFactorValue = 5;
-    } else if (width >= 900) {
-      _uiSizeFactorValue = 4;
-    } else if (width >= 600) {
-      _uiSizeFactorValue = 3;
-    } else if (width >= 360) {
-      _uiSizeFactorValue = 2;
-    } else {
-      _uiSizeFactorValue = 1;
-    }
+    _uiSizeFactorValue = DeviceInfo.getColumnsForWidth(width);
   }
 }

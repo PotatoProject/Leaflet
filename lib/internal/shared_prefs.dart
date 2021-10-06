@@ -3,7 +3,6 @@ import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 class SharedPrefs {
   final SharedPreferences prefs;
@@ -35,9 +34,7 @@ class SharedPrefs {
       case 2:
         return ThemeMode.dark;
       default:
-        return UniversalPlatform.isWindows || UniversalPlatform.isLinux
-            ? ThemeMode.light
-            : ThemeMode.system;
+        return ThemeMode.system;
     }
   }
 
@@ -56,6 +53,22 @@ class SharedPrefs {
         break;
     }
     setInt("theme_mode", newValue);
+  }
+
+  String get lightTheme {
+    return prefs.getString("light_theme") ?? "light";
+  }
+
+  set lightTheme(String value) {
+    setString("light_theme", value);
+  }
+
+  String get darkTheme {
+    return prefs.getString("dark_theme") ?? (useAmoled ? "black" : "dark");
+  }
+
+  set darkTheme(String value) {
+    setString("dark_theme", value);
   }
 
   Color? get customAccent {
