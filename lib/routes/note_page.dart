@@ -247,11 +247,7 @@ class _NotePageState extends State<NotePage> {
       ),
       colorScheme: ColorScheme(
         primary: foregroundColor ?? context.theme.colorScheme.primary,
-        primaryVariant:
-            foregroundColor ?? context.theme.colorScheme.primaryVariant,
         secondary: foregroundColor ?? context.theme.colorScheme.secondary,
-        secondaryVariant:
-            foregroundColor ?? context.theme.colorScheme.secondaryVariant,
         surface: noteColor ?? context.theme.colorScheme.surface,
         background: noteColor ?? context.theme.colorScheme.background,
         error: noteColor ?? context.theme.colorScheme.error,

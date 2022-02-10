@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="${label}"
         android:icon="@mipmap/ic_launcher"
         android:fullBackupContent="@xml/backup_rules">
@@ -23,10 +23,6 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"
-                />
-            <meta-data
-                android:name="io.flutter.embedding.android.SplashScreenDrawable"
-                android:resource="@drawable/launch_background"
                 />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

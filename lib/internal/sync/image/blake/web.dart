@@ -2,7 +2,7 @@
 
 import 'dart:typed_data';
 
-import 'blake_base.dart';
+import 'package:potato_notes/internal/sync/image/blake/blake_base.dart';
 
 /// The BLAKE2s (32-bit) flavor of the BLAKE2
 /// cryptographic hash function.

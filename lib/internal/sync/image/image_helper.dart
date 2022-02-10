@@ -15,9 +15,8 @@ import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/sync/image/blake/stub.dart';
+import 'package:potato_notes/internal/sync/image/download_queue_item.dart';
 import 'package:potato_notes/internal/utils.dart';
-
-import 'download_queue_item.dart';
 
 class ImageHelper with LoggerProvider {
   static const int jpegQuality = 90;

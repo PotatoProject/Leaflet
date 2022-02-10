@@ -128,7 +128,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                     children: List.generate(
                       icons.isNotEmpty ? icons.length + icons.length - 1 : 0,
                       (index) {
-                        return index % 2 == 0
+                        return index.isEven
                             ? icons[index ~/ 2]
                             : const VerticalDivider(
                                 width: 4,

@@ -46,9 +46,7 @@ class Themes {
         illustrationPalette: IllustrationPalette.light,
         colors: ColorScheme(
           primary: mainColor,
-          primaryVariant: mainColor,
           secondary: mainColor,
-          secondaryVariant: mainColor,
           surface: lightColor,
           background: lightSecondaryColor,
           error: Colors.red.shade500,
@@ -74,9 +72,7 @@ class Themes {
         ),
         colors: ColorScheme(
           primary: monetColors.accent1.shade600,
-          primaryVariant: monetColors.accent1.shade600,
           secondary: monetColors.accent1.shade600,
-          secondaryVariant: monetColors.accent1.shade600,
           surface: monetColors.accent2.shade50,
           background: monetColors.accent2.shade100,
           error: Colors.red.shade500,
@@ -98,9 +94,7 @@ class Themes {
         illustrationPalette: IllustrationPalette.dark,
         colors: ColorScheme(
           primary: mainColor,
-          primaryVariant: mainColor,
           secondary: mainColor,
-          secondaryVariant: mainColor,
           surface: darkColor,
           background: darkSecondaryColor,
           error: Colors.red.shade400,
@@ -126,9 +120,7 @@ class Themes {
         ),
         colors: ColorScheme(
           primary: monetColors.accent1.shade300,
-          primaryVariant: monetColors.accent1.shade300,
           secondary: monetColors.accent1.shade300,
-          secondaryVariant: monetColors.accent1.shade300,
           surface: monetColors.accent2.shade800,
           background: monetColors.accent2.shade900,
           error: Colors.red.shade400,
@@ -150,9 +142,7 @@ class Themes {
         illustrationPalette: IllustrationPalette.dark,
         colors: ColorScheme(
           primary: mainColor,
-          primaryVariant: mainColor,
           secondary: mainColor,
-          secondaryVariant: mainColor,
           surface: blackColor,
           background: blackSecondaryColor,
           error: Colors.red.shade400,

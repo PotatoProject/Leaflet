@@ -128,7 +128,7 @@ class _DrawerListTileState extends State<DrawerListTile>
           ),
         );
         return !widget.showTitle
-            ? Tooltip(message: widget.title.data!, child: parent)
+            ? Tooltip(message: widget.title.data, child: parent)
             : parent;
       },
     );

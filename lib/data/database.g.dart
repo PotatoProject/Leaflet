@@ -260,45 +260,25 @@ class Note extends DataClass implements Insertable<Note> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      id.hashCode,
-      $mrjc(
-          title.hashCode,
-          $mrjc(
-              content.hashCode,
-              $mrjc(
-                  starred.hashCode,
-                  $mrjc(
-                      creationDate.hashCode,
-                      $mrjc(
-                          lastModifyDate.hashCode,
-                          $mrjc(
-                              color.hashCode,
-                              $mrjc(
-                                  images.hashCode,
-                                  $mrjc(
-                                      list.hashCode,
-                                      $mrjc(
-                                          listContent.hashCode,
-                                          $mrjc(
-                                              reminders.hashCode,
-                                              $mrjc(
-                                                  tags.hashCode,
-                                                  $mrjc(
-                                                      hideContent.hashCode,
-                                                      $mrjc(
-                                                          lockNote.hashCode,
-                                                          $mrjc(
-                                                              usesBiometrics
-                                                                  .hashCode,
-                                                              $mrjc(
-                                                                  deleted
-                                                                      .hashCode,
-                                                                  $mrjc(
-                                                                      archived
-                                                                          .hashCode,
-                                                                      synced
-                                                                          .hashCode))))))))))))))))));
+  int get hashCode => Object.hash(
+      id,
+      title,
+      content,
+      starred,
+      creationDate,
+      lastModifyDate,
+      color,
+      images,
+      list,
+      listContent,
+      reminders,
+      tags,
+      hideContent,
+      lockNote,
+      usesBiometrics,
+      deleted,
+      archived,
+      synced);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -565,113 +545,132 @@ class NotesCompanion extends UpdateCompanion<Note> {
 }
 
 class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $NotesTable(this._db, [this._alias]);
+  $NotesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _contentMeta = const VerificationMeta('content');
+  @override
   late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
       'content', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _starredMeta = const VerificationMeta('starred');
+  @override
   late final GeneratedColumn<bool?> starred = GeneratedColumn<bool?>(
       'starred', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (starred IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _creationDateMeta =
       const VerificationMeta('creationDate');
+  @override
   late final GeneratedColumn<DateTime?> creationDate =
       GeneratedColumn<DateTime?>('creation_date', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
+  @override
   late final GeneratedColumn<DateTime?> lastModifyDate =
       GeneratedColumn<DateTime?>('last_modify_date', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
   late final GeneratedColumn<int?> color = GeneratedColumn<int?>(
       'color', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
   final VerificationMeta _imagesMeta = const VerificationMeta('images');
+  @override
   late final GeneratedColumnWithTypeConverter<List<SavedImage>, String?>
       images = GeneratedColumn<String?>('images', aliasedName, false,
-              typeName: 'TEXT', requiredDuringInsert: true)
+              type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<SavedImage>>($NotesTable.$converter0);
   final VerificationMeta _listMeta = const VerificationMeta('list');
+  @override
   late final GeneratedColumn<bool?> list = GeneratedColumn<bool?>(
       'list', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (list IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _listContentMeta =
       const VerificationMeta('listContent');
+  @override
   late final GeneratedColumnWithTypeConverter<List<ListItem>, String?>
       listContent = GeneratedColumn<String?>('list_content', aliasedName, false,
-              typeName: 'TEXT', requiredDuringInsert: true)
+              type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<ListItem>>($NotesTable.$converter1);
   final VerificationMeta _remindersMeta = const VerificationMeta('reminders');
+  @override
   late final GeneratedColumnWithTypeConverter<List<DateTime>, String?>
       reminders = GeneratedColumn<String?>('reminders', aliasedName, false,
-              typeName: 'TEXT', requiredDuringInsert: true)
+              type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<DateTime>>($NotesTable.$converter2);
   final VerificationMeta _tagsMeta = const VerificationMeta('tags');
+  @override
   late final GeneratedColumnWithTypeConverter<List<String>, String?> tags =
       GeneratedColumn<String?>('tags', aliasedName, false,
-              typeName: 'TEXT', requiredDuringInsert: true)
+              type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<String>>($NotesTable.$converter3);
   final VerificationMeta _hideContentMeta =
       const VerificationMeta('hideContent');
+  @override
   late final GeneratedColumn<bool?> hideContent = GeneratedColumn<bool?>(
       'hide_content', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (hide_content IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _lockNoteMeta = const VerificationMeta('lockNote');
+  @override
   late final GeneratedColumn<bool?> lockNote = GeneratedColumn<bool?>(
       'lock_note', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (lock_note IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _usesBiometricsMeta =
       const VerificationMeta('usesBiometrics');
+  @override
   late final GeneratedColumn<bool?> usesBiometrics = GeneratedColumn<bool?>(
       'uses_biometrics', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (uses_biometrics IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _deletedMeta = const VerificationMeta('deleted');
+  @override
   late final GeneratedColumn<bool?> deleted = GeneratedColumn<bool?>(
       'deleted', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (deleted IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _archivedMeta = const VerificationMeta('archived');
+  @override
   late final GeneratedColumn<bool?> archived = GeneratedColumn<bool?>(
       'archived', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (archived IN (0, 1))',
       defaultValue: const Constant(false));
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  @override
   late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
       'synced', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (synced IN (0, 1))',
       defaultValue: const Constant(false));
@@ -789,13 +788,13 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Note map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Note.fromData(data, _db,
+    return Note.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $NotesTable createAlias(String alias) {
-    return $NotesTable(_db, alias);
+    return $NotesTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<SavedImage>, String> $converter0 =
@@ -877,8 +876,7 @@ class Tag extends DataClass implements Insertable<Tag> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(name.hashCode, lastModifyDate.hashCode)));
+  int get hashCode => Object.hash(id, name, lastModifyDate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -954,22 +952,26 @@ class TagsCompanion extends UpdateCompanion<Tag> {
 }
 
 class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TagsTable(this._db, [this._alias]);
+  $TagsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
       'name', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _lastModifyDateMeta =
       const VerificationMeta('lastModifyDate');
+  @override
   late final GeneratedColumn<DateTime?> lastModifyDate =
       GeneratedColumn<DateTime?>('last_modify_date', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, name, lastModifyDate];
   @override
@@ -1007,13 +1009,13 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Tag.fromData(data, _db,
+    return Tag.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $TagsTable createAlias(String alias) {
-    return $TagsTable(_db, alias);
+    return $TagsTable(attachedDatabase, alias);
   }
 }
 

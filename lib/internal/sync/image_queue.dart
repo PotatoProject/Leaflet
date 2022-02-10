@@ -7,12 +7,11 @@ import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/image/delete_queue_item.dart';
+import 'package:potato_notes/internal/sync/image/download_queue_item.dart';
+import 'package:potato_notes/internal/sync/image/queue_item.dart';
 import 'package:potato_notes/internal/sync/image/upload_queue_item.dart';
 import 'package:potato_notes/internal/utils.dart';
-
-import 'image/delete_queue_item.dart';
-import 'image/download_queue_item.dart';
-import 'image/queue_item.dart';
 
 class ImageQueue extends ChangeNotifier with LoggerProvider {
   List<QueueItem> get queue => List.from(downloadQueue)..addAll(uploadQueue);

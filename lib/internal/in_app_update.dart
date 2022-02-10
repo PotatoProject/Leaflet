@@ -54,7 +54,7 @@ class InAppUpdater {
         final Map<dynamic, dynamic> body =
             Utils.asMap<String, dynamic>(githubRelease.data);
         final int versionCode =
-            int.parse(body["tag_name"].split("+").last as String);
+            int.parse(body["tag_name"].toString().split("+").last);
         final bool updateAvailable =
             versionCode > appInfo.packageInfo.buildNumberInt;
         return AppUpdateInfo(

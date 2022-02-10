@@ -18,36 +18,54 @@ class FileSystemHelper {
     String? initialDirectory,
     List<String>? allowedExtensions,
   }) async {
-    final dynamic asyncFile = DeviceInfo.isDesktop
-        ? await openFile(
-            acceptedTypeGroups: [
-              XTypeGroup(
-                extensions: allowedExtensions,
-              ),
-            ],
-            initialDirectory: initialDirectory,
-          )
-        : (await FilePicker.platform.pickFiles())?.files.first;
+    String? pickedPath;
 
-    return asyncFile?.path as String?;
+    if (DeviceInfo.isDesktop) {
+      final XFile? file = await openFile(
+        acceptedTypeGroups: [
+          XTypeGroup(
+            extensions: allowedExtensions,
+          ),
+        ],
+        initialDirectory: initialDirectory,
+      );
+      pickedPath = file?.path;
+    } else {
+      final List<PlatformFile>? files =
+          (await FilePicker.platform.pickFiles())?.files;
+      if (files?.isNotEmpty == true) {
+        pickedPath = files!.first.path;
+      }
+    }
+
+    return pickedPath;
   }
 
   static Future<List<String>?> getFiles({
     String? initialDirectory,
     List<String>? allowedExtensions,
   }) async {
-    final List<dynamic>? asyncFiles = DeviceInfo.isDesktop
-        ? await openFiles(
-            acceptedTypeGroups: [
-              XTypeGroup(
-                extensions: allowedExtensions,
-              ),
-            ],
-            initialDirectory: initialDirectory,
-          )
-        : (await FilePicker.platform.pickFiles())?.files;
+    List<String>? pickedPaths;
 
-    return asyncFiles?.map((e) => e.path as String).toList();
+    if (DeviceInfo.isDesktop) {
+      final List<XFile> files = await openFiles(
+        acceptedTypeGroups: [
+          XTypeGroup(
+            extensions: allowedExtensions,
+          ),
+        ],
+        initialDirectory: initialDirectory,
+      );
+
+      pickedPaths = files.map((e) => e.path).toList();
+    } else {
+      final List<PlatformFile>? files =
+          (await FilePicker.platform.pickFiles())?.files;
+
+      pickedPaths = files?.map((e) => e.path!).toList() ?? [];
+    }
+
+    return pickedPaths;
   }
 
   static Future<SaveFileResult> saveFile({

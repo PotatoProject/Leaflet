@@ -207,9 +207,7 @@ class ThemeParser {
 
     return ColorScheme(
       primary: primary,
-      primaryVariant: primary,
       secondary: primary,
-      secondaryVariant: primary,
       surface: surface,
       background: background,
       error: error,

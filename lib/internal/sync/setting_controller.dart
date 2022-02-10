@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/controller.dart';
+import 'package:potato_notes/internal/sync/note_controller.dart';
 import 'package:potato_notes/internal/utils.dart';
-
-import 'note_controller.dart';
 
 class SettingController extends Controller {
   Future<String> get(String key) async {
