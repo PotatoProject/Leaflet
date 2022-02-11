@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/database.dart' hide NoteImages;
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -120,9 +120,14 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                     child: Visibility(
                       visible: (widget.note.images.isNotEmpty) &&
                           !widget.note.hideContent,
-                      child: NoteImages(
-                        images: widget.note.images,
-                        maxGridRows: 2,
+                      child: StreamBuilder<List<NoteImage>>(
+                        stream: imageHelper.watchImages(widget.note),
+                        builder: (context, snapshot) {
+                          return NoteImages(
+                            images: snapshot.data ?? [],
+                            maxGridRows: 2,
+                          );
+                        },
                       ),
                     ),
                   ),

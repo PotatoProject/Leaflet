@@ -1,13 +1,10 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
-import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
@@ -26,8 +23,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
-  final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  await initCriticalProviders(_db);
+  await initCriticalProviders();
 
   runApp(
     EasyLocalization(

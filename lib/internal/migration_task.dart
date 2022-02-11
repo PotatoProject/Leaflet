@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -81,7 +80,7 @@ class MigrationTask {
         );
       }
 
-      SavedImage? savedImage;
+      NoteImage? noteImage;
       if (v1Note.imagePath != null) {
         final Response response = await dio.get<Uint8List>(
           v1Note.imagePath!,
@@ -90,9 +89,9 @@ class MigrationTask {
         final File file =
             File(join(appDirectories.tempDirectory.path, "$id.jpg"))..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
-        savedImage = await imageHelper.copyToCache(XFile(file.path));
+        noteImage = await Utils.copyFileToCache(XFile(file.path));
         await file.delete();
-        imageQueue.addUpload(savedImage, id);
+        //imageQueue.addUpload(savedImage, id);
       }
 
       final Note note = Note(
@@ -105,7 +104,7 @@ class MigrationTask {
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date!),
         lastModifyDate: DateTime.now(),
         color: v1Note.color ?? 0,
-        images: [if (savedImage != null) savedImage],
+        images: [if (noteImage != null) noteImage.id],
         list: v1Note.isList == 1,
         listContent: listItems,
         reminders: [],

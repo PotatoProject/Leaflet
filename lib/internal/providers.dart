@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:monet/monet.dart';
+import 'package:potato_notes/data/dao/image_helper.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/app_config.dart';
 import 'package:potato_notes/internal/app_directories.dart';
 import 'package:potato_notes/internal/app_info.dart';
@@ -11,10 +14,6 @@ import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
-import 'package:potato_notes/internal/sync/image/image_helper.dart';
-import 'package:potato_notes/internal/sync/image_queue.dart';
-import 'package:potato_notes/internal/sync/request_interceptor.dart';
-import 'package:potato_notes/internal/sync/sync_routine.dart';
 
 class _ProvidersSingleton {
   _ProvidersSingleton._();
@@ -28,11 +27,10 @@ class _ProvidersSingleton {
   late DeviceInfo _deviceInfo;
   late Preferences _prefs;
   late BackupDelegate _backupDelegate;
-  late ImageQueue _imageQueue;
   late Dio _dio;
+  late AppDatabase _db;
   late NoteHelper _helper;
   late TagHelper _tagHelper;
-  late SyncRoutine _syncRoutine;
   late ImageHelper _imageHelper;
 
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
@@ -41,18 +39,19 @@ class _ProvidersSingleton {
     _keystore = await Keystore.newInstance();
   }
 
-  Future<void> initCriticalProviders(AppDatabase _db) async {
+  Future<void> initCriticalProviders() async {
     _monet = await MonetProvider.newInstance();
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
     _appDirectories = await AppDirectories.initWithDefaults();
+    _db = AppDatabase(constructDb(logStatements: kDebugMode));
     _helper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
+    _imageHelper = _db.imageHelper;
   }
 
   Future<void> initProviders() async {
     _dio = Dio();
-    _dio.interceptors.add(RequestInterceptor());
 
     _prefs = Preferences();
     await _prefs.loadData();
@@ -61,18 +60,15 @@ class _ProvidersSingleton {
     _appInfo = AppInfo();
     await _appInfo.loadData();
 
-    _imageQueue = ImageQueue();
     _backupDelegate = BackupDelegate();
-    _syncRoutine = SyncRoutine();
-    _imageHelper = ImageHelper();
   }
 }
 
 Future<void> initKeystore() async =>
     _ProvidersSingleton.instance.initKeystore();
 
-Future<void> initCriticalProviders(AppDatabase _db) async =>
-    _ProvidersSingleton.instance.initCriticalProviders(_db);
+Future<void> initCriticalProviders() async =>
+    _ProvidersSingleton.instance.initCriticalProviders();
 
 Future<void> initProviders() async =>
     _ProvidersSingleton.instance.initProviders();
@@ -97,14 +93,12 @@ Preferences get prefs => _ProvidersSingleton.instance._prefs;
 BackupDelegate get backupDelegate =>
     _ProvidersSingleton.instance._backupDelegate;
 
-ImageQueue get imageQueue => _ProvidersSingleton.instance._imageQueue;
-
 Dio get dio => _ProvidersSingleton.instance._dio;
+
+AppDatabase get db => _ProvidersSingleton.instance._db;
 
 NoteHelper get helper => _ProvidersSingleton.instance._helper;
 
 TagHelper get tagHelper => _ProvidersSingleton.instance._tagHelper;
-
-SyncRoutine get syncRoutine => _ProvidersSingleton.instance._syncRoutine;
 
 ImageHelper get imageHelper => _ProvidersSingleton.instance._imageHelper;

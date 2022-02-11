@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -8,15 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_size_getter/file_input.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
+import 'package:path/path.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
+import 'package:potato_notes/internal/blake/stub.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -24,7 +28,6 @@ import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/backup_password_prompt.dart';
@@ -55,7 +58,6 @@ class Utils {
   );
 
   static void deleteNoteSafely(Note note) {
-    imageHelper.handleNoteDeletion(note);
     helper.deleteNote(note);
   }
 
@@ -718,8 +720,9 @@ class Utils {
     final XFile? image = await pickImage();
 
     if (image != null) {
-      final SavedImage savedImage = await imageHelper.copyToCache(image);
-      note.images.add(savedImage);
+      final NoteImage savedImage = await copyFileToCache(image);
+      imageHelper.saveImage(savedImage);
+      note.images.add(savedImage.id);
 
       final int currentLength =
           (await helper.listNotes(ReturnMode.normal)).length;
@@ -873,6 +876,27 @@ class Utils {
     final Blake2 blake = Blake2();
     blake.updateWithString(pass);
     return utils.hex(blake.digest());
+  }
+
+  static Future<NoteImage> copyFileToCache(XFile origin) async {
+    final String id = Utils.generateId();
+    final String path = join(
+      appDirectories.imagesDirectory.path,
+      id + extension(origin.path),
+    );
+    final File file = File(path);
+    await origin.saveTo(file.path);
+    final Size _size = ImageSizeGetter.getSize(FileInput(file));
+    final String type = extension(file.path);
+
+    return NoteImage(
+      id: id,
+      type: type,
+      width: _size.width,
+      height: _size.height,
+      uploaded: false,
+      lastModifyDate: DateTime.now(),
+    );
   }
 
   static Color getMainColorFromTheme() {

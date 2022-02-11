@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/internal/jwt_decode.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/controller.dart';
 
 part 'preferences.g.dart';
 
@@ -229,31 +227,5 @@ abstract class _PreferencesBase with Store, LoggerProvider {
     tagHelper.watchTags(TagReturnMode.local).listen((newTags) {
       _tagsValue = newTags;
     });
-
-    if (sharedPrefs.accessToken != null) {
-      await Controller.files.getStats();
-      final String? netAvatarUrl = await imageHelper.getAvatar();
-      if (netAvatarUrl != _avatarUrlValue) {
-        avatarUrl = netAvatarUrl;
-      }
-    }
-  }
-
-  Future<String> getToken() async {
-    final bool tokenExpired = accessToken != null
-        ? DateTime.fromMillisecondsSinceEpoch(
-            (Jwt.parseJwt(accessToken!)["exp"] as int) * 1000,
-          ).isBefore(DateTime.now())
-        : false;
-
-    if (accessToken == null || tokenExpired) {
-      final AuthResponse response = await Controller.account.refreshToken();
-
-      if (!response.status) {
-        logger.w(response.message);
-      }
-    }
-
-    return accessToken!;
   }
 }

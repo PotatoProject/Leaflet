@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -23,7 +22,7 @@ import 'package:potato_notes/widget/fake_appbar.dart';
 
 class DrawPage extends StatefulWidget {
   final Note note;
-  final SavedImage? savedImage;
+  final NoteImage? savedImage;
 
   const DrawPage({
     required this.note,
@@ -73,7 +72,7 @@ class _DrawPageState extends State<DrawPage>
   final GlobalKey _appbarKey = GlobalKey();
   final GlobalKey _toolbarKey = GlobalKey();
 
-  SavedImage? _savedImage;
+  late NoteImage? _noteImage = widget.savedImage;
 
   @override
   void initState() {
@@ -87,7 +86,6 @@ class _DrawPageState extends State<DrawPage>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _savedImage = widget.savedImage;
   }
 
   @override
@@ -369,14 +367,20 @@ class _DrawPageState extends State<DrawPage>
     final File imgFile = File(drawing);
     await imgFile.writeAsBytes(pngBytes, flush: true);
     logger.d(drawing);
-
-    if (_savedImage != null) {
-      widget.note.images
-          .removeWhere((savedImage) => savedImage.id == _savedImage!.id);
+    final NoteImage newImg = await Utils.copyFileToCache(XFile(imgFile.path));
+    if (_noteImage != null) {
+      final int indexOf = widget.note.images.indexOf(_noteImage!.id);
+      widget.note.images.insert(indexOf, newImg.id);
+      widget.note.images.remove(_noteImage!.id);
+      imageHelper.deleteImageById(_noteImage!.id);
+      await File(_noteImage!.path).delete();
+      _noteImage = newImg;
+    } else {
+      _noteImage = newImg;
+      widget.note.images.add(_noteImage!.id);
     }
-    _savedImage = await imageHelper.copyToCache(XFile(imgFile.path));
 
-    widget.note.images.add(_savedImage!);
+    imageHelper.saveImage(_noteImage!);
     helper.saveNote(widget.note.markChanged());
 
     _controller.saved = true;

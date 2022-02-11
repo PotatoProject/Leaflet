@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/badge_icon.dart';
@@ -22,29 +21,28 @@ class AccountAvatar extends StatelessWidget {
       builder: (context) {
         final String? avatarUrl = prefs.avatarUrl;
 
-        return ValueListenableBuilder<bool>(
+        /* return ValueListenableBuilder<bool>(
           valueListenable: syncRoutine.syncing,
-          builder: (context, syncing, _) {
-            return BadgeIcon(
-              icon: CircleAvatar(
-                radius: size / 2,
-                backgroundColor: backgroundColor ?? Colors.transparent,
-                foregroundImage:
-                    avatarUrl != null ? NetworkImage(avatarUrl) : null,
-                child: Icon(
-                  Icons.person_outline,
-                  color: context.theme.iconTheme.color,
-                ),
-              ),
-              size: size,
-              badgeIcon: syncing && showBadgeOnSync
+          builder: (context, syncing, _) { */
+        return BadgeIcon(
+          icon: CircleAvatar(
+            radius: size / 2,
+            backgroundColor: backgroundColor ?? Colors.transparent,
+            foregroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
+            child: Icon(
+              Icons.person_outline,
+              color: context.theme.iconTheme.color,
+            ),
+          ),
+          size: size,
+          /* badgeIcon: syncing && showBadgeOnSync
                   ? SpinningSyncIcon(spin: syncing)
                   : null,
-              badgeSize: size / 2,
-            );
-          },
+              badgeSize: size / 2, */
         );
       },
     );
+    /*   },
+    ); */
   }
 }

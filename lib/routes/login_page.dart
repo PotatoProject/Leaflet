@@ -1,11 +1,10 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -284,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> onSubmit(BuildContext context) async {
-    AuthResponse response;
+    //AuthResponse response;
 
     setState(() {
       usernameError = null;
@@ -292,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
       passwordError = null;
       showLoadingOverlay = true;
     });
-    if (register) {
+    /* if (register) {
       response = await Controller.account.register(
         usernameController.text,
         emailController.text,
@@ -303,14 +302,14 @@ class _LoginPageState extends State<LoginPage> {
         emailOrUserController.text,
         passwordController.text,
       );
-    }
+    } */
 
     setState(() => showLoadingOverlay = false);
 
-    if (response.status && !register) {
+    if (/* response.status && */ !register) {
       context.pop();
     } else {
-      if (response.message is Map<String, dynamic>) {
+      /* if (response.message is Map<String, dynamic>) {
         final Map<String, dynamic> validation =
             Utils.asMap<String, dynamic>(response.message);
         setState(() {
@@ -343,11 +342,11 @@ class _LoginPageState extends State<LoginPage> {
             content: Text(message),
           ),
         );
-      }
+      } */
     }
   }
 
-  static final Map<String, String> _statusMessages = {
+  /* static final Map<String, String> _statusMessages = {
     'INVALID_CREDENTIALS': 'The username or password is wrong.',
     'USER_NOT_FOUND': 'No such user exists on the server.',
     'USER_NOT_VERIFIED':
@@ -355,5 +354,5 @@ class _LoginPageState extends State<LoginPage> {
     'LOGGED_OUT': 'The user is already logged out.',
     'INVALID_TOKEN': 'The token is not valid, login again.',
     'INVALID_SESSION': 'The current session is not valid, login again.',
-  };
+  }; */
 }

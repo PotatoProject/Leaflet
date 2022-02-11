@@ -43,26 +43,53 @@ class BasePageNavigationBar extends StatelessWidget {
             child: AnimatedOpacity(
               opacity: enabled ? 1.0 : 0.5,
               duration: const Duration(milliseconds: 300),
-              child: NavigationBar(
-                destinations: items
-                    .map(
-                      (e) => NavigationDestination(
-                        label: e.label ?? "",
-                        icon: e.icon,
-                        selectedIcon: e.activeIcon,
-                      ),
-                    )
-                    .toList(),
-                height: 64,
-                backgroundColor: Colors.transparent,
-                selectedIndex: index,
-                onDestinationSelected: onPageChanged,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              ),
+              child: _buildNavbar(context),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildNavbar(BuildContext context) {
+    if (context.theme.useMaterial3) {
+      return NavigationBar(
+        destinations: items
+            .map(
+              (e) => NavigationDestination(
+                label: e.label ?? "",
+                icon: e.icon,
+                selectedIcon: e.activeIcon,
+              ),
+            )
+            .toList(),
+        height: 64,
+        backgroundColor: Colors.transparent,
+        selectedIndex: index,
+        onDestinationSelected: onPageChanged,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      );
+    } else {
+      return BottomNavigationBar(
+        items: items
+            .map(
+              (e) => BottomNavigationBarItem(
+                icon: e.icon,
+                label: e.label,
+                activeIcon: e.activeIcon,
+                tooltip: "",
+              ),
+            )
+            .toList(),
+        backgroundColor: Colors.transparent,
+        selectedFontSize: 12,
+        currentIndex: index,
+        onTap: onPageChanged,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: context.theme.colorScheme.secondary,
+        unselectedItemColor: context.theme.textTheme.caption!.color,
+        elevation: 0,
+      );
+    }
   }
 }

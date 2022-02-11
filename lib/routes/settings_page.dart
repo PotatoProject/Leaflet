@@ -19,7 +19,6 @@ import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/locales/native_names.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/controller.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/about_page.dart';
@@ -194,7 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         await helper.deleteAllNotes();
                         if (AppInfo.supportsNotesApi &&
                             prefs.accessToken != null) {
-                          await Controller.note.deleteAll();
+                          //await Controller.note.deleteAll();
                         }
                       },
                     ),

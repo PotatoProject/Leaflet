@@ -66,6 +66,11 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
     }
   }
 
+  Stream<Note> watchNote(Note note) {
+    return (select(notes)..where((table) => table.id.equals(note.id)))
+        .watchSingle();
+  }
+
   Stream<List<Note>> noteStream(ReturnMode mode) {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 

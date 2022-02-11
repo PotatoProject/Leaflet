@@ -5,15 +5,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/theme/theme.dart';
+import 'package:potato_notes/internal/unmodifiable_note.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
@@ -59,8 +60,7 @@ extension NoteX on Note {
               Utils.asList<Map<String, dynamic>>(
             json.decode(value.toString()),
           );
-          final List<SavedImage> images =
-              list.map((i) => SavedImage.fromJson(i)).toList();
+          final List<String> images = list.map((i) => i.toString()).toList();
           newValue = images;
           break;
         case "list_content":
@@ -153,7 +153,7 @@ extension NoteX on Note {
           }
         case "images":
           {
-            final List<SavedImage> images = Utils.asList<SavedImage>(value);
+            final List<String> images = Utils.asList<String>(value);
             newValue = json.encode(images);
             break;
           }
@@ -197,6 +197,8 @@ extension NoteX on Note {
     );
   }
 
+  UnmodifiableNoteView get view => UnmodifiableNoteView(note: this);
+
   List<String> getActualTags({List<Tag>? overrideTags}) {
     final List<String> actualTags = [];
     final List<Tag> providedTags = overrideTags ?? prefs.tags;
@@ -214,6 +216,12 @@ extension TagX on Tag {
   Tag markChanged() {
     return copyWith(lastModifyDate: DateTime.now());
   }
+}
+
+extension NoteImageX on NoteImage {
+  Size get size => Size(width.toDouble(), height.toDouble());
+  bool get existsLocally => File(path).existsSync();
+  String get path => join(appDirectories.imagesDirectory.path, "$id$type");
 }
 
 extension PackageInfoX on PackageInfo {

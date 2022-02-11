@@ -1,61 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/controller.dart';
-import 'package:potato_notes/internal/sync/image/files_controller.dart';
-import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/login_page.dart';
 import 'package:potato_notes/widget/account_avatar.dart';
 
 class AccountInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
+    /* return ValueListenableBuilder<bool>(
       valueListenable: syncRoutine.syncing,
       builder: (context, syncing, _) {
         final bool loggedIn = prefs.accessToken != null;
         final String lastSync = prefs.lastUpdated != 0
             ? DateFormat('EEE dd MMM y, HH:mm')
                 .format(DateTime.fromMillisecondsSinceEpoch(prefs.lastUpdated))
-            : "never";
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-              child: Row(
+            : "never"; */
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          child: Row(
+            children: [
+              AccountAvatar(
+                size: 36,
+                backgroundColor:
+                    context.theme.iconTheme.color!.withOpacity(0.1),
+                showBadgeOnSync: false,
+              ),
+              const SizedBox(width: 24),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AccountAvatar(
-                    size: 36,
-                    backgroundColor:
-                        context.theme.iconTheme.color!.withOpacity(0.1),
-                    showBadgeOnSync: false,
+                  Text(
+                    prefs.username ?? "Guest",
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(width: 24),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        prefs.username ?? "Guest",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        prefs.email ?? "Not logged in",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color:
-                              context.theme.iconTheme.color!.withOpacity(0.5),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    prefs.email ?? "Not logged in",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: context.theme.iconTheme.color!.withOpacity(0.5),
+                    ),
                   ),
                 ],
               ),
-            ),
-            if (loggedIn)
+            ],
+          ),
+        ),
+        /* if (loggedIn)
               FutureBuilder<FilesApiStats>(
                 future: Controller.files.getStats(),
                 builder: (context, snapshot) {
@@ -135,11 +127,11 @@ class AccountInfo extends StatelessWidget {
                   await Utils.showSecondaryRoute(context, LoginPage());
                 },
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-              ),
-            const SizedBox(height: 8),
-          ],
-        );
-      },
+              ), */
+        const SizedBox(height: 8),
+      ],
     );
+    /*   },
+    ); */
   }
 }

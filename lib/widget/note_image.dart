@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/queue_item.dart';
+import 'package:potato_notes/data/database.dart' as db;
+import 'package:potato_notes/internal/extensions.dart';
 
 class NoteImage extends StatefulWidget {
-  final SavedImage savedImage;
+  final db.NoteImage savedImage;
   final BoxFit fit;
 
   const NoteImage({
@@ -19,15 +17,15 @@ class NoteImage extends StatefulWidget {
   @override
   _NoteImageState createState() => _NoteImageState();
 
-  static ImageProvider getProvider(SavedImage savedImage) {
+  static ImageProvider getProvider(db.NoteImage noteImage) {
     ImageProvider image;
 
-    if (savedImage.existsLocally && savedImage.uploaded) {
-      image = FileImage(File(savedImage.path));
-    } else if (savedImage.hash != null) {
-      image = BlurHashImage(savedImage.blurHash!);
+    if (noteImage.existsLocally && noteImage.uploaded) {
+      image = FileImage(File(noteImage.path));
+    } else if (noteImage.blurHash != null) {
+      image = BlurHashImage(noteImage.blurHash!);
     } else {
-      image = FileImage(File(savedImage.path));
+      image = FileImage(File(noteImage.path));
     }
 
     return image;
@@ -35,76 +33,39 @@ class NoteImage extends StatefulWidget {
 }
 
 class _NoteImageState extends State<NoteImage> {
-  QueueItem? queueItem;
-
-  @override
-  void initState() {
-    super.initState();
-    _getQueueItem();
-    imageQueue.addListener(_getQueueItem);
-  }
-
-  void _getQueueItem() {
-    queueItem = imageQueue.queue.firstWhereOrNull(
-      (e) => e.savedImage.id == widget.savedImage.id,
-    );
-    if (queueItem != null) setState(() {});
-  }
-
-  @override
-  void didUpdateWidget(NoteImage old) {
-    super.didUpdateWidget(old);
-    if (widget.savedImage.id != old.savedImage.id) {
-      _getQueueItem();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    imageQueue.removeListener(_getQueueItem);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<QueueItemStatus>(
-      valueListenable:
-          queueItem?.status ?? ValueNotifier(QueueItemStatus.complete),
-      builder: (context, value, _) {
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NoteImage.getProvider(widget.savedImage),
-              fit: widget.fit,
-            ),
-          ),
-          child: SizedBox.expand(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Visibility(
-                visible: value == QueueItemStatus.ongoing,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox.fromSize(
-                    size: const Size.square(32),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: ValueListenableBuilder<double?>(
-                            valueListenable: queueItem?.progress ??
-                                ValueNotifier<double?>(null),
-                            builder: (context, value, _) {
-                              return CircularProgressIndicator(
-                                strokeWidth: 2,
-                                value: value,
-                              );
-                            },
-                          ),
-                        ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NoteImage.getProvider(widget.savedImage),
+          fit: widget.fit,
+        ),
+      ),
+      child: SizedBox.expand(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Visibility(
+            visible: false,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox.fromSize(
+                size: const Size.square(32),
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  elevation: 4,
+                  shape: const CircleBorder(),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: ValueListenableBuilder<double?>(
+                        valueListenable: ValueNotifier<double?>(null),
+                        builder: (context, value, _) {
+                          return CircularProgressIndicator(
+                            strokeWidth: 2,
+                            value: value,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -112,8 +73,8 @@ class _NoteImageState extends State<NoteImage> {
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

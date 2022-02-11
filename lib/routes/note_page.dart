@@ -4,9 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/database.dart' hide NoteImages;
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -101,8 +100,15 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void dispose() {
+    titleFocusNode.dispose();
+    titleController.dispose();
+    contentFocusNode.dispose();
+    contentController.dispose();
     for (final FocusNode node in listContentNodes) {
       node.dispose();
+    }
+    for (final TextEditingController controller in listContentControllers) {
+      controller.dispose();
     }
     super.dispose();
   }
@@ -207,7 +213,7 @@ class _NotePageState extends State<NotePage> {
                       top: context.padding.top + 56,
                     ),
                     width: imageWidgetSize,
-                    child: getImageWidget(Axis.vertical),
+                    child: getImageWidget(context, Axis.vertical),
                   ),
               ],
             ),
@@ -277,26 +283,10 @@ class _NotePageState extends State<NotePage> {
           bottom: 16,
         ),
         children: [
-          /* if (note.deleted)
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 8,
-                bottom: 8,
-              ),
-              child: Row(
-                children: const [
-                  Icon(Icons.warning_amber_outlined, size: 16),
-                  SizedBox(width: 8),
-                  Text("Deleted notes can be opened only for reading"),
-                ],
-              ),
-            ), */
           if (note.images.isNotEmpty && !deviceInfo.isLandscape)
             SizedBox(
               height: imageWidgetSize,
-              child: getImageWidget(Axis.horizontal),
+              child: getImageWidget(context, Axis.horizontal),
             ),
           if (actualTags.isNotEmpty)
             Container(
@@ -439,29 +429,53 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> handleImageAdd(XFile file) async {
-    final SavedImage savedImage = await imageHelper.copyToCache(file);
-    setState(() => note.images.add(savedImage));
-    imageQueue.addUpload(savedImage, note.id);
+    final NoteImage savedImage = await Utils.copyFileToCache(file);
+    imageHelper.saveImage(savedImage);
+    setState(() => note.images.add(savedImage.id));
+    //imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
     await helper.saveNote(note);
   }
 
-  Widget getImageWidget(Axis axis) {
-    return NoteImages(
-      images: note.images,
-      onImageTap: (index) async {
-        await Utils.showSecondaryRoute(
-          context,
-          NotePageImageGallery(
-            note: note,
-            currentImage: index,
-          ),
-        );
+  Widget getImageWidget(BuildContext context, Axis axis) {
+    return StreamBuilder<List<NoteImage>>(
+      stream: imageHelper.watchImages(note),
+      builder: (context, snapshot) {
+        return NoteImages(
+          images: snapshot.data ?? [],
+          onImageTap: (index) async {
+            await Utils.showSecondaryRoute(
+              context,
+              NotePageImageGallery(
+                note: note.view,
+                initialImages: await imageHelper.getImagesById(note.images),
+                allowEditing: !note.deleted,
+                currentImage: index,
+                onDraw: (image) {
+                  Utils.showSecondaryRoute(
+                    context,
+                    DrawPage(
+                      note: note,
+                      savedImage: image,
+                    ),
+                    allowGestures: false,
+                  );
+                },
+                onDelete: (image) async {
+                  note.images.remove(image.id);
+                  imageHelper.deleteImageById(image.id);
+                  await File(image.path).delete();
+                  helper.saveNote(note.markChanged());
+                },
+              ),
+            );
 
-        setState(() {});
+            setState(() {});
+          },
+          layoutType: ImageLayoutType.strip,
+          stripAxis: axis,
+        );
       },
-      layoutType: ImageLayoutType.strip,
-      stripAxis: axis,
     );
   }
 
