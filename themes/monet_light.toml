@@ -3,6 +3,7 @@ name = "Monet light"
 author = "HrX03"
 version = 1
 brightness = "light"
+useMaterial3 = true
 
 [shapes.smallComponents]
 type = "rounded"
@@ -39,16 +40,40 @@ type = "rounded"
 radius.all = 16
 
 [colors]
-primary = "monet.accent1.600"
-surface = "monet.accent2.50"
-background = "monet.accent2.100"
-error = "color.red"
-onPrimary = "monet.accent2.50"
-onSurface = "monet.accent2.900"
-onBackground = "monet.accent2.900"
-onError = "color.grey.900"
+primary = "monet.primaries.600"
+primaryContainer = "monet.primaries.100"
+secondary = "monet.secondaries.600"
+secondaryContainer = "monet.secondaries.100"
+tertiary = "monet.tertiaries.600"
+tertiaryContainer = "monet.tertiaries.100"
+error = "monet.errors.600"
+errorContainer = "monet.errors.100"
+
+background = "monet.neutrals.10"
+surface = "monet.neutrals.50"
+surfaceVariant = "monet.neutralVariants.100"
+
+onPrimary = "monet.primaries.0"
+onSecondary = "monet.secondaries.0"
+onTertiary = "monet.tertiaries.0"
+onPrimaryContainer = "monet.primaries.900"
+onSecondaryContainer = "monet.secondaries.900"
+onTertiaryContainer = "monet.tertiaries.900"
+onError = "monet.errors.0"
+onErrorContainer = "monet.errors.900"
+
+onBackground = "monet.neutrals.900"
+onSurface = "monet.neutrals.900"
+onSurfaceVariant = "monet.neutralVariants.700"
+
+outline = "monet.neutralVariants.500"
+shadow = "monet.neutrals.1000"
+
+inverseSurface = "monet.neutrals.800"
+onInverseSurface = "monet.neutrals.50"
+inversePrimary = "monet.primaries.200"
 
 [colors.illustrations]
-base = "monet.accent2.600"
-contrast = "monet.accent2.800"
-invertedContrast = "monet.accent2.300"
+base = "monet.secondaries.600"
+contrast = "monet.secondaries.800"
+invertedContrast = "monet.secondaries.300"

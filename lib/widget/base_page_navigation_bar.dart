@@ -32,7 +32,7 @@ class BasePageNavigationBar extends StatelessWidget {
         ],
       ),
       child: Material(
-        color: context.theme.canvasColor,
+        color: context.theme.colorScheme.surface,
         child: Padding(
           padding: EdgeInsetsDirectional.only(
             start: context.viewPaddingDirectional.start,

@@ -496,3 +496,13 @@ extension DynamicX on dynamic {
     return this as T;
   }
 }
+
+extension ColorX on Color {
+  Color get contrasting {
+    if (ThemeData.estimateBrightnessForColor(this) == Brightness.light) {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
+  }
+}
