@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
@@ -40,7 +41,7 @@ QueryExecutor constructDb({bool logStatements = false}) {
     final Directory dataDir = DeviceInfo.isDesktop
         ? appDirectories.supportDirectory
         : Directory(await getDatabasesPath());
-    final File dbFile = File(p.join(dataDir.path, 'notes.sqlite'));
+    final File dbFile = File(p.join(dataDir.path, databaseFileName));
 
     String? databaseKey = await keystore.getDatabaseKey();
     if (databaseKey == null) {
@@ -60,4 +61,15 @@ QueryExecutor constructDb({bool logStatements = false}) {
     );
   });
   return executor;
+}
+
+/// databaseFileName returns the file name to use for the database. We use
+/// a different file name in debug builds as windows' implementation of secure
+/// keystore keeps debug and release keys seperate.
+String get databaseFileName {
+  if (kDebugMode) {
+    return 'notes_dbg.sqlite';
+  }
+
+  return 'notes.sqlite';
 }
