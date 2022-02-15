@@ -71,5 +71,9 @@ String get databaseFileName {
     return 'notes_dbg.sqlite';
   }
 
+  if (kProfileMode) {
+    return 'notes_profile.sqlite';
+  }
+
   return 'notes.sqlite';
 }
