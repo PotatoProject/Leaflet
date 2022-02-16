@@ -5,9 +5,9 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
+import 'package:drift/drift.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
-import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/id_list.dart';
@@ -635,7 +635,7 @@ class ZipByteEncoder {
   }
 
   void addFile(File file, [String? filename, int? level = gzip]) {
-    final InputFileStream fileStream = InputFileStream.file(file);
+    final InputFileStream fileStream = InputFileStream(file.path);
     final ArchiveFile archiveFile = ArchiveFile.stream(
       filename ?? p.basename(file.path),
       file.lengthSync(),

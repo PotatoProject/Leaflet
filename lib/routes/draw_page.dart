@@ -381,7 +381,7 @@ class _DrawPageState extends State<DrawPage>
     }
 
     imageHelper.saveImage(_noteImage!);
-    helper.saveNote(widget.note.markChanged());
+    noteHelper.saveNote(widget.note.markChanged());
 
     _controller.saved = true;
   }

@@ -19,10 +19,9 @@ class UnmodifiableNoteView extends Note {
           hideContent: note.hideContent,
           lockNote: note.lockNote,
           usesBiometrics: note.usesBiometrics,
-          deleted: note.deleted,
-          archived: note.archived,
-          synced: note.synced,
-          lastModifyDate: note.lastModifyDate,
+          folder: note.folder,
+          lastChanged: note.lastChanged,
+          lastSynced: note.lastSynced,
         );
 
   @override

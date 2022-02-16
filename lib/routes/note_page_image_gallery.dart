@@ -45,7 +45,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
   @override
   void initState() {
     super.initState();
-    stream = helper.watchNote(widget.note).listen(_updateImages);
+    stream = noteHelper.watchNote(widget.note).listen(_updateImages);
   }
 
   @override

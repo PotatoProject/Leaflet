@@ -1,4 +1,4 @@
-import 'dart:math';
+/* import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +32,8 @@ import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_search_delegate.dart';
 
 class BasePage extends StatefulWidget {
+  const BasePage();
+
   static BasePageState of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<BasePageInheritedWidget>()!
@@ -593,3 +595,4 @@ class _SecondaryAppBar extends StatelessWidget {
     );
   }
 }
+ */

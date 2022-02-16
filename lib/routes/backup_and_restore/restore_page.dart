@@ -433,7 +433,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
               onPressed: selectedNotes.isNotEmpty
                   ? () async {
                       if (replaceExistingNotes) {
-                        await helper.deleteAllNotes();
+                        await noteHelper.deleteAllNotes();
                         await tagHelper.deleteAllTags();
                       }
 
@@ -445,7 +445,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                               .firstWhereOrNull((t) => t.id == tagId);
                           if (tag != null) await tagHelper.saveTag(tag);
                         }
-                        await helper.saveNote(note);
+                        await noteHelper.saveNote(note);
                       }
 
                       context.pop();

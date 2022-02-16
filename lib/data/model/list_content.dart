@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 part 'list_content.g.dart';

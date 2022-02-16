@@ -291,7 +291,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   onChanged: (value) {
                     widget.note.listContent[index].status = value!;
                     widget.note.markChanged();
-                    helper.saveNote(widget.note);
+                    noteHelper.saveNote(widget.note);
                     setState(() {});
                   },
                   splashRadius: 14,

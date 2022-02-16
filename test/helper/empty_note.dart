@@ -10,19 +10,17 @@ class EmptyNote {
       content: "",
       starred: false,
       creationDate: DateTime.now(),
-      lastModifyDate: DateTime.now(),
+      lastChanged: DateTime.now(),
       color: 0,
       images: [],
       list: false,
       listContent: [],
       reminders: [],
       tags: [],
+      folder: 'default',
       hideContent: false,
       lockNote: false,
       usesBiometrics: false,
-      deleted: false,
-      archived: false,
-      synced: false,
     );
   }
 }

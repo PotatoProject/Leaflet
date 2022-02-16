@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
+import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -14,7 +16,7 @@ class NoteListWidget extends StatelessWidget {
   final IndexedWidgetBuilder itemBuilder;
   final int noteCount;
   final bool gridView;
-  final ReturnMode? noteKind;
+  final Folder? folder;
   final bool primary;
   final ScrollController? scrollController;
   final Widget? customIllustration;
@@ -26,7 +28,7 @@ class NoteListWidget extends StatelessWidget {
     required this.itemBuilder,
     required this.noteCount,
     this.gridView = false,
-    this.noteKind,
+    this.folder,
     this.primary = false,
     this.scrollController,
     this.customIllustration,
@@ -94,23 +96,114 @@ class NoteListWidget extends StatelessWidget {
   }
 
   MapEntry<Widget, String> getInfoOnCurrentMode(IllustrationPalette palette) {
-    switch (noteKind) {
-      case ReturnMode.archive:
-        return MapEntry(
-          Illustration.archive(palette: palette, height: 128),
-          LocaleStrings.mainPage.emptyStateArchive,
-        );
-      case ReturnMode.trash:
+    switch (folder?.id ?? BuiltInFolders.all.id) {
+      case 'trash':
         return MapEntry(
           Illustration.trash(palette: palette, height: 128),
           LocaleStrings.mainPage.emptyStateTrash,
         );
-      case ReturnMode.all:
-      case ReturnMode.normal:
-      default:
+      case 'normal':
+      case 'all':
         return MapEntry(
           Illustration.noNotes(palette: palette, height: 128),
           LocaleStrings.mainPage.emptyStateHome,
+        );
+      default:
+        return MapEntry(
+          Illustration.archive(palette: palette, height: 128),
+          LocaleStrings.mainPage.emptyStateArchive,
+        );
+    }
+  }
+}
+
+class NoteSliverListWidget extends StatelessWidget {
+  final IndexedWidgetBuilder itemBuilder;
+  final int noteCount;
+  final bool gridView;
+  final Folder? folder;
+  final Widget? customIllustration;
+  final int? gridColumns;
+
+  const NoteSliverListWidget({
+    required this.itemBuilder,
+    required this.noteCount,
+    this.gridView = false,
+    this.folder,
+    this.customIllustration,
+    this.gridColumns,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final EdgeInsetsDirectional padding = EdgeInsetsDirectional.fromSTEB(
+      Constants.cardPadding + context.viewPaddingDirectional.start,
+      Constants.cardPadding,
+      Constants.cardPadding + context.viewPaddingDirectional.end,
+      Constants.cardPadding + 80.0 + context.viewInsets.bottom,
+    );
+    Widget child;
+
+    if (noteCount > 0) {
+      if (gridView) {
+        child = SliverMasonryGrid.count(
+          crossAxisCount: gridColumns ?? deviceInfo.uiSizeFactor,
+          itemBuilder: itemBuilder,
+          childCount: noteCount,
+        );
+      } else {
+        child = SliverList(
+          delegate: SliverChildBuilderDelegate(
+            itemBuilder,
+            childCount: noteCount,
+          ),
+        );
+      }
+
+      child = SliverPadding(
+        padding: padding,
+        sliver: child,
+      );
+    } else {
+      final MapEntry<Widget, String> info =
+          getInfoOnCurrentMode(context.leafletTheme.illustrationPalette);
+      child = SliverFillRemaining(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: context.viewInsets.bottom,
+              ),
+              height: constraints.maxHeight,
+              child: customIllustration ??
+                  Utils.quickIllustration(context, info.key, info.value),
+            );
+          },
+        ),
+      );
+    }
+
+    return child;
+  }
+
+  MapEntry<Widget, String> getInfoOnCurrentMode(IllustrationPalette palette) {
+    switch (folder?.id ?? BuiltInFolders.all.id) {
+      case 'trash':
+        return MapEntry(
+          Illustration.trash(palette: palette, height: 128),
+          LocaleStrings.mainPage.emptyStateTrash,
+        );
+      case 'normal':
+      case 'all':
+        return MapEntry(
+          Illustration.noNotes(palette: palette, height: 128),
+          LocaleStrings.mainPage.emptyStateHome,
+        );
+      default:
+        return MapEntry(
+          Illustration.archive(palette: palette, height: 128),
+          LocaleStrings.mainPage.emptyStateArchive,
         );
     }
   }

@@ -1,7 +1,6 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -20,12 +19,12 @@ import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class NoteListPage extends StatefulWidget {
-  final ReturnMode noteKind;
+  final Folder folder;
   final SelectionOptions selectionOptions;
 
   const NoteListPage({
     Key? key,
-    required this.noteKind,
+    required this.folder,
     required this.selectionOptions,
   }) : super(key: key);
 
@@ -52,9 +51,9 @@ class NoteListPageState extends State<NoteListPage> {
     super.initState();
     _selectionState = SelectionState(
       options: widget.selectionOptions,
-      noteKind: widget.noteKind,
+      folder: widget.folder,
       onSelectionChanged: (value) {
-        context.basePage!.setNavigationEnabled(!value);
+        //context.basePage!.setNavigationEnabled(!value);
       },
     );
     _selectionState.selectingNotifier.addListener(() => setState(() {}));
@@ -77,16 +76,15 @@ class NoteListPageState extends State<NoteListPage> {
             state: _selectionState,
             child: _selectionState.selecting
                 ? const SelectionBar()
-                : DefaultAppBar(extraActions: appBarButtons),
+                : const DefaultAppBar(/* extraActions: appBarButtons */),
           ),
         ),
         useAppBarAsSecondary: _selectionState.selecting,
-        secondaryAppBar:
-            widget.noteKind == ReturnMode.normal && !_selectionState.selecting
-                ? NewNoteBar()
-                : null,
+        secondaryAppBar: !widget.folder.readOnly && !_selectionState.selecting
+            ? NewNoteBar(folder: widget.folder)
+            : null,
         body: StreamBuilder<List<Note>>(
-          stream: helper.noteStream(widget.noteKind),
+          stream: noteHelper.watchNotes(widget.folder),
           initialData: const [],
           builder: (context, snapshot) {
             final List<Note> notes = snapshot.data ?? [];
@@ -95,16 +93,14 @@ class NoteListPageState extends State<NoteListPage> {
               itemBuilder: (_, index) => _buildNoteList(context, notes, index),
               gridView: prefs.useGrid,
               noteCount: notes.length,
-              noteKind: widget.noteKind,
+              folder: widget.folder,
               primary: UniversalPlatform.isIOS,
             );
           },
         ),
         resizeToAvoidBottomInset: false,
         floatingActionButton:
-            widget.noteKind == ReturnMode.normal && !_selectionState.selecting
-                ? fab
-                : null,
+            !widget.folder.readOnly && !_selectionState.selecting ? fab : null,
       ),
     );
   }
@@ -116,7 +112,7 @@ class NoteListPageState extends State<NoteListPage> {
       mainEntry: MenuFabEntry(
         icon: const Icon(Icons.edit_outlined),
         label: LocaleStrings.common.newNote,
-        onTap: () => Utils.newNote(context),
+        onTap: () => Utils.newNote(context, widget.folder),
       ),
       entries: [
         MenuFabEntry(
@@ -127,23 +123,24 @@ class NoteListPageState extends State<NoteListPage> {
         MenuFabEntry(
           icon: const Icon(Icons.check_box_outlined),
           label: LocaleStrings.common.newList,
-          onTap: () => Utils.newList(context),
+          onTap: () => Utils.newList(context, widget.folder),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.image_outlined),
           label: LocaleStrings.common.newImage,
-          onTap: () => Utils.newImage(context, ImageSource.gallery),
+          onTap: () =>
+              Utils.newImage(context, widget.folder, ImageSource.gallery),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.brush_outlined),
           label: LocaleStrings.common.newDrawing,
-          onTap: () => Utils.newDrawing(context),
+          onTap: () => Utils.newDrawing(context, widget.folder),
         ),
       ],
     );
   }
 
-  List<Widget> get appBarButtons => [
+  /* List<Widget> get appBarButtons => [
         Visibility(
           visible: widget.noteKind == ReturnMode.archive ||
               widget.noteKind == ReturnMode.trash,
@@ -153,7 +150,7 @@ class NoteListPageState extends State<NoteListPage> {
                 icon: const Icon(Icons.settings_backup_restore),
                 onPressed: () async {
                   final List<Note> notes =
-                      await helper.listNotes(widget.noteKind);
+                      await noteHelper.listNotes(widget.noteKind);
                   final bool? result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -190,7 +187,7 @@ class NoteListPageState extends State<NoteListPage> {
             },
           ),
         ),
-      ];
+      ]; */
 
   Widget _buildNoteList(BuildContext context, List<Note> notes, int index) {
     final _state = context.selectionState;
@@ -210,7 +207,7 @@ class NoteListPageState extends State<NoteListPage> {
           _state.selecting = true;
           _state.addSelectedNote(note);
         }
-        context.basePage!.setNavigationEnabled(!_state.selecting);
+        //context.basePage!.setNavigationEnabled(!_state.selecting);
       },
       allowSelection: true,
     );

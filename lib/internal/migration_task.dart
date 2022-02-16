@@ -5,6 +5,7 @@ import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -60,6 +61,7 @@ class MigrationTask {
         isArchived: rawV1Notes[index]['isArchived'] as int,
       );
     });
+    final List<Folder> folders = await folderHelper.listFolders();
 
     for (final NoteV1Model v1Note in v1Notes) {
       final List<ListItem> listItems = [];
@@ -94,6 +96,20 @@ class MigrationTask {
         //imageQueue.addUpload(savedImage, id);
       }
 
+      final Folder folder;
+
+      if (v1Note.isArchived == 1) {
+        if (!folders.contains(BuiltInFolders.archive)) {
+          await folderHelper.createFolder(BuiltInFolders.archive);
+        }
+
+        folder = BuiltInFolders.archive;
+      } else if (v1Note.isDeleted == 1) {
+        folder = BuiltInFolders.trash;
+      } else {
+        folder = BuiltInFolders.home;
+      }
+
       final Note note = Note(
         id: id,
         title: v1Note.title ?? "",
@@ -102,7 +118,7 @@ class MigrationTask {
             : "",
         starred: v1Note.isStarred == 1,
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date!),
-        lastModifyDate: DateTime.now(),
+        lastChanged: DateTime.now(),
         color: v1Note.color ?? 0,
         images: [if (noteImage != null) noteImage.id],
         list: v1Note.isList == 1,
@@ -112,9 +128,7 @@ class MigrationTask {
         hideContent: v1Note.hideContent == 1,
         lockNote: false,
         usesBiometrics: false,
-        deleted: v1Note.isDeleted == 1,
-        archived: v1Note.isArchived == 1,
-        synced: false,
+        folder: folder.id,
       );
 
       notes.add(note);

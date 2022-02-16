@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/constants.dart';
@@ -76,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Text(LocaleStrings.settings.backupRestoreBackupDesc),
                     onTap: () async {
                       final List<Note> notes =
-                          await helper.listNotes(ReturnMode.local);
+                          await noteHelper.listNotes(BuiltInFolders.all);
                       if (notes.isNotEmpty) {
                         await Utils.showModalBottomSheet(
                           context: context,
@@ -190,7 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       icon: const Icon(MdiIcons.databaseRemoveOutline),
                       title: Text(LocaleStrings.settings.debugClearDatabase),
                       onTap: () async {
-                        await helper.deleteAllNotes();
+                        await noteHelper.deleteAllNotes();
                         if (AppInfo.supportsNotesApi &&
                             prefs.accessToken != null) {
                           //await Controller.note.deleteAll();
@@ -220,7 +220,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             starred: r.nextBool(),
                             color: r.nextInt(10),
                           );
-                          await helper.saveNote(n);
+                          await noteHelper.saveNote(n);
                         }
                       },
                     ),
@@ -569,19 +569,19 @@ class _SettingsPageState extends State<SettingsPage> {
                     prefs.masterPass = "";
 
                     final List<Note> notes =
-                        await helper.listNotes(ReturnMode.local);
+                        await noteHelper.listNotes(BuiltInFolders.all);
 
                     setState(() => removingMasterPass = true);
-                    context.basePage!.setNavigationEnabled(false);
+                    //context.basePage!.setNavigationEnabled(false);
                     for (int i = 0; i < notes.length; i++) {
                       final Note note = notes[i];
                       if (note.lockNote) {
-                        await helper.saveNote(
+                        await noteHelper.saveNote(
                           note.markChanged().copyWith(lockNote: false),
                         );
                       }
                     }
-                    context.basePage!.setNavigationEnabled(true);
+                    //context.basePage!.setNavigationEnabled(true);
                   }
                 }
               },

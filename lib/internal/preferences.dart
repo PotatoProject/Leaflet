@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -68,6 +69,9 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   List<dynamic> _tagsValue = [];
 
   @observable
+  List<dynamic> _foldersValue = [];
+
+  @observable
   List<String> _downloadedImagesValue = sharedPrefs.downloadedImages;
 
   @observable
@@ -99,6 +103,10 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   String? get avatarUrlAsKey => _avatarUrlValue?.split("?").first;
   int get logLevel => _logLevelValue;
   List<Tag> get tags => _tagsValue.map((e) => e as Tag).toList();
+  List<Folder> get folders => [
+        ...BuiltInFolders.values,
+        ..._foldersValue.map((e) => e as Folder),
+      ];
   List<String> get downloadedImages => _downloadedImagesValue;
   List<String> get deletedImages => _deletedImagesValue;
   int get lastUpdated => _lastUpdatedValue;
@@ -223,9 +231,13 @@ abstract class _PreferencesBase with Store, LoggerProvider {
     _masterPassValue = await keystore.getMasterPass();
 
     _tagsValue = await tagHelper.listTags(TagReturnMode.local);
-
     tagHelper.watchTags(TagReturnMode.local).listen((newTags) {
       _tagsValue = newTags;
+    });
+
+    _foldersValue = await folderHelper.listFolders();
+    folderHelper.watchFolders().listen((newFolders) {
+      _foldersValue = newFolders;
     });
   }
 }

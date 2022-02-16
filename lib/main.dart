@@ -14,6 +14,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
+import 'package:potato_notes/routes/home_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -116,7 +117,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
             return WindowFrame(child: child!);
           },
           themeMode: prefs.themeMode,
-          home: BasePage(),
+          home: const HomePage(),
           debugShowCheckedModeBanner: false,
           color: Utils.getMainColorFromTheme(),
         );

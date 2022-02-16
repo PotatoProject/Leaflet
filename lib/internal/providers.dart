@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monet/monet.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/dao/image_helper.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/dao/tag_helper.dart';
@@ -29,8 +30,9 @@ class _ProvidersSingleton {
   late BackupDelegate _backupDelegate;
   late Dio _dio;
   late AppDatabase _db;
-  late NoteHelper _helper;
+  late NoteHelper _noteHelper;
   late TagHelper _tagHelper;
+  late FolderHelper _folderHelper;
   late ImageHelper _imageHelper;
 
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
@@ -45,8 +47,9 @@ class _ProvidersSingleton {
     _appConfig = await AppConfig.load();
     _appDirectories = await AppDirectories.initWithDefaults();
     _db = AppDatabase(constructDb(logStatements: kDebugMode));
-    _helper = _db.noteHelper;
+    _noteHelper = _db.noteHelper;
     _tagHelper = _db.tagHelper;
+    _folderHelper = _db.folderHelper;
     _imageHelper = _db.imageHelper;
   }
 
@@ -97,8 +100,10 @@ Dio get dio => _ProvidersSingleton.instance._dio;
 
 AppDatabase get db => _ProvidersSingleton.instance._db;
 
-NoteHelper get helper => _ProvidersSingleton.instance._helper;
+NoteHelper get noteHelper => _ProvidersSingleton.instance._noteHelper;
 
 TagHelper get tagHelper => _ProvidersSingleton.instance._tagHelper;
+
+FolderHelper get folderHelper => _ProvidersSingleton.instance._folderHelper;
 
 ImageHelper get imageHelper => _ProvidersSingleton.instance._imageHelper;

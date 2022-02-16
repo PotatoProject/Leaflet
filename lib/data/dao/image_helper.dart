@@ -1,9 +1,9 @@
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:potato_notes/data/database.dart';
 
 part 'image_helper.g.dart';
 
-@UseDao(tables: [NoteImages])
+@DriftAccessor(tables: [NoteImages])
 class ImageHelper extends DatabaseAccessor<AppDatabase>
     with _$ImageHelperMixin {
   final AppDatabase db;

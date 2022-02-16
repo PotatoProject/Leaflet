@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -32,7 +33,7 @@ class _BackupPageState extends State<BackupPage> {
   }
 
   Future<void> _initNotes() async {
-    notes.addAll(await helper.listNotes(ReturnMode.local));
+    notes.addAll(await noteHelper.listNotes(BuiltInFolders.all));
     setState(() {});
   }
 

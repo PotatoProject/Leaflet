@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:potato_notes/internal/utils.dart';
 
 class IdListConverter extends TypeConverter<List<String>, String> {

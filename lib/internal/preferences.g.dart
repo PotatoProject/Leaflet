@@ -307,6 +307,21 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
+  final _$_foldersValueAtom = Atom(name: '_PreferencesBase._foldersValue');
+
+  @override
+  List<dynamic> get _foldersValue {
+    _$_foldersValueAtom.reportRead();
+    return super._foldersValue;
+  }
+
+  @override
+  set _foldersValue(List<dynamic> value) {
+    _$_foldersValueAtom.reportWrite(value, super._foldersValue, () {
+      super._foldersValue = value;
+    });
+  }
+
   final _$_downloadedImagesValueAtom =
       Atom(name: '_PreferencesBase._downloadedImagesValue');
 

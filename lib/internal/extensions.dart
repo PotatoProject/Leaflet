@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -16,7 +17,6 @@ import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/theme/theme.dart';
 import 'package:potato_notes/internal/unmodifiable_note.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:recase/recase.dart';
 
@@ -27,7 +27,6 @@ extension NoteX on Note {
         content: "",
         starred: false,
         creationDate: DateTime.now(),
-        lastModifyDate: DateTime.now(),
         color: 0,
         images: [],
         list: false,
@@ -37,9 +36,8 @@ extension NoteX on Note {
         hideContent: false,
         lockNote: false,
         usesBiometrics: false,
-        deleted: false,
-        archived: false,
-        synced: false,
+        folder: BuiltInFolders.home.id,
+        lastChanged: DateTime.now(),
       );
 
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
@@ -107,7 +105,7 @@ extension NoteX on Note {
     derivated.putIfAbsent('styleJson', () => []);
     derivated.putIfAbsent('starred', () => false);
     derivated.putIfAbsent('creationDate', () => DateTime.now());
-    derivated.putIfAbsent('lastModifyDate', () => DateTime.now());
+    derivated.putIfAbsent('lastChanged', () => DateTime.now());
     derivated.putIfAbsent('color', () => 0);
     derivated.putIfAbsent('images', () => []);
     derivated.putIfAbsent('list', () => false);
@@ -117,9 +115,6 @@ extension NoteX on Note {
     derivated.putIfAbsent('hideContent', () => false);
     derivated.putIfAbsent('lockNote', () => false);
     derivated.putIfAbsent('usesBiometrics', () => false);
-    derivated.putIfAbsent('deleted', () => false);
-    derivated.putIfAbsent('archived', () => false);
-    derivated.putIfAbsent('synced', () => false);
     return derivated;
   }
 
@@ -185,7 +180,7 @@ extension NoteX on Note {
   }
 
   Note markChanged() {
-    return copyWith(synced: false, lastModifyDate: DateTime.now());
+    return copyWith(lastChanged: DateTime.now());
   }
 
   int get notificationId =>
@@ -214,7 +209,7 @@ extension NoteX on Note {
 
 extension TagX on Tag {
   Tag markChanged() {
-    return copyWith(lastModifyDate: DateTime.now());
+    return copyWith(lastChanged: DateTime.now());
   }
 }
 
@@ -313,7 +308,7 @@ extension ContextProviders on BuildContext {
     }
   }
 
-  BasePageState? get basePage => BasePage.maybeOf(this);
+  //BasePageState? get basePage => BasePage.maybeOf(this);
   TextDirection get directionality => Directionality.of(this);
 
   NavigatorState get navigator => Navigator.of(this);

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart' hide NoteImages;
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -63,7 +64,6 @@ class _NotePageState extends State<NotePage> {
       content: widget.note?.content ?? "",
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
-      lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
       images: widget.note?.images ?? [],
       list: widget.note?.list ?? false,
@@ -73,9 +73,9 @@ class _NotePageState extends State<NotePage> {
       hideContent: widget.note?.hideContent ?? false,
       lockNote: widget.note?.lockNote ?? false,
       usesBiometrics: widget.note?.usesBiometrics ?? false,
-      deleted: widget.note?.deleted ?? false,
-      archived: widget.note?.archived ?? false,
-      synced: widget.note?.synced ?? false,
+      folder: widget.note?.folder ?? BuiltInFolders.home.id,
+      lastChanged: widget.note?.lastChanged ?? DateTime.now(),
+      lastSynced: widget.note?.lastSynced ?? DateTime.now(),
     );
 
     titleController = TextEditingController(text: note.title);
@@ -121,7 +121,7 @@ class _NotePageState extends State<NotePage> {
         builder: (context) {
           Widget? bottomBar;
 
-          if (note.deleted) {
+          if (prefs.folders.firstWhere((e) => e.id == note.folder).readOnly) {
             bottomBar = Material(
               color: context.theme.colorScheme.surface,
               elevation: 8,
@@ -141,7 +141,7 @@ class _NotePageState extends State<NotePage> {
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        "Deleted notes can be opened only for reading",
+                        "Notes in read-only folders can't be edited",
                       ),
                     ),
                     TextButton(
@@ -155,7 +155,7 @@ class _NotePageState extends State<NotePage> {
                         setState(() => note = note.copyWith(deleted: false));
                         notifyNoteChanged();
                       },
-                      child: Text(LocaleStrings.common.restore.toUpperCase()),
+                      child: Text("Move".toUpperCase()),
                     ),
                   ],
                 ),
@@ -182,14 +182,18 @@ class _NotePageState extends State<NotePage> {
           return Scaffold(
             appBar: AppBar(
               actions: <Widget>[
-                if (!note.deleted)
+                if (!prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly)
                   IconButton(
                     icon: const Icon(Icons.remove_red_eye_outlined),
                     padding: EdgeInsets.zero,
                     tooltip: LocaleStrings.notePage.privacyTitle,
                     onPressed: showPrivacyOptionSheet,
                   ),
-                if (!note.deleted)
+                if (!prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly)
                   IconButton(
                     icon: Icon(
                       note.starred ? Icons.favorite : Icons.favorite_border,
@@ -320,7 +324,8 @@ class _NotePageState extends State<NotePage> {
             },
             onSubmitted: (value) =>
                 context.focusScope.requestFocus(contentFocusNode),
-            enabled: !note.deleted,
+            enabled:
+                !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
           ),
           _NotePageTextFormField(
             contentField: true,
@@ -332,11 +337,13 @@ class _NotePageState extends State<NotePage> {
 
               notifyNoteChanged();
             },
-            enabled: !note.deleted,
+            enabled:
+                !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
           ),
           if (note.list)
             ...List.generate(note.listContent.length, generateListItem),
-          if (note.list && !note.deleted)
+          if (note.list &&
+              !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly)
             AnimatedOpacity(
               opacity: showNewItemButton ? 1 : 0,
               duration: showNewItemButton
@@ -374,7 +381,7 @@ class _NotePageState extends State<NotePage> {
       item: currentItem,
       controller: listContentControllers[index],
       focusNode: listContentNodes[index],
-      enabled: !note.deleted,
+      enabled: !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
       onDismissed: (_) => setState(() {
         note.listContent.removeAt(index);
         listContentControllers.removeAt(index);
@@ -425,7 +432,7 @@ class _NotePageState extends State<NotePage> {
 
   void notifyNoteChanged() {
     note = note.markChanged();
-    helper.saveNote(note);
+    noteHelper.saveNote(note);
   }
 
   Future<void> handleImageAdd(XFile file) async {
@@ -434,7 +441,7 @@ class _NotePageState extends State<NotePage> {
     setState(() => note.images.add(savedImage.id));
     //imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
-    await helper.saveNote(note);
+    await noteHelper.saveNote(note);
   }
 
   Widget getImageWidget(BuildContext context, Axis axis) {
@@ -449,7 +456,9 @@ class _NotePageState extends State<NotePage> {
               NotePageImageGallery(
                 note: note.view,
                 initialImages: await imageHelper.getImagesById(note.images),
-                allowEditing: !note.deleted,
+                allowEditing: !prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly,
                 currentImage: index,
                 onDraw: (image) {
                   Utils.showSecondaryRoute(
@@ -465,7 +474,7 @@ class _NotePageState extends State<NotePage> {
                   note.images.remove(image.id);
                   imageHelper.deleteImageById(image.id);
                   await File(image.path).delete();
-                  helper.saveNote(note.markChanged());
+                  noteHelper.saveNote(note.markChanged());
                 },
               ),
             );
@@ -480,7 +489,8 @@ class _NotePageState extends State<NotePage> {
   }
 
   List<Widget> getToolbarButtons({bool returnNothing = false}) {
-    if (note.deleted || returnNothing) {
+    if (prefs.folders.firstWhere((e) => e.id == note.folder).readOnly ||
+        returnNothing) {
       return [];
     } else {
       return [
@@ -494,7 +504,7 @@ class _NotePageState extends State<NotePage> {
               SearchPage(
                 delegate: TagSearchDelegate(
                   note.tags,
-                  onChanged: () => helper.saveNote(note.markChanged()),
+                  onChanged: () => noteHelper.saveNote(note.markChanged()),
                 ),
               ),
             );

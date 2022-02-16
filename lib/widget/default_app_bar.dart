@@ -25,7 +25,7 @@ class DefaultAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.basePage;
+    final state = null; // context.basePage;
     final Widget? _leading = state != null
         ? const Center(
             child: Illustration.leaflet(
