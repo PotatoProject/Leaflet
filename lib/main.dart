@@ -42,7 +42,7 @@ Future<void> main() async {
 
   if (DeviceInfo.isDesktop) {
     doWhenWindowReady(() {
-      appWindow.minSize = const Size(360, 400);
+      appWindow.minSize = const Size(400, 600);
       appWindow.show();
     });
   }
