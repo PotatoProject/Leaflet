@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monet/monet.dart';
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/theme/data.dart';
@@ -30,7 +31,7 @@ class ThemeParser {
     700,
     800,
     900,
-    100,
+    1000,
   ];
   static const List<int> _validColorShades = [
     50,
@@ -65,6 +66,21 @@ class ThemeParser {
     "grey": Colors.grey,
     "blueGrey": Colors.blueGrey,
   };
+  static final MonetPalette _errors = MonetPalette(const {
+    0: Color(0xFFFFFFFF),
+    10: Color(0xFFFCFCFC),
+    50: Color(0xFFFFEDE9),
+    100: Color(0xFFFFDAD4),
+    200: Color(0xFFFFB4A9),
+    300: Color(0xFFFF897A),
+    400: Color(0xFFFF5449),
+    500: Color(0xFFDD3730),
+    600: Color(0xFFBA1B1B),
+    700: Color(0xFF930006),
+    800: Color(0xFF680003),
+    900: Color(0xFF410001),
+    1000: Color(0xFF000000),
+  });
 
   final Map<String, dynamic> data;
 
@@ -92,11 +108,13 @@ class ThemeParser {
     final int version = info.getRequired<int>("version");
     final Brightness brightness =
         _parseBrightness(info.getRequired<String>("brightness"));
+    final bool? useMaterial3 = info.getOptional<bool>("useMaterial3");
 
     return LeafletThemeData(
       name: name,
       author: author,
       version: version,
+      useMaterial3: useMaterial3 == true,
       notePalette: noteColors != null
           ? _parseNoteColorPalette(noteColors)
           : _notePaletteFromBrightness(brightness),
@@ -192,30 +210,84 @@ class ThemeParser {
     Map<String, dynamic> colors,
     Brightness brightness,
   ) {
-    final Color primary = _parseColor(colors.getRequired<String>("primary"));
-    final Color surface = _parseColor(colors.getRequired<String>("surface"));
+    final Color primary = _parseColor(colors.getRequired<String>("primary"))!;
+    final Color? onPrimary =
+        _parseColor(colors.getOptional<String>("onPrimary"));
+    final Color? primaryContainer =
+        _parseColor(colors.getOptional<String>("primaryContainer"));
+    final Color? onPrimaryContainer =
+        _parseColor(colors.getOptional<String>("onPrimaryContainer"));
+    final Color? secondary =
+        _parseColor(colors.getOptional<String>("secondary"));
+    final Color? onSecondary =
+        _parseColor(colors.getOptional<String>("onSecondary"));
+    final Color? secondaryContainer =
+        _parseColor(colors.getOptional<String>("secondaryContainer"));
+    final Color? onSecondaryContainer =
+        _parseColor(colors.getOptional<String>("onSecondaryContainer"));
+    final Color? tertiary = _parseColor(colors.getOptional<String>("tertiary"));
+    final Color? onTertiary =
+        _parseColor(colors.getOptional<String>("onTertiary"));
+    final Color? tertiaryContainer =
+        _parseColor(colors.getOptional<String>("tertiaryContainer"));
+    final Color? onTertiaryContainer =
+        _parseColor(colors.getOptional<String>("onTertiaryContainer"));
+    final Color error = _parseColor(colors.getRequired<String>("error"))!;
+    final Color? onError = _parseColor(colors.getOptional<String>("onError"));
+    final Color? errorContainer =
+        _parseColor(colors.getOptional<String>("errorContainer"));
+    final Color? onErrorContainer =
+        _parseColor(colors.getOptional<String>("onErrorContainer"));
+    final Color surface = _parseColor(colors.getRequired<String>("surface"))!;
+    final Color? onSurface =
+        _parseColor(colors.getOptional<String>("onSurface"));
     final Color background =
-        _parseColor(colors.getRequired<String>("background"));
-    final Color error = _parseColor(colors.getRequired<String>("error"));
-    final Color onPrimary =
-        _parseColor(colors.getRequired<String>("onPrimary"));
-    final Color onSurface =
-        _parseColor(colors.getRequired<String>("onSurface"));
-    final Color onBackground =
-        _parseColor(colors.getRequired<String>("onBackground"));
-    final Color onError = _parseColor(colors.getRequired<String>("onError"));
+        _parseColor(colors.getRequired<String>("background"))!;
+    final Color? onBackground =
+        _parseColor(colors.getOptional<String>("onBackground"));
+    final Color? surfaceVariant =
+        _parseColor(colors.getOptional<String>("surfaceVariant"));
+    final Color? onSurfaceVariant =
+        _parseColor(colors.getOptional<String>("onSurfaceVariant"));
+    final Color? outline = _parseColor(colors.getOptional<String>("outline"));
+    final Color? shadow = _parseColor(colors.getOptional<String>("shadow"));
+    final Color? inverseSurface =
+        _parseColor(colors.getOptional<String>("inverseSurface"));
+    final Color? onInverseSurface =
+        _parseColor(colors.getOptional<String>("onInverseSurface"));
+    final Color? inversePrimary =
+        _parseColor(colors.getOptional<String>("inversePrimary"));
 
     return ColorScheme(
       primary: primary,
-      secondary: primary,
-      surface: surface,
-      background: background,
+      onPrimary: onPrimary ?? primary.contrasting,
+      primaryContainer: primaryContainer,
+      onPrimaryContainer: onPrimaryContainer ?? primaryContainer?.contrasting,
+      secondary: secondary ?? primary,
+      onSecondary: onSecondary ?? secondary?.contrasting ?? primary.contrasting,
+      secondaryContainer: secondaryContainer,
+      onSecondaryContainer:
+          onSecondaryContainer ?? secondaryContainer?.contrasting,
+      tertiary: tertiary,
+      onTertiary: onTertiary ?? tertiary?.contrasting,
+      tertiaryContainer: tertiaryContainer,
+      onTertiaryContainer:
+          onTertiaryContainer ?? tertiaryContainer?.contrasting,
       error: error,
-      onPrimary: onPrimary,
-      onSecondary: onPrimary,
-      onSurface: onSurface,
-      onBackground: onBackground,
-      onError: onError,
+      onError: onError ?? error.contrasting,
+      errorContainer: errorContainer,
+      onErrorContainer: onErrorContainer ?? errorContainer?.contrasting,
+      surface: surface,
+      onSurface: onSurface ?? surface.contrasting,
+      background: background,
+      onBackground: onBackground ?? background.contrasting,
+      surfaceVariant: surfaceVariant,
+      onSurfaceVariant: onSurfaceVariant ?? surfaceVariant?.contrasting,
+      outline: outline,
+      shadow: shadow,
+      inverseSurface: inverseSurface,
+      onInverseSurface: onInverseSurface ?? inverseSurface?.contrasting,
+      inversePrimary: inversePrimary,
       brightness: brightness,
     );
   }
@@ -252,11 +324,11 @@ class ThemeParser {
   IllustrationPalette _parseIllustrationPalette(
     Map<String, dynamic> illustrations,
   ) {
-    final Color base = _parseColor(illustrations.getRequired<String>("base"));
+    final Color base = _parseColor(illustrations.getRequired<String>("base"))!;
     final Color contrast =
-        _parseColor(illustrations.getRequired<String>("contrast"));
+        _parseColor(illustrations.getRequired<String>("contrast"))!;
     final Color invertedContrast =
-        _parseColor(illustrations.getRequired<String>("invertedContrast"));
+        _parseColor(illustrations.getRequired<String>("invertedContrast"))!;
 
     return IllustrationPalette(
       contrast: contrast,
@@ -268,15 +340,16 @@ class ThemeParser {
   NoteColorPalette _parseNoteColorPalette(
     Map<String, dynamic> notes,
   ) {
-    final Color red = _parseColor(notes.getRequired<String>("red"));
-    final Color orange = _parseColor(notes.getRequired<String>("orange"));
-    final Color yellow = _parseColor(notes.getRequired<String>("yellow"));
-    final Color green = _parseColor(notes.getRequired<String>("green"));
-    final Color cyan = _parseColor(notes.getRequired<String>("cyan"));
-    final Color lightBlue = _parseColor(notes.getRequired<String>("lightBlue"));
-    final Color blue = _parseColor(notes.getRequired<String>("blue"));
-    final Color purple = _parseColor(notes.getRequired<String>("purple"));
-    final Color pink = _parseColor(notes.getRequired<String>("pink"));
+    final Color red = _parseColor(notes.getRequired<String>("red"))!;
+    final Color orange = _parseColor(notes.getRequired<String>("orange"))!;
+    final Color yellow = _parseColor(notes.getRequired<String>("yellow"))!;
+    final Color green = _parseColor(notes.getRequired<String>("green"))!;
+    final Color cyan = _parseColor(notes.getRequired<String>("cyan"))!;
+    final Color lightBlue =
+        _parseColor(notes.getRequired<String>("lightBlue"))!;
+    final Color blue = _parseColor(notes.getRequired<String>("blue"))!;
+    final Color purple = _parseColor(notes.getRequired<String>("purple"))!;
+    final Color pink = _parseColor(notes.getRequired<String>("pink"))!;
 
     return NoteColorPalette.fromColors(
       empty: Colors.transparent,
@@ -341,7 +414,9 @@ class ThemeParser {
     return BorderRadius.zero;
   }
 
-  Color _parseColor(String color) {
+  Color? _parseColor(String? color) {
+    if (color == null) return null;
+
     if (color.startsWith("#")) {
       return _colorFromHex(color);
     }
@@ -381,11 +456,12 @@ class ThemeParser {
     bool monetPalette = false,
   ]) {
     final Map<String, ColorSwatch> _monetColors = {
-      "accent1": monetColors.accent1,
-      "accent2": monetColors.accent2,
-      "accent3": monetColors.accent3,
-      "neutral1": monetColors.neutral1,
-      "neutral2": monetColors.neutral2,
+      "primaries": monetColors.accent1,
+      "secondaries": monetColors.accent2,
+      "tertiaries": monetColors.accent3,
+      "neutrals": monetColors.neutral1,
+      "neutralVariants": monetColors.neutral2,
+      "errors": _errors,
     };
     final Map<String, ColorSwatch> colors =
         monetPalette ? _monetColors : _colors;

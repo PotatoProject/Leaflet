@@ -25,7 +25,7 @@ class _NewTagState extends State<TagEditor> {
   Tag tag = Tag(
     id: "",
     name: "",
-    lastModifyDate: DateTime.now(),
+    lastChanged: DateTime.now(),
   );
   late TextEditingController controller;
 

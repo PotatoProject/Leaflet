@@ -52,7 +52,7 @@ class _QueryFiltersState extends State<QueryFilters> {
               widget.filterChangedCallback?.call();
             },
           ),
-          ListTile(
+          /* ListTile(
             leading: const Icon(Icons.folder_outlined),
             title: Text(LocaleStrings.search.noteFiltersLocations),
             subtitle: Text(returnModeToString),
@@ -69,7 +69,7 @@ class _QueryFiltersState extends State<QueryFilters> {
                 ),
               );
             },
-          ),
+          ), */
           ListTile(
             leading: const Icon(Icons.color_lens_outlined),
             title: Text(LocaleStrings.search.noteFiltersColor),
@@ -197,7 +197,7 @@ class _QueryFiltersState extends State<QueryFilters> {
     );
   }
 
-  String get returnModeToString {
+  /* String get returnModeToString {
     final List<String> enabled = [];
 
     if (widget.query.returnMode.fromNormal) {
@@ -211,5 +211,5 @@ class _QueryFiltersState extends State<QueryFilters> {
     }
 
     return enabled.join(", ");
-  }
+  } */
 }

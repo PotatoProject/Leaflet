@@ -13,6 +13,7 @@ class LeafletThemeData {
   final String name;
   final String author;
   final int version;
+  final bool useMaterial3;
   final NoteColorPalette notePalette;
   final IllustrationPalette illustrationPalette;
   final ShapeTheme shapes;
@@ -22,6 +23,7 @@ class LeafletThemeData {
     required this.name,
     required this.author,
     required this.version,
+    required this.useMaterial3,
     required this.notePalette,
     required this.illustrationPalette,
     required this.shapes,
@@ -60,6 +62,7 @@ class LeafletThemeData {
       name: t > 0.5 ? a.name : b.name,
       author: t > 0.5 ? a.author : b.author,
       version: t > 0.5 ? a.version : b.version,
+      useMaterial3: t > 0.5 ? a.useMaterial3 : b.useMaterial3,
       notePalette: NoteColorPalette.lerp(
         a.notePalette,
         b.notePalette,
@@ -78,6 +81,7 @@ class LeafletThemeData {
   ThemeData get materialTheme {
     return ThemeData(
       brightness: colors.brightness,
+      useMaterial3: useMaterial3,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: colors.primary,
         selectionHandleColor: colors.primary,

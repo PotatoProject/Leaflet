@@ -5,9 +5,9 @@ import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -61,6 +61,7 @@ class MigrationTask {
         isArchived: rawV1Notes[index]['isArchived'] as int,
       );
     });
+    final List<Folder> folders = await folderHelper.listFolders();
 
     for (final NoteV1Model v1Note in v1Notes) {
       final List<ListItem> listItems = [];
@@ -81,7 +82,7 @@ class MigrationTask {
         );
       }
 
-      SavedImage? savedImage;
+      NoteImage? noteImage;
       if (v1Note.imagePath != null) {
         final Response response = await dio.get<Uint8List>(
           v1Note.imagePath!,
@@ -90,9 +91,23 @@ class MigrationTask {
         final File file =
             File(join(appDirectories.tempDirectory.path, "$id.jpg"))..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
-        savedImage = await imageHelper.copyToCache(XFile(file.path));
+        noteImage = await Utils.copyFileToCache(XFile(file.path));
         await file.delete();
-        imageQueue.addUpload(savedImage, id);
+        //imageQueue.addUpload(savedImage, id);
+      }
+
+      final Folder folder;
+
+      if (v1Note.isArchived == 1) {
+        if (!folders.contains(BuiltInFolders.archive)) {
+          await folderHelper.createFolder(BuiltInFolders.archive);
+        }
+
+        folder = BuiltInFolders.archive;
+      } else if (v1Note.isDeleted == 1) {
+        folder = BuiltInFolders.trash;
+      } else {
+        folder = BuiltInFolders.home;
       }
 
       final Note note = Note(
@@ -103,9 +118,9 @@ class MigrationTask {
             : "",
         starred: v1Note.isStarred == 1,
         creationDate: DateTime.fromMillisecondsSinceEpoch(v1Note.date!),
-        lastModifyDate: DateTime.now(),
+        lastChanged: DateTime.now(),
         color: v1Note.color ?? 0,
-        images: [if (savedImage != null) savedImage],
+        images: [if (noteImage != null) noteImage.id],
         list: v1Note.isList == 1,
         listContent: listItems,
         reminders: [],
@@ -113,9 +128,7 @@ class MigrationTask {
         hideContent: v1Note.hideContent == 1,
         lockNote: false,
         usesBiometrics: false,
-        deleted: v1Note.isDeleted == 1,
-        archived: v1Note.isArchived == 1,
-        synced: false,
+        folder: folder.id,
       );
 
       notes.add(note);

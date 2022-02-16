@@ -1,124 +1,44 @@
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 
 part 'note_helper.g.dart';
 
-@UseDao(tables: [Notes])
+@DriftAccessor(tables: [Notes])
 class NoteHelper extends DatabaseAccessor<AppDatabase>
     with _$NoteHelperMixin, LoggerProvider {
   final AppDatabase db;
 
   NoteHelper(this.db) : super(db);
 
-  Future<List<Note>> listNotes(ReturnMode mode) async {
-    switch (mode) {
-      case ReturnMode.all:
-        return select(notes).get();
-      case ReturnMode.normal:
-        return (select(notes)
-              ..where(
-                (table) =>
-                    table.archived.not() &
-                    table.deleted.not() &
-                    table.id.contains("-synced").not(),
-              ))
-            .get();
-      case ReturnMode.archive:
-        return (select(notes)
-              ..where(
-                (table) =>
-                    table.archived &
-                    table.deleted.not() &
-                    table.id.contains("-synced").not(),
-              ))
-            .get();
-      case ReturnMode.trash:
-        return (select(notes)
-              ..where(
-                (table) =>
-                    table.archived.not() &
-                    table.deleted &
-                    table.id.contains("-synced").not(),
-              ))
-            .get();
-      case ReturnMode.synced:
-        return (select(notes)..where((table) => table.id.contains("-synced")))
-            .get();
-      case ReturnMode.tag:
-      case ReturnMode.local:
-        return (select(notes)
-              ..where((table) => table.id.contains("-synced").not()))
-            .get();
-      case ReturnMode.favourites:
-        return (select(notes)
-              ..where(
-                (table) =>
-                    table.starred &
-                    table.archived.not() &
-                    table.deleted.not() &
-                    table.id.contains("-synced").not(),
-              ))
-            .get();
-
-      default:
-        return select(notes).get();
+  Future<List<Note>> listNotes(Folder folder) async {
+    if (folder != BuiltInFolders.all) {
+      return (select(notes)
+            ..where(
+              (table) => table.folder.equals(folder.id),
+            ))
+          .get();
+    } else {
+      return select(notes).get();
     }
   }
 
-  Stream<List<Note>> noteStream(ReturnMode mode) {
+  Stream<Note> watchNote(Note note) {
+    return (select(notes)..where((table) => table.id.equals(note.id)))
+        .watchSingle();
+  }
+
+  Stream<List<Note>> watchNotes(Folder folder) {
     SimpleSelectStatement<$NotesTable, Note> selectQuery;
 
-    switch (mode) {
-      case ReturnMode.all:
-        selectQuery = select(notes);
-        break;
-      case ReturnMode.normal:
-        selectQuery = select(notes)
-          ..where(
-            (table) =>
-                table.archived.not() &
-                table.deleted.not() &
-                table.id.contains("-synced").not(),
-          );
-        break;
-      case ReturnMode.archive:
-        selectQuery = select(notes)
-          ..where(
-            (table) =>
-                table.archived &
-                table.deleted.not() &
-                table.id.contains("-synced").not(),
-          );
-        break;
-      case ReturnMode.favourites:
-        selectQuery = select(notes)
-          ..where(
-            (table) =>
-                table.starred &
-                table.archived.not() &
-                table.deleted.not() &
-                table.id.contains("-synced").not(),
-          );
-        break;
-      case ReturnMode.trash:
-        selectQuery = select(notes)
-          ..where(
-            (table) =>
-                table.archived.not() &
-                table.deleted &
-                table.id.contains("-synced").not(),
-          );
-        break;
-      case ReturnMode.synced:
-        selectQuery = select(notes)
-          ..where((table) => table.id.contains("-synced"));
-        break;
-      case ReturnMode.tag:
-      case ReturnMode.local:
-        selectQuery = select(notes)
-          ..where((table) => table.id.contains("-synced").not());
-        break;
+    if (folder != BuiltInFolders.all) {
+      selectQuery = select(notes)
+        ..where(
+          (table) => table.folder.equals(folder.id),
+        );
+    } else {
+      selectQuery = select(notes);
     }
 
     return (selectQuery
@@ -149,7 +69,7 @@ class NoteHelper extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteAllNotes() async {
-    final List<Note> notes = await listNotes(ReturnMode.all);
+    final List<Note> notes = await listNotes(BuiltInFolders.all);
 
     for (final Note note in notes) {
       await deleteNote(note);
@@ -164,7 +84,7 @@ class SearchQuery {
   DateFilterMode dateMode;
   List<String> tags = [];
   bool onlyFavourites;
-  SearchReturnMode returnMode;
+  Set<Folder> folders = {};
 
   SearchQuery({
     this.caseSensitive = false,
@@ -172,11 +92,7 @@ class SearchQuery {
     this.date,
     this.dateMode = DateFilterMode.only,
     this.onlyFavourites = false,
-    this.returnMode = const SearchReturnMode(
-      fromNormal: true,
-      fromArchive: true,
-      fromTrash: true,
-    ),
+    this.folders = const {},
   });
 
   void reset() {
@@ -186,11 +102,7 @@ class SearchQuery {
     dateMode = DateFilterMode.only;
     tags = [];
     onlyFavourites = false;
-    returnMode = const SearchReturnMode(
-      fromNormal: true,
-      fromArchive: true,
-      fromTrash: true,
-    );
+    folders = {};
   }
 
   List<Note> filterNotes(
@@ -221,14 +133,14 @@ class SearchQuery {
       final bool colorMatch = color != null ? _getColorBool(note.color) : true;
       final bool tagMatch = tags.isNotEmpty ? _getTagBool(note.tags) : true;
       final bool favouriteMatch = onlyFavourites ? note.starred : true;
-      final bool modesMatch = _getModesBool(note);
+      final bool folderMatch = _getFoldersBool(note);
 
       if (tagMatch &&
           colorMatch &&
           dateMatch &&
           favouriteMatch &&
           (titleMatch || contentMatch) &&
-          modesMatch) {
+          folderMatch) {
         results.add(note);
       }
     }
@@ -289,14 +201,10 @@ class SearchQuery {
     return matchResult ?? false;
   }
 
-  bool _getModesBool(Note note) {
-    final bool normal =
-        !note.archived && !note.deleted && returnMode.fromNormal;
-    final bool archived =
-        note.archived && !note.deleted && returnMode.fromArchive;
-    final bool deleted = !note.archived && note.deleted && returnMode.fromTrash;
+  bool _getFoldersBool(Note note) {
+    if (folders.isEmpty) return true;
 
-    return normal || archived || deleted;
+    return folders.any((f) => f.id == note.folder);
   }
 }
 
@@ -350,6 +258,7 @@ enum DateFilterMode {
   only,
 }
 
+@Deprecated("Prefer Folder instead of ReturnMode")
 enum ReturnMode {
   all,
   normal,

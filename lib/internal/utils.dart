@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -8,23 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_size_getter/file_input.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
-import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:path/path.dart';
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
+import 'package:potato_notes/internal/blake/stub.dart';
 import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/sync/image/blake/stub.dart';
 import 'package:potato_notes/internal/themes.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/widget/backup_password_prompt.dart';
@@ -55,8 +58,7 @@ class Utils {
   );
 
   static void deleteNoteSafely(Note note) {
-    imageHelper.handleNoteDeletion(note);
-    helper.deleteNote(note);
+    noteHelper.deleteNote(note);
   }
 
   static void handleNotePagePop(Note note) {
@@ -195,7 +197,7 @@ class Utils {
     return const Uuid().v4();
   }
 
-  static SelectionOptions getSelectionOptionsForMode(ReturnMode mode) {
+  static SelectionOptions getSelectionOptionsForMode(Folder folder) {
     return SelectionOptions(
       options: (context, notes) {
         final bool anyStarred = notes.any((item) => item.starred);
@@ -214,7 +216,7 @@ class Utils {
             value: 'selectall',
             showOnlyOnRightClickMenu: true,
           ),
-          if (mode == ReturnMode.normal)
+          if (!folder.readOnly)
             SelectionOptionEntry(
               title: anyStarred
                   ? LocaleStrings.mainPage.selectionBarRemoveFavourites
@@ -222,13 +224,13 @@ class Utils {
               icon: anyStarred ? Icons.favorite : Icons.favorite_border,
               value: 'favourites',
             ),
-          if (mode == ReturnMode.normal)
+          if (!folder.readOnly)
             SelectionOptionEntry(
               title: LocaleStrings.mainPage.selectionBarChangeColor,
               icon: Icons.color_lens_outlined,
               value: 'color',
             ),
-          if (mode != ReturnMode.archive)
+          /* if (mode != ReturnMode.archive)
             SelectionOptionEntry(
               title: LocaleStrings.mainPage.selectionBarArchive,
               icon: Icons.inventory_2_outlined,
@@ -246,7 +248,7 @@ class Utils {
               icon: Icons.settings_backup_restore,
               title: LocaleStrings.common.restore,
               value: 'restore',
-            ),
+            ), */
           if (AppInfo.supportsNotePinning)
             SelectionOptionEntry(
               icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
@@ -288,7 +290,7 @@ class Utils {
         break;
       case 'selectall':
         state.selecting = true;
-        final List<Note> notes = await helper.listNotes(state.noteKind);
+        final List<Note> notes = await noteHelper.listNotes(state.folder);
         for (final Note note in notes) {
           state.addSelectedNote(note);
         }
@@ -305,11 +307,11 @@ class Utils {
 
           for (final Note note in notes) {
             if (anyStarred) {
-              await helper.saveNote(
+              await noteHelper.saveNote(
                 note.markChanged().copyWith(starred: false),
               );
             } else {
-              await helper.saveNote(
+              await noteHelper.saveNote(
                 note.markChanged().copyWith(starred: true),
               );
             }
@@ -352,7 +354,7 @@ class Utils {
 
           if (selectedColor != null) {
             for (final Note note in notes) {
-              await helper.saveNote(note.copyWith(color: selectedColor));
+              await noteHelper.saveNote(note.copyWith(color: selectedColor));
             }
 
             state.closeSelection();
@@ -369,7 +371,7 @@ class Utils {
 
         if (archived) state.closeSelection();
         break;
-      case 'delete':
+      /* case 'delete':
         final List<Note> notesToTrash = notes.where((n) => !n.deleted).toList();
 
         final bool deleted = await Utils.deleteNotes(
@@ -401,7 +403,7 @@ class Utils {
         );
 
         if (restored) state.closeSelection();
-        break;
+        break; */
       case 'pin':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
@@ -433,7 +435,7 @@ class Utils {
             final bool exported =
                 await backupDelegate.saveNote(notes.first, password);
             Utils.hideLoadingOverlay(context);
-            context.basePage?.hideCurrentSnackBar();
+            /* context.basePage?.hideCurrentSnackBar();
             context.basePage?.showSnackBar(
               SnackBar(
                 content: Text(
@@ -444,7 +446,7 @@ class Utils {
                 behavior: SnackBarBehavior.floating,
                 width: min(640, context.mSize.width - 32),
               ),
-            );
+            ); */
           }
 
           state.closeSelection();
@@ -510,28 +512,6 @@ class Utils {
     }
   }
 
-  static String getNameFromMode(ReturnMode mode, {int tagIndex = 0}) {
-    switch (mode) {
-      case ReturnMode.normal:
-        return LocaleStrings.mainPage.titleNotes;
-      case ReturnMode.archive:
-        return LocaleStrings.mainPage.titleArchive;
-      case ReturnMode.trash:
-        return LocaleStrings.mainPage.titleTrash;
-      case ReturnMode.favourites:
-        return LocaleStrings.mainPage.titleFavourites;
-      case ReturnMode.tag:
-        if (prefs.tags.isNotEmpty) {
-          return prefs.tags[tagIndex].name;
-        } else {
-          return LocaleStrings.mainPage.titleTag;
-        }
-      case ReturnMode.all:
-      default:
-        return LocaleStrings.mainPage.titleAll;
-    }
-  }
-
   static Future<bool> deleteNotes({
     required BuildContext context,
     required List<Note> notes,
@@ -549,14 +529,14 @@ class Utils {
 
     for (final Note note in notes) {
       if (archive) {
-        await helper.saveNote(
+        await noteHelper.saveNote(
           note.markChanged().copyWith(deleted: false, archived: true),
         );
       } else {
         if (permaDelete) {
           Utils.deleteNoteSafely(note);
         } else {
-          await helper.saveNote(
+          await noteHelper.saveNote(
             note.markChanged().copyWith(deleted: true, archived: false),
           );
         }
@@ -565,7 +545,7 @@ class Utils {
 
     final List<Note> backupNotes = List.from(notes);
 
-    context.basePage?.hideCurrentSnackBar();
+    /* context.basePage?.hideCurrentSnackBar();
     context.basePage?.showSnackBar(
       SnackBar(
         content: Text(reason),
@@ -575,12 +555,12 @@ class Utils {
           label: LocaleStrings.common.undo,
           onPressed: () async {
             for (final Note note in backupNotes) {
-              await helper.saveNote(note);
+              await noteHelper.saveNote(note);
             }
           },
         ),
       ),
-    );
+    ); */
 
     return true;
   }
@@ -600,14 +580,14 @@ class Utils {
     if (!lockSuccess) return false;
 
     for (final Note note in notes) {
-      await helper.saveNote(
+      await noteHelper.saveNote(
         note.markChanged().copyWith(deleted: false, archived: false),
       );
     }
 
     final List<Note> backupNotes = List.from(notes);
 
-    context.basePage?.hideCurrentSnackBar();
+    /* context.basePage?.hideCurrentSnackBar();
     context.basePage?.showSnackBar(
       SnackBar(
         content: Text(reason),
@@ -617,12 +597,12 @@ class Utils {
           label: LocaleStrings.common.undo,
           onPressed: () async {
             for (final Note note in backupNotes) {
-              await helper.saveNote(note);
+              await noteHelper.saveNote(note);
             }
           },
         ),
       ),
-    );
+    ); */
 
     return true;
   }
@@ -672,9 +652,8 @@ class Utils {
     );
   }
 
-  static Future<void> newNote(BuildContext context) async {
-    final int currentLength =
-        (await helper.listNotes(ReturnMode.normal)).length;
+  static Future<void> newNote(BuildContext context, Folder folder) async {
+    final int currentLength = (await noteHelper.listNotes(folder)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -685,15 +664,16 @@ class Utils {
       ),
     );
 
-    deleteLastNoteIfEmpty(context, currentLength, id);
+    deleteLastNoteIfEmpty(context, folder, currentLength, id);
   }
 
   static Future<void> deleteLastNoteIfEmpty(
     BuildContext context,
+    Folder folder,
     int currentLength,
     String id,
   ) async {
-    final List<Note> notes = await helper.listNotes(ReturnMode.normal);
+    final List<Note> notes = await noteHelper.listNotes(folder);
     final int newLength = notes.length;
 
     if (newLength > currentLength) {
@@ -713,36 +693,34 @@ class Utils {
     }
   }
 
-  static Future<void> newImage(BuildContext context, ImageSource source) async {
+  static Future<void> newImage(
+    BuildContext context,
+    Folder folder,
+    ImageSource source,
+  ) async {
     Note note = NoteX.emptyNote;
     final XFile? image = await pickImage();
 
     if (image != null) {
-      final SavedImage savedImage = await imageHelper.copyToCache(image);
-      note.images.add(savedImage);
+      final NoteImage savedImage = await copyFileToCache(image);
+      imageHelper.saveImage(savedImage);
+      note.images.add(savedImage.id);
 
-      final int currentLength =
-          (await helper.listNotes(ReturnMode.normal)).length;
+      final int currentLength = (await noteHelper.listNotes(folder)).length;
       final String id = generateId();
 
       note = note.copyWith(id: id);
 
-      await Utils.showSecondaryRoute(
-        context,
-        NotePage(
-          note: note,
-        ),
-      );
+      await Utils.showSecondaryRoute(context, NotePage(note: note));
 
-      helper.saveNote(note.markChanged());
+      noteHelper.saveNote(note.markChanged());
 
-      deleteLastNoteIfEmpty(context, currentLength, id);
+      deleteLastNoteIfEmpty(context, folder, currentLength, id);
     }
   }
 
-  static Future<void> newList(BuildContext context) async {
-    final int currentLength =
-        (await helper.listNotes(ReturnMode.normal)).length;
+  static Future<void> newList(BuildContext context, Folder folder) async {
+    final int currentLength = (await noteHelper.listNotes(folder)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -753,12 +731,11 @@ class Utils {
       ),
     );
 
-    deleteLastNoteIfEmpty(context, currentLength, id);
+    deleteLastNoteIfEmpty(context, folder, currentLength, id);
   }
 
-  static Future<void> newDrawing(BuildContext context) async {
-    final int currentLength =
-        (await helper.listNotes(ReturnMode.normal)).length;
+  static Future<void> newDrawing(BuildContext context, Folder folder) async {
+    final int currentLength = (await noteHelper.listNotes(folder)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
@@ -769,7 +746,7 @@ class Utils {
       ),
     );
 
-    deleteLastNoteIfEmpty(context, currentLength, id);
+    deleteLastNoteIfEmpty(context, folder, currentLength, id);
   }
 
   static Future<void> importNotes(BuildContext context) async {
@@ -801,8 +778,8 @@ class Utils {
         final Note note = result.notes.first;
         final List<Tag> tags = result.tags;
 
-        if (!await helper.noteExists(note)) {
-          await helper.saveNote(note);
+        if (!await noteHelper.noteExists(note)) {
+          await noteHelper.saveNote(note);
           for (final Tag tag in tags) {
             await tagHelper.saveTag(tag);
           }
@@ -861,6 +838,21 @@ class Utils {
     return false;
   }
 
+  static IconData getIconForFolder(Folder folder) {
+    switch (folder.id) {
+      case 'all':
+        return CustomIcons.notes;
+      case 'default':
+        return Icons.home_outlined;
+      case 'trash':
+        return Icons.delete_outlined;
+      case 'archive':
+        return MdiIcons.archiveOutline;
+      default:
+        return Icons.ac_unit;
+    }
+  }
+
   static List<T> asList<T>(dynamic obj) {
     return List<T>.from(obj as List<dynamic>);
   }
@@ -873,6 +865,27 @@ class Utils {
     final Blake2 blake = Blake2();
     blake.updateWithString(pass);
     return utils.hex(blake.digest());
+  }
+
+  static Future<NoteImage> copyFileToCache(XFile origin) async {
+    final String id = Utils.generateId();
+    final String path = join(
+      appDirectories.imagesDirectory.path,
+      id + extension(origin.path),
+    );
+    final File file = File(path);
+    await origin.saveTo(file.path);
+    final Size _size = ImageSizeGetter.getSize(FileInput(file));
+    final String type = extension(file.path);
+
+    return NoteImage(
+      id: id,
+      type: type,
+      width: _size.width,
+      height: _size.height,
+      uploaded: false,
+      lastChanged: DateTime.now(),
+    );
   }
 
   static Color getMainColorFromTheme() {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 
@@ -10,11 +9,11 @@ class SelectionStateWidget extends StatelessWidget {
   SelectionStateWidget({
     required this.child,
     required SelectionOptions options,
-    required ReturnMode noteKind,
+    required Folder folder,
     ValueChanged<bool>? onSelectionChanged,
   }) : state = SelectionState(
           options: options,
-          noteKind: noteKind,
+          folder: folder,
           onSelectionChanged: onSelectionChanged,
         );
 
@@ -35,20 +34,20 @@ class SelectionStateWidget extends StatelessWidget {
 class SelectionState extends ChangeNotifier {
   final SelectionOptions _selectionOptions;
   final ValueChanged<bool>? onSelectionChanged;
-  final ReturnMode _noteKind;
+  final Folder _folder;
 
   SelectionState({
     required SelectionOptions options,
-    required ReturnMode noteKind,
+    required Folder folder,
     this.onSelectionChanged,
-  })  : _noteKind = noteKind,
+  })  : _folder = folder,
         _selectionOptions = options;
 
   final ValueNotifier<bool> _selecting = ValueNotifier(false);
   final List<Note> _selectionList = [];
 
   SelectionOptions get selectionOptions => _selectionOptions;
-  ReturnMode get noteKind => _noteKind;
+  Folder get folder => _folder;
 
   ValueNotifier<bool> get selectingNotifier => _selecting;
   bool get selecting => _selecting.value;
