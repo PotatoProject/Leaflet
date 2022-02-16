@@ -5,16 +5,14 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
+import 'package:drift/drift.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
-import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
 import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/model/image_list.dart';
+import 'package:potato_notes/data/model/id_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
-import 'package:potato_notes/data/model/tag_list.dart';
 import 'package:potato_notes/internal/encryption/base.dart';
 import 'package:potato_notes/internal/encryption/dart.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -217,11 +215,11 @@ class BackupDelegate with LoggerProvider {
       final Directory imagesDirectory =
           Directory(p.join(baseDir.path, "images"));
       await imagesDirectory.create();
-      for (final SavedImage image in note.images) {
-        final String imagePath =
-            p.join(imagesDir, "${image.id}${image.fileExtension}");
+      for (final String imageId in note.images) {
+        final NoteImage image = (await imageHelper.getImage(imageId))!;
+        final String imagePath = p.join(imagesDir, "${image.id}${image.type}");
         final String newImagePath =
-            p.join(imagesDirectory.path, "${image.id}${image.fileExtension}");
+            p.join(imagesDirectory.path, "${image.id}${image.type}");
         try {
           await File(imagePath).copy(newImagePath);
         } on FileSystemException {}
@@ -574,11 +572,6 @@ class _TypeAwareValueSerializer extends ValueSerializer {
       return Uint8List.fromList(asList) as T;
     }
 
-    if (jsonContent is List<dynamic> && _typeList is List<List<SavedImage>>) {
-      return const ImageListConverter().mapToDart(json.encode(jsonContent))
-          as T;
-    }
-
     if (jsonContent is List<dynamic> && _typeList is List<List<ListItem>>) {
       return const ListContentConverter().mapToDart(json.encode(jsonContent))
           as T;
@@ -590,7 +583,7 @@ class _TypeAwareValueSerializer extends ValueSerializer {
     }
 
     if (jsonContent is List<dynamic> && _typeList is List<List<String>>) {
-      return const TagListConverter().mapToDart(json.encode(jsonContent)) as T;
+      return const IdListConverter().mapToDart(json.encode(jsonContent)) as T;
     }
 
     return jsonContent as T;
@@ -642,7 +635,7 @@ class ZipByteEncoder {
   }
 
   void addFile(File file, [String? filename, int? level = gzip]) {
-    final InputFileStream fileStream = InputFileStream.file(file);
+    final InputFileStream fileStream = InputFileStream(file.path);
     final ArchiveFile archiveFile = ArchiveFile.stream(
       filename ?? p.basename(file.path),
       file.lengthSync(),

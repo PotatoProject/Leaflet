@@ -19,14 +19,15 @@ class SeparatedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _children =
-        List.generate(children.length * 2 - 1, (index) {
-      if (index.isEven) {
-        return children[index ~/ 2];
-      } else {
-        return separator;
-      }
-    });
+    final List<Widget> _children = children.isNotEmpty
+        ? List.generate(children.length * 2 - 1, (index) {
+            if (index.isEven) {
+              return children[index ~/ 2];
+            } else {
+              return separator;
+            }
+          })
+        : [];
 
     switch (axis) {
       case Axis.horizontal:

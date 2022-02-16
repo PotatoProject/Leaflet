@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:potato_notes/data/database.dart' as db;
+import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/widget/note_image.dart';
 import 'package:potato_notes/widget/separated_list.dart';
 
@@ -9,7 +10,7 @@ const double _imageGridSpacing = 2.0;
 const double _imageStripSpacing = 8.0;
 
 class NoteImages extends StatelessWidget {
-  final List<SavedImage> images;
+  final List<db.NoteImage> images;
   final ValueChanged<int>? onImageTap;
   final ImageLayoutType layoutType;
   final Axis stripAxis;
@@ -44,7 +45,7 @@ class NoteImages extends StatelessWidget {
 }
 
 class _ImageGrid extends StatelessWidget {
-  final List<SavedImage> images;
+  final List<db.NoteImage> images;
   final ValueChanged<int>? onImageTap;
   final int? maxGridRows;
 
@@ -56,7 +57,7 @@ class _ImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<List<SavedImage>> _groupedImages = images.group(3);
+    final List<List<db.NoteImage>> _groupedImages = images.group(3);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -80,7 +81,7 @@ class _ImageGrid extends StatelessWidget {
   }
 
   Widget buildImageRow(
-    List<SavedImage> images,
+    List<db.NoteImage> images,
     double baseWidth,
     int forLoopIndex,
   ) {
@@ -103,7 +104,7 @@ class _ImageGrid extends StatelessWidget {
     final List<Widget> _children = <Widget>[];
 
     for (int i = 0; i < images.length; i++) {
-      final SavedImage _savedImage = images[i];
+      final db.NoteImage _savedImage = images[i];
       final double _width = _newWidths[i];
 
       _children.add(
@@ -154,7 +155,7 @@ class _ImageGrid extends StatelessWidget {
 }
 
 class _ImageStrip extends StatelessWidget {
-  final List<SavedImage> images;
+  final List<db.NoteImage> images;
   final Axis axis;
   final ValueChanged<int>? onImageTap;
 
@@ -183,7 +184,7 @@ class _ImageStrip extends StatelessWidget {
                 ),
                 child: ListView.separated(
                   itemBuilder: (context, index) {
-                    final SavedImage _image = images[index];
+                    final db.NoteImage _image = images[index];
                     Size _imageWidgetSize;
 
                     if (axis == Axis.horizontal) {

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:moor/ffi.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -52,7 +52,7 @@ QueryExecutor constructDb({bool logStatements = false}) {
       databaseKey = hexKey;
     }
 
-    return VmDatabase(
+    return NativeDatabase(
       dbFile,
       logStatements: logStatements,
       setup: (database) {

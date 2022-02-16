@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
+import 'package:potato_notes/data/database.dart' hide NoteImages;
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -64,7 +64,6 @@ class _NotePageState extends State<NotePage> {
       content: widget.note?.content ?? "",
       starred: widget.note?.starred ?? false,
       creationDate: widget.note?.creationDate ?? DateTime.now(),
-      lastModifyDate: widget.note?.lastModifyDate ?? DateTime.now(),
       color: widget.note?.color ?? 0,
       images: widget.note?.images ?? [],
       list: widget.note?.list ?? false,
@@ -74,9 +73,9 @@ class _NotePageState extends State<NotePage> {
       hideContent: widget.note?.hideContent ?? false,
       lockNote: widget.note?.lockNote ?? false,
       usesBiometrics: widget.note?.usesBiometrics ?? false,
-      deleted: widget.note?.deleted ?? false,
-      archived: widget.note?.archived ?? false,
-      synced: widget.note?.synced ?? false,
+      folder: widget.note?.folder ?? BuiltInFolders.home.id,
+      lastChanged: widget.note?.lastChanged ?? DateTime.now(),
+      lastSynced: widget.note?.lastSynced ?? DateTime.now(),
     );
 
     titleController = TextEditingController(text: note.title);
@@ -101,8 +100,15 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void dispose() {
+    titleFocusNode.dispose();
+    titleController.dispose();
+    contentFocusNode.dispose();
+    contentController.dispose();
     for (final FocusNode node in listContentNodes) {
       node.dispose();
+    }
+    for (final TextEditingController controller in listContentControllers) {
+      controller.dispose();
     }
     super.dispose();
   }
@@ -115,7 +121,7 @@ class _NotePageState extends State<NotePage> {
         builder: (context) {
           Widget? bottomBar;
 
-          if (note.deleted) {
+          if (prefs.folders.firstWhere((e) => e.id == note.folder).readOnly) {
             bottomBar = Material(
               color: context.theme.colorScheme.surface,
               elevation: 8,
@@ -135,7 +141,7 @@ class _NotePageState extends State<NotePage> {
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        "Deleted notes can be opened only for reading",
+                        "Notes in read-only folders can't be edited",
                       ),
                     ),
                     TextButton(
@@ -149,7 +155,7 @@ class _NotePageState extends State<NotePage> {
                         setState(() => note = note.copyWith(deleted: false));
                         notifyNoteChanged();
                       },
-                      child: Text(LocaleStrings.common.restore.toUpperCase()),
+                      child: Text("Move".toUpperCase()),
                     ),
                   ],
                 ),
@@ -176,14 +182,18 @@ class _NotePageState extends State<NotePage> {
           return Scaffold(
             appBar: AppBar(
               actions: <Widget>[
-                if (!note.deleted)
+                if (!prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly)
                   IconButton(
                     icon: const Icon(Icons.remove_red_eye_outlined),
                     padding: EdgeInsets.zero,
                     tooltip: LocaleStrings.notePage.privacyTitle,
                     onPressed: showPrivacyOptionSheet,
                   ),
-                if (!note.deleted)
+                if (!prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly)
                   IconButton(
                     icon: Icon(
                       note.starred ? Icons.favorite : Icons.favorite_border,
@@ -207,7 +217,7 @@ class _NotePageState extends State<NotePage> {
                       top: context.padding.top + 56,
                     ),
                     width: imageWidgetSize,
-                    child: getImageWidget(Axis.vertical),
+                    child: getImageWidget(context, Axis.vertical),
                   ),
               ],
             ),
@@ -277,26 +287,10 @@ class _NotePageState extends State<NotePage> {
           bottom: 16,
         ),
         children: [
-          /* if (note.deleted)
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 8,
-                bottom: 8,
-              ),
-              child: Row(
-                children: const [
-                  Icon(Icons.warning_amber_outlined, size: 16),
-                  SizedBox(width: 8),
-                  Text("Deleted notes can be opened only for reading"),
-                ],
-              ),
-            ), */
           if (note.images.isNotEmpty && !deviceInfo.isLandscape)
             SizedBox(
               height: imageWidgetSize,
-              child: getImageWidget(Axis.horizontal),
+              child: getImageWidget(context, Axis.horizontal),
             ),
           if (actualTags.isNotEmpty)
             Container(
@@ -330,7 +324,8 @@ class _NotePageState extends State<NotePage> {
             },
             onSubmitted: (value) =>
                 context.focusScope.requestFocus(contentFocusNode),
-            enabled: !note.deleted,
+            enabled:
+                !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
           ),
           _NotePageTextFormField(
             contentField: true,
@@ -342,11 +337,13 @@ class _NotePageState extends State<NotePage> {
 
               notifyNoteChanged();
             },
-            enabled: !note.deleted,
+            enabled:
+                !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
           ),
           if (note.list)
             ...List.generate(note.listContent.length, generateListItem),
-          if (note.list && !note.deleted)
+          if (note.list &&
+              !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly)
             AnimatedOpacity(
               opacity: showNewItemButton ? 1 : 0,
               duration: showNewItemButton
@@ -384,7 +381,7 @@ class _NotePageState extends State<NotePage> {
       item: currentItem,
       controller: listContentControllers[index],
       focusNode: listContentNodes[index],
-      enabled: !note.deleted,
+      enabled: !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
       onDismissed: (_) => setState(() {
         note.listContent.removeAt(index);
         listContentControllers.removeAt(index);
@@ -435,38 +432,65 @@ class _NotePageState extends State<NotePage> {
 
   void notifyNoteChanged() {
     note = note.markChanged();
-    helper.saveNote(note);
+    noteHelper.saveNote(note);
   }
 
   Future<void> handleImageAdd(XFile file) async {
-    final SavedImage savedImage = await imageHelper.copyToCache(file);
-    setState(() => note.images.add(savedImage));
-    imageQueue.addUpload(savedImage, note.id);
+    final NoteImage savedImage = await Utils.copyFileToCache(file);
+    imageHelper.saveImage(savedImage);
+    setState(() => note.images.add(savedImage.id));
+    //imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
-    await helper.saveNote(note);
+    await noteHelper.saveNote(note);
   }
 
-  Widget getImageWidget(Axis axis) {
-    return NoteImages(
-      images: note.images,
-      onImageTap: (index) async {
-        await Utils.showSecondaryRoute(
-          context,
-          NotePageImageGallery(
-            note: note,
-            currentImage: index,
-          ),
-        );
+  Widget getImageWidget(BuildContext context, Axis axis) {
+    return StreamBuilder<List<NoteImage>>(
+      stream: imageHelper.watchImages(note),
+      builder: (context, snapshot) {
+        return NoteImages(
+          images: snapshot.data ?? [],
+          onImageTap: (index) async {
+            await Utils.showSecondaryRoute(
+              context,
+              NotePageImageGallery(
+                note: note.view,
+                initialImages: await imageHelper.getImagesById(note.images),
+                allowEditing: !prefs.folders
+                    .firstWhere((e) => e.id == note.folder)
+                    .readOnly,
+                currentImage: index,
+                onDraw: (image) {
+                  Utils.showSecondaryRoute(
+                    context,
+                    DrawPage(
+                      note: note,
+                      savedImage: image,
+                    ),
+                    allowGestures: false,
+                  );
+                },
+                onDelete: (image) async {
+                  note.images.remove(image.id);
+                  imageHelper.deleteImageById(image.id);
+                  await File(image.path).delete();
+                  noteHelper.saveNote(note.markChanged());
+                },
+              ),
+            );
 
-        setState(() {});
+            setState(() {});
+          },
+          layoutType: ImageLayoutType.strip,
+          stripAxis: axis,
+        );
       },
-      layoutType: ImageLayoutType.strip,
-      stripAxis: axis,
     );
   }
 
   List<Widget> getToolbarButtons({bool returnNothing = false}) {
-    if (note.deleted || returnNothing) {
+    if (prefs.folders.firstWhere((e) => e.id == note.folder).readOnly ||
+        returnNothing) {
       return [];
     } else {
       return [
@@ -480,7 +504,7 @@ class _NotePageState extends State<NotePage> {
               SearchPage(
                 delegate: TagSearchDelegate(
                   note.tags,
-                  onChanged: () => helper.saveNote(note.markChanged()),
+                  onChanged: () => noteHelper.saveNote(note.markChanged()),
                 ),
               ),
             );

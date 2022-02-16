@@ -42,7 +42,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
         TextButton(
           onPressed: () async {
             prefs.apiUrl = Constants.defaultApiUrl;
-            await helper.deleteAllNotes();
+            await noteHelper.deleteAllNotes();
 
             if (!mounted) return;
             context.pop();
@@ -61,7 +61,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
 
   Future<void> _onSubmit(String text) async {
     prefs.apiUrl = text;
-    await helper.deleteAllNotes();
+    await noteHelper.deleteAllNotes();
 
     if (!mounted) return;
     context.pop();

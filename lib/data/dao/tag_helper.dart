@@ -1,9 +1,9 @@
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:potato_notes/data/database.dart';
 
 part 'tag_helper.g.dart';
 
-@UseDao(tables: [Tags])
+@DriftAccessor(tables: [Tags])
 class TagHelper extends DatabaseAccessor<AppDatabase> with _$TagHelperMixin {
   final AppDatabase db;
 

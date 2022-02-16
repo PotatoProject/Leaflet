@@ -2,9 +2,9 @@
 
 import 'dart:typed_data';
 
-import 'package:potato_notes/internal/sync/image/blake/blake_base.dart';
+import 'package:potato_notes/internal/blake/blake_base.dart';
 
-/// The BLAKE2b (64-bit) flavor of the BLAKE2
+/// The BLAKE2s (32-bit) flavor of the BLAKE2
 /// cryptographic hash function.
 class Blake2 extends BlakeBase {
   /// The BLAKE2s (32-bit) flavor of the BLAKE2
@@ -22,20 +22,20 @@ class Blake2 extends BlakeBase {
     this.key,
     this.salt,
     this.personalization,
-    Uint64List? iv,
+    Uint32List? iv,
   })  : assert(digestLength > 0 && digestLength <= 32),
         assert(salt == null || salt.length == 8),
         assert(personalization == null || personalization.length == 8),
         iv = iv ??
-            Uint64List.fromList(<int>[
-              0x6a09e667f3bcc908,
-              0xbb67ae8584caa73b,
-              0x3c6ef372fe94f82b,
-              0xa54ff53a5f1d36f1,
-              0x510e527fade682d1,
-              0x9b05688c2b3e6c1f,
-              0x1f83d9abfb41bd6b,
-              0x5be0cd19137e2179,
+            Uint32List.fromList(<int>[
+              0x6A09E667,
+              0xBB67AE85,
+              0x3C6EF372,
+              0xA54FF53A,
+              0x510E527F,
+              0x9B05688C,
+              0x1F83D9AB,
+              0x5BE0CD19,
             ]) {
     reset();
   }
@@ -53,13 +53,13 @@ class Blake2 extends BlakeBase {
   final int digestLength;
 
   @override
-  Uint64List iv;
+  Uint32List iv;
 
   @override
-  final int bitLength = 64;
+  final int bitLength = 32;
 
   @override
-  final Uint8List sigma = Uint8List.fromList([
+  final Uint8List sigma = Uint8List.fromList(<int>[
     0,
     1,
     2,
@@ -220,38 +220,6 @@ class Blake2 extends BlakeBase {
     12,
     13,
     0,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    14,
-    10,
-    4,
-    8,
-    9,
-    15,
-    13,
-    6,
-    1,
-    12,
-    0,
-    2,
-    11,
-    7,
-    5,
-    3,
   ]);
 
   /// Returns a [Blake2] instance using [Strings] for the
@@ -266,7 +234,7 @@ class Blake2 extends BlakeBase {
     String? key,
     String? salt,
     String? personalization,
-    Uint64List? iv,
+    Uint32List? iv,
   }) {
     assert(digestLength > 0 && digestLength <= 32);
     assert(salt == null || salt.length == 8);

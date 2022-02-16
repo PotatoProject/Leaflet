@@ -1,13 +1,10 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
-import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
@@ -17,6 +14,7 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/routes/splash_page.dart';
+import 'package:potato_notes/routes/home_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -26,8 +24,7 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
-  final AppDatabase _db = AppDatabase(constructDb(logStatements: kDebugMode));
-  await initCriticalProviders(_db);
+  await initCriticalProviders();
 
   runApp(
     EasyLocalization(
@@ -120,7 +117,7 @@ class _PotatoNotesState extends State<PotatoNotes> {
             return WindowFrame(child: child!);
           },
           themeMode: prefs.themeMode,
-          home: BasePage(),
+          home: const HomePage(),
           debugShowCheckedModeBanner: false,
           color: Utils.getMainColorFromTheme(),
         );

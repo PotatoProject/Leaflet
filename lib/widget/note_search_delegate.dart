@@ -1,6 +1,7 @@
 import 'package:animated_vector/animated_vector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/dao/note_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
@@ -58,7 +59,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return StreamBuilder<List<Note>>(
-      stream: helper.noteStream(ReturnMode.local),
+      stream: noteHelper.watchNotes(BuiltInFolders.all),
       initialData: const [],
       builder: (context, snapshot) {
         final IllustrationPalette palette =

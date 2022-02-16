@@ -5,17 +5,18 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/data/model/list_content.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/theme/theme.dart';
+import 'package:potato_notes/internal/unmodifiable_note.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/base_page.dart';
 import 'package:potato_notes/widget/dismissible_route.dart';
 import 'package:recase/recase.dart';
 
@@ -26,7 +27,6 @@ extension NoteX on Note {
         content: "",
         starred: false,
         creationDate: DateTime.now(),
-        lastModifyDate: DateTime.now(),
         color: 0,
         images: [],
         list: false,
@@ -36,9 +36,8 @@ extension NoteX on Note {
         hideContent: false,
         lockNote: false,
         usesBiometrics: false,
-        deleted: false,
-        archived: false,
-        synced: false,
+        folder: BuiltInFolders.home.id,
+        lastChanged: DateTime.now(),
       );
 
   static Note fromSyncMap(Map<String, dynamic> syncMap) {
@@ -59,8 +58,7 @@ extension NoteX on Note {
               Utils.asList<Map<String, dynamic>>(
             json.decode(value.toString()),
           );
-          final List<SavedImage> images =
-              list.map((i) => SavedImage.fromJson(i)).toList();
+          final List<String> images = list.map((i) => i.toString()).toList();
           newValue = images;
           break;
         case "list_content":
@@ -107,7 +105,7 @@ extension NoteX on Note {
     derivated.putIfAbsent('styleJson', () => []);
     derivated.putIfAbsent('starred', () => false);
     derivated.putIfAbsent('creationDate', () => DateTime.now());
-    derivated.putIfAbsent('lastModifyDate', () => DateTime.now());
+    derivated.putIfAbsent('lastChanged', () => DateTime.now());
     derivated.putIfAbsent('color', () => 0);
     derivated.putIfAbsent('images', () => []);
     derivated.putIfAbsent('list', () => false);
@@ -117,9 +115,6 @@ extension NoteX on Note {
     derivated.putIfAbsent('hideContent', () => false);
     derivated.putIfAbsent('lockNote', () => false);
     derivated.putIfAbsent('usesBiometrics', () => false);
-    derivated.putIfAbsent('deleted', () => false);
-    derivated.putIfAbsent('archived', () => false);
-    derivated.putIfAbsent('synced', () => false);
     return derivated;
   }
 
@@ -153,7 +148,7 @@ extension NoteX on Note {
           }
         case "images":
           {
-            final List<SavedImage> images = Utils.asList<SavedImage>(value);
+            final List<String> images = Utils.asList<String>(value);
             newValue = json.encode(images);
             break;
           }
@@ -185,7 +180,7 @@ extension NoteX on Note {
   }
 
   Note markChanged() {
-    return copyWith(synced: false, lastModifyDate: DateTime.now());
+    return copyWith(lastChanged: DateTime.now());
   }
 
   int get notificationId =>
@@ -196,6 +191,8 @@ extension NoteX on Note {
       (e) => e.id == notificationId,
     );
   }
+
+  UnmodifiableNoteView get view => UnmodifiableNoteView(note: this);
 
   List<String> getActualTags({List<Tag>? overrideTags}) {
     final List<String> actualTags = [];
@@ -212,8 +209,14 @@ extension NoteX on Note {
 
 extension TagX on Tag {
   Tag markChanged() {
-    return copyWith(lastModifyDate: DateTime.now());
+    return copyWith(lastChanged: DateTime.now());
   }
+}
+
+extension NoteImageX on NoteImage {
+  Size get size => Size(width.toDouble(), height.toDouble());
+  bool get existsLocally => File(path).existsSync();
+  String get path => join(appDirectories.imagesDirectory.path, "$id$type");
 }
 
 extension PackageInfoX on PackageInfo {
@@ -305,7 +308,7 @@ extension ContextProviders on BuildContext {
     }
   }
 
-  BasePageState? get basePage => BasePage.maybeOf(this);
+  //BasePageState? get basePage => BasePage.maybeOf(this);
   TextDirection get directionality => Directionality.of(this);
 
   NavigatorState get navigator => Navigator.of(this);
@@ -486,5 +489,15 @@ extension BorderRadiusDirectionalX on BorderRadiusDirectional {
 extension DynamicX on dynamic {
   T toType<T>() {
     return this as T;
+  }
+}
+
+extension ColorX on Color {
+  Color get contrasting {
+    if (ThemeData.estimateBrightnessForColor(this) == Brightness.light) {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
   }
 }

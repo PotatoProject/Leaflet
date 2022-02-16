@@ -55,7 +55,7 @@ class DependentScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.basePage;
+    final state = null; //context.basePage;
 
     if (state != null) {
       state.setFAB(floatingActionButton);
