@@ -186,7 +186,7 @@ class AppDatabase extends _$AppDatabase {
     for (final Note note in dbNotes) {
       if (note.archived!) {
         if (!dbFolders.contains(BuiltInFolders.archive)) {
-          await folderHelper.createFolder(BuiltInFolders.archive);
+          await folderHelper.saveFolder(BuiltInFolders.archive);
         }
 
         newNotes.add(note.copyWith(folder: BuiltInFolders.archive.id));

@@ -108,22 +108,41 @@ class ThemeParser {
     final int version = info.getRequired<int>("version");
     final Brightness brightness =
         _parseBrightness(info.getRequired<String>("brightness"));
-    final bool? useMaterial3 = info.getOptional<bool>("useMaterial3");
+    final bool useMaterial3 = info.getOptional<bool>("useMaterial3") ?? false;
+
+    final ColorScheme colorScheme = _parseColorScheme(colors, brightness);
+    final ShapeTheme shapeTheme = _parseShapes(shapes);
+    final NoteColorPalette notePalette = _harmonizeIfMaterial3(
+      noteColors != null
+          ? _parseNoteColorPalette(noteColors)
+          : _notePaletteFromBrightness(brightness),
+      colorScheme.primary,
+      useMaterial3,
+    );
+    final IllustrationPalette illustrationPalette = illustrationColors != null
+        ? _parseIllustrationPalette(illustrationColors)
+        : _illustrationPaletteFromBrightness(brightness);
 
     return LeafletThemeData(
       name: name,
       author: author,
       version: version,
-      useMaterial3: useMaterial3 == true,
-      notePalette: noteColors != null
-          ? _parseNoteColorPalette(noteColors)
-          : _notePaletteFromBrightness(brightness),
-      illustrationPalette: illustrationColors != null
-          ? _parseIllustrationPalette(illustrationColors)
-          : _illustrationPaletteFromBrightness(brightness),
-      shapes: _parseShapes(shapes),
-      colors: _parseColorScheme(colors, brightness),
+      useMaterial3: useMaterial3,
+      notePalette: notePalette,
+      illustrationPalette: illustrationPalette,
+      shapes: shapeTheme,
+      colors: colorScheme,
     );
+  }
+
+  NoteColorPalette _harmonizeIfMaterial3(
+    NoteColorPalette palette,
+    Color primary,
+    bool useMaterial3,
+  ) {
+    if (!useMaterial3) return palette;
+
+    return palette.harmonize(primary);
   }
 
   NoteColorPalette _notePaletteFromBrightness(Brightness brightness) {

@@ -1,5 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/custom_icons.dart';
 
 part 'folder_helper.g.dart';
 
@@ -14,7 +17,7 @@ class FolderHelper extends DatabaseAccessor<AppDatabase>
 
   Stream<List<Folder>> watchFolders() => select(folders).watch();
 
-  Future<void> createFolder(Folder folder) =>
+  Future<void> saveFolder(Folder folder) =>
       into(folders).insert(folder, mode: InsertMode.replace);
 
   Future<void> deleteFolder(Folder folder) => delete(folders).delete(folder);
@@ -29,7 +32,7 @@ class BuiltInFolders {
   static final Folder all = Folder(
     id: 'all',
     name: "All",
-    icon: -1,
+    icon: 4,
     color: -1,
     lastChanged: DateTime(0),
     readOnly: false,
@@ -38,7 +41,7 @@ class BuiltInFolders {
   static final Folder home = Folder(
     id: 'default',
     name: "Home",
-    icon: -1,
+    icon: 1,
     color: -1,
     lastChanged: DateTime(0),
     readOnly: false,
@@ -47,7 +50,7 @@ class BuiltInFolders {
   static final Folder trash = Folder(
     id: 'trash',
     name: "Trash",
-    icon: -1,
+    icon: 2,
     color: -1,
     lastChanged: DateTime(0),
     readOnly: true,
@@ -58,7 +61,7 @@ class BuiltInFolders {
   static final Folder archive = Folder(
     id: 'archive',
     name: "Archive",
-    icon: -1,
+    icon: 3,
     color: -1,
     lastChanged: DateTime(0),
     readOnly: true,
@@ -70,3 +73,30 @@ class BuiltInFolders {
     trash,
   ];
 }
+
+const List<IconData> folderDefaultIcons = [
+  Icons.folder_outlined,
+  Icons.home_outlined,
+  Icons.delete_outline,
+  MdiIcons.archiveOutline,
+  CustomIcons.notes,
+  Icons.star_border,
+  Icons.emoji_events_outlined,
+  Icons.local_cafe_outlined,
+  Icons.spa_outlined,
+  Icons.videogame_asset_outlined,
+  Icons.favorite_outline,
+  MdiIcons.incognito,
+  Icons.local_bar_outlined,
+  Icons.sports_soccer_outlined,
+  Icons.school_outlined,
+  Icons.bar_chart_outlined,
+  Icons.local_airport_outlined,
+  Icons.work_outline,
+  Icons.question_answer_outlined,
+  Icons.notifications_none_outlined,
+  Icons.smart_toy_outlined,
+  Icons.campaign_outlined,
+  Icons.people_alt_outlined,
+  Icons.person_outlined,
+];

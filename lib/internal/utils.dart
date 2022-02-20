@@ -16,6 +16,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
 import 'package:path/path.dart';
+import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
@@ -659,7 +660,7 @@ class Utils {
     await Utils.showSecondaryRoute(
       context,
       NotePage(
-        note: NoteX.emptyNote.copyWith(id: id),
+        note: NoteX.emptyNote.copyWith(id: id, folder: folder.id),
         focusTitle: true,
       ),
     );
@@ -839,18 +840,11 @@ class Utils {
   }
 
   static IconData getIconForFolder(Folder folder) {
-    switch (folder.id) {
-      case 'all':
-        return CustomIcons.notes;
-      case 'default':
-        return Icons.home_outlined;
-      case 'trash':
-        return Icons.delete_outlined;
-      case 'archive':
-        return MdiIcons.archiveOutline;
-      default:
-        return Icons.ac_unit;
+    if (folder.icon > folderDefaultIcons.length || folder.icon < 0) {
+      return folderDefaultIcons.first;
     }
+
+    return folderDefaultIcons[folder.icon];
   }
 
   static List<T> asList<T>(dynamic obj) {

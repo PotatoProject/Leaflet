@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,11 +11,11 @@ import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/widget/folder_editor.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/separated_list.dart';
-import 'package:recase/recase.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController controller = ScrollController();
   Folder folder = BuiltInFolders.home;
   late SelectionState _selectionState;
+  final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   void initState() {
@@ -50,8 +52,8 @@ class _HomePageState extends State<HomePage> {
           stream: noteHelper.watchNotes(folder),
           initialData: const [],
           builder: (context, snapshot) {
-            return CustomScrollView(
-              slivers: [
+            return NestedScrollView(
+              headerSliverBuilder: (context, _) => [
                 SliverAppBar(
                   leading: const Center(
                     child: Illustration.leaflet(height: 28),
@@ -132,54 +134,76 @@ class _HomePageState extends State<HomePage> {
                                     PointerDeviceKind.mouse,
                                   },
                                 ),
-                                child: ListView.separated(
-                                  controller: controller,
-                                  itemBuilder: (context, index) => _buildTag(
-                                    context: context,
-                                    title:
-                                        prefs.folders[index].name.sentenceCase,
-                                    icon: Utils.getIconForFolder(
-                                      prefs.folders[index],
-                                    ),
-                                    selected:
-                                        prefs.folders[index].id == folder.id,
-                                    onTap: () => setState(
-                                      () {
-                                        folder = prefs.folders[index];
-                                      },
-                                    ),
-                                  ),
-                                  padding: const EdgeInsets.only(
-                                    left: 8,
-                                    bottom: 8,
-                                    top: 8,
-                                  ),
-                                  scrollDirection: Axis.horizontal,
-                                  separatorBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Row(
-                                        children: [
-                                          const SizedBox(width: 8),
-                                          Center(
-                                            child: Container(
-                                              width: 4,
-                                              height: 4,
-                                              decoration: ShapeDecoration(
-                                                shape: const CircleBorder(),
-                                                color: context
-                                                    .theme.colorScheme.outline
-                                                    .withOpacity(0.7),
-                                              ),
-                                            ),
+                                child: StreamBuilder<void>(
+                                  stream: folderHelper.watchFolders(),
+                                  builder: (context, snapshot) {
+                                    return ListView.separated(
+                                      controller: controller,
+                                      itemBuilder: (context, index) =>
+                                          _buildTag(
+                                        context: context,
+                                        title: prefs.folders[index].name,
+                                        icon: Utils.getIconForFolder(
+                                          prefs.folders[index],
+                                        ),
+                                        selected: prefs.folders[index].id ==
+                                            folder.id,
+                                        onTap: () => setState(
+                                          () {
+                                            folder = prefs.folders[index];
+                                          },
+                                        ),
+                                        onLongPress: () =>
+                                            Utils.showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => FolderEditor(
+                                            folder: prefs.folders[index],
+                                            onSave: (folder) async {
+                                              context.pop();
+                                              await folderHelper
+                                                  .saveFolder(folder);
+                                            },
+                                            onDelete: (folder) async {
+                                              context.pop();
+                                              await folderHelper
+                                                  .deleteFolder(folder);
+                                            },
                                           ),
-                                          const SizedBox(width: 8),
-                                        ],
-                                      );
-                                    } else {
-                                      return const SizedBox(width: 8);
-                                    }
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.only(
+                                        left: 8,
+                                        bottom: 8,
+                                        top: 8,
+                                      ),
+                                      scrollDirection: Axis.horizontal,
+                                      separatorBuilder: (context, index) {
+                                        if (index == 0) {
+                                          return Row(
+                                            children: [
+                                              const SizedBox(width: 8),
+                                              Center(
+                                                child: Container(
+                                                  width: 4,
+                                                  height: 4,
+                                                  decoration: ShapeDecoration(
+                                                    shape: const CircleBorder(),
+                                                    color: context.theme
+                                                        .colorScheme.outline
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                            ],
+                                          );
+                                        } else {
+                                          return const SizedBox(width: 8);
+                                        }
+                                      },
+                                      itemCount: prefs.folders.length,
+                                    );
                                   },
-                                  itemCount: prefs.folders.length,
                                 ),
                               ),
                             ),
@@ -205,7 +229,15 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () => Utils.showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => FolderEditor(
+                                      onSave: (folder) async {
+                                        context.pop();
+                                        await folderHelper.saveFolder(folder);
+                                      },
+                                    ),
+                                  ),
                                   child: const Center(
                                     child: Icon(
                                       Icons.add,
@@ -221,7 +253,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                NoteSliverListWidget(
+              ],
+              body: PageTransitionSwitcher(
+                transitionBuilder: (
+                  Widget child,
+                  Animation<double> primaryAnimation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return FadeThroughTransition(
+                    animation: primaryAnimation,
+                    secondaryAnimation: secondaryAnimation,
+                    fillColor: context.theme.colorScheme.background,
+                    child: PageStorage(bucket: _bucket, child: child),
+                  );
+                },
+                child: NoteListWidget(
+                  key: ValueKey(folder.id),
                   itemBuilder: (context, index) {
                     final Note note = snapshot.data![index];
                     final SelectionState _state = context.selectionState;
@@ -255,9 +302,9 @@ class _HomePageState extends State<HomePage> {
                   noteCount: snapshot.data!.length,
                   folder: folder,
                 ),
-              ],
-              primary: true,
-              physics: const AlwaysScrollableScrollPhysics(),
+              ),
+              //primary: true,
+              //physics: const AlwaysScrollableScrollPhysics(),
             );
           },
         ),
@@ -337,9 +384,7 @@ class _HomePageState extends State<HomePage> {
       if (status) {
         await Utils.showSecondaryRoute(
           context,
-          NotePage(
-            note: note,
-          ),
+          NotePage(note: note),
         );
         Utils.handleNotePagePop(note);
       }
@@ -361,6 +406,7 @@ class _HomePageState extends State<HomePage> {
     required IconData icon,
     bool selected = false,
     VoidCallback? onTap,
+    VoidCallback? onLongPress,
   }) {
     return Material(
       shape: StadiumBorder(
@@ -380,6 +426,7 @@ class _HomePageState extends State<HomePage> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         child: Padding(
           padding: const EdgeInsetsDirectional.only(
             start: 10,
@@ -390,6 +437,7 @@ class _HomePageState extends State<HomePage> {
           child: SeparatedList(
             axis: Axis.horizontal,
             separator: const SizedBox(width: 4),
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
                 icon,

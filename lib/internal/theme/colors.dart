@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 class NoteColorPalette {
   final NoteColor empty;
@@ -131,6 +132,77 @@ class NoteColorPalette {
 
   @override
   int get hashCode => colors.hashCode;
+
+  NoteColorPalette copyWith({
+    NoteColor? empty,
+    NoteColor? red,
+    NoteColor? orange,
+    NoteColor? yellow,
+    NoteColor? green,
+    NoteColor? cyan,
+    NoteColor? lightBlue,
+    NoteColor? blue,
+    NoteColor? purple,
+    NoteColor? pink,
+  }) {
+    return NoteColorPalette(
+      empty: empty ?? this.empty,
+      red: red ?? this.red,
+      orange: orange ?? this.orange,
+      yellow: yellow ?? this.yellow,
+      green: green ?? this.green,
+      cyan: cyan ?? this.cyan,
+      lightBlue: lightBlue ?? this.lightBlue,
+      blue: blue ?? this.blue,
+      purple: purple ?? this.purple,
+      pink: pink ?? this.pink,
+    );
+  }
+
+  NoteColorPalette copyWithColors({
+    Color? empty,
+    Color? red,
+    Color? orange,
+    Color? yellow,
+    Color? green,
+    Color? cyan,
+    Color? lightBlue,
+    Color? blue,
+    Color? purple,
+    Color? pink,
+  }) {
+    return NoteColorPalette.fromColors(
+      empty: empty ?? this.empty,
+      red: red ?? this.red,
+      orange: orange ?? this.orange,
+      yellow: yellow ?? this.yellow,
+      green: green ?? this.green,
+      cyan: cyan ?? this.cyan,
+      lightBlue: lightBlue ?? this.lightBlue,
+      blue: blue ?? this.blue,
+      purple: purple ?? this.purple,
+      pink: pink ?? this.pink,
+    );
+  }
+
+  NoteColorPalette harmonize(Color color) {
+    return NoteColorPalette.fromColors(
+      empty: _harmonizeColor(empty, color),
+      red: _harmonizeColor(red, color),
+      orange: _harmonizeColor(orange, color),
+      yellow: _harmonizeColor(yellow, color),
+      green: _harmonizeColor(green, color),
+      cyan: _harmonizeColor(cyan, color),
+      lightBlue: _harmonizeColor(lightBlue, color),
+      blue: _harmonizeColor(blue, color),
+      purple: _harmonizeColor(purple, color),
+      pink: _harmonizeColor(pink, color),
+    );
+  }
+
+  Color _harmonizeColor(Color from, Color to) {
+    return Color(Blend.harmonize(from.value, to.value));
+  }
 }
 
 class NoteColor extends Color {

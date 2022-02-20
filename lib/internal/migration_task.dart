@@ -100,7 +100,7 @@ class MigrationTask {
 
       if (v1Note.isArchived == 1) {
         if (!folders.contains(BuiltInFolders.archive)) {
-          await folderHelper.createFolder(BuiltInFolders.archive);
+          await folderHelper.saveFolder(BuiltInFolders.archive);
         }
 
         folder = BuiltInFolders.archive;
