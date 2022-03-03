@@ -85,3 +85,6 @@ config.json
 **/*.AppImage*
 
 .fvm
+
+# Rust stuff
+native/target

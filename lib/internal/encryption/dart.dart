@@ -1,9 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:cryptography/cryptography.dart';
 import 'package:potato_notes/internal/encryption/base.dart';
 
 class DartEncryptionUtils extends EncryptionUtilsBase {
   @override
-  Future<List<int>> decryptBytes(List<int> origin, String password) async {
+  Future<Uint8List> decryptBytes(Uint8List origin, String password) async {
     final keySalt = origin.sublist(0, 16);
     final aesNonce = origin.sublist(16, 28);
     final macBytes = origin.sublist(28, 44);
@@ -21,11 +23,11 @@ class DartEncryptionUtils extends EncryptionUtilsBase {
       secretKey: SecretKey(key),
     );
 
-    return plaintext;
+    return Uint8List.fromList(plaintext);
   }
 
   @override
-  Future<List<int>> deriveKey(String password, List<int> nonce) async {
+  Future<Uint8List> deriveKey(String password, Uint8List nonce) async {
     final kdf = Pbkdf2(
       bits: 256,
       iterations: 100000,
@@ -36,22 +38,22 @@ class DartEncryptionUtils extends EncryptionUtilsBase {
       nonce: nonce,
     );
 
-    return key.extractBytes();
+    return Uint8List.fromList(await key.extractBytes());
   }
 
   @override
-  Future<List<int>> encryptBytes(List<int> origin, String password) async {
+  Future<Uint8List> encryptBytes(Uint8List origin, String password) async {
     final keySalt = EncryptionUtilsBase.generateNonce();
     final key = await deriveKey(password, keySalt);
 
     final aes = AesGcm.with256bits();
     final ciphertext = await aes.encrypt(origin, secretKey: SecretKey(key));
 
-    return [
+    return Uint8List.fromList([
       ...keySalt,
       ...ciphertext.nonce,
       ...ciphertext.mac.bytes,
       ...ciphertext.cipherText,
-    ];
+    ]);
   }
 }

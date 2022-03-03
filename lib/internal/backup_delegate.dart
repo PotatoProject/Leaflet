@@ -14,7 +14,7 @@ import 'package:potato_notes/data/model/id_list.dart';
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/data/model/reminder_list.dart';
 import 'package:potato_notes/internal/encryption/base.dart';
-import 'package:potato_notes/internal/encryption/dart.dart';
+import 'package:potato_notes/internal/encryption/rust.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
@@ -89,7 +89,7 @@ class BackupDelegate with LoggerProvider {
     final ZipByteEncoder encoder = ZipByteEncoder()
       ..create()
       ..addDirectory(noteDir, includeDirName: false);
-    final List<int> fileBytes = encoder.close();
+    final Uint8List fileBytes = encoder.close();
     await noteDir.delete(recursive: true);
     final NoteBackupMetadata metadata = NoteBackupMetadata(
       name: name,
@@ -115,6 +115,7 @@ class BackupDelegate with LoggerProvider {
     required String name,
     ValueChanged<int>? onProgress,
   }) async {
+    final DateTime startTime = DateTime.now();
     final ReceivePort progressPort = ReceivePort();
     final ReceivePort returnPort = ReceivePort();
     final String outDir = appDirectories.backupDirectory.path;
@@ -141,6 +142,10 @@ class BackupDelegate with LoggerProvider {
     });
 
     final String finalBackupName = await returnPort.first as String;
+
+    // TODO: BKP: remove the time log
+    logger.v('Backup took ${DateTime.now().difference(startTime)}');
+
     return p.join(outDir, finalBackupName);
   }
 
@@ -186,7 +191,7 @@ class BackupDelegate with LoggerProvider {
       ..create()
       ..addDirectory(baseDir, includeDirName: false)
       ..close();
-    final List<int> fileBytes = encoder.close();
+    final Uint8List fileBytes = encoder.close();
     await baseDir.delete(recursive: true);
     final String backupPath = p.join(outDir, name);
     File(backupPath).writeAsBytes(
@@ -254,7 +259,7 @@ class BackupDelegate with LoggerProvider {
     final Map<String, dynamic> data =
         json.decode(payload) as Map<String, dynamic>;
 
-    final List<int> fileData = Utils.asList<int>(data['data']);
+    final Uint8List fileData = Utils.asUint8List(data['data']);
     final List<Tag> tags =
         _decodeTags(Utils.asList<Map<String, dynamic>>(data['tags']));
     final String password = data['password']! as String;
@@ -369,10 +374,11 @@ class BackupDelegate with LoggerProvider {
         .toList();
   }
 
-  static EncryptionUtilsBase _figureOutEncryptionUtils(int version) {
-    // For now use only the dart encryption utils
-    return DartEncryptionUtils();
-  }
+  static final EncryptionUtilsBase _encryptionUtils = RustEncryptionUtils();
+
+  // For now use only the rust encryption utils
+  static EncryptionUtilsBase _figureOutEncryptionUtils(int version) =>
+      _encryptionUtils;
 }
 
 class _BackupPayload {
@@ -657,8 +663,8 @@ class ZipByteEncoder {
     _encoder.addFile(file);
   }
 
-  List<int> close() {
+  Uint8List close() {
     _encoder.endEncode();
-    return _output.getBytes();
+    return Uint8List.fromList(_output.getBytes());
   }
 }

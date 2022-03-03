@@ -40,7 +40,9 @@ dependencies:
   flutter_keyboard_visibility: ^5.1.1
   flutter_local_notifications: ^9.2.0
   flutter_mobx: ^2.0.4
+  flutter_rust_bridge: ^1.22.1
   flutter_staggered_grid_view: ^0.6.1
+  freezed_annotation: ^1.1.0
 
   http: ^0.13.3
 
@@ -79,7 +81,7 @@ dependencies:
       url: https://github.com/simolus3/sqlite3.dart.git
       path: sqlcipher_flutter_libs
   sqlite3: ^1.5.1
-  
+
   toml: ^0.12.0
 
   universal_platform: ^1.0.0+1
@@ -97,6 +99,7 @@ dev_dependencies:
   drift_dev: ^1.4.0
   flutter_test:
     sdk: flutter
+  freezed: ^1.1.1
   json_serializable: ^6.1.4
   lint: ^1.8.2
   mobx_codegen: ^2.0.5+2
