@@ -12,3 +12,10 @@ crate-type = ["staticlib", "cdylib"]
 aes-gcm = "0.9.4"
 flutter_rust_bridge = "1"
 ring = "0.16.20"
+
+# Release builds
+[profile.release]
+strip = "debuginfo"
+lto = true
+opt-level = 3
+debug = 0
