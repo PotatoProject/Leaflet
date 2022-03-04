@@ -1301,15 +1301,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  webcrypto:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "98f210ab17982874af0ee885dcd5f51b064e8f73"
-      url: "https://github.com/gargakshit/webcrypto.dart"
-    source: git
-    version: "0.5.2"
   win32:
     dependency: transitive
     description:

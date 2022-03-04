@@ -1,3 +1,5 @@
-# Enable SIMD and hardware AES on x86_64
+# Enable SIMD and hardware AES on supported targets
+
+# Windows x86_64
 [target.x86_64-pc-msvc-windows]
 rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]

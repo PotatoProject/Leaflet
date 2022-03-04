@@ -89,8 +89,6 @@ dependencies:
   uuid: ^3.0.4
 
   waterfall_flow: ^3.0.2
-  webcrypto:
-    git: https://github.com/gargakshit/webcrypto.dart
 
   xml: ^5.3.1
 
