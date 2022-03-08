@@ -26,10 +26,11 @@
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
-		6BC079F3269E455800BFA311 /* libwebcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC079F2269E455800BFA311 /* libwebcrypto.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6BC079F4269E459E00BFA311 /* libwebcrypto.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 6BC079F2269E455800BFA311 /* libwebcrypto.dylib */; };
-		6BC079F5269E45D600BFA311 /* libwebcrypto.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 6BC079F2269E455800BFA311 /* libwebcrypto.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		75A2F025844D41ADA8F479A6 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1914D3DF6EF84F457635516E /* Pods_Runner.framework */; };
+		7C067C7A27D7BFAF0043B7C9 /* native.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C067C7727D7BF910043B7C9 /* native.dylib */; };
+		7C067C7B27D7BFBD0043B7C9 /* native.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 7C067C7727D7BF910043B7C9 /* native.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		7C067C8327D7C2F50043B7C9 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C067C8227D7C2F50043B7C9 /* libc++.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,18 +41,39 @@
 			remoteGlobalIDString = 33CC111A2044C6BA0003C045;
 			remoteInfo = FLX;
 		};
+		7C067C7427D7BF910043B7C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C067C6F27D7BF910043B7C9 /* native.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA60AD08325E2969E816930C;
+			remoteInfo = "native-staticlib";
+		};
+		7C067C7627D7BF910043B7C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C067C6F27D7BF910043B7C9 /* native.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA604B1163E6EAC3B2E0A336;
+			remoteInfo = "native-cdylib";
+		};
+		7C067C7827D7BF9F0043B7C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C067C6F27D7BF910043B7C9 /* native.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CA604B1163E63AEEE34191F5;
+			remoteInfo = "native-cdylib";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		33CC110E2044A8840003C045 /* Bundle Framework */ = {
+		7C067C7C27D7BFBD0043B7C9 /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				6BC079F5269E45D600BFA311 /* libwebcrypto.dylib in Bundle Framework */,
+				7C067C7B27D7BFBD0043B7C9 /* native.dylib in Embed Libraries */,
 			);
-			name = "Bundle Framework";
+			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -75,6 +97,9 @@
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		6BC079F2269E455800BFA311 /* libwebcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libwebcrypto.dylib; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		7C067C6F27D7BF910043B7C9 /* native.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = native.xcodeproj; path = ../../native/native.xcodeproj; sourceTree = "<group>"; };
+		7C067C7E27D7C17B0043B7C9 /* bridge_generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bridge_generated.h; sourceTree = "<group>"; };
+		7C067C8227D7C2F50043B7C9 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		D365DBA1626786BD42A77EC8 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		EE100A25E87338E92F32A510 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
@@ -85,8 +110,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C067C8327D7C2F50043B7C9 /* libc++.tbd in Frameworks */,
+				7C067C7A27D7BFAF0043B7C9 /* native.dylib in Frameworks */,
 				75A2F025844D41ADA8F479A6 /* Pods_Runner.framework in Frameworks */,
-				6BC079F3269E455800BFA311 /* libwebcrypto.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +174,8 @@
 		33FAB671232836740065AC1E /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				7C067C7E27D7C17B0043B7C9 /* bridge_generated.h */,
+				7C067C6F27D7BF910043B7C9 /* native.xcodeproj */,
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
 				33E51913231747F40026EE4D /* DebugProfile.entitlements */,
@@ -156,6 +184,15 @@
 				33BA886A226E78AF003329D5 /* Configs */,
 			);
 			path = Runner;
+			sourceTree = "<group>";
+		};
+		7C067C7027D7BF910043B7C9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7C067C7527D7BF910043B7C9 /* libnative_static.a */,
+				7C067C7727D7BF910043B7C9 /* native.dylib */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		BE11626A1C8AB7701D478DA4 /* Pods */ = {
@@ -171,6 +208,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7C067C8227D7C2F50043B7C9 /* libc++.tbd */,
 				6BC079F2269E455800BFA311 /* libwebcrypto.dylib */,
 				1914D3DF6EF84F457635516E /* Pods_Runner.framework */,
 			);
@@ -188,13 +226,14 @@
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
-				33CC110E2044A8840003C045 /* Bundle Framework */,
 				3399D490228B24CF009A79C7 /* ShellScript */,
 				F3A41A24920B7A9C419DF78F /* [CP] Embed Pods Frameworks */,
+				7C067C7C27D7BFBD0043B7C9 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7C067C7927D7BF9F0043B7C9 /* PBXTargetDependency */,
 				33CC11202044C79F0003C045 /* PBXTargetDependency */,
 			);
 			name = Runner;
@@ -239,6 +278,12 @@
 			mainGroup = 33CC10E42044A3C60003C045;
 			productRefGroup = 33CC10EE2044A3C60003C045 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7C067C7027D7BF910043B7C9 /* Products */;
+					ProjectRef = 7C067C6F27D7BF910043B7C9 /* native.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				33CC10EC2044A3C60003C045 /* Runner */,
@@ -246,6 +291,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7C067C7527D7BF910043B7C9 /* libnative_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libnative_static.a;
+			remoteRef = 7C067C7427D7BF910043B7C9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7C067C7727D7BF910043B7C9 /* native.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = native.dylib;
+			remoteRef = 7C067C7627D7BF910043B7C9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		33CC10EB2044A3C60003C045 /* Resources */ = {
@@ -381,6 +443,11 @@
 			target = 33CC111A2044C6BA0003C045 /* Flutter Assemble */;
 			targetProxy = 33CC111F2044C79F0003C045 /* PBXContainerItemProxy */;
 		};
+		7C067C7927D7BF9F0043B7C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "native-cdylib";
+			targetProxy = 7C067C7827D7BF9F0043B7C9 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -466,6 +533,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Profile;
@@ -601,6 +669,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -630,6 +699,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

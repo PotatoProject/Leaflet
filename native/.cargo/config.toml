@@ -5,9 +5,12 @@
 rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]
 
 # iOS x86_64 (sim)
-[target.x86_64-apple-ios]
-rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]
+# [target.x86_64-apple-ios]
+# rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]
 
 # macOS x86_64
-[target.x86_64-apple-darwin]
-rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]
+# [target.x86_64-apple-darwin]
+# rustc-flags = ["-Ctarget-cpu=sandybridge", "-Ctarget-feature=+aes,+sse2,+sse4.1,+ssse3"]
+
+# rustc-flags for targets other than windows are commented out due to build
+# issues. It should still pick AES-NI intrinsics during runtime
