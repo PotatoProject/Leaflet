@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["staticlib", "cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
+# lib for tests, benchmarks and all
+# staticlib for iOS
+# cdynlib for everything else
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,7 +1,7 @@
 # Homebrew installs LLVM in a place that is not visible to ffigen.
 # This explicitly specifies the place where the LLVM dylibs are kept.
 llvm_path := if os() == "macos" {
-    "--llvm-path /opt/homebrew/opt/llvm"
+    "--llvm-path /usr/local/opt/llvm"
 } else {
     ""
 }
