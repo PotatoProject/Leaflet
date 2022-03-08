@@ -68,6 +68,9 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+include(./cmake/gen.cmake)
+include(./cmake/rust.cmake)
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
