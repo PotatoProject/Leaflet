@@ -78,7 +78,7 @@ public final class GeneratedPluginRegistrant {
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.quickactions.QuickActionsPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin quick_actions, io.flutter.plugins.quickactions.QuickActionsPlugin", e);
+      Log.e(TAG, "Error registering plugin quick_actions_android, io.flutter.plugins.quickactions.QuickActionsPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.share.SharePlusPlugin());

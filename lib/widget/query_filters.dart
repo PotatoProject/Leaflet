@@ -9,7 +9,6 @@ import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/date_selector.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/note_color_selector.dart';
-import 'package:potato_notes/widget/return_mode_sheet.dart';
 import 'package:potato_notes/widget/tag_search_delegate.dart';
 
 class QueryFilters extends StatefulWidget {

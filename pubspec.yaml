@@ -57,11 +57,12 @@ dependencies:
   loggy:
     git: https://github.com/HrX03/loggy
 
+  material_color_utilities: ^0.1.3
   material_design_icons_flutter: ^5.0.6595
   mobx: ^2.0.6+1
   monet: ^0.1.0
 
-  package_info_plus: ^1.0.3
+  package_info_plus: "1.0.4"
   path: ^1.8.1
   path_drawing: ^1.0.0
   path_provider: ^2.0.8
@@ -89,6 +90,7 @@ dependencies:
   waterfall_flow: ^3.0.2
   webcrypto:
     git: https://github.com/gargakshit/webcrypto.dart
+  window_manager: ^0.1.6
 
   xml: ^5.3.1
 

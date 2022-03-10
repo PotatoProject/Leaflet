@@ -1,4 +1,3 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +16,24 @@ import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await windowManager.ensureInitialized();
   await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
   await initCriticalProviders();
+
+  if (DeviceInfo.isDesktop) {
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.setTitleBarStyle("hidden");
+      await windowManager.setMinimumSize(const Size(360, 520));
+      await windowManager.show();
+      await windowManager.setSkipTaskbar(false);
+    });
+  }
 
   runApp(
     EasyLocalization(
@@ -38,13 +48,6 @@ Future<void> main() async {
       ),
     ),
   );
-
-  if (DeviceInfo.isDesktop) {
-    doWhenWindowReady(() {
-      appWindow.minSize = const Size(360, 520);
-      appWindow.show();
-    });
-  }
 }
 
 class PotatoNotes extends StatefulWidget {

@@ -1,9 +1,9 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:window_manager/window_manager.dart';
 
 class WindowFrame extends StatelessWidget {
   final Widget child;
@@ -43,7 +43,30 @@ class WindowFrame extends StatelessWidget {
   }
 }
 
-class _WindowTitlebar extends StatelessWidget {
+class _WindowTitlebar extends StatefulWidget {
+  @override
+  State<_WindowTitlebar> createState() => _WindowTitlebarState();
+}
+
+class _WindowTitlebarState extends State<_WindowTitlebar> with WindowListener {
+  bool maximized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    windowManager.addListener(this);
+  }
+
+  @override
+  void onWindowMaximize() {
+    maximized = true;
+  }
+
+  @override
+  void onWindowUnmaximize() {
+    maximized = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     late final double opacity;
@@ -71,25 +94,29 @@ class _WindowTitlebar extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onPanStart: (details) => appWindow.startDragging(),
-                  onDoubleTap: appWindow.maximizeOrRestore,
+                  onPanStart: (details) => windowManager.startDragging(),
+                  onDoubleTap: maximized
+                      ? windowManager.unmaximize
+                      : windowManager.maximize,
                 ),
               ),
               if (showButtons)
                 _TitlebarButton(
-                  onTap: appWindow.minimize,
+                  onTap: windowManager.minimize,
                   child: const Icon(Icons.remove),
                 ),
               if (showButtons)
                 _TitlebarButton(
-                  onTap: appWindow.maximizeOrRestore,
-                  child: appWindow.isMaximized
+                  onTap: maximized
+                      ? windowManager.unmaximize
+                      : windowManager.maximize,
+                  child: maximized
                       ? const Icon(Icons.flip_to_front_outlined)
                       : const Icon(Icons.crop_square),
                 ),
               if (showButtons)
                 _TitlebarButton(
-                  onTap: appWindow.close,
+                  onTap: windowManager.close,
                   child: const Icon(Icons.close),
                 ),
             ],

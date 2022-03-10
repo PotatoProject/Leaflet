@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/widget/default_app_bar.dart';
 
 class DependentScaffold extends StatelessWidget {
@@ -55,9 +54,9 @@ class DependentScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = null; //context.basePage;
+    const state = null; //context.basePage;
 
-    if (state != null) {
+    /* if (state != null) {
       state.setFAB(floatingActionButton);
       state.setAppBar(appBar);
 
@@ -76,7 +75,7 @@ class DependentScaffold extends StatelessWidget {
       } else {
         state.setSecondaryAppBar(null);
       }
-    }
+    } */
 
     return ScaffoldMessenger(
       child: Scaffold(

@@ -11,6 +11,7 @@ import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/widget/badge_icon.dart';
 import 'package:potato_notes/widget/folder_editor.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';

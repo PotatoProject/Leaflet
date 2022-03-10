@@ -9,7 +9,6 @@ import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
-import 'package:waterfall_flow/waterfall_flow.dart';
 
 class NoteListWidget extends StatelessWidget {
   final TransitionBuilder? builder;

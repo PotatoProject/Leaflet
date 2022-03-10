@@ -4,6 +4,7 @@ import 'package:potato_notes/internal/extensions.dart';
 class BadgeIcon extends StatelessWidget {
   final Widget icon;
   final Widget? badgeIcon;
+  final bool showBadge;
   final double size;
   final double badgeSize;
   final AlignmentGeometry? badgeAlignment;
@@ -11,6 +12,7 @@ class BadgeIcon extends StatelessWidget {
   const BadgeIcon({
     required this.icon,
     this.badgeIcon,
+    this.showBadge = true,
     this.size = 24,
     this.badgeSize = 12,
     this.badgeAlignment,
@@ -20,7 +22,7 @@ class BadgeIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.fromSize(
       size: Size.square(size),
-      child: badgeIcon != null
+      child: badgeIcon != null && showBadge
           ? Stack(
               children: [
                 ClipPath(
