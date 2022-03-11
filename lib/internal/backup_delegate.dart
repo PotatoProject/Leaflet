@@ -294,6 +294,18 @@ class BackupDelegate with LoggerProvider {
               Utils.asMap<String, dynamic>(json.decode(content));
           final Map<String, dynamic> noteJson =
               Utils.asMap<String, dynamic>(decodedContent);
+
+          // TODO: @hrx03 fix this
+          if (!noteJson.containsKey('folder')) {
+            noteJson['folder'] = 'default';
+          }
+
+          if (!noteJson.containsKey('last_changed') ||
+              !noteJson.containsKey('lastChanged')) {
+            noteJson['last_changed'] = DateTime.now().millisecondsSinceEpoch;
+            noteJson['lastChanged'] = noteJson['last_changed'];
+          }
+
           final Note note = Note.fromJson(
             noteJson,
             serializer: const _TypeAwareValueSerializer(),

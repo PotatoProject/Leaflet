@@ -15,14 +15,14 @@ abstract class Native {
   Future<Uint8List> deriveKey(
       {required String password, required Uint8List nonce, dynamic hint});
 
-  Future<Uint8List> encrypt(
+  Future<Uint8List?> encrypt(
       {required Uint8List data,
       required String password,
       required Uint8List keyNonce,
       required Uint8List aesNonce,
       dynamic hint});
 
-  Future<Uint8List> decrypt(
+  Future<Uint8List?> decrypt(
       {required Uint8List data, required String password, dynamic hint});
 }
 
@@ -48,7 +48,7 @@ class NativeImpl extends FlutterRustBridgeBase<NativeWire> implements Native {
         hint: hint,
       ));
 
-  Future<Uint8List> encrypt(
+  Future<Uint8List?> encrypt(
           {required Uint8List data,
           required String password,
           required Uint8List keyNonce,
@@ -61,7 +61,7 @@ class NativeImpl extends FlutterRustBridgeBase<NativeWire> implements Native {
             _api2wire_String(password),
             _api2wire_ZeroCopyBuffer_Uint8List(keyNonce),
             _api2wire_ZeroCopyBuffer_Uint8List(aesNonce)),
-        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
+        parseSuccessData: _wire2api_opt_ZeroCopyBuffer_Uint8List,
         constMeta: const FlutterRustBridgeTaskConstMeta(
           debugName: "encrypt",
           argNames: ["data", "password", "keyNonce", "aesNonce"],
@@ -70,14 +70,14 @@ class NativeImpl extends FlutterRustBridgeBase<NativeWire> implements Native {
         hint: hint,
       ));
 
-  Future<Uint8List> decrypt(
+  Future<Uint8List?> decrypt(
           {required Uint8List data, required String password, dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_decrypt(
             port_,
             _api2wire_ZeroCopyBuffer_Uint8List(data),
             _api2wire_String(password)),
-        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
+        parseSuccessData: _wire2api_opt_ZeroCopyBuffer_Uint8List,
         constMeta: const FlutterRustBridgeTaskConstMeta(
           debugName: "decrypt",
           argNames: ["data", "password"],
@@ -113,6 +113,10 @@ class NativeImpl extends FlutterRustBridgeBase<NativeWire> implements Native {
 // Section: wire2api
 Uint8List _wire2api_ZeroCopyBuffer_Uint8List(dynamic raw) {
   return raw as Uint8List;
+}
+
+Uint8List? _wire2api_opt_ZeroCopyBuffer_Uint8List(dynamic raw) {
+  return raw == null ? null : _wire2api_ZeroCopyBuffer_Uint8List(raw);
 }
 
 int _wire2api_u8(dynamic raw) {

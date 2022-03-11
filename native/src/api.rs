@@ -37,32 +37,40 @@ pub fn encrypt(
     key_nonce: ZeroCopyBuffer<Vec<u8>>,
     // AES nonce
     aes_nonce: ZeroCopyBuffer<Vec<u8>>,
-) -> ZeroCopyBuffer<Vec<u8>> {
+) -> Option<ZeroCopyBuffer<Vec<u8>>> {
     let key = derive_key(password, key_nonce.clone());
 
     let cipher = Aes256Gcm::new(Key::from_slice(&key.0));
     let nonce: &GenericArray<u8, typenum::U12> =
         Nonce::from_slice(&aes_nonce.0);
 
-    let ciphertext = cipher.encrypt(nonce, &*data.0).unwrap();
-    let ciphertext_len = ciphertext.len();
+    cipher
+        .encrypt(nonce, &*data.0)
+        .and_then(|ciphertext| {
+            let ciphertext_len = ciphertext.len();
 
-    let mut result =
-        vec![0u8; key_nonce.0.len() + aes_nonce.0.len() + ciphertext.len()];
+            let mut result =
+                vec![
+                    0u8;
+                    key_nonce.0.len() + aes_nonce.0.len() + ciphertext.len()
+                ];
 
-    result[0..16].copy_from_slice(&key_nonce.0);
-    result[16..28].copy_from_slice(&aes_nonce.0);
-    result[28..44]
-        .copy_from_slice(&ciphertext[(ciphertext_len - 16)..(ciphertext_len)]);
-    result[44..].copy_from_slice(&ciphertext[..(ciphertext_len - 16)]);
+            result[0..16].copy_from_slice(&key_nonce.0);
+            result[16..28].copy_from_slice(&aes_nonce.0);
+            result[28..44].copy_from_slice(
+                &ciphertext[(ciphertext_len - 16)..(ciphertext_len)],
+            );
+            result[44..].copy_from_slice(&ciphertext[..(ciphertext_len - 16)]);
 
-    ZeroCopyBuffer(result)
+            Ok(ZeroCopyBuffer(result))
+        })
+        .ok()
 }
 
 pub fn decrypt(
     data: ZeroCopyBuffer<Vec<u8>>,
     password: String,
-) -> ZeroCopyBuffer<Vec<u8>> {
+) -> Option<ZeroCopyBuffer<Vec<u8>>> {
     let key_nonce = &data.0[0..16];
     let aes_nonce = &data.0[16..28];
     let mac = &data.0[28..44];
@@ -77,7 +85,8 @@ pub fn decrypt(
     let cipher = Aes256Gcm::new(Key::from_slice(&key.0));
     let nonce: &GenericArray<u8, typenum::U12> = Nonce::from_slice(aes_nonce);
 
-    let plaintext = cipher.decrypt(nonce, ciphertext_mac.as_ref()).unwrap();
-
-    ZeroCopyBuffer(plaintext)
+    cipher
+        .decrypt(nonce, ciphertext_mac.as_ref())
+        .and_then(|plaintext| Ok(ZeroCopyBuffer(plaintext)))
+        .ok()
 }
