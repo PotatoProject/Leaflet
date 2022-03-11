@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -855,6 +856,10 @@ class Utils {
 
   static List<T> asList<T>(dynamic obj) {
     return List<T>.from(obj as List<dynamic>);
+  }
+
+  static Uint8List asUint8List(dynamic obj) {
+    return Uint8List.fromList(asList<int>(obj));
   }
 
   static Map<K, V> asMap<K, V>(dynamic obj) {

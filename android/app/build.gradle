@@ -33,6 +33,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 31
+    ndkVersion "22.1.7171670"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -64,7 +65,7 @@ android {
     productFlavors {
         def debugSigning = signingConfigs.debug
         def releaseSigning = signingConfigs.release
-        
+
         dev {
             signingConfig debugSigning
             applicationId = "com.potatoproject.notes.dev"
@@ -73,7 +74,7 @@ android {
                 label: "Leaflet Dev",
             ]
         }
-        
+
         ci {
             signingConfig debugSigning
             applicationId = "com.potatoproject.notes.ci"
@@ -82,7 +83,7 @@ android {
                 label: "Leaflet CI",
             ]
         }
-        
+
         production {
             signingConfig releaseSigning
             applicationId = "com.potatoproject.notes"
@@ -102,4 +103,27 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0-alpha02'
     implementation 'androidx.annotation:annotation:1.2.0'
+}
+
+[
+    new Tuple2('Debug', 'debug'),
+    new Tuple2('Profile', 'release'),
+    new Tuple2('Release', 'release')
+].each {
+    def taskPostfix = it.first
+    def profileMode = it.second
+
+    tasks.whenTaskAdded { task ->
+        if (task.name == "javaPreCompileDev$taskPostfix"
+            || task.name == "javaPreCompileCi$taskPostfix"
+            || task.name == "javaPreCompileProduction$taskPostfix") {
+            task.dependsOn "cargoBuild$taskPostfix"
+        }
+    }
+
+    tasks.register("cargoBuild$taskPostfix", Exec) {
+        // Until https://github.com/bbqsrc/cargo-ndk/pull/13 is merged,
+        // this workaround is necessary.
+        commandLine 'just', '-d', '../..', '--justfile', '../../justfile', "android-native-$profileMode"
+    }
 }
