@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "LeafletAPI";
+
+package blob;
+
+message Empty {
+
+}
+
+message Data {
+    string id = 1;
+    string blob_type = 2;
+    bytes content = 3;
+    google.protobuf.Timestamp last_changed = 4;
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+
+message GetDeletedRequest {
+    string blob_type = 1;
+    repeated string list = 2;
+}
+
+message GetDeletedResponse {
+    repeated string list = 1;
+}
+
+message GetUpdatedRequest {
+    string blob_type = 1;
+    google.protobuf.Timestamp last_updated = 2;
+}
+
+message GetUpdatedResponse {
+    repeated Data items = 1;
+}
+
+service Blob {
+    rpc Sync(Data) returns (Empty);
+    rpc Delete(DeleteRequest) returns (Empty);
+    rpc DeleteAll(Empty) returns (Empty);
+    rpc GetDeleted(GetDeletedRequest) returns (GetDeletedResponse);
+    rpc GetUpdated(GetUpdatedRequest) returns (GetUpdatedResponse);
+}

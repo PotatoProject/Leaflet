@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monet/monet.dart';
 import 'package:potato_notes/data/dao/folder_helper.dart';
@@ -34,6 +35,7 @@ class _ProvidersSingleton {
   late TagHelper _tagHelper;
   late FolderHelper _folderHelper;
   late ImageHelper _imageHelper;
+  late EventBus _eventBus;
 
   static final _ProvidersSingleton instance = _ProvidersSingleton._();
 
@@ -51,6 +53,7 @@ class _ProvidersSingleton {
     _tagHelper = _db.tagHelper;
     _folderHelper = _db.folderHelper;
     _imageHelper = _db.imageHelper;
+    _eventBus = EventBus();
   }
 
   Future<void> initProviders() async {
@@ -107,3 +110,5 @@ TagHelper get tagHelper => _ProvidersSingleton.instance._tagHelper;
 FolderHelper get folderHelper => _ProvidersSingleton.instance._folderHelper;
 
 ImageHelper get imageHelper => _ProvidersSingleton.instance._imageHelper;
+
+EventBus get eventBus => _ProvidersSingleton.instance._eventBus;

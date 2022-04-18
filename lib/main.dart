@@ -11,10 +11,10 @@ import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:potato_notes/internal/sync/sync_handler.dart';
 import 'package:potato_notes/internal/utils.dart';
-import 'package:potato_notes/routes/base_page.dart';
-import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/routes/home_page.dart';
+import 'package:potato_notes/routes/splash_page.dart';
 import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -25,6 +25,7 @@ Future<void> main() async {
   await initKeystore();
   GestureBinding.instance!.resamplingEnabled = true;
   await initCriticalProviders();
+  SyncHandler().setupListeners();
 
   runApp(
     EasyLocalization(

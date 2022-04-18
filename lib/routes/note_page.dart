@@ -8,6 +8,7 @@ import 'package:potato_notes/data/dao/folder_helper.dart';
 import 'package:potato_notes/data/database.dart' hide NoteImages;
 import 'package:potato_notes/data/model/list_content.dart';
 import 'package:potato_notes/internal/device_info.dart';
+import 'package:potato_notes/internal/events/note_edited_event.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -432,6 +433,7 @@ class _NotePageState extends State<NotePage> {
 
   void notifyNoteChanged() {
     note = note.markChanged();
+    eventBus.fire(NoteEditedEvent(note.id, note));
     noteHelper.saveNote(note);
   }
 
@@ -441,6 +443,7 @@ class _NotePageState extends State<NotePage> {
     setState(() => note.images.add(savedImage.id));
     //imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
+    eventBus.fire(NoteEditedEvent(note.id, note));
     await noteHelper.saveNote(note);
   }
 
@@ -474,7 +477,9 @@ class _NotePageState extends State<NotePage> {
                   note.images.remove(image.id);
                   imageHelper.deleteImageById(image.id);
                   await File(image.path).delete();
-                  noteHelper.saveNote(note.markChanged());
+                  note = note.markChanged();
+                  eventBus.fire(NoteEditedEvent(note.id, note));
+                  noteHelper.saveNote(note);
                 },
               ),
             );
