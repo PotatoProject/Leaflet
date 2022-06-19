@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:liblymph/database.dart';
 import 'package:mobx/mobx.dart';
-import 'package:potato_notes/data/dao/folder_helper.dart';
-import 'package:potato_notes/data/dao/tag_helper.dart';
-import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 
@@ -24,7 +22,9 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   String _darkThemeValue = sharedPrefs.darkTheme;
 
   @observable
-  Color? _customAccentValue = sharedPrefs.customAccent;
+  Color? _customAccentValue = sharedPrefs.customAccent != null
+      ? Color(sharedPrefs.customAccent!)
+      : null;
 
   @observable
   bool _useAmoledValue = sharedPrefs.useAmoled;
@@ -36,7 +36,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   bool _useCustomAccentValue = sharedPrefs.useCustomAccent;
 
   @observable
-  bool _welcomePageSeenValue = sharedPrefs.welcomePageSeen;
+  bool _welcomePageSeenValue = sharedPrefs.welcomePageSeenV2;
 
   @observable
   bool _migrationInfoShownValue = sharedPrefs.migrationInfoShown;
@@ -135,7 +135,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
 
   set customAccent(Color? value) {
     _customAccentValue = value;
-    sharedPrefs.customAccent = value;
+    sharedPrefs.customAccent = value?.value;
   }
 
   set useAmoled(bool value) {
@@ -155,7 +155,7 @@ abstract class _PreferencesBase with Store, LoggerProvider {
 
   set welcomePageSeen(bool value) {
     _welcomePageSeenValue = value;
-    sharedPrefs.welcomePageSeen = value;
+    sharedPrefs.welcomePageSeenV2 = value;
   }
 
   set migrationInfoShown(bool value) {
@@ -221,10 +221,6 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   set deleteQueue(String? value) {
     _deleteQueueValue = value;
     sharedPrefs.deleteQueue = value;
-  }
-
-  Object? getFromCache(String key) {
-    return sharedPrefs.prefs.get(key);
   }
 
   Future<void> loadData() async {

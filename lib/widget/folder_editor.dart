@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:potato_notes/data/dao/folder_helper.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -171,13 +171,13 @@ class _FolderIconPickerState extends State<_FolderIconPicker> {
           },
           child: Center(
             child: Icon(
-              folderDefaultIcons[index],
+              Constants.folderDefaultIcons[index],
               size: 32,
               color: index == icon ? context.theme.colorScheme.primary : null,
             ),
           ),
         ),
-        itemCount: folderDefaultIcons.length,
+        itemCount: Constants.folderDefaultIcons.length,
         shrinkWrap: true,
       ),
       contentPadding: EdgeInsets.zero,

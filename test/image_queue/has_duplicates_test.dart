@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
-import 'package:potato_notes/data/model/saved_image.dart';
+import 'package:liblymph/database.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/sync/image_queue.dart';
 
 import '../helper/empty_note.dart';

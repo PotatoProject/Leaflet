@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 

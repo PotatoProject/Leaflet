@@ -1,0 +1,117 @@
+{
+    "className": "GeneratedSharedPrefs",
+    "additionalImports": [
+        "package:flutter/material.dart"
+    ],
+    "preferences": [
+        {
+            "name": "master_pass",
+            "type": "string",
+            "defaultValue": ""
+        },
+        {
+            "name": "theme_mode",
+            "type": "enumerated",
+            "refersToExistingEnum": true,
+            "defaultValue": "system",
+            "values": {
+                "0": "system",
+                "1": "light",
+                "2": "dark"
+            }
+        },
+        {
+            "name": "light_theme",
+            "type": "string",
+            "defaultValue": "light"
+        },
+        {
+            "name": "dark_theme",
+            "type": "string",
+            "defaultValue": "dark"
+        },
+        {
+            "name": "custom_accent",
+            "type": "int"
+        },
+        {
+            "name": "use_amoled",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "use_grid",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "use_custom_accent",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "welcome_page_seen_v2",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "migration_info_shown",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "protect_backups",
+            "type": "bool",
+            "defaultValue": false
+        },
+        {
+            "name": "api_url",
+            "type": "string",
+            "defaultValue": "https://sync.potatoproject.co/api/v2"
+        },
+        {
+            "name": "access_token",
+            "type": "string"
+        },
+        {
+            "name": "refresh_token",
+            "type": "string"
+        },
+        {
+            "name": "username",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "type": "string"
+        },
+        {
+            "name": "avatar_url",
+            "type": "string"
+        },
+        {
+            "name": "log_level",
+            "type": "int",
+            "defaultValue": 0
+        },
+        {
+            "name": "downloaded_images",
+            "type": "stringList",
+            "defaultValue": []
+        },
+        {
+            "name": "deleted_images",
+            "type": "stringList",
+            "defaultValue": []
+        },
+        {
+            "name": "last_updated",
+            "type": "int",
+            "defaultValue": 0
+        },
+        {
+            "name": "delete_queue",
+            "type": "string"
+        }
+    ]
+}

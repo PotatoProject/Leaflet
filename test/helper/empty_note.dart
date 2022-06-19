@@ -1,4 +1,4 @@
-import 'package:potato_notes/data/database.dart';
+import 'package:liblymph/database.dart';
 
 class EmptyNote {
   const EmptyNote._();

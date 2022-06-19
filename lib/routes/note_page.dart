@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_notes/data/dao/folder_helper.dart';
-import 'package:potato_notes/data/database.dart' hide NoteImages;
-import 'package:potato_notes/data/model/list_content.dart';
+import 'package:liblymph/database.dart' hide NoteImages;
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
@@ -503,7 +501,7 @@ class _NotePageState extends State<NotePage> {
               context,
               SearchPage(
                 delegate: TagSearchDelegate(
-                  note.tags,
+                  note.tags.toSet(),
                   onChanged: () => noteHelper.saveNote(note.markChanged()),
                 ),
               ),

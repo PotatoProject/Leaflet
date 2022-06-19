@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/custom_icons.dart';

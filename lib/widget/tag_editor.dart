@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';

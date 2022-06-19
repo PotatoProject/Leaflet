@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
-import 'package:potato_notes/data/database.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -9,7 +9,7 @@ import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:potato_notes/widget/tag_editor.dart';
 
 class TagSearchDelegate extends CustomSearchDelegate {
-  final List<String> tags;
+  final Set<String> tags;
   final VoidCallback? onChanged;
 
   TagSearchDelegate(

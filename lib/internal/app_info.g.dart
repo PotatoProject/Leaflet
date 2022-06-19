@@ -6,11 +6,11 @@ part of 'app_info.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppInfo on _AppInfoBase, Store {
-  final _$_systemAccentDataValueAtom =
-      Atom(name: '_AppInfoBase._systemAccentDataValue');
+  late final _$_systemAccentDataValueAtom =
+      Atom(name: '_AppInfoBase._systemAccentDataValue', context: context);
 
   @override
   int get _systemAccentDataValue {
@@ -26,7 +26,8 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
-  final _$_accentDataValueAtom = Atom(name: '_AppInfoBase._accentDataValue');
+  late final _$_accentDataValueAtom =
+      Atom(name: '_AppInfoBase._accentDataValue', context: context);
 
   @override
   Color get _accentDataValue {
@@ -41,7 +42,8 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
-  final _$_lightThemeValueAtom = Atom(name: '_AppInfoBase._lightThemeValue');
+  late final _$_lightThemeValueAtom =
+      Atom(name: '_AppInfoBase._lightThemeValue', context: context);
 
   @override
   LeafletThemeData? get _lightThemeValue {
@@ -56,7 +58,8 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
-  final _$_darkThemeValueAtom = Atom(name: '_AppInfoBase._darkThemeValue');
+  late final _$_darkThemeValueAtom =
+      Atom(name: '_AppInfoBase._darkThemeValue', context: context);
 
   @override
   LeafletThemeData? get _darkThemeValue {
@@ -71,8 +74,8 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
-  final _$_activeNotificationsValueAtom =
-      Atom(name: '_AppInfoBase._activeNotificationsValue');
+  late final _$_activeNotificationsValueAtom =
+      Atom(name: '_AppInfoBase._activeNotificationsValue', context: context);
 
   @override
   List<ActiveNotification> get _activeNotificationsValue {
@@ -88,7 +91,8 @@ mixin _$AppInfo on _AppInfoBase, Store {
     });
   }
 
-  final _$_AppInfoBaseActionController = ActionController(name: '_AppInfoBase');
+  late final _$_AppInfoBaseActionController =
+      ActionController(name: '_AppInfoBase', context: context);
 
   @override
   void updateAccent(dynamic event) {

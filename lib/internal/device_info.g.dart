@@ -6,11 +6,11 @@ part of 'device_info.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$DeviceInfo on _DeviceInfoBase, Store {
-  final _$_canCheckBiometricsValueAtom =
-      Atom(name: '_DeviceInfoBase._canCheckBiometricsValue');
+  late final _$_canCheckBiometricsValueAtom =
+      Atom(name: '_DeviceInfoBase._canCheckBiometricsValue', context: context);
 
   @override
   bool get _canCheckBiometricsValue {
@@ -26,8 +26,8 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_availableBiometricsValueAtom =
-      Atom(name: '_DeviceInfoBase._availableBiometricsValue');
+  late final _$_availableBiometricsValueAtom =
+      Atom(name: '_DeviceInfoBase._availableBiometricsValue', context: context);
 
   @override
   List<BiometricType> get _availableBiometricsValue {
@@ -43,8 +43,8 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_canUseSystemAccentValueAtom =
-      Atom(name: '_DeviceInfoBase._canUseSystemAccentValue');
+  late final _$_canUseSystemAccentValueAtom =
+      Atom(name: '_DeviceInfoBase._canUseSystemAccentValue', context: context);
 
   @override
   bool get _canUseSystemAccentValue {
@@ -60,8 +60,8 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_isLandscapeValueAtom =
-      Atom(name: '_DeviceInfoBase._isLandscapeValue');
+  late final _$_isLandscapeValueAtom =
+      Atom(name: '_DeviceInfoBase._isLandscapeValue', context: context);
 
   @override
   bool get _isLandscapeValue {
@@ -76,8 +76,8 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$_uiSizeFactorValueAtom =
-      Atom(name: '_DeviceInfoBase._uiSizeFactorValue');
+  late final _$_uiSizeFactorValueAtom =
+      Atom(name: '_DeviceInfoBase._uiSizeFactorValue', context: context);
 
   @override
   int get _uiSizeFactorValue {
@@ -92,15 +92,16 @@ mixin _$DeviceInfo on _DeviceInfoBase, Store {
     });
   }
 
-  final _$loadDataAsyncAction = AsyncAction('_DeviceInfoBase.loadData');
+  late final _$loadDataAsyncAction =
+      AsyncAction('_DeviceInfoBase.loadData', context: context);
 
   @override
   Future<void> loadData() {
     return _$loadDataAsyncAction.run(() => super.loadData());
   }
 
-  final _$_DeviceInfoBaseActionController =
-      ActionController(name: '_DeviceInfoBase');
+  late final _$_DeviceInfoBaseActionController =
+      ActionController(name: '_DeviceInfoBase', context: context);
 
   @override
   void setCanUseSystemAccent(bool value) {

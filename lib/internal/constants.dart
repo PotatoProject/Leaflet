@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:liblymph/database.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/routes/about_page.dart';
 
@@ -88,4 +91,31 @@ class Constants {
       ];
 
   static const String defaultApiUrl = "https://sync.potatoproject.co/api/v2";
+
+  static const List<IconData> folderDefaultIcons = [
+    Icons.folder_outlined,
+    Icons.home_outlined,
+    Icons.delete_outline,
+    MdiIcons.archiveOutline,
+    CustomIcons.notes,
+    Icons.star_border,
+    Icons.emoji_events_outlined,
+    Icons.local_cafe_outlined,
+    Icons.spa_outlined,
+    Icons.videogame_asset_outlined,
+    Icons.favorite_outline,
+    MdiIcons.incognito,
+    Icons.local_bar_outlined,
+    Icons.sports_soccer_outlined,
+    Icons.school_outlined,
+    Icons.bar_chart_outlined,
+    Icons.local_airport_outlined,
+    Icons.work_outline,
+    Icons.question_answer_outlined,
+    Icons.notifications_none_outlined,
+    Icons.smart_toy_outlined,
+    Icons.campaign_outlined,
+    Icons.people_alt_outlined,
+    Icons.person_outlined,
+  ];
 }

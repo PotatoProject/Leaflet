@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart' hide NoteImages;
-import 'package:potato_notes/data/model/list_content.dart';
+import 'package:liblymph/database.dart' hide NoteImages;
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';

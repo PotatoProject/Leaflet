@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart' as db show Note, NoteImage;
+import 'package:liblymph/database.dart' as db
+    show Note, NoteImage, UnmodifiableNoteView;
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
-import 'package:potato_notes/internal/unmodifiable_note.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class NotePageImageGallery extends StatefulWidget {
-  final UnmodifiableNoteView note;
+  final db.UnmodifiableNoteView note;
   final List<db.NoteImage> initialImages;
   final bool allowEditing;
   final ValueChanged<db.NoteImage>? onDraw;

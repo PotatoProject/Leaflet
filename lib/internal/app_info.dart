@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/migration_task.dart';
@@ -159,7 +159,7 @@ abstract class _AppInfoBase with Store {
     final List<FileSystemEntity> entities =
         await appDirectories.themesDirectory.list().toList();
     final Iterable<File> themes = entities
-        .where((e) => e is File && extension(e.path) == ".toml")
+        .where((e) => e is File && p.extension(e.path) == ".toml")
         .cast<File>();
 
     return themes.map((e) => ImportedTheme(e.path));
@@ -231,12 +231,12 @@ abstract class _AppInfoBase with Store {
   }
 
   Future<ImportedTheme?> addTheme(File themeFile) async {
-    final String ext = extension(themeFile.path);
+    final String ext = p.extension(themeFile.path);
     if (ext != ".toml") return null;
 
-    final String newPath = join(
+    final String newPath = p.join(
       appDirectories.themesDirectory.path,
-      basename(themeFile.path),
+      p.basename(themeFile.path),
     );
     await themeFile.copy(newPath);
 

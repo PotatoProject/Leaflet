@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart';
+import 'package:liblymph/database.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 
 class SelectionStateWidget extends StatelessWidget {

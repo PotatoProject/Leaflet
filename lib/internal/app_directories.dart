@@ -1,22 +1,17 @@
 import 'dart:io';
 
+import 'package:liblymph/providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-class AppDirectories {
-  final Directory tempDirectory;
-  final Directory supportDirectory;
-  final Directory imagesDirectory;
-  final Directory themesDirectory;
-  final Directory backupDirectory;
-
+class AppDirectories extends Directories {
   const AppDirectories({
-    required this.tempDirectory,
-    required this.supportDirectory,
-    required this.imagesDirectory,
-    required this.themesDirectory,
-    required this.backupDirectory,
+    required super.tempDirectory,
+    required super.supportDirectory,
+    required super.imagesDirectory,
+    required super.themesDirectory,
+    required super.backupDirectory,
   });
 
   static Future<AppDirectories> initWithDefaults() async {

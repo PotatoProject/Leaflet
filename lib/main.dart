@@ -21,6 +21,7 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  initProvidersInstance();
   await initKeystore();
   GestureBinding.instance.resamplingEnabled = true;
   await initCriticalProviders();
@@ -28,7 +29,7 @@ Future<void> main() async {
   if (DeviceInfo.isDesktop) {
     await windowManager.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle("hidden");
+      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
       await windowManager.setMinimumSize(const Size(360, 520));
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);

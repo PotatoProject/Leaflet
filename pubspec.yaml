@@ -12,7 +12,7 @@ dependencies:
   animations: ^2.0.2
   archive: ^3.1.11
 
-  back_button_interceptor: ^5.0.2
+  back_button_interceptor: ^6.0.0
   biometric_storage: ^4.0.1
   bitsdojo_window: ^0.1.1+1
   blurhash_dart: ^1.1.0
@@ -30,13 +30,13 @@ dependencies:
     git: https://github.com/HrX03/easy_localization
 
   file_picker: ^4.3.3
-  file_selector: ^0.8.3
+  file_selector: ^0.8.4+3
   file_selector_linux: ^0.0.2
-  file_selector_macos: ^0.0.4
+  file_selector_macos: ^0.8.2+2
   file_selector_windows: ^0.8.2
   flutter:
     sdk: flutter
-  flutter_blurhash: ^0.6.0
+  flutter_blurhash: ^0.7.0
   flutter_keyboard_visibility: ^5.1.1
   flutter_local_notifications: ^9.2.0
   flutter_mobx: ^2.0.4
@@ -44,15 +44,17 @@ dependencies:
 
   http: ^0.13.3
 
-  image: ^3.1.1
+  image: ^3.2.0
   image_picker: ^0.8.4+7
   image_picker_for_web: ^2.1.5
-  image_size_getter: ^1.0.0
+  image_size_getter: ^2.1.1
   in_app_update: ^3.0.0
   intl: ^0.17.0
 
   json_annotation: ^4.4.0
 
+  liblymph:
+    git: https://github.com/HrX03/liblymph
   local_auth: ^1.1.10
   loggy:
     git: https://github.com/HrX03/loggy
@@ -62,8 +64,8 @@ dependencies:
   mobx: ^2.0.6+1
   monet: ^0.1.0
 
-  package_info_plus: "1.0.4"
-  path: ^1.8.1
+  package_info_plus: ^1.4.2
+  path: ^1.8.2
   path_drawing: ^1.0.0
   path_provider: ^2.0.8
 
@@ -75,13 +77,10 @@ dependencies:
   shared_preferences: ^2.0.13
   sqflite: ^2.0.2
   sqflite_common_ffi: ^2.1.0+2
-  sqlcipher_flutter_libs:
-    git:
-      url: https://github.com/simolus3/sqlite3.dart.git
-      path: sqlcipher_flutter_libs
+  sqlcipher_flutter_libs: ^0.5.1
   sqlite3: ^1.5.1
   
-  toml: ^0.12.0
+  toml: ^0.13.1
 
   universal_platform: ^1.0.0+1
   url_launcher: ^6.0.18
@@ -90,16 +89,17 @@ dependencies:
   waterfall_flow: ^3.0.2
   webcrypto:
     git: https://github.com/gargakshit/webcrypto.dart
-  window_manager: ^0.1.6
+  window_manager: ^0.2.5
 
-  xml: ^5.3.1
+  xml: ^6.1.0
 
 dev_dependencies:
   build_runner: ^2.1.7
-  drift_dev: ^1.4.0
   flutter_test:
     sdk: flutter
   json_serializable: ^6.1.4
+  liblymph_gen:
+    git: https://github.com/HrX03/liblymph_gen
   lint: ^1.8.2
   mobx_codegen: ^2.0.5+2
   mockito: ^5.0.17

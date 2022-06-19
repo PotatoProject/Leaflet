@@ -11,16 +11,15 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
+import 'package:liblymph/database.dart';
+import 'package:liblymph/encryption.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
 import 'package:path/path.dart';
-import 'package:potato_notes/data/dao/folder_helper.dart';
-import 'package:potato_notes/data/database.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
-import 'package:potato_notes/internal/blake/stub.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
@@ -40,7 +39,7 @@ import 'package:potato_notes/widget/restore_confirmation_dialog.dart';
 import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/utils/utils.dart' as utils;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as ul;
 import 'package:uuid/uuid.dart';
 
 class Utils {
@@ -829,21 +828,26 @@ class Utils {
     String url, {
     Map<String, String> headers = const {},
   }) async {
-    final bool canLaunchLink = await canLaunch(url);
+    final bool canLaunchLink = await ul.canLaunchUrl(Uri.parse(url));
 
     if (canLaunchLink) {
-      return launch(url, headers: headers);
+      return ul.launchUrl(
+        Uri.parse(url),
+        webViewConfiguration: ul.WebViewConfiguration(
+          headers: headers,
+        ),
+      );
     }
 
     return false;
   }
 
   static IconData getIconForFolder(Folder folder) {
-    if (folder.icon > folderDefaultIcons.length || folder.icon < 0) {
-      return folderDefaultIcons.first;
+    if (folder.icon > Constants.folderDefaultIcons.length || folder.icon < 0) {
+      return Constants.folderDefaultIcons.first;
     }
 
-    return folderDefaultIcons[folder.icon];
+    return Constants.folderDefaultIcons[folder.icon];
   }
 
   static List<T> asList<T>(dynamic obj) {

@@ -1,22 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:drift/backends.dart';
 import 'package:flutter/foundation.dart';
+import 'package:liblymph/database.dart';
+import 'package:liblymph/providers.dart';
 import 'package:monet/monet.dart';
-import 'package:potato_notes/data/dao/folder_helper.dart';
-import 'package:potato_notes/data/dao/image_helper.dart';
-import 'package:potato_notes/data/dao/note_helper.dart';
-import 'package:potato_notes/data/dao/tag_helper.dart';
-import 'package:potato_notes/data/database.dart';
-import 'package:potato_notes/data/db/stub.dart';
 import 'package:potato_notes/internal/app_config.dart';
 import 'package:potato_notes/internal/app_directories.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
+import 'package:potato_notes/internal/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 
-class _ProvidersSingleton {
+class _ProvidersSingleton extends Providers {
   _ProvidersSingleton._();
 
   late Keystore _keystore;
@@ -24,18 +22,12 @@ class _ProvidersSingleton {
   late SharedPrefs _sharedPrefs;
   late AppConfig _appConfig;
   late AppInfo _appInfo;
-  late AppDirectories _appDirectories;
   late DeviceInfo _deviceInfo;
   late Preferences _prefs;
   late BackupDelegate _backupDelegate;
   late Dio _dio;
-  late AppDatabase _db;
-  late NoteHelper _noteHelper;
-  late TagHelper _tagHelper;
-  late FolderHelper _folderHelper;
-  late ImageHelper _imageHelper;
 
-  static final _ProvidersSingleton instance = _ProvidersSingleton._();
+  static void init() => Providers.provideInstance(_ProvidersSingleton._());
 
   Future<void> initKeystore() async {
     _keystore = await Keystore.newInstance();
@@ -45,12 +37,12 @@ class _ProvidersSingleton {
     _monet = await MonetProvider.newInstance();
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
-    _appDirectories = await AppDirectories.initWithDefaults();
-    _db = AppDatabase(constructDb(logStatements: kDebugMode));
-    _noteHelper = _db.noteHelper;
-    _tagHelper = _db.tagHelper;
-    _folderHelper = _db.folderHelper;
-    _imageHelper = _db.imageHelper;
+    directories = await AppDirectories.initWithDefaults();
+    database = AppDatabase(constructLeafletDb());
+    this.noteHelper = database.noteHelper;
+    this.tagHelper = database.tagHelper;
+    this.folderHelper = database.folderHelper;
+    this.imageHelper = database.imageHelper;
   }
 
   Future<void> initProviders() async {
@@ -67,43 +59,42 @@ class _ProvidersSingleton {
   }
 }
 
-Future<void> initKeystore() async =>
-    _ProvidersSingleton.instance.initKeystore();
+_ProvidersSingleton get _instance => Providers.instance as _ProvidersSingleton;
 
-Future<void> initCriticalProviders() async =>
-    _ProvidersSingleton.instance.initCriticalProviders();
+void initProvidersInstance() => _ProvidersSingleton.init();
 
-Future<void> initProviders() async =>
-    _ProvidersSingleton.instance.initProviders();
+Future<void> initKeystore() async => _instance.initKeystore();
 
-Keystore get keystore => _ProvidersSingleton.instance._keystore;
+Future<void> initCriticalProviders() async => _instance.initCriticalProviders();
 
-MonetProvider get monet => _ProvidersSingleton.instance._monet;
+Future<void> initProviders() async => _instance.initProviders();
 
-AppConfig get appConfig => _ProvidersSingleton.instance._appConfig;
+Keystore get keystore => _instance._keystore;
 
-SharedPrefs get sharedPrefs => _ProvidersSingleton.instance._sharedPrefs;
+MonetProvider get monet => _instance._monet;
 
-AppInfo get appInfo => _ProvidersSingleton.instance._appInfo;
+AppConfig get appConfig => _instance._appConfig;
 
-AppDirectories get appDirectories =>
-    _ProvidersSingleton.instance._appDirectories;
+SharedPrefs get sharedPrefs => _instance._sharedPrefs;
 
-DeviceInfo get deviceInfo => _ProvidersSingleton.instance._deviceInfo;
+AppInfo get appInfo => _instance._appInfo;
 
-Preferences get prefs => _ProvidersSingleton.instance._prefs;
+AppDirectories get appDirectories => _instance.directories as AppDirectories;
 
-BackupDelegate get backupDelegate =>
-    _ProvidersSingleton.instance._backupDelegate;
+DeviceInfo get deviceInfo => _instance._deviceInfo;
 
-Dio get dio => _ProvidersSingleton.instance._dio;
+Preferences get prefs => _instance._prefs;
 
-AppDatabase get db => _ProvidersSingleton.instance._db;
+BackupDelegate get backupDelegate => _instance._backupDelegate;
 
-NoteHelper get noteHelper => _ProvidersSingleton.instance._noteHelper;
+Dio get dio => _instance._dio;
 
-TagHelper get tagHelper => _ProvidersSingleton.instance._tagHelper;
+AppDatabase get db => _instance.database;
 
-FolderHelper get folderHelper => _ProvidersSingleton.instance._folderHelper;
+NoteHelper get noteHelper => _instance.noteHelper;
 
-ImageHelper get imageHelper => _ProvidersSingleton.instance._imageHelper;
+TagHelper get tagHelper => _instance.tagHelper;
+
+FolderHelper get folderHelper => _instance.folderHelper;
+
+ImageHelper get imageHelper => _instance.imageHelper;

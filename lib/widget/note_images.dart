@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:potato_notes/data/database.dart' as db;
+import 'package:liblymph/database.dart' as db;
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/widget/note_image.dart';
 import 'package:potato_notes/widget/separated_list.dart';

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:potato_notes/data/database.dart' as db;
+import 'package:liblymph/database.dart' as db;
 import 'package:potato_notes/internal/extensions.dart';
 
 class NoteImage extends StatefulWidget {

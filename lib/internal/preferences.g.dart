@@ -6,11 +6,11 @@ part of 'preferences.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$Preferences on _PreferencesBase, Store {
-  final _$_masterPassValueAtom =
-      Atom(name: '_PreferencesBase._masterPassValue');
+  late final _$_masterPassValueAtom =
+      Atom(name: '_PreferencesBase._masterPassValue', context: context);
 
   @override
   String get _masterPassValue {
@@ -25,7 +25,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_themeModeValueAtom = Atom(name: '_PreferencesBase._themeModeValue');
+  late final _$_themeModeValueAtom =
+      Atom(name: '_PreferencesBase._themeModeValue', context: context);
 
   @override
   ThemeMode get _themeModeValue {
@@ -40,8 +41,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_lightThemeValueAtom =
-      Atom(name: '_PreferencesBase._lightThemeValue');
+  late final _$_lightThemeValueAtom =
+      Atom(name: '_PreferencesBase._lightThemeValue', context: context);
 
   @override
   String get _lightThemeValue {
@@ -56,7 +57,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_darkThemeValueAtom = Atom(name: '_PreferencesBase._darkThemeValue');
+  late final _$_darkThemeValueAtom =
+      Atom(name: '_PreferencesBase._darkThemeValue', context: context);
 
   @override
   String get _darkThemeValue {
@@ -71,8 +73,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_customAccentValueAtom =
-      Atom(name: '_PreferencesBase._customAccentValue');
+  late final _$_customAccentValueAtom =
+      Atom(name: '_PreferencesBase._customAccentValue', context: context);
 
   @override
   Color? get _customAccentValue {
@@ -87,7 +89,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_useAmoledValueAtom = Atom(name: '_PreferencesBase._useAmoledValue');
+  late final _$_useAmoledValueAtom =
+      Atom(name: '_PreferencesBase._useAmoledValue', context: context);
 
   @override
   bool get _useAmoledValue {
@@ -102,7 +105,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_useGridValueAtom = Atom(name: '_PreferencesBase._useGridValue');
+  late final _$_useGridValueAtom =
+      Atom(name: '_PreferencesBase._useGridValue', context: context);
 
   @override
   bool get _useGridValue {
@@ -117,8 +121,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_useCustomAccentValueAtom =
-      Atom(name: '_PreferencesBase._useCustomAccentValue');
+  late final _$_useCustomAccentValueAtom =
+      Atom(name: '_PreferencesBase._useCustomAccentValue', context: context);
 
   @override
   bool get _useCustomAccentValue {
@@ -134,8 +138,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_welcomePageSeenValueAtom =
-      Atom(name: '_PreferencesBase._welcomePageSeenValue');
+  late final _$_welcomePageSeenValueAtom =
+      Atom(name: '_PreferencesBase._welcomePageSeenValue', context: context);
 
   @override
   bool get _welcomePageSeenValue {
@@ -151,8 +155,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_migrationInfoShownValueAtom =
-      Atom(name: '_PreferencesBase._migrationInfoShownValue');
+  late final _$_migrationInfoShownValueAtom =
+      Atom(name: '_PreferencesBase._migrationInfoShownValue', context: context);
 
   @override
   bool get _migrationInfoShownValue {
@@ -168,8 +172,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_protectBackupsValueAtom =
-      Atom(name: '_PreferencesBase._protectBackupsValue');
+  late final _$_protectBackupsValueAtom =
+      Atom(name: '_PreferencesBase._protectBackupsValue', context: context);
 
   @override
   bool get _protectBackupsValue {
@@ -185,7 +189,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_apiUrlValueAtom = Atom(name: '_PreferencesBase._apiUrlValue');
+  late final _$_apiUrlValueAtom =
+      Atom(name: '_PreferencesBase._apiUrlValue', context: context);
 
   @override
   String get _apiUrlValue {
@@ -200,8 +205,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_accessTokenValueAtom =
-      Atom(name: '_PreferencesBase._accessTokenValue');
+  late final _$_accessTokenValueAtom =
+      Atom(name: '_PreferencesBase._accessTokenValue', context: context);
 
   @override
   String? get _accessTokenValue {
@@ -216,8 +221,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_refreshTokenValueAtom =
-      Atom(name: '_PreferencesBase._refreshTokenValue');
+  late final _$_refreshTokenValueAtom =
+      Atom(name: '_PreferencesBase._refreshTokenValue', context: context);
 
   @override
   String? get _refreshTokenValue {
@@ -232,7 +237,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_usernameValueAtom = Atom(name: '_PreferencesBase._usernameValue');
+  late final _$_usernameValueAtom =
+      Atom(name: '_PreferencesBase._usernameValue', context: context);
 
   @override
   String? get _usernameValue {
@@ -247,7 +253,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_emailValueAtom = Atom(name: '_PreferencesBase._emailValue');
+  late final _$_emailValueAtom =
+      Atom(name: '_PreferencesBase._emailValue', context: context);
 
   @override
   String? get _emailValue {
@@ -262,7 +269,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_avatarUrlValueAtom = Atom(name: '_PreferencesBase._avatarUrlValue');
+  late final _$_avatarUrlValueAtom =
+      Atom(name: '_PreferencesBase._avatarUrlValue', context: context);
 
   @override
   String? get _avatarUrlValue {
@@ -277,7 +285,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_logLevelValueAtom = Atom(name: '_PreferencesBase._logLevelValue');
+  late final _$_logLevelValueAtom =
+      Atom(name: '_PreferencesBase._logLevelValue', context: context);
 
   @override
   int get _logLevelValue {
@@ -292,7 +301,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_tagsValueAtom = Atom(name: '_PreferencesBase._tagsValue');
+  late final _$_tagsValueAtom =
+      Atom(name: '_PreferencesBase._tagsValue', context: context);
 
   @override
   List<dynamic> get _tagsValue {
@@ -307,7 +317,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_foldersValueAtom = Atom(name: '_PreferencesBase._foldersValue');
+  late final _$_foldersValueAtom =
+      Atom(name: '_PreferencesBase._foldersValue', context: context);
 
   @override
   List<dynamic> get _foldersValue {
@@ -322,8 +333,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_downloadedImagesValueAtom =
-      Atom(name: '_PreferencesBase._downloadedImagesValue');
+  late final _$_downloadedImagesValueAtom =
+      Atom(name: '_PreferencesBase._downloadedImagesValue', context: context);
 
   @override
   List<String> get _downloadedImagesValue {
@@ -339,8 +350,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_deletedImagesValueAtom =
-      Atom(name: '_PreferencesBase._deletedImagesValue');
+  late final _$_deletedImagesValueAtom =
+      Atom(name: '_PreferencesBase._deletedImagesValue', context: context);
 
   @override
   List<String> get _deletedImagesValue {
@@ -355,8 +366,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_lastUpdatedValueAtom =
-      Atom(name: '_PreferencesBase._lastUpdatedValue');
+  late final _$_lastUpdatedValueAtom =
+      Atom(name: '_PreferencesBase._lastUpdatedValue', context: context);
 
   @override
   int get _lastUpdatedValue {
@@ -371,8 +382,8 @@ mixin _$Preferences on _PreferencesBase, Store {
     });
   }
 
-  final _$_deleteQueueValueAtom =
-      Atom(name: '_PreferencesBase._deleteQueueValue');
+  late final _$_deleteQueueValueAtom =
+      Atom(name: '_PreferencesBase._deleteQueueValue', context: context);
 
   @override
   String? get _deleteQueueValue {
