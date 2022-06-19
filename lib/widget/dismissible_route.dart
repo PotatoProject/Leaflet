@@ -304,7 +304,7 @@ class DismissibleRouteState extends State<DismissibleRoute> {
   bool get requestDisableGestures => _requestDisableGestures;
 
   set requestDisableGestures(bool disable) {
-    WidgetsBinding.instance!.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => setState(() => _requestDisableGestures = disable),
     );
   }

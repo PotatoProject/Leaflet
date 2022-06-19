@@ -883,7 +883,7 @@ class Utils {
 
   static Color getMainColorFromTheme() {
     final MediaQueryData data =
-        MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     final bool isDarkSystemTheme = data.platformBrightness == Brightness.dark;
     final ThemeMode themeMode = prefs.themeMode;
     final bool useAmoled = prefs.useAmoled;

@@ -136,7 +136,7 @@ class LeafletThemeData {
         ),
       ),
       scrollbarTheme: ScrollbarThemeData(
-        isAlwaysShown: true,
+        thumbVisibility: MaterialStateProperty.all(true),
         thickness: MaterialStateProperty.resolveWith((states) {
           if ([
             MaterialState.hovered,

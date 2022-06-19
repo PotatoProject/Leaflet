@@ -21,12 +21,12 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await windowManager.ensureInitialized();
   await initKeystore();
-  GestureBinding.instance!.resamplingEnabled = true;
+  GestureBinding.instance.resamplingEnabled = true;
   await initCriticalProviders();
 
   if (DeviceInfo.isDesktop) {
+    await windowManager.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle("hidden");
       await windowManager.setMinimumSize(const Size(360, 520));
@@ -78,9 +78,6 @@ class _PotatoNotesState extends State<PotatoNotes> {
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           locale: context.locale,
-          scrollBehavior: const MaterialScrollBehavior(
-            androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-          ),
           builder: (context, child) {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = const QuickActions();

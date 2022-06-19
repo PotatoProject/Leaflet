@@ -103,12 +103,12 @@ class BasePageState extends State<BasePage>
 
   void setFAB(Widget? fab) {
     _floatingActionButton = fab;
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   void setAppBar(Widget? appBar) {
     _appBar = appBar;
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   Future<void> setSecondaryAppBar(Widget? secondaryAppBar) async {
@@ -128,7 +128,7 @@ class BasePageState extends State<BasePage>
           )
         : null;
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   void hideCurrentSnackBar() => context.scaffoldMessenger.hideCurrentSnackBar();
@@ -186,7 +186,7 @@ class BasePageState extends State<BasePage>
 
     InAppUpdater.checkForUpdate(context);
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!prefs.welcomePageSeen) {
         await Utils.showSecondaryRoute(
           context,

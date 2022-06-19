@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     BackButtonInterceptor.add((_, __) => showLoadingOverlay, name: "antiPop");
-    WidgetsBinding.instance!.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => context.focusScope.requestFocus(emailOrUserFocusNode),
     );
     super.initState();
@@ -227,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                           emailError = null;
                           passwordError = null;
                           setState(() => register = !register);
-                          WidgetsBinding.instance!.addPostFrameCallback((_) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (register) {
                               context.focusScope.requestFocus(emailFocusNode);
                             } else {

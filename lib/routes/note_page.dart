@@ -81,7 +81,7 @@ class _NotePageState extends State<NotePage> {
     titleController = TextEditingController(text: note.title);
     contentController = TextEditingController(text: note.content);
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.openWithList && !widget.openWithDrawing) {
         if (widget.focusTitle) {
           context.focusScope.requestFocus(titleFocusNode);
@@ -372,7 +372,7 @@ class _NotePageState extends State<NotePage> {
 
     if (needsFocus && index == note.listContent.length - 1) {
       needsFocus = false;
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.focusScope.requestFocus(listContentNodes.last),
       );
     }
