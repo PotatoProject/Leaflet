@@ -170,7 +170,6 @@ class AboutPage extends StatelessWidget {
   }
 }
 
-@immutable
 class ContributorInfo {
   final String name;
   final String role;
@@ -185,7 +184,6 @@ class ContributorInfo {
   });
 }
 
-@immutable
 class SocialLink {
   final SocialLinkType type;
   final String username;

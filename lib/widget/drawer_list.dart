@@ -108,7 +108,6 @@ class DrawerList extends StatelessWidget {
       );
 }
 
-@immutable
 class DrawerListItem {
   final Widget icon;
   final Widget selectedIcon;

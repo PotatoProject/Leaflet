@@ -135,7 +135,6 @@ class _DrawerListTileState extends State<DrawerListTile>
   }
 }
 
-@immutable
 class DrawerListTileData {
   final Widget icon;
   final Widget? activeIcon;

@@ -21,7 +21,6 @@ class PathCache {
   }
 }
 
-@immutable
 class PathInfo {
   final String name;
   final Size size;
@@ -46,7 +45,7 @@ class PathInfo {
   }
 
   @override
-  int get hashCode => hashValues(name, size, data);
+  int get hashCode => Object.hash(name, size, data);
 
   PathInfo copyWith({
     String? name,
@@ -63,7 +62,6 @@ class PathInfo {
   }
 }
 
-@immutable
 class PathData {
   final String path;
   final Color? color;
@@ -82,7 +80,7 @@ class PathData {
   }
 
   @override
-  int get hashCode => hashValues(path, color);
+  int get hashCode => Object.hash(path, color);
 }
 
 class PathInfoPainter extends CustomPainter {

@@ -230,7 +230,7 @@ class DrawObject {
   }
 
   @override
-  int get hashCode => hashValues(paint.hashCode, points.hashCode);
+  int get hashCode => Object.hash(paint.hashCode, points.hashCode);
 
   @override
   bool operator ==(Object other) {

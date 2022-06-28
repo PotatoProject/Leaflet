@@ -80,7 +80,6 @@ class Illustration extends StatelessWidget {
   }
 }
 
-@immutable
 class IllustrationPaths {
   final IllustrationPalette palette;
 

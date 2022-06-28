@@ -520,7 +520,6 @@ class _MenuEntryListTile extends StatelessWidget {
   }
 }
 
-@immutable
 class MenuFabEntry {
   final Widget icon;
   final String label;

@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liblymph/database.dart';
-import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';

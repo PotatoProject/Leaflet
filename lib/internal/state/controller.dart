@@ -128,9 +128,11 @@ mixin SingleTickerProviderViewStateMixin on ViewState
       if (_ticker == null) return true;
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary(
-            '$runtimeType is a SingleTickerProviderStateMixin but multiple tickers were created.'),
+          '$runtimeType is a SingleTickerProviderStateMixin but multiple tickers were created.',
+        ),
         ErrorDescription(
-            'A SingleTickerProviderStateMixin can only be used as a TickerProvider once.'),
+          'A SingleTickerProviderStateMixin can only be used as a TickerProvider once.',
+        ),
         ErrorHint(
           'If a State is used for multiple AnimationController objects, or if it is passed to other '
           'objects and those objects might use it more than one time in total, then instead of '
@@ -138,8 +140,10 @@ mixin SingleTickerProviderViewStateMixin on ViewState
         ),
       ]);
     }());
-    _ticker = Ticker(onTick,
-        debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null);
+    _ticker = Ticker(
+      onTick,
+      debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null,
+    );
     _updateTickerModeNotifier();
     _updateTicker(); // Sets _ticker.mute correctly.
     return _ticker!;
@@ -237,9 +241,11 @@ mixin TickerProviderViewStateMixin on ViewState implements TickerProvider {
     }
     assert(_tickerModeNotifier != null);
     _tickers ??= <_WidgetTicker>{};
-    final _WidgetTicker result = _WidgetTicker(onTick, this,
-        debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null)
-      ..muted = !_tickerModeNotifier!.value;
+    final _WidgetTicker result = _WidgetTicker(
+      onTick,
+      this,
+      debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null,
+    )..muted = !_tickerModeNotifier!.value;
     _tickers!.add(result);
     return result;
   }
@@ -312,14 +318,16 @@ mixin TickerProviderViewStateMixin on ViewState implements TickerProvider {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Set<Ticker>>(
-      'tickers',
-      _tickers,
-      description: _tickers != null
-          ? 'tracking ${_tickers!.length} ticker${_tickers!.length == 1 ? "" : "s"}'
-          : null,
-      defaultValue: null,
-    ));
+    properties.add(
+      DiagnosticsProperty<Set<Ticker>>(
+        'tickers',
+        _tickers,
+        description: _tickers != null
+            ? 'tracking ${_tickers!.length} ticker${_tickers!.length == 1 ? "" : "s"}'
+            : null,
+        defaultValue: null,
+      ),
+    );
   }
 }
 

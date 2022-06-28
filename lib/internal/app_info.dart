@@ -49,7 +49,7 @@ abstract class _AppInfoBase with Store, WidgetsBindingObserver {
   late final bool migrationAvailable;
 
   @observable
-  Locale _deviceLocaleValue = Locale("en", "US");
+  Locale _deviceLocaleValue = const Locale("en", "US");
 
   Locale get deviceLocale => _deviceLocaleValue;
 

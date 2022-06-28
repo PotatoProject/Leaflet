@@ -222,7 +222,7 @@ class NoteColor extends Color {
   }
 
   @override
-  int get hashCode => hashValues(value, type);
+  int get hashCode => Object.hash(value, type);
 }
 
 enum NoteColorType {
@@ -238,7 +238,6 @@ enum NoteColorType {
   pink,
 }
 
-@immutable
 class IllustrationPalette {
   final Color contrast;
   final Color invertedContrast;
@@ -285,5 +284,5 @@ class IllustrationPalette {
   }
 
   @override
-  int get hashCode => hashValues(contrast, invertedContrast, base);
+  int get hashCode => Object.hash(contrast, invertedContrast, base);
 }

@@ -92,7 +92,6 @@ typedef SelectedCallback = Future<void> Function(
   String value,
 );
 
-@immutable
 class SelectionOptions {
   /// Options to build for the selection bar
   final SelectionOptionsCallback options;
@@ -106,7 +105,6 @@ class SelectionOptions {
   });
 }
 
-@immutable
 class SelectionOptionEntry {
   final String title;
   final IconData icon;
