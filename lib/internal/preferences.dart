@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/locale.dart' as intl;
 import 'package:liblymph/database.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
+import 'package:yatl_flutter/yatl_flutter.dart' hide Locale;
 
 part 'preferences.g.dart';
 
 class Preferences = _PreferencesBase with _$Preferences;
 
 abstract class _PreferencesBase with Store, LoggerProvider {
+  @observable
+  String? _localeValue = sharedPrefs.locale;
+
   @observable
   String _masterPassValue = "";
 
@@ -83,6 +88,9 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   @observable
   String? _deleteQueueValue = sharedPrefs.deleteQueue;
 
+  Locale? get locale => _localeValue != null
+      ? intl.Locale.tryParse(_localeValue!)?.toFlutterLocale()
+      : null;
   String get masterPass => _masterPassValue;
   ThemeMode get themeMode => _themeModeValue;
   String get lightTheme => _lightThemeValue;
@@ -111,6 +119,12 @@ abstract class _PreferencesBase with Store, LoggerProvider {
   List<String> get deletedImages => _deletedImagesValue;
   int get lastUpdated => _lastUpdatedValue;
   String? get deleteQueue => _deleteQueueValue;
+
+  set locale(Locale? value) {
+    _localeValue = value?.toStringWithSeparator();
+
+    sharedPrefs.locale = value?.toStringWithSeparator();
+  }
 
   set masterPass(String value) {
     _masterPassValue = value;

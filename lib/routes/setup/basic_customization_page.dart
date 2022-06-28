@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/settings_page.dart';
 
 class BasicCustomizationPage extends StatelessWidget {
@@ -10,7 +10,7 @@ class BasicCustomizationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(CustomIcons.settings_outline),
-        title: Text(LocaleStrings.setup.basicCustomizationTitle),
+        title: Text(strings.setup.basicCustomizationTitle),
       ),
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(

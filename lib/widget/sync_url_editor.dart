@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
@@ -36,7 +35,7 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
       actions: [
         TextButton(
           onPressed: () => context.pop(),
-          child: Text(LocaleStrings.common.cancel),
+          child: Text(strings.common.cancel),
         ),
         const Spacer(),
         TextButton(
@@ -47,13 +46,13 @@ class _SyncUrlEditorState extends State<SyncUrlEditor> {
             if (!mounted) return;
             context.pop();
           },
-          child: Text(LocaleStrings.common.reset),
+          child: Text(strings.common.reset),
         ),
         TextButton(
           onPressed: controller.text.isNotEmpty
               ? () => _onSubmit(controller.text)
               : null,
-          child: Text(LocaleStrings.common.save),
+          child: Text(strings.common.save),
         ),
       ],
     );

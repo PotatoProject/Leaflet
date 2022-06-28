@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -99,12 +98,12 @@ class InAppUpdater {
       if (showNoUpdatesAvailable) {
         Utils.showAlertDialog(
           context: context,
-          title: Text(LocaleStrings.miscellaneous.updaterAlreadyOnLatest),
-          content: Text(LocaleStrings.miscellaneous.updaterAlreadyOnLatestDesc),
+          title: Text(strings.miscellaneous.updaterAlreadyOnLatest),
+          content: Text(strings.miscellaneous.updaterAlreadyOnLatestDesc),
           actions: (context) => [
             TextButton(
               onPressed: () => context.pop(),
-              child: Text(LocaleStrings.common.close),
+              child: Text(strings.common.close),
             ),
           ],
         );
@@ -149,18 +148,18 @@ class InAppUpdater {
                 height: 24,
               ),
               const SizedBox(width: 16),
-              Text(LocaleStrings.miscellaneous.updaterUpdateAvailable),
+              Text(strings.miscellaneous.updaterUpdateAvailable),
             ],
           ),
-          content: Text(LocaleStrings.miscellaneous.updaterUpdateAvailableDesc),
+          content: Text(strings.miscellaneous.updaterUpdateAvailableDesc),
           actions: [
             TextButton(
               onPressed: () => context.pop(false),
-              child: Text(LocaleStrings.common.notNow.toUpperCase()),
+              child: Text(strings.common.notNow.toUpperCase()),
             ),
             TextButton(
               onPressed: () => context.pop(true),
-              child: Text(LocaleStrings.common.update.toUpperCase()),
+              child: Text(strings.common.update.toUpperCase()),
             ),
           ],
         );

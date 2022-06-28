@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/search_page.dart';
 import 'package:potato_notes/widget/date_selector.dart';
@@ -33,7 +33,7 @@ class _QueryFiltersState extends State<QueryFilters> {
         children: [
           SwitchListTile.adaptive(
             secondary: const Icon(Icons.format_size),
-            title: Text(LocaleStrings.search.noteFiltersCaseSensitive),
+            title: Text(strings.search.noteFiltersCaseSensitive),
             value: widget.query.caseSensitive,
             activeColor: context.theme.colorScheme.secondary,
             onChanged: (value) {
@@ -43,7 +43,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           ),
           SwitchListTile.adaptive(
             secondary: const Icon(Icons.favorite_border),
-            title: Text(LocaleStrings.search.noteFiltersFavourites),
+            title: Text(strings.search.noteFiltersFavourites),
             value: widget.query.onlyFavourites,
             activeColor: context.theme.colorScheme.secondary,
             onChanged: (value) {
@@ -53,7 +53,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           ),
           /* ListTile(
             leading: const Icon(Icons.folder_outlined),
-            title: Text(LocaleStrings.search.noteFiltersLocations),
+            title: Text(strings.search.noteFiltersLocations),
             subtitle: Text(returnModeToString),
             onTap: () async {
               await Utils.showModalBottomSheet(
@@ -71,7 +71,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           ), */
           ListTile(
             leading: const Icon(Icons.color_lens_outlined),
-            title: Text(LocaleStrings.search.noteFiltersColor),
+            title: Text(strings.search.noteFiltersColor),
             trailing: Container(
               width: 28,
               height: 28,
@@ -104,11 +104,11 @@ class _QueryFiltersState extends State<QueryFilters> {
                       actions: [
                         TextButton(
                           onPressed: () => context.pop(-1),
-                          child: Text(LocaleStrings.common.reset),
+                          child: Text(strings.common.reset),
                         ),
                         TextButton(
                           onPressed: () => context.pop(selectedColor),
-                          child: Text(LocaleStrings.common.confirm),
+                          child: Text(strings.common.confirm),
                         ),
                       ],
                     );
@@ -127,7 +127,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           ),
           ListTile(
             leading: const Icon(Icons.date_range_outlined),
-            title: Text(LocaleStrings.search.noteFiltersDate),
+            title: Text(strings.search.noteFiltersDate),
             subtitle: widget.query.date != null
                 ? Text(
                     "${DateFormat("EEEE d MMM yyyy").format(widget.query.date!)} - ${DateFilterSelector.stringFromDateMode(widget.query.dateMode)}",
@@ -159,10 +159,10 @@ class _QueryFiltersState extends State<QueryFilters> {
           ),
           ListTile(
             leading: const Icon(Icons.label_outline),
-            title: Text(LocaleStrings.search.noteFiltersTags),
+            title: Text(strings.search.noteFiltersTags),
             trailing: Text(
               widget.query.tags.isNotEmpty
-                  ? LocaleStrings.search
+                  ? strings.search
                       .noteFiltersTagsSelected(widget.query.tags.length)
                   : "",
             ),
@@ -183,7 +183,7 @@ class _QueryFiltersState extends State<QueryFilters> {
           const Divider(),
           ListTile(
             leading: const Icon(MdiIcons.filterRemoveOutline),
-            title: Text(LocaleStrings.search.noteFiltersClear),
+            title: Text(strings.search.noteFiltersClear),
             onTap: () async {
               widget.query.reset();
               setState(() {});
@@ -200,13 +200,13 @@ class _QueryFiltersState extends State<QueryFilters> {
     final List<String> enabled = [];
 
     if (widget.query.returnMode.fromNormal) {
-      enabled.add(LocaleStrings.search.noteFiltersLocationsNormal);
+      enabled.add(strings.search.noteFiltersLocationsNormal);
     }
     if (widget.query.returnMode.fromArchive) {
-      enabled.add(LocaleStrings.search.noteFiltersLocationsArchive);
+      enabled.add(strings.search.noteFiltersLocationsArchive);
     }
     if (widget.query.returnMode.fromTrash) {
-      enabled.add(LocaleStrings.search.noteFiltersLocationsTrash);
+      enabled.add(strings.search.noteFiltersLocationsTrash);
     }
 
     return enabled.join(", ");

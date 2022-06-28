@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
@@ -27,7 +26,7 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: Text(LocaleStrings.common.backupPasswordTitle),
+      title: Text(strings.common.backupPasswordTitle),
       content: Column(
         children: [
           Padding(
@@ -66,14 +65,14 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
           if (!widget.confirmationMode)
             CheckboxListTile(
               value: useMasterPass,
-              title: Text(LocaleStrings.common.backupPasswordUseMasterPass),
+              title: Text(strings.common.backupPasswordUseMasterPass),
               secondary: const Icon(Icons.vpn_key_outlined),
               onChanged: prefs.masterPass != ""
                   ? (value) => setState(() => _useMasterPass = value!)
                   : null,
               subtitle: prefs.masterPass == ""
                   ? Text(
-                      LocaleStrings.notePage.privacyLockNoteMissingPass,
+                      strings.notePage.privacyLockNoteMissingPass,
                       style: const TextStyle(color: Colors.red),
                     )
                   : null,
@@ -89,7 +88,7 @@ class _BackupPasswordPromptState extends State<BackupPasswordPrompt> {
                         : Utils.hashedPass(controller.text),
                   )
               : null,
-          child: Text(LocaleStrings.common.confirm),
+          child: Text(strings.common.confirm),
         ),
       ],
       contentPadding: EdgeInsets.zero,

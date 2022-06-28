@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart' hide NoteImages;
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_images.dart';
@@ -297,7 +296,7 @@ class _NoteViewState extends State<NoteView> with MouseListenerMixin {
                   width: 16,
                 );
           final String text = showMoreItem
-              ? LocaleStrings.mainPage
+              ? strings.mainPage
                   .noteListXMoreItems((widget.note.listContent.length) - 5)
               : item.text;
 

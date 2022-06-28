@@ -9,6 +9,22 @@ part of 'preferences.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$Preferences on _PreferencesBase, Store {
+  late final _$_localeValueAtom =
+      Atom(name: '_PreferencesBase._localeValue', context: context);
+
+  @override
+  String? get _localeValue {
+    _$_localeValueAtom.reportRead();
+    return super._localeValue;
+  }
+
+  @override
+  set _localeValue(String? value) {
+    _$_localeValueAtom.reportWrite(value, super._localeValue, () {
+      super._localeValue = value;
+    });
+  }
+
   late final _$_masterPassValueAtom =
       Atom(name: '_PreferencesBase._masterPassValue', context: context);
 

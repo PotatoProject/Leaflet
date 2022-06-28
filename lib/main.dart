@@ -1,14 +1,12 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/locale.dart' as intl;
 import 'package:loggy/loggy.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/generated_asset_loader.g.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/locales/locales.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/home_page.dart';
@@ -17,10 +15,10 @@ import 'package:potato_notes/widget/notes_app.dart';
 import 'package:potato_notes/widget/window_frame.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:yatl_flutter/yatl_flutter.dart' hide Locale;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
   initProvidersInstance();
   await initKeystore();
   GestureBinding.instance.resamplingEnabled = true;
@@ -37,12 +35,8 @@ Future<void> main() async {
   }
 
   runApp(
-    EasyLocalization(
-      supportedLocales: Locales.supported,
-      fallbackLocale: const Locale("en", "US"),
-      useFallbackTranslations: true,
-      assetLoader: GeneratedAssetLoader(),
-      path: "assets/locales",
+    YatlApp(
+      core: yatl,
       child: SplashPage(
         child: PotatoNotes(),
         future: () => initProviders(),
@@ -77,8 +71,13 @@ class _PotatoNotesState extends State<PotatoNotes> {
           theme: appInfo.lightTheme,
           darkTheme: appInfo.darkTheme,
           supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          locale: context.locale,
+          localizationsDelegates: [
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            context.localizationsDelegate,
+          ],
+          locale: prefs.locale,
           builder: (context, child) {
             if (appInfo.quickActions == null && !DeviceInfo.isDesktopOrWeb) {
               appInfo.quickActions = const QuickActions();
@@ -86,22 +85,22 @@ class _PotatoNotesState extends State<PotatoNotes> {
               appInfo.quickActions!.setShortcutItems([
                 ShortcutItem(
                   type: 'new_text',
-                  localizedTitle: LocaleStrings.common.newNote,
+                  localizedTitle: strings.common.newNote,
                   icon: 'note_shortcut',
                 ),
                 ShortcutItem(
                   type: 'new_list',
-                  localizedTitle: LocaleStrings.common.newList,
+                  localizedTitle: strings.common.newList,
                   icon: 'list_shortcut',
                 ),
                 ShortcutItem(
                   type: 'new_image',
-                  localizedTitle: LocaleStrings.common.newImage,
+                  localizedTitle: strings.common.newImage,
                   icon: 'image_shortcut',
                 ),
                 ShortcutItem(
                   type: 'new_drawing',
-                  localizedTitle: LocaleStrings.common.newDrawing,
+                  localizedTitle: strings.common.newDrawing,
                   icon: 'drawing_shortcut',
                 ),
               ]);

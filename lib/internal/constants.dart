@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/about_page.dart';
 
 class Constants {
@@ -18,7 +17,7 @@ class Constants {
   static List<ContributorInfo> get contributors => [
         ContributorInfo(
           name: "Davide Bianco",
-          role: LocaleStrings.about.contributorsHrx,
+          role: strings.about.contributorsHrx,
           avatarUrl: "https://avatars.githubusercontent.com/u/29352339",
           socialLinks: const [
             SocialLink(SocialLinkType.github, "HrX03"),
@@ -28,7 +27,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "Bas Wieringa (broodrooster)",
-          role: LocaleStrings.about.contributorsBas,
+          role: strings.about.contributorsBas,
           avatarUrl: "https://avatars.githubusercontent.com/u/31385368",
           socialLinks: const [
             SocialLink(SocialLinkType.github, "broodroosterdev"),
@@ -36,7 +35,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "Nico Franke",
-          role: LocaleStrings.about.contributorsNico,
+          role: strings.about.contributorsNico,
           avatarUrl: "https://avatars.githubusercontent.com/u/23036430",
           socialLinks: const [
             SocialLink(SocialLinkType.github, "ZerNico"),
@@ -46,7 +45,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "Akshit Garg",
-          role: LocaleStrings.about.contributorsAkshit,
+          role: strings.about.contributorsAkshit,
           avatarUrl: "https://avatars.githubusercontent.com/u/15605299",
           socialLinks: const [
             SocialLink(SocialLinkType.github, "gargakshit"),
@@ -55,7 +54,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "SphericalKat",
-          role: LocaleStrings.about.contributorsKat,
+          role: strings.about.contributorsKat,
           avatarUrl: "https://avatars.githubusercontent.com/u/31761843",
           socialLinks: const [
             SocialLink(SocialLinkType.github, "ATechnoHazard"),
@@ -63,7 +62,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "Rohit K.Parida",
-          role: LocaleStrings.about.contributorsRohit,
+          role: strings.about.contributorsRohit,
           avatarUrl: "https://avatars.githubusercontent.com/u/18437518",
           socialLinks: const [
             SocialLink(SocialLinkType.twitter, "paridadesigns"),
@@ -71,7 +70,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "RshBfn",
-          role: LocaleStrings.about.contributorsRshbfn,
+          role: strings.about.contributorsRshbfn,
           avatarUrl:
               "https://pbs.twimg.com/profile_images/1306121394241953792/G0zeUpRb.jpg",
           socialLinks: const [
@@ -80,7 +79,7 @@ class Constants {
         ),
         ContributorInfo(
           name: "Elias Gagnef",
-          role: LocaleStrings.about.contributorsElias,
+          role: strings.about.contributorsElias,
           avatarUrl: "https://avatars.githubusercontent.com/u/46574798",
           socialLinks: const [
             SocialLink(SocialLinkType.twitter, "EliasGagnef"),

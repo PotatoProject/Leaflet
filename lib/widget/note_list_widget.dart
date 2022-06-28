@@ -3,7 +3,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -171,19 +170,19 @@ MapEntry<Widget, String> _getInfoOnCurrentMode(
     case 'trash':
       return MapEntry(
         Illustration.trash(palette: palette, height: 128),
-        LocaleStrings.mainPage.emptyStateTrash,
+        strings.mainPage.emptyStateTrash,
       );
     case 'archive':
       return MapEntry(
         Illustration.archive(palette: palette, height: 128),
-        LocaleStrings.mainPage.emptyStateArchive,
+        strings.mainPage.emptyStateArchive,
       );
     case 'default':
     case 'all':
     default:
       return MapEntry(
         Illustration.noNotes(palette: palette, height: 128),
-        LocaleStrings.mainPage.emptyStateHome,
+        strings.mainPage.emptyStateHome,
       );
   }
 }

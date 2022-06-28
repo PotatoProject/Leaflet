@@ -4,13 +4,12 @@ import 'dart:ui' as ui;
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cross_file/cross_file.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:liblymph/database.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/logger_provider.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
@@ -46,19 +45,19 @@ class _DrawPageState extends State<DrawPage>
   final List<DrawingTool> _tools = [
     DrawingTool(
       icon: Icons.brush_outlined,
-      title: LocaleStrings.drawing.toolsBrush,
+      title: strings.drawing.toolsBrush,
       toolType: DrawTool.pen,
     ),
     DrawingTool(
       icon: MdiIcons.marker,
-      title: LocaleStrings.drawing.toolsMarker,
+      title: strings.drawing.toolsMarker,
       toolType: DrawTool.marker,
       color: NoteColorPalette.neutral.yellow,
       size: ToolSize.twelve,
     ),
     DrawingTool(
       icon: MdiIcons.eraserVariant,
-      title: LocaleStrings.drawing.toolsEraser,
+      title: strings.drawing.toolsEraser,
       toolType: DrawTool.eraser,
       size: ToolSize.thirtyTwo,
       allowColor: false,
@@ -128,7 +127,7 @@ class _DrawPageState extends State<DrawPage>
                       return IconButton(
                         icon: const Icon(Icons.save_outlined),
                         padding: EdgeInsets.zero,
-                        tooltip: LocaleStrings.common.save,
+                        tooltip: strings.common.save,
                         onPressed: !_controller.saved ? _saveImage : null,
                       );
                     },
@@ -173,19 +172,19 @@ class _DrawPageState extends State<DrawPage>
                   Utils.showModalBottomSheet(
                     context: context,
                     builder: (context) => DialogSheetBase(
-                      title: Text(LocaleStrings.common.areYouSure),
-                      content: Text(LocaleStrings.drawing.clearCanvasWarning),
+                      title: Text(strings.common.areYouSure),
+                      content: Text(strings.drawing.clearCanvasWarning),
                       actions: [
                         TextButton(
                           onPressed: () => context.pop(),
-                          child: Text(LocaleStrings.common.cancel),
+                          child: Text(strings.common.cancel),
                         ),
                         TextButton(
                           onPressed: () {
                             _controller.clearCanvas();
                             context.pop();
                           },
-                          child: Text(LocaleStrings.common.confirm),
+                          child: Text(strings.common.confirm),
                         ),
                       ],
                     ),
@@ -314,16 +313,16 @@ class _DrawPageState extends State<DrawPage>
         final bool? exit = await Utils.showModalBottomSheet(
           context: _globalContext!,
           builder: (context) => DialogSheetBase(
-            title: Text(LocaleStrings.common.areYouSure),
-            content: Text(LocaleStrings.drawing.exitPrompt),
+            title: Text(strings.common.areYouSure),
+            content: Text(strings.drawing.exitPrompt),
             actions: [
               TextButton(
                 onPressed: () => context.pop(),
-                child: Text(LocaleStrings.common.cancel),
+                child: Text(strings.common.cancel),
               ),
               TextButton(
                 onPressed: () => context.pop(true),
-                child: Text(LocaleStrings.common.exit),
+                child: Text(strings.common.exit),
               ),
             ],
           ),

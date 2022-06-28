@@ -18,6 +18,7 @@ import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:yatl_flutter/yatl_flutter.dart' hide Locale;
 
 part 'app_info.g.dart';
 
@@ -38,7 +39,7 @@ class AppInfo extends _AppInfoBase with _$AppInfo {
       UniversalPlatform.isAndroid || UniversalPlatform.isIOS;
 }
 
-abstract class _AppInfoBase with Store {
+abstract class _AppInfoBase with Store, WidgetsBindingObserver {
   static const EventChannel accentStreamChannel =
       EventChannel('potato_notes_accents');
 
@@ -46,6 +47,11 @@ abstract class _AppInfoBase with Store {
   QuickActions? quickActions;
   late PackageInfo packageInfo;
   late final bool migrationAvailable;
+
+  @observable
+  Locale _deviceLocaleValue = Locale("en", "US");
+
+  Locale get deviceLocale => _deviceLocaleValue;
 
   @observable
   int _systemAccentDataValue = Colors.blue.value;
@@ -118,9 +124,27 @@ abstract class _AppInfoBase with Store {
     }
   }
 
+  @action
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    final Locale newLocale = _resolveLocales(
+      locales,
+      yatl.supportedLocales.toFlutterLocales(),
+    );
+    if (newLocale != _deviceLocaleValue) {
+      _deviceLocaleValue = newLocale;
+    }
+  }
+
   Future<void> loadData() async {
     await refetchThemes();
     _updateAccent();
+
+    _deviceLocaleValue = _resolveLocales(
+      WidgetsBinding.instance.platformDispatcher.locales,
+      yatl.supportedLocales.toFlutterLocales(),
+    );
+    WidgetsBinding.instance.addObserver(this);
 
     if (UniversalPlatform.isAndroid) {
       migrationAvailable = await MigrationTask.isMigrationAvailable(
@@ -163,6 +187,13 @@ abstract class _AppInfoBase with Store {
         .cast<File>();
 
     return themes.map((e) => ImportedTheme(e.path));
+  }
+
+  Locale _resolveLocales(
+    List<Locale>? preferredLocales,
+    Iterable<Locale> supportedLocales,
+  ) {
+    return basicLocaleListResolution(preferredLocales, supportedLocales);
   }
 
   @action

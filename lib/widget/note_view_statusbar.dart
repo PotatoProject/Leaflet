@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:liblymph/database.dart';
 import 'package:mobx/mobx.dart';
 import 'package:potato_notes/internal/device_info.dart';

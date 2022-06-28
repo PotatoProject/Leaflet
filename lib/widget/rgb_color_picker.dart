@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class RGBColorPicker extends StatefulWidget {
@@ -149,15 +149,15 @@ class _RGBColorPickerState extends State<RGBColorPicker> {
       actions: [
         TextButton(
           onPressed: () => context.pop(-1),
-          child: Text(LocaleStrings.common.reset),
+          child: Text(strings.common.reset),
         ),
         TextButton(
           onPressed: () => context.pop(),
-          child: Text(LocaleStrings.common.cancel),
+          child: Text(strings.common.cancel),
         ),
         TextButton(
           onPressed: () => context.pop(currentColor.value),
-          child: Text(LocaleStrings.common.confirm),
+          child: Text(strings.common.confirm),
         ),
       ],
     );

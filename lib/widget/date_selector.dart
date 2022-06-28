@@ -1,8 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 class DateFilterSelector extends StatefulWidget {
   final DateTime? date;
@@ -23,12 +23,12 @@ class DateFilterSelector extends StatefulWidget {
   static String stringFromDateMode(DateFilterMode mode) {
     switch (mode) {
       case DateFilterMode.after:
-        return LocaleStrings.search.noteFiltersDateModeAfter;
+        return strings.search.noteFiltersDateModeAfter;
       case DateFilterMode.before:
-        return LocaleStrings.search.noteFiltersDateModeBefore;
+        return strings.search.noteFiltersDateModeBefore;
       case DateFilterMode.only:
       default:
-        return LocaleStrings.search.noteFiltersDateModeExact;
+        return strings.search.noteFiltersDateModeExact;
     }
   }
 }
@@ -61,7 +61,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
           onDateChanged: (date) => setState(() => selectedDate = date),
         ),
         ListTile(
-          title: Text(LocaleStrings.search.noteFiltersDateModeTitle),
+          title: Text(strings.search.noteFiltersDateModeTitle),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
           trailing: DropdownButton<DateFilterMode>(
             items: [
@@ -111,7 +111,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                   onPressed: () {
                     context.pop();
                   },
-                  child: Text(LocaleStrings.common.cancel),
+                  child: Text(strings.common.cancel),
                 ),
                 const Spacer(),
                 const SizedBox(width: 8),
@@ -120,7 +120,7 @@ class _DateFilterSelectorState extends State<DateFilterSelector> {
                     widget.onConfirm?.call(selectedDate, selectedMode);
                     context.pop();
                   },
-                  child: Text(LocaleStrings.common.confirm),
+                  child: Text(strings.common.confirm),
                 ),
               ],
             ),
@@ -165,7 +165,7 @@ class _DateFilterSelectorHeader extends StatelessWidget {
                 onReset?.call();
                 context.pop();
               },
-              child: Text(LocaleStrings.common.reset),
+              child: Text(strings.common.reset),
             ),
           ],
         ),

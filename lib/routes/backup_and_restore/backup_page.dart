@@ -4,10 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:liblymph/database.dart';
-import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
@@ -39,7 +37,7 @@ class _BackupPageState extends State<BackupPage> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: Text(LocaleStrings.backupRestore.backupTitle),
+      title: Text(strings.backupRestore.backupTitle),
       content: Column(
         children: [
           Padding(
@@ -66,7 +64,7 @@ class _BackupPageState extends State<BackupPage> {
                             onPressed: () =>
                                 setState(() => showPass = !showPass),
                           ),
-                          hintText: LocaleStrings.backupRestore.backupPassword,
+                          hintText: strings.backupRestore.backupPassword,
                           hintStyle: TextStyle(
                             color: context.theme.hintColor
                                 .withOpacity(useMasterPass ? 0.2 : 0.6),
@@ -85,7 +83,7 @@ class _BackupPageState extends State<BackupPage> {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          hintText: LocaleStrings.backupRestore.backupName,
+                          hintText: strings.backupRestore.backupName,
                         ),
                         maxLength: 64,
                         onChanged: (value) {
@@ -101,14 +99,14 @@ class _BackupPageState extends State<BackupPage> {
           const SizedBox(height: 16),
           CheckboxListTile(
             value: useMasterPass,
-            title: Text(LocaleStrings.common.backupPasswordUseMasterPass),
+            title: Text(strings.common.backupPasswordUseMasterPass),
             secondary: const Icon(Icons.vpn_key_outlined),
             onChanged: prefs.masterPass != ""
                 ? (value) => setState(() => useMasterPass = value!)
                 : null,
             subtitle: prefs.masterPass == ""
                 ? Text(
-                    LocaleStrings.notePage.privacyLockNoteMissingPass,
+                    strings.notePage.privacyLockNoteMissingPass,
                     style: const TextStyle(color: Colors.red),
                   )
                 : null,
@@ -118,7 +116,7 @@ class _BackupPageState extends State<BackupPage> {
       contentPadding: EdgeInsets.zero,
       actions: [
         Text(
-          LocaleStrings.backupRestore.backupNumOfNotes(notes.length),
+          strings.backupRestore.backupNumOfNotes(notes.length),
           style: TextStyle(
             color: context.theme.iconTheme.color,
           ),
@@ -126,7 +124,7 @@ class _BackupPageState extends State<BackupPage> {
         const Spacer(),
         TextButton(
           onPressed: password.length >= 4 || useMasterPass ? _onSubmit : null,
-          child: Text(LocaleStrings.common.create.toUpperCase()),
+          child: Text(strings.common.create.toUpperCase()),
         ),
       ],
     );
@@ -143,7 +141,7 @@ class _BackupPageState extends State<BackupPage> {
         showBiometrics: promptForBiometrics,
         description: useMasterPass
             ? null
-            : LocaleStrings.backupRestore.backupProtectedNotesPrompt,
+            : strings.backupRestore.backupProtectedNotesPrompt,
       );
     }
     if (status && mounted) {
@@ -232,7 +230,7 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: Text(
-            LocaleStrings.backupRestore.backupCreating,
+            strings.backupRestore.backupCreating,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -242,7 +240,7 @@ class _BackupProgressPageState extends State<_BackupProgressPage> {
         ListTile(
           leading: const Icon(Icons.save_alt),
           title: Text(
-            LocaleStrings.backupRestore.backupCreatingProgress(
+            strings.backupRestore.backupCreatingProgress(
               currentNote,
               widget.notes.length,
             ),
@@ -270,13 +268,13 @@ class _BackupCompletePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String title = !cancelled
-        ? LocaleStrings.backupRestore.backupCompleteSuccess
-        : LocaleStrings.backupRestore.backupCompleteFailure;
+        ? strings.backupRestore.backupCompleteSuccess
+        : strings.backupRestore.backupCompleteFailure;
     final String description = !cancelled
         ? backupFile != null
-            ? LocaleStrings.backupRestore.backupCompleteDescSuccess
-            : LocaleStrings.backupRestore.backupCompleteDescSuccessNoFile
-        : LocaleStrings.backupRestore.backupCompleteDescFailure;
+            ? strings.backupRestore.backupCompleteDescSuccess
+            : strings.backupRestore.backupCompleteDescSuccessNoFile
+        : strings.backupRestore.backupCompleteDescFailure;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,7 +323,7 @@ class _BackupCompletePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(LocaleStrings.common.close.toUpperCase()),
+                child: Text(strings.common.close.toUpperCase()),
               ),
             ],
           ),

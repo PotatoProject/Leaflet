@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
 class RestoreConfirmationDialog extends StatelessWidget {
@@ -15,7 +15,7 @@ class RestoreConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: Text(LocaleStrings.common.restoreDialogTitle),
+      title: Text(strings.common.restoreDialogTitle),
       content: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,29 +26,26 @@ class RestoreConfirmationDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  LocaleStrings.common.restoreDialogBackupName(metadata.name),
+                  strings.common.restoreDialogBackupName(metadata.name),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocaleStrings.common.restoreDialogCreationDate(
+                  strings.common.restoreDialogCreationDate(
                     DateFormat("dd MMM yyyy HH:mm").format(metadata.createdAt),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocaleStrings.common
-                      .restoreDialogAppVersion(metadata.appVersion),
+                  strings.common.restoreDialogAppVersion(metadata.appVersion),
                 ),
                 if (metadata.noteCount > 1) const SizedBox(height: 4),
                 if (metadata.noteCount > 1)
                   Text(
-                    LocaleStrings.common
-                        .restoreDialogNoteCount(metadata.noteCount),
+                    strings.common.restoreDialogNoteCount(metadata.noteCount),
                   ),
                 const SizedBox(height: 4),
                 Text(
-                  LocaleStrings.common
-                      .restoreDialogTagCount(metadata.tags.length),
+                  strings.common.restoreDialogTagCount(metadata.tags.length),
                 ),
               ],
             ),
@@ -58,11 +55,11 @@ class RestoreConfirmationDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => context.pop(false),
-          child: Text(LocaleStrings.common.cancel),
+          child: Text(strings.common.cancel),
         ),
         TextButton(
           onPressed: () => context.pop(true),
-          child: Text(LocaleStrings.common.confirm),
+          child: Text(strings.common.confirm),
         ),
       ],
     );

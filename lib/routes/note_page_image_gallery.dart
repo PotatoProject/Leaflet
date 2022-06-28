@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart' as db
     show Note, NoteImage, UnmodifiableNoteView;
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/mouse_listener_mixin.dart';
 import 'package:potato_notes/widget/note_image.dart';
@@ -119,7 +118,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
       ),
       appBar: AppBar(
         title: Text(
-          LocaleStrings.common.xOfY(
+          strings.common.xOfY(
             currentPage + 1,
             widget.note.images.length,
           ),
@@ -132,7 +131,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               padding: EdgeInsets.zero,
-              tooltip: LocaleStrings.common.edit,
+              tooltip: strings.common.edit,
               onPressed: () async {
                 widget.onDraw!.call(images[currentPage]);
 
@@ -143,7 +142,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             IconButton(
               icon: const Icon(Icons.share_outlined),
               padding: EdgeInsets.zero,
-              tooltip: LocaleStrings.common.share,
+              tooltip: strings.common.share,
               onPressed: () async {
                 Share.shareFiles([images[currentPage].path]);
               },
@@ -152,7 +151,7 @@ class _NotePageImageGalleryState extends State<NotePageImageGallery>
             IconButton(
               icon: const Icon(Icons.delete_outline),
               padding: EdgeInsets.zero,
-              tooltip: LocaleStrings.common.delete,
+              tooltip: strings.common.delete,
               onPressed: () async {
                 //imageQueue.addDelete(widget.note.images[currentPage]);
                 widget.onDelete!.call(images[currentPage]);

@@ -9,6 +9,22 @@ part of 'app_info.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AppInfo on _AppInfoBase, Store {
+  late final _$_deviceLocaleValueAtom =
+      Atom(name: '_AppInfoBase._deviceLocaleValue', context: context);
+
+  @override
+  Locale get _deviceLocaleValue {
+    _$_deviceLocaleValueAtom.reportRead();
+    return super._deviceLocaleValue;
+  }
+
+  @override
+  set _deviceLocaleValue(Locale value) {
+    _$_deviceLocaleValueAtom.reportWrite(value, super._deviceLocaleValue, () {
+      super._deviceLocaleValue = value;
+    });
+  }
+
   late final _$_systemAccentDataValueAtom =
       Atom(name: '_AppInfoBase._systemAccentDataValue', context: context);
 
@@ -93,6 +109,17 @@ mixin _$AppInfo on _AppInfoBase, Store {
 
   late final _$_AppInfoBaseActionController =
       ActionController(name: '_AppInfoBase', context: context);
+
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    final _$actionInfo = _$_AppInfoBaseActionController.startAction(
+        name: '_AppInfoBase.didChangeLocales');
+    try {
+      return super.didChangeLocales(locales);
+    } finally {
+      _$_AppInfoBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void updateAccent(dynamic event) {

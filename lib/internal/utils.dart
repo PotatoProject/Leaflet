@@ -24,7 +24,6 @@ import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/notification_payload.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/themes.dart';
@@ -83,15 +82,15 @@ class Utils {
   static Future<bool> showBiometricPrompt() async {
     try {
       return await LocalAuthentication().authenticate(
-        localizedReason: LocaleStrings.common.biometricsPrompt,
+        localizedReason: strings.common.biometricsPrompt,
         biometricOnly: true,
         stickyAuth: true,
         androidAuthStrings: AndroidAuthMessages(
-          signInTitle: LocaleStrings.common.biometricsPrompt,
-          cancelButton: LocaleStrings.common.cancel,
+          signInTitle: strings.common.biometricsPrompt,
+          cancelButton: strings.common.cancel,
         ),
         iOSAuthStrings: IOSAuthMessages(
-          cancelButton: LocaleStrings.common.cancel,
+          cancelButton: strings.common.cancel,
         ),
       );
     } catch (e) {
@@ -180,7 +179,7 @@ class Utils {
             [
               TextButton(
                 onPressed: () => context.pop(),
-                child: Text(LocaleStrings.common.ok),
+                child: Text(strings.common.ok),
               ),
             ],
       ),
@@ -204,13 +203,13 @@ class Utils {
 
         return [
           SelectionOptionEntry(
-            title: LocaleStrings.mainPage.selectionBarSelect,
+            title: strings.mainPage.selectionBarSelect,
             icon: Icons.check,
             value: 'select',
             showOnlyOnRightClickMenu: true,
           ),
           SelectionOptionEntry(
-            title: LocaleStrings.mainPage.selectionBarSelectAll,
+            title: strings.mainPage.selectionBarSelectAll,
             icon: Icons.select_all_outlined,
             value: 'selectall',
             showOnlyOnRightClickMenu: true,
@@ -218,54 +217,54 @@ class Utils {
           if (!folder.readOnly)
             SelectionOptionEntry(
               title: anyStarred
-                  ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                  : LocaleStrings.mainPage.selectionBarAddFavourites,
+                  ? strings.mainPage.selectionBarRemoveFavourites
+                  : strings.mainPage.selectionBarAddFavourites,
               icon: anyStarred ? Icons.favorite : Icons.favorite_border,
               value: 'favourites',
             ),
           if (!folder.readOnly)
             SelectionOptionEntry(
-              title: LocaleStrings.mainPage.selectionBarChangeColor,
+              title: strings.mainPage.selectionBarChangeColor,
               icon: Icons.color_lens_outlined,
               value: 'color',
             ),
           /* if (mode != ReturnMode.archive)
             SelectionOptionEntry(
-              title: LocaleStrings.mainPage.selectionBarArchive,
+              title: strings.mainPage.selectionBarArchive,
               icon: Icons.inventory_2_outlined,
               value: 'archive',
             ),
           SelectionOptionEntry(
             title: mode == ReturnMode.trash
-                ? LocaleStrings.mainPage.selectionBarPermaDelete
-                : LocaleStrings.mainPage.selectionBarDelete,
+                ? strings.mainPage.selectionBarPermaDelete
+                : strings.mainPage.selectionBarDelete,
             icon: Icons.delete_outline,
             value: mode == ReturnMode.trash ? 'perma_delete' : 'delete',
           ),
           if (mode != ReturnMode.normal)
             SelectionOptionEntry(
               icon: Icons.settings_backup_restore,
-              title: LocaleStrings.common.restore,
+              title: strings.common.restore,
               value: 'restore',
             ), */
           if (AppInfo.supportsNotePinning)
             SelectionOptionEntry(
               icon: showUnpin ? MdiIcons.pinOffOutline : MdiIcons.pinOutline,
               title: showUnpin
-                  ? LocaleStrings.mainPage.selectionBarUnpin
-                  : LocaleStrings.mainPage.selectionBarPin,
+                  ? strings.mainPage.selectionBarUnpin
+                  : strings.mainPage.selectionBarPin,
               value: 'pin',
               oneNoteOnly: true,
             ),
           SelectionOptionEntry(
-            title: LocaleStrings.mainPage.selectionBarSave,
+            title: strings.mainPage.selectionBarSave,
             icon: Icons.save_alt_outlined,
             value: 'export',
             oneNoteOnly: true,
           ),
           /* SelectionOptionEntry(
             icon: Icons.share_outlined,
-            title: LocaleStrings.mainPage.selectionBarShare,
+            title: strings.mainPage.selectionBarShare,
             value: 'share',
             oneNoteOnly: true,
           ), */
@@ -364,7 +363,7 @@ class Utils {
         final bool archived = await Utils.deleteNotes(
           context: context,
           notes: notes,
-          reason: LocaleStrings.mainPage.notesArchived(notes.length),
+          reason: strings.mainPage.notesArchived(notes.length),
           archive: true,
         );
 
@@ -376,7 +375,7 @@ class Utils {
         final bool deleted = await Utils.deleteNotes(
           context: context,
           notes: List.from(notesToTrash),
-          reason: LocaleStrings.mainPage.notesDeleted(notes.length),
+          reason: strings.mainPage.notesDeleted(notes.length),
         );
 
         if (deleted) state.closeSelection();
@@ -388,7 +387,7 @@ class Utils {
         final bool deleted = await Utils.deleteNotes(
           context: context,
           notes: List.from(notesToBeDeleted),
-          reason: LocaleStrings.mainPage.notesPermaDeleted(notes.length),
+          reason: strings.mainPage.notesPermaDeleted(notes.length),
           permaDelete: true,
         );
 
@@ -398,7 +397,7 @@ class Utils {
         final bool restored = await Utils.restoreNotes(
           context: context,
           notes: notes,
-          reason: LocaleStrings.mainPage.notesRestored(notes.length),
+          reason: strings.mainPage.notesRestored(notes.length),
         );
 
         if (restored) state.closeSelection();
@@ -421,7 +420,7 @@ class Utils {
           context: context,
           showLock: notes.first.lockNote && !notes.first.isEmpty,
           showBiometrics: notes.first.usesBiometrics,
-          description: LocaleStrings.mainPage.selectionBarSaveNoteLocked,
+          description: strings.mainPage.selectionBarSaveNoteLocked,
         );
 
         if (unlocked) {
@@ -439,8 +438,8 @@ class Utils {
               SnackBar(
                 content: Text(
                   exported
-                      ? LocaleStrings.mainPage.selectionBarSaveSuccess
-                      : LocaleStrings.mainPage.selectionBarSaveOopsie,
+                      ? strings.mainPage.selectionBarSaveSuccess
+                      : strings.mainPage.selectionBarSaveOopsie,
                 ),
                 behavior: SnackBarBehavior.floating,
                 width: min(640, context.mSize.width - 32),
@@ -477,14 +476,14 @@ class Utils {
       appInfo.notifications?.show(
         note.notificationId,
         note.title.isEmpty
-            ? LocaleStrings.common.notificationDefaultTitle
+            ? strings.common.notificationDefaultTitle
             : note.title,
         note.content,
         NotificationDetails(
           android: AndroidNotificationDetails(
             'pinned_notifications',
-            LocaleStrings.common.notificationDetailsTitle,
-            channelDescription: LocaleStrings.common.notificationDetailsDesc,
+            strings.common.notificationDetailsTitle,
+            channelDescription: strings.common.notificationDetailsDesc,
             color: Constants.defaultAccent,
             ongoing: true,
             priority: Priority.max,
@@ -551,7 +550,7 @@ class Utils {
         behavior: SnackBarBehavior.floating,
         width: min(640, context.mSize.width - 32),
         action: SnackBarAction(
-          label: LocaleStrings.common.undo,
+          label: strings.common.undo,
           onPressed: () async {
             for (final Note note in backupNotes) {
               await noteHelper.saveNote(note);
@@ -593,7 +592,7 @@ class Utils {
         behavior: SnackBarBehavior.floating,
         width: min(640, context.mSize.width - 32),
         action: SnackBarAction(
-          label: LocaleStrings.common.undo,
+          label: strings.common.undo,
           onPressed: () async {
             for (final Note note in backupNotes) {
               await noteHelper.saveNote(note);
@@ -686,7 +685,7 @@ class Utils {
         Utils.deleteNotes(
           context: context,
           notes: [lastNote],
-          reason: LocaleStrings.mainPage.deletedEmptyNote,
+          reason: strings.mainPage.deletedEmptyNote,
         );
       }
     }
@@ -903,15 +902,15 @@ class Utils {
   static String getMessageFromRestoreStatus(RestoreResultStatus status) {
     switch (status) {
       case RestoreResultStatus.success:
-        return LocaleStrings.settings.backupRestoreRestoreStatusSuccess;
+        return strings.settings.backupRestoreRestoreStatusSuccess;
       case RestoreResultStatus.wrongFormat:
-        return LocaleStrings.settings.backupRestoreRestoreStatusWrongFormat;
+        return strings.settings.backupRestoreRestoreStatusWrongFormat;
       case RestoreResultStatus.wrongPassword:
-        return LocaleStrings.settings.backupRestoreRestoreStatusWrongPassword;
+        return strings.settings.backupRestoreRestoreStatusWrongPassword;
       case RestoreResultStatus.alreadyExists:
-        return LocaleStrings.settings.backupRestoreRestoreStatusAlreadyExists;
+        return strings.settings.backupRestoreRestoreStatusAlreadyExists;
       case RestoreResultStatus.unknown:
-        return LocaleStrings.settings.backupRestoreRestoreStatusUnknown;
+        return strings.settings.backupRestoreRestoreStatusUnknown;
     }
   }
 

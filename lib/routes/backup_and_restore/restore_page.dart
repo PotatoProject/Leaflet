@@ -1,16 +1,15 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
+import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
-import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/migration_task.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -74,14 +73,13 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
               String cleanName =
                   metadata.metadata.name.replaceAll(".backup", "");
               if (fromFile) {
-                cleanName =
-                    LocaleStrings.backupRestore.restoreFromFile(cleanName);
+                cleanName = strings.backupRestore.restoreFromFile(cleanName);
               }
               return ListTile(
                 leading: const Icon(Icons.description_outlined),
                 title: Text(cleanName),
                 subtitle: Text(
-                  LocaleStrings.backupRestore.restoreInfo(
+                  strings.backupRestore.restoreInfo(
                     metadata.metadata.noteCount,
                     metadata.metadata.tags.length,
                     formattedDate,
@@ -98,7 +96,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
           ),
         );
       } else {
-        content = Text(LocaleStrings.backupRestore.restoreNoBackups);
+        content = Text(strings.backupRestore.restoreNoBackups);
       }
     } else {
       content = const SizedBox(
@@ -112,7 +110,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
         children: [
           Expanded(
             child: Text(
-              LocaleStrings.backupRestore.restoreTitle,
+              strings.backupRestore.restoreTitle,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -142,7 +140,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
               }
             },
             padding: EdgeInsets.zero,
-            tooltip: LocaleStrings.backupRestore.restoreFileOpen,
+            tooltip: strings.backupRestore.restoreFileOpen,
             splashRadius: 24,
           ),
         ],
@@ -178,7 +176,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
                 }
               : null,
           child: Text(
-            LocaleStrings.setup.buttonNext.toUpperCase(),
+            strings.setup.buttonNext.toUpperCase(),
             style: const TextStyle(
               letterSpacing: 1,
               fontWeight: FontWeight.w500,
@@ -195,7 +193,7 @@ class _RestoreNotesPageState extends State<RestoreNotesPage> {
   void _unableToRestore(RestoreResultStatus status) {
     Utils.showAlertDialog(
       context: context,
-      title: Text(LocaleStrings.backupRestore.restoreFailure),
+      title: Text(strings.backupRestore.restoreFailure),
       content: Text(
         Utils.getMessageFromRestoreStatus(status),
       ),
@@ -221,12 +219,12 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
   @override
   Widget build(BuildContext context) {
     return DialogSheetBase(
-      title: Text(LocaleStrings.backupRestore.importTitle),
+      title: Text(strings.backupRestore.importTitle),
       content: Column(
         children: [
           ListTile(
             leading: const Icon(Icons.file_present_outlined),
-            title: Text(LocaleStrings.backupRestore.importOpenDb),
+            title: Text(strings.backupRestore.importOpenDb),
             onTap: () async {
               final String? pickedFilePath = await FileSystemHelper.getFile(
                 allowedExtensions: ["db"],
@@ -249,7 +247,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
           ),
           ListTile(
             leading: const Icon(MdiIcons.databaseOutline),
-            title: Text(LocaleStrings.backupRestore.importOpenPrevious),
+            title: Text(strings.backupRestore.importOpenPrevious),
             enabled: appInfo.migrationAvailable,
             onTap: () async {
               final String file = await MigrationTask.v1DatabasePath;
@@ -277,7 +275,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
               ),
               const SizedBox(width: 8),
               Text(
-                LocaleStrings.backupRestore.importNotesLoaded,
+                strings.backupRestore.importNotesLoaded,
                 style: TextStyle(
                   color: context.theme.colorScheme.secondary,
                 ),
@@ -296,7 +294,7 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
                 }
               : null,
           child: Text(
-            LocaleStrings.setup.buttonNext.toUpperCase(),
+            strings.setup.buttonNext.toUpperCase(),
             style: const TextStyle(
               letterSpacing: 1,
               fontWeight: FontWeight.w500,
@@ -310,11 +308,11 @@ class _ImportNotesPageState extends State<ImportNotesPage> {
 
   String _getErrorText() {
     if (!UniversalPlatform.isAndroid) {
-      return LocaleStrings.backupRestore.importOpenPreviousUnsupportedPlatform;
+      return strings.backupRestore.importOpenPreviousUnsupportedPlatform;
     }
 
     if (appInfo.migrationAvailable) {
-      return LocaleStrings.backupRestore.importOpenPreviousNoFile;
+      return strings.backupRestore.importOpenPreviousNoFile;
     }
 
     return "";
@@ -354,7 +352,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocaleStrings.backupRestore.selectNotes),
+        title: Text(strings.backupRestore.selectNotes),
       ),
       body: Observer(
         builder: (context) {
@@ -422,7 +420,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                 ),
               ),
               label: Text(
-                LocaleStrings.backupRestore.replaceExisting,
+                strings.backupRestore.replaceExisting,
                 style: TextStyle(
                   color: context.theme.textTheme.bodyText2!.color,
                 ),
@@ -453,7 +451,7 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
                   : null,
               icon: const Icon(Icons.check),
               label: Text(
-                LocaleStrings.setup.buttonFinish.toUpperCase(),
+                strings.setup.buttonFinish.toUpperCase(),
                 style: const TextStyle(
                   letterSpacing: 1,
                   fontWeight: FontWeight.w500,

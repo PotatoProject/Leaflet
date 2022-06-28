@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
@@ -38,8 +37,8 @@ class _PassChallengeState extends State<PassChallenge> {
     return DialogSheetBase(
       title: Text(
         widget.editMode
-            ? LocaleStrings.common.masterPassModify
-            : LocaleStrings.common.masterPassConfirm,
+            ? strings.common.masterPassModify
+            : strings.common.masterPassConfirm,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -75,9 +74,7 @@ class _PassChallengeState extends State<PassChallenge> {
         TextButton(
           onPressed: controller.text.length >= 4 ? _onConfirm : null,
           child: Text(
-            widget.editMode
-                ? LocaleStrings.common.save
-                : LocaleStrings.common.confirm,
+            widget.editMode ? strings.common.save : strings.common.confirm,
           ),
         ),
       ],

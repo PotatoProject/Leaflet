@@ -3,7 +3,7 @@ import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 import 'package:potato_notes/widget/separated_list.dart';
@@ -89,7 +89,7 @@ class _FolderEditorState extends State<FolderEditor> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: LocaleStrings.common.tagTextboxHint,
+                  labelText: strings.common.tagTextboxHint,
                   border: const UnderlineInputBorder(),
                 ),
                 autofocus: true,
@@ -122,13 +122,13 @@ class _FolderEditorState extends State<FolderEditor> {
         if (widget.folder != null)
           TextButton(
             onPressed: () => widget.onDelete?.call(folder),
-            child: Text(LocaleStrings.common.delete),
+            child: Text(strings.common.delete),
           ),
         TextButton(
           onPressed: folder.name.trim().isNotEmpty
               ? () => _onSubmit(folder.name)
               : null,
-          child: Text(LocaleStrings.common.save),
+          child: Text(strings.common.save),
         ),
       ],
     );
@@ -184,11 +184,11 @@ class _FolderIconPickerState extends State<_FolderIconPicker> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(LocaleStrings.common.cancel),
+          child: Text(strings.common.cancel),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, icon),
-          child: Text(LocaleStrings.common.confirm),
+          child: Text(strings.common.confirm),
         ),
       ],
     );

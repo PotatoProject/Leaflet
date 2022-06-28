@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/search_page.dart';
@@ -89,8 +88,8 @@ class TagSearchDelegate extends CustomSearchDelegate {
           leading: const Icon(Icons.add),
           title: Text(
             query.isNotEmpty
-                ? LocaleStrings.search.tagCreateHint(query)
-                : LocaleStrings.search.tagCreateEmptyHint,
+                ? strings.search.tagCreateHint(query)
+                : strings.search.tagCreateEmptyHint,
           ),
           onTap: () async {
             final bool? result = await Utils.showModalBottomSheet<bool>(

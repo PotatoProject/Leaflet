@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:diffutil_dart/diffutil.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,9 +13,7 @@ import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
-import 'package:potato_notes/internal/locales/locales.g.dart';
-import 'package:potato_notes/internal/locales/native_names.dart';
+import 'package:potato_notes/internal/native_names.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -32,6 +29,7 @@ import 'package:potato_notes/widget/settings_tile.dart';
 import 'package:potato_notes/widget/sync_url_editor.dart';
 import 'package:recase/recase.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:yatl_flutter/yatl_flutter.dart' hide Locale;
 
 class SettingsPage extends StatefulWidget {
   final bool trimmed;
@@ -66,13 +64,12 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               commonSettings,
               SettingsCategory(
-                header: LocaleStrings.settings.backupRestoreTitle,
+                header: strings.settings.backupRestoreTitle,
                 children: [
                   SettingsTile(
                     icon: const Icon(Icons.save_outlined),
-                    title: Text(LocaleStrings.settings.backupRestoreBackup),
-                    description:
-                        Text(LocaleStrings.settings.backupRestoreBackupDesc),
+                    title: Text(strings.settings.backupRestoreBackup),
+                    description: Text(strings.settings.backupRestoreBackupDesc),
                     onTap: () async {
                       final List<Note> notes =
                           await noteHelper.listNotes(BuiltInFolders.all);
@@ -85,11 +82,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         await Utils.showAlertDialog(
                           context: context,
                           title: Text(
-                            LocaleStrings.settings
+                            strings.settings
                                 .backupRestoreBackupNothingToRestoreTitle,
                           ),
                           content: Text(
-                            LocaleStrings.settings
+                            strings.settings
                                 .backupRestoreBackupNothingToRestoreDesc,
                           ),
                         );
@@ -98,9 +95,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(Icons.restart_alt_rounded),
-                    title: Text(LocaleStrings.settings.backupRestoreRestore),
+                    title: Text(strings.settings.backupRestoreRestore),
                     description: Text(
-                      LocaleStrings.settings.backupRestoreRestoreDesc,
+                      strings.settings.backupRestoreRestoreDesc,
                     ),
                     onTap: () async {
                       await Utils.showModalBottomSheet(
@@ -111,9 +108,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(Icons.file_present_outlined),
-                    title: Text(LocaleStrings.settings.backupRestoreImport),
-                    description:
-                        Text(LocaleStrings.settings.backupRestoreImportDesc),
+                    title: Text(strings.settings.backupRestoreImport),
+                    description: Text(strings.settings.backupRestoreImportDesc),
                     onTap: () async {
                       await Utils.showModalBottomSheet(
                         context: context,
@@ -124,11 +120,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               SettingsCategory(
-                header: LocaleStrings.settings.infoTitle,
+                header: strings.settings.infoTitle,
                 children: <Widget>[
                   SettingsTile(
                     icon: const Icon(Icons.info_outline),
-                    title: Text(LocaleStrings.settings.infoAboutApp),
+                    title: Text(strings.settings.infoAboutApp),
                     onTap: () => Utils.showSecondaryRoute(
                       context,
                       AboutPage(),
@@ -136,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(Icons.update_outlined),
-                    title: Text(LocaleStrings.settings.infoUpdateCheck),
+                    title: Text(strings.settings.infoUpdateCheck),
                     onTap: () => InAppUpdater.checkForUpdate(
                       context,
                       showNoUpdatesAvailable: true,
@@ -144,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   SettingsTile(
                     icon: const Icon(Icons.translate),
-                    title: Text(LocaleStrings.settings.infoTranslate),
+                    title: Text(strings.settings.infoTranslate),
                     onTap: () => Utils.launchUrl(
                       "https://crowdin.potatoproject.co/leaflet",
                     ),
@@ -152,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   SettingsTile(
                     icon: const Icon(Icons.bug_report_outlined),
                     visible: appConfig.bugReportUrl != null,
-                    title: Text(LocaleStrings.settings.infoBugReport),
+                    title: Text(strings.settings.infoBugReport),
                     onTap: () => Utils.launchUrl(appConfig.bugReportUrl!),
                   ),
                 ],
@@ -161,12 +157,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 // ignore: avoid_redundant_argument_values
                 visible: kDebugMode,
                 child: SettingsCategory(
-                  header: LocaleStrings.settings.debugTitle,
+                  header: strings.settings.debugTitle,
                   children: [
                     SettingsTile.withSwitch(
                       icon: const Icon(Icons.emoji_people_outlined),
                       title: Text(
-                        LocaleStrings.settings.debugShowSetupScreen,
+                        strings.settings.debugShowSetupScreen,
                       ),
                       value: !prefs.welcomePageSeen,
                       activeColor: context.theme.colorScheme.secondary,
@@ -176,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     SettingsTile(
                       icon: const Icon(Icons.timer),
-                      title: Text(LocaleStrings.settings.debugLoadingOverlay),
+                      title: Text(strings.settings.debugLoadingOverlay),
                       onTap: () {
                         Utils.showLoadingOverlay(context);
                         Future.delayed(
@@ -187,7 +183,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     SettingsTile(
                       icon: const Icon(MdiIcons.databaseRemoveOutline),
-                      title: Text(LocaleStrings.settings.debugClearDatabase),
+                      title: Text(strings.settings.debugClearDatabase),
                       onTap: () async {
                         await noteHelper.deleteAllNotes();
                         if (AppInfo.supportsNotesApi &&
@@ -198,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     SettingsTile(
                       icon: const Icon(MdiIcons.databasePlusOutline),
-                      title: Text(LocaleStrings.settings.debugGenerateTrash),
+                      title: Text(strings.settings.debugGenerateTrash),
                       onTap: () async {
                         for (int i = 0; i < 100; i++) {
                           final Random r = Random();
@@ -225,7 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     SettingsTile(
                       icon: const Icon(Icons.text_snippet_outlined),
-                      title: Text(LocaleStrings.settings.debugLogLevel),
+                      title: Text(strings.settings.debugLogLevel),
                       onTap: () {
                         showDropdownSheet(
                           context: context,
@@ -266,7 +262,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             SettingsTile(
               icon: const Icon(Icons.brightness_4_outlined),
-              title: Text(LocaleStrings.settings.personalizationThemeMode),
+              title: Text(strings.settings.personalizationThemeMode),
               onTap: () {
                 showDropdownSheet(
                   context: context,
@@ -397,7 +393,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         SettingsCategory(
-          header: LocaleStrings.settings.personalizationTitle,
+          header: strings.settings.personalizationTitle,
           children: [
             if (deviceInfo.canUseSystemAccent)
               SettingsTile.withSwitch(
@@ -406,14 +402,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     : !prefs.useCustomAccent,
                 onChanged: (value) => prefs.useCustomAccent = !value,
                 title: Text(
-                  LocaleStrings.settings.personalizationUseCustomAccent,
+                  strings.settings.personalizationUseCustomAccent,
                 ),
                 icon: const Icon(Icons.color_lens_outlined),
                 activeColor: context.theme.colorScheme.secondary,
               ),
             SettingsTile(
               title: Text(
-                LocaleStrings.settings.personalizationCustomAccent,
+                strings.settings.personalizationCustomAccent,
               ),
               icon: const Icon(Icons.colorize_outlined),
               enabled: !deviceInfo.canUseSystemAccent || prefs.useCustomAccent,
@@ -451,19 +447,18 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsTile.withSwitch(
               value: prefs.useGrid,
               onChanged: (value) => prefs.useGrid = value,
-              title: Text(LocaleStrings.settings.personalizationUseGrid),
+              title: Text(strings.settings.personalizationUseGrid),
               icon: const Icon(Icons.dashboard_outlined),
               activeColor: context.theme.colorScheme.secondary,
             ),
             SettingsTile(
               icon: const Icon(Icons.language),
-              title: Text(LocaleStrings.settings.personalizationLocale),
+              title: Text(strings.settings.personalizationLocale),
               onTap: () {
                 showDropdownSheet(
                   context: context,
-                  initialIndex: context.savedLocale != null
-                      ? context.supportedLocales.indexOf(context.savedLocale!) +
-                          1
+                  initialIndex: prefs.locale != null
+                      ? context.supportedLocales.indexOf(prefs.locale!) + 1
                       : 0,
                   scrollable: true,
                   itemBuilder: (context, index) {
@@ -473,42 +468,36 @@ class _SettingsPageState extends State<SettingsPage> {
                         ? firstLetterToUppercase(
                             localeNativeNames[locale.languageCode]!,
                           )
-                        : LocaleStrings
-                            .settings.personalizationLocaleDeviceDefault;
-                    final bool selected = context.savedLocale == locale;
-                    final Locale deviceLocale =
-                        Locales.supported.contains(context.deviceLocale)
-                            ? context.deviceLocale
-                            : const Locale("en", "US");
+                        : strings.settings.personalizationLocaleDeviceDefault;
+                    final bool selected = prefs.locale == locale;
+                    final Locale deviceLocale = locales.supportedLocales
+                            .contains(appInfo.deviceLocale.toIntlLocale())
+                        ? appInfo.deviceLocale
+                        : const Locale("en", "US");
 
                     double? translationPercentage;
                     if (locale != null) {
                       translationPercentage =
-                          Locales.stringData[locale.toLanguageTag()]! /
-                              Locales.stringData["en-US"]!;
+                          locales.progressData[locale.toLanguageTag()]! /
+                              locales.progressData["en-US"]!;
                     } else {
                       translationPercentage =
-                          Locales.stringData[deviceLocale.toLanguageTag()]! /
-                              Locales.stringData["en-US"]!;
+                          locales.progressData[deviceLocale.toLanguageTag()]! /
+                              locales.progressData["en-US"]!;
                     }
 
                     return dropDownTile(
                       title: Text(nativeName),
                       subtitle: Text(
                         locale != null
-                            ? LocaleStrings.settings
-                                .personalizationLocaleXTranslated(
+                            ? strings.settings.personalizationLocaleXTranslated(
                                 (translationPercentage * 100).round(),
                               )
                             : "${localeNativeNames[deviceLocale.languageCode]!.sentenceCase} \u2022 ${(translationPercentage * 100).round()}%",
                       ),
                       selected: selected,
                       onTap: () {
-                        if (locale == null) {
-                          context.deleteSaveLocale();
-                        } else {
-                          context.setLocale(locale);
-                        }
+                        prefs.locale = locale;
                         setState(() {});
                         context.pop();
                       },
@@ -518,11 +507,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               },
               subtitle: Text(
-                context.savedLocale != null
+                prefs.locale != null
                     ? firstLetterToUppercase(
-                        localeNativeNames[context.savedLocale!.languageCode]!,
+                        localeNativeNames[prefs.locale!.languageCode]!,
                       )
-                    : LocaleStrings.settings.personalizationLocaleDeviceDefault,
+                    : strings.settings.personalizationLocaleDeviceDefault,
               ),
             ),
             SettingsTile(
@@ -534,7 +523,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   context,
                   content:
                       "If you decide to change the sync api url every note will get deleted to prevent conflicts. Do this only if you know what are you doing.",
-                  buttonAction: LocaleStrings.common.goOn,
+                  buttonAction: strings.common.goOn,
                 );
                 if (status ?? false) {
                   Utils.showModalBottomSheet(
@@ -547,7 +536,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         SettingsCategory(
-          header: LocaleStrings.settings.privacyTitle,
+          header: strings.settings.privacyTitle,
           children: [
             SettingsTile.withSwitch(
               value: prefs.masterPass != "",
@@ -555,9 +544,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (prefs.masterPass == "") {
                   final bool? status = await showInfoSheet(
                     context,
-                    content:
-                        LocaleStrings.settings.privacyUseMasterPassDisclaimer,
-                    buttonAction: LocaleStrings.common.goOn,
+                    content: strings.settings.privacyUseMasterPassDisclaimer,
+                    buttonAction: strings.common.goOn,
                   );
                   if (status ?? false) showPassChallengeSheet(context);
                 } else {
@@ -585,14 +573,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
               icon: const Icon(Icons.vpn_key_outlined),
-              title: Text(LocaleStrings.settings.privacyUseMasterPass),
+              title: Text(strings.settings.privacyUseMasterPass),
               activeColor: context.theme.colorScheme.secondary,
               subtitle:
                   removingMasterPass ? const LinearProgressIndicator() : null,
             ),
             SettingsTile(
               icon: const Icon(Icons.password_outlined),
-              title: Text(LocaleStrings.settings.privacyModifyMasterPass),
+              title: Text(strings.settings.privacyModifyMasterPass),
               enabled: prefs.masterPass != "",
               onTap: () async {
                 final bool? confirm =
@@ -680,12 +668,12 @@ class _SettingsPageState extends State<SettingsPage> {
   String getThemeModeName(ThemeMode themeMode) {
     switch (themeMode) {
       case ThemeMode.light:
-        return LocaleStrings.settings.personalizationThemeModeLight;
+        return strings.settings.personalizationThemeModeLight;
       case ThemeMode.dark:
-        return LocaleStrings.settings.personalizationThemeModeDark;
+        return strings.settings.personalizationThemeModeDark;
       case ThemeMode.system:
       default:
-        return LocaleStrings.settings.personalizationThemeModeSystem;
+        return strings.settings.personalizationThemeModeSystem;
     }
   }
 

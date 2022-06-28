@@ -4,7 +4,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -69,7 +68,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                   palette: palette,
                   height: 72,
                 ),
-                LocaleStrings.search.typeToSearch,
+                strings.search.typeToSearch,
               )
             : Utils.quickIllustration(
                 context,
@@ -77,7 +76,7 @@ class NoteSearchDelegate extends CustomSearchDelegate {
                   palette: palette,
                   height: 72,
                 ),
-                LocaleStrings.search.nothingFound,
+                strings.search.nothingFound,
               );
         final List<Note> results =
             searchQuery.filterNotes(query, snapshot.data!);

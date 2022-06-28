@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/drawing_board.dart';
@@ -121,7 +121,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                       IconButton(
                         icon: const Icon(Icons.undo),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        tooltip: LocaleStrings.common.undo,
+                        tooltip: strings.common.undo,
                         onPressed: widget.boardController.canUndo
                             ? () => widget.boardController.undo()
                             : null,
@@ -129,7 +129,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                       IconButton(
                         icon: const Icon(Icons.redo),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        tooltip: LocaleStrings.common.redo,
+                        tooltip: strings.common.redo,
                         onPressed: widget.boardController.canRedo
                             ? () => widget.boardController.redo()
                             : null,
@@ -169,7 +169,7 @@ class _DrawingToolbarState extends State<DrawingToolbar>
                       }),
                       IconButton(
                         icon: const Icon(Icons.delete_outline),
-                        tooltip: LocaleStrings.drawing.toolsClear,
+                        tooltip: strings.drawing.toolsClear,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         onPressed: widget.clearCanvas,
                       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -111,29 +110,29 @@ class NoteListPageState extends State<NoteListPage> {
       foregroundColor: context.theme.colorScheme.onPrimary,
       mainEntry: MenuFabEntry(
         icon: const Icon(Icons.edit_outlined),
-        label: LocaleStrings.common.newNote,
+        label: strings.common.newNote,
         onTap: () => Utils.newNote(context, widget.folder),
       ),
       entries: [
         MenuFabEntry(
           icon: const Icon(Icons.note_add_outlined),
-          label: LocaleStrings.common.importNote,
+          label: strings.common.importNote,
           onTap: () => Utils.importNotes(context),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.check_box_outlined),
-          label: LocaleStrings.common.newList,
+          label: strings.common.newList,
           onTap: () => Utils.newList(context, widget.folder),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.image_outlined),
-          label: LocaleStrings.common.newImage,
+          label: strings.common.newImage,
           onTap: () =>
               Utils.newImage(context, widget.folder, ImageSource.gallery),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.brush_outlined),
-          label: LocaleStrings.common.newDrawing,
+          label: strings.common.newDrawing,
           onTap: () => Utils.newDrawing(context, widget.folder),
         ),
       ],
@@ -154,20 +153,20 @@ class NoteListPageState extends State<NoteListPage> {
                   final bool? result = await showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(LocaleStrings.common.areYouSure),
+                      title: Text(strings.common.areYouSure),
                       content: Text(
                         widget.noteKind == ReturnMode.archive
-                            ? LocaleStrings.mainPage.restorePromptArchive
-                            : LocaleStrings.mainPage.restorePromptTrash,
+                            ? strings.mainPage.restorePromptArchive
+                            : strings.mainPage.restorePromptTrash,
                       ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => context.pop(),
-                          child: Text(LocaleStrings.common.cancel),
+                          child: Text(strings.common.cancel),
                         ),
                         TextButton(
                           onPressed: () => context.pop(true),
-                          child: Text(LocaleStrings.common.restore),
+                          child: Text(strings.common.restore),
                         ),
                       ],
                     ),
@@ -177,7 +176,7 @@ class NoteListPageState extends State<NoteListPage> {
                     await Utils.restoreNotes(
                       context: context,
                       notes: notes,
-                      reason: LocaleStrings.mainPage
+                      reason: strings.mainPage
                           .notesRestored(_selectionState.selectionList.length),
                       archive: widget.noteKind == ReturnMode.archive,
                     );

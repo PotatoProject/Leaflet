@@ -13,7 +13,7 @@ class SharedPrefs extends GeneratedSharedPrefs {
   }
 }
 
-class SharedPreferencesBackend extends LocalPreferencesBackend {
+class SharedPreferencesBackend extends TypedPreferencesBackend {
   final SharedPreferences prefs;
 
   const SharedPreferencesBackend(this.prefs);
@@ -34,45 +34,32 @@ class SharedPreferencesBackend extends LocalPreferencesBackend {
   List<String>? getStringList(String pref) => prefs.getStringList(pref);
 
   @override
-  void setBool(String key, bool? value) {
-    _setValue<bool>(key, value);
+  void setBool(String key, bool value) {
+    prefs.setBool(key, value);
   }
 
   @override
-  void setDouble(String key, double? value) {
-    _setValue<double>(key, value);
+  void setDouble(String key, double value) {
+    prefs.setDouble(key, value);
   }
 
   @override
-  void setInt(String key, int? value) {
-    _setValue<int>(key, value);
+  void setInt(String key, int value) {
+    prefs.setInt(key, value);
   }
 
   @override
-  void setString(String key, String? value) {
-    _setValue<String>(key, value);
+  void setString(String key, String value) {
+    prefs.setString(key, value);
   }
 
   @override
-  void setStringList(String key, List<String>? value) {
-    _setValue<List<String>>(key, value);
+  void setStringList(String key, List<String> value) {
+    prefs.setStringList(key, value);
   }
 
-  void _setValue<T>(String key, T? value) {
-    if (value != null) {
-      if (value is bool) {
-        prefs.setBool(key, value);
-      } else if (value is double) {
-        prefs.setDouble(key, value);
-      } else if (value is int) {
-        prefs.setInt(key, value);
-      } else if (value is String) {
-        prefs.setString(key, value);
-      } else if (value is List<String>) {
-        prefs.setStringList(key, value);
-      }
-    } else {
-      prefs.remove(key);
-    }
+  @override
+  void delete(String key) {
+    prefs.remove(key);
   }
 }

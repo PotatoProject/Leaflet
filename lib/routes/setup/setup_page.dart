@@ -5,7 +5,6 @@ import 'package:animations/animations.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/routes/setup/basic_customization_page.dart';
 import 'package:potato_notes/routes/setup/finish_page.dart';
@@ -46,11 +45,11 @@ class _SetupPagetate extends State<SetupPage> {
     String buttonText;
 
     if (pageIndex == 0) {
-      buttonText = LocaleStrings.setup.buttonGetStarted;
+      buttonText = strings.setup.buttonGetStarted;
     } else if (pageIndex == (pages.length - 1)) {
-      buttonText = LocaleStrings.setup.buttonFinish;
+      buttonText = strings.setup.buttonFinish;
     } else {
-      buttonText = LocaleStrings.setup.buttonNext;
+      buttonText = strings.setup.buttonNext;
     }
     return WillPopScope(
       onWillPop: () async => pageIndex == (pages.length - 1),
@@ -88,7 +87,7 @@ class _SetupPagetate extends State<SetupPage> {
                     ignoring: pageIndex == 0,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back),
-                      tooltip: LocaleStrings.setup.buttonBack,
+                      tooltip: strings.setup.buttonBack,
                       onPressed: pageIndex != 0 ? prevPage : null,
                     ),
                   ),

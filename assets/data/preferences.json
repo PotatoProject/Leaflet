@@ -5,6 +5,10 @@
     ],
     "preferences": [
         {
+            "name": "locale",
+            "type": "string"
+        },
+        {
             "name": "master_pass",
             "type": "string",
             "defaultValue": ""

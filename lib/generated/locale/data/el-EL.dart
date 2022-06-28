@@ -1,0 +1,315 @@
+part of '../data.dart';
+
+// ignore_for_file: file_names
+class _$ElELLocaleData extends LocaleData {
+  _$ElELLocaleData._()
+      : super(
+          locale: "el-EL",
+          translationProgress: 245,
+        );
+
+  @override
+  final Map<String, String> data = const {
+    "common.cancel": "Ακύρωση",
+    "common.reset": "Επαναφορά",
+    "common.restore": "Αποκατάσταση",
+    "common.confirm": "Επιβεβαίωση",
+    "common.save": "Αποθήκευση",
+    "common.delete": "Διαγραφή",
+    "common.undo": "Αναίρεση",
+    "common.redo": "Επανάληψη",
+    "common.edit": "Επεξεργασία",
+    "common.go_on": "Μετάβαση στο",
+    "common.exit": "Έξοδος",
+    "common.ok": "Εντάξει",
+    "common.share": "Κοινή χρήση",
+    "common.not_now": "Όχι τώρα",
+    "common.update": "Ενημέρωση",
+    "common.expand": "Επέκταση",
+    "common.collapse": "Σύμπτυξη",
+    "common.create": "Δημιουργία",
+    "common.close": "Κλείσιμο",
+    "common.x_of_y": "{{}} από {{}}",
+    "common.quick_tip": "Γρήγορη συμβουλή",
+    "common.new_note": "Νέα σημείωση",
+    "common.new_list": "Νέα λίστα",
+    "common.new_image": "Νέα εικόνα",
+    "common.new_drawing": "Νέο σχέδιο",
+    "common.import_note": "Εισαγωγή σημείωσης",
+    "common.biometrics_prompt": "Επιβεβαίωση βιομετρικών στοιχείων",
+    "common.master_pass.modify": "Τροποποίηση κύριου κωδικού πρόσβασης",
+    "common.master_pass.confirm": "Επιβεβαίωση κύριου κωδικού πρόσβασης",
+    "common.master_pass.incorrect": "Εσφαλμένος κύριος κωδικός πρόσβασης",
+    "common.backup_password.title": "Εισαγωγή εφεδρικού κωδικού πρόσβασης",
+    "common.backup_password.use_master_pass":
+        "Χρήση κύριου κωδικού πρόσβασης ως συνθηματικό",
+    "common.restore_dialog.title": "Επιβεβαίωση επαναφοράς σημείωσης",
+    "common.restore_dialog.backup_name": "Όνομα αντιγράφου ασφαλείας: {{}}",
+    "common.restore_dialog.creation_date": "Ημερομηνία δημιουργίας: {{}}",
+    "common.restore_dialog.app_version": "Έκδοση εφαρμογής: {{}}",
+    "common.restore_dialog.note_count": "Αριθμός σημειώσεων: {{}}",
+    "common.restore_dialog.tag_count": "Αριθμός σημειώσεων: {{}}",
+    "common.are_you_sure": "Είστε σίγουροι;",
+    "common.color.none": "Κανένα",
+    "common.color.red": "Κόκκινο",
+    "common.color.orange": "Πορτοκαλί",
+    "common.color.yellow": "Κίτρινο",
+    "common.color.green": "Πράσινο",
+    "common.color.cyan": "Κυανό",
+    "common.color.light_blue": "Ανοιχτό μπλε",
+    "common.color.blue": "Μπλε",
+    "common.color.purple": "Μωβ",
+    "common.color.pink": "Ροζ",
+    "common.notification.default_title": "Καρφιτσωμένη ειδοποίηση",
+    "common.notification.details_title": "Καρφιτσωμένες ειδοποιήσεις",
+    "common.notification.details_desc": "Καρφιτσωμένες ειδοποιήσεις χρηστών",
+    "common.tag.new": "Νέα ετικέτα",
+    "common.tag.modify": "Τροποποίηση ετικέτας",
+    "common.tag.textbox_hint": "Όνομα",
+    "main_page.write_note": "Γράψτε μια σημείωση",
+    "main_page.settings": "Ρυθμίσεις",
+    "main_page.search": "Αναζήτηση",
+    "main_page.account": "Λογαριασμός",
+    "main_page.restore_prompt.archive":
+        "Θέλετε να επαναφέρετε κάθε σημείωση από το αρχείο;",
+    "main_page.restore_prompt.trash":
+        "Θέλετε να επαναφέρετε κάθε σημείωση από τον κάδο απορριμάτων;",
+    "main_page.tag_delete_prompt":
+        "Αυτή η ετικέτα θα χαθεί για πάντα εάν την διαγράψετε",
+    "main_page.deleted_empty_note": "Διαγράφηκε κενή σημείωση",
+    "main_page.empty_state.home": "Δεν έχουν προστεθεί ακόμα σημειώσεις",
+    "main_page.empty_state.archive": "Το αρχείο είναι άδειο",
+    "main_page.empty_state.trash": "Ο κάδος απορριμάτων είναι άδειος",
+    "main_page.empty_state.favourites": "Δεν υπάρχουν αγαπημένα προς το παρόν",
+    "main_page.empty_state.tag": "Δεν υπάρχουν σημειώσεις με αυτήν την ετικέτα",
+    "main_page.note_list_x_more_items.one": "{{}} ακόμη αντικείμενα",
+    "main_page.note_list_x_more_items.other": "{{}} ακόμη αντικείμενα",
+    "main_page.title.notes": "Σημειώσεις",
+    "main_page.title.archive": "Αρχείο",
+    "main_page.title.trash": "Κάδος",
+    "main_page.title.favourites": "Αγαπημένα",
+    "main_page.title.tag": "Ετικέτα",
+    "main_page.title.all": "Όλες",
+    "main_page.selection_bar.close": "Κλείσιμο",
+    "main_page.selection_bar.select": "Επιλογή",
+    "main_page.selection_bar.select_all": "Επιλογή όλων",
+    "main_page.selection_bar.add_favourites": "Προσθήκη στα αγαπημένα",
+    "main_page.selection_bar.remove_favourites": "Αφαίρεση από τα αγαπημένα",
+    "main_page.selection_bar.change_color": "Αλλαγή χρώματος",
+    "main_page.selection_bar.archive": "Αρχείο",
+    "main_page.selection_bar.delete": "Μετακίνηση στον κάδο απορριμμάτων",
+    "main_page.selection_bar.perma_delete": "Διαγραφή",
+    "main_page.selection_bar.pin": "Καρφίτσωμα",
+    "main_page.selection_bar.unpin": "Ξεκαρφίτσωμα",
+    "main_page.selection_bar.save": "Τοπική αποθήκευση",
+    "main_page.selection_bar.save.note_locked":
+        "Η σημείωση είναι κλειδωμένη, απαιτείται ο κύριος κωδικός πρόσβασης",
+    "main_page.selection_bar.save.success": "Η σημείωση εξήχθη επιτυχώς",
+    "main_page.selection_bar.save.oopsie":
+        "Κάτι πήγε στραβά κατά την εξαγωγή ή η διαδικασία διακόπηκε",
+    "main_page.selection_bar.share": "Κοινή χρήση",
+    "main_page.notes_deleted.one":
+        "{{}} σημείωση μετακινήθηκε στον κάδο απορριμμάτων",
+    "main_page.notes_deleted.other":
+        "{{}} σημειώσεις μετακινήθηκαν στον κάδο απορριμμάτων",
+    "main_page.notes_perma_deleted.one": "{{}} σημείωσεις διαγράφηκε",
+    "main_page.notes_perma_deleted.other": "{{}} σημειώσεις διαγράφηκαν",
+    "main_page.notes_archived.one": "Αρχειοθετήθηκε {{}} σημείωσεις",
+    "main_page.notes_archived.other": "Αρχειοθετήθηκαν {{}} σημειώσεις",
+    "main_page.notes_restored.one": "Επαναφέρθηκαν {{}} σημείωσεις",
+    "main_page.notes_restored.other": "Επαναφέρθηκαν {{}} σημειώσεις",
+    "main_page.export.success": "Η σημείωση εξήχθη επιτυχώς",
+    "main_page.export.failure": "Κάτι πήγε στραβά κατά την εξαγωγή",
+    "main_page.import_psa":
+        "Αν δεν μπορείτε να βρείτε τις παλαιότερες σημειώσεις σας από το PotatoNotes, μπορείτε να τις επαναφέρετε πηγαίνοντας στο\n\n{{}}\n\nκαι από εκεί επιλέξτε \"{{}}\"",
+    "note_page.title_hint": "Τίτλος",
+    "note_page.content_hint": "Περιεχόμενο",
+    "note_page.list_item_hint": "Εισαγωγή",
+    "note_page.add_entry_hint": "Προσθήκη καταχώρησης",
+    "note_page.toolbar.tags": "Διαχείριση ετικετών",
+    "note_page.toolbar.color": "Αλλαγή χρώματος",
+    "note_page.toolbar.add_item": "Προσθήκη στοιχείου",
+    "note_page.privacy.title": "Επιλογές απορρήτου",
+    "note_page.privacy.hide_content": "Απόκρυψη περιεχομένου στην κύρια σελίδα",
+    "note_page.privacy.lock_note": "Κλείδωμα σημείωσης",
+    "note_page.privacy.lock_note.missing_pass":
+        "Πρέπει να ορίσετε ένα κύριο κωδικό πρόσβασης από τις ρυθμίσεις",
+    "note_page.privacy.use_biometrics":
+        "Χρήση βιομετρικών στοιχείων για ξεκλείδωμα",
+    "note_page.toggle_list": "Εμφάνιση λίστας",
+    "note_page.image_gallery": "Εικόνα από τη συλλογή",
+    "note_page.image_camera": "Λήψη φωτογραφίας",
+    "note_page.drawing": "Προσθήκη σχεδίου",
+    "note_page.added_favourites": "Η σημείωση προστέθηκε στα αγαπημένα",
+    "note_page.removed_favourites": "Η σημείωση αφαιρέθηκε από τα αγαπημένα",
+    "settings.title": "Ρυθμίσεις",
+    "settings.personalization.title": "Εξατομίκευση",
+    "settings.personalization.theme_mode": "Λειτουργία θέματος",
+    "settings.personalization.theme_mode.system": "Σύστημα",
+    "settings.personalization.theme_mode.light": "Φωτεινό",
+    "settings.personalization.theme_mode.dark": "Σκοτεινό",
+    "settings.personalization.use_amoled": "Χρήση μαύρου θέματος",
+    "settings.personalization.use_custom_accent":
+        "Ακολουθήστε την απόχρωση του συστήματος",
+    "settings.personalization.custom_accent":
+        "Επιλέξτε μια προσαρμοσμένη απόχρωση",
+    "settings.personalization.use_grid": "Προβολή πλέγματος για σημειώσεις",
+    "settings.personalization.locale": "Γλώσσα εφαρμογής",
+    "settings.personalization.locale.device_default": "Προεπιλογή συσκευής",
+    "settings.personalization.locale.x_translated": "{{}}% μεταφρασμένο",
+    "settings.privacy.title": "Απόρρητο",
+    "settings.privacy.use_master_pass": "Χρήση κύριου κωδικού πρόσβασης",
+    "settings.privacy.use_master_pass.disclaimer":
+        "Προειδοποίηση: Εαν ξεχάσετε ποτέ τον κύριο κωδικό πρόσβασης, δεν θα μπορεσετε να τον επαναφέρετε, θα χρειαστεί να απεγκαταστήσετε την εφαρμογή και κατα συνέπεια να καταργήσετε όλες τις σημειώσεις σας και να την επανεγκαταστήσετε. Παρακαλώ σημειώστε τον κάπου",
+    "settings.privacy.modify_master_pass":
+        "Τροποποίηση κύριου κωδικού πρόσβασης",
+    "settings.backup_restore.title": "Αντίγραφα ασφαλείας και επαναφορά",
+    "settings.backup_restore.backup": "Αντίγραφα Ασφαλείας",
+    "settings.backup_restore.backup_desc":
+        "Δημιουργία τοπικού αντιγράφου των σημειώσεων σας",
+    "settings.backup_restore.backup.nothing_to_restore.title":
+        "Δεν υπάρχουν σημειώσεις για επαναφορά!",
+    "settings.backup_restore.backup.nothing_to_restore.desc":
+        "Δεν υπάρχουν αποθηκευμένες σημειώσεις για δημιουργία αντιγράφου ασφαλείας",
+    "settings.backup_restore.restore": "Αποκατάσταση",
+    "settings.backup_restore.restore_desc":
+        "Επαναφορά ενός αντιγράφου ασφαλείας που δημιουργήθηκε από μια έκδοση του Leaflet",
+    "settings.backup_restore.restore.status.success":
+        "Η σημείωση αποκαταστάθηκε με επιτυχία",
+    "settings.backup_restore.restore.status.wrong_format":
+        "Το επιλεγμένο αρχείο δεν είναι έγκυρο αντίγραφο ασφαλείας του Leaflet",
+    "settings.backup_restore.restore.status.wrong_password":
+        "Ο κωδικός πρόσβασης που εισάγατε δεν μπόρεσε να αποκρυπτογραφήσει το αντίγραφο ασφαλείας",
+    "settings.backup_restore.restore.status.already_exists":
+        "Η σημείωση του αντιγράφου ασφαλείας είναι ήδη παρούσα στη βάση δεδομένων",
+    "settings.backup_restore.restore.status.unknown":
+        "Υπήρξε ένα πρόβλημα κατά την εισαγωγή της σημείωσης",
+    "settings.backup_restore.import": "Εισαγωγή",
+    "settings.backup_restore.import_desc":
+        "Εισαγωγή σημειώσεων από μια έκδοση του PotatoNotes",
+    "settings.info.title": "Πληροφορίες",
+    "settings.info.about_app": "Σχετικά με το Leaflet",
+    "settings.info.update_check": "Έλεγχος για ενημερώσεις",
+    "settings.info.translate": "Μεταφράστε την εφαρμογή",
+    "settings.info.bug_report": "Αναφορά σφάλματος",
+    "settings.debug.title": "Αποσφαλμάτωση",
+    "settings.debug.show_setup_screen":
+        "Εμφάνιση οθόνης ρύθμισης στην επόμενη εκκίνηση της εφαρμογης",
+    "settings.debug.loading_overlay": "Έλεγχος επικάλυψης φόρτωσης",
+    "settings.debug.clear_database": "Εκκαθάριση βάσης δεδομένων",
+    "settings.debug.migrate_database": "Μεταφορά βάσης δεδομένων",
+    "settings.debug.generate_trash": "Δημιουργία σκουπιδιών",
+    "settings.debug.log_level": "Επίπεδο καταγραφής",
+    "about.title": "Πληροφορίες",
+    "about.pwa_version": "Έκδοση PWA",
+    "about.links": "Σύνδεσμοι",
+    "about.contributors": "Συνεισφορές",
+    "about.contributors.hrx":
+        "Επικεφαλής προγραμματιστής και σχεδιαστής της εφαρμογής",
+    "about.contributors.bas": "API συγχρονισμού και εφαρμογή",
+    "about.contributors.nico": "API συγχρονισμού",
+    "about.contributors.kat": "Παλιό API συγχρονισμού",
+    "about.contributors.rohit":
+        "Εικονογράφηση εφαρμογής και χρώματα σημειώσεων",
+    "about.contributors.rshbfn": "Εικονίδιο εφαρμογής και κύρια απόχρωση",
+    "about.contributors.elias": "Επωνυμία της εφαρμογής",
+    "about.contributors.akshit": "Ασφάλεια και υποστήριξη",
+    "search.textbox_hint": "Αναζήτηση",
+    "search.tag_create_empty_hint": "Δημιουργία νέας ετικέτας",
+    "search.tag_create_hint": "Δημιουργία ετικέτας \"{{}}\"",
+    "search.type_to_search": "Πληκτρολογήστε για αναζήτηση",
+    "search.nothing_found": "Δεν βρέθηκε τίποτα...",
+    "search.note.filters.case_sensitive": "Διάκριση πεζών και κεφαλαίων",
+    "search.note.filters.favourites": "Μόνο τα αγαπημένα",
+    "search.note.filters.locations": "Τοποθεσίες σημειώσεων",
+    "search.note.filters.locations.normal": "Κανονική",
+    "search.note.filters.locations.archive": "Αρχείο",
+    "search.note.filters.locations.trash": "Κάδος",
+    "search.note.filters.locations.normal_title": "Κανονικές σημειώσεις",
+    "search.note.filters.locations.archive_title": "Αρχειοθετημένες σημειώσεις",
+    "search.note.filters.locations.trash_title": "Διεγραμμένες σημειώσεις",
+    "search.note.filters.color": "Φίλτρο χρώματος",
+    "search.note.filters.date": "Φίλτρο ημερομηνίας",
+    "search.note.filters.date.mode_title": "Λειτουργία φίλτρου",
+    "search.note.filters.date.mode_after": "Μετά την ημερομηνία",
+    "search.note.filters.date.mode_exact": "Ίδια ημερομηνία",
+    "search.note.filters.date.mode_before": "Πριν την ημερομηνία",
+    "search.note.filters.tags": "Ετικέτες",
+    "search.note.filters.tags.selected.one": "{{}} επιλέχθηκαν",
+    "search.note.filters.tags.selected.other": "{{}} επιλέχθηκαν",
+    "search.note.filters.clear": "Εκκαθάριση φίλτρων",
+    "drawing.color_black": "Μαύρο",
+    "drawing.exit_prompt":
+        "Οποιαδήποτε μη αποθηκευμένη αλλαγή θα χαθεί. Θέλετε να εξέλθετε;",
+    "drawing.clear_canvas_warning":
+        "Αυτή η λειτουργία δεν μπορεί να αναιρεθεί. Συνέχεια;",
+    "drawing.tools.brush": "Πινέλο",
+    "drawing.tools.eraser": "Γόμα",
+    "drawing.tools.marker": "Μαρκαδόρος",
+    "drawing.tools.color_picker": "Χρώμα",
+    "drawing.tools.radius_picker": "Ακτίνα",
+    "drawing.tools.clear": "Εκκαθάριση καμβά",
+    "setup.button.get_started": "Ας ξεκινήσουμε",
+    "setup.button.finish": "Ολοκλήρωση",
+    "setup.button.next": "Επόμενο",
+    "setup.button.back": "Επιστροφή",
+    "setup.welcome.catchphrase":
+        "Η καινούρια σας αγαπημένη εφαρμογή για σημειώσεις",
+    "setup.basic_customization.title": "Βασικές προσαρμογές",
+    "setup.restore_import.title": "Επαναφορά και εισαγωγή",
+    "setup.restore_import.desc":
+        "Μπορείτε να επιλέξετε να επαναφέρετε σημειώσεις από άλλη έκδοση του Leaflet ή να εισάγετε σημειώσεις από μια παλαιότερη έκδοση του PotatoNotes",
+    "setup.restore_import.restore_btn": "Επαναφορά από το Leaflet",
+    "setup.restore_import.import_btn": "Εισαγωγή από PotatoNotes",
+    "setup.finish.title": "Όλα είναι έτοιμα!",
+    "setup.finish.last_words":
+        "Έχετε ολοκληρώσει τη ρύθμιση του Leaflet, τώρα η εφαρμογή είναι έτοιμη για την πρώτη χρήση. Αν ποτέ θέλετε να αλλάξετε κάτι, πηγαίνετε στις ρυθμίσεις. Ελπίζω ότι θα απολαύσετε το Leaflet όσο και εγώ!",
+    "backup_restore.backup.title": "Δημιουργία αντιγράφου ασφαλείας",
+    "backup_restore.backup.password": "Κωδικός",
+    "backup_restore.backup.name": "Όνομα (προαιρετικό)",
+    "backup_restore.backup.num_of_notes":
+        "Αριθμός σημειώσεων στο αντίγραφο ασφαλείας: {{}}",
+    "backup_restore.backup.protected_notes_prompt":
+        "Ορισμένες σημειώσεις είναι κλειδωμένες, απαιτούν κωδικό πρόσβασης για να προχωρήσετε",
+    "backup_restore.backup.creating": "Δημιουργία αντιγράφου ασφαλείας",
+    "backup_restore.backup.creating_progress":
+        "Δημιουργία αντιγράφου ασφαλείας της σημείωσης {{}} από {{}}",
+    "backup_restore.backup.complete.success":
+        "Το αντίγραφο ασφαλείας ολοκληρώθηκε επιτυχώς!",
+    "backup_restore.backup.complete.failure":
+        "Η διαδικασία δημιουργίας αντιγράφου ασφαλείας διακόπηκε",
+    "backup_restore.backup.complete_desc.success":
+        "Η διαδικασία αντιγράφου ασφαλείας ήταν επιτυχής! Μπορείτε να βρείτε το αντίγραφο ασφαλείας στο ",
+    "backup_restore.backup.complete_desc.success.no_file":
+        "Η διαδικασία αντιγράφου ασφαλείας ήταν επιτυχημένη! Μπορείτε τώρα να κλείσετε αυτό το παράθυρο",
+    "backup_restore.backup.complete_desc.failure":
+        "Κάτι πήγε στραβά ή ακυρώσατε τη διαδικασία αποθήκευσης. Μπορείτε να επαναλάβετε τη διαδικασία δημιουργίας αντιγράφων ασφαλείας ανά πάσα στιγμή",
+    "backup_restore.restore.title":
+        "Επιλέξτε αντίγραφο ασφαλείας για επαναφορά",
+    "backup_restore.restore.file_open": "Άνοιγμα αρχείου",
+    "backup_restore.restore.from_file": "{{}} (Από αρχείο)",
+    "backup_restore.restore.info":
+        "Αριθμός σημειώσεων: {{}}, Αριθμός ετικετών: {{}}\nΔημιουργήθηκε στις {{}}",
+    "backup_restore.restore.no_backups":
+        "Δεν υπάρχουν διαθέσιμα αντίγραφα ασφαλείας. Δοκιμάστε να ανοίξετε ένα αρχείο",
+    "backup_restore.restore.failure":
+        "Αδυναμία επαναφοράς αντιγράφου ασφαλείας",
+    "backup_restore.import.title": "Επιλέξτε την προέλευση της εισαγωγής",
+    "backup_restore.import.open_db": "Άνοιγμα αντιγράφου ασφαλείας PotatoNotes",
+    "backup_restore.import.open_previous":
+        "Άνοιγμα βάσης δεδομένων προηγούμενης έκδοσης",
+    "backup_restore.import.open_previous.unsupported_platform":
+        "Μόνο το Android υποστηρίζει φόρτωση από προηγούμενη έκδοση",
+    "backup_restore.import.open_previous.no_file":
+        "Δεν βρέθηκε βάση δεδομένων από παλιά έκδοση",
+    "backup_restore.import.notes_loaded": "Επιτυχής φόρτωση σημειώσεων",
+    "backup_restore.select_notes": "Επιλέξτε σημειώσεις για επαναφορά",
+    "backup_restore.replace_existing": "Αντικατάσταση υπαρχουσών σημειώσεων",
+    "miscellaneous.updater.update_available": "Υπάρχει διαθέσιμη ενημέρωση!",
+    "miscellaneous.updater.update_available_desc":
+        "Μια νέα ενημέρωση είναι διαθέσιμη για λήψη, κάντε κλικ στο αντίστοιχο κουμπί για να την κατεβάσετε",
+    "miscellaneous.updater.already_on_latest": "Τελευταία έκδοση",
+    "miscellaneous.updater.already_on_latest_desc":
+        "Είστε ήδη στην τελευταία έκδοση της εφαρμογής",
+  };
+}

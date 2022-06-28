@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 
@@ -53,7 +52,7 @@ class WelcomePage extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          LocaleStrings.setup.welcomeCatchphrase,
+                          strings.setup.welcomeCatchphrase,
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 16),
                         ),

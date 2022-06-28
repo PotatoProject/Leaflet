@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -13,7 +12,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocaleStrings.about.title),
+        title: Text(strings.about.title),
       ),
       extendBodyBehindAppBar: true,
       body: LayoutBuilder(
@@ -56,7 +55,7 @@ class AboutPage extends StatelessWidget {
               ),
               const Divider(height: 1),
               SettingsCategory(
-                header: LocaleStrings.about.contributors,
+                header: strings.about.contributors,
                 children: List.generate(
                   Constants.contributors.length,
                   (index) =>
@@ -92,7 +91,7 @@ class AboutPage extends StatelessWidget {
               vertical: 16,
             ),
             child: Text(
-              LocaleStrings.about.links,
+              strings.about.links,
               style: const TextStyle(
                 fontSize: 18,
               ),

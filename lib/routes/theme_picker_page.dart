@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
@@ -208,7 +207,7 @@ class _AppThemeCard extends StatelessWidget {
                             child: TextButton(
                               onPressed: !selected ? onDelete : null,
                               child: Text(
-                                LocaleStrings.common.delete.toUpperCase(),
+                                strings.common.delete.toUpperCase(),
                               ),
                             ),
                           ),

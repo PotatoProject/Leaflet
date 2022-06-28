@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/widget/dialog_sheet_base.dart';
 
@@ -46,15 +46,13 @@ class _NewTagState extends State<TagEditor> {
   Widget build(BuildContext context) {
     return DialogSheetBase(
       title: Text(
-        widget.tag != null
-            ? LocaleStrings.common.tagModify
-            : LocaleStrings.common.tagNew,
+        widget.tag != null ? strings.common.tagModify : strings.common.tagNew,
       ),
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: TextFormField(
           decoration: InputDecoration(
-            labelText: LocaleStrings.common.tagTextboxHint,
+            labelText: strings.common.tagTextboxHint,
             border: const UnderlineInputBorder(),
           ),
           autofocus: true,
@@ -69,12 +67,12 @@ class _NewTagState extends State<TagEditor> {
         if (widget.tag != null)
           TextButton(
             onPressed: () => widget.onDelete?.call(tag),
-            child: Text(LocaleStrings.common.delete),
+            child: Text(strings.common.delete),
           ),
         TextButton(
           onPressed:
               tag.name.trim().isNotEmpty ? () => _onSubmit(tag.name) : null,
-          child: Text(LocaleStrings.common.save),
+          child: Text(strings.common.save),
         ),
       ],
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/dependent_scaffold.dart';
 
@@ -65,7 +64,7 @@ class _SearchPageState<T> extends State<SearchPage> {
           controller: widget.delegate._queryTextController,
           focusNode: focusNode,
           decoration: InputDecoration.collapsed(
-            hintText: LocaleStrings.search.textboxHint,
+            hintText: strings.search.textboxHint,
           ),
           autofocus: true,
           onChanged: (value) => _onSearchBodyChanged(),

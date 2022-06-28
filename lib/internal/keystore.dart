@@ -1,18 +1,20 @@
+import 'dart:async';
+
 import 'package:biometric_storage/biometric_storage.dart';
 
 class Keystore {
-  final Map<String, BiometricStorageFile> _storages;
+  final Map<_KeystorageFileConstants, BiometricStorageFile> _storages;
 
   Keystore._(this._storages);
 
   static Future<Keystore> newInstance() async {
-    final Map<String, BiometricStorageFile> _storages = {};
-    for (final String key in _KeystorageFileConstants.values) {
+    final Map<_KeystorageFileConstants, BiometricStorageFile> _storages = {};
+    for (final constant in _KeystorageFileConstants.values) {
       final BiometricStorageFile instance = await BiometricStorage().getStorage(
-        key,
+        constant.key,
         options: StorageFileInitOptions(authenticationRequired: false),
       );
-      _storages[key] = instance;
+      _storages[constant] = instance;
     }
     return Keystore._(_storages);
   }
@@ -38,12 +40,10 @@ class Keystore {
   }
 }
 
-class _KeystorageFileConstants {
-  static const String masterPass = "master_pass";
-  static const String databaseKey = "database_key";
+enum _KeystorageFileConstants {
+  masterPass("master_pass"),
+  databaseKey("database_key");
 
-  static const List<String> values = [
-    masterPass,
-    databaseKey,
-  ];
+  final String key;
+  const _KeystorageFileConstants(this.key);
 }

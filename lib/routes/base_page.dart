@@ -12,7 +12,6 @@ import 'package:potato_notes/internal/custom_icons.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/in_app_update.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_list_page.dart';
@@ -138,23 +137,23 @@ class BasePageState extends State<BasePage>
   List<BottomNavigationBarItem> get _items => [
         BottomNavigationBarItem(
           icon: const Icon(CustomIcons.notes),
-          label: LocaleStrings.mainPage.titleNotes,
+          label: strings.mainPage.titleNotes,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.inventory_2_outlined),
-          label: LocaleStrings.mainPage.titleArchive,
+          label: strings.mainPage.titleArchive,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.search_outlined),
-          label: LocaleStrings.mainPage.search,
+          label: strings.mainPage.search,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.delete_outlined),
-          label: LocaleStrings.mainPage.titleTrash,
+          label: strings.mainPage.titleTrash,
         ),
         BottomNavigationBarItem(
           icon: const Icon(CustomIcons.settings_outline),
-          label: LocaleStrings.mainPage.settings,
+          label: strings.mainPage.settings,
         ),
       ];
 
@@ -201,15 +200,15 @@ class BasePageState extends State<BasePage>
           enableDismiss: false,
           enableGestures: false,
           builder: (context) => DialogSheetBase(
-            title: Text(LocaleStrings.common.quickTip),
+            title: Text(strings.common.quickTip),
             content: Text(
-              LocaleStrings.mainPage.importPsa(
+              strings.mainPage.importPsa(
                 [
-                  LocaleStrings.settings.title,
-                  LocaleStrings.settings.backupRestoreTitle,
-                  LocaleStrings.settings.backupRestoreImport,
+                  strings.settings.title,
+                  strings.settings.backupRestoreTitle,
+                  strings.settings.backupRestoreImport,
                 ].join(" > "),
-                LocaleStrings.backupRestore.importOpenPrevious,
+                strings.backupRestore.importOpenPrevious,
               ),
             ),
             actions: [
@@ -218,7 +217,7 @@ class BasePageState extends State<BasePage>
                   prefs.migrationInfoShown = true;
                   Navigator.pop(context);
                 },
-                child: Text(LocaleStrings.common.ok),
+                child: Text(strings.common.ok),
               ),
             ],
           ),
@@ -491,7 +490,7 @@ class _NavigationDrawer extends StatelessWidget {
                   title: Text(
                     prefs.accessToken != null
                         ? prefs.username ?? "Guest"
-                        : LocaleStrings.mainPage.account,
+                        : strings.mainPage.account,
                   ),
                   onTap: () {
                     Utils.showModalBottomSheet(
@@ -509,8 +508,8 @@ class _NavigationDrawer extends StatelessWidget {
             ),
             title: Text(
               collapsed
-                  ? LocaleStrings.common.expand
-                  : LocaleStrings.common.collapse,
+                  ? strings.common.expand
+                  : strings.common.collapse,
             ),
             onTap: () => onExpandChanged?.call(!collapsed),
             showTitle: !collapsed,

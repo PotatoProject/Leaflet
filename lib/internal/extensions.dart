@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:liblymph/database.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
@@ -305,6 +304,8 @@ extension ContextProviders on BuildContext {
     }
   }
 
+  Locale get locale => Localizations.localeOf(this);
+
   //BasePageState? get basePage => BasePage.maybeOf(this);
   TextDirection get directionality => Directionality.of(this);
 
@@ -328,25 +329,25 @@ extension NoteColorX on NoteColor {
   String get label {
     switch (type) {
       case NoteColorType.empty:
-        return LocaleStrings.common.colorNone;
+        return strings.common.colorNone;
       case NoteColorType.red:
-        return LocaleStrings.common.colorRed;
+        return strings.common.colorRed;
       case NoteColorType.orange:
-        return LocaleStrings.common.colorOrange;
+        return strings.common.colorOrange;
       case NoteColorType.yellow:
-        return LocaleStrings.common.colorYellow;
+        return strings.common.colorYellow;
       case NoteColorType.green:
-        return LocaleStrings.common.colorGreen;
+        return strings.common.colorGreen;
       case NoteColorType.cyan:
-        return LocaleStrings.common.colorCyan;
+        return strings.common.colorCyan;
       case NoteColorType.lightBlue:
-        return LocaleStrings.common.colorLightBlue;
+        return strings.common.colorLightBlue;
       case NoteColorType.blue:
-        return LocaleStrings.common.colorBlue;
+        return strings.common.colorBlue;
       case NoteColorType.purple:
-        return LocaleStrings.common.colorPurple;
+        return strings.common.colorPurple;
       case NoteColorType.pink:
-        return LocaleStrings.common.colorPink;
+        return strings.common.colorPink;
     }
   }
 }

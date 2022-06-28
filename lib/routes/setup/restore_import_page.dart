@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/backup_and_restore/restore_page.dart';
 import 'package:potato_notes/widget/illustrations.dart';
@@ -14,7 +14,7 @@ class BackupRestorePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(MdiIcons.zipBoxOutline),
-        title: Text(LocaleStrings.setup.restoreImportTitle),
+        title: Text(strings.setup.restoreImportTitle),
       ),
       extendBodyBehindAppBar: true,
       body: Padding(
@@ -27,7 +27,7 @@ class BackupRestorePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(LocaleStrings.setup.restoreImportDesc),
+            Text(strings.setup.restoreImportDesc),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -57,7 +57,7 @@ class BackupRestorePage extends StatelessWidget {
                 );
               },
               label: Text(
-                LocaleStrings.setup.restoreImportRestoreBtn.toUpperCase(),
+                strings.setup.restoreImportRestoreBtn.toUpperCase(),
               ),
               icon: const Icon(Icons.restart_alt_rounded),
             ),
@@ -70,7 +70,7 @@ class BackupRestorePage extends StatelessWidget {
                 );
               },
               label: Text(
-                LocaleStrings.setup.restoreImportImportBtn.toUpperCase(),
+                strings.setup.restoreImportImportBtn.toUpperCase(),
               ),
               icon: const Icon(Icons.file_present_outlined),
             ),

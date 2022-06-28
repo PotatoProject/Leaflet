@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/widget/popup_menu_item_with_icon.dart';
 
 class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
@@ -31,7 +31,7 @@ class SelectionBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.close),
         padding: EdgeInsets.zero,
         onPressed: state.closeSelection,
-        tooltip: LocaleStrings.mainPage.selectionBarClose,
+        tooltip: strings.mainPage.selectionBarClose,
       ),
       title: Text(
         selectionList.length.toString(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/custom_icons.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
+import 'package:potato_notes/internal/providers.dart';
 
 class ReturnModeSelectionSheet extends StatefulWidget {
   final SearchReturnMode mode;
@@ -41,7 +41,7 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
       children: [
         CheckboxListTile(
           secondary: const Icon(CustomIcons.notes),
-          title: Text(LocaleStrings.search.noteFiltersLocationsNormalTitle),
+          title: Text(strings.search.noteFiltersLocationsNormalTitle),
           value: _mode.fromNormal,
           onChanged:
               _mode.values.where((e) => e).length > 1 || !_mode.fromNormal
@@ -56,7 +56,7 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
         ),
         CheckboxListTile(
           secondary: const Icon(Icons.inventory_2_outlined),
-          title: Text(LocaleStrings.search.noteFiltersLocationsArchiveTitle),
+          title: Text(strings.search.noteFiltersLocationsArchiveTitle),
           value: _mode.fromArchive,
           onChanged:
               _mode.values.where((e) => e).length > 1 || !_mode.fromArchive
@@ -71,7 +71,7 @@ class _ReturnModeSelectionSheetState extends State<ReturnModeSelectionSheet> {
         ),
         CheckboxListTile(
           secondary: const Icon(Icons.delete_outlined),
-          title: Text(LocaleStrings.search.noteFiltersLocationsTrashTitle),
+          title: Text(strings.search.noteFiltersLocationsTrashTitle),
           value: _mode.fromTrash,
           onChanged: _mode.values.where((e) => e).length > 1 || !_mode.fromTrash
               ? (value) {

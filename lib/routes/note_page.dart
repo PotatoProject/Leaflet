@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:liblymph/database.dart' hide NoteImages;
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
-import 'package:potato_notes/internal/locales/locale_strings.g.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/draw_page.dart';
@@ -186,7 +185,7 @@ class _NotePageState extends State<NotePage> {
                   IconButton(
                     icon: const Icon(Icons.remove_red_eye_outlined),
                     padding: EdgeInsets.zero,
-                    tooltip: LocaleStrings.notePage.privacyTitle,
+                    tooltip: strings.notePage.privacyTitle,
                     onPressed: showPrivacyOptionSheet,
                   ),
                 if (!prefs.folders
@@ -198,8 +197,8 @@ class _NotePageState extends State<NotePage> {
                     ),
                     padding: EdgeInsets.zero,
                     tooltip: note.starred
-                        ? LocaleStrings.mainPage.selectionBarRemoveFavourites
-                        : LocaleStrings.mainPage.selectionBarAddFavourites,
+                        ? strings.mainPage.selectionBarRemoveFavourites
+                        : strings.mainPage.selectionBarAddFavourites,
                     onPressed: () => setStarred(!note.starred),
                   ),
                 ...getToolbarButtons(returnNothing: !deviceInfo.isLandscape),
@@ -313,7 +312,7 @@ class _NotePageState extends State<NotePage> {
               ),
             ),
           _NotePageTextFormField(
-            hintText: LocaleStrings.notePage.titleHint,
+            hintText: strings.notePage.titleHint,
             controller: titleController,
             focusNode: titleFocusNode,
             onChanged: (text) {
@@ -327,7 +326,7 @@ class _NotePageState extends State<NotePage> {
           ),
           _NotePageTextFormField(
             contentField: true,
-            hintText: LocaleStrings.notePage.contentHint,
+            hintText: strings.notePage.contentHint,
             controller: contentController,
             focusNode: contentFocusNode,
             onChanged: (text) {
@@ -350,7 +349,7 @@ class _NotePageState extends State<NotePage> {
               child: ListTile(
                 leading: const Icon(Icons.add),
                 title: Text(
-                  LocaleStrings.notePage.addEntryHint,
+                  strings.notePage.addEntryHint,
                   style: TextStyle(
                     color: context.theme.colorScheme.onBackground,
                   ),
@@ -419,8 +418,8 @@ class _NotePageState extends State<NotePage> {
       SnackBar(
         content: Text(
           starred
-              ? LocaleStrings.notePage.addedFavourites
-              : LocaleStrings.notePage.removedFavourites,
+              ? strings.notePage.addedFavourites
+              : strings.notePage.removedFavourites,
         ),
         width: min(640, context.mSize.width - 32),
         behavior: SnackBarBehavior.floating,
@@ -495,7 +494,7 @@ class _NotePageState extends State<NotePage> {
         IconButton(
           icon: const Icon(Icons.local_offer_outlined),
           padding: EdgeInsets.zero,
-          tooltip: LocaleStrings.notePage.toolbarTags,
+          tooltip: strings.notePage.toolbarTags,
           onPressed: () async {
             await Utils.showSecondaryRoute(
               context,
@@ -513,7 +512,7 @@ class _NotePageState extends State<NotePage> {
         IconButton(
           icon: const Icon(Icons.color_lens_outlined),
           padding: EdgeInsets.zero,
-          tooltip: LocaleStrings.notePage.toolbarColor,
+          tooltip: strings.notePage.toolbarColor,
           onPressed: () => Utils.showModalBottomSheet(
             context: context,
             backgroundColor: context.theme.cardColor,
@@ -531,7 +530,7 @@ class _NotePageState extends State<NotePage> {
         IconButton(
           icon: const Icon(Icons.add),
           padding: EdgeInsets.zero,
-          tooltip: LocaleStrings.notePage.toolbarAddItem,
+          tooltip: strings.notePage.toolbarAddItem,
           onPressed: () async {
             Utils.showModalBottomSheet(
               context: context,
@@ -546,23 +545,23 @@ class _NotePageState extends State<NotePage> {
                               ? Icons.check_circle
                               : Icons.check_circle_outline,
                         ),
-                        title: Text(LocaleStrings.notePage.toggleList),
+                        title: Text(strings.notePage.toggleList),
                         onTap: () => handleAddItemTap(context, 'list'),
                       ),
                       ListTile(
                         leading: const Icon(Icons.photo_outlined),
-                        title: Text(LocaleStrings.notePage.imageGallery),
+                        title: Text(strings.notePage.imageGallery),
                         onTap: () => handleAddItemTap(context, 'image'),
                       ),
                       ListTile(
                         leading: const Icon(Icons.camera_outlined),
                         enabled: !DeviceInfo.isDesktop,
-                        title: Text(LocaleStrings.notePage.imageCamera),
+                        title: Text(strings.notePage.imageCamera),
                         onTap: () => handleAddItemTap(context, 'camera'),
                       ),
                       ListTile(
                         leading: const Icon(Icons.brush_outlined),
-                        title: Text(LocaleStrings.notePage.drawing),
+                        title: Text(strings.notePage.drawing),
                         onTap: () => handleAddItemTap(context, 'drawing'),
                       ),
                     ],
@@ -652,7 +651,7 @@ class _NotePageState extends State<NotePage> {
                 },
                 activeColor: context.theme.colorScheme.secondary,
                 secondary: const Icon(Icons.remove_red_eye_outlined),
-                title: Text(LocaleStrings.notePage.privacyHideContent),
+                title: Text(strings.notePage.privacyHideContent),
               ),
               SwitchListTile.adaptive(
                 value: note.lockNote,
@@ -673,10 +672,10 @@ class _NotePageState extends State<NotePage> {
                     : null,
                 activeColor: context.theme.colorScheme.secondary,
                 secondary: const Icon(Icons.lock_outlined),
-                title: Text(LocaleStrings.notePage.privacyLockNote),
+                title: Text(strings.notePage.privacyLockNote),
                 subtitle: prefs.masterPass == ""
                     ? Text(
-                        LocaleStrings.notePage.privacyLockNoteMissingPass,
+                        strings.notePage.privacyLockNoteMissingPass,
                         style: const TextStyle(color: Colors.red),
                       )
                     : null,
@@ -705,7 +704,7 @@ class _NotePageState extends State<NotePage> {
                       : null,
                   activeColor: context.theme.colorScheme.secondary,
                   secondary: const Icon(Icons.fingerprint_outlined),
-                  title: Text(LocaleStrings.notePage.privacyUseBiometrics),
+                  title: Text(strings.notePage.privacyUseBiometrics),
                 ),
               ),
             ],
@@ -825,7 +824,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
                 child: TextField(
                   controller: widget.controller,
                   decoration: InputDecoration.collapsed(
-                    hintText: LocaleStrings.notePage.listItemHint,
+                    hintText: strings.notePage.listItemHint,
                   ),
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(

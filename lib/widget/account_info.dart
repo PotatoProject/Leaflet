@@ -63,7 +63,7 @@ class AccountInfo extends StatelessWidget {
                     ),
                     trailing: Text(
                       snapshot.hasData
-                          ? LocaleStrings.common
+                          ? strings.common
                               .xOfY(snapshot.data!.used, snapshot.data!.limit)
                           : '-',
                     ),
