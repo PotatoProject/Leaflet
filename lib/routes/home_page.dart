@@ -2,8 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/data/folder.dart';
+import 'package:potato_notes/internal/data/note.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       body: SelectionStateWidget.withState(
         state: _selectionState,
         child: StreamBuilder<List<Note>>(
-          stream: noteHelper.watchNotes(folder),
+          stream: data.watchNotes(folder),
           initialData: const [],
           builder: (context, snapshot) {
             return NestedScrollView(
@@ -64,6 +65,10 @@ class _HomePageState extends State<HomePage> {
                         TextStyle(fontFamily: Constants.leafletLogoFontFamily),
                   ),
                   actions: [
+                    IconButton(
+                      onPressed: () => data.sync(),
+                      icon: const Icon(Icons.sync),
+                    ),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.search),
@@ -142,30 +147,31 @@ class _HomePageState extends State<HomePage> {
                                           _buildTag(
                                         context: context,
                                         title: prefs.folders[index].name,
-                                        icon: Utils.getIconForFolder(
+                                        icon: Icons
+                                            .home /*Utils.getIconForFolder(
                                           prefs.folders[index],
-                                        ),
+                                        )*/
+                                        ,
                                         selected: prefs.folders[index].id ==
                                             folder.id,
                                         onTap: () => setState(
                                           () {
-                                            folder = prefs.folders[index];
+                                            //folder = prefs.folders[index];
                                           },
                                         ),
                                         onLongPress: () =>
                                             Utils.showModalBottomSheet(
                                           context: context,
                                           builder: (context) => FolderEditor(
-                                            folder: prefs.folders[index],
+                                            folder: BuiltInFolders
+                                                .all, //prefs.folders[index],
                                             onSave: (folder) async {
                                               context.pop();
-                                              await folderHelper
-                                                  .saveFolder(folder);
+                                              await data.saveFolder(folder);
                                             },
                                             onDelete: (folder) async {
                                               context.pop();
-                                              await folderHelper
-                                                  .deleteFolder(folder);
+                                              await data.deleteFolder(folder);
                                             },
                                           ),
                                         ),
@@ -233,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => FolderEditor(
                                       onSave: (folder) async {
                                         context.pop();
-                                        await folderHelper.saveFolder(folder);
+                                        await data.saveFolder(folder);
                                       },
                                     ),
                                   ),
@@ -335,23 +341,23 @@ class _HomePageState extends State<HomePage> {
                   ),
                 if (!folder.readOnly)
                   IconButton(
-                    icon: const Icon(Icons.image_outlined),
-                    padding: EdgeInsets.zero,
-                    onPressed: () =>
-                        Utils.newImage(context, folder, ImageSource.gallery),
-                  ),
+                      icon: const Icon(Icons.image_outlined),
+                      padding: EdgeInsets.zero,
+                      onPressed: () => {}
+                      //Utils.newImage(context, folder, ImageSource.gallery),
+                      ),
                 if (!folder.readOnly)
                   IconButton(
-                    icon: const Icon(Icons.brush_outlined),
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Utils.newDrawing(context, folder),
-                  ),
+                      icon: const Icon(Icons.brush_outlined),
+                      padding: EdgeInsets.zero,
+                      onPressed: () => {} //Utils.newDrawing(context, folder),
+                      ),
                 if (!folder.readOnly)
                   IconButton(
-                    icon: const Icon(Icons.note_add_outlined),
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Utils.importNotes(context),
-                  ),
+                      icon: const Icon(Icons.note_add_outlined),
+                      padding: EdgeInsets.zero,
+                      onPressed: () => {} //Utils.importNotes(context),
+                      ),
                 if (folder.readOnly) const Spacer(),
                 if (folder.readOnly) const Text("Read only"),
                 if (folder.readOnly) const Spacer(),

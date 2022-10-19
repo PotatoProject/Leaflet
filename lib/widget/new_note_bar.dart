@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:liblymph/database.dart';
+import 'package:potato_notes/internal/data/folder.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -29,22 +29,23 @@ class NewNoteBar extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.check_box_outlined),
           tooltip: strings.common.newList,
-          onPressed: () => Utils.newList(context, folder),
+          onPressed: () => {}, //Utils.newList(context, folder),
         ),
         IconButton(
           icon: const Icon(Icons.image_outlined),
           tooltip: strings.common.newImage,
-          onPressed: () => Utils.newImage(context, folder, ImageSource.gallery),
+          onPressed: () =>
+              {}, //Utils.newImage(context, folder, ImageSource.gallery),
         ),
         IconButton(
           icon: const Icon(Icons.brush_outlined),
           tooltip: strings.common.newDrawing,
-          onPressed: () => Utils.newDrawing(context, folder),
+          onPressed: () => {}, //Utils.newDrawing(context, folder),
         ),
         IconButton(
           icon: const Icon(Icons.note_add_outlined),
           tooltip: strings.common.importNote,
-          onPressed: () => Utils.importNotes(context),
+          onPressed: () => {}, //Utils.importNotes(context),
         ),
       ],
     );

@@ -366,7 +366,7 @@ class _DrawPageState extends State<DrawPage>
     final File imgFile = File(drawing);
     await imgFile.writeAsBytes(pngBytes, flush: true);
     logger.d(drawing);
-    final NoteImage newImg = await Utils.copyFileToCache(XFile(imgFile.path));
+    /*final NoteImage newImg = await Utils.copyFileToCache(XFile(imgFile.path));
     if (_noteImage != null) {
       final int indexOf = widget.note.images.indexOf(_noteImage!.id);
       widget.note.images.insert(indexOf, newImg.id);
@@ -382,7 +382,7 @@ class _DrawPageState extends State<DrawPage>
     imageHelper.saveImage(_noteImage!);
     noteHelper.saveNote(widget.note.markChanged());
 
-    _controller.saved = true;
+    _controller.saved = true;*/
   }
 }
 

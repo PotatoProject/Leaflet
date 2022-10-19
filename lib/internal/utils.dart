@@ -11,7 +11,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
-import 'package:liblymph/database.dart';
 import 'package:liblymph/encryption.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -21,6 +20,8 @@ import 'package:path/path.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
 import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/data/folder.dart';
+import 'package:potato_notes/internal/data/note.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/file_system_helper.dart';
@@ -56,7 +57,7 @@ class Utils {
   );
 
   static void deleteNoteSafely(Note note) {
-    noteHelper.deleteNote(note);
+    data.deleteNote(note);
   }
 
   static void handleNotePagePop(Note note) {
@@ -199,7 +200,7 @@ class Utils {
     return SelectionOptions(
       options: (context, notes) {
         final bool anyStarred = notes.any((item) => item.starred);
-        final bool showUnpin = notes.firstOrNull?.pinned ?? false;
+        final bool showUnpin = false;
 
         return [
           SelectionOptionEntry(
@@ -288,7 +289,7 @@ class Utils {
         break;
       case 'selectall':
         state.selecting = true;
-        final List<Note> notes = await noteHelper.listNotes(state.folder);
+        final List<Note> notes = await data.listNotes(state.folder);
         for (final Note note in notes) {
           state.addSelectedNote(note);
         }
@@ -296,7 +297,7 @@ class Utils {
       case 'favourites':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
+          showLock: notes.any((n) => n.lockNote),
           showBiometrics: notes.any((n) => n.usesBiometrics),
         );
 
@@ -305,13 +306,11 @@ class Utils {
 
           for (final Note note in notes) {
             if (anyStarred) {
-              await noteHelper.saveNote(
-                note.markChanged().copyWith(starred: false),
-              );
+              note.starred = false;
+              await data.saveNote(note);
             } else {
-              await noteHelper.saveNote(
-                note.markChanged().copyWith(starred: true),
-              );
+              note.starred = false;
+              await data.saveNote(note);
             }
           }
 
@@ -321,7 +320,7 @@ class Utils {
       case 'color':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          showLock: notes.any((n) => n.lockNote && !n.isEmpty),
+          showLock: notes.any((n) => n.lockNote),
           showBiometrics: notes.any((n) => n.usesBiometrics),
         );
 
@@ -352,14 +351,15 @@ class Utils {
 
           if (selectedColor != null) {
             for (final Note note in notes) {
-              await noteHelper.saveNote(note.copyWith(color: selectedColor));
+              note.color = selectedColor;
+              await data.saveNote(note);
             }
 
             state.closeSelection();
           }
         }
         break;
-      case 'archive':
+      /*case 'archive':
         final bool archived = await Utils.deleteNotes(
           context: context,
           notes: notes,
@@ -368,7 +368,7 @@ class Utils {
         );
 
         if (archived) state.closeSelection();
-        break;
+        break;*/
       /* case 'delete':
         final List<Note> notesToTrash = notes.where((n) => !n.deleted).toList();
 
@@ -405,7 +405,7 @@ class Utils {
       case 'pin':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          showLock: notes.first.lockNote && !notes.first.pinned,
+          showLock: notes.first.lockNote,
           showBiometrics: notes.first.usesBiometrics,
         );
 
@@ -418,7 +418,7 @@ class Utils {
       case 'export':
         final bool unlocked = await Utils.showNoteLockDialog(
           context: context,
-          showLock: notes.first.lockNote && !notes.first.isEmpty,
+          showLock: notes.first.lockNote,
           showBiometrics: notes.first.usesBiometrics,
           description: strings.mainPage.selectionBarSaveNoteLocked,
         );
@@ -430,8 +430,9 @@ class Utils {
           );
           if (password != null) {
             Utils.showLoadingOverlay(context);
-            final bool exported =
-                await backupDelegate.saveNote(notes.first, password);
+            //TODO: fix export
+            /*final bool exported =
+                await backupDelegate.saveNote(notes.first, password);*/
             Utils.hideLoadingOverlay(context);
             /* context.basePage?.hideCurrentSnackBar();
             context.basePage?.showSnackBar(
@@ -470,44 +471,41 @@ class Utils {
   }
 
   static Future<void> handlePinNotes(BuildContext context, Note note) async {
-    if (note.pinned) {
+    /*if (note.pinned) {
       appInfo.notifications?.cancel(note.notificationId);
-    } else {
-      appInfo.notifications?.show(
-        note.notificationId,
-        note.title.isEmpty
-            ? strings.common.notificationDefaultTitle
-            : note.title,
-        note.content,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'pinned_notifications',
-            strings.common.notificationDetailsTitle,
-            channelDescription: strings.common.notificationDetailsDesc,
-            color: Constants.defaultAccent,
-            ongoing: true,
-            priority: Priority.max,
-          ),
-          iOS: const IOSNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-          macOS: const MacOSNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
+    } else {*/
+    appInfo.notifications?.show(
+      0, //note.notificationId,
+      note.title.isEmpty ? strings.common.notificationDefaultTitle : note.title,
+      note.content,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'pinned_notifications',
+          strings.common.notificationDetailsTitle,
+          channelDescription: strings.common.notificationDetailsDesc,
+          color: Constants.defaultAccent,
+          ongoing: true,
+          priority: Priority.max,
         ),
-        payload: json.encode(
-          NotificationPayload(
-            action: NotificationAction.pin,
-            id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
-            noteId: note.id,
-          ).toJson(),
+        iOS: const IOSNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
         ),
-      );
-    }
+        macOS: const MacOSNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: json.encode(
+        NotificationPayload(
+          action: NotificationAction.pin,
+          id: int.parse(note.id.split("-")[0], radix: 16).toUnsigned(31),
+          noteId: note.id,
+        ).toJson(),
+      ),
+    );
   }
 
   static Future<bool> deleteNotes({
@@ -520,23 +518,23 @@ class Utils {
   }) async {
     final bool lockSuccess = await Utils.showNoteLockDialog(
       context: context,
-      showLock: notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog,
+      showLock: notes.any((n) => n.lockNote) && showAuthDialog,
       showBiometrics: notes.any((n) => n.usesBiometrics),
     );
     if (!lockSuccess) return false;
 
     for (final Note note in notes) {
       if (archive) {
-        await noteHelper.saveNote(
-          note.markChanged().copyWith(deleted: false, archived: true),
-        );
+        note.deleted = false;
+        note.archived = true;
+        await data.saveNote(note);
       } else {
         if (permaDelete) {
           Utils.deleteNoteSafely(note);
         } else {
-          await noteHelper.saveNote(
-            note.markChanged().copyWith(deleted: true, archived: false),
-          );
+          note.deleted = true;
+          note.archived = true;
+          await data.saveNote(note);
         }
       }
     }
@@ -572,15 +570,15 @@ class Utils {
   }) async {
     final bool lockSuccess = await Utils.showNoteLockDialog(
       context: context,
-      showLock: notes.any((n) => n.lockNote && !n.isEmpty) && showAuthDialog,
+      showLock: notes.any((n) => n.lockNote) && showAuthDialog,
       showBiometrics: notes.any((n) => n.usesBiometrics),
     );
     if (!lockSuccess) return false;
 
     for (final Note note in notes) {
-      await noteHelper.saveNote(
-        note.markChanged().copyWith(deleted: false, archived: false),
-      );
+      note.deleted = false;
+      note.archived = false;
+      await data.saveNote(note);
     }
 
     final List<Note> backupNotes = List.from(notes);
@@ -651,13 +649,13 @@ class Utils {
   }
 
   static Future<void> newNote(BuildContext context, Folder folder) async {
-    final int currentLength = (await noteHelper.listNotes(folder)).length;
+    final int currentLength = (await data.listNotes(folder)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
       NotePage(
-        note: NoteX.emptyNote.copyWith(id: id, folder: folder.id),
+        note: Note.new(),
         focusTitle: true,
       ),
     );
@@ -671,7 +669,7 @@ class Utils {
     int currentLength,
     String id,
   ) async {
-    final List<Note> notes = await noteHelper.listNotes(folder);
+    final List<Note> notes = await data.listNotes(folder);
     final int newLength = notes.length;
 
     if (newLength > currentLength) {
@@ -681,17 +679,17 @@ class Utils {
       if (lastNote == null) return;
       Utils.handleNotePagePop(lastNote);
 
-      if (lastNote.isEmpty) {
+      /*if (lastNote.isEmpty) {
         Utils.deleteNotes(
           context: context,
           notes: [lastNote],
           reason: strings.mainPage.deletedEmptyNote,
         );
-      }
+      }*/
     }
   }
 
-  static Future<void> newImage(
+  /*static Future<void> newImage(
     BuildContext context,
     Folder folder,
     ImageSource source,
@@ -715,16 +713,16 @@ class Utils {
 
       deleteLastNoteIfEmpty(context, folder, currentLength, id);
     }
-  }
+  }*/
 
   static Future<void> newList(BuildContext context, Folder folder) async {
-    final int currentLength = (await noteHelper.listNotes(folder)).length;
+    final int currentLength = (await data.listNotes(folder)).length;
     final String id = generateId();
 
     await Utils.showSecondaryRoute(
       context,
       NotePage(
-        note: NoteX.emptyNote.copyWith(id: id),
+        note: Note.new(),
         openWithList: true,
       ),
     );
@@ -732,7 +730,7 @@ class Utils {
     deleteLastNoteIfEmpty(context, folder, currentLength, id);
   }
 
-  static Future<void> newDrawing(BuildContext context, Folder folder) async {
+  /*static Future<void> newDrawing(BuildContext context, Folder folder) async {
     final int currentLength = (await noteHelper.listNotes(folder)).length;
     final String id = generateId();
 
@@ -745,9 +743,9 @@ class Utils {
     );
 
     deleteLastNoteIfEmpty(context, folder, currentLength, id);
-  }
+  }*/
 
-  static Future<void> importNotes(BuildContext context) async {
+  /*static Future<void> importNotes(BuildContext context) async {
     final String? pickedFile = await FileSystemHelper.getFile(
       allowedExtensions: ['note'],
     );
@@ -801,7 +799,7 @@ class Utils {
         width: min(640, context.mSize.width - 32),
       ),
     );
-  }
+  }*/
 
   static Future<XFile?> pickImage() {
     if (DeviceInfo.isDesktop) {
@@ -863,7 +861,7 @@ class Utils {
     return utils.hex(blake.digest());
   }
 
-  static Future<NoteImage> copyFileToCache(XFile origin) async {
+  /*static Future<NoteImage> copyFileToCache(XFile origin) async {
     final String id = Utils.generateId();
     final String path = join(
       appDirectories.imagesDirectory.path,
@@ -882,7 +880,7 @@ class Utils {
       uploaded: false,
       lastChanged: DateTime.now(),
     );
-  }
+  }*/
 
   static Color getMainColorFromTheme() {
     final MediaQueryData data =

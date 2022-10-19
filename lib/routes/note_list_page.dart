@@ -1,7 +1,8 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:liblymph/database.dart';
+import 'package:potato_notes/internal/data/folder.dart';
+import 'package:potato_notes/internal/data/note.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
@@ -83,7 +84,7 @@ class NoteListPageState extends State<NoteListPage> {
             ? NewNoteBar(folder: widget.folder)
             : null,
         body: StreamBuilder<List<Note>>(
-          stream: noteHelper.watchNotes(widget.folder),
+          stream: data.watchNotes(widget.folder),
           initialData: const [],
           builder: (context, snapshot) {
             final List<Note> notes = snapshot.data ?? [];
@@ -117,7 +118,7 @@ class NoteListPageState extends State<NoteListPage> {
         MenuFabEntry(
           icon: const Icon(Icons.note_add_outlined),
           label: strings.common.importNote,
-          onTap: () => Utils.importNotes(context),
+          onTap: () => {}, //Utils.importNotes(context),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.check_box_outlined),
@@ -128,12 +129,12 @@ class NoteListPageState extends State<NoteListPage> {
           icon: const Icon(Icons.image_outlined),
           label: strings.common.newImage,
           onTap: () =>
-              Utils.newImage(context, widget.folder, ImageSource.gallery),
+              {}, //Utils.newImage(context, widget.folder, ImageSource.gallery),
         ),
         MenuFabEntry(
           icon: const Icon(Icons.brush_outlined),
           label: strings.common.newDrawing,
-          onTap: () => Utils.newDrawing(context, widget.folder),
+          onTap: () => {}, //Utils.newDrawing(context, widget.folder),
         ),
       ],
     );

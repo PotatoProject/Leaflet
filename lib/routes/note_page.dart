@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:liblymph/database.dart' hide NoteImages;
+import 'package:potato_notes/internal/data/note.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -55,25 +55,26 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    note = Note(
-      id: widget.note?.id ?? Utils.generateId(),
-      title: widget.note?.title ?? "",
-      content: widget.note?.content ?? "",
-      starred: widget.note?.starred ?? false,
-      creationDate: widget.note?.creationDate ?? DateTime.now(),
-      color: widget.note?.color ?? 0,
-      images: widget.note?.images ?? [],
-      list: widget.note?.list ?? false,
-      listContent: widget.note?.listContent ?? [],
-      reminders: widget.note?.reminders ?? [],
-      tags: widget.note?.tags ?? [],
-      hideContent: widget.note?.hideContent ?? false,
-      lockNote: widget.note?.lockNote ?? false,
-      usesBiometrics: widget.note?.usesBiometrics ?? false,
-      folder: widget.note?.folder ?? BuiltInFolders.home.id,
-      lastChanged: widget.note?.lastChanged ?? DateTime.now(),
-      lastSynced: widget.note?.lastSynced ?? DateTime.now(),
-    );
+    note = widget.note ?? Note.new();
+    // note = Note.new(
+    //   id: widget.note?.id ?? Utils.generateId(),
+    //   title: widget.note?.title ?? "",
+    //   content: widget.note?.content ?? "",
+    //   starred: widget.note?.starred ?? false,
+    //   creationDate: widget.note?.creationDate ?? DateTime.now(),
+    //   color: widget.note?.color ?? 0,
+    //   images: widget.note?.images ?? [],
+    //   list: widget.note?.list ?? false,
+    //   listContent: widget.note?.listContent ?? [],
+    //   reminders: widget.note?.reminders ?? [],
+    //   tags: widget.note?.tags ?? [],
+    //   hideContent: widget.note?.hideContent ?? false,
+    //   lockNote: widget.note?.lockNote ?? false,
+    //   usesBiometrics: widget.note?.usesBiometrics ?? false,
+    //   folder: widget.note?.folder ?? BuiltInFolders.home.id,
+    //   lastChanged: widget.note?.lastChanged ?? DateTime.now(),
+    //   lastSynced: widget.note?.lastSynced ?? DateTime.now(),
+    // );
 
     titleController = TextEditingController(text: note.title);
     contentController = TextEditingController(text: note.content);
@@ -90,7 +91,7 @@ class _NotePageState extends State<NotePage> {
       }
     });
 
-    buildListContentElements();
+    //buildListContentElements();
 
     super.initState();
   }
@@ -149,7 +150,7 @@ class _NotePageState extends State<NotePage> {
                         ),
                       ),
                       onPressed: () {
-                        setState(() => note = note.copyWith(deleted: false));
+                        setState(() => note.deleted = false);
                         notifyNoteChanged();
                       },
                       child: Text("Move".toUpperCase()),
@@ -208,13 +209,13 @@ class _NotePageState extends State<NotePage> {
             body: Row(
               children: <Widget>[
                 Expanded(child: getMainBody(context)),
-                if (note.images.isNotEmpty && deviceInfo.isLandscape)
+                if (/*note.images.isNotEmpty && */ deviceInfo.isLandscape)
                   Container(
                     padding: EdgeInsets.only(
                       top: context.padding.top + 56,
                     ),
                     width: imageWidgetSize,
-                    child: getImageWidget(context, Axis.vertical),
+                    child: null, //getImageWidget(context, Axis.vertical),
                   ),
               ],
             ),
@@ -269,10 +270,10 @@ class _NotePageState extends State<NotePage> {
   }
 
   Widget getMainBody(BuildContext context) {
-    final bool showNewItemButton =
-        note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
-            note.listContent.isEmpty;
-    final List<String> actualTags = note.getActualTags();
+    final bool showNewItemButton = false;
+    /*note.listContent.isNotEmpty && note.listContent.last.text.isNotEmpty ||
+            note.listContent.isEmpty;*/
+    final List<String> actualTags = []; //note.getActualTags();
 
     return GestureDetector(
       onTap: () {
@@ -284,10 +285,10 @@ class _NotePageState extends State<NotePage> {
           bottom: 16,
         ),
         children: [
-          if (note.images.isNotEmpty && !deviceInfo.isLandscape)
+          if (/*note.images.isNotEmpty &&*/ !deviceInfo.isLandscape)
             SizedBox(
               height: imageWidgetSize,
-              child: getImageWidget(context, Axis.horizontal),
+              child: null, //getImageWidget(context, Axis.horizontal),
             ),
           if (actualTags.isNotEmpty)
             Container(
@@ -299,12 +300,12 @@ class _NotePageState extends State<NotePage> {
                 children: List.generate(
                   actualTags.length,
                   (index) {
-                    final Tag tag = prefs.tags.firstWhere(
+                    /*final Tag tag = prefs.tags.firstWhere(
                       (tag) => tag.id == actualTags[index],
-                    );
+                    );*/
 
                     return TagChip(
-                      title: tag.name,
+                      title: "test", //tag.name,
                       shrink: !(Platform.isAndroid || Platform.isIOS),
                     );
                   },
@@ -316,7 +317,7 @@ class _NotePageState extends State<NotePage> {
             controller: titleController,
             focusNode: titleFocusNode,
             onChanged: (text) {
-              note = note.copyWith(title: text);
+              note.title = text;
               notifyNoteChanged();
             },
             onSubmitted: (value) =>
@@ -330,15 +331,15 @@ class _NotePageState extends State<NotePage> {
             controller: contentController,
             focusNode: contentFocusNode,
             onChanged: (text) {
-              note = note.copyWith(content: text);
+              note.content = text;
 
               notifyNoteChanged();
             },
             enabled:
                 !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly,
           ),
-          if (note.list)
-            ...List.generate(note.listContent.length, generateListItem),
+          /*if (note.list)
+            ...List.generate(/*note.listContent.length*/ 0, generateListItem),*/
           if (note.list &&
               !prefs.folders.firstWhere((e) => e.id == note.folder).readOnly)
             AnimatedOpacity(
@@ -355,7 +356,8 @@ class _NotePageState extends State<NotePage> {
                   ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                onTap: showNewItemButton ? () => addListContentItem() : null,
+                onTap:
+                    null, //showNewItemButton ? () => addListContentItem() : null,
                 horizontalTitleGap: 12,
               ),
             ),
@@ -364,7 +366,7 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
-  Widget generateListItem(int index) {
+  /*Widget generateListItem(int index) {
     final ListItem currentItem = note.listContent[index];
 
     if (needsFocus && index == note.listContent.length - 1) {
@@ -408,10 +410,10 @@ class _NotePageState extends State<NotePage> {
           ? context.notePalette.colors[note.color]
           : context.theme.scaffoldBackgroundColor,
     );
-  }
+  }*/
 
   void setStarred(bool starred) {
-    setState(() => note = note.copyWith(starred: starred));
+    setState(() => note.starred = starred);
     notifyNoteChanged();
     context.scaffoldMessenger.removeCurrentSnackBar();
     context.scaffoldMessenger.showSnackBar(
@@ -428,20 +430,20 @@ class _NotePageState extends State<NotePage> {
   }
 
   void notifyNoteChanged() {
-    note = note.markChanged();
-    noteHelper.saveNote(note);
+    //note = note.markChanged();
+    data.saveNote(note);
   }
 
   Future<void> handleImageAdd(XFile file) async {
-    final NoteImage savedImage = await Utils.copyFileToCache(file);
+    /*final NoteImage savedImage = await Utils.copyFileToCache(file);
     imageHelper.saveImage(savedImage);
     setState(() => note.images.add(savedImage.id));
     //imageQueue.addUpload(savedImage, note.id);
     note = note.markChanged();
-    await noteHelper.saveNote(note);
+    await noteHelper.saveNote(note);*/
   }
 
-  Widget getImageWidget(BuildContext context, Axis axis) {
+  /*Widget getImageWidget(BuildContext context, Axis axis) {
     return StreamBuilder<List<NoteImage>>(
       stream: imageHelper.watchImages(note),
       builder: (context, snapshot) {
@@ -483,7 +485,7 @@ class _NotePageState extends State<NotePage> {
         );
       },
     );
-  }
+  }*/
 
   List<Widget> getToolbarButtons({bool returnNothing = false}) {
     if (prefs.folders.firstWhere((e) => e.id == note.folder).readOnly ||
@@ -500,8 +502,8 @@ class _NotePageState extends State<NotePage> {
               context,
               SearchPage(
                 delegate: TagSearchDelegate(
-                  note.tags.toSet(),
-                  onChanged: () => noteHelper.saveNote(note.markChanged()),
+                  {}, //note.tags.toSet(),
+                  onChanged: () => notifyNoteChanged(),
                 ),
               ),
             );
@@ -519,7 +521,7 @@ class _NotePageState extends State<NotePage> {
             builder: (context) => NoteColorSelector(
               selectedColor: note.color,
               onColorSelect: (color) {
-                setState(() => note = note.copyWith(color: color));
+                setState(() => note.color = color);
                 notifyNoteChanged();
 
                 context.pop();
@@ -609,7 +611,7 @@ class _NotePageState extends State<NotePage> {
     }
   }
 
-  void addListContentItem() {
+  /*void addListContentItem() {
     final List<ListItem> sortedList = note.listContent;
     sortedList.sort((a, b) => a.id.compareTo(b.id));
 
@@ -630,7 +632,7 @@ class _NotePageState extends State<NotePage> {
     listContentNodes.add(node);
 
     needsFocus = true;
-  }
+  }*/
 
   void showPrivacyOptionSheet() {
     Utils.showModalBottomSheet(
@@ -645,7 +647,7 @@ class _NotePageState extends State<NotePage> {
                 value: note.hideContent,
                 onChanged: (value) {
                   setState(
-                    () => note = note.copyWith(hideContent: !note.hideContent),
+                    () => note.hideContent = !note.hideContent,
                   );
                   notifyNoteChanged();
                 },
@@ -663,8 +665,7 @@ class _NotePageState extends State<NotePage> {
 
                         if (confirm) {
                           setState(
-                            () =>
-                                note = note.copyWith(lockNote: !note.lockNote),
+                            () => note.lockNote = !note.lockNote,
                           );
                           notifyNoteChanged();
                         }
@@ -696,7 +697,7 @@ class _NotePageState extends State<NotePage> {
 
                           if (confirm) {
                             setState(
-                              () => note = note.copyWith(usesBiometrics: value),
+                              () => note.usesBiometrics = value,
                             );
                             notifyNoteChanged();
                           }
@@ -715,25 +716,25 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future<void> toggleList() async {
-    setState(() => note = note.copyWith(list: !note.list));
+    setState(() => note.list = !note.list);
     notifyNoteChanged();
 
-    if (note.listContent.isEmpty && note.list) {
+    /*if (note.listContent.isEmpty && note.list) {
       addListContentItem();
-    }
+    }*/
   }
 
   Future<void> addDrawing() async {
-    await Utils.showSecondaryRoute(
+    /*await Utils.showSecondaryRoute(
       context,
       DrawPage(note: note),
       allowGestures: false,
-    );
+    );*/
 
     setState(() {});
   }
 
-  void buildListContentElements() {
+  /*void buildListContentElements() {
     listContentControllers.clear();
     listContentNodes.clear();
     for (int i = 0; i < note.listContent.length; i++) {
@@ -743,10 +744,10 @@ class _NotePageState extends State<NotePage> {
       final FocusNode node = FocusNode();
       listContentNodes.add(node);
     }
-  }
+  }*/
 }
 
-class _NoteListEntryItem extends StatefulWidget {
+/*class _NoteListEntryItem extends StatefulWidget {
   final ListItem item;
   final TextEditingController? controller;
   final FocusNode? focusNode;
@@ -772,9 +773,9 @@ class _NoteListEntryItem extends StatefulWidget {
 
   @override
   _NoteListEntryItemState createState() => _NoteListEntryItemState();
-}
+}*/
 
-class _NoteListEntryItemState extends State<_NoteListEntryItem>
+/*class _NoteListEntryItemState extends State<_NoteListEntryItem>
     with SingleTickerProviderStateMixin, MouseListenerMixin {
   bool showDeleteButton = false;
 
@@ -863,7 +864,7 @@ class _NoteListEntryItemState extends State<_NoteListEntryItem>
       ),
     );
   }
-}
+}*/
 
 class _NotePageTextFormField extends StatelessWidget {
   final bool contentField;

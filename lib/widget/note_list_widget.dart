@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/data/folder.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/theme/colors.dart';

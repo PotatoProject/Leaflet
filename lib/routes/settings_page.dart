@@ -100,10 +100,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       strings.settings.backupRestoreRestoreDesc,
                     ),
                     onTap: () async {
-                      await Utils.showModalBottomSheet(
+                      /*await Utils.showModalBottomSheet(
                         context: context,
                         builder: (context) => const RestoreNotesPage(),
-                      );
+                      );*/
                     },
                   ),
                   SettingsTile(
@@ -111,10 +111,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: Text(strings.settings.backupRestoreImport),
                     description: Text(strings.settings.backupRestoreImportDesc),
                     onTap: () async {
-                      await Utils.showModalBottomSheet(
+                      /*await Utils.showModalBottomSheet(
                         context: context,
                         builder: (context) => const ImportNotesPage(),
-                      );
+                      );*/
                     },
                   ),
                 ],

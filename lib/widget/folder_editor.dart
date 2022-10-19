@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:liblymph/database.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:potato_notes/internal/constants.dart';
+import 'package:potato_notes/internal/data/folder.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/utils.dart';
@@ -26,21 +26,14 @@ class FolderEditor extends StatefulWidget {
 }
 
 class _FolderEditorState extends State<FolderEditor> {
-  Folder folder = Folder(
-    id: "",
-    name: "",
-    color: 0,
-    icon: 0,
-    readOnly: false,
-    lastChanged: DateTime.now(),
-  );
+  Folder folder = Folder.new();
   late TextEditingController controller;
 
   @override
   void initState() {
     if (widget.folder == null) {
-      folder = folder.copyWith(id: Utils.generateId());
-      folder = folder.copyWith(name: widget.initialInput);
+      //folder = folder.copyWith(id: Utils.generateId());
+      folder.name = widget.initialInput;
     } else {
       folder = widget.folder!;
     }
@@ -69,7 +62,7 @@ class _FolderEditorState extends State<FolderEditor> {
               );
 
               if (newIcon != null) {
-                folder = folder.copyWith(icon: newIcon);
+                folder.icon = newIcon;
                 setState(() {});
               }
             },
@@ -99,7 +92,7 @@ class _FolderEditorState extends State<FolderEditor> {
                     : null,
                 maxLength: 30,
                 onChanged: (text) => setState(
-                  () => folder = folder.copyWith(name: text),
+                  () => folder.name = text,
                 ),
               ),
             ),
@@ -111,7 +104,7 @@ class _FolderEditorState extends State<FolderEditor> {
               ),
               value: folder.readOnly,
               onChanged: (value) => setState(
-                () => folder = folder.copyWith(readOnly: value),
+                () => folder.readOnly = value ?? false,
               ),
             ),
           ],
@@ -136,7 +129,7 @@ class _FolderEditorState extends State<FolderEditor> {
 
   void _onSubmit(String text) {
     widget.onSave?.call(
-      folder.copyWith(name: text.trim()),
+      folder..name = text.trim(),
     );
   }
 }

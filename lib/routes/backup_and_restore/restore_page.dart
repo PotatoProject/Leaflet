@@ -18,7 +18,7 @@ import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/note_view_checkbox.dart';
 import 'package:universal_platform/universal_platform.dart';
-
+/*
 class RestoreNotesPage extends StatefulWidget {
   const RestoreNotesPage({Key? key}) : super(key: key);
 
@@ -464,3 +464,4 @@ class _NoteSelectionPageState extends State<_NoteSelectionPage> {
     );
   }
 }
+*/

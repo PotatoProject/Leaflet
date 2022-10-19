@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   biometric_storage
   bitsdojo_window_linux
+  cbl_flutter_ce
   file_selector_linux
   screen_retriever
   url_launcher_linux

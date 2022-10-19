@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:liblymph/database.dart';
 import 'package:mobx/mobx.dart';
+import 'package:potato_notes/internal/data/note.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -10,12 +10,12 @@ import 'package:potato_notes/widget/tag_chip.dart';
 class NoteViewStatusbar extends StatefulWidget {
   final Note note;
   final EdgeInsets? padding;
-  final List<Tag>? overrideTags;
+  //final List<Tag>? overrideTags;
 
   const NoteViewStatusbar({
     required this.note,
     this.padding,
-    this.overrideTags,
+    //this.overrideTags,
   });
 
   @override
@@ -64,8 +64,8 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> actualTags =
-        widget.note.getActualTags(overrideTags: widget.overrideTags);
+    final List<String> actualTags = [];
+    //widget.note.getActualTags(overrideTags: widget.overrideTags);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
               children: List.generate(
                 actualTags.length > 3 ? 4 : actualTags.length,
                 (index) {
-                  if (index != 3) {
+                  /*if (index != 3) {
                     final List<Tag> tags = widget.overrideTags ?? prefs.tags;
                     final Tag tag = tags.firstWhere(
                       (tag) => tag.id == actualTags[index],
@@ -89,12 +89,12 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
                     return TagChip(
                       title: tag.name,
                     );
-                  } else {
-                    return TagChip(
-                      title: "+${actualTags.length - 3}",
-                      showIcon: false,
-                    );
-                  }
+                  } else {*/
+                  return TagChip(
+                    title: "+${actualTags.length - 3}",
+                    showIcon: false,
+                  );
+                  //}
                 },
               ),
             ),
@@ -159,11 +159,11 @@ class _NoteViewStatusbarState extends State<NoteViewStatusbar> {
       icons.add('hasBiometrics');
     }
 
-    if (widget.note.reminders.isNotEmpty) icons.add('hasReminders');
+    //if (widget.note.reminders.isNotEmpty) icons.add('hasReminders');
 
     if (widget.note.starred) icons.add('starred');
 
-    if (widget.note.pinned) icons.add('pinned');
+    //if (widget.note.pinned) icons.add('pinned');
 
     return icons
         .map(

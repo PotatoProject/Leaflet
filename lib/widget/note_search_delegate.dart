@@ -1,7 +1,7 @@
 import 'package:animated_vector/animated_vector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:liblymph/database.dart';
+
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
@@ -13,7 +13,7 @@ import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/query_filters.dart';
-
+/*
 class NoteSearchDelegate extends CustomSearchDelegate {
   final SearchQuery searchQuery = SearchQuery();
 
@@ -198,3 +198,4 @@ class _AnimatedIconTwoVectorsState extends State<_AnimatedIconTwoVectors>
     );
   }
 }
+*/

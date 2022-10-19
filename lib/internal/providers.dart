@@ -1,19 +1,22 @@
+import 'package:cbl_flutter/cbl_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/src/locale.dart';
 import 'package:liblymph/database.dart';
 import 'package:liblymph/providers.dart';
-import 'package:liblymph/utils.dart';
 import 'package:monet/monet.dart';
 import 'package:potato_notes/generated/locale.dart';
 import 'package:potato_notes/internal/app_config.dart';
 import 'package:potato_notes/internal/app_directories.dart';
 import 'package:potato_notes/internal/app_info.dart';
 import 'package:potato_notes/internal/backup_delegate.dart';
+import 'package:potato_notes/internal/data/data.dart';
 import 'package:potato_notes/internal/database.dart';
 import 'package:potato_notes/internal/device_info.dart';
 import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:yatl/yatl.dart';
+import 'package:yatl_gen/src/api.dart';
 
 class _ProvidersSingleton extends Providers {
   _ProvidersSingleton._();
@@ -30,6 +33,7 @@ class _ProvidersSingleton extends Providers {
   late YatlCore _yatl;
   late GeneratedLocales _locales;
   late GeneratedLocaleStrings _strings;
+  late Data _data;
 
   static void init() => Providers.provideInstance(_ProvidersSingleton._());
 
@@ -42,6 +46,9 @@ class _ProvidersSingleton extends Providers {
     _sharedPrefs = await SharedPrefs.newInstance();
     _appConfig = await AppConfig.load();
     directories = await AppDirectories.initWithDefaults();
+    await CouchbaseLiteFlutter.init();
+    _data = Data();
+    await _data.init();
     database = AppDatabase(constructLeafletDb());
     this.noteHelper = database.noteHelper;
     this.tagHelper = database.tagHelper;
@@ -116,3 +123,5 @@ YatlCore get yatl => _instance._yatl;
 GeneratedLocales get locales => _instance._locales;
 
 GeneratedLocaleStrings get strings => _instance._strings;
+
+Data get data => _instance._data;

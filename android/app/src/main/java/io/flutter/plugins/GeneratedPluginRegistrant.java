@@ -21,6 +21,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin biometric_storage, design.codeux.biometric_storage.BiometricStoragePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.terwesten.gabriel.cbl_flutter_ce.CblFlutterCe());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin cbl_flutter_ce, com.terwesten.gabriel.cbl_flutter_ce.CblFlutterCe", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new com.mr.flutter.plugin.filepicker.FilePickerPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin file_picker, com.mr.flutter.plugin.filepicker.FilePickerPlugin", e);

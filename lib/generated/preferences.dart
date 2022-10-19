@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:liblymph/providers.dart';
 
 class GeneratedSharedPrefs extends LocalPreferences<TypedPreferencesBackend> {
-  const GeneratedSharedPrefs({required TypedPreferencesBackend backend})
-      : super(backend: backend);
+  const GeneratedSharedPrefs({required super.backend});
 
   String? get locale {
     return backend.read<String>("locale");

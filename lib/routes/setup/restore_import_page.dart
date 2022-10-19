@@ -51,10 +51,11 @@ class BackupRestorePage extends StatelessWidget {
           children: [
             TextButton.icon(
               onPressed: () async {
+                /*
                 await Utils.showModalBottomSheet(
                   context: context,
                   builder: (context) => const RestoreNotesPage(),
-                );
+                );*/
               },
               label: Text(
                 strings.setup.restoreImportRestoreBtn.toUpperCase(),
@@ -64,10 +65,10 @@ class BackupRestorePage extends StatelessWidget {
             const SizedBox(height: 16),
             TextButton.icon(
               onPressed: () async {
-                await Utils.showModalBottomSheet(
-                  context: context,
-                  builder: (context) => const ImportNotesPage(),
-                );
+                // await Utils.showModalBottomSheet(
+                //   context: context,
+                //   builder: (context) => const ImportNotesPage(),
+                // );
               },
               label: Text(
                 strings.setup.restoreImportImportBtn.toUpperCase(),

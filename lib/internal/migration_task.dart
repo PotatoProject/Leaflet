@@ -88,7 +88,7 @@ class MigrationTask {
         final File file =
             File(join(appDirectories.tempDirectory.path, "$id.jpg"))..create();
         await file.writeAsBytes(Utils.asList<int>(response.data));
-        noteImage = await Utils.copyFileToCache(XFile(file.path));
+        //noteImage = await Utils.copyFileToCache(XFile(file.path));
         await file.delete();
         //imageQueue.addUpload(savedImage, id);
       }

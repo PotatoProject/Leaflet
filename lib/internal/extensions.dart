@@ -227,8 +227,8 @@ extension PackageInfoX on PackageInfo {
 
 extension UriX on Uri {
   ImageProvider toImageProvider() {
-    if (data != null) {
-      return MemoryImage(data!.contentAsBytes());
+    if (this.data != null) {
+      return MemoryImage(this.data!.contentAsBytes());
     } else if (scheme.startsWith("http") || scheme.startsWith("blob")) {
       return NetworkImage(toString());
     } else {
