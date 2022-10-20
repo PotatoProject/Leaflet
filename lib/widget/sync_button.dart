@@ -19,7 +19,7 @@ class _SyncButtonState extends State<SyncButton> with TickerProviderStateMixin {
         return IconButton(
           onPressed: () {
             setState(() {
-              syncFuture = SyncServive().sync();
+              syncFuture = SyncService().sync();
             });
           },
           icon: snapshot.connectionState == ConnectionState.done ||
