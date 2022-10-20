@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
+import 'package:potato_notes/internal/sync/image_utils.dart';
 import 'package:potato_notes/internal/theme/colors.dart';
 import 'package:potato_notes/internal/theme/data.dart';
 import 'package:potato_notes/internal/theme/theme.dart';
@@ -211,7 +212,8 @@ extension TagX on Tag {
 
 extension NoteImageX on NoteImage {
   Size get size => Size(width.toDouble(), height.toDouble());
-  bool get existsLocally => File(path).existsSync();
+  bool get existsLocally =>
+      File(ImageUtils.filePathFromImage(this)).existsSync();
   String get path => join(appDirectories.imagesDirectory.path, "$id$type");
 }
 

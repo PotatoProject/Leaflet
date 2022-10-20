@@ -2,6 +2,8 @@ import 'package:liblymph/database.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/blob.dart';
 import 'package:potato_notes/internal/sync/blob_service.dart';
+import 'package:potato_notes/internal/sync/image_service.dart';
+import 'package:potato_notes/internal/sync/image_utils.dart';
 import 'package:potato_notes/internal/sync/sync_item.dart';
 
 class SyncService {
@@ -45,11 +47,29 @@ class SyncService {
   ];
 
   Future sync() async {
+    List<NoteImage> noteImages = await imageHelper.listAllImages();
+    for (final NoteImage noteImage in noteImages) {
+      if (noteImage.uploaded) {
+        continue;
+      }
+      var processedImage = await ImageUtils.processImage(noteImage);
+      await SyncImageService().uploadImage(noteImage);
+      var uploadedImage = processedImage.copyWith(uploaded: true);
+      await imageHelper.saveImage(uploadedImage);
+    }
+
     // Step 1: Fetch all data from the server
     final List<Blob> serverBlobs = await SyncBlobService().getAllBlobs();
 
     for (final SyncItem item in syncItems) {
       await item.sync(serverBlobs: serverBlobs);
+    }
+
+    noteImages = await imageHelper.listAllImages();
+    for (final NoteImage noteImage in noteImages) {
+      if (!await ImageUtils.imageDownloaded(noteImage)) {
+        await SyncImageService().downloadImage(noteImage);
+      }
     }
     //Syncing is done
   }
