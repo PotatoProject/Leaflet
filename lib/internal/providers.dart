@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:intl/locale.dart';
 import 'package:liblymph/database.dart';
 import 'package:liblymph/providers.dart';
-import 'package:liblymph/utils.dart';
 import 'package:monet/monet.dart';
 import 'package:potato_notes/generated/locale.dart';
 import 'package:potato_notes/internal/app_config.dart';
@@ -14,6 +14,7 @@ import 'package:potato_notes/internal/keystore.dart';
 import 'package:potato_notes/internal/preferences.dart';
 import 'package:potato_notes/internal/shared_prefs.dart';
 import 'package:yatl/yatl.dart';
+import 'package:yatl_gen/src/api.dart';
 
 class _ProvidersSingleton extends Providers {
   _ProvidersSingleton._();

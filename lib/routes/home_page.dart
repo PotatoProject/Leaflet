@@ -7,6 +7,7 @@ import 'package:potato_notes/internal/constants.dart';
 import 'package:potato_notes/internal/extensions.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/selection_state.dart';
+import 'package:potato_notes/internal/sync/sync_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
@@ -15,6 +16,7 @@ import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
 import 'package:potato_notes/widget/note_view.dart';
 import 'package:potato_notes/widget/separated_list.dart';
+import 'package:potato_notes/widget/sync_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -68,6 +70,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {},
                       icon: const Icon(Icons.search),
                     ),
+                    const SyncButton(),
                     IconButton(
                       onPressed: () => Utils.showSecondaryRoute(
                         context,

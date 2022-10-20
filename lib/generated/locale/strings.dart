@@ -1,5 +1,6 @@
 import 'package:liblymph/utils.dart';
 import 'package:yatl/yatl.dart';
+import 'package:yatl_gen/src/api.dart';
 
 class CommonLocaleStrings extends LocaleStrings {
   CommonLocaleStrings._(YatlCore core) : super(core);

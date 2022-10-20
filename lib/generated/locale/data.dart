@@ -1,4 +1,5 @@
 import 'package:liblymph/utils.dart';
+import 'package:yatl_gen/src/api.dart';
 part './data/ar-AR.dart';
 part './data/de-DE.dart';
 part './data/el-EL.dart';

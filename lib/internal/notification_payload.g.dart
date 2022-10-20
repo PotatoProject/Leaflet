@@ -18,7 +18,7 @@ Map<String, dynamic> _$NotificationPayloadToJson(
     <String, dynamic>{
       'id': instance.id,
       'noteId': instance.noteId,
-      'action': _$NotificationActionEnumMap[instance.action],
+      'action': _$NotificationActionEnumMap[instance.action]!,
     };
 
 const _$NotificationActionEnumMap = {
