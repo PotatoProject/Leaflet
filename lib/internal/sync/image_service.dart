@@ -86,5 +86,6 @@ class PocketbaseImageService extends ImageService {
         )
       ],
     );
+    await imageHelper.saveImage(noteImage.copyWith(uploaded: true));
   }
 }
