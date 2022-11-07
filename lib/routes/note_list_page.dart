@@ -81,7 +81,7 @@ class NoteListPageState extends State<NoteListPage> {
         useAppBarAsSecondary: _selectionState.selecting,
         secondaryAppBar: !widget.folder.readOnly && !_selectionState.selecting
             ? NewNoteBar(folder: widget.folder)
-            : null,
+            : SelectionBar(),
         body: StreamBuilder<List<Note>>(
           stream: noteHelper.watchNotes(widget.folder),
           initialData: const [],

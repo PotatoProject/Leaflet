@@ -22,7 +22,10 @@ class SyncItem<T> {
     required this.save,
   });
 
-  Future<void> sync({required List<Blob> serverBlobs}) async {
+  Future<void> sync(
+      {required List<Blob> serverBlobs,
+      required BlobService blobService,
+      required bool Function(String) blobExists}) async {
     final List<T> localItems = await getLocalItems();
 
     final List<Blob> serverNotes =
@@ -67,7 +70,7 @@ class SyncItem<T> {
       // Step 5: If the note at the client is newer or doesnt exist,
       // Upsert (Insert or Update) the blob at the server
       print("$blobType ${getId(localItem)} will be uploaded to server");
-      await SyncBlobService().upsertBlob(blob);
+      await blobService.upsertBlob(blob, blobExists(getId(localItem)));
     }
   }
 }

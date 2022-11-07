@@ -1,4 +1,5 @@
 import 'package:liblymph/database.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'package:potato_notes/internal/providers.dart';
 import 'package:potato_notes/internal/sync/blob.dart';
 import 'package:potato_notes/internal/sync/blob_service.dart';
@@ -53,23 +54,36 @@ class SyncService {
         continue;
       }
       var processedImage = await ImageUtils.processImage(noteImage);
-      await SyncImageService().uploadImage(noteImage);
+      await PocketbaseImageService().uploadImage(noteImage);
       var uploadedImage = processedImage.copyWith(uploaded: true);
       await imageHelper.saveImage(uploadedImage);
     }
+    try {
+      // Step 1: Fetch all data from the server
+      final List<RecordModel> serverRecords =
+          await PocketbaseBlobService().getAllBlobs();
 
-    // Step 1: Fetch all data from the server
-    final List<Blob> serverBlobs = await SyncBlobService().getAllBlobs();
+      final List<Blob> serverBlobs = serverRecords
+          .map((model) =>
+              Blob.fromJson(model.data..putIfAbsent("id", () => model.id)))
+          .toList();
 
-    for (final SyncItem item in syncItems) {
-      await item.sync(serverBlobs: serverBlobs);
-    }
-
-    noteImages = await imageHelper.listAllImages();
-    for (final NoteImage noteImage in noteImages) {
-      if (!await ImageUtils.imageDownloaded(noteImage)) {
-        await SyncImageService().downloadImage(noteImage);
+      for (final SyncItem item in syncItems) {
+        await item.sync(
+          serverBlobs: serverBlobs,
+          blobService: PocketbaseBlobService(),
+          blobExists: (id) => serverRecords.any((record) => record.id == id),
+        );
       }
+
+      noteImages = await imageHelper.listAllImages();
+      for (final NoteImage noteImage in noteImages) {
+        if (!await ImageUtils.imageDownloaded(noteImage)) {
+          await PocketbaseImageService().downloadImage(noteImage);
+        }
+      }
+    } catch (e) {
+      print(e);
     }
     //Syncing is done
   }

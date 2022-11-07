@@ -11,6 +11,7 @@ import 'package:potato_notes/internal/sync/sync_service.dart';
 import 'package:potato_notes/internal/utils.dart';
 import 'package:potato_notes/routes/note_page.dart';
 import 'package:potato_notes/routes/settings_page.dart';
+import 'package:potato_notes/widget/account_avatar.dart';
 import 'package:potato_notes/widget/folder_editor.dart';
 import 'package:potato_notes/widget/illustrations.dart';
 import 'package:potato_notes/widget/note_list_widget.dart';
@@ -78,6 +79,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                       icon: const Icon(Icons.settings),
                     ),
+                    IconButton(
+                      icon: const AccountAvatar(),
+                      onPressed: () {},
+                    )
                   ],
                   backgroundColor: context.theme.colorScheme.background,
                   elevation: 4,

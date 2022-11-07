@@ -39,7 +39,6 @@ import 'package:potato_notes/widget/selection_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/utils/utils.dart' as utils;
 import 'package:url_launcher/url_launcher.dart' as ul;
-import 'package:uuid/uuid.dart';
 
 class Utils {
   Utils._();
@@ -192,7 +191,11 @@ class Utils {
       _loadingOverlayEntry.remove();
 
   static String generateId() {
-    return const Uuid().v4();
+    var r = Random.secure();
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return List.generate(15, (index) => _chars[r.nextInt(_chars.length)])
+        .join();
   }
 
   static SelectionOptions getSelectionOptionsForMode(Folder folder) {

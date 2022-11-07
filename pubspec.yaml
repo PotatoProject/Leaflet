@@ -68,6 +68,7 @@ dependencies:
   path_drawing: ^1.0.0
   path_provider: ^2.0.8
 
+  pocketbase: ^0.4.1
   quick_actions: ^0.6.0+9
 
   recase: ^4.0.0
@@ -83,7 +84,6 @@ dependencies:
 
   universal_platform: ^1.0.0+1
   url_launcher: ^6.0.18
-  uuid: ^3.0.4
 
   waterfall_flow: ^3.0.2
   webcrypto:

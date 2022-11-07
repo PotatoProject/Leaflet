@@ -10,13 +10,12 @@ class Blob {
       : id = json['id'] as String,
         content = json['content'] as String,
         blobType = json['blob_type'] as String,
-        lastChanged =
-            DateTime.fromMillisecondsSinceEpoch(json['last_changed'] as int);
+        lastChanged = DateTime.parse(json['last_changed'] as String);
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'content': content,
         'blob_type': blobType,
-        'last_changed': lastChanged.millisecondsSinceEpoch
+        'last_changed': lastChanged.toIso8601String()
       };
 }

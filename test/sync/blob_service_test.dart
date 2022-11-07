@@ -11,7 +11,7 @@ void main() {
 
   test('upsert blob', () async {
     final blob = Blob("b4e1c4aa-ecd9-4ff3-89a1-a957d0566e10",
-        "{\"test\": \"test\"}", DateTime.now());
+        '{"test": "test"}', "note", DateTime.now());
     await SyncBlobService().upsertBlob(blob);
   });
 }

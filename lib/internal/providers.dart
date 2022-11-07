@@ -3,6 +3,7 @@ import 'package:intl/locale.dart';
 import 'package:liblymph/database.dart';
 import 'package:liblymph/providers.dart';
 import 'package:monet/monet.dart';
+import 'package:pocketbase/pocketbase.dart';
 import 'package:potato_notes/generated/locale.dart';
 import 'package:potato_notes/internal/app_config.dart';
 import 'package:potato_notes/internal/app_directories.dart';
@@ -31,6 +32,7 @@ class _ProvidersSingleton extends Providers {
   late YatlCore _yatl;
   late GeneratedLocales _locales;
   late GeneratedLocaleStrings _strings;
+  late PocketBase _pocketBase;
 
   static void init() => Providers.provideInstance(_ProvidersSingleton._());
 
@@ -56,6 +58,10 @@ class _ProvidersSingleton extends Providers {
       fallbackLocale: Locale.parse("en_US"),
     );
     _strings = GeneratedLocaleStrings(_yatl);
+    _pocketBase = PocketBase("https://potatosync.fly.dev");
+    //TODO: remove the temporary login
+    await _pocketBase.users
+        .authViaEmail("myth.usa538+1@gmail.com", "dDbu6sy9ADJYTQ");
   }
 
   Future<void> initProviders() async {
@@ -117,3 +123,5 @@ YatlCore get yatl => _instance._yatl;
 GeneratedLocales get locales => _instance._locales;
 
 GeneratedLocaleStrings get strings => _instance._strings;
+
+PocketBase get pocketbase => _instance._pocketBase;
